@@ -1,23 +1,41 @@
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+  Template.profileSettings.onCreated(function() {
+    Session.set("hasDog", Meteor.user().profile.hasDog);
+    Session.set("hasCamera", Meteor.user().profile.hasCamera);
+  });
+
+  Template.profileSettings.helpers({
+    hc: function() {
+      return Session.get("hasCamera");
+    },
+    hd: function() {
+      return Session.get("hasDog");
     }
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
+  Template.profileSettings.events({
+    "change .has-camera input": function (event) {
+      Session.set("hasCamera", event.target.checked);
+    },
+    "change .has-dog input": function (event) {
+      Session.set("hasDog", event.target.checked);
+    },
+    "submit .profile-settings": function (event) {
+      console.log("hi");
+      // event.preventDefault();
+      console.log(Session.get("hasCamera"));
+      Meteor.users.update(Meteor.userId(), {$set: {"profile.hasCamera": Session.get("hasCamera")}});
+      Meteor.users.update(Meteor.userId(), {$set: {"profile.hasDog": Session.get("hasDog")}});
     }
   });
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+  Accounts.onCreateUser(function(options, user) {
+    if (user.profile == undefined) user.profile = {};
+    user.profile.hasDog = false;
+    user.profile.hasCamera = false;
+    return user;
   });
 }
