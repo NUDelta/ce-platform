@@ -21,3 +21,9 @@ insecure                # Allow all DB writes from clients (for prototyping)
 accounts-ui
 accounts-password
 ryanmadden:cerebro
+twbs:bootstrap
+iron:router
+random
+reload
+check
+spacebars
