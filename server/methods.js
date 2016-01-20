@@ -7,10 +7,8 @@ Meteor.methods({
 
     let users = Meteor.users.find({
       'profile.experiences': expId
-    }).fetch();
-
-    for (let i = 0; i < users.length; i++) {
-      let email = users[i].emails[0].address;
+    }).forEach((user) => {
+      let email = user.emails[0].address;
       // MAIL_URL="smtp://postmaster@sandbox31e59e1446774315b14003638c8f64ba.mailgun.org:fe2c40e92b55de91104c823fdec0967c@smtp.mailgun.org:587" meteor
       Email.send({
         to: email,
@@ -18,6 +16,6 @@ Meteor.methods({
         subject: subject,
         html: text
       });
-    }
+    });
   }
 });
