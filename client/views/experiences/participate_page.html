@@ -1,0 +1,22 @@
+<template name="participatePage">
+  {{#if ownExperience}}
+    <i class="secret">This is what your experience looks like to experiencers.</i>
+  {{/if}}
+  <div class="row">
+    <h1>{{name}}</h1>
+    <h3>{{desc}}</h3>
+    {{#if photoChosen}}
+      <form>
+        <input type="file" name="photo">
+        <input type="submit">
+      </form>
+    {{/if}}
+</div>
+  {{#if ownExperience}}
+    <br/>
+    <br/>
+    <i class="secret">Psst {{currentUser.username}}! When you're ready to start the experience...</i>
+    <br/>
+    {{> experienceButton this}}
+  {{/if}}
+</template>

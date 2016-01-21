@@ -1,0 +1,23 @@
+<template name="experienceCreator">
+  <form class="main form page">
+    <div class="form-group">
+      <label class="control-label" for="name">What do you want to call your experience?</label>
+      <div class="controls">
+          <input name="name" id="name" type="text" value="" placeholder="e.g. Sunsetogether" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="desc">What should experiencers do?</label>
+      <div class="controls">
+          <input name="desc" id="desc" type="text" value="" placeholder="e.g. Upload a picture of the sunset around you right now!" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="module">What modules do you need from us?</label>
+      <div class="controls">
+          <input type="checkbox" id="photo" value="photo">Photo upload<br>
+      </div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+  </form>
+</template>

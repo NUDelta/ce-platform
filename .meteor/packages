@@ -28,3 +28,7 @@ reload
 check
 spacebars
 email
+cfs:filesystem
+cfs:gridfs
+cfs:standard-packages
+ejson

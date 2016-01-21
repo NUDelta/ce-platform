@@ -1,12 +1,29 @@
 if (Experiences.find().count() === 0) {
+  let beatriceId = Meteor.users.insert({
+    emails: [{
+      address: "jayz@hov.com",
+      verified: true
+    }],
+    profile: {
+      name: 'Beatrice Montgomery',
+      experiences: []
+    }
+  });
+
   let eId1 = Experiences.insert({
     name: 'Sunset',
-    text: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://www.facebook.com">link</a></p>'
+    author: beatriceId,
+    desc: 'Upload a picture of the sunset where you are right now!',
+    start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
+    module: 'photo'
   });
 
   let eId2 = Experiences.insert({
     name: 'Pet Dog',
-    text: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://www.google.com">link</a></p>'
+    author: beatriceId,
+    desc: 'Upload a picture of you petting your dog right now!',
+    start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
+    module: 'photo'
   });
 
   let tomId = Meteor.users.insert({
@@ -19,7 +36,6 @@ if (Experiences.find().count() === 0) {
       experiences: [eId1, eId2]
     }
   });
-  let tom = Meteor.users.findOne(tomId);
   let sachaId = Meteor.users.insert({
     emails: [{
       address: "sgnachreiner@gmail.com",
@@ -27,8 +43,7 @@ if (Experiences.find().count() === 0) {
     }],
     profile: {
       name: 'Sacha Greif',
-      experiences: [eId1]
+      experiences: [eId1, eId2]
     }
   });
-  let sacha = Meteor.users.findOne(sachaId);
 }

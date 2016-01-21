@@ -6,7 +6,7 @@ Template.experienceButton.events({
       Meteor.call('sendEmail',
             'shannonnachreiner2012@u.northwestern.edu',
             'Event is starting!',
-            this.text, this._id);
+            this.start_email_text, this._id);
       alert(`Sent ${this.name}`);
   }
 });

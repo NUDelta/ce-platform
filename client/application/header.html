@@ -1,0 +1,10 @@
+<template name="header">
+  <h1><a href="/">Cerebro</a></h1>
+  {{> loginButtons}}
+  <br/>
+  {{#if currentUser}}
+    <a href="{{pathFor 'experienceCreator'}}">Create new experience</a>
+  {{/if}}
+  <br/>
+  <br/>
+</template>
