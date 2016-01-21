@@ -25,7 +25,6 @@ Template.profileSettings.events({
     Meteor.users.update(Meteor.userId(), {$set: {'profile.hasDog': Session.get('hasDog')}});
     Meteor.call('updateUserExperiences', function(err, result) {
       Meteor.users.update(Meteor.userId(), {$set: {'profile.experiences': result}});
-      console.log(Meteor.user().profile.experiences);
    });
   }
 });

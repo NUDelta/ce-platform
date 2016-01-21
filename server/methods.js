@@ -21,7 +21,6 @@ Meteor.methods({
   updateUserExperiences: function() {
     let exps = Experiences.find().fetch().filter(function(doc) {
       let match = true;
-      console.log(doc);
       doc.requirements.forEach(function(s) {
         if (!Meteor.user().profile[s] === true) {
           match = false;
@@ -31,8 +30,6 @@ Meteor.methods({
     }).map(function(doc) {
       return doc._id;
     });
-    console.log("FUCK");
-    console.log(exps);
     return exps;
   }
 });
