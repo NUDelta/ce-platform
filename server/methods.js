@@ -17,5 +17,22 @@ Meteor.methods({
         html: text
       });
     });
+  },
+  updateUserExperiences: function() {
+    let exps = Experiences.find().map(function(doc, index, cursor) {
+      let match = true;
+      console.log(doc);
+      doc.requirements.forEach(function(s) {
+        if (!Meteor.user().profile[s] === true) {
+          match = false;
+        }
+      });
+      if (match) {
+        return doc._id;
+      }
+    });
+    console.log("FUCK");
+    console.log(exps);
+    return exps;
   }
 });

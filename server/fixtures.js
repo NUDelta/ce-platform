@@ -1,4 +1,4 @@
-if (Experiences.find().count() === 0) {
+if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
   let beatriceId = Meteor.users.insert({
     emails: [{
       address: "jayz@hov.com",
@@ -9,13 +9,13 @@ if (Experiences.find().count() === 0) {
       experiences: []
     }
   });
-
   let eId1 = Experiences.insert({
     name: 'Sunset',
     author: beatriceId,
     desc: 'Upload a picture of the sunset where you are right now!',
     start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
-    module: 'photo'
+    module: 'photo',
+    requirements: ['hasCamera']
   });
 
   let eId2 = Experiences.insert({
@@ -23,7 +23,8 @@ if (Experiences.find().count() === 0) {
     author: beatriceId,
     desc: 'Upload a picture of you petting your dog right now!',
     start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
-    module: 'photo'
+    module: 'photo',
+    requirements: ['hasDog', 'hasCamera']
   });
 
   let tomId = Meteor.users.insert({

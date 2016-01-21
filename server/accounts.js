@@ -4,5 +4,7 @@ Accounts.onCreateUser((options, user) => {
   }
   user.profile.hasDog = false;
   user.profile.hasCamera = false;
+  user.profile.experiences = [];
+  user.profile.subscriptions = [];
   return user;
 });
