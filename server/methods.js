@@ -19,7 +19,7 @@ Meteor.methods({
     });
   },
   updateUserExperiences: function() {
-    let exps = Experiences.find().map(function(doc, index, cursor) {
+    let exps = Experiences.find().fetch().filter(function(doc) {
       let match = true;
       console.log(doc);
       doc.requirements.forEach(function(s) {
@@ -27,9 +27,9 @@ Meteor.methods({
           match = false;
         }
       });
-      if (match) {
-        return doc._id;
-      }
+      return match;
+    }).map(function(doc) {
+      return doc._id;
     });
     console.log("FUCK");
     console.log(exps);
