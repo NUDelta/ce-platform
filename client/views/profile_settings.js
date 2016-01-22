@@ -23,8 +23,13 @@ Template.profileSettings.events({
     event.preventDefault();
     Meteor.users.update(Meteor.userId(), {$set: {'profile.hasCamera': Session.get('hasCamera')}});
     Meteor.users.update(Meteor.userId(), {$set: {'profile.hasDog': Session.get('hasDog')}});
-    Meteor.call('updateUserExperiences', function(err, result) {
-      Meteor.users.update(Meteor.userId(), {$set: {'profile.experiences': result}});
-   });
+    Meteor.call('updateUserExperiences', function(err, exps) {
+      Meteor.users.update(Meteor.userId(), {$set: {'profile.experiences': exps}});
+      let subs = Meteor.user().profile.subscriptions;
+      subs = subs.filter(function(i) {
+        return exps.indexOf(i) !== -1
+      });
+      Meteor.users.update(Meteor.userId(), {$set: {'profile.subscriptions': subs}});
+    });
   }
 });

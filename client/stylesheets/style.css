@@ -26,3 +26,12 @@ img.logo {
 .secret {
 	color: #a6a6a6;
 }
+
+.table-subscription {
+  max-width: 200px;
+}
+
+.table-subscription td {
+  padding-top: 10px;
+  text-align: left;
+}

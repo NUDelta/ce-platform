@@ -1,0 +1,22 @@
+<template name="subscriptions">
+  <table class="table table-subscription">
+    {{#each experiences}}
+    {{> experience}}
+    {{/each}}
+  </table>
+</template>
+
+<template name="experience">
+  <tr>
+    <td>
+      {{name}} 
+    </td>
+    <td>
+      {{#if subscribed}}
+      <button type="button" class="btn btn-default btn-xs btn-unsubscribe">Unsubscribe</button>
+      {{else}}
+      <button type="button" class="btn btn-primary btn-xs btn-subscribe">Subscribe</button>
+      {{/if}}
+    </td>
+  </tr>
+</template>
