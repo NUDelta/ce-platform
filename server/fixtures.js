@@ -34,7 +34,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     }],
     profile: {
       name: 'Tom Coleman',
-      experiences: [eId1, eId2]
+      subscriptions: [eId1, eId2]
     }
   });
   let sachaId = Meteor.users.insert({
@@ -44,7 +44,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     }],
     profile: {
       name: 'Sacha Greif',
-      experiences: [eId1, eId2]
+      subscriptions: [eId1, eId2]
     }
   });
 }

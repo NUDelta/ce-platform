@@ -6,7 +6,7 @@ Meteor.methods({
     this.unblock();
 
     let users = Meteor.users.find({
-      'profile.experiences': expId
+      'profile.subscriptions': expId
     }).forEach((user) => {
       let email = user.emails[0].address;
       // MAIL_URL="smtp://postmaster@sandbox31e59e1446774315b14003638c8f64ba.mailgun.org:fe2c40e92b55de91104c823fdec0967c@smtp.mailgun.org:587" meteor

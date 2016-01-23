@@ -1,15 +1,20 @@
 <template name="subscriptions">
   <table class="table table-subscription">
-    {{#each experiences}}
-    {{> experience}}
-    {{/each}}
+    {{#if experiences.length}}
+      {{#each experiences}}
+        {{> experience}}
+      {{/each}}
+    {{else}}
+      <p>Bummer, you're not eligible for any experiences right now. Check back later?</p>
+    {{/if}}
+
   </table>
 </template>
 
 <template name="experience">
   <tr>
     <td>
-      {{name}} 
+      {{name}}
     </td>
     <td>
       {{#if subscribed}}
