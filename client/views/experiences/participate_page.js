@@ -1,8 +1,8 @@
 Template.participatePage.helpers({
   photoChosen: function() {
-    let moduleArr = Experiences.findOne(this._id).module;
+    let moduleArr = Experiences.findOne(this._id).modules;
     console.log(moduleArr)
-    return moduleArr.indexOf('photo') !== -1;
+    return moduleArr.indexOf('camera') !== -1;
   },
   ownExperience: function() {
     return this.author === Meteor.userId();
@@ -14,7 +14,6 @@ Template.participatePage.events({
     event.preventDefault();
 
     let image = {};
-
     let picture = event.target.photo.files[0];
     image = Images.insert(picture, (err, pictureObj) => {
       if (err) {

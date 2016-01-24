@@ -4,8 +4,8 @@ Template.subscriptions.helpers({
   experiences: function() {
     //return Experiences.find({'_id': {'$in': Meteor.user().profile.experiences}});
     let filtered = [];
-    let userHasCam = Meteor.user().profile.hasCamera;
-    let userHasDog = Meteor.user().profile.hasDog;
+    let userHasCam = Meteor.user().profile.qualifications.hasCamera;
+    let userHasDog = Meteor.user().profile.qualifications.hasDog;
 
     let exps = Experiences.find().forEach((exp) => {
       let reqs = exp.requirements;

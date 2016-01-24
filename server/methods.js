@@ -18,16 +18,17 @@ Meteor.methods({
       });
     });
   },
-  updateUserExperiences: function() {
-    let exps = Experiences.find().fetch().filter(function(doc) {
+  updateUserExperiences: function(user) {
+    // TODO: Figure out if it's possible to turn this into an efficent Mongo query
+    let exps = Experiences.find().fetch().filter((doc) => {
       let match = true;
-      doc.requirements.forEach(function(s) {
-        if (!Meteor.user().profile[s] === true) {
+      doc.requirements.forEach((req) => {
+        if (!user.profile.qualifications[req]) {
           match = false;
         }
       });
       return match;
-    }).map(function(doc) {
+    }).map((doc) => {
       return doc._id;
     });
     return exps;

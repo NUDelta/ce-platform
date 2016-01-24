@@ -32,3 +32,5 @@ cfs:filesystem
 cfs:gridfs
 cfs:standard-packages
 ejson
+mike:mocha
+aldeed:collection2

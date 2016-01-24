@@ -19,26 +19,6 @@ var foo = 'bar';
 let foo = 'bar';
 ```
 
-### Function Declarations
-Use the new `() =>` for anonymous functions.
-
-```js
-// bad
-functionWithCallback(1, function() {
-  // callback
-});
-
-// good
-functionWithCallback(1, () => {
-
-});
-
-// good, declaring function
-function myFunction() {
-
-}
-```
-
 ### Quotations
 Use single quotes for Javascript, and double quotes for HTML.
 

@@ -6,24 +6,29 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     }],
     profile: {
       name: 'Beatrice Montgomery',
-      experiences: []
+      experiences: [],
+      subscriptions: [],
+      qualifications: {
+        hasDog: true,
+        hasCamera: true
+      }
     }
   });
   let eId1 = Experiences.insert({
     name: 'Sunset',
     author: beatriceId,
-    desc: 'Upload a picture of the sunset where you are right now!',
-    start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
-    module: 'photo',
+    description: 'Upload a picture of the sunset where you are right now!',
+    startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
+    modules: ['camera'],
     requirements: ['hasCamera']
   });
 
   let eId2 = Experiences.insert({
     name: 'Pet Dog',
     author: beatriceId,
-    desc: 'Upload a picture of you petting your dog right now!',
-    start_email_text: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
-    module: 'photo',
+    description: 'Upload a picture of you petting your dog right now!',
+    startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
+    modules: ['camera'],
     requirements: ['hasDog', 'hasCamera']
   });
 
@@ -34,7 +39,12 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     }],
     profile: {
       name: 'Tom Coleman',
-      subscriptions: [eId1, eId2]
+      experiences: [],
+      subscriptions: [eId1, eId2],
+      qualifications: {
+        hasDog: true,
+        hasCamera: true
+      }
     }
   });
   let sachaId = Meteor.users.insert({
@@ -44,7 +54,18 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     }],
     profile: {
       name: 'Sacha Greif',
-      subscriptions: [eId1, eId2]
+      subscriptions: [eId1, eId2],
+      experiences: [],
+      qualifications: {
+        hasDog: true,
+        hasCamera: true
+      }
     }
   });
+
+  var userObject = {
+    email: 'admin@a.com',
+    password: 'password'
+  };
+  Accounts.createUser(userObject);
 }

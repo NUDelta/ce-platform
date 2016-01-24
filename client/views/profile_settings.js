@@ -1,6 +1,6 @@
 Template.profileSettings.onCreated(function() {
-  Session.set('hasDog', Meteor.user().profile.hasDog);
-  Session.set('hasCamera', Meteor.user().profile.hasCamera);
+  Session.set('hasDog', Meteor.user().profile.qualifications.hasDog);
+  Session.set('hasCamera', Meteor.user().profile.qualifications.hasCamera);
 });
 
 Template.profileSettings.helpers({
@@ -21,9 +21,9 @@ Template.profileSettings.events({
   },
   'submit .profile-settings': function (event) {
     event.preventDefault();
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.hasCamera': Session.get('hasCamera')}});
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.hasDog': Session.get('hasDog')}});
-    Meteor.call('updateUserExperiences', function(err, exps) {
+    Meteor.users.update(Meteor.userId(), {$set: {'profile.qualifications.hasCamera': Session.get('hasCamera')}});
+    Meteor.users.update(Meteor.userId(), {$set: {'profile.qualifications.hasDog': Session.get('hasDog')}});
+    Meteor.call('updateUserExperiences', Meteor.user(), function(err, exps) {
       Meteor.users.update(Meteor.userId(), {$set: {'profile.experiences': exps}});
       let subs = Meteor.user().profile.subscriptions;
       subs = subs.filter(function(i) {

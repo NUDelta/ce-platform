@@ -7,7 +7,7 @@ Template.experienceCreator.events({
     let name = $(e.target).find('[name=name]').val();
 
     if ($('#photo').is(':checked')) {
-      modules[0] = 'photo';
+      modules[0] = 'camera';
       email = '<p>Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
     } else {
@@ -16,19 +16,21 @@ Template.experienceCreator.events({
 
     let experience = {
       name: name,
-      desc: $(e.target).find('[name=desc]').val(),
+      description: $(e.target).find('[name=desc]').val(),
       author: Meteor.userId(),
-      module: modules,
-      start_email_text: email,
+      modules: modules,
+      startEmailText: email,
       requirements: requirements
     };
+
+    console.log(experience);
 
     experience._id = Experiences.insert(experience);
 
     email = email + ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
     console.log(email);
     Experiences.update({_id: experience._id}, {
-        $set: {start_email_text: email}
+        $set: {startEmailText: email}
     });
 
     Router.go('participatePage', experience);
