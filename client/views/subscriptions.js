@@ -10,13 +10,13 @@ Template.subscriptions.helpers({
     let exps = Experiences.find().forEach((exp) => {
       let reqs = exp.requirements;
 
-      if (reqs.indexOf('hasDog') !== -1 && reqs.indexOf('hasCamera') !== -1) {
+      if (_.contains(reqs, 'hasDog') && _.contains(reqs, 'hasCamera')) {
         if (userHasDog && userHasCam) {
           filtered.push(exp);
         }
-      } else if (reqs.indexOf('hasDog') !== -1 && userHasDog) {
+      } else if (_.contains(reqs, 'hasDog') && userHasDog) {
         filtered.push(exp);
-      } else if (reqs.indexOf('hasCamera') !== -1 && userHasCam) {
+      } else if (_.contains(reqs, 'hasCamera') && userHasCam) {
         filtered.push(exp);
       } else if (reqs.length === 0) {
         filtered.push(exp);

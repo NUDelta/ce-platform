@@ -1,8 +1,7 @@
 Template.participatePage.helpers({
   photoChosen: function() {
-    let moduleArr = Experiences.findOne(this._id).modules;
-    console.log(moduleArr)
-    return moduleArr.indexOf('camera') !== -1;
+    let modules = Experiences.findOne(this._id).modules;
+    return _.contains(modules, 'camera');
   },
   ownExperience: function() {
     return this.author === Meteor.userId();
