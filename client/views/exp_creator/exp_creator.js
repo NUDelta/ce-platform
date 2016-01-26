@@ -7,6 +7,7 @@ Template.experienceCreator.events({
     let name = $(e.target).find('[name=name]').val();
 
     if ($('#photo').is(':checked')) {
+      console.log("I got here");
       modules[0] = 'camera';
       email = '<p>Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
