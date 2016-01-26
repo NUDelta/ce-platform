@@ -14,7 +14,7 @@ Template.experienceButton.events({
   },
     'click .end-btn': function(e) {
       e.preventDefault();
-      let endEmailText = '<p>The experience has ended. Thanks for participating! Click <a href="' + this.endEmailLink + this._id + '">this link</a> to see the results.</p>';
+      let endEmailText = '<p>The experience has ended. Thanks for participating! Click <a href="http://localhost:3000/results/' + this._id + '">this link</a> to see the results.</p>';
       Meteor.call('sendEmail',
             'shannonnachreiner2012@u.northwestern.edu',
             'Your experience has ended.',

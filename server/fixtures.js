@@ -19,7 +19,6 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     author: beatriceId,
     description: 'Upload a picture of the sunset where you are right now!',
     startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
-    endEmailLink: 'http://sunset.meteor.com/results/',
     modules: ['camera'],
     requirements: ['hasCamera']
   });
@@ -29,7 +28,6 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     author: beatriceId,
     description: 'Upload a picture of you petting your dog right now!',
     startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
-    endEmailLink: 'http://dogs-are-great.meteor.com/results/',
     modules: ['camera'],
     requirements: ['hasDog', 'hasCamera']
   });
