@@ -32,5 +32,11 @@ Meteor.methods({
       return doc._id;
     });
     return exps;
+  },
+  getExperiences: function(params1 = {}, params2 = {}) {
+    return Experiences.find(params1, params2).fetch();
+  },
+  getUsers: function(params1 = {}, params2 = {}) {
+    return Meteor.users.find(params1, params2).fetch();
   }
 });
