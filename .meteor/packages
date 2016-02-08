@@ -34,3 +34,4 @@ cfs:standard-packages
 ejson
 mike:mocha
 aldeed:collection2
+aspin:location-engine

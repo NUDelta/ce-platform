@@ -26,12 +26,9 @@ Template.experienceCreator.events({
       location: location
     };
 
-    console.log(experience);
-
     experience._id = Experiences.insert(experience);
 
     email = email + ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
-    console.log(email);
     Experiences.update({_id: experience._id}, {
         $set: {startEmailText: email}
     });
