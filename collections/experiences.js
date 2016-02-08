@@ -27,5 +27,9 @@ Experiences.attachSchema(new SimpleSchema({
     type: [String],
     label: 'User characteristic requirements',
     allowedValues: CEQualifications
+  },
+  location: {
+    type: String,
+    label: 'Desired location of participants'
   }
 }));

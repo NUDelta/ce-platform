@@ -5,6 +5,7 @@ Template.experienceCreator.events({
     let requirements = [];
     let email = '';
     let name = $(e.target).find('[name=name]').val();
+    let location = e.target.location.value;
 
     if ($('#photo').is(':checked')) {
       console.log("I got here");
@@ -21,7 +22,8 @@ Template.experienceCreator.events({
       author: Meteor.userId(),
       modules: modules,
       startEmailText: email,
-      requirements: requirements
+      requirements: requirements,
+      location: location
     };
 
     console.log(experience);

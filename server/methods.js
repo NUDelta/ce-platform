@@ -18,8 +18,10 @@ Meteor.methods({
       });
     });
   },
-  updateUserExperiences: function(user) {
+  updateUserExperiences: function(userId) {
     // TODO: Figure out if it's possible to turn this into an efficent Mongo query
+    let user = Meteor.users.findOne(userId);
+    console.log(user)
     let exps = Experiences.find().fetch().filter((doc) => {
       let match = true;
       doc.requirements.forEach((req) => {
@@ -31,9 +33,18 @@ Meteor.methods({
     }).map((doc) => {
       return doc._id;
     });
-    return exps;
+    Meteor.users.update(userId, {$set: {'profile.experiences': exps}});
+    let subs = user.profile.subscriptions;
+    subs = subs.filter((sub) => {
+      return _.contains(exps, sub);
+    });
+    Meteor.users.update(userId, {$set: {'profile.subscriptions': subs}});
+  },
+  updateUserProfile: function(userId) {
+    return "we got here"
   },
   getExperiences: function(params1 = {}, params2 = {}) {
+    console.log(params1);
     return Experiences.find(params1, params2).fetch();
   },
   getUsers: function(params1 = {}, params2 = {}) {
