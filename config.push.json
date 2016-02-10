@@ -1,0 +1,13 @@
+{
+  "apn": {
+    "passphrase": "limo",
+    "key": "iosGp/apn-dev/PushChatKey.pem",
+    "cert": "iosGp/apn-dev/PushChatCert.pem",
+    "gateway": "gateway.sandbox.push.apple.com"
+  },
+  "production":false,
+  "badge": true,
+  "sound": true,
+  "alert": true,
+  "vibrate": true
+}
