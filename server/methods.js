@@ -56,10 +56,13 @@ Meteor.methods({
     return "we got here"
   },
   getExperiences: function(params1 = {}, params2 = {}) {
-    console.log(params1);
     return Experiences.find(params1, params2).fetch();
   },
   getUsers: function(params1 = {}, params2 = {}) {
     return Meteor.users.find(params1, params2).fetch();
+  },
+  getSubscriptions: function(userId) {
+    console.log(userId);
+    return Meteor.users.findOne(userId, { fields: { 'profile.subscriptions': 1 }});
   }
 });
