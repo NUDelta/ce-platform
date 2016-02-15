@@ -64,5 +64,31 @@ Meteor.methods({
   getSubscriptions: function(userId) {
     console.log(userId);
     return Meteor.users.findOne(userId, { fields: { 'profile.subscriptions': 1 }});
+  },
+  insertPhoto: function(experienceId, picture) {
+    //console.log(experienceId)
+    //console.log(picture)
+
+    function _base64ToArrayBuffer(base64) {
+      var binary_string = new Buffer(base64).toString('base64');
+      var len = binary_string.length;
+      var bytes = new Uint8Array(len);
+      for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+      }
+      return bytes.buffer;
+    }
+
+    var newFile = new FS.File();
+    newFile.attachData(new Buffer(picture), {type: 'image/png'}, function(error){
+      if(error) throw error;
+      newFile.name('myGraphic.png');
+      var image = Images.insert(newFile);
+
+      image = Images.findOne(image._id);
+      Images.update({_id: image._id}, {"$set" : {experience: experienceId}});
+    });
+
+    return picture
   }
 });
