@@ -3,9 +3,9 @@
     "passphrase": "limo",
     "key": "iosGp/apn-prod/key.pem",
     "cert": "iosGp/apn-prod/cert.pem",
-    "gateway": "gateway.sandbox.push.apple.com"
+    "gateway": "gateway.push.apple.com"
   },
-  "production":false,
+  "production":true,
   "badge": true,
   "sound": true,
   "alert": true,
