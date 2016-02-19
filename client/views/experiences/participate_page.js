@@ -22,10 +22,8 @@ Template.participatePage.events({
       }
     });
 
-    console.log(picture)
-
     image = Images.findOne(image._id);
-    Images.update({_id: image._id}, {"$set" : {experience: this._id}});
+    Images.update({ _id: image._id }, {$set : { experience: this._id }});
 
     Router.go('resultsPage', this);
   }
