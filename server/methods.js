@@ -28,7 +28,16 @@ Meteor.methods({
         subject: subject,
         html: text
       });
+    })  ;
+
+    return query._id.$in;
+  },
+  getEmails: function(users) {
+    let emails = [];
+    users.forEach((user) => {
+      emails.push(Meteor.users.findOne(user).emails[0]);
     });
+    return users;
   },
   updateUserExperiences: function(userId) {
     // TODO: Figure out if it's possible to turn this into an efficent Mongo query
