@@ -1,3 +1,21 @@
+Template.experienceCreator.helpers({
+  settings: function() {
+    return {
+      position: Session.get("position"),
+      limit: 6,
+      rules: [
+        {
+          // token: '',
+          collection: YelpCategories,
+          field: 'title',
+          matchAll: true,
+          template: Template.categoryName
+        }
+      ]
+    };
+  }
+});
+
 Template.experienceCreator.events({
   'submit form': function(e) {
     e.preventDefault();
