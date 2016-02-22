@@ -1,9 +1,10 @@
 var getBase64Data = function(doc, callback) {
+  console.log('this');
   var buffer = new Buffer(0);
   // callback has the form function (err, res) {}
   var readStream = doc.createReadStream();
-  readStream.on('readable', function() {
-    buffer = Buffer.concat([buffer, readStream.read()]);
+  readStream.on('data', function(chunk) {
+    buffer = Buffer.concat([buffer, chunk]);
     console.log(buffer);
   });
   readStream.on('error', function(err) {
@@ -105,12 +106,10 @@ Meteor.methods({
   },
   getPhotos: function(experienceId) {
     let pics = [];
-    console.log("we are in getPhotos");
     Images.find({experience: experienceId}).forEach((pic) => {
-      getBase64DataSync(pic, function(error, buffer) {
-        pics.push(buffer)
-      });
+      pics.push(getBase64DataSync(pic));
     });
+    console.log(pics);
     return pics
   }
  });

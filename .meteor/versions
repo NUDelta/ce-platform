@@ -1,4 +1,5 @@
 accounts-base@1.2.2
+accounts-oauth@1.1.8
 accounts-password@1.1.4
 accounts-ui@1.1.6
 accounts-ui-unstyled@1.1.8
@@ -94,6 +95,8 @@ mongo-id@1.0.1
 mongo-livedata@1.0.9
 npm-bcrypt@0.7.8_2
 npm-mongo@1.4.39_1
+oauth@1.1.6
+oauth1@1.1.5
 observe-sequence@1.0.7
 ordered-dict@1.0.4
 package-version-parser@3.0.4
