@@ -1,3 +1,21 @@
+var getBase64Data = function(doc, callback) {
+  var buffer = new Buffer(0);
+  // callback has the form function (err, res) {}
+  var readStream = doc.createReadStream();
+  readStream.on('readable', function() {
+    buffer = Buffer.concat([buffer, readStream.read()]);
+    console.log(buffer);
+  });
+  readStream.on('error', function(err) {
+    callback(err, null);
+  });
+  readStream.on('end', function() {
+    // done
+    callback(null, buffer.toString('base64'));
+  });
+};
+var getBase64DataSync = Meteor.wrapAsync(getBase64Data);
+
 Meteor.methods({
   sendEmail: function(from, subject, text, expId) {
 
@@ -84,5 +102,15 @@ Meteor.methods({
       Images.update({ _id: image._id }, {$set : { experience: experienceId }});
     });
     return picture;
+  },
+  getPhotos: function(experienceId) {
+    let pics = [];
+    console.log("we are in getPhotos");
+    Images.find({experience: experienceId}).forEach((pic) => {
+      getBase64DataSync(pic, function(error, buffer) {
+        pics.push(buffer)
+      });
+    });
+    return pics
   }
-});
+ });
