@@ -42,7 +42,7 @@ Meteor.methods({
   updateUserExperiences: function(userId) {
     // TODO: Figure out if it's possible to turn this into an efficent Mongo query
     let user = Meteor.users.findOne(userId);
-    console.log(user)
+    //console.log(user);
     let exps = Experiences.find().fetch().filter((doc) => {
       let match = true;
       doc.requirements.forEach((req) => {
