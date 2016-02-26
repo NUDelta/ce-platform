@@ -1,8 +1,8 @@
 Template.profileSettings.helpers({
-  hc: function() {
+  hasCamera: function() {
     return Meteor.user().profile.qualifications.hasCamera;
   },
-  hd: function() {
+  hasDog: function() {
     return Meteor.user().profile.qualifications.hasDog;
   }
 });
@@ -10,9 +10,11 @@ Template.profileSettings.helpers({
 Template.profileSettings.events({
   'submit .profile-settings': function (event) {
     event.preventDefault();
-    console.log(event);
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.qualifications.hasCamera': event.currentTarget.camera.checked}});
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.qualifications.hasDog': event.currentTarget.dog.checked}});
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.qualifications.hasCamera': event.currentTarget.camera.checked,
+        'profile.qualifications.hasDog': event.currentTarget.dog.checked
+      }});
     Meteor.call('updateUserExperiences', Meteor.userId());
   }
 });
