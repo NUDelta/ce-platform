@@ -5,7 +5,7 @@
         {{> experience}}
       {{/each}}
     {{else}}
-      <p>Bummer, you're not eligible for any experiences right now. Check back later?</p>
+      <br/><p>Bummer, it looks like you're not eligible for any experiences right now. Update your profile or check back later.</p>
     {{/if}}
 
   </table>
@@ -14,13 +14,13 @@
 <template name="experience">
   <tr>
     <td>
-      {{name}}
+      <strong>{{name}}</strong>: <br/>{{description}}
     </td>
     <td>
       {{#if subscribed}}
-      <button type="button" class="btn btn-default btn-xs btn-unsubscribe">Unsubscribe</button>
+      <button type="button" class="btn btn-default btn-s btn-unsubscribe">Unsubscribe</button>
       {{else}}
-      <button type="button" class="btn btn-primary btn-xs btn-subscribe">Subscribe</button>
+      <button type="button" class="btn btn-primary btn-s btn-subscribe">Subscribe</button>
       {{/if}}
     </td>
   </tr>
