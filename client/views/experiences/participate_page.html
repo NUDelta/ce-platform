@@ -5,12 +5,16 @@
   <div class="row">
     <h1>{{name}}</h1>
     <h3>{{description}}</h3>
-    {{#if photoChosen}}
-      <form>
+    <form>
+      {{#if photoChosen}}
         <input type="file" name="photo">
-        <input type="submit">
-      </form>
-    {{/if}}
+      {{/if}}
+      {{#if textChosen}}
+        <input type="text" name="write">
+      {{/if}}
+      <input type="submit">
+    </form>
+
 </div>
   {{#if ownExperience}}
     <br/>

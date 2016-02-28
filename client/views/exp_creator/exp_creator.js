@@ -27,11 +27,15 @@ Template.experienceCreator.events({
 
     if ($('#photo').is(':checked')) {
       console.log("I got here");
-      modules[0] = 'camera';
+      modules.push('camera');
       email = '<p>Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
     } else {
       email = '<p>Get ready because it\'s time to participate in ' + name + '.'
+    }
+
+    if ($('#text-entry').is(':checked')) {
+      modules.push('text');
     }
 
     let experience = {

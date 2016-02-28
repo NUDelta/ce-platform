@@ -1,9 +1,18 @@
 <template name="resultsPage">
-  <h1>Everybody's pics for {{name}}</h1>
-  <ul class="image-set">
-    {{#each images this}}
-      <li><div><img class="square" src="{{url}}" alt=""></div></li>
+
+  {{#if photoChosen this}}
+    <h1>Everybody's pics for {{name}}</h1>
+    <ul class="image-set">
+      {{#each images this}}
+        <li><div><img class="square" src="{{url}}" alt=""></div></li>
+      {{/each}}
+    </ul>
+  {{/if}}
+
+  {{#if textChosen this}}
+    {{#each textEntries this}}
+      <p>"{{text}}"</p>
     {{/each}}
-  </ul>
+  {{/if}}
   <a href="{{pathFor 'participatePage' this}}">Back to upload</a>
 </template>
