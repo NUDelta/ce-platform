@@ -3,7 +3,6 @@ Template.layout.onRendered(function() {
     return location;
   }
   function changeLocation(loc, updated) {
-    console.log(updated);
   }
   LocationManager.trackUpdates(this, addTransform, changeLocation);
 });

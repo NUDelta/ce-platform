@@ -20,7 +20,6 @@ autopublish             # Publish all data to the clients (for prototyping)
 insecure                # Allow all DB writes from clients (for prototyping)
 accounts-ui
 accounts-password
-ryanmadden:cerebro
 twbs:bootstrap
 iron:router
 random
@@ -34,7 +33,8 @@ cfs:standard-packages
 ejson
 mike:mocha
 aldeed:collection2
-aspin:location-engine
 raix:push
 mizzao:autocomplete
 percolate:synced-cron
+collectiveexperiences:cerebro
+collectiveexperiences:location-engine
