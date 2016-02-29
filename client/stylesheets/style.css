@@ -2,7 +2,7 @@ img.logo {
   width: 100%;
 }
 
-.image-set li {
+/*.image-set li {
   margin: 0.5em;
   display: inline-block;
   padding: 2px;
@@ -21,6 +21,29 @@ img.logo {
 
 .image-set li img {
   width: 100%;
+}*/
+
+
+figure {
+    display: inline-block;
+    margin: 3em; /* adjust as needed */
+    height: 300px;
+    width : 200px;
+}
+
+figure div {
+  height: 100%;
+  width: 100%;
+}
+figure img {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: top;
+    margin-bottom: 0.5em;
+}
+figure figcaption {
+    text-align: center;
 }
 
 .secret {

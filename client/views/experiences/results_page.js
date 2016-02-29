@@ -1,5 +1,6 @@
 Template.resultsPage.onCreated(function() {
   this.subscribe('images', this.data._id);
+  this.subscribe('textEntries');
 });
 
 Template.resultsPage.helpers({
@@ -15,7 +16,6 @@ Template.resultsPage.helpers({
     return Images.find({experience: params._id});
   },
   textEntries: function(params) {
-    console.log(params._id);
     return TextEntries.find({experience: params._id});
   }
 });

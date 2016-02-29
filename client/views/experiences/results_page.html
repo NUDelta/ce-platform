@@ -4,12 +4,15 @@
     <h1>Everybody's pics for {{name}}</h1>
     <ul class="image-set">
       {{#each images this}}
-        <li><div><img class="square" src="{{url}}" alt=""></div></li>
+        <figure>
+          <div><img class="square" src="{{url}}" alt=""></div>
+          <figcaption>{{caption}}</figcaption>
+        </figure>
       {{/each}}
     </ul>
-  {{/if}}
-
-  {{#if textChosen this}}
+  {{else}}
+    <h1>Here's what everyone wrote for {{name}}</h1>
+    <br/>
     {{#each textEntries this}}
       <p>"{{text}}"</p>
     {{/each}}

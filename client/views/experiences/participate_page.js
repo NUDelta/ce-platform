@@ -17,6 +17,9 @@ Template.participatePage.helpers({
   },
   textChosen: function() {
     return textChosenLocal(this);
+  },
+  onlyTextChosen: function() {
+    return !photoChosenLocal(this) && textChosenLocal(this);
   }
 });
 
@@ -47,7 +50,7 @@ Template.participatePage.events({
         captionText = event.target.write.value;
       }
 
-      Images.update({ _id: image._id }, {$set : { experience: this._id}});
+      Images.update({ _id: image._id }, {$set : {experience: this._id, caption: captionText}});
     }
 
     if (isText) {
