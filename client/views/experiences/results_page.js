@@ -1,3 +1,7 @@
+Template.resultsPage.onCreated(function() {
+  this.subscribe('images', this.data._id);
+});
+
 Template.resultsPage.helpers({
   photoChosen: function(params) {
     let modules = Experiences.findOne(params._id).modules;

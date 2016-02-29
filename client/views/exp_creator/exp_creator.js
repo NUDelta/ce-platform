@@ -1,3 +1,7 @@
+Template.experienceCreator.onCreated(function() {
+  this.subscribe('yelpCategories');
+});
+
 Template.experienceCreator.helpers({
   settings: function() {
     return {

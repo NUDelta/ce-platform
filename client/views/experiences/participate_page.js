@@ -1,12 +1,12 @@
 var photoChosenLocal = function(exp) {
   let modules = Experiences.findOne(exp._id).modules;
   return _.contains(modules, 'camera');
-}
+};
 
 var textChosenLocal = function(exp) {
   let modules = Experiences.findOne(exp._id).modules;
   return _.contains(modules, 'text');
-}
+};
 
 Template.participatePage.helpers({
   photoChosen: function() {
