@@ -32,7 +32,7 @@ cfs:standard-packages
 ejson
 aldeed:collection2
 raix:push
-mizzao:autocomplete
 browser-policy
 collectiveexperiences:location-engine
 collectiveexperiences:cerebro
+sergeyt:typeahead

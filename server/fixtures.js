@@ -18,7 +18,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     name: 'Sunset',
     author: beatriceId,
     description: 'Upload a picture of the sunset where you are right now!',
-    startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
+    startText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
     modules: ['camera'],
     requirements: ['hasCamera'],
     location: 'beach'
@@ -28,7 +28,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     name: 'Pet Dog',
     author: beatriceId,
     description: 'Upload a picture of you petting your dog right now!',
-    startEmailText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
+    startText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
     modules: ['camera'],
     requirements: ['hasDog', 'hasCamera'],
     location: 'dog park'

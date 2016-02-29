@@ -9,7 +9,8 @@
     <div class="form-group">
       <label class="control-label" for="desc">Write out some simple instructions to your participants.</label>
       <div class="controls">
-          <input name="desc" id="desc" type="text" value="" placeholder="e.g. Upload a picture of the sunset around you right now!" class="form-control"/>
+          <input name="desc" id="desc" type="text" value="" class="form-control"
+                 placeholder="e.g. Upload a picture of the sunset around you right now!"/>
       </div>
     </div>
     <div class="form-group">
@@ -22,13 +23,12 @@
     <div class="form-group">
       <label class="control-label" for="location">Tell us who we should ask to participate in your experience.</label>
       <div class="controls">
-        <span>People at</span> {{> inputAutocomplete settings=settings id="location" name="location" placeholder="e.g. bakeries"}}
+        <span>People at</span>
+        <input name="location" class="form-control typeahead" type="text" autocomplete="off" placeholder="e.g. bakeries"
+               spellcheck="false" data-source="categories">
       </div>
     </div>
-    <input type="submit" value="Submit" class="btn btn-primary"/>
+    <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 </template>
 
-<template name="categoryName">
-  <p>{{title}}</p>
-</template>

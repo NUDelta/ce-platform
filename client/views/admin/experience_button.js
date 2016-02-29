@@ -1,7 +1,7 @@
 Template.experienceButton.events({
   'click .start-btn': function(e) {
     e.preventDefault();
-    Cerebro.notify(this._id, `Event "${this.name}" is starting!`, this.startEmailText);
+    Cerebro.notify(this._id, `Event "${this.name}" is starting!`, this.startText);
     alert(`Sent ${this.name}`);
   },
   'click .schedule-btn': function(e) {

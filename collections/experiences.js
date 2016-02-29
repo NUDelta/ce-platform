@@ -14,7 +14,7 @@ Experiences.attachSchema(new SimpleSchema({
     type: String,
     label: 'Experience description'
   },
-  startEmailText: {
+  startText: {
     type: String,
     label: 'Experience starting email text'
   },
@@ -30,6 +30,7 @@ Experiences.attachSchema(new SimpleSchema({
   },
   location: {
     type: String,
-    label: 'Desired location of participants'
+    label: 'Desired location of participants',
+    optional: true
   }
 }));

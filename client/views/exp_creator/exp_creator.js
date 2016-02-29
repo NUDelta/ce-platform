@@ -1,22 +1,13 @@
 Template.experienceCreator.onCreated(function() {
-  this.subscribe('yelpCategories');
+});
+
+Template.experienceCreator.onRendered(function() {
+  Meteor.typeahead.inject();
 });
 
 Template.experienceCreator.helpers({
-  settings: function() {
-    return {
-      position: Session.get("position"),
-      limit: 6,
-      rules: [
-        {
-          // token: '',
-          collection: YelpCategories,
-          field: 'title',
-          matchAll: true,
-          template: Template.categoryName
-        }
-      ]
-    };
+  categories: function() {
+    return _.map(YelpCategories, category => category.title);
   }
 });
 
@@ -27,7 +18,9 @@ Template.experienceCreator.events({
     let requirements = [];
     let email = '';
     let name = $(e.target).find('[name=name]').val();
-    let location = e.target.location.value;
+    let location = _.find(YelpCategories, (category) => {
+      return category.title = e.target.location.value;
+    });
 
     if ($('#photo').is(':checked')) {
       console.log("I got here");
@@ -47,18 +40,22 @@ Template.experienceCreator.events({
       description: $(e.target).find('[name=desc]').val(),
       author: Meteor.userId(),
       modules: modules,
-      startEmailText: email,
+      startText: email,
       requirements: requirements,
       location: location
     };
 
-    experience._id = Experiences.insert(experience);
-
-    email = email + ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
-    Experiences.update({_id: experience._id}, {
-        $set: {startEmailText: email}
+    experience._id = Experiences.insert(experience, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        email += ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
+        Experiences.update({ _id: experience._id }, {
+          $set: {startText: email}
+        });
+        Router.go('participatePage', experience);
+      }
     });
 
-    Router.go('participatePage', experience);
   }
 });
