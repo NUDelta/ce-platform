@@ -31,6 +31,7 @@ Experiences.attachSchema(new SimpleSchema({
   location: {
     type: String,
     label: 'Desired location of participants',
-    optional: true
+    optional: true,
+    allowedValues: _.map(YelpCategories, category => category.alias)
   }
 }));

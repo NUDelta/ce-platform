@@ -19,8 +19,14 @@ Template.experienceCreator.events({
     let email = '';
     let name = $(e.target).find('[name=name]').val();
     let location = _.find(YelpCategories, (category) => {
-      return category.title = e.target.location.value;
+      return category.title == e.target.location.value;
     });
+
+    if (location) {
+      location = location.alias;
+    } else {
+      location = e.target.location.value;
+    }
 
     if ($('#photo').is(':checked')) {
       console.log("I got here");
