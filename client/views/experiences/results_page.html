@@ -2,14 +2,15 @@
 
   {{#if photoChosen this}}
     <h1>Everybody's pics for {{name}}</h1>
-    <ul class="image-set">
+    <div class="grid">
       {{#each images this}}
         <figure>
           <div><img class="square" src="{{url}}" alt=""></div>
+          <br/>
           <figcaption>{{caption}}</figcaption>
         </figure>
       {{/each}}
-    </ul>
+    </div>
   {{else}}
     <h1>Here's what everyone wrote for {{name}}</h1>
     <br/>

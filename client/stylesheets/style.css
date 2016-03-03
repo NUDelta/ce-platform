@@ -2,48 +2,36 @@ img.logo {
   width: 100%;
 }
 
-/*.image-set li {
-  margin: 0.5em;
-  display: inline-block;
-  padding: 2px;
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  background-color: rgb(125, 125, 125);
+.grid {
+  display: block;
+  text-align: center;
 }
-
-.image-set li div {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.image-set li img {
-  width: 100%;
-}*/
-
 
 figure {
     display: inline-block;
-    margin: 3em; /* adjust as needed */
+    margin-top: 2em;
+    width: 200px;
     height: 300px;
-    width : 200px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 figure div {
   height: 100%;
   width: 100%;
 }
+
 figure img {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    vertical-align: top;
-    margin-bottom: 0.5em;
+    height: 100%;
+    vertical-align: bottom;
 }
+
 figure figcaption {
+    width: 100%;
     text-align: center;
+    color: black;
+    margin-top: -1em;
 }
 
 .secret {
