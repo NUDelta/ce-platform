@@ -27,6 +27,7 @@ Schema.Profile = new SimpleSchema({
   activeExperience: {
     type: String,
     label: 'Active experience',
+    optional: true
   }
 });
 
