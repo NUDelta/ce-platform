@@ -25,7 +25,7 @@ Template.experienceCreator.events({
     if (location) {
       location = location.alias;
     } else {
-      location = e.target.location.value;
+      location = '';
     }
 
     if ($('#photo').is(':checked')) {
