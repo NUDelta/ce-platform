@@ -21,7 +21,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     startText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
     modules: ['camera'],
     requirements: ['hasCamera'],
-    location: 'beach'
+    location: 'beaches'
   });
 
   let eId2 = Experiences.insert({
@@ -31,7 +31,7 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
     startText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
     modules: ['camera'],
     requirements: ['hasDog', 'hasCamera'],
-    location: 'dog park'
+    location: 'dog_parks'
   });
 
   let tomId = Meteor.users.insert({
