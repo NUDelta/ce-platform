@@ -1,11 +1,14 @@
 <template name="home">
   <div class="container">
     {{#if currentUser}}
+      {{#if activeExperience}}
+      <div class="container">
+        <h3>One of your experiences is running right now!</h3>
+        <button class="btn btn-primary btn-participate" href="">Participate</button>
+      </div>
+      {{/if}}
       <h2>Getting started with Cerebro</h2>
       <div>
-        {{#if activeExperience}}
-        {{> participate_link}}
-        {{/if}}
         <h4>Step 1. Update your user profile</h4>
         <i>We'll use this information to provide you with new experiences to subscribe to.</i>
         {{> profileSettings}}
