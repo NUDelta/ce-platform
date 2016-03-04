@@ -1,5 +1,9 @@
-Meteor.publish('experiences', function(query) {
-  return Experiences.find(query);
+Meteor.publish('experiences', function(experienceId) {
+  if (experienceId) {
+    return Experiences.find({ _id: experienceId });
+  } else {
+    return Experiences.find();
+  }
 });
 
 Meteor.publish('textEntries', function() {
