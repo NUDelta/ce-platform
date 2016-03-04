@@ -20,6 +20,9 @@ Template.participatePage.helpers({
   },
   onlyTextChosen: function() {
     return !photoChosenLocal(this) && textChosenLocal(this);
+  },
+  photoOrTextChosen: function() {
+    return photoChosenLocal(this) || textChosenLocal(this);
   }
 });
 
