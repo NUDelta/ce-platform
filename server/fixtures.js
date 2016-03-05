@@ -71,3 +71,4 @@ if (Experiences.find().count() === 0 && Meteor.users.find().count() === 0) {
   };
   Accounts.createUser(userObject);
 }
+

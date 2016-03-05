@@ -17,3 +17,7 @@ Meteor.publish('images', function(experienceId) {
     return Images.find();
   }
 });
+
+Meteor.publish('locations', function() {
+  return Locations.find();
+});

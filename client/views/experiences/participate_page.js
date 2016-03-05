@@ -10,7 +10,7 @@ let textChosenLocal = (exp) => {
 
 Template.participatePage.onCreated(function() {
   this.subscribe('images', this.data._id);
-})
+});
 
 Template.participatePage.helpers({
   photoChosen: function() {
