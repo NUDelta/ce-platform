@@ -30,10 +30,10 @@ Template.experienceCreator.events({
 
     if ($('#photo').is(':checked')) {
       modules.push('camera');
-      email = '<p>Get your camera ready because it\'s time to post a picture for ' + name + '.';
+      email = 'Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
     } else {
-      email = '<p>Get ready because it\'s time to participate in ' + name + '.'
+      email = 'Get ready because it\'s time to participate in ' + name + '.'
     }
 
     if ($('#text-entry').is(':checked')) {
@@ -54,7 +54,7 @@ Template.experienceCreator.events({
       if (err) {
         alert(err);
       } else {
-        email += ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
+        //email += ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
         Experiences.update({ _id: experience._id }, {
           $set: {startText: email}
         });
