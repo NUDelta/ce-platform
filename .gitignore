@@ -2,3 +2,4 @@ packages/
 settings.json
 deploy.sh
 mup.json
+.DS_Store

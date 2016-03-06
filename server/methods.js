@@ -28,6 +28,9 @@ Meteor.methods({
     });
     Meteor.users.update(userId, {$set: {'profile.subscriptions': subs}});
   },
+  setAllActiveExperiences: function(experienceId) {
+    Meteor.users.update({}, {$set: {'profile.activeExperience': experienceId}});
+  },
   getExperiences: function(params1 = {}, params2 = {}) {
     return Experiences.find(params1, params2).fetch();
   },
