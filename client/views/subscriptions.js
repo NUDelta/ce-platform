@@ -40,7 +40,7 @@ Template.experience.events({
     exps.push(this._id);
     Meteor.users.update(Meteor.userId(), {$set: {'profile.subscriptions': exps}});
     let exp_name = Experiences.findOne(this._id).name;
-    alert(`You have successfully subscribed to ${exp_name}. You'll get an email with instructions when it's time to participate!`);
+    alert(`You have successfully subscribed to ${exp_name}. We'll notify you when it's time to participate!`);
   },
   'click .btn-unsubscribe': function (event) {
     let subs =  Meteor.user().profile.subscriptions;
