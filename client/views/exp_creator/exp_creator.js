@@ -33,7 +33,7 @@ Template.experienceCreator.events({
       email = 'Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
     } else {
-      email = 'Get ready because it\'s time to participate in ' + name + '.'
+      email = 'The ' + name + ' experience is starting. ' + $(e.target).find('[name=desc]').val();
     }
 
     if ($('#text-entry').is(':checked')) {
