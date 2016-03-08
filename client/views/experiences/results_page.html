@@ -1,7 +1,7 @@
 <template name="resultsPage">
 
   {{#if photoChosen this}}
-    <h1>Everybody's pics for {{name}}</h1>
+    <h3>Check out everyone's pictures for {{name}}</h3>
     <div class="grid">
       {{#each images this}}
         <figure>
@@ -12,7 +12,7 @@
       {{/each}}
     </div>
   {{else}}
-    <h1>Here's what everyone wrote for {{name}}</h1>
+    <h3>Here's what everyone wrote for {{name}}</h3>
     <br/>
     {{#each textEntries this}}
       <p>"{{text}}"</p>

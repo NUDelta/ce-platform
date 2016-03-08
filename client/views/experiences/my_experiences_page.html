@@ -1,5 +1,7 @@
 <template name="myExperiencesPage">
+  <h3>Experiences You've Created</h3>
   {{#each experiences}}
     <a href="{{pathFor 'participatePage'}}">{{name}}</a><br/>
+    <p>{{description}}</p>
   {{/each}}
 </template>
