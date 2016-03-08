@@ -50,3 +50,7 @@ figure figcaption {
   padding-top: 10px;
   text-align: left;
 }
+
+.twitter-typeahead, .twitter-typeahead > .form-control, .tt-menu {
+  max-width: 100% !important;
+}
