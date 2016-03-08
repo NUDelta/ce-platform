@@ -1,7 +1,14 @@
 <template name="myExperiencesPage">
   <h3>Experiences You've Created</h3>
   {{#each experiences}}
-    <a href="{{pathFor 'participatePage'}}">{{name}}</a><br/>
-    <p>{{description}}</p>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <a href="{{pathFor 'participatePage'}}">{{name}}</a>
+    </div>
+    <div class="panel-body">
+      <p>{{description}}</p>
+      <button class="btn btn-danger btn-delete">Delete</button>
+    </div>
+  </div>
   {{/each}}
 </template>
