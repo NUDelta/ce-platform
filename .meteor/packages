@@ -17,7 +17,6 @@ es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 insecure                # Allow all DB writes from clients (for prototyping)
-accounts-ui
 accounts-password
 twbs:bootstrap
 iron:router
@@ -37,3 +36,4 @@ collectiveexperiences:location-engine
 collectiveexperiences:cerebro
 sergeyt:typeahead
 dburles:google-maps
+ian:accounts-ui-bootstrap-3

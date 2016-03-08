@@ -1,11 +1,28 @@
 <template name="header">
-  <h1><a href="/">Cerebro</a></h1>
-  {{> loginButtons}}
-  <br/>
-  {{#if currentUser}}
-    <a href="{{pathFor 'experienceCreator'}}">Create new experience</a><br/>
-    <a href="{{pathFor 'myExperiencesPage'}}">See the experiences I've made</a>
-  {{/if}}
-  <br/>
-  <br/>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span> 
+        </button>
+        <a class="navbar-brand" href="/">Cerebro</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <!-- <li class="navbar-text">Left Link</li> -->
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {{#if currentUser}}
+          <li><a href="{{pathFor 'experienceCreator'}}">New Experience</a></li>
+          <li><a href="{{pathFor 'myExperiencesPage'}}">My Experiences</a></li>
+          {{/if}}
+          {{> loginButtons}}
+        </ul>
+      </div>
+    </div>
+  </nav>
 </template>
