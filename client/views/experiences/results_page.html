@@ -1,22 +1,20 @@
 <template name="resultsPage">
-
   {{#if photoChosen this}}
-    <h3>Check out everyone's pictures for {{name}}</h3>
-    <div class="grid">
-      {{#each images this}}
-        <figure>
-          <div><img class="square" src="{{url}}" alt=""></div>
-          <br/>
-          <figcaption>{{caption}}</figcaption>
-        </figure>
-      {{/each}}
+  <h3>Check out everyone's pictures for {{name}}</h3>
+  <div class="row">
+    {{#each images this}}
+    <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
+      <img class="square img-responsive" src="{{url}}" alt="">
+      <p>{{caption}}</p>
     </div>
-  {{else}}
-    <h3>Here's what everyone wrote for {{name}}</h3>
-    <br/>
-    {{#each textEntries this}}
-      <p>"{{text}}"</p>
     {{/each}}
+  </div>
+  {{else}}
+  <h3>Here's what everyone wrote for {{name}}</h3>
+  <br/>
+  {{#each textEntries this}}
+  <p>"{{text}}"</p>
+  {{/each}}
   {{/if}}
   <a href="{{pathFor 'participatePage' this}}">Back to upload</a>
 </template>
