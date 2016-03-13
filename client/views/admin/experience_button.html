@@ -1,5 +1,8 @@
 <template name="experienceButton">
-  <button class="start-btn">Send start notification about {{name}}</button>
-  <button class="schedule-btn">Schedule notifications for the next hour</button>
-  <button class="end-btn">Send end notification about {{name}}</button>
+  <h4>{{name}}</h4>
+  <div class="btn-group" role="group" aria-label="...">
+    <button class="start-btn btn btn-default">Start</button>
+    <button class="schedule-btn btn btn-default">Next Hour</button>
+    <button class="end-btn btn btn-default">End</button>
+  </div>
 </template>

@@ -11,33 +11,6 @@ img.logo {
   text-align: center;
 }
 
-figure {
-    display: inline-block;
-    margin-top: 2em;
-    width: 200px;
-    height: 300px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-figure div {
-  height: 100%;
-  width: 100%;
-}
-
-figure img {
-    height: 100%;
-    vertical-align: bottom;
-}
-
-figure figcaption {
-    width: 100%;
-    text-align: center;
-    color: black;
-    margin-top: -1em;
-}
-
 .secret {
 	color: #a6a6a6;
 }
@@ -51,6 +24,7 @@ figure figcaption {
   text-align: left;
 }
 
+/* Constrain autocomplete dropdown to viewport width */
 .twitter-typeahead, .twitter-typeahead > .form-control, .tt-menu {
   max-width: 100% !important;
 }
