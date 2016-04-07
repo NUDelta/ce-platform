@@ -1,3 +1,6 @@
+import { Cerebro } from 'meteor/collectiveexperiences:cerebro';
+import { BrowserPolicy } from 'meteor/browser-policy-common';
+
 Cerebro.NOTIFY_ALL = true;
 Cerebro.NOTIFY_METHOD = Cerebro.PUSH;
 //Cerebro.DEBUG_PUSH = true;
@@ -17,3 +20,4 @@ WebApp.connectHandlers.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   return next();
 });
+

@@ -1,6 +1,10 @@
-Experiences = new Mongo.Collection('experiences');
+import { Mongo } from 'meteor/mongo';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Schema } from '../schema.js';
 
-Experiences.attachSchema(new SimpleSchema({
+export const Experiences = new Mongo.Collection('experiences');
+
+Schema.Experience = new SimpleSchema({
   name: {
     type: String,
     label: 'Experience name'
@@ -21,17 +25,19 @@ Experiences.attachSchema(new SimpleSchema({
   modules: {
     type: [String],
     label: 'Integrated collective experience modules',
-    allowedValues: CEModules
+    allowedValues: Schema.CEModules
   },
   requirements: {
     type: [String],
     label: 'User characteristic requirements',
-    allowedValues: CEQualifications
+    allowedValues: Schema.CEQualifications
   },
   location: {
     type: String,
     label: 'Desired location of participants',
     optional: true,
-    allowedValues: _.map(YelpCategories, category => category.alias)
+    allowedValues: _.map(Schema.YelpCategories, category => category.alias)
   }
-}));
+});
+
+Experiences.attachSchema(Schema.Experience);

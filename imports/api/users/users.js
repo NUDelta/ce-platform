@@ -1,24 +1,28 @@
-let Schema = {};
+import { Meteor } from 'meteor/meteor';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
+import { Schema } from '../schema.js';
 
 let qualifications = {};
-for(let allowed of CEQualifications) {
+Schema.CEQualifications.forEach((allowed) => {
   qualifications[allowed] = {
     type: Boolean,
     label: allowed
-  };
-}
+  }
+});
+
 Schema.Qualification = new SimpleSchema(qualifications);
 
 Schema.Profile = new SimpleSchema({
   experiences: {
     type: [String],
     label: 'Eligible experiences',
-    // regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id // leaing out for test cases
   },
   subscriptions: {
     type: [String],
     label: 'Subscribed experiences',
-    // regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id // leaing out for test cases
   },
   qualifications: {
     type: Schema.Qualification,
