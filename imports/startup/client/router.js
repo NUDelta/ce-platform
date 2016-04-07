@@ -1,3 +1,9 @@
+import { Meteor } from 'meteor/meteor';
+import { Router } from 'meteor/iron:router';
+import { Experiences } from '../../api/experiences/experiences.js';
+
+
+
 Router.configure({
   layoutTemplate: 'layout'
 });
@@ -8,32 +14,33 @@ Router.route('/', {
 });
 
 Router.route('/admin', {
-  name: 'expButtonList',
+  name: 'admin_experiences',
   waitOn: function() { return Meteor.subscribe('experiences'); }
 });
 
 Router.route('/admin/locations', {
-  name: 'locations'
+  name: 'admin_locations'
 });
 
 Router.route('/create', {
-  name: 'experienceCreator'
+  name: 'creator'
 });
 
+// TODO: Fix up subscription management patterns
 Router.route('/participate/:_id', {
-  name: 'participatePage',
+  name: 'participate',
   data: function() { return Experiences.findOne(this.params._id); },
   waitOn: function() { return Meteor.subscribe('experiences', this.params._id); }
 });
 
 Router.route('/results/:_id', {
-  name: 'resultsPage',
+  name: 'results',
   layoutTemplate: 'spreadLayout',
   data: function() { return Experiences.findOne(this.params._id); },
   waitOn: function() { return Meteor.subscribe('experiences', this.params._id); }
 });
 
 Router.route('/archive', {
-  name: 'myExperiencesPage',
+  name: 'archive',
   waitOn: function() { return Meteor.subscribe('experiences'); }
 });

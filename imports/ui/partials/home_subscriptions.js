@@ -1,4 +1,4 @@
-Template.subscriptions.helpers({
+Template.home_subscriptions.helpers({
   //look up all experiences, grab requirements, cross-check with user's profile
   //also research JavaScript filter
   experiences: function() {
@@ -28,13 +28,13 @@ Template.subscriptions.helpers({
   }
 });
 
-Template.experience.helpers({
+Template.home_subscriptions_experience.helpers({
   subscribed: function() {
     return Meteor.user().profile.subscriptions.indexOf(this._id) != -1;
   }
 });
 
-Template.experience.events({
+Template.home_subscriptions_experience.events({
   'click .btn-subscribe': function (event) {
     let exps =  Meteor.user().profile.subscriptions;
     exps.push(this._id);

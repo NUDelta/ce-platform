@@ -1,4 +1,4 @@
-Template.locations.onCreated(function() {
+Template.admin_locations.onCreated(function() {
   this.subscribe('locations');
 
   GoogleMaps.load();
@@ -13,7 +13,7 @@ Template.locations.onCreated(function() {
   });
 });
 
-Template.locations.helpers({
+Template.admin_locations.helpers({
   mapOptions: () => {
     let latLng = LocationManager.currentLocation();
     if (GoogleMaps.loaded() && latLng) {

@@ -1,4 +1,4 @@
-Template.profileSettings.helpers({
+Template.home_profile.helpers({
   hasCamera: function() {
     return Meteor.user().profile.qualifications.hasCamera;
   },
@@ -7,7 +7,7 @@ Template.profileSettings.helpers({
   }
 });
 
-Template.profileSettings.events({
+Template.home_profile.events({
   'submit .profile-settings': function (event) {
     event.preventDefault();
     Meteor.users.update(Meteor.userId(), {

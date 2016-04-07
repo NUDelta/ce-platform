@@ -8,11 +8,11 @@ let textChosenLocal = (exp) => {
   return _.contains(modules, 'text');
 };
 
-Template.participatePage.onCreated(function() {
+Template.participate.onCreated(function() {
   this.subscribe('images', this.data._id);
 });
 
-Template.participatePage.helpers({
+Template.participate.helpers({
   photoChosen: function() {
     return photoChosenLocal(this);
   },
@@ -30,7 +30,7 @@ Template.participatePage.helpers({
   }
 });
 
-Template.participatePage.events({
+Template.participate.events({
   'submit form': function(event, template) {
     event.preventDefault();
 

@@ -42,3 +42,9 @@ let foo = "bar";
 // good
 let foo = 'bar'
 ```
+
+### Template Naming
+Try to fit template names into namespaces describing their functionality and what pages/routes they show up on.
+For example, any component that shows up underneath the `home` template should be named `home_component`. Be
+descriptive with names; prefer full words over brevity. Don't include `page` at the end, unless it would be ambigious
+otherwise.

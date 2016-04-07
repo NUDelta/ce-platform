@@ -1,9 +1,9 @@
-Template.resultsPage.onCreated(function() {
+Template.results.onCreated(function() {
   this.subscribe('images', this.data._id);
   this.subscribe('textEntries');
 });
 
-Template.resultsPage.helpers({
+Template.results.helpers({
   photoChosen: function(params) {
     let modules = Experiences.findOne(params._id).modules;
     return _.contains(modules, 'camera');

@@ -1,17 +1,17 @@
-Template.experienceCreator.onCreated(function() {
+Template.creator.onCreated(function() {
 });
 
-Template.experienceCreator.onRendered(function() {
+Template.creator.onRendered(function() {
   Meteor.typeahead.inject();
 });
 
-Template.experienceCreator.helpers({
+Template.creator.helpers({
   categories: function() {
     return _.map(YelpCategories, category => category.title);
   }
 });
 
-Template.experienceCreator.events({
+Template.creator.events({
   'submit form': function(e) {
     e.preventDefault();
     let modules = [];
