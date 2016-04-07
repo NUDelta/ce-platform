@@ -24,9 +24,9 @@ Schema.Profile = new SimpleSchema({
     type: Schema.Qualification,
     label: 'User qualifications',
   },
-  activeExperience: {
-    type: String,
-    label: 'Active experience',
+  activeExperiences: {
+    type: [String],
+    label: 'Active experiences',
     optional: true
   }
 });

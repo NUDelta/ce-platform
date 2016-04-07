@@ -31,8 +31,14 @@ Meteor.methods({
   removeExperience: function(experienceId) {
     Experiences.remove({_id: experienceId});
   },
-  setAllActiveExperiences: function(experienceId) {
-    Meteor.users.update({}, {$set: {'profile.activeExperience': experienceId}}, {multi: true});
+  clearAllActiveExperiences: function() {
+    Meteor.users.update({}, {$set: {'profile.activeExperiences': []}}, {multi: true});
+  },
+  pushToAllActiveExperiences: function(experienceId) {
+    Meteor.users.update({}, {$push: {'profile.activeExperiences': experienceId}}, {multi: true});
+  },
+  removeFromAllActiveExperiences: function(experienceId) {
+    Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
   },
   getExperiences: function(params1 = {}, params2 = {}) {
     return Experiences.find(params1, params2).fetch();
@@ -62,4 +68,4 @@ Meteor.methods({
     });
     return pics
   }
- });
+});
