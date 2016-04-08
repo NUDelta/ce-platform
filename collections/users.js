@@ -28,6 +28,11 @@ Schema.Profile = new SimpleSchema({
     type: [String],
     label: 'Active experiences',
     optional: true
+  },
+  pastIncidents: {
+    type: [String],
+    label: 'Previous incidents the user was notified of',
+    optional: true
   }
 });
 
