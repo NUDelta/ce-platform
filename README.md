@@ -10,27 +10,19 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 ## iOS Build
 - Deploy to Galaxy, Heroku, or start a local server
 - `meteor build <output_dir> --server=<server_location>`
-  - If running a local server, `<server_location>` is `<your_IP_address>:3000` 
+  - If running a local server, `<server_location>` is `<your_IP_address>:3000`
 - Open the xcodeproject that the build generates
 - Build a `.ipa` file with DTR guides using the DeltaLab or Enterprise certificates
 - Distribute your `.ipa` to testers using [diawi.com](www.diawi.com)
 
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
 
-## Style Guide
+## Development Guidelines & Styles
+Please read through and follow these guidelines while contributing code to this project.
 
-Because we're cool and want to be ES6 friendly.
+### Javascript
+Refer to the [Airbnb Javascript style guide](https://github.com/airbnb/javascript). We're fully into ES6, so make sure you're familiar with using `let` over `var`, `() => {}` function shorthand, and so on.
 
-### Variable Declarations
-Use `let` instead of `var`.
-
-```js
-// bad
-var foo = 'bar';
-
-// good
-let foo = 'bar';
-```
 
 ### Quotations
 Use single quotes for Javascript, and double quotes for HTML.
@@ -57,3 +49,6 @@ Sort all imports in this order and into these groups, omitting any groups that d
    `import { Template } from 'meteor/templating'` if you use either of those.
 3. Include files from `imports/`.
 4. If client page `.js` file, include other template components used inside. Do `components/` first, then `partials`.
+
+### Methods
+You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the (Github Repo)[https://github.com/meteor/validated-method/] and the (guide page)[http://guide.meteor.com/methods.html] about this, but be sure to use these.
