@@ -1,3 +1,10 @@
+import './home_profile.html';
+
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+
+import { updateUserExperiences } from '../../api/experiences/methods.js';
+
 Template.home_profile.helpers({
   hasCamera: function() {
     return Meteor.user().profile.qualifications.hasCamera;
@@ -15,6 +22,6 @@ Template.home_profile.events({
         'profile.qualifications.hasCamera': event.currentTarget.camera.checked,
         'profile.qualifications.hasDog': event.currentTarget.dog.checked
       }});
-    Meteor.call('updateUserExperiences', Meteor.userId());
+    updateUserExperiences.call({ userId: Meteor.userId() });
   }
 });

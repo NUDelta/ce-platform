@@ -1,3 +1,16 @@
+import './participate.html';
+
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { Router } from 'meteor/iron:router';
+import { _ } from 'meteor/underscore';
+
+import { Experiences } from '../../api/experiences/experiences.js';
+import { Images } from '../../api/images/images.js';
+import { TextEntries } from '../../api/text-entries/text-entries.js';
+
+import '../components/experience_buttons.js';
+
 let photoChosenLocal = (exp) => {
   let modules = Experiences.findOne(exp._id).modules;
   return _.contains(modules, 'camera');
@@ -61,20 +74,19 @@ Template.participate.events({
           );
           console.log('Image metadata created.');
           alert('We got it!');
-          Router.go('resultsPage', this);
+          Router.go('results', this);
           //let observer = Images.find(imageObj._id).observe({
           //  changed: (newImage, oldImage) => {
           //    if (newImage.isUploaded()) {
           //      observer.stop();
           //      alert('We got it!');
-          //      Router.go('resultsPage', this);
           //    }
           //  }
           //})
         }
       });
     } else {
-      Router.go('resultsPage', this);
+      Router.go('results', this);
     }
   }
 });

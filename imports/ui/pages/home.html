@@ -4,16 +4,21 @@
     {{#if activeExperience}}
     <div class="container">
     </div>
-    <div class="alert alert-info" role="alert">One of your experiences is running right now!<button class="btn btn-primary btn-participate btn-block" href="">Participate</button></div>
+    <div class="alert alert-info" role="alert">
+      One of your experiences is running right now!
+      <button class="btn btn-primary btn-participate btn-block" href="">
+        Participate
+      </button>
+    </div>
     {{/if}}
     <h2>Getting Started</h2>
     <div>
       <h4>1. Update your user profile</h4>
       <i>We'll use this information to provide you with new experiences to subscribe to.</i>
-      {{> profileSettings}}
+      {{> home_profile}}
       <br/>
       <h4>2. Subscribe to experiences that interest you</h4>
-      {{> subscriptions}}
+      {{> home_subscriptions}}
       <h4>3. Wait for an experience to start. We'll notify you when it does!</h4>
     </div>
     {{/if}}

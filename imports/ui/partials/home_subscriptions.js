@@ -1,3 +1,11 @@
+import './home_subscriptions.html';
+
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { _ } from 'meteor/underscore';
+
+import { Experiences } from '../../api/experiences/experiences.js';
+
 Template.home_subscriptions.helpers({
   //look up all experiences, grab requirements, cross-check with user's profile
   //also research JavaScript filter
@@ -23,7 +31,6 @@ Template.home_subscriptions.helpers({
         filtered.push(exp);
       }
     });
-
     return filtered;
   }
 });

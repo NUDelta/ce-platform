@@ -1,13 +1,20 @@
-Template.creator.onCreated(function() {
-});
+import './creator.html';
+
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { Router } from 'meteor/iron:router';
+import { _ } from 'meteor/underscore';
+
+import { Experiences } from '../../api/experiences/experiences.js';
+import { Schema } from '../../api/schema.js';
 
 Template.creator.onRendered(function() {
-  Meteor.typeahead.inject();
+  Meteor.typeahead.inject(); // require import?
 });
 
 Template.creator.helpers({
   categories: function() {
-    return _.map(YelpCategories, category => category.title);
+    return _.map(Schema.YelpCategories, category => category.title);
   }
 });
 
@@ -18,7 +25,7 @@ Template.creator.events({
     let requirements = [];
     let email = '';
     let name = $(e.target).find('[name=name]').val();
-    let location = _.find(YelpCategories, (category) => {
+    let location = _.find(Schema.YelpCategories, (category) => {
       return category.title == e.target.location.value;
     });
 
@@ -58,7 +65,7 @@ Template.creator.events({
         Experiences.update({ _id: experience._id }, {
           $set: {startText: email}
         });
-        Router.go('participatePage', experience);
+        Router.go('participate', experience);
       }
     });
 

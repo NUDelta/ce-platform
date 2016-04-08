@@ -48,3 +48,12 @@ Try to fit template names into namespaces describing their functionality and wha
 For example, any component that shows up underneath the `home` template should be named `home_component`. Be
 descriptive with names; prefer full words over brevity. Don't include `page` at the end, unless it would be ambigious
 otherwise.
+
+### Ordering / Grouping Imports
+Sort all imports in this order and into these groups, omitting any groups that don't exist.
+
+1. If client page `.js` file, include the matching `html` file. Do not include `html` files in any files except the relevant `.js` one..
+2. Include Meteor packages, starting with `import { Meteor } from 'meteor/meteor'`, followed by
+   `import { Template } from 'meteor/templating'` if you use either of those.
+3. Include files from `imports/`.
+4. If client page `.js` file, include other template components used inside. Do `components/` first, then `partials`.

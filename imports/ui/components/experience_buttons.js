@@ -1,4 +1,9 @@
-Template.experienceButton.events({
+import './experience_buttons.html';
+
+import { Template } from 'meteor/templating';
+import { Cerebro } from 'meteor/collectiveexperiences:cerebro';
+
+Template.experienceButtons.events({
   'click .start-btn': function(e) {
     e.preventDefault();
     Cerebro.notify(this._id, `Event "${this.name}" is starting!`, this.startText);
