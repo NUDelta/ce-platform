@@ -49,6 +49,17 @@ Meteor.methods({
   getSubscriptions: function(userId) {
     return Meteor.users.findOne(userId, { fields: { 'profile.subscriptions': 1 }});
   },
+  insertIncident: function(name, experienceId, launcher) {
+    Incidents.insert({
+      date: Date.parse(new Date()),
+      name: name,
+      experience: experienceId,
+      launcher: launcher,
+    });
+  },
+  setAllIncidents: function(incidentId) {
+    Experiences.update({}, {$set: {'activeIncident': incidentId}});
+  },
   insertPhoto: function(experienceId, picture, title='upload.png') {
     let newFile = new FS.File();
     newFile.attachData(new Buffer(picture, 'base64'), { type: 'image/png' }, function(error) {
@@ -61,6 +72,7 @@ Meteor.methods({
     });
     return picture;
   },
+
   getPhotos: function(experienceId) {
     let pics = [];
     Images.find({experience: experienceId}).forEach((pic) => {

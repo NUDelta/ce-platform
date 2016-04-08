@@ -9,6 +9,9 @@ let textChosenLocal = (exp) => {
 };
 
 Template.participatePage.onCreated(function() {
+  console.log(this.data);
+  this.subscribe('experiences', this.data._id);
+  this.subscribe('incidents');
   this.subscribe('images', this.data._id);
 });
 
@@ -33,19 +36,18 @@ Template.participatePage.helpers({
 Template.participatePage.events({
   'submit form': function(event, template) {
     event.preventDefault();
-
     let image = {},
-        textEntry = {},
-        isPhoto = photoChosenLocal(this),
-        isText = textChosenLocal(this),
-        captionText;
-
+    textEntry = {},
+    isPhoto = photoChosenLocal(this),
+    isText = textChosenLocal(this),
+    captionText;
     if (isText) {
       captionText = event.target.write.value || '';
       textEntry = {
         submitter: Meteor.userId(),
         text: captionText,
-        experience: this._id
+        experience: this._id,
+        incident: this.activeIncident
       };
       TextEntries.insert(textEntry);
     }
@@ -57,11 +59,11 @@ Template.participatePage.events({
           alert(error);
         } else {
           Images.update(imageObj._id,
-            { $set : { experience: this._id, caption: captionText } }
-          );
+            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident } }
+            );
           console.log('Image metadata created.');
           alert('We got it!');
-          Router.go('resultsPage', this);
+          Router.go('resultsPage', {_id: this.activeIncident});
           //let observer = Images.find(imageObj._id).observe({
           //  changed: (newImage, oldImage) => {
           //    if (newImage.isUploaded()) {
@@ -71,10 +73,10 @@ Template.participatePage.events({
           //    }
           //  }
           //})
-        }
-      });
+    }
+  });
     } else {
-      Router.go('resultsPage', this);
+      Router.go('resultsPage', {_id: this.activeIncident});
     }
   }
 });

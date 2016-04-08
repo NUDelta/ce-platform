@@ -10,9 +10,9 @@ Meteor.publish('textEntries', function() {
   return TextEntries.find();
 });
 
-Meteor.publish('images', function(experienceId) {
-  if (experienceId) {
-    return Images.find({ experience: experienceId });
+Meteor.publish('images', function(incidentId) {
+  if (incidentId) {
+    return Images.find({ incident: incidentId });
   } else {
     return Images.find();
   }
@@ -20,4 +20,8 @@ Meteor.publish('images', function(experienceId) {
 
 Meteor.publish('locations', function() {
   return Locations.find();
+});
+
+Meteor.publish('incidents', function () {
+  return Incidents.find();
 });

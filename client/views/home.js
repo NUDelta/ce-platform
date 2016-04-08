@@ -6,7 +6,8 @@ Template.home.helpers({
 
 Template.activeExperience.events({
   'click .btn-participate': function () {
-    Router.go('participatePage', {_id: this});
+    incidentId = Experiences.findOne({_id: this.toString()}).activeIncident;
+    Router.go('participatePage', {_id: incidentId});
   }
 });
 

@@ -33,5 +33,10 @@ Experiences.attachSchema(new SimpleSchema({
     label: 'Desired location of participants',
     optional: true,
     allowedValues: _.map(YelpCategories, category => category.alias)
+  },
+  activeIncident: {
+    type: String,
+    label: 'The current incident for this experience',
+    optional: true
   }
 }));

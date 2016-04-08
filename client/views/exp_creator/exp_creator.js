@@ -47,7 +47,8 @@ Template.experienceCreator.events({
       modules: modules,
       startText: email,
       requirements: requirements,
-      location: location
+      location: location,
+      activeIncident: null
     };
 
     experience._id = Experiences.insert(experience, (err, res) => {
