@@ -24,7 +24,8 @@ Template.creator.events({
     let modules = [];
     let requirements = [];
     let email = '';
-    let name = $(e.target).find('[name=name]').val();
+    let name = e.target.name.value;
+    let desc = e.target.desc.value;
     let location = _.find(Schema.YelpCategories, (category) => {
       return category.title == e.target.location.value;
     });
@@ -35,21 +36,21 @@ Template.creator.events({
       location = '';
     }
 
-    if ($('#photo').is(':checked')) {
+    if (e.target.photo.checked) {
       modules.push('camera');
       email = 'Get your camera ready because it\'s time to post a picture for ' + name + '.';
       requirements[0] = 'hasCamera'
     } else {
-      email = 'The ' + name + ' experience is starting. ' + $(e.target).find('[name=desc]').val();
+      email = 'The ' + name + ' experience is starting. ' + desc;
     }
 
-    if ($('#text-entry').is(':checked')) {
+    if (e.target.text.checked) {
       modules.push('text');
     }
 
     let experience = {
       name: name,
-      description: $(e.target).find('[name=desc]').val(),
+      description: desc,
       author: Meteor.userId(),
       modules: modules,
       startText: email,
@@ -57,14 +58,10 @@ Template.creator.events({
       location: location
     };
 
-    experience._id = Experiences.insert(experience, (err, res) => {
+    Experiences.insert(experience, (err, res) => {
       if (err) {
         alert(err);
       } else {
-        //email += ' Follow this <a href="http://localhost:3000/participate/' + experience._id + '">link</a></p>'
-        Experiences.update({ _id: experience._id }, {
-          $set: {startText: email}
-        });
         Router.go('participate', experience);
       }
     });
