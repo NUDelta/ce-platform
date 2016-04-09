@@ -55,10 +55,11 @@ Template.creator.events({
       modules: modules,
       startText: email,
       requirements: requirements,
-      location: location
+      location: location,
+      activeIncident: null
     };
 
-    Experiences.insert(experience, (err, res) => {
+    experience._id = Experiences.insert(experience, (err, res) => {
       if (err) {
         alert(err);
       } else {

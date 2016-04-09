@@ -8,13 +8,20 @@ import '../partials/home_profile.js';
 import '../partials/home_subscriptions.js';
 
 Template.home.helpers({
-  activeExperience: function () {
-    return Meteor.users.findOne({_id: Meteor.userId()}).profile.activeExperience;
+  activeExperiences: function () {
+    return Meteor.users.findOne({_id: Meteor.userId()}).profile.activeExperiences;
   }
 });
 
-Template.home.events({
+Template.activeExperience.events({
   'click .btn-participate': function () {
-    Router.go('participate', {_id: Meteor.users.findOne({_id: Meteor.userId()}).profile.activeExperience});
+    incidentId = Experiences.findOne({_id: this.toString()}).activeIncident;
+    Router.go('participatePage', {_id: incidentId});
+  }
+});
+
+Template.activeExperience.helpers({
+  name: function () {
+    return Experiences.findOne(this.toString()).name;
   }
 });

@@ -42,14 +42,14 @@ Router.route('/create', {
 Router.route('/participate/:_id', {
   name: 'participate',
   data: function() { return Experiences.findOne(this.params._id); },
-  waitOn: function() { return Meteor.subscribe('experiences', this.params._id); }
+  waitOn: function() { return Meteor.subscribe('experiences'); }
 });
 
 Router.route('/results/:_id', {
   name: 'results',
   layoutTemplate: 'spreadLayout',
-  data: function() { return Experiences.findOne(this.params._id); },
-  waitOn: function() { return Meteor.subscribe('experiences', this.params._id); }
+  data: function() { return Incidents.findOne(this.params._id); },
+  waitOn: function() { return [Meteor.subscribe('incidents'), Meteor.subscribe('experiences')]; }
 });
 
 Router.route('/archive', {

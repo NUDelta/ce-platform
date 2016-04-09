@@ -14,17 +14,17 @@ Template.results.onCreated(function() {
 
 Template.results.helpers({
   photoChosen: function(params) {
-    let modules = Experiences.findOne(params._id).modules;
+    let modules = Experiences.findOne(this.experience).modules;
     return _.contains(modules, 'camera');
   },
   textChosen: function(params) {
-    let modules = Experiences.findOne(params._id).modules;
+    let modules = Experiences.findOne(this.experience).modules;
     return _.contains(modules, 'text');
   },
   images: function(params) {
-    return Images.find({ experience: params._id });
+    return Images.find({ incident: params._id });
   },
   textEntries: function(params) {
-    return TextEntries.find({ experience: params._id });
+    return TextEntries.find({ incident: params._id });
   }
 });
