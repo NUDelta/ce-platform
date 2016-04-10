@@ -33,3 +33,9 @@ Template.experienceButtons.events({
     alert(`Sent ${this.name}`);
   }
 });
+
+Template.experienceButtons.helpers({
+  isRunning: function () {
+    return this.activeIncident;
+  }
+});

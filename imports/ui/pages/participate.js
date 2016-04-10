@@ -23,7 +23,6 @@ let textChosenLocal = (exp) => {
 };
 
 Template.participate.onCreated(function() {
-  console.log(this.data);
   this.subscribe('experiences', this.data._id);
   this.subscribe('incidents');
   this.subscribe('images', this.data._id);
@@ -50,7 +49,6 @@ Template.participate.helpers({
 Template.participate.events({
   'submit form': function(event, template) {
     event.preventDefault();
-    console.log(this);
     let image = {},
     textEntry = {},
     isPhoto = photoChosenLocal(this),
@@ -64,8 +62,7 @@ Template.participate.events({
         experience: this._id,
         incident: this.activeIncident
       };
-      let id = TextEntries.insert(textEntry);
-      console.log(TextEntries.findOne(id));
+      TextEntries.insert(textEntry);
     }
 
     if (isPhoto) {
