@@ -4,6 +4,10 @@
   {{> active_experience}}
   {{/each}}
   <h4>You'll get a notification when an experience starts!</h4>
+  <h4>Results from past experiences:</h4>
+  {{#each pastIncidents}}
+    {{> resultLink }}
+  {{/each}}
 <!--   <h2>Getting Started</h2>
   <div>
     <h4>1. Update your user profile</h4>

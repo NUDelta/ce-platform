@@ -21,7 +21,7 @@ Router.configure({
 
 Router.route('/', {
   name: 'home',
-  waitOn: function() { return Meteor.subscribe('experiences'); }
+  waitOn: function() { return [Meteor.subscribe('experiences'), Meteor.subscribe('incidents')]; }
 });
 
 Router.route('/admin', {
