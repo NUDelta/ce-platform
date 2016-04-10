@@ -1,4 +1,8 @@
-Incidents = new Mongo.Collection('incidents');
+import { Mongo } from 'meteor/mongo';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Schema } from '../schema.js';
+
+export const Incidents = new Mongo.Collection('incidents');
 
 Incidents.attachSchema(new SimpleSchema({
   experience: {

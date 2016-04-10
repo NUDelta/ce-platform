@@ -18,6 +18,10 @@ Schema.TextEntry = new SimpleSchema({
     type: String,
     label: 'Comment experience',
     regEx: SimpleSchema.RegEx.Id
+  },
+  incident: {
+    type: String,
+    label: 'Incident',
   }
 });
 

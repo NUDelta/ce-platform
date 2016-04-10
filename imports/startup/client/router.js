@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Router } from 'meteor/iron:router';
 import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
 
 import '../../ui/layout/header.js';
 import '../../ui/layout/layout.js';
@@ -49,7 +50,7 @@ Router.route('/results/:_id', {
   name: 'results',
   layoutTemplate: 'spreadLayout',
   data: function() { return Incidents.findOne(this.params._id); },
-  waitOn: function() { return [Meteor.subscribe('incidents'), Meteor.subscribe('experiences')]; }
+  waitOn: function() { return [Meteor.subscribe('experiences'), Meteor.subscribe('incidents')]; }
 });
 
 Router.route('/archive', {

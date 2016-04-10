@@ -50,6 +50,7 @@ Template.participate.helpers({
 Template.participate.events({
   'submit form': function(event, template) {
     event.preventDefault();
+    console.log(this);
     let image = {},
     textEntry = {},
     isPhoto = photoChosenLocal(this),
@@ -63,7 +64,8 @@ Template.participate.events({
         experience: this._id,
         incident: this.activeIncident
       };
-      TextEntries.insert(textEntry);
+      let id = TextEntries.insert(textEntry);
+      console.log(TextEntries.findOne(id));
     }
 
     if (isPhoto) {

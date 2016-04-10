@@ -45,3 +45,17 @@ export const getSubscriptions = new ValidatedMethod({
     return Meteor.users.findOne(userId, { fields: { 'profile.subscriptions': 1 }});
   }
 });
+
+export const removeFromAllActiveExperiences = new ValidatedMethod({
+  name: 'users.removeFromAllActiveExperiences',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+    
+  }).validator(),
+  run({ experienceId }) {
+    return Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
+  }
+});

@@ -1,5 +1,7 @@
 import '../../api/experiences/server/publications.js';
 import '../../api/experiences/methods.js';
+import '../../api/incidents/server/publications.js';
+import '../../api/incidents/methods.js';
 import '../../api/images/server/publications.js';
 import '../../api/images/methods.js';
 import '../../api/text-entries/server/publications.js';

@@ -1,7 +1,7 @@
 <template name="home">
   {{#if currentUser}}
   {{#each activeExperiences}}
-  {{> activeExperience}}
+  {{> active_experience}}
   {{/each}}
   <h4>You'll get a notification when an experience starts!</h4>
 <!--   <h2>Getting Started</h2>
@@ -16,10 +16,4 @@
   </div> -->
 
   {{/if}}
-</template>
-
-<template name="activeExperience">
-  <div class="alert alert-info" role="alert"><strong>{{name}}</strong> is running right now!
-    <button class="btn btn-primary btn-participate btn-block" href="">Participate</button>
-  </div>
 </template>
