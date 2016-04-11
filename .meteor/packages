@@ -32,7 +32,6 @@ aldeed:collection2
 raix:push
 browser-policy
 collectiveexperiences:location-engine
-collectiveexperiences:cerebro
 sergeyt:typeahead
 dburles:google-maps
 accounts-ui
@@ -40,3 +39,7 @@ standard-minifier-css
 standard-minifier-js
 mdg:validated-method
 fourseven:scss
+oauth
+nooitaf:colors
+percolate:synced-cron
+oauth1

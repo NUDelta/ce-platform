@@ -1,3 +1,5 @@
+import '../../api/cerebro/server/cerebro-server.js';
+import '../../api/cerebro/server/methods.js';
 import '../../api/experiences/server/publications.js';
 import '../../api/experiences/methods.js';
 import '../../api/incidents/server/publications.js';
