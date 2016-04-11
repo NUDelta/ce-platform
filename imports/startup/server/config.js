@@ -7,7 +7,6 @@ Cerebro.NOTIFY_ALL = true;
 Cerebro.NOTIFY_METHOD = Cerebro.PUSH;
 Cerebro.setExperiences(Experiences);
 
-
 //Cerebro.DEBUG_PUSH = true;
 //Cerebro.DEBUG_USERS = [ 'pTeAq958AvmvMvF7e', 'mr9qe4nRHQn8KufLX', 'BvYfcgvJ7yDETLjME' ];
 

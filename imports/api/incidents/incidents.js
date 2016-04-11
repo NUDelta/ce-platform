@@ -20,6 +20,6 @@ Incidents.attachSchema(new SimpleSchema({
   launcher: {
     type: String,
     label: 'Launcher user id',
-    // regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id
   }
 }));

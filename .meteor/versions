@@ -98,6 +98,7 @@ modules-runtime@0.6.2
 mongo@1.1.6
 mongo-id@1.0.3
 mongo-livedata@1.0.11
+nooitaf:colors@0.0.3
 npm-bcrypt@0.7.8_2
 npm-mongo@1.4.42
 oauth@1.1.9

@@ -23,7 +23,7 @@ export const insertIncident = new ValidatedMethod({
       date: Date.parse(new Date()),
       name: name,
       experience: experience,
-      launcher: launcher,
+      launcher: launcher
     }, function(error, id) {
       if (error) {
         console.log(error);

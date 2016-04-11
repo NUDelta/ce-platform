@@ -17,16 +17,16 @@ Schema.Profile = new SimpleSchema({
   experiences: {
     type: [String],
     label: 'Eligible experiences',
-    regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id
   },
   subscriptions: {
     type: [String],
     label: 'Subscribed experiences',
-    regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id
   },
   qualifications: {
     type: Schema.Qualification,
-    label: 'User qualifications',
+    label: 'User qualifications'
   },
   activeExperiences: {
     type: [String],

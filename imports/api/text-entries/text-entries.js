@@ -21,7 +21,7 @@ Schema.TextEntry = new SimpleSchema({
   },
   incident: {
     type: String,
-    label: 'Incident',
+    label: 'Incident'
   }
 });
 

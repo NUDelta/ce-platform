@@ -12,7 +12,7 @@ Schema.Experience = new SimpleSchema({
   author: {
     type: String,
     label: 'Author user id',
-    // regEx: SimpleSchema.RegEx.Id // leaing out for test cases
+    regEx: SimpleSchema.RegEx.Id
   },
   description: {
     type: String,
