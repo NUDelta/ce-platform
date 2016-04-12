@@ -1,7 +1,7 @@
 import './layout.html';
 
 import { Template } from 'meteor/templating';
-import { LocationManager } from 'meteor/collectiveexperiences:location-engine';
+import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 Template.layout.onRendered(function() {
   function addTransform(location) {

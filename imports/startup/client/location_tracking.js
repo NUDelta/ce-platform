@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { BackgroundLocation } from 'meteor/mirrorcell:background-geolocation-plus';
-import { LocationManager } from 'meteor/collectiveexperiences:location-engine';
+
+import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 if (Meteor.isCordova) {
   Meteor.startup(function() {
@@ -20,7 +21,10 @@ if (Meteor.isCordova) {
     //this is where location objects will be sent in the background
     BackgroundLocation.registerForLocationUpdates(function (location) {
       console.log("We got a Background Update" + JSON.stringify(location));
-      LocationManager.updateUserLocation(location);
+      LocationManager.updateUserLocation({
+        lat: location.latitude,
+        lng: location.longitude
+      });
     }, function (err) {
       console.log("Error: Didnt get an update", err);
     });

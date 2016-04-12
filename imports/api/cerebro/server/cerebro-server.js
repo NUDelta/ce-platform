@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 import { Push } from 'meteor/raix:push';
-import { LocationManager } from 'meteor/collectiveexperiences:location-engine';
 
+import { LocationManager } from '../../locations/server/location-manager-server.js';
 import { CerebroCore } from '../cerebro-core.js';
 
 let auth = {

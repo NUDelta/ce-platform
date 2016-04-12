@@ -2,7 +2,9 @@ import './admin_locations.html';
 
 import { Template } from 'meteor/templating';
 import { GoogleMaps } from 'meteor/dburles:google-maps'; // check this import
-import { Locations, LocationManager } from 'meteor/collectiveexperiences:location-engine';
+
+import { Locations } from '../../api/locations/locations.js';
+import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 Template.admin_locations.onCreated(function() {
   this.subscribe('locations');

@@ -31,7 +31,6 @@ ejson
 aldeed:collection2
 raix:push
 browser-policy
-collectiveexperiences:location-engine
 sergeyt:typeahead
 dburles:google-maps
 accounts-ui
@@ -44,3 +43,4 @@ nooitaf:colors
 percolate:synced-cron
 oauth1
 mirrorcell:background-geolocation-plus
+mdg:geolocation
