@@ -22,6 +22,14 @@ Schema.TextEntry = new SimpleSchema({
   incident: {
     type: String,
     label: 'Incident'
+  },
+  lat: {
+    type: String,
+    label: 'Latitude'
+  },
+  lng: {
+    type: String,
+    label: 'Longitude'
   }
 });
 

@@ -1,20 +1,21 @@
 <template name="results">
   {{#if photoChosen this}}
-  <h3>Check out everyone's pictures for {{name}}</h3>
-  <div class="row">
-    {{#each images this}}
-    <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
-      <img class="square img-responsive" src="{{url}}" alt="">
-      <p>{{caption}}</p>
+    <h3>Check out everyone's pictures for {{name}}</h3>
+    <div class="row">
+      {{#each images this}}
+        <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
+          <img class="square img-responsive" src="{{url}}" alt="">
+          <p>{{caption}}</p>
+          <p>Submitted from ({{lat}}, {{lng}})</p>
+        </div>
+      {{/each}}
     </div>
-    {{/each}}
-  </div>
   {{else}}
-  <h3>Here's what everyone wrote for {{name}}</h3>
-  <br/>
-  {{#each textEntries this}}
-  <p>"{{text}}"</p>
-  {{/each}}
+    <h3>Here's what everyone wrote for {{name}}</h3>
+    <br/>
+    {{#each textEntries this}}
+      <p>"{{text}}" ...submitted from ({{lat}}, {{lng}})</p>
+    {{/each}}
   {{/if}}
   <a href="{{pathFor 'participate' this}}">Back to upload</a>
 </template>

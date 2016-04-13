@@ -9,6 +9,7 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
+import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 import '../components/experience_buttons.js';
 
@@ -54,14 +55,21 @@ Template.participate.events({
     isPhoto = photoChosenLocal(this),
     isText = textChosenLocal(this),
     captionText;
+
+    let loc = LocationManager.currentLocation();
+    let lat = loc.lat;
+    let lng = loc.lng;
     if (isText) {
       captionText = event.target.write.value || '';
       textEntry = {
         submitter: Meteor.userId(),
         text: captionText,
         experience: this._id,
-        incident: this.activeIncident
+        incident: this.activeIncident,
+        lat: lat,
+        lng: lng
       };
+      console.log(textEntry);
       TextEntries.insert(textEntry);
     }
 
@@ -72,7 +80,7 @@ Template.participate.events({
           alert(error);
         } else {
           Images.update(imageObj._id,
-            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident } }
+            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident, lat: lat, lng: lng } }
             );
           console.log('Image metadata created.');
           alert('We got it!');
