@@ -149,3 +149,27 @@ export const scheduleNotifications = new ValidatedMethod({
   }
 });
 
+export const startChain = new ValidatedMethod({
+  name: 'cerebro.startChain',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    },
+    subject: {
+      type: String,
+      optional: true
+    },
+    text: {
+      type: String,
+      optional: true
+    },
+    appendIncident: {
+      type: Boolean
+    }
+  }).validator(),
+  run({ experienceId, subject, text, appendIncident }) {
+    let chain = [];
+  }
+});
+

@@ -39,6 +39,10 @@ CerebroClient = class CerebroClient extends CerebroCore {
       }
     });
   }
+
+  startChain(experienceId, subject, text, appendIncident) {
+
+  }
 };
 
 export const Cerebro = new CerebroClient();
