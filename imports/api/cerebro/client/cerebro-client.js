@@ -23,13 +23,14 @@ CerebroClient = class CerebroClient extends CerebroCore {
     });
   }
 
-  scheduleNotifications(experienceId, subject, text) {
+  scheduleNotifications(experienceId, subject, text, appendIncident) {
     let schedule = 'every 1 mins';
     Meteor.call('cerebro.scheduleNotifications', {
       experienceId: experienceId,
       subject: subject,
       text: text,
-      schedule: schedule
+      schedule: schedule,
+      appendIncident: appendIncident
     }, (err, res) => {
       if (err) {
         console.log('error', err);

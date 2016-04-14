@@ -81,9 +81,12 @@ export const scheduleNotifications = new ValidatedMethod({
     },
     schedule: {
       type: String
+    },
+    appendIncident: {
+      type: Boolean
     }
   }).validator(),
-  run({ experienceId, subject, text, schedule }) {
+  run({ experienceId, subject, text, schedule, appendIncident }) {
     let n = 0,
       server = this,
       usersReached = [],
@@ -107,7 +110,6 @@ export const scheduleNotifications = new ValidatedMethod({
       job: function() {
         log.job(`Starting job ${n} for ${experienceId}`);
         n += 1;
-        // ugly hack I think....
         if (n === 60) {
           SyncedCron.remove(name);
         }
@@ -130,11 +132,16 @@ export const scheduleNotifications = new ValidatedMethod({
           delete query.profile;
         }
 
-        let newUsers = Meteor.users.find(query, { fields: { _id: 1, emails: 1 }});
+        const newUsers = Meteor.users.find(
+          query,
+          { fields: { _id: 1, emails: 1 }}
+        ).fetch().map(user => user._id);
         Cerebro.notify(newUsers, server, subject, text, 'participate');
-        newUsers.forEach((user) => {
-          usersReached.push(user._id);
-        });
+        if (appendIncident) {
+          Meteor.users.update({_id: {$in: newUsers}}, {$push: {'profile.pastIncidents': experience.activeIncident}}, {multi: true});
+        }
+        usersReached.push(...newUsers);
+
         log.job(`Completed job ${n} for ${experienceId}`);
         return n;
       }

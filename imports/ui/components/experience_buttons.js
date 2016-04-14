@@ -14,16 +14,19 @@ import { insertIncident } from '../../api/incidents/methods.js';
 Template.experienceButtons.events({
   'click .start-btn': function(e) {
     e.preventDefault();
-    let experienceId = this._id;
-    let callParams = {id: this._id, name: this.name, text: this.startText};
-    insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, function() {
+    const callParams = {id: this._id, name: this.name, text: this.startText};
+    insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
       Cerebro.notify(callParams.id, `Event "${callParams.name}" is starting!`, callParams.text, true, 'participate');
     });
     alert(`Sent ${this.name}`);
   },
   'click .schedule-btn': function(e) {
     e.preventDefault();
-    Cerebro.scheduleNotifications(this._id, `Event "${this.name}" is starting!`);
+
+    insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
+      Cerebro.scheduleNotifications(this._id, `Event "${this.name}" is starting!`, this.startText, true);
+    });
+    alert(`Notifications scheduled for ${ this.name }`);
   },
   'click .end-btn': function(e) {
     e.preventDefault();
