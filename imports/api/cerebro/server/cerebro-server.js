@@ -4,6 +4,7 @@ import { Push } from 'meteor/raix:push';
 
 import { LocationManager } from '../../locations/server/location-manager-server.js';
 import { CerebroCore } from '../cerebro-core.js';
+import { log } from '../../logs.js';
 
 let auth = {
   oauth_consumer_key: "-_zoLpC8DASmu7ql13IQIw",
@@ -20,17 +21,17 @@ CerebroServer = class CerebroServer extends CerebroCore {
     this.DEBUG_USERS = [];
   }
 
-  notify(users, server, subject, text, experienceId) {
+  notify(users, server, subject, text, experienceId, route) {
     // this needs refactoring into cerebro base
     switch(this.NOTIFY_METHOD) {
       case CerebroCore.EMAIL:
         this._sendEmails(users, server, subject, text);
         break;
       case CerebroCore.PUSH:
-        this._sendPush(users, server, subject, text, experienceId);
+        this._sendPush(users, server, subject, text, experienceId, route);
         break;
       default:
-        console.log('[CEREBRO-SERVER] Invalid notification method was set.');
+        log.warn('Invalid notification method set');
         break;
     }
   }
@@ -49,8 +50,8 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  _sendPush(users, server, subject, text, experienceId) {
-    console.log('[CEREBRO-SERVER] Sending push notifications.');
+  _sendPush(users, server, subject, text, experienceId, route) {
+    log.cerebro('Sending push notifications');
     let userIds = _.map(users, user => user._id);
     if (this.DEBUG_PUSH) {
       userIds = this.DEBUG_USERS;
@@ -59,12 +60,14 @@ CerebroServer = class CerebroServer extends CerebroCore {
       from: 'push',
       title: subject,
       text: text,
-      badge: 1, // TODO: not sure what this is
+      badge: 1,
       sound: 'airhorn.caf',
       payload: {
         title: subject,
         text: text,
-        historyId: 'result'
+        historyId: 'result',
+        experienceId: experienceId,
+        route: route
       },
       query: {
         userId: { $in: userIds }
@@ -77,6 +80,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   _broadcastPush(subject, text) {
+    log.cerebro('Broadcasting push notifications');
     Push.send({
       from: 'push',
       title: subject,
@@ -95,7 +99,9 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   _addActiveExperience(userId, experienceId) {
-    Meteor.users.update({_id: userId}, {$push: {'profile.activeExperiences': experienceId}}, {multi: true});
+    Meteor.users.update({ _id: userId },
+      { $push: { 'profile.activeExperiences': experienceId } },
+      { multi: true });
   }
 
   liveQuery(locationType, options = {}) {

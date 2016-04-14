@@ -17,7 +17,7 @@ Template.experienceButtons.events({
     let experienceId = this._id;
     let callParams = {id: this._id, name: this.name, text: this.startText};
     insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, function() {
-      Cerebro.notify(callParams.id, `Event "${callParams.name}" is starting!`, callParams.text, true);
+      Cerebro.notify(callParams.id, `Event "${callParams.name}" is starting!`, callParams.text, true, 'participate');
     });
     alert(`Sent ${this.name}`);
   },
@@ -28,7 +28,7 @@ Template.experienceButtons.events({
   'click .end-btn': function(e) {
     e.preventDefault();
     let endEmailText = '<p>The experience has ended. Thanks for participating! Click <a href="http://localhost:3000/results/' + this._id + '">this link</a> to see the results.</p>';
-    Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false);
+    Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false, 'results');
     removeFromAllActiveExperiences.call({ experienceId: this._id});
     Experiences.update({_id: this._id}, {$set: {'activeIncident': null}});
     alert(`Sent ${this.name}`);

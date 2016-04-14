@@ -1,9 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Cerebro } from './cerebro-server.js';
 import { Experiences } from '../../experiences/experiences.js';
+import { log } from '../../logs.js';
 
 export const notify = new ValidatedMethod({
   name: 'cerebro.notify',
@@ -22,30 +24,33 @@ export const notify = new ValidatedMethod({
     },
     appendIncident: {
       type: Boolean
+    },
+    route: {
+      type: String
     }
   }).validator(),
-  run({ experienceId, subject, text, appendIncident }) {
+  run({ experienceId, subject, text, appendIncident, route }) {
     let experience = Experiences.findOne(experienceId),
         query;
     subject = subject || experience.name;
     text = text || experience.startText;
 
     if (experience.location) {
-      console.log(`[CEREBRO-CORE] Notifying users for experience ${experience.name} in ${experience.location}`);
+      log.cerebro(`Notifying users for experience "${ experience.name }" in ${ experience.location }`);
       let atLocation = Cerebro.liveQuery(experience.location);
       query = {
         'profile.subscriptions': experienceId,
         _id: { $in: atLocation }
       };
     } else {
-      console.log(`[CEREBRO-CORE] Notifying users for experience ${experience.name}. No location detected, so notifying everyone.`);
+      log.cerebro(`Notifying users for experience "${ experience.name }". No location detected, so notifying everyone.`);
       query = {
         'profile.subscriptions': experienceId
       };
     }
 
     if (Cerebro.NOTIFY_ALL) {
-      console.log('[CEREBRO-CORE] Debug enabled. Ignoring user subscriptions.');
+      log.info('Debug enabled. Ignoring user subscriptions.');
       delete query['profile.subscriptions'];
     }
 
@@ -54,7 +59,7 @@ export const notify = new ValidatedMethod({
     if (appendIncident) {
       Meteor.users.update({_id: {$in: userIds}}, {$push: {'profile.pastIncidents': experience.activeIncident}}, {multi: true});
     }
-    Cerebro.notify(users, this, subject, text, experienceId);
+    Cerebro.notify(users, this, subject, text, experienceId, route);
 
   }
 });
@@ -85,21 +90,22 @@ export const scheduleNotifications = new ValidatedMethod({
       experience = Experiences.findOne(experienceId),
       name = `Notifying users for experience ${experienceId}`;
 
+    log.cerebro(`Scheduling notifications for users for experience "${ experience.name }" in ${ experience.location }`);
+
     subject = subject || experience.name;
     text = text || experience.startText;
 
-    console.log(`[CEREBRO-CORE] Notifying users for experience ${experience.name} in ${experience.location}`);
-    // only allow one job per experienceId
-    SyncedCron.remove(name);
+
     // TODO: Cron jobs aren't really the way to do this.
     // Try to send signal to devices to report back to us.
+    SyncedCron.remove(name);
     SyncedCron.add({
       name: name,
       schedule: function(parser) {
         return parser.text(schedule);
       },
       job: function() {
-        console.log(`Starting job ${n} for ${experienceId}`);
+        log.job(`Starting job ${n} for ${experienceId}`);
         n += 1;
         // ugly hack I think....
         if (n === 60) {
@@ -125,11 +131,11 @@ export const scheduleNotifications = new ValidatedMethod({
         }
 
         let newUsers = Meteor.users.find(query, { fields: { _id: 1, emails: 1 }});
-        Cerebro.notify(newUsers, server, subject, text);
+        Cerebro.notify(newUsers, server, subject, text, 'participate');
         newUsers.forEach((user) => {
           usersReached.push(user._id);
         });
-        console.log(`Completed job ${n} for ${experienceId}`);
+        log.job(`Completed job ${n} for ${experienceId}`);
         return n;
       }
     });

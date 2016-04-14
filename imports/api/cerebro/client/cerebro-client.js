@@ -7,12 +7,13 @@ CerebroClient = class CerebroClient extends CerebroCore {
     super();
   }
 
-  notify(experienceId, subject, text, appendIncident) {
+  notify(experienceId, subject, text, appendIncident, route) {
     Meteor.call('cerebro.notify', {
       experienceId: experienceId,
       subject: subject,
       text: text,
-      appendIncident: appendIncident
+      appendIncident: appendIncident,
+      route: route
     }, (err, res) => {
       if (err) {
         console.log('error', err);

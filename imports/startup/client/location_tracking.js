@@ -17,8 +17,6 @@ if (Meteor.isCordova) {
       useActivityDetection : true // Shuts off GPS when your phone is still, increasing battery life enormously
     });
 
-    //Register a callback for location updates.
-    //this is where location objects will be sent in the background
     BackgroundLocation.registerForLocationUpdates(function (location) {
       console.log("We got a Background Update" + JSON.stringify(location));
       LocationManager.updateUserLocation({
@@ -29,8 +27,6 @@ if (Meteor.isCordova) {
       console.log("Error: Didnt get an update", err);
     });
 
-    //Start the Background Tracker.
-    //When you enter the background tracking will start.
     BackgroundLocation.start();
   });
 }
