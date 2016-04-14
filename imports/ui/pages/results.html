@@ -1,20 +1,45 @@
 <template name="results">
   {{#if photoChosen this}}
     <h3>Check out everyone's pictures for {{name}}</h3>
+    <h5>View only photos from:
+      <select id="pic-dropdown">
+        <option value="anywhere" selected>Anywhere</option>
+        <option value="north-campus">NU North Campus</option>
+        <option value="south-campus">NU South Campus</option>
+        <option value="offcampus-evanston">Off-campus Evanston</option>
+        <option value="greater-chicago">Greater Chicago, IL Area</option>
+        <option value="greater-new-york">Greater New York, NY Area</option>
+        <option value="greater-buffalo">Greater Buffalo,NY Area</option>
+        <option value="greater-st-louis">Greater St. Louis, MO Area</option>
+      </select>
+    </h5>
+    <br/>
     <div class="row">
       {{#each images this}}
         <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
           <img class="square img-responsive" src="{{url}}" alt="">
           <p>{{caption}}</p>
-          <p>Submitted from {{getSubmissionLabel lat lng}}</p>
+          <p>Submitted from {{location}}</p>
         </div>
       {{/each}}
     </div>
   {{else}}
     <h3>Here's what everyone wrote for {{name}}</h3>
+    <h5>View only submissions from:
+      <select id="text-dropdown">
+        <option value="anywhere" selected>Anywhere</option>
+        <option value="north-campus">NU North Campus</option>
+        <option value="south-campus">NU South Campus</option>
+        <option value="offcampus-evanston">Off-campus Evanston</option>
+        <option value="greater-chicago">Greater Chicago, IL Area</option>
+        <option value="greater-new-york">Greater New York, NY Area</option>
+        <option value="greater-buffalo">Greater Buffalo,NY Area</option>
+        <option value="greater-st-louis">Greater St. Louis, MO Area</option>
+      </select>
+    </h5>
     <br/>
     {{#each textEntries this}}
-      <p>"{{text}}" ...submitted from {{getSubmissionLabel lat lng}}</p>
+      <p>"{{text}}" ...submitted from {{location}}</p>
     {{/each}}
   {{/if}}
   <a href="{{pathFor 'participate' this}}">Back to upload</a>
