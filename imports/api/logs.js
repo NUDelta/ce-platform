@@ -2,23 +2,23 @@ import 'meteor/nooitaf:colors';
 
 export const log = {
   debug(message) {
-    console.log(`[debug]: ${ process(message) }`.blue);
+    _log(`[debug]: ${ process(message) }`, 'blue');
   },
 
   info(message) {
-    console.log(`[info]: ${ process(message) }`.green);
+    _log(`[info]: ${ process(message) }`, 'green');
   },
 
   warning(message) {
-    console.log(`[warn]: ${ process(message) }`.yellow);
+    _log(`[warn]: ${ process(message) }`, 'yellow');
   },
 
   job(message) {
-    console.log(`[job]: ${ process(message) }`.magenta);
+    _log(`[job]: ${ process(message) }`, 'magenta');
   },
 
   cerebro(message) {
-    console.log(`[cerebro] ${ process(message) }`.cyan);
+    _log(`[cerebro]: ${ process(message) }`, 'cyan');
   }
 };
 
@@ -30,4 +30,10 @@ function process(message) {
   }
 }
 
-
+function _log(message, color) {
+  if (Meteor.isClient) {
+    console.log(message);
+  } else {
+    console.log(message[color]);
+  }
+}
