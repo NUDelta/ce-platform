@@ -12,7 +12,7 @@ import { removeFromAllActiveExperiences } from '../../api/users/methods.js';
 import { insertIncident } from '../../api/incidents/methods.js';
 
 Template.experienceButtons.events({
-  'click .start-btn': function(e) {
+  'click .start-btn:not(.disabled)': function(e) {
     e.preventDefault();
     const callParams = {id: this._id, name: this.name, text: this.startText};
     insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
@@ -20,7 +20,7 @@ Template.experienceButtons.events({
     });
     alert(`Sent ${this.name}`);
   },
-  'click .schedule-btn': function(e) {
+  'click .schedule-btn:not(.disabled)': function(e) {
     e.preventDefault();
 
     insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
@@ -28,7 +28,7 @@ Template.experienceButtons.events({
     });
     alert(`Notifications scheduled for ${ this.name }`);
   },
-  'click .end-btn': function(e) {
+  'click .end-btn:not(.disabled)': function(e) {
     e.preventDefault();
     const endEmailText = `${ this.name } has ended. Thanks for participating!`;
     Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false, 'results');
