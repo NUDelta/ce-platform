@@ -42,5 +42,7 @@
       <p>"{{text}}" ...submitted from {{location}}</p>
     {{/each}}
   {{/if}}
-  <a href="{{pathFor 'participate' this}}">Back to upload</a>
+  {{#if isActive}}
+    <a href="/participate/{{experience}}">Back to upload</a>
+  {{/if}}
 </template>

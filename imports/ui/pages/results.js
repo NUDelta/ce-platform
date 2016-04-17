@@ -32,6 +32,13 @@ Template.results.helpers({
   },
   textEntries: function(params) {
     return TextEntries.find(Session.get('textFilter'));
+  },
+  experience: function() {
+    return this.experience;
+  },
+  isActive: function() {
+    console.log(Experiences.findOne(this.experience).activeIncident === this._id);
+    return Experiences.findOne(this.experience).activeIncident === this._id;
   }
 });
 
