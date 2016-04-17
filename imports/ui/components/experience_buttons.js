@@ -30,7 +30,7 @@ Template.experienceButtons.events({
   },
   'click .end-btn': function(e) {
     e.preventDefault();
-    let endEmailText = '<p>The experience has ended. Thanks for participating! Click <a href="http://localhost:3000/results/' + this._id + '">this link</a> to see the results.</p>';
+    const endEmailText = `${ this.name } has ended. Thanks for participating!`;
     Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false, 'results');
     removeFromAllActiveExperiences.call({ experienceId: this._id});
     Experiences.update({_id: this._id}, {$set: {'activeIncident': null}});

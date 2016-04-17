@@ -5,7 +5,7 @@
     "cert": "iosGp/apn-prod/cert.pem",
     "gateway": "gateway.push.apple.com"
   },
-  "production":true,
+  "production": true,
   "badge": true,
   "sound": true,
   "alert": true,
