@@ -1,12 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 
+import { log, serverLog } from '../../api/logs.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
-//noinspection JSUnresolvedVariable
 if (Meteor.isCordova) {
   Meteor.startup(() => {
+
     function success(location) {
-      console.log(location);
       LocationManager.updateUserLocation({
         lat: location.latitude,
         lng: location.longitude

@@ -51,7 +51,18 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   _sendPush(users, server, subject, text, experienceId, route) {
+    const payload = {
+      title: subject,
+      text: text,
+      historyId: 'result',
+      experienceId: experienceId,
+      route: route
+
+    };
+
     log.cerebro('Sending push notifications');
+    log.cerebro(payload);
+
     let userIds = _.map(users, user => user._id);
     if (this.DEBUG_PUSH) {
       userIds = this.DEBUG_USERS;
@@ -62,13 +73,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       text: text,
       badge: 1,
       sound: 'airhorn.caf',
-      payload: {
-        title: subject,
-        text: text,
-        historyId: 'result',
-        experienceId: experienceId,
-        route: route
-      },
+      payload: payload,
       query: {
         userId: { $in: userIds }
       }

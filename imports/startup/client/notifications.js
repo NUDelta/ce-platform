@@ -1,16 +1,19 @@
 import { Push } from 'meteor/raix:push';
 import { Router } from 'meteor/iron:router';
 
+import { log, serverLog } from '../../api/logs.js';
+
 Push.addListener('startup', (notification) => {
-  console.log(JSON.stringify(notification));
+
   if (notification.payload.route) {
+    serverLog.call({ message: `Cold start with ${ JSON.stringify(notification.payload) }` });
     Router.go(notification.payload.route, { _id: notification.payload.experienceId });
   }
 });
 
 Push.addListener('message', (notification) => {
-  console.log(JSON.stringify(notification));
   if (notification.payload.route) {
+    serverLog.call({ message: `Hot start with ${ JSON.stringify(notification.payload) }` });
     Router.go(notification.payload.route, { _id: notification.payload.experienceId });
   }
 });

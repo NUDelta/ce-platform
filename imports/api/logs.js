@@ -1,3 +1,6 @@
+import { Meteor } from 'meteor/meteor';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import 'meteor/nooitaf:colors';
 
 export const log = {
@@ -21,6 +24,18 @@ export const log = {
     _log(`[cerebro]: ${ process(message) }`, 'cyan');
   }
 };
+
+export const serverLog = new ValidatedMethod({
+  name: 'server.log',
+  validate: new SimpleSchema({
+    message: {
+      type: String
+    }
+  }).validator(),
+  run({ message }) {
+    log.info(message);
+  }
+});
 
 function process(message) {
   if (typeof message == 'string') {
