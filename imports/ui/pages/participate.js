@@ -9,9 +9,11 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
+import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 import '../components/experience_buttons.js';
+import '../components/map.js';
 
 let photoChosenLocal = (exp) => {
   let modules = Experiences.findOne(exp._id).modules;
@@ -88,6 +90,8 @@ Template.participate.events({
         text: captionText,
         experience: this._id,
         incident: this.activeIncident,
+        lat: loc.lat,
+        lng: loc.lng,
         location: place
       };
       console.log(textEntry);
@@ -101,7 +105,7 @@ Template.participate.events({
           alert(error);
         } else {
           Images.update(imageObj._id,
-            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident, location: place} }
+            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident, lat: loc.lat, lng: loc.lng, location: place} }
             );
           console.log('Image metadata created.');
           alert('We got it!');

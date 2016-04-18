@@ -9,6 +9,8 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
+import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
+
 Template.results.onCreated(function() {
   this.subscribe('images', this.data._id);
   this.subscribe('text_entries');
