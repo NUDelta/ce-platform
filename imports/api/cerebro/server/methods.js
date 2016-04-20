@@ -57,6 +57,7 @@ export const notify = new ValidatedMethod({
     let users = Meteor.users.find(query, { fields: { _id: 1, emails: 1 }}).fetch();
     let userIds = _.map(users, user => user._id);
     if (appendIncident) {
+      Meteor.users.update({ _id: {$in: userIds}}, {$push: { 'profile.activeExperiences': experience._id }}, { multi: true });
       Meteor.users.update({_id: {$in: userIds}}, {$push: {'profile.pastIncidents': experience.activeIncident}}, {multi: true});
     }
     Cerebro.notify(users, this, subject, text, experienceId, route);

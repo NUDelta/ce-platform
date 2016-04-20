@@ -78,10 +78,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
         userId: { $in: userIds }
       }
     });
-
-    userIds.forEach((userId) => {
-      this._addActiveExperience(userId, experienceId);
-    })
   }
 
   _broadcastPush(subject, text) {
@@ -101,12 +97,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
         // this sends to all users
       }
     });
-  }
-
-  _addActiveExperience(userId, experienceId) {
-    Meteor.users.update({ _id: userId },
-      { $push: { 'profile.activeExperiences': experienceId } },
-      { multi: true });
   }
 
   liveQuery(locationType, options = {}) {
