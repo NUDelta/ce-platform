@@ -147,5 +147,7 @@ Template.participate.events({
     };
 
     ParticipationLocations.insert(participationLocLog);
+
+    document.getElementById('participate-btn').style.visibility = 'hidden';
   }
 });
