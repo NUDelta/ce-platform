@@ -52,6 +52,9 @@ Template.participate.onCreated(function() {
   this.subscribe('experiences', this.data._id);
   this.subscribe('incidents');
   this.subscribe('images', this.data._id);
+  this.subscribe('participation_locations');
+  Session.set('incidentId', this.data.activeIncident);
+  //need to deal with what happens when an experience ends (time stamp incidents?)
 });
 
 Template.participate.helpers({
@@ -106,7 +109,7 @@ Template.participate.events({
         } else {
           Images.update(imageObj._id,
             { $set : { experience: this._id, caption: captionText, incident: this.activeIncident, lat: loc.lat, lng: loc.lng, location: place} }
-            );
+          );
           console.log('Image metadata created.');
           alert('We got it!');
 
@@ -119,10 +122,30 @@ Template.participate.events({
           //    }
           //  }
           //})
-    }
-  });
+        }
+      });
     } else {
       Router.go('results', {_id: this.activeIncident});
     }
+  },
+  'click #participate-btn': function(event) {
+    event.preventDefault();
+
+    let longitude = -(Math.random()*(90-70+1)+70);
+    let latitude = Math.random()*(50-30+1)+30;
+    let loc = {lat: latitude, lng: longitude};
+
+    //for when mobile works
+    // let loc = LocationManager.currentLocation();
+
+    let participationLocLog = {
+      incidentId: this.activeIncident,
+      experience: this._id,
+      userId: Meteor.userId(),
+      lat: loc.lat,
+      lng: loc.lng
+    };
+
+    ParticipationLocations.insert(participationLocLog);
   }
 });

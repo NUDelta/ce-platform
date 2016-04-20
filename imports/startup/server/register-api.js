@@ -8,3 +8,4 @@ import '../../api/images/methods.js';
 import '../../api/text-entries/server/publications.js';
 import '../../api/users/methods.js';
 import '../../api/locations/locations.js';
+import '../../api/participation-locations/server/publications.js';
