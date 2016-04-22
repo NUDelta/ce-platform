@@ -17,7 +17,6 @@ Template.map.onCreated(function() {
     // });
 
     let activeIncident = Session.get('incidentId');
-    console.log('incident is ' + activeIncident);
 
     ParticipationLocations.find({incidentId: activeIncident}).forEach(function(entry) {
       var marker = new google.maps.Marker({
@@ -46,6 +45,10 @@ Template.map.onCreated(function() {
 Template.map.helpers({
   mapOptions: function() {
     let loc = LocationManager.currentLocation();
+
+    if (loc == null) {
+      loc = {lat: 42, lng: -87};
+    }
 
     if (GoogleMaps.loaded()) {
       return {

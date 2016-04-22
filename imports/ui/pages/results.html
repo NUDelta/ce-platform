@@ -19,7 +19,7 @@
         <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
           <img class="square img-responsive" src="{{url}}" alt="">
           <p>{{caption}}</p>
-          <p>Submitted from {{lat}}, {{lng}} {{location}}</p>
+          <p>Submitted from {{location}}</p>
         </div>
       {{/each}}
     </div>
@@ -40,7 +40,7 @@
     </h5>
     <br/>
     {{#each textEntries this}}
-      <p>"{{text}}" ...submitted from {{lat}}, {{lng}} {{location}}</p>
+      <p>"{{text}}" ...submitted from {{location}}</p>
     {{/each}}
   {{/if}}
   {{#if isActive}}
