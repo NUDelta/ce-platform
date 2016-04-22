@@ -29,4 +29,8 @@ if (Meteor.isCordova) {
     backgroundGeoLocation.configure(success, error, options);
     backgroundGeoLocation.start();
   });
+} else {
+  Meteor.startup(() => {
+    LocationManager.trackUpdates(Tracker, () => {}, () => {});
+  });
 }
