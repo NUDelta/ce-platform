@@ -21,3 +21,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
   return next();
 });
 
+export const Config = {
+  CLEAR_DB: true,
+  CLEAR_USERS: false
+};

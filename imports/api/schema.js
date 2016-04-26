@@ -1,8 +1,11 @@
 export const Schema = {};
 
+// TODO: refacotr into enums?
 Schema.CEModules = [
   'camera',
-  'text'
+  'text',
+  'chain',
+  'map'
 ];
 
 Schema.CEQualifications = [
