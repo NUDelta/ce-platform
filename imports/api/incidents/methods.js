@@ -15,7 +15,7 @@ export const insertIncident = new ValidatedMethod({
       type: String,
     },
     launcher: {
-      type: String,
+      type: String
     }
   }).validator(),
   run({ name, experience, launcher }) {
@@ -29,9 +29,7 @@ export const insertIncident = new ValidatedMethod({
         console.log(error);
       }
       else {
-        console.log("inserting incident");
         Experiences.update({_id: experience}, {$set: {'activeIncident': id}});
-        console.log(Experiences.findOne(experience));
       }
     });
   }

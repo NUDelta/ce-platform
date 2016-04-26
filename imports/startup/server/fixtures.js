@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { SyncedCron } from 'meteor/percolate:synced-cron';
+
 import { Schema } from '../../api/schema.js';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Locations } from '../../api/locations/locations.js';
@@ -13,18 +15,8 @@ import { log } from '../../api/logs.js';
 import '../../api/users/users.js';
 
 Meteor.startup(() => {
+  SyncedCron.start();
 
-  // let count = 0;
-  // // Remove locations that don't match users
-  // Locations.find().forEach((location) => {
-  //   const user = Meteor.users.findOne(location.uid);
-  //   if (!user) {
-  //     Locations.remove(location._id);
-  //     count++;
-  //   }
-  // });
-  //
-  // log.debug(count);
 
   // if (Meteor.users.find().count() === 0) {
   //   const userData = [

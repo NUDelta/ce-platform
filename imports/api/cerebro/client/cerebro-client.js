@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 import { CerebroCore } from '../cerebro-core.js';
 
+// TODO: change these to validatedmethod calls?
 CerebroClient = class CerebroClient extends CerebroCore {
   constructor() {
     super();
@@ -40,8 +41,13 @@ CerebroClient = class CerebroClient extends CerebroCore {
     });
   }
 
-  startChain(experienceId, subject, text, appendIncident) {
-
+  startChain(experienceId, subject, text, chain) {
+    Meteor.call('cerebro.startChain', {
+      experienceId: experienceId,
+      subject: subject,
+      text: text,
+      chain: chain
+    });
   }
 };
 

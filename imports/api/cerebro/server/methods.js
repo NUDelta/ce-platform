@@ -57,11 +57,10 @@ export const notify = new ValidatedMethod({
     let users = Meteor.users.find(query, { fields: { _id: 1, emails: 1 }}).fetch();
     let userIds = _.map(users, user => user._id);
     if (appendIncident) {
-      Meteor.users.update({ _id: {$in: userIds}}, {$push: { 'profile.activeExperiences': experience._id }}, { multi: true });
-      Meteor.users.update({_id: {$in: userIds}}, {$push: {'profile.pastIncidents': experience.activeIncident}}, {multi: true});
+      Cerebro.setActiveExperiences(userIds, experience._id);
+      Cerebro.addIncidents(userIds, experience.activeIncident);
     }
     Cerebro.notify(users, this, subject, text, experienceId, route);
-
   }
 });
 
@@ -99,9 +98,6 @@ export const scheduleNotifications = new ValidatedMethod({
     subject = subject || experience.name;
     text = text || experience.startText;
 
-
-    // TODO: Cron jobs aren't really the way to do this.
-    // Try to send signal to devices to report back to us.
     SyncedCron.remove(name);
     SyncedCron.add({
       name: name,
@@ -139,7 +135,8 @@ export const scheduleNotifications = new ValidatedMethod({
         ).fetch().map(user => user._id);
         Cerebro.notify(newUsers, server, subject, text, 'participate');
         if (appendIncident) {
-          Meteor.users.update({_id: {$in: newUsers}}, {$push: {'profile.pastIncidents': experience.activeIncident}}, {multi: true});
+          Cerebro.setActiveExperiences(newUsers, experience._id);
+          Cerebro.addIncidents(newUsers, experience.activeIncident);
         }
         usersReached.push(...newUsers);
 
@@ -165,12 +162,57 @@ export const startChain = new ValidatedMethod({
       type: String,
       optional: true
     },
-    appendIncident: {
-      type: Boolean
+    chainLength: {
+      type: Number,
+      optional: true
     }
   }).validator(),
-  run({ experienceId, subject, text, appendIncident }) {
-    let chain = [];
+  run({ experienceId, subject, text, chainLength }) {
+    let userChain = [];
+    let userSet = Meteor.users.find({ 'profile.subscriptions': experienceId }).fetch();
+
+    if (Cerebro.NOTIFY_ALL) {
+      userSet = Meteor.users.find().fetch();
+    }
+
+    const experience = Experiences.findOne(experienceId);
+    const cronName = `${ experienceId } chain notifications`;
+
+    subject = subject || experience.name;
+    text = text || experience.startText;
+    chainLength = chainLength || userSet.length;
+    log.cerebro(`Schedule chain notifications for "${ experience.name }"`);
+    log.cerebro(`Chain is expected to go for ${ chainLength } runs over ${ userSet.length } users`);
+
+    SyncedCron.remove(cronName);
+    SyncedCron.add({
+      name: cronName,
+      schedule(parser) {
+        // add some interrupting behavior if someone submits?
+        return parser.text('every 30 seconds');
+      },
+      job() {
+        log.job(`Pinging participant #${ userChain.length + 1 } for ${ experience.name }`);
+        if (userChain.length >= chainLength) {
+          SyncedCron.remove(cronName);
+          Cerebro.notify(
+            userChain, this, experience.name, `${ experience.name } has ended!`,
+            experience.activeIncident, 'results'
+          );
+          Cerebro.addIncidents(userChain, experience.activeIncident);
+        } else {
+          const nextUser = userSet.shift();
+          userChain.push(nextUser);
+          Cerebro.notify([ nextUser ], this, subject, text, experienceId, 'participate');
+          log.debug(nextUser);
+
+          Cerebro.setActiveExperiences([ nextUser ], experienceId);
+          const previousUser = userChain[userChain.length - 1];
+          if (previousUser) {
+            Cerebro.removeActiveExperiences([ previousUser ], experienceId);
+          }
+        }
+      }
+    })
   }
 });
-

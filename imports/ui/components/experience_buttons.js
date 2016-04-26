@@ -12,34 +12,37 @@ import { removeFromAllActiveExperiences } from '../../api/users/methods.js';
 import { insertIncident } from '../../api/incidents/methods.js';
 
 Template.experienceButtons.events({
-  'click .start-btn:not(.disabled)': function(e) {
+  'click .start-btn:not(.disabled)'(event, instance) {
     e.preventDefault();
-    const callParams = {id: this._id, name: this.name, text: this.startText};
-    insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
-      Cerebro.notify(callParams.id, `Event "${callParams.name}" is starting!`, callParams.text, true, 'participate');
+    insertIncident.call({ name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
+      Cerebro.notify(this._id, `Event "${this.name}" is starting!`, this.startText, true, 'participate');
     });
     alert(`Sent ${this.name}`);
   },
-  'click .schedule-btn:not(.disabled)': function(e) {
+  'click .schedule-btn:not(.disabled)'(event, instance) {
     e.preventDefault();
-
-    insertIncident.call({name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
+    insertIncident.call({ name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
       Cerebro.scheduleNotifications(this._id, `Event "${this.name}" is starting!`, this.startText, true);
     });
     alert(`Notifications scheduled for ${ this.name }`);
   },
-  'click .end-btn:not(.disabled)': function(e) {
+  'click .end-btn:not(.disabled)'(event, instance) {
     e.preventDefault();
     const endEmailText = `${ this.name } has ended. Thanks for participating!`;
     Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false, 'results');
     removeFromAllActiveExperiences.call({ experienceId: this._id});
-    Experiences.update({_id: this._id}, {$set: {'activeIncident': null}});
+    Experiences.update({_id: this._id}, {$unset: {'activeIncident': 0}});
     alert(`Sent ${this.name}`);
+  },
+  'click .chain-btn'(event, instance) {
+    Cerebro.startChain(this._id);
+    alert(`Starting chain for ${ this.name }`);
   }
 });
 
 Template.experienceButtons.helpers({
-  isRunning: function () {
-    return this.activeIncident;
+  isRunning() {
+    const data = Template.currentData();
+    return data.activeIncident;
   }
 });

@@ -21,5 +21,11 @@ Incidents.attachSchema(new SimpleSchema({
     type: String,
     label: 'Launcher user id',
     regEx: SimpleSchema.RegEx.Id
+  },
+  latestSubmission: {
+    type: String,
+    label: 'Submission id of latest submission',
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true
   }
 }));
