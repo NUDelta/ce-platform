@@ -43,9 +43,7 @@ Router.route('/create', {
 
 // TODO: Fix up subscription management patterns
 Router.route('/participate/:_id', {
-  name: 'participate',
-  data: function() { return Experiences.findOne(this.params._id); },
-  waitOn: function() { return [Meteor.subscribe('experiences')]; }
+  name: 'participate'
 });
 
 Router.route('/results/:_id', {

@@ -5,12 +5,12 @@
   <div class="row">
     <h3>{{name}}</h3>
     <p>{{description}}</p>
-    {{#if photoOrTextChosen}}
+    {{#if formChosen}}
       <form>
-        {{#if photoChosen}}
+        {{#if (moduleChosen "camera")}}
           <input type="file" name="photo">
         {{/if}}
-        {{#if textChosen}}
+        {{#if (moduleChosen "text")}}
           <input type="text" name="write">
         {{/if}}
         <input type="submit">
@@ -27,6 +27,6 @@
     <br/>
     <i class="secret">Psst {{currentUser.username}}! When you're ready to start the experience...</i>
     <br/>
-    {{> experienceButtons this}}
+    {{> experienceButtons experienceButtonsArgs}}
   {{/if}}
 </template>

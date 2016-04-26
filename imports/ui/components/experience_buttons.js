@@ -13,30 +13,56 @@ import { insertIncident } from '../../api/incidents/methods.js';
 
 Template.experienceButtons.events({
   'click .start-btn:not(.disabled)'(event, instance) {
-    e.preventDefault();
-    insertIncident.call({ name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
-      Cerebro.notify(this._id, `Event "${this.name}" is starting!`, this.startText, true, 'participate');
+    event.preventDefault();
+    insertIncident.call({
+      name: instance.data.experience.name,
+      experience: instance.data.experience._id,
+      launcher: Meteor.userId()
+    }, () => {
+      Cerebro.notify(instance.data.experience._id,
+        `Event "${instance.data.experience.name}" is starting!`,
+        instance.data.experience.startText,
+        true,
+        'participate');
     });
-    alert(`Sent ${this.name}`);
+    alert(`Sent ${instance.data.experience.name}`);
   },
   'click .schedule-btn:not(.disabled)'(event, instance) {
-    e.preventDefault();
-    insertIncident.call({ name: this.name, experience: this._id, launcher: Meteor.userId() }, () => {
-      Cerebro.scheduleNotifications(this._id, `Event "${this.name}" is starting!`, this.startText, true);
+    event.preventDefault();
+    insertIncident.call({
+      name: instance.data.experience.name,
+      experience: instance.data.experience._id,
+      launcher: Meteor.userId() },
+      () => {
+        Cerebro.scheduleNotifications(
+          instance.data.experience._id,
+          `Event "${instance.data.experience.name}" is starting!`,
+          instance.data.experience.startText,
+          true);
     });
-    alert(`Notifications scheduled for ${ this.name }`);
+    alert(`Notifications scheduled for ${ instance.data.experience.name }`);
   },
   'click .end-btn:not(.disabled)'(event, instance) {
-    e.preventDefault();
-    const endEmailText = `${ this.name } has ended. Thanks for participating!`;
-    Cerebro.notify(this._id, 'Your experience has ended.', endEmailText, false, 'results');
-    removeFromAllActiveExperiences.call({ experienceId: this._id});
-    Experiences.update({_id: this._id}, {$unset: {'activeIncident': 0}});
-    alert(`Sent ${this.name}`);
+    event.preventDefault();
+    const endEmailText = `${ instance.data.experience.name } has ended. Thanks for participating!`;
+    Cerebro.notify(
+      instance.data.experience._id,
+      'Your experience has ended.',
+      endEmailText,
+      false,
+      'results');
+    removeFromAllActiveExperiences.call({ experienceId: instance.data.experience._id});
+    Experiences.update({
+      _id: instance.data.experience._id
+    }, {
+      $unset: { 'activeIncident': 0 }
+    });
+    alert(`Sent ${instance.data.experience.name}`);
   },
   'click .chain-btn'(event, instance) {
-    Cerebro.startChain(this._id);
-    alert(`Starting chain for ${ this.name }`);
+    event.preventDefault();
+    Cerebro.startChain(instance.data.experience._id);
+    alert(`Starting chain for ${ instance.data.experience.name }`);
   }
 });
 
