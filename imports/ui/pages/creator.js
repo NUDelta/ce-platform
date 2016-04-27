@@ -13,56 +13,57 @@ Template.creator.onRendered(function() {
 });
 
 Template.creator.helpers({
-  categories: function() {
+  categories() {
     return _.map(Schema.YelpCategories, category => category.title);
   }
 });
 
 Template.creator.events({
-  'submit form': function(e) {
-    e.preventDefault();
+  'submit form'(event, instance) {
+    event.preventDefault();
+
+    // Parse out fields
+    const name = event.target.name.value;
+    const desc = event.target.desc.value;
+    const startText = event.target.start.value;
+
+    // Parse out modules
     let modules = [];
     let requirements = [];
-    let email = '';
-    let name = e.target.name.value;
-    let desc = e.target.desc.value;
-    let location = _.find(Schema.YelpCategories, (category) => {
-      return category.title == e.target.location.value;
-    });
+    if (event.target.photo.checked) {
+      modules.push('camera');
+      requirements.push('hasCamera');
+    }
+    if (event.target.text.checked) {
+      modules.push('text');
+    }
+    if (event.target.chain.checked) {
+      modules.push('chain');
+    }
 
+    // Process location
+    let location = _.find(Schema.YelpCategories, (category) => {
+      return category.title == event.target.location.value;
+    });
     if (location) {
       location = location.alias;
     } else {
       location = '';
     }
 
-    if (e.target.photo.checked) {
-      modules.push('camera');
-      email = 'Get your camera ready because it\'s time to post a picture for ' + name + '.';
-      requirements[0] = 'hasCamera'
-    } else {
-      email = 'The ' + name + ' experience is starting. ' + desc;
-    }
-
-    if (e.target.text.checked) {
-      modules.push('text');
-    }
-
-    const experience = {
+    Experiences.insert({
       name: name,
       description: desc,
       author: Meteor.userId(),
       modules: modules,
-      startText: email,
+      startText: startText,
       requirements: requirements,
-      location: location,
-    };
-
-    experience._id = Experiences.insert(experience, (err, res) => {
+      location: location
+    }, (err, experienceId) => {
       if (err) {
         alert(err);
       } else {
-        Router.go('participate', experience);
+        Router.go('participate', { _id: experienceId });
       }
     });
 

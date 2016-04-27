@@ -19,11 +19,13 @@ Template.experienceButtons.events({
       experience: instance.data.experience._id,
       launcher: Meteor.userId()
     }, () => {
-      Cerebro.notify(instance.data.experience._id,
-        `Event "${instance.data.experience.name}" is starting!`,
-        instance.data.experience.startText,
-        true,
-        'participate');
+      Cerebro.notify({
+        experienceId: instance.data.experience._id,
+        subject: `Event "${instance.data.experience.name}" is starting!`,
+        text: instance.data.experience.startText,
+        appendIncident: true,
+        route: 'participate'
+      });
     });
     alert(`Sent ${instance.data.experience.name}`);
   },
@@ -34,23 +36,24 @@ Template.experienceButtons.events({
       experience: instance.data.experience._id,
       launcher: Meteor.userId() },
       () => {
-        Cerebro.scheduleNotifications(
-          instance.data.experience._id,
-          `Event "${instance.data.experience.name}" is starting!`,
-          instance.data.experience.startText,
-          true);
+        Cerebro.scheduleNotifications({
+          experienceId: instance.data.experience._id,
+          subject: `Event "${instance.data.experience.name}" is starting!`,
+          text: instance.data.experience.startText,
+          appendIncident: true
+        });
     });
     alert(`Notifications scheduled for ${ instance.data.experience.name }`);
   },
   'click .end-btn:not(.disabled)'(event, instance) {
     event.preventDefault();
-    const endEmailText = `${ instance.data.experience.name } has ended. Thanks for participating!`;
-    Cerebro.notify(
-      instance.data.experience._id,
-      'Your experience has ended.',
-      endEmailText,
-      false,
-      'results');
+    Cerebro.notify({
+      experienceId: instance.data.experience._id,
+      subject: `"${ instance.data.experience.name }" has ended.`,
+      text: `${ instance.data.experience.name } has ended. Thanks for participating!`,
+      appendIncident: false,
+      route: 'results'
+    });
     removeFromAllActiveExperiences.call({ experienceId: instance.data.experience._id});
     Experiences.update({
       _id: instance.data.experience._id
