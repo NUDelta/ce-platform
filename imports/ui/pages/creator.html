@@ -4,21 +4,45 @@
     <div class="form-group">
       <label class="control-label" for="name">Name your experience.</label>
       <div class="controls">
-          <input name="name" id="name" type="text" value="" placeholder="e.g. Sunsetogether" class="form-control"/>
+          <input name="name" id="name" type="text" placeholder="e.g. Sunsetogether" class="form-control"/>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="desc">Write out some simple instructions to your participants.</label>
+      <label class="control-label" for="desc">
+        Description
+      </label>
       <div class="controls">
-          <input name="desc" id="desc" type="text" value="" class="form-control"
-                 placeholder="e.g. Upload a picture of the sunset around you right now!"/>
+          <input name="desc" id="desc" type="text" class="form-control"
+                 placeholder="This will be shown on the participation page."/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="start">
+        Notification Text
+      </label>
+      <div class="controls">
+        <input name="start" id="start" type="text" class="form-control"
+               placeholder="This will be the text in your notifications."/>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label" for="module">Tell us what participants will do on Cerebro.</label>
-      <div class="controls">
-          <input name="photo" type="checkbox" id="photo" value="photo">Upload a photo<br>
-          <input name="text" type="checkbox" id="text-entry" value="text-entry">Write something<br>
+      <div class="checkbox">
+        <label>
+          <input name="photo" type="checkbox" id="photo" value="photo">
+          Upload a photo
+        </label>
+        <br>
+        <label>
+          <input name="text" type="checkbox" id="text-entry" value="text-entry">
+          Write something
+        </label>
+        <br>
+        <label>
+          <input name="chain" type="checkbox" id="chain" value="chain">
+          Send in chain
+        </label>
+        <br>
       </div>
     </div>
     <div class="form-group">
