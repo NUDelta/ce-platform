@@ -6,7 +6,12 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import '../components/experience_buttons.js';
 
 Template.admin_experiences.helpers({
-  experiences: function() {
+  experiences() {
     return Experiences.find({});
+  },
+  experienceButtonArgs(experience) {
+    return {
+      experience: experience
+    };
   }
 });

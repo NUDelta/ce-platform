@@ -48,7 +48,7 @@ Template.creator.events({
       modules.push('text');
     }
 
-    let experience = {
+    const experience = {
       name: name,
       description: desc,
       author: Meteor.userId(),
@@ -56,7 +56,6 @@ Template.creator.events({
       startText: email,
       requirements: requirements,
       location: location,
-      activeIncident: null
     };
 
     experience._id = Experiences.insert(experience, (err, res) => {

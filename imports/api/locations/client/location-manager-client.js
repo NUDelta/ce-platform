@@ -2,12 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import { Geolocation } from 'meteor/mdg:geolocation';
 
 import { Locations } from '../locations.js';
+import { updateLocation } from '../methods.js';
 
 LocationManagerClient = class LocationManagerClient {
   constructor() {
     this._current = {};
     this._others = {};
     this._locationId = null;
+    Meteor.subscribe('locations');
   }
 
   trackUpdates(tracker, addTransform, changeCallback) {
@@ -57,20 +59,13 @@ LocationManagerClient = class LocationManagerClient {
 
   updateUserLocation(location) {
     if (Meteor.userId() && location) {
-      if (this._locationId) {
-        Locations.update(this._locationId, { $set: { lat: location.lat, lng: location.lng }});
-      } else {
-        const entry = Locations.findOne({ uid: Meteor.userId() });
-        if (entry) {
-          this._locationId = entry._id;
-          Locations.update(this._locationId, { $set: { lat: location.lat, lng: location.lng}});
-        } else {
-          this._locationId = Locations.insert({ lat: location.lat, lng: location.lng, uid: Meteor.userId() });
-        }
-      }
+      updateLocation.call({
+        uid: Meteor.userId(),
+        lat: location.lat,
+        lng: location.lng
+      });
     }
   }
 };
 
 export const LocationManager = new LocationManagerClient();
-

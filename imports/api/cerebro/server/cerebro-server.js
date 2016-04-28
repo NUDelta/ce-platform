@@ -99,6 +99,42 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+  setActiveExperiences(userIds, experienceId) {
+    Meteor.users.update({
+      _id: { $in: userIds }
+    }, {
+      $push: {
+        'profile.activeExperiences': experienceId
+      }
+    }, {
+      multi: true
+    });
+  }
+
+  removeActiveExperiences(userIds, experienceId) {
+    Meteor.users.update({
+      _id: { $in: userIds }
+    }, {
+      $pull: {
+        'profile.activeExperiences': experienceId
+      }
+    }, {
+      multi: true
+    });
+  }
+
+  addIncidents(userIds, incidentId) {
+    Meteor.users.update({
+      _id: { $in: userIds }
+    }, {
+      $push: {
+        'profile.pastIncidents': incidentId
+      }
+    }, {
+      multi: true
+    });
+  }
+
   liveQuery(locationType, options = {}) {
     options.location = options.location || 'Evanston+IL';
     options.radius = options.radius || 200;

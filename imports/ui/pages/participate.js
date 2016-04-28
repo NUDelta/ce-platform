@@ -3,10 +3,11 @@ import './participate.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { _ } from 'meteor/underscore';
 
+import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
@@ -15,153 +16,122 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 import '../components/experience_buttons.js';
 import '../components/map.js';
 
-let photoChosenLocal = (exp) => {
-  let modules = Experiences.findOne(exp._id).modules;
-  return _.contains(modules, 'camera');
-};
-
-let textChosenLocal = (exp) => {
-  let modules = Experiences.findOne(exp._id).modules;
-  return _.contains(modules, 'text');
-};
-
-let getSubmissionLocation = (latStr, lngStr) => {
-  lat = parseFloat(latStr);
-  lng = parseFloat(lngStr);
-
-  if (lat <= 42.062833 && lat > 42.055657 && lng >= -87.679559 && lng < -87.669491) {
-    return "NU North Campus";
-  } else if (lat <= 42.055657 && lat > 42.048593 && lng >= -87.679559 && lng < -87.669491) {
-    return "NU South Campus";
-  } else if (lat <= 42.078932 && lat > 42.019184 && lng >= -87.711036 && lng < -87.669491) {
-    return "Off-campus Evanston";
-  } else if (lat <= 42.009091 && lat > 41.683914 && lng >= -87.940299 && lng < -87.669491) {
-    return "Greater Chicago, IL Area";
-  } else if (lat <= 43.153463 && lat > 42.696882 && lng >= -79.038439 && lng < -78.656952) {
-    return "Greater Buffalo, NY Area";
-  } else if (lat <= 40.882255 && lat > 40.540665 && lng >= -74.203905 && lng < -73.756606) {
-    return "Greater New York, NY Area";
-  } else if (lat <= 38.721315 && lat > 38.564493 && lng >= -90.370798 && lng < -90.152168) {
-    return "Greater St. Louis, MO Area";
-  } else {
-    return "(" + lat + ", " + lng + ")";
-  }
-}
-
 Template.participate.onCreated(function() {
-  this.subscribe('experiences', this.data._id);
+  const experienceId = Router.current().params._id;
+
+  this.subscribe('experiences.single', experienceId);
+  this.subscribe('images', experienceId);
   this.subscribe('incidents');
-  this.subscribe('images', this.data._id);
   this.subscribe('participation_locations');
-  Session.set('incidentId', this.data.activeIncident);
+
+  this.state = new ReactiveDict();
+  this.autorun(() => {
+    const experience = Experiences.findOne(experienceId);
+
+    if (experience) {
+      this.state.set('experience', experience);
+      this.state.set('incidentId', experience.activeIncident);
+      this.state.set('modules', this.state.get('experience').modules);
+    }
+  });
+
+  this.usesModule = (module) => {
+    return _.contains(this.state.get('modules'), module);
+  };
+
   //need to deal with what happens when an experience ends (time stamp incidents?)
 });
 
 Template.participate.helpers({
-  photoChosen: function() {
-    return photoChosenLocal(this);
+  moduleChosen(module) {
+    const instance = Template.instance();
+    const modules = instance.state.get('modules');
+    return _.contains(modules, module);
   },
-  ownExperience: function() {
-    return this.author === Meteor.userId();
+  ownExperience() {
+    const instance = Template.instance();
+    const experience = instance.state.get('experience');
+    return experience && experience.author == Meteor.userId();
   },
-  textChosen: function() {
-    return textChosenLocal(this);
+  formChosen() {
+    const instance = Template.instance();
+    const modules = instance.state.get('modules');
+    return _.contains(modules, 'camera') ||
+      _.contains(modules, 'text');
   },
-  onlyTextChosen: function() {
-    return !photoChosenLocal(this) && textChosenLocal(this);
-  },
-  photoOrTextChosen: function() {
-    return photoChosenLocal(this) || textChosenLocal(this);
+  experienceButtonsArgs() {
+    const instance = Template.instance();
+    return {
+      experience: instance.state.get('experience')
+    };
   }
 });
 
 Template.participate.events({
-  'submit form': function(event, template) {
+  'submit form'(event, instance) {
     event.preventDefault();
-    let image = {},
-    textEntry = {},
-    isPhoto = photoChosenLocal(this),
-    isText = textChosenLocal(this),
-    captionText;
 
-    let loc = LocationManager.currentLocation();
-    let place = getSubmissionLocation(loc.lat, loc.lng);
-    if (isText) {
-      captionText = event.target.write.value || '';
-      textEntry = {
+    const caption = event.target.write.value || '';
+    const picture = event.target.photo.files[0];
+
+    const location = LocationManager.currentLocation();
+    const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
+    const experienceId = Router.current.params._id;
+    const incidentId = instance.state.get('incidentId');
+
+    if (instance.usesModule('text')) {
+      TextEntries.insert({
         submitter: Meteor.userId(),
-        text: captionText,
-        experience: this._id,
-        incident: this.activeIncident,
-        lat: loc.lat,
-        lng: loc.lng,
+        text: caption,
+        experience: experienceId,
+        incident: incidentId,
+        lat: location.lat,
+        lng: location.lng,
         location: place
-      };
-      console.log(textEntry);
-      TextEntries.insert(textEntry);
+      });
     }
 
-    if (isPhoto) {
-      let picture = event.target.photo.files[0];
-      Images.insert(picture, (err, imageObj) => {
+    if (instance.usesModule('camera')) {
+      Images.insert(picture, (err, imageFile) => {
         if (err) {
-          alert(error);
+          // shouldn't happen
+          alert(err);
         } else {
-          Images.update(imageObj._id,
-            { $set : { experience: this._id, caption: captionText, incident: this.activeIncident, lat: loc.lat, lng: loc.lng, location: place} }
+          Images.update(imageFile._id,
+            {
+              $set: {
+                experience: experienceId,
+                caption: caption,
+                incident: incidentId,
+                lat: location.lat,
+                lng: location.lng,
+                location: place
+              }
+            }
           );
-          console.log('Image metadata created.');
-          alert('We got it!');
-
-          Router.go('results', {_id: this.activeIncident});
-          //let observer = Images.find(imageObj._id).observe({
-          //  changed: (newImage, oldImage) => {
-          //    if (newImage.isUploaded()) {
-          //      observer.stop();
-          //      alert('We got it!');
-          //    }
-          //  }
-          //})
         }
       });
-    } else {
-      Router.go('results', {_id: this.activeIncident});
     }
+    Router.go('results', { _id: incidentId });
   },
-  'click #participate-btn': function(event) {
+  'click #participate-btn'(event, instance) {
     event.preventDefault();
 
-    let longitude = -(Math.random()*(90-70+1)+70);
-    let latitude = Math.random()*(50-30+1)+30;
-    let loc = {lat: latitude, lng: longitude};
+    const longitude = -(Math.random()*(90-70+1)+70);
+    const latitude = Math.random()*(50-30+1)+30;
+    const loc = {lat: latitude, lng: longitude};
 
     //for when mobile works
-    // let loc = LocationManager.currentLocation();
+    // const loc = LocationManager.currentLocation();
 
     let participationLocLog = {
-      incidentId: this.activeIncident,
-      experience: this._id,
+      incidentId: instance.state.get('incidentId'),
+      experience: Router.current().params._id,
       userId: Meteor.userId(),
       lat: loc.lat,
       lng: loc.lng
     };
 
     ParticipationLocations.insert(participationLocLog);
-
-    window.plugins.flashlight.available(function(isAvailable) {
-      if (isAvailable) {
-
-        // switch on
-        window.plugins.flashlight.switchOn(); // success/error callbacks may be passed
-
-        // switch off after 3 seconds
-        setTimeout(function() {
-          window.plugins.flashlight.switchOff(); // success/error callbacks may be passed
-        }, 3000);
-
-      } else {
-        alert("Flashlight not available on this device");
-      }
-    });
   }
 });
