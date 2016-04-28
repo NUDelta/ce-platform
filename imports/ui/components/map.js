@@ -17,10 +17,11 @@ Template.map.onCreated(function() {
     // });
 
     let activeIncident = Session.get('incidentId');
+    console.log(activeIncident);
 
     ParticipationLocations.find({incidentId: activeIncident}).forEach(function(entry) {
       var marker = new google.maps.Marker({
-        draggable: true,
+        draggable: false,
         animation: google.maps.Animation.DROP,
         position: new google.maps.LatLng(entry.lat, entry.lng),
         map: map.instance
@@ -32,7 +33,7 @@ Template.map.onCreated(function() {
         // Create a marker for this document
         let insertedMarker = ParticipationLocations.findOne({_id: document});
         var marker = new google.maps.Marker({
-          draggable: true,
+          draggable: false,
           animation: google.maps.Animation.DROP,
           position: new google.maps.LatLng(insertedMarker.lat, insertedMarker.lng),
           map: map.instance

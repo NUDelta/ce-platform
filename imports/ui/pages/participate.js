@@ -31,6 +31,7 @@ Template.participate.onCreated(function() {
     if (experience) {
       this.state.set('experience', experience);
       this.state.set('incidentId', experience.activeIncident);
+      Session.set('incidentId', experience.activeIncident);
       this.state.set('modules', this.state.get('experience').modules);
     }
   });
@@ -133,5 +134,17 @@ Template.participate.events({
     };
 
     ParticipationLocations.insert(participationLocLog);
+
+    window.plugins.flashlight.available(function(isAvailable) {
+      if (isAvailable) {
+        console.log("we in here");
+        // switch on
+        window.plugins.flashlight.toggle();
+
+      } else {
+        console.log("We couldn't make it fam");
+        alert("Flashlight not available on this device");
+      }
+    });
   }
 });
