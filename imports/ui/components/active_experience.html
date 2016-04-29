@@ -1,5 +1,7 @@
-<template name="active_experience">
-  <div class="alert alert-info" role="alert"><strong>{{name}}</strong> is running right now!
-    <button class="btn btn-primary btn-participate btn-block" href="">Participate</button>
+<template name="activeExperience">
+  <div class="alert alert-info" role="alert"><strong>{{experience.name}}</strong> is running right now!
+    <button class="btn btn-primary btn-participate btn-block" href="/participate/{{experience._id}}">
+      Participate
+    </button>
   </div>
 </template>

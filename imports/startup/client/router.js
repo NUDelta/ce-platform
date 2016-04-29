@@ -1,9 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Router } from 'meteor/iron:router';
-import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 
+import '../../ui/blaze-helpers.js';
 
 import '../../ui/layout/header.js';
 import '../../ui/layout/layout.js';
@@ -22,8 +21,7 @@ Router.configure({
 });
 
 Router.route('/', {
-  name: 'home',
-  waitOn: function() { return [Meteor.subscribe('experiences'), Meteor.subscribe('incidents')]; }
+  name: 'home'
 });
 
 Router.route('/admin', {

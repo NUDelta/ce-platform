@@ -4,6 +4,7 @@ import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Config } from './config.js';
 import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
@@ -29,6 +30,19 @@ Meteor.startup(() => {
     Images.remove({});
     TextEntries.remove({});
     ParticipationLocations.remove({});
+  }
+
+  if (Meteor.isDevelopment && Config.CLEAR_ACTIVE) {
+    log.warning(`Clearing active experiences...`);
+    Meteor.users.update({}, {
+      $set: {
+        'profile.activeExperiences': [],
+        'profile.pastIncidents': []
+      }
+    }, {
+      multi: true
+    });
+    Incidents.remove({});
   }
 
   if (Meteor.users.find().count() === 0) {
@@ -62,6 +76,14 @@ Meteor.startup(() => {
         description: 'Come play an online telephone game with people across the world.',
         startText: 'Telephone is about to start!',
         modules: ['chain'],
+        requirements: []
+      },
+      {
+        name: 'Storytime',
+        author: kevin._id,
+        description: 'Let\'s all write a story together!',
+        startText: 'Storytime is about to start!',
+        modules: ['chain', 'text'],
         requirements: []
       },
       {

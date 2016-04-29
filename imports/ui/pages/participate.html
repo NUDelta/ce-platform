@@ -3,10 +3,16 @@
     <i class="secret">This is what your experience looks like to experiencers.</i>
   {{/if}}
   <div class="row">
-    <h3>{{name}}</h3>
-    <p>{{description}}</p>
+    <h3>{{ experience.name}}</h3>
+    <p>{{ experience.description}}</p>
     {{#if formChosen}}
       <form>
+        {{#if (moduleChosen "chain")}}
+          <p>Last submission: </p>
+          {{#if (moduleChosen "text")}}
+            <p>Text: {{lastEntry "text"}}</p>
+          {{/if}}
+        {{/if}}
         {{#if (moduleChosen "camera")}}
           <input type="file" name="photo">
         {{/if}}
@@ -21,7 +27,7 @@
       {{> map}}
     {{/if}}
 
-</div>
+  </div>
   {{#if ownExperience}}
     <br/>
     <br/>

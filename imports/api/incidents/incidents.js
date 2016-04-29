@@ -7,7 +7,8 @@ export const Incidents = new Mongo.Collection('incidents');
 Incidents.attachSchema(new SimpleSchema({
   experience: {
     type: String,
-    label: 'Id of referenced experience'
+    label: 'Id of referenced experience',
+    regEx: SimpleSchema.RegEx.Id
   },
   name: {
     type: String,

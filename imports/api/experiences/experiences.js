@@ -5,6 +5,11 @@ import { Schema } from '../schema.js';
 export const Experiences = new Mongo.Collection('experiences');
 
 Schema.Experience = new SimpleSchema({
+  _id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true
+  },
   name: {
     type: String,
     label: 'Experience name'

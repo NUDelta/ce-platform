@@ -8,6 +8,7 @@ import { _ } from 'meteor/underscore';
 
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
@@ -16,23 +17,28 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 import '../components/experience_buttons.js';
 import '../components/map.js';
 
+import '../partials/participate_last_submission.js';
+
 Template.participate.onCreated(function() {
   const experienceId = Router.current().params._id;
 
-  this.subscribe('experiences.single', experienceId);
+  const experiencesHandle = this.subscribe('experiences.single', experienceId);
   this.subscribe('images', experienceId);
   this.subscribe('incidents');
   this.subscribe('participation_locations');
 
   this.state = new ReactiveDict();
   this.autorun(() => {
-    const experience = Experiences.findOne(experienceId);
-
-    if (experience) {
+    if (experiencesHandle.ready()) {
+      const experience = Experiences.findOne(experienceId);
       this.state.set('experience', experience);
-      this.state.set('incidentId', experience.activeIncident);
-      Session.set('incidentId', experience.activeIncident);
       this.state.set('modules', this.state.get('experience').modules);
+
+      Session.set('incidentId', experience.activeIncident);
+      const incident = Incidents.findOne(experience.activeIncident);
+      if (incident) {
+        this.state.set('incident', incident);
+      }
     }
   });
 
@@ -44,10 +50,21 @@ Template.participate.onCreated(function() {
 });
 
 Template.participate.helpers({
+  experience() {
+    const instance = Template.instance();
+    return instance.state.get('experience');
+  },
   moduleChosen(module) {
     const instance = Template.instance();
     const modules = instance.state.get('modules');
     return _.contains(modules, module);
+  },
+  lastEntry(module) {
+    const instance = Template.instance();
+    if (module == 'text') {
+      const entry = TextEntries.findOne(instance.state.get('text'));
+      return entry && entry.text;
+    }
   },
   ownExperience() {
     const instance = Template.instance();
@@ -58,7 +75,8 @@ Template.participate.helpers({
     const instance = Template.instance();
     const modules = instance.state.get('modules');
     return _.contains(modules, 'camera') ||
-      _.contains(modules, 'text');
+        _.contains(modules, 'text') ||
+        _.contains(modules, 'chain');
   },
   experienceButtonsArgs() {
     const instance = Template.instance();
@@ -78,7 +96,7 @@ Template.participate.events({
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const experienceId = Router.current.params._id;
-    const incidentId = instance.state.get('incidentId');
+    const incidentId = instance.state.get('incident')._id;
 
     if (instance.usesModule('text')) {
       TextEntries.insert({
@@ -126,7 +144,7 @@ Template.participate.events({
     // const loc = LocationManager.currentLocation();
 
     let participationLocLog = {
-      incidentId: instance.state.get('incidentId'),
+      incidentId: instance.state.get('incident')._id,
       experience: Router.current().params._id,
       userId: Meteor.userId(),
       lat: loc.lat,
