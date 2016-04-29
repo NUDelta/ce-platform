@@ -26,11 +26,12 @@ Template.admin_locations.onCreated(function() {
 
 Template.admin_locations.helpers({
   mapOptions: () => {
-    let latLng = LocationManager.currentLocation();
+    // let latLng = LocationManager.currentLocation();
+    const latLng = { lat: 42, lng: -87 };
     if (GoogleMaps.loaded() && latLng) {
       return {
         center: new google.maps.LatLng(latLng.lat, latLng.lng),
-        zoom: 17
+        zoom: 10
       };
     }
   }

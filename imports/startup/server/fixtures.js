@@ -99,7 +99,7 @@ Meteor.startup(() => {
       },
       {
         name: 'Nightlight',
-        author: shannon._id,
+        author: kevin._id,
         description: 'Shine your phone\'s flashlight into the night sky in solidarity with everyone walking in the dark',
         startText: 'Come be a part of Nightlight!',
         modules: ['map'],
