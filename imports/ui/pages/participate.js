@@ -34,7 +34,6 @@ Template.participate.onCreated(function() {
       this.state.set('experience', experience);
       this.state.set('modules', this.state.get('experience').modules);
 
-      Session.set('incidentId', experience.activeIncident);
       const incident = Incidents.findOne(experience.activeIncident);
       if (incident) {
         this.state.set('incident', incident);
@@ -77,6 +76,12 @@ Template.participate.helpers({
     return _.contains(modules, 'camera') ||
         _.contains(modules, 'text') ||
         _.contains(modules, 'chain');
+  },
+  mapArgs() {
+    const instance = Template.instance();
+    return {
+      incidentId: instance.state.get('incident')._id
+    };
   },
   experienceButtonsArgs() {
     const instance = Template.instance();

@@ -2,6 +2,8 @@ import './map.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
@@ -11,15 +13,24 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 Template.map.onCreated(function() {
   this.subscribe('participation_locations');
 
-  GoogleMaps.ready('map', function(map) {
-    // google.maps.event.addListener(map.instance, 'click', function(event) {
-    //   ParticipationLocations.insert({ lat: event.latLng.lat(), lng: event.latLng.lng()});
-    // });
+  const data = Template.currentData();
+  this.autorun(() => {
+    // Somewhat unintuitive here.
+    // Only check for data if it exists, so we can use it from
+    // experience owner.
+    if (data) {
+      new SimpleSchema({
+        incidentId: {
+          type: String,
+          regEx: SimpleSchema.RegEx.Id,
+        }
+      }).validate(data);
+    }
+  });
 
-    let activeIncident = Session.get('incidentId');
-    console.log(activeIncident);
-
-    ParticipationLocations.find({incidentId: activeIncident}).forEach(function(entry) {
+  const incidentId = data && data.incidentId;
+  GoogleMaps.ready('map', (map) => {
+    ParticipationLocations.find({incidentId: incidentId}).forEach(function(entry) {
       var marker = new google.maps.Marker({
         draggable: false,
         animation: google.maps.Animation.DROP,
@@ -28,10 +39,10 @@ Template.map.onCreated(function() {
       });
     });
 
-    ParticipationLocations.find({incidentId: activeIncident}).observeChanges({
-      added: function(document) {
+    ParticipationLocations.find({incidentId: incidentId}).observeChanges({
+      added(document) {
         // Create a marker for this document
-        let insertedMarker = ParticipationLocations.findOne({_id: document});
+        const insertedMarker = ParticipationLocations.findOne({_id: document});
         var marker = new google.maps.Marker({
           draggable: false,
           animation: google.maps.Animation.DROP,

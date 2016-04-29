@@ -24,7 +24,9 @@
     {{else}}
       <button id="participate-btn">I'm doing it!</button>
       <br/><br/>
-      {{> map}}
+      {{#if Template.subscriptionsReady}}
+        {{> map mapArgs}}
+      {{/if}}
     {{/if}}
 
   </div>
