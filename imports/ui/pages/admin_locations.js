@@ -9,14 +9,17 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 Template.admin_locations.onCreated(function() {
   this.subscribe('locations');
 
-  GoogleMaps.load(); // defines `google` namespace
   GoogleMaps.ready('map', (map) => {
 
-    Locations.find().forEach((location) => {
-      let hi = new google.maps.Marker({
-        position: new google.maps.LatLng(location.lat, location.lng),
-        map: map.instance
-      });
+    this.autorun(() => {
+      if (this.subscriptionsReady()) {
+        Locations.find().forEach((location) => {
+          let hi = new google.maps.Marker({
+            position: new google.maps.LatLng(location.lat, location.lng),
+            map: map.instance
+          });
+        });
+      }
     });
   });
 });
