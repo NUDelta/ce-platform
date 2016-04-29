@@ -45,6 +45,17 @@ Meteor.startup(() => {
     Incidents.remove({});
   }
 
+  if (Config.CLEANUP) {
+    // Remove orphaned experiences
+    Incidents.find().forEach((incident) => {
+      const experience = Experiences.findOne(incident.experience);
+      if (!experience) {
+        Incidents.remove(incident._id);
+      }
+    });
+
+  }
+
   if (Meteor.users.find().count() === 0) {
     const admins = [
       {
@@ -109,8 +120,6 @@ Meteor.startup(() => {
   }
 
   // TODO: simulate some submissions
-
-
   // if (ParticipationLocations.find().count() === 0) {
   //   const locationData = [
   //     {

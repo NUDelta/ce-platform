@@ -1,10 +1,25 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
 import { Schema } from '../schema.js';
 
-export const Incidents = new Mongo.Collection('incidents');
+class IncidentCollection extends Mongo.Collection {
+  remove(selector, callback) {
+    Incidents.find(selector).forEach((incident) => {
+      Meteor.users.update({}, {
+        $pull: {
+          'profile.pastIncidents': incident._id
+        }
+      });
+    });
+    return super.remove(selector, callback);
+  }
+}
 
-Incidents.attachSchema(new SimpleSchema({
+export const Incidents = new IncidentCollection('incidents');
+
+Schema.Incident = new SimpleSchema({
   experience: {
     type: String,
     label: 'Id of referenced experience',
@@ -29,4 +44,6 @@ Incidents.attachSchema(new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true
   }
-}));
+});
+
+Incidents.attachSchema(Schema.Incident);

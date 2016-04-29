@@ -1,8 +1,26 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
+import { Incidents } from '../incidents/incidents.js';
 import { Schema } from '../schema.js';
 
-export const Experiences = new Mongo.Collection('experiences');
+// TODO: cascade delete incidents and remove from active, etc.
+class ExperiencesCollection extends Mongo.Collection {
+  remove(selector, callback) {
+    Experiences.find(selector).forEach((experience) => {
+      Incidents.remove({ experience: experience._id });
+      Meteor.users.update({}, {
+        $pull: {
+          'profile.activeExperiences': experience._id
+        }
+      });
+    });
+    return super.remove(selector, callback);
+  }
+}
+
+export const Experiences = new ExperiencesCollection('experiences');
 
 Schema.Experience = new SimpleSchema({
   _id: {
