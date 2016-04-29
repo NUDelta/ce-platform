@@ -9,7 +9,6 @@ LocationManagerClient = class LocationManagerClient {
     this._current = {};
     this._others = {};
     this._locationId = null;
-    Meteor.subscribe('locations');
   }
 
   trackUpdates(tracker, addTransform, changeCallback) {
