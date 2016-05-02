@@ -5,7 +5,8 @@ Schema.CEModules = [
   'camera',
   'text',
   'chain',
-  'map'
+  'map',
+  'flashlight'
 ];
 
 Schema.CEQualifications = [

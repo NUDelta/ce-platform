@@ -70,7 +70,7 @@ Template.participate.helpers({
     const experience = instance.state.get('experience');
     return experience && experience.author == Meteor.userId();
   },
-  formChosen() {
+  uploadRequired() {
     const instance = Template.instance();
     const modules = instance.state.get('modules');
     return _.contains(modules, 'camera') ||
@@ -138,6 +138,18 @@ Template.participate.events({
     }
     Router.go('results', { _id: incidentId });
   },
+  'click #flashlight-off-btn'(event, instance) {
+    window.plugins.flashlight.available(function(isAvailable) {
+      if (isAvailable) {
+        // switch on
+        window.plugins.flashlight.toggle();
+        document.getElementById('participate-btn').style.display = "none";
+        document.getElementById('flashlight-off-btn').style.display = "none";
+      } else {
+        alert("Flashlight not available on this device");
+      }
+    });
+  },
   'click #participate-btn'(event, instance) {
     event.preventDefault();
 
@@ -158,16 +170,17 @@ Template.participate.events({
 
     ParticipationLocations.insert(participationLocLog);
 
-    window.plugins.flashlight.available(function(isAvailable) {
-      if (isAvailable) {
-        console.log("we in here");
-        // switch on
-        window.plugins.flashlight.toggle();
-
-      } else {
-        console.log("We couldn't make it fam");
-        alert("Flashlight not available on this device");
-      }
-    });
+    if (instance.usesModule('flashlight')) {
+      window.plugins.flashlight.available(function(isAvailable) {
+        if (isAvailable) {
+          // switch on
+          window.plugins.flashlight.toggle();
+          document.getElementById('participate-btn').style.display = "none";
+          document.getElementById('flashlight-off-btn').style.display = "block";
+        } else {
+          alert("Flashlight not available on this device");
+        }
+      });
+    }
   }
 });

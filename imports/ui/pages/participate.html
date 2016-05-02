@@ -5,7 +5,7 @@
   <div class="row">
     <h3>{{ experience.name}}</h3>
     <p>{{ experience.description}}</p>
-    {{#if formChosen}}
+    {{#if uploadRequired}}
       <form>
         {{#if (moduleChosen "chain")}}
           <p>Last submission: </p>
@@ -22,13 +22,19 @@
         <input type="submit">
       </form>
     {{else}}
-      <button id="participate-btn">I'm doing it!</button>
+      {{#if (moduleChosen "flashlight")}}
+        <button id="participate-btn">Turn on flashlight</button>
+        <button id="flashlight-off-btn" style="display: none">Turn flashlight off</button>
+      {{else}}
+        <button id="participate-btn">I'm doing it!</button>
+      {{/if}}
       <br/><br/>
-      {{#if Template.subscriptionsReady}}
-        {{> map mapArgs}}
+      {{#if (moduleChosen "map")}}
+        {{#if Template.subscriptionsReady}}
+          {{> map mapArgs}}
+        {{/if}}
       {{/if}}
     {{/if}}
-
   </div>
   {{#if ownExperience}}
     <br/>

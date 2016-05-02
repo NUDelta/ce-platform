@@ -40,6 +40,12 @@ Template.creator.events({
     if (event.target.chain.checked) {
       modules.push('chain');
     }
+    if (event.target.map.checked) {
+      modules.push('map');
+    }
+    if (event.target.flashlight.checked) {
+      modules.push('flashlight');
+    }
 
     // Process location
     let location = _.find(Schema.YelpCategories, (category) => {
