@@ -32,17 +32,6 @@ Template.map.onCreated(function() {
   GoogleMaps.ready('map', (map) => {
     var markers = {};
 
-    ParticipationLocations.find({incidentId: incidentId}).forEach(function(entry) {
-      var marker = new google.maps.Marker({
-        draggable: false,
-        animation: google.maps.Animation.DROP,
-        position: new google.maps.LatLng(entry.lat, entry.lng),
-        map: map.instance
-      });
-
-      markers[entry._id] = marker;
-    });
-
     ParticipationLocations.find({incidentId: incidentId}).observeChanges({
       added(document) {
         // Create a marker for this document
@@ -58,14 +47,8 @@ Template.map.onCreated(function() {
         markers[insertedMarker._id] = marker;
       },
       removed(oldDocument) {
-        console.log(markers);
-        console.log(markers[oldDocument]);
         markers[oldDocument].setMap(null);
-        console.log(markers[oldDocument]);
-        console.log(oldDocument);
-        console.log(markers);
         delete markers[oldDocument];
-        console.log(markers[oldDocument]);
       }
     });
   });
