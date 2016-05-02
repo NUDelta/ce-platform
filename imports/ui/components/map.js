@@ -30,6 +30,8 @@ Template.map.onCreated(function() {
 
   const incidentId = data && data.incidentId;
   GoogleMaps.ready('map', (map) => {
+    var markers = {};
+
     ParticipationLocations.find({incidentId: incidentId}).forEach(function(entry) {
       var marker = new google.maps.Marker({
         draggable: false,
@@ -37,18 +39,33 @@ Template.map.onCreated(function() {
         position: new google.maps.LatLng(entry.lat, entry.lng),
         map: map.instance
       });
+
+      markers[entry._id] = marker;
     });
 
     ParticipationLocations.find({incidentId: incidentId}).observeChanges({
       added(document) {
         // Create a marker for this document
         const insertedMarker = ParticipationLocations.findOne({_id: document});
+
         var marker = new google.maps.Marker({
           draggable: false,
           animation: google.maps.Animation.DROP,
           position: new google.maps.LatLng(insertedMarker.lat, insertedMarker.lng),
           map: map.instance
         });
+
+        markers[insertedMarker._id] = marker;
+      },
+      removed(oldDocument) {
+        console.log(markers);
+        console.log(markers[oldDocument]);
+        markers[oldDocument].setMap(null);
+        console.log(markers[oldDocument]);
+        console.log(oldDocument);
+        console.log(markers);
+        delete markers[oldDocument];
+        console.log(markers[oldDocument]);
       }
     });
   });
@@ -65,7 +82,8 @@ Template.map.helpers({
     if (GoogleMaps.loaded()) {
       return {
         center: new google.maps.LatLng(loc.lat, loc.lng),
-        zoom: 3
+        zoom: 3,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
       };
     }
   }

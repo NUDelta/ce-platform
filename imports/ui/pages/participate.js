@@ -139,16 +139,22 @@ Template.participate.events({
     Router.go('results', { _id: incidentId });
   },
   'click #flashlight-off-btn'(event, instance) {
-    window.plugins.flashlight.available(function(isAvailable) {
-      if (isAvailable) {
+    const incidentId = instance.state.get('incident')._id;
+
+    //window.plugins.flashlight.available(function(isAvailable) {
+      //if (isAvailable) {
         // switch on
-        window.plugins.flashlight.toggle();
-        document.getElementById('participate-btn').style.display = "none";
+        //window.plugins.flashlight.toggle();
+        document.getElementById('participate-btn').style.display = "block";
         document.getElementById('flashlight-off-btn').style.display = "none";
-      } else {
-        alert("Flashlight not available on this device");
-      }
-    });
+      //} else {
+      //  alert("Flashlight not available on this device");
+      //}
+    //});
+
+    let entryToRemove = ParticipationLocations.findOne({incidentId: incidentId, userId: Meteor.userId()});
+    ParticipationLocations.remove({_id: entryToRemove._id});
+
   },
   'click #participate-btn'(event, instance) {
     event.preventDefault();
@@ -170,17 +176,17 @@ Template.participate.events({
 
     ParticipationLocations.insert(participationLocLog);
 
-    if (instance.usesModule('flashlight')) {
-      window.plugins.flashlight.available(function(isAvailable) {
-        if (isAvailable) {
+    //if (instance.usesModule('flashlight')) {
+      //window.plugins.flashlight.available(function(isAvailable) {
+        //if (isAvailable) {
           // switch on
-          window.plugins.flashlight.toggle();
+          //window.plugins.flashlight.toggle();
           document.getElementById('participate-btn').style.display = "none";
           document.getElementById('flashlight-off-btn').style.display = "block";
-        } else {
-          alert("Flashlight not available on this device");
-        }
-      });
-    }
+        //} else {
+        //  alert("Flashlight not available on this device");
+        //}
+      //});
+    //}
   }
 });
