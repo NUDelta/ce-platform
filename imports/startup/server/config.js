@@ -14,16 +14,17 @@ BrowserPolicy.content.allowOriginForAll('http://yo-star.xyz');
 BrowserPolicy.content.allowOriginForAll('http://aspin.xyz');
 BrowserPolicy.content.allowOriginForAll('https://*.googleapis.com');
 BrowserPolicy.content.allowOriginForAll('https://*.gstatic.com');
-BrowserPolicy.content.allowEval();
+BrowserPolicy.content.allowOriginForAll('*');
 
 WebApp.connectHandlers.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   return next();
 });
 
 export const Config = {
   CLEAR_DB: 0,
   CLEAR_USERS: 0,
-  CLEAR_ACTIVE: 0,
+  CLEAR_ACTIVE: 1,
   CLEANUP: 0
 };

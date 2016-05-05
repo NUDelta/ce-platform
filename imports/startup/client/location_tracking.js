@@ -1,33 +1,41 @@
 import { Meteor } from 'meteor/meteor';
+import { HTTP } from 'meteor/http';
 
 import { log, serverLog } from '../../api/logs.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 if (Meteor.isCordova) {
   Meteor.startup(() => {
+    const bgGeo = window.BackgroundGeolocation;
 
-    function success(location) {
-      LocationManager.updateUserLocation({
-        lat: location.latitude,
-        lng: location.longitude
+    function success(location, taskId) {
+      HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
+        data: {
+          location: location.coords,
+          userId: Meteor.userId()
+        }
+      }, (err, res) => {
+        bgGeo.finish(taskId);
       });
-      backgroundGeoLocation.finish();
     }
 
     function error(error) {
       console.log(error);
     }
 
+    bgGeo.on('location', success, error);
+
     const options = {
-      desiredAccuracy: 10,
-      stationaryRadius: 20,
-      distanceFilter: 30,
+      desiredAccuracy: 0,
+      stationaryRadius: 50,
+      distanceFilter: 10,
       debug: false,
       stopOnTerminate: false
     };
 
-    backgroundGeoLocation.configure(success, error, options);
-    backgroundGeoLocation.start();
+    bgGeo.configure(options, (state) => {
+      bgGeo.start();
+    });
   });
 } else {
   Meteor.startup(() => {
