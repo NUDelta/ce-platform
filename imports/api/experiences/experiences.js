@@ -66,6 +66,11 @@ Schema.Experience = new SimpleSchema({
     label: 'The current incident for this experience',
     optional: true
   }
+  /*
+   * start condition
+   * end condition
+   * schedule
+   */
 });
 
 Experiences.attachSchema(Schema.Experience);

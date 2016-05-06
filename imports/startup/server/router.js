@@ -25,10 +25,11 @@ Example location object:
   }
 */
   .post(function() {
+    log.debug(this.request.body);
     const userId = this.request.body.userId;
     const location = this.request.body.location;
-    log.debug(`Got update from ${ userId }`);
-    log.debug(location)
+    log.debug(`[${ moment().tz('America/Chicago').format('dd h:mm:ssa') }]: Got update from ${ userId }`);
+    log.debug(location);
     updateLocation.call({
       uid: userId,
       lat: location.latitude,

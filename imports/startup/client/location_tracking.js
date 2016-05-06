@@ -9,14 +9,18 @@ if (Meteor.isCordova) {
     const bgGeo = window.BackgroundGeolocation;
 
     function success(location, taskId) {
-      HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
-        data: {
-          location: location.coords,
-          userId: Meteor.userId()
-        }
-      }, (err, res) => {
+      if (Meteor.userId()) {
+        HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
+          data: {
+            location: location.coords,
+            userId: Meteor.userId()
+          }
+        }, (err, res) => {
+          bgGeo.finish(taskId);
+        });
+      } else {
         bgGeo.finish(taskId);
-      });
+      }
     }
 
     function error(error) {
@@ -27,10 +31,13 @@ if (Meteor.isCordova) {
 
     const options = {
       desiredAccuracy: 0,
-      stationaryRadius: 50,
+      stationaryRadius: 20,
       distanceFilter: 10,
+      locationUpdateInterval: 1000,
+
       debug: false,
-      stopOnTerminate: false
+      stopOnTerminate: false,
+      startOnBoot: true,
     };
 
     bgGeo.configure(options, (state) => {
