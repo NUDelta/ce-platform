@@ -24,20 +24,16 @@ Template.participate.onCreated(function() {
 
   const experiencesHandle = this.subscribe('experiences.single', experienceId);
   this.subscribe('images', experienceId);
-  this.subscribe('incidents');
   this.subscribe('participation_locations');
 
   this.state = new ReactiveDict();
   this.autorun(() => {
+    this.subscribe('incidents.byExperience', experienceId);
+
     if (experiencesHandle.ready()) {
       const experience = Experiences.findOne(experienceId);
       this.state.set('experience', experience);
       this.state.set('modules', this.state.get('experience').modules);
-
-      const incident = Incidents.findOne(experience.activeIncident);
-      if (incident) {
-        this.state.set('incident', incident);
-      }
     }
   });
 
@@ -79,8 +75,10 @@ Template.participate.helpers({
   },
   mapArgs() {
     const instance = Template.instance();
+    const incident = Incidents.findOne();
+
     return {
-      incidentId: instance.state.get('incident')._id
+      incidentId: incident && incident._id
     };
   },
   experienceButtonsArgs() {
@@ -100,8 +98,8 @@ Template.participate.events({
 
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
-    const experienceId = Router.current.params._id;
-    const incidentId = instance.state.get('incident')._id;
+    const experienceId = Router.current().params._id;
+    const incidentId = Incidents.findOne()._id; // TODO: might need to handle error cases?
 
     if (instance.usesModule('text')) {
       TextEntries.insert({
