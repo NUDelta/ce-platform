@@ -46,6 +46,11 @@ Template.map.onCreated(function() {
 
         markers[insertedMarker._id] = marker;
       },
+      changed(changedDocument, oldDocument) {
+        const changedMarker = ParticipationLocations.findOne({_id: changedDocument});
+        console.log(changedMarker);
+        markers[changedMarker._id].setPosition({ lat: changedMarker.lat, lng: changedMarker.lng});
+      },
       removed(oldDocument) {
         markers[oldDocument].setMap(null);
         delete markers[oldDocument];

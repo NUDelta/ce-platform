@@ -137,7 +137,7 @@ Template.participate.events({
     Router.go('results', { _id: incidentId });
   },
   'click #flashlight-off-btn'(event, instance) {
-    const incidentId = instance.state.get('incident')._id;
+    const incidentId = Incidents.findOne()._id;
 
     window.plugins.flashlight.available(function(isAvailable) {
       if (isAvailable) {
@@ -157,29 +157,36 @@ Template.participate.events({
   'click #participate-btn'(event, instance) {
     event.preventDefault();
 
-    const longitude = -(Math.random()*(90-70+1)+70);
-    const latitude = Math.random()*(50-30+1)+30;
-    const loc = {lat: latitude, lng: longitude};
+    //const longitude = -(Math.random()*(90-70+1)+70);
+    //const latitude = Math.random()*(50-30+1)+30;
+    //const loc = {lat: latitude, lng: longitude};
 
     //for when mobile works
-    // const loc = LocationManager.currentLocation();
+    const loc = LocationManager.currentLocation();
+    const incidentId = Incidents.findOne()._id;
 
     let participationLocLog = {
-      incidentId: instance.state.get('incident')._id,
+      incidentId: incidentId,
       experience: Router.current().params._id,
       userId: Meteor.userId(),
       lat: loc.lat,
       lng: loc.lng
     };
 
-    ParticipationLocations.insert(participationLocLog);
+    let submissionId = ParticipationLocations.insert(participationLocLog);
+    instance.autorun(() => {
+      const newLoc = LocationManager.currentLocation();
+      ParticipationLocations.update(submissionId, {$set: {lat: newLoc.lat, lng: newLoc.lng}});
+    });
+
+    //can only participate once, will need to be made smarter in the future
+    document.getElementById('participate-btn').style.display = "none";
 
     if (instance.usesModule('flashlight')) {
       window.plugins.flashlight.available(function(isAvailable) {
         if (isAvailable) {
           // switch on
           window.plugins.flashlight.toggle();
-          document.getElementById('participate-btn').style.display = "none";
           document.getElementById('flashlight-off-btn').style.display = "block";
         } else {
           alert("Flashlight not available on this device");
