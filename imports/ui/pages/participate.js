@@ -93,8 +93,9 @@ Template.participate.events({
   'submit form'(event, instance) {
     event.preventDefault();
 
-    const caption = event.target.write.value || '';
-    const picture = event.target.photo.files[0];
+    // TODO: Probably can generalize this logic
+    const caption = event.target.write && event.target.write.value || '';
+    const picture = event.target.photo && event.target.photo.files[0];
 
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
