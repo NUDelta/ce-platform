@@ -72,6 +72,6 @@ Template.experienceButtons.events({
 Template.experienceButtons.helpers({
   isRunning() {
     const data = Template.currentData();
-    return data.activeIncident;
+    return data.experience.activeIncident;
   }
 });
