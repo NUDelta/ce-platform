@@ -13,6 +13,7 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
+import { DEBUG_USERS } from '../../startup/client/config.js'
 
 import '../components/experience_buttons.js';
 import '../components/map.js';
@@ -86,6 +87,9 @@ Template.participate.helpers({
     return {
       experience: instance.state.get('experience')
     };
+  },
+  isDebugUser() {
+    return DEBUG_USERS.indexOf(Meteor.userId()) > -1;
   }
 });
 
