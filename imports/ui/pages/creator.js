@@ -61,6 +61,7 @@ Template.creator.events({
       name: name,
       description: desc,
       author: Meteor.userId(),
+      activeIncident: null,
       modules: modules,
       startText: startText,
       requirements: requirements,
