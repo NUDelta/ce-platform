@@ -90,6 +90,11 @@ Template.participate.helpers({
   },
   isDebugUser() {
     return DEBUG_USERS.indexOf(Meteor.userId()) > -1;
+  },
+  experienceIsActive() {
+    const instance = Template.instance();
+    const experience = instance.state.get('experience');
+    return experience.activeIncident;
   }
 });
 

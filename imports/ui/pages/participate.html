@@ -5,6 +5,7 @@
   <div class="row">
     <h3>{{ experience.name}}</h3>
     <p>{{ experience.description}}</p>
+    {{#if experienceIsActive}}
     {{#if uploadRequired}}
       <form>
         {{#if (moduleChosen "chain")}}
@@ -34,6 +35,7 @@
           {{> map mapArgs}}
         {{/if}}
       {{/if}}
+    {{/if}}
     {{/if}}
   </div>
   {{#if isDebugUser }}
