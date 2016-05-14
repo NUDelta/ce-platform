@@ -1,12 +1,6 @@
 import { BrowserPolicy } from 'meteor/browser-policy-common';
-import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
 
-Cerebro.NOTIFY_ALL = true;
-Cerebro.NOTIFY_METHOD = Cerebro.PUSH;
-
-Cerebro.DEBUG_PUSH = true;
-Cerebro.DEBUG_USERS = [ 'pTeAq958AvmvMvF7e', 'mr9qe4nRHQn8KufLX', 'BvYfcgvJ7yDETLjME' ];
-
+// TODO: This file needs serious refactoring and redundancy removal
 BrowserPolicy.content.allowSameOriginForAll();
 BrowserPolicy.content.allowOriginForAll('http://meteor.local');
 BrowserPolicy.content.allowOriginForAll('http://localhost');
@@ -21,10 +15,3 @@ WebApp.connectHandlers.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   return next();
 });
-
-export const Config = {
-  CLEAR_DB: 0,
-  CLEAR_USERS: 0,
-  CLEAR_ACTIVE: 0,
-  CLEANUP: 0
-};

@@ -59,3 +59,4 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
     return Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
   }
 });
+

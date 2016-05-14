@@ -10,3 +10,5 @@ import '../../api/users/methods.js';
 import '../../api/locations/server/publications.js';
 import '../../api/locations/methods.js';
 import '../../api/participation-locations/server/publications.js';
+import '../../api/activator/activator.js';
+import '../../api/activator/methods.js';

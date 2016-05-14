@@ -13,7 +13,7 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
-import { DEBUG_USERS } from '../../startup/client/config.js'
+import { CONFIG } from '../../api/config.js'
 
 import '../components/experience_buttons.js';
 import '../components/map.js';
@@ -89,7 +89,7 @@ Template.participate.helpers({
     };
   },
   isDebugUser() {
-    return DEBUG_USERS.indexOf(Meteor.userId()) > -1;
+    return Meteor.isDevelopment || _.contains(CONFIG.DEBUG_USERS, Meteor.userId());
   },
   experienceIsActive() {
     const instance = Template.instance();

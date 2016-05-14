@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
-import { Config } from './config.js';
+import { CONFIG } from '../../api/config.js';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
@@ -10,20 +10,24 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 
+import { updateLocation } from '../../api/locations/methods.js';
 import { log } from '../../api/logs.js';
 
+import { LOCATIONS } from './data.js';
 
-import '../../api/users/users.js';
+function findUserByEmail(email) {
+  return Meteor.users.findOne({ 'emails.0.address': email });
+}
 
 Meteor.startup(() => {
   SyncedCron.start();
 
-  if (Meteor.isDevelopment && Config.CLEAR_USERS) {
+  if (Meteor.isDevelopment && CONFIG.CLEAR_USERS) {
     log.warning(`Clearing users...`);
     Meteor.users.remove({});
   }
 
-  if (Meteor.isDevelopment && Config.CLEAR_DB) {
+  if (Meteor.isDevelopment && CONFIG.CLEAR_DB) {
     log.warning(`Clearing database...`);
     Experiences.remove({});
     Locations.remove({});
@@ -32,7 +36,7 @@ Meteor.startup(() => {
     ParticipationLocations.remove({});
   }
 
-  if (Meteor.isDevelopment && Config.CLEAR_ACTIVE) {
+  if (Meteor.isDevelopment && CONFIG.CLEAR_ACTIVE) {
     log.warning(`Clearing active experiences...`);
     Meteor.users.update({}, {
       $set: {
@@ -45,7 +49,12 @@ Meteor.startup(() => {
     Incidents.remove({});
   }
 
-  if (Config.CLEANUP) {
+  if (Meteor.isDevelopment && CONFIG.CLEAR_LOCATIONS) {
+    log.warning(`Clearing locations...`);
+    Locations.remove({});
+  }
+
+  if (CONFIG.CLEANUP) {
     // Remove orphaned experiences
     Incidents.find().forEach((incident) => {
       const experience = Experiences.findOne(incident.experience);
@@ -72,13 +81,29 @@ Meteor.startup(() => {
       }
     ];
 
+    const others = [
+      {
+        email: 'hq@northwestern.edu',
+        password: 'password'
+      },
+      {
+        email: 'yk@u.northwestern.edu',
+        password: 'password'
+      },
+      {
+        email: 'josh@u.northwestern.edu',
+        password: 'password'
+      }
+    ];
+
     admins.forEach(admin => Accounts.createUser(admin));
+    others.forEach(other => Accounts.createUser(other));
     log.info(`Populated ${ Meteor.users.find().count() } accounts`);
   }
 
   if (Experiences.find().count() === 0) {
-    const kevin = Meteor.users.findOne({ 'emails.0.address': 'kevinjchen94@gmail.com' });
-    const shannon = Meteor.users.findOne({ 'emails.0.address': 'shannon@shannon.com' });
+    const kevin = findUserByEmail('kevinjchen94@gmail.com');
+    const shannon = findUserByEmail('shannon@shannon.com');
 
     const experiences = [
       {
@@ -112,11 +137,57 @@ Meteor.startup(() => {
         startText: 'Pet Stella now and take a picture!',
         modules: ['camera', 'text'],
         requirements: ['hasCamera']
+      },
+      {
+        name: 'I\'m Hungry',
+        author: kevin._id,
+        description: 'Take a pic of yo meal at a restaurant right now!',
+        startText: 'Take a picture of your food please!',
+        modules: ['camera'],
+        requirements: ['hasCamera'],
+        location: 'restaurants'
       }
     ];
 
     experiences.forEach(experience => Experiences.insert(experience));
     log.info(`Populated ${ Experiences.find().count() } experiences`);
+  }
+
+  if (Locations.find().count() === 0) {
+    const kevin = findUserByEmail('kevinjchen94@gmail.com');
+    const shannon = findUserByEmail('shannon@shannon.com');
+    const ryan = findUserByEmail('ryanm36@gmail.com');
+    const hq = findUserByEmail('hq@northwestern.edu');
+    const yk = findUserByEmail('yk@u.northwestern.edu');
+    const josh = findUserByEmail('josh@u.northwestern.edu');
+
+    updateLocation.call({
+      uid: josh._id,
+      lat: LOCATIONS.FUNKY_MONK.lat,
+      lng: LOCATIONS.FUNKY_MONK.lng
+    });
+    updateLocation.call({
+      uid: shannon._id,
+      lat: LOCATIONS.EDZOS.lat,
+      lng: LOCATIONS.EDZOS.lng
+    });
+    updateLocation.call({
+      uid: ryan._id,
+      lat: LOCATIONS.TECH.lat,
+      lng: LOCATIONS.TECH.lng
+    });
+    updateLocation.call({
+      uid: hq._id,
+      lat: LOCATIONS.CRISP.lat,
+      lng: LOCATIONS.CRISP.lng
+    });
+    updateLocation.call({
+      uid: yk._id,
+      lat: LOCATIONS.ART_INSTITUTE.lat,
+      lng: LOCATIONS.ART_INSTITUTE.lng
+    });
+
+    log.info(`There are now ${ Locations.find().count() } locations collected.`);
   }
 
   // TODO: simulate some submissions

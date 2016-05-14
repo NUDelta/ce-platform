@@ -5,30 +5,23 @@ import { Push } from 'meteor/raix:push';
 import { LocationManager } from '../../locations/server/location-manager-server.js';
 import { CerebroCore } from '../cerebro-core.js';
 import { log } from '../../logs.js';
+import { CONFIG, AUTH } from '../../config.js';
 
-let auth = {
-  oauth_consumer_key: "-_zoLpC8DASmu7ql13IQIw",
-  oauth_consumer_secret: "2t9PyZDkOvykIWYvwWCy0uWoTug",
-  oauth_token: "kkU3B_Abdf30sx5tVB2fkFVbr3gzxMZO",
-  accessTokenSecret: "GGs0J7wWWshnazwoOHB01j3A2sM",
-  oauth_signature_method: "HMAC-SHA1"
-}, yelpEndpoint = 'http://api.yelp.com/v2/search';
+const yelpEndpoint = 'http://api.yelp.com/v2/search';
 
 CerebroServer = class CerebroServer extends CerebroCore {
   constructor() {
     super();
-    this.DEBUG_PUSH = false;
-    this.DEBUG_USERS = [];
   }
 
-  notify(users, server, subject, text, experienceId, route) {
-    // this needs refactoring into cerebro base
-    switch(this.NOTIFY_METHOD) {
-      case CerebroCore.EMAIL:
-        this._sendEmails(users, server, subject, text);
-        break;
+  notify({ userIds, experienceId, subject, text, route }) {
+    switch(CONFIG.NOTIFY_METHOD) {
+      // @Deprecated
+      // case CerebroCore.EMAIL:
+      //   this._sendEmails(users, server, subject, text);
+      //   break;
       case CerebroCore.PUSH:
-        this._sendPush(users, server, subject, text, experienceId, route);
+        this._sendPush(userIds, subject, text, route, experienceId);
         break;
       default:
         log.warn('Invalid notification method set');
@@ -36,8 +29,9 @@ CerebroServer = class CerebroServer extends CerebroCore {
     }
   }
 
+  // @Deprecated
   _sendEmails(users, server, subject, text) {
-    console.log('[CEREBRO-SERVER] Sending emails.');
+    log.cerebro('Sending emails.');
     server.unblock();
     users.forEach((user) => {
       this._addActiveExperience(user._id, experienceId);
@@ -50,23 +44,25 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  _sendPush(users, server, subject, text, experienceId, route) {
+  _sendPush(userIds, subject, text, route, experienceId) {
     const payload = {
       title: subject,
       text: text,
-      historyId: 'result',
       experienceId: experienceId,
       route: route
-
     };
 
     log.cerebro('Sending push notifications');
     log.cerebro(payload);
 
-    let userIds = _.map(users, user => user._id);
-    if (this.DEBUG_PUSH) {
-      userIds = this.DEBUG_USERS;
+    let pushUsers = [];
+    if (CONFIG.DEBUG_PUSH) {
+      log.info(`Debug push enabled. Sending to debug set.`);
+      pushUsers = CONFIG.DEBUG_USERS;
+    } else {
+      pushUsers = userIds
     }
+
     Push.send({
       from: 'push',
       title: subject,
@@ -75,11 +71,12 @@ CerebroServer = class CerebroServer extends CerebroCore {
       sound: 'airhorn.caf',
       payload: payload,
       query: {
-        userId: { $in: userIds }
+        userId: { $in: pushUsers }
       }
     });
   }
 
+  //@Unused
   _broadcastPush(subject, text) {
     log.cerebro('Broadcasting push notifications');
     Push.send({
@@ -91,7 +88,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
       payload: {
         title: subject,
         text: text,
-        historyId: 'result'
       },
       query: {
         // this sends to all users
@@ -157,7 +153,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     // TODO: refactor this
     // TODO: add support for *any* location
     // TODO: might want to unblock this
-    let params = _.clone(auth);
+    let params = _.clone(AUTH);
     params.category_filter = locationType;
 
     if (location.lat && location.lng) {
@@ -170,13 +166,13 @@ CerebroServer = class CerebroServer extends CerebroCore {
     params.radius = radius;
 
     let config = {
-      consumerKey: auth.oauth_consumer_key,
-      secret: auth.oauth_consumer_secret
+      consumerKey: AUTH.oauth_consumer_key,
+      secret: AUTH.oauth_consumer_secret
     }, urls = {
       requestToken: yelpEndpoint,
-      accessToken: auth.oauth_token
+      accessToken: AUTH.oauth_token
     }, oauthBinding = new OAuth1Binding(config, urls);
-    oauthBinding.accessTokenSecret = auth.accessTokenSecret;
+    oauthBinding.accessTokenSecret = AUTH.accessTokenSecret;
     let headers = oauthBinding._buildHeader();
 
     // TODO: check if this is blocking -- fix up if it is
