@@ -2,6 +2,7 @@ import './admin_locations.html';
 
 import { Template } from 'meteor/templating';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
+import { _ } from 'meteor/underscore';
 
 import { Locations } from '../../api/locations/locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
@@ -9,18 +10,53 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 Template.admin_locations.onCreated(function() {
   const handle = this.subscribe('locations');
 
+  this.markers = [];
+  this.doLiveQuery = (locationType, radius) => {
+    this.markers.forEach(marker => marker.setMap(null));
+    this.markers = [];
+
+    Meteor.call('cerebro.liveQuery',
+      { locationType, radius },
+      (err, users) => {
+        if (err) {
+          console.log(err);
+          alert(err)
+        } else {
+          Locations.find().forEach((location) => {
+            let icon;
+            if (_.contains(users, location.uid)) {
+              icon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+            } else {
+              icon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+            }
+            const marker = new google.maps.Marker({
+              position: new google.maps.LatLng(location.lat, location.lng),
+              map: this.map,
+              icon: icon
+            });
+            this.markers.push(marker);
+          });
+        }
+    });
+  };
   GoogleMaps.ready('map', (map) => {
     this.autorun(() => {
+      this.map = map.instance;
       if (handle.ready()) {
-        Locations.find().forEach((location) => {
-          const marker = new google.maps.Marker({
-            position: new google.maps.LatLng(location.lat, location.lng),
-            map: map.instance
-          });
-        });
+        this.doLiveQuery('restaurants', 200);
       }
     });
   });
+});
+
+Template.admin_locations.events({
+  'submit form'(event, instance) {
+    event.preventDefault();
+    const locationType = event.target.locationType.value;
+    const radius = parseInt(event.target.radius.value);
+    
+    instance.doLiveQuery(locationType, radius);
+  }
 });
 
 Template.admin_locations.helpers({

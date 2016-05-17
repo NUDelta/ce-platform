@@ -133,15 +133,19 @@ CerebroServer = class CerebroServer extends CerebroCore {
 
   liveQuery(locationType, options = {}) {
     options.location = options.location || 'Evanston+IL';
-    options.radius = options.radius || 200;
+    options.locationRadius = options.locationRadius || 200;
+    options.radius = options.radius || 20;
     options.limit = options.limit || 20;
 
-    let locations = _.map(this._yelpQuery(locationType, options.location, options.radius, options.limit),
-      business => business.location.coordinate);
-    locations = _.map(locations, (location) => {
-      return { lat: location.latitude, lng: location.longitude }
-    });
-    return LocationManager.findUsersNearLocations(locations);
+    const locations = _.map(
+      this._yelpQuery(locationType, options.location, options.locationRadius, options.limit),
+      (business) => {
+        return {
+          lat: business.location.coordinate.latitude,
+          lng: business.location.coordinate.longitude
+        }
+      });
+    return LocationManager.findUsersNearLocations(locations, options.radius);
   }
 
   pointsQuery(locations, options = {}) {
@@ -149,7 +153,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     return LocationManager.findUsersNearLocations(locations);
   }
 
-  _yelpQuery(locationType, location='Evanston+IL', radius=200, limit=5) {
+  _yelpQuery(locationType, location, radius, limit) {
     // TODO: refactor this
     // TODO: add support for *any* location
     // TODO: might want to unblock this

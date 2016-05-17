@@ -5,6 +5,7 @@ import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Cerebro } from './cerebro-server.js';
 import { Experiences } from '../../experiences/experiences.js';
+import { Schema } from '../../schema.js';
 import { log } from '../../logs.js';
 
 export const notify = new ValidatedMethod({
@@ -214,5 +215,23 @@ export const startChain = new ValidatedMethod({
         }
       }
     })
+  }
+});
+
+export const doLiveQuery = new ValidatedMethod({
+  name: 'cerebro.liveQuery',
+  validate: new SimpleSchema({
+    locationType: {
+      type: String,
+      label: 'location type',
+      allowedValues: _.map(Schema.YelpCategories, category => category.alias)
+    },
+    radius: {
+      type: Number,
+      label: 'radius'
+    }
+  }).validator(),
+  run({ locationType, radius }) {
+    return Cerebro.liveQuery(locationType, { radius });
   }
 });

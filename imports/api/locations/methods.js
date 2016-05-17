@@ -19,3 +19,4 @@ export const updateLocation = new ValidatedMethod({
     }
   }
 });
+
