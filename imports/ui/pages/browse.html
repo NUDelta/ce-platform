@@ -1,3 +1,10 @@
 <template name="browse">
-  <p>Browse wizards</p>
+  <div class="list-group">
+    {{#each experience in experiences}}
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">{{experience.name}}</h4>
+      <p class="list-group-item-text">{{experience.description}}</p>
+    </div>
+    {{/each}}
+  </div>
 </template>
