@@ -14,6 +14,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     super();
   }
 
+  // experienceId could be experience OR incident id
   notify({ userIds, experienceId, subject, text, route }) {
     switch(CONFIG.NOTIFY_METHOD) {
       // @Deprecated
@@ -157,6 +158,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     // TODO: refactor this
     // TODO: add support for *any* location
     // TODO: might want to unblock this
+    // TODO: paginate
     let params = _.clone(AUTH);
     params.category_filter = locationType;
 

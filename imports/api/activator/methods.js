@@ -37,6 +37,7 @@ function getUsersToNotify(experience) {
 
 function endExperience(experience, userIds, notificationOptions) {
   // TODO: encode what users were in the OG experience
+  const activeIncidentId = experience.activeIncident;
   removeFromAllActiveExperiences.call({ experienceId: experience._id });
   Experiences.update({
     _id: experience._id
@@ -45,7 +46,7 @@ function endExperience(experience, userIds, notificationOptions) {
   });
   Cerebro.notify({
     userIds: userIds,
-    experienceId: experience._id,
+    experienceId: activeIncidentId,
     subject: notificationOptions.subject,
     text: notificationOptions.text,
     route: notificationOptions.route
