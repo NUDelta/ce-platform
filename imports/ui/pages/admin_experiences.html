@@ -2,6 +2,8 @@
   <h3>Send Experience Notifications</h3>
   <p>Use these controls to send start and end notifications or schedule notifications for the next hour.</p>
   {{#each experience in experiences}}
+    <h4>{{experience.name}}</h4>
+    <p>{{experience.description}}</p>
     {{> experienceButtons (experienceButtonArgs experience)}}
   {{/each}}
 </template>
