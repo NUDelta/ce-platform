@@ -16,6 +16,8 @@ import '../../ui/pages/archive.js';
 import '../../ui/pages/creator.js';
 import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
+import '../../ui/pages/browse.js';
+import '../../ui/pages/profile.js';
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -55,4 +57,12 @@ Router.route('/results/:_id', {
 Router.route('/archive', {
   name: 'archive',
   waitOn: function() { return Meteor.subscribe('experiences'); }
+});
+
+Router.route('/browse', {
+  name: 'browse'
+});
+
+Router.route('/profile', {
+  name: 'profile'
 });
