@@ -7,6 +7,7 @@ import '../../ui/blaze-helpers.js';
 import '../../ui/layout/header.js';
 import '../../ui/layout/layout.js';
 import '../../ui/layout/spread_layout.js';
+import '../../ui/layout/nav.js';
 
 import '../../ui/pages/home.js';
 import '../../ui/pages/admin_experiences.js';
