@@ -1,5 +1,12 @@
 <template name="activeExperience">
-  <div class="alert alert-info" role="alert"><strong>{{experience.name}}</strong> is running right now!
+<!--   <div class="alert alert-info" role="alert"><strong>{{experience.name}}</strong> is running right now!
+    <a class="btn btn-primary btn-participate btn-block" href="/participate/{{experience._id}}">
+      Participate
+    </a>
+  </div> -->
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">{{experience.name}}</h4>
+    <p class="list-group-item-text">{{experience.description}}</p>
     <a class="btn btn-primary btn-participate btn-block" href="/participate/{{experience._id}}">
       Participate
     </a>
