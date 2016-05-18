@@ -6,9 +6,7 @@
       {{> activeExperience (activeExperienceArgs experienceId)}}
     {{/each}}
     </div>
-    <h4>Results From Past Experiences</h4>
-    {{#each pastIncident in pastIncidents}}
-      {{> resultLink (resultLinkArgs pastIncident)}}
-    {{/each}}
+  {{else}}
+  <h4>Sign In To Participate In Experiences</h4>
   {{/if}}
 </template>

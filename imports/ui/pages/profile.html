@@ -1,3 +1,10 @@
 <template name="profile">
-  <p>Profile page</p>
+  {{#if currentUser }}
+  <h4>Results From Past Experiences</h4>
+  {{#each pastIncident in pastIncidents}}
+    {{> resultLink (resultLinkArgs pastIncident)}}
+  {{/each}}
+  {{else}}
+  <h4>Sign In To See Existing Experiences</h4>
+  {{/if}}
 </template>
