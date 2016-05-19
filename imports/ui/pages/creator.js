@@ -70,6 +70,7 @@ Template.creator.events({
       if (err) {
         alert(err);
       } else {
+        Meteor.call('users.subscribeAllUsersToExperience', {experienceId: experienceId});
         Router.go('participate', { _id: experienceId });
       }
     });
