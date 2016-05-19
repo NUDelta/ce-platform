@@ -60,3 +60,47 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
   }
 });
 
+// Note: subscribe all users to all experiences by running
+// Experiences.find().fetch().forEach(function(elem, index, array) { Meteor.call('users.subscribeAllUsersToExperience', {experienceId: elem._id}); });
+// in your console with all Experiences subscribed
+export const subscribeAllUsersToExperience = new ValidatedMethod({
+  name: 'users.subscribeAllUsersToExperience',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+  run({ experienceId }) {
+    return Meteor.users.update({'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}}, {multi: true});
+  }
+});
+
+export const subscribeUserToExperience = new ValidatedMethod({
+  name: 'users.subscribeUserToExperience',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+  run({ experienceId }) {
+    return Meteor.users.update({_id: this.userId, 'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}});
+  }
+});
+
+export const unsubscribeUserFromExperience = new ValidatedMethod({
+  name: 'users.unsubscribeUserFromExperience',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+  run({ experienceId }) {
+    return Meteor.users.update({_id: this.userId, 'profile.subscriptions': experienceId}, {$pull: {'profile.subscriptions': experienceId}});
+  }
+});
+
+
+
