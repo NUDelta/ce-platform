@@ -9,8 +9,11 @@ import { Locations } from '../../api/locations/locations.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
+import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
 
 import { updateLocation } from '../../api/locations/methods.js';
+import { insertPhoto } from '../../api/images/methods.js';
+import { activateNewIncident } from '../../api/incidents/methods.js';
 import { log } from '../../api/logs.js';
 
 import { LOCATIONS } from './data.js';
@@ -53,11 +56,18 @@ Meteor.startup(() => {
     log.warning(`Clearing locations...`);
     Locations.remove({});
   }
+  
+  if (Meteor.isDevelopment && CONFIG.CLEAR_SUBMISSIONS) {
+    log.warning(`Clearing submissions...`);
+    Images.remove({});
+    TextEntries.remove({});
+    ParticipationLocations.remove({});
+  }
 
   if (CONFIG.CLEANUP) {
     // Remove orphaned experiences
     Incidents.find().forEach((incident) => {
-      const experience = Experiences.findOne(incident.experience);
+      const experience = Experiences.findOne(incident.experienceId);
       if (!experience) {
         Incidents.remove(incident._id);
       }
@@ -187,9 +197,56 @@ Meteor.startup(() => {
       lng: LOCATIONS.ART_INSTITUTE.lng
     });
 
-    log.info(`There are now ${ Locations.find().count() } locations collected.`);
+    log.info(`Populated ${ Locations.find().count() } locations`);
   }
 
+
+  if (Images.find().count() === 0) {
+    const stellaTime = Experiences.findOne({ name: 'Stella Time' });
+    const kevin = findUserByEmail('kevinjchen94@gmail.com');
+    const incidentId = activateNewIncident.call({
+      name: stellaTime.name,
+      experienceId: stellaTime._id,
+      launcher: kevin._id
+    });
+
+    const userIds = Meteor.users.find().fetch().map(user => user._id);
+    Cerebro.setActiveExperiences(userIds, stellaTime._id);
+    Cerebro.addIncidents(userIds, incidentId);
+
+    const images = [
+      {
+        title: 'stella1.jpg',
+        url: 'fixtures/stella_time/stella1.jpg',
+        incidentId: incidentId
+      },
+      {
+        title: 'stella2.jpg',
+        url: 'fixtures/stella_time/stella2.jpg',
+        incidentId: incidentId
+      },
+      {
+        title: 'stella3.jpg',
+        url: 'fixtures/stella_time/stella3.jpg',
+        incidentId: incidentId
+      },
+      {
+        title: 'stella4.jpg',
+        url: 'fixtures/stella_time/stella4.jpg',
+        incidentId: incidentId
+      }
+    ];
+
+    images.forEach((image) => {
+      const buffer = new Buffer(Assets.getBinary(image.url));
+      insertPhoto.call({
+        incidentId: image.incidentId,
+        image: buffer.toString('base64')
+      });
+    });
+
+    log.info(`Populated ${ Images.find().count() } images`);
+  }
   // TODO: simulate some submissions
   // if (ParticipationLocations.find().count() === 0) {
   //   const locationData = [

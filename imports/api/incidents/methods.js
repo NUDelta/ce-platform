@@ -25,7 +25,7 @@ export const activateNewIncident = new ValidatedMethod({
     const incidentId = Incidents.insert({
       date: Date.parse(new Date()),
       name: name,
-      experience: experienceId,
+      experienceId: experienceId,
       launcher: launcher
     });
     Experiences.update(experienceId, { $set: { activeIncident: incidentId } });

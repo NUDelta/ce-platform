@@ -5,12 +5,12 @@ Template.nav.onRendered(function() {
 });
 
 Template.nav.helpers({
-  isCurrentPage: function(pageName){
+  isCurrentPage(pageName) {
     return Router.current().route.getName() === pageName;
   }
 });
 
-adjustActive = function() {
+const adjustActive = function() {
   $('.nav-item').removeClass('active');
   let route = Router.current().route.getName();
   if (route === 'home') { $('#browse').addClass('active'); }

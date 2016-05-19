@@ -115,8 +115,8 @@ Template.participate.events({
       TextEntries.insert({
         submitter: Meteor.userId(),
         text: caption,
-        experience: experienceId,
-        incident: incidentId,
+        experienceId: experienceId,
+        incidentId: incidentId,
         lat: location.lat,
         lng: location.lng,
         location: place
@@ -132,9 +132,9 @@ Template.participate.events({
           Images.update(imageFile._id,
             {
               $set: {
-                experience: experienceId,
+                experienceId: experienceId,
                 caption: caption,
-                incident: incidentId,
+                incidentId: incidentId,
                 lat: location.lat,
                 lng: location.lng,
                 location: place

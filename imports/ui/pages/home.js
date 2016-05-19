@@ -33,7 +33,7 @@ Template.home.helpers({
     const incident = Incidents.findOne(pastIncident);
     return {
       incidentId: pastIncident,
-      experience: Experiences.findOne(incident.experience)
+      experience: Experiences.findOne(incident.experienceId)
     }
   }
 });

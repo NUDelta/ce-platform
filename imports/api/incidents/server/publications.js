@@ -11,3 +11,7 @@ Meteor.publish('incidents.byExperience', function(experienceId) {
   const experience = Experiences.findOne(experienceId);
   return Incidents.find(experience.activeIncident);
 });
+
+Meteor.publish('incidents.byId', function(incidentId) {
+  return Incidents.find(incidentId);
+});

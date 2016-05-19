@@ -20,7 +20,7 @@ class IncidentCollection extends Mongo.Collection {
 export const Incidents = new IncidentCollection('incidents');
 
 Schema.Incident = new SimpleSchema({
-  experience: {
+  experienceId: {
     type: String,
     label: 'Id of referenced experience',
     regEx: SimpleSchema.RegEx.Id

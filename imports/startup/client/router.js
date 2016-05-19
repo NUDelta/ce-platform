@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Router } from 'meteor/iron:router';
-import { Incidents } from '../../api/incidents/incidents.js';
 
 import '../../ui/blaze-helpers.js';
 
-import '../../ui/layout/header.js';
 import '../../ui/layout/layout.js';
 import '../../ui/layout/spread_layout.js';
-import '../../ui/layout/nav.js';
 
 import '../../ui/pages/home.js';
 import '../../ui/pages/admin_experiences.js';
@@ -49,9 +46,7 @@ Router.route('/participate/:_id', {
 
 Router.route('/results/:_id', {
   name: 'results',
-  layoutTemplate: 'spreadLayout',
-  data: function() { return Incidents.findOne(this.params._id); },
-  waitOn: function() { return [Meteor.subscribe('experiences'), Meteor.subscribe('incidents')]; }
+  layoutTemplate: 'spreadLayout'
 });
 
 Router.route('/archive', {

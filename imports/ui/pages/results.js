@@ -2,6 +2,8 @@ import './results.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
 import { Experiences } from '../../api/experiences/experiences.js';
@@ -12,63 +14,79 @@ import { Incidents } from '../../api/incidents/incidents.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 
 Template.results.onCreated(function() {
-  this.subscribe('images', this.data._id);
-  this.subscribe('text_entries');
-  this.subscribe('incidents');
-  this.subscribe('experiences', this.data._id);
-  Session.set('imageFilter', {incident: this.data._id});
-  Session.set('textFilter', {incident: this.data._id});
+  const incidentId = Router.current().params._id;
+  
+  this.subscribe('images', incidentId);
+  this.subscribe('textEntries.byIncident', incidentId);
+  const incHandle = this.subscribe('incidents.byId', incidentId);
+  const expHandle = this.subscribe('experiences.byIncident', incidentId);
+
+  this.state = new ReactiveDict();
+  this.state.set('incidentId', incidentId);
+  this.filter = new ReactiveVar({ incidentId: incidentId});
+
+  this.autorun(() => {
+    if (expHandle.ready() && incHandle.ready()) {
+      const experience = Experiences.findOne();
+      const incident = Incidents.findOne();
+      this.state.set({
+        incident: incident,
+        experience: experience,
+        modules: experience.modules
+      });
+    }
+  });
 });
 
 Template.results.helpers({
-  photoChosen: function(params) {
-    let modules = Experiences.findOne(this.experience).modules;
-    return _.contains(modules, 'camera');
+  incident() {
+    const instance = Template.instance();
+    return instance.state.get('incident');
   },
-  textChosen: function(params) {
-    let modules = Experiences.findOne(this.experience).modules;
-    return _.contains(modules, 'text');
+  moduleChosen(module) {
+    const instance = Template.instance();
+    const modules = instance.state.get('modules');
+    return _.contains(modules, module);
   },
-  images: function(params) {
-    return Images.find(Session.get('imageFilter'));
+  images() {
+    const instance = Template.instance();
+    return Images.find(instance.filter.get());
   },
-  textEntries: function(params) {
-    return TextEntries.find(Session.get('textFilter'));
+  textEntries() {
+    const instance = Template.instance();
+    return TextEntries.find(instance.filter.get());
   },
-  experience: function() {
-    return this.experience;
+  experience() {
+    const instance = Template.instance();
+    return instance.state.get('experience');
   },
   isActive: function() {
-    console.log(Experiences.findOne(this.experience).activeIncident === this._id);
-    return Experiences.findOne(this.experience).activeIncident === this._id;
+    const instance = Template.instance();
+    return Experiences.findOne() == instance.state.get('incidentId');
   }
 });
 
 Template.results.events({
-  'change #pic-dropdown': function(evt) {
-    let newValue =  $('#pic-dropdown option:selected').text();
-    let oldValue = Session.get('imageFilter');
-    let newFilter = {incident: this._id};
+  'change #pic-dropdown'(event, instance) {
+    const newValue = event.target.value;
+    const newFilter = { incidentId: instance.state.get('incidentId') };
 
-    if (newValue != oldValue && newValue != 'Anywhere') {
-      // value changed, let's do something
+    if (newValue != instance.filter.get() && newValue != 'Anywhere') {
       newFilter.location = newValue;
     }
-
-    console.log(newFilter);
-    Session.set('imageFilter', newFilter);
+    instance.filter.set(newFilter);
   },
-  'change #text-dropdown': function(evt) {
-    let newValue =  $('#text-dropdown option:selected').text();
-    let oldValue = Session.get('textFilter');
-    let newFilter = {incident: this._id};
-
-    if (newValue != oldValue && newValue != 'Anywhere') {
-      // value changed, let's do something
-      newFilter.location = newValue;
-    }
-
-    console.log(newFilter);
-    Session.set('textFilter', newFilter);
-  }
+  // 'change #text-dropdown'(event, instance) {
+  //   let newValue =  $('#text-dropdown option:selected').text();
+  //   let oldValue = Session.get('textFilter');
+  //   let newFilter = { incidentId: this._id };
+  //
+  //   if (newValue != oldValue && newValue != 'Anywhere') {
+  //     // value changed, let's do something
+  //     newFilter.location = newValue;
+  //   }
+  //
+  //   console.log(newFilter);
+  //   Session.set('textFilter', newFilter);
+  // }
 });

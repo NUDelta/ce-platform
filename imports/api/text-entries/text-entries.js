@@ -14,14 +14,15 @@ Schema.TextEntry = new SimpleSchema({
     type: String,
     label: 'Comment content'
   },
-  experience: {
+  experienceId: {
     type: String,
     label: 'Comment experience',
     regEx: SimpleSchema.RegEx.Id
   },
-  incident: {
+  incidentId: {
     type: String,
-    label: 'Incident'
+    label: 'Incident',
+    regEx: SimpleSchema.RegEx.Id
   },
   lat: {
     type: String,

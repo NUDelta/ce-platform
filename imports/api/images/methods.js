@@ -20,11 +20,11 @@ let _getBase64Data = (doc, callback) => {
 export const insertPhoto = new ValidatedMethod({
   name: 'images.mobile.insert',
   validate: new SimpleSchema({
-    experienceId: {
+    incidentId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id
     },
-    picture: {
+    image: {
       type: String // base64 string?
     },
     title: {
@@ -32,32 +32,29 @@ export const insertPhoto = new ValidatedMethod({
       optional: true
     }
   }).validator(),
-  run({ experienceId, picture, title = 'upload.png' }) {
-    // title might throw an error
-    let newFile = new FS.File();
-    newFile.attachData(new Buffer(picture, 'base64'), { type: 'image/png' }, function(error) {
+  run({ incidentId, image, title = 'upload.png' }) {
+    const newFile = new FS.File();
+    newFile.attachData(new Buffer(image, 'base64'), { type: 'image/png' }, (error) => {
       if (error) throw error;
-
       newFile.name(title);
       let image = Images.insert(newFile);
       image = Images.findOne(image._id);
-      Images.update({ _id: image._id }, {$set : { experience: experienceId }});
+      Images.update({ _id: image._id }, {$set : { incidentId: incidentId }});
     });
-    return picture;
   }
 });
 
 export const getPhotos = new ValidatedMethod({
   name: 'images.mobile.find',
   validate: new SimpleSchema({
-    experienceId: {
+    incidentId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id
     }
   }).validator(),
-  run({ experienceId }) {
+  run({ incidentId }) {
     let pics = [];
-    Images.find({experience: experienceId}).forEach((pic) => {
+    Images.find({ incidentId: incidentId }).forEach((pic) => {
       pics.push(getBase64Data(pic));
     });
     return pics
