@@ -60,3 +60,16 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
   }
 });
 
+export const subscribeAllUsersToExperience = new ValidatedMethod({
+  name: 'users.subscribeAllUsersToExperience',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+  run({ experienceId }) {
+    return Meteor.users.update({'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}}, {multi: true});
+  }
+});
+
