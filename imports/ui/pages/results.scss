@@ -1,17 +1,25 @@
 
 #results {
-  .image-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0;
 
-    li {
-      display: inline-block;
-      font-size: 16px;
-      margin-left: 4px;
-      margin-right: 4px;
-      margin-bottom: 8px;
-    }
+  img {
+    width: 100%;
+  }
+
+  .col {
+    padding: 0;
+  }
+
+//    display: flex;
+//    flex-wrap: wrap;
+//    font-size: 0;
+
+//    li {
+//      display: inline-block;
+//      font-size: 16px;
+//      margin-left: 4px;
+//      margin-right: 4px;
+//      margin-bottom: 8px;
+//    }
     //li {
     //  margin: 4px;
     //  width: 400px;
@@ -32,5 +40,4 @@
     //  top: -100%;
     //  bottom: -100%;
     //}
-  }
 }

@@ -1,0 +1,28 @@
+{
+  "name": "ce-platform",
+  "version": "0.0.1",
+  "description": "This is a collective experiences platform.",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "photoswipe": "4.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NUDelta/ce-platform.git"
+  },
+  "keywords": [
+    "collective",
+    "experiences"
+  ],
+  "author": "Kevin J. Chen <kevinchen2016@u.northwestern.edu> (http://kevinchen.ninja/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NUDelta/ce-platform/issues"
+  },
+  "homepage": "https://github.com/NUDelta/ce-platform#readme"
+}

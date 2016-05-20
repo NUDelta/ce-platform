@@ -6,6 +6,9 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
+import PhotoSwipe from 'photoswipe/dist/photoswipe.min';
+import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default.min';
+
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
@@ -76,6 +79,22 @@ Template.results.events({
     }
     instance.filter.set(newFilter);
   },
+  'click img'(event, instance) {
+    const galleryElement = document.getElementById('gallery');
+    const items = Images.find(instance.filter.get()).fetch().map(
+      (image) => {
+        return {
+          src: image.url(),
+          w: image.metadata.width,
+          h: image.metadata.height
+        };
+      });
+    const options = {
+      index: event.target.getAttribute('data-index')
+    };
+    const gallery = new PhotoSwipe(galleryElement, PhotoSwipeUI_Default, items, options);
+    gallery.init();
+  }
   // 'change #text-dropdown'(event, instance) {
   //   let newValue =  $('#text-dropdown option:selected').text();
   //   let oldValue = Session.get('textFilter');
@@ -89,4 +108,7 @@ Template.results.events({
   //   console.log(newFilter);
   //   Session.set('textFilter', newFilter);
   // }
+});
+
+Template.results.onRendered(() => {
 });
