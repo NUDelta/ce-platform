@@ -1,0 +1,36 @@
+
+#results {
+  .image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0;
+
+    li {
+      display: inline-block;
+      font-size: 16px;
+      margin-left: 4px;
+      margin-right: 4px;
+      margin-bottom: 8px;
+    }
+    //li {
+    //  margin: 4px;
+    //  width: 400px;
+    //  height: 400px;
+    //  overflow: hidden;
+    //  position: relative;
+    //}
+    //img {
+    //  position: absolute;
+    //  margin: auto;
+    //  min-height: 100%;
+    //  max-width: 100%;
+    //
+    //  /* For the following settings we set 100%, but it can be higher if needed
+    //  See the answer's update */
+    //  left: -100%;
+    //  right: -100%;
+    //  top: -100%;
+    //  bottom: -100%;
+    //}
+  }
+}

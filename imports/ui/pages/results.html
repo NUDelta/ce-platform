@@ -1,49 +1,56 @@
 <template name="results">
-  {{#if moduleChosen "camera"}}
-    <h3>Check out everyone's pictures for {{experience.name}}</h3>
-    <h5>View only photos from:
-      <select id="pic-dropdown">
-        <option value="anywhere" selected>Anywhere</option>
-        <option value="north-campus">NU North Campus</option>
-        <option value="south-campus">NU South Campus</option>
-        <option value="offcampus-evanston">Off-campus Evanston</option>
-        <option value="greater-chicago">Greater Chicago, IL Area</option>
-        <option value="greater-new-york">Greater New York, NY Area</option>
-        <option value="greater-buffalo">Greater Buffalo,NY Area</option>
-        <option value="greater-st-louis">Greater St. Louis, MO Area</option>
-      </select>
-    </h5>
-    <br/>
-    <div class="row">
-      {{#each image in images}}
-        <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
-          <img class="square img-responsive" src="{{image.url}}" alt="">
-          <p>{{image.caption}}</p>
-          <p>Submitted from {{image.location}}</p>
-        </div>
+  <div id="results">
+    {{#if moduleChosen "camera"}}
+      <h3>Check out everyone's pictures for {{experience.name}}</h3>
+      <h5>View only photos from:
+        <select id="pic-dropdown">
+          <option value="anywhere" selected>Anywhere</option>
+          <option value="north-campus">NU North Campus</option>
+          <option value="south-campus">NU South Campus</option>
+          <option value="offcampus-evanston">Off-campus Evanston</option>
+          <option value="greater-chicago">Greater Chicago, IL Area</option>
+          <option value="greater-new-york">Greater New York, NY Area</option>
+          <option value="greater-buffalo">Greater Buffalo,NY Area</option>
+          <option value="greater-st-louis">Greater St. Louis, MO Area</option>
+        </select>
+      </h5>
+      <br/>
+      <div class="row">
+        <ul class="col-sm-12 image-gallery">
+          {{#each image in images}}
+            <li>
+              <img src="{{image.url store="thumbs"}}" alt="">
+            </li>
+            <!--<div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">-->
+              <!--<img class="square img-responsive" src="{{image.url}}" alt="">-->
+              <!--<p>{{image.caption}}</p>-->
+              <!--<p>Submitted from {{image.location}}</p>-->
+            <!--</div>-->
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+    {{#if moduleChosen "text"}}
+      <h3>Here's what everyone wrote for {{experience.name}}</h3>
+      <!--<h5>View only submissions from:-->
+        <!--<select id="text-dropdown">-->
+          <!--<option value="anywhere" selected>Anywhere</option>-->
+          <!--<option value="north-campus">NU North Campus</option>-->
+          <!--<option value="south-campus">NU South Campus</option>-->
+          <!--<option value="offcampus-evanston">Off-campus Evanston</option>-->
+          <!--<option value="greater-chicago">Greater Chicago, IL Area</option>-->
+          <!--<option value="greater-new-york">Greater New York, NY Area</option>-->
+          <!--<option value="greater-buffalo">Greater Buffalo,NY Area</option>-->
+          <!--<option value="greater-st-louis">Greater St. Louis, MO Area</option>-->
+        <!--</select>-->
+      <!--</h5>-->
+      <br/>
+      {{#each textEntry in textEntries}}
+        <p>"{{textEntry.text}}" ...submitted from {{textEntry.location}}</p>
       {{/each}}
-    </div>
-  {{/if}}
-  {{#if moduleChosen "text"}}
-    <h3>Here's what everyone wrote for {{experience.name}}</h3>
-    <!--<h5>View only submissions from:-->
-      <!--<select id="text-dropdown">-->
-        <!--<option value="anywhere" selected>Anywhere</option>-->
-        <!--<option value="north-campus">NU North Campus</option>-->
-        <!--<option value="south-campus">NU South Campus</option>-->
-        <!--<option value="offcampus-evanston">Off-campus Evanston</option>-->
-        <!--<option value="greater-chicago">Greater Chicago, IL Area</option>-->
-        <!--<option value="greater-new-york">Greater New York, NY Area</option>-->
-        <!--<option value="greater-buffalo">Greater Buffalo,NY Area</option>-->
-        <!--<option value="greater-st-louis">Greater St. Louis, MO Area</option>-->
-      <!--</select>-->
-    <!--</h5>-->
-    <br/>
-    {{#each textEntry in textEntries}}
-      <p>"{{textEntry.text}}" ...submitted from {{textEntry.location}}</p>
-    {{/each}}
-  {{/if}}
-  {{#if isActive}}
-    <a href="/participate/{{experience._id}}">Back to upload</a>
-  {{/if}}
+    {{/if}}
+    {{#if isActive}}
+      <a href="/participate/{{experience._id}}">Back to upload</a>
+    {{/if}}
+  </div>
 </template>

@@ -46,3 +46,5 @@ mirrorcell:background-geolocation-plus
 mdg:geolocation
 mrt:moment-timezone
 force-ssl
+cfs:graphicsmagick
+jasny:bootstrap

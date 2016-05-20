@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
@@ -17,6 +18,7 @@ import { CONFIG } from '../../api/config.js'
 
 import '../components/experience_buttons.js';
 import '../components/map.js';
+import '../components/loading_overlay.js';
 
 import '../partials/participate_last_submission.js';
 
@@ -27,6 +29,7 @@ Template.participate.onCreated(function() {
   this.subscribe('images', experienceId);
   this.subscribe('participation_locations');
 
+  this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
   this.autorun(() => {
     this.subscribe('incidents.byExperience', experienceId);
@@ -95,12 +98,18 @@ Template.participate.helpers({
     const instance = Template.instance();
     const experience = instance.state.get('experience');
     return experience.activeIncident;
+  },
+  isSubmitting() {
+    const instance = Template.instance();
+    return instance.submitting.get();
   }
 });
 
 Template.participate.events({
   'submit form'(event, instance) {
     event.preventDefault();
+
+    instance.submitting.set(true);
 
     // TODO: Probably can generalize this logic
     const caption = event.target.write && event.target.write.value || '';
@@ -141,10 +150,12 @@ Template.participate.events({
               }
             }
           );
+          setTimeout(() => {
+            Router.go('results', { _id: incidentId });
+          }, 5000);
         }
       });
     }
-    Router.go('results', { _id: incidentId });
   },
   'click #flashlight-off-btn'(event, instance) {
     const incidentId = Incidents.findOne()._id;
