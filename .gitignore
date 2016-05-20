@@ -5,3 +5,5 @@ mup.json
 .DS_Store
 */.DS_Store
 ssl/
+node_modules/
+*.swp

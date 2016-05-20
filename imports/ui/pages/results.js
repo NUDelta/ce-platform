@@ -86,11 +86,12 @@ Template.results.events({
         return {
           src: image.url(),
           w: image.metadata.width,
-          h: image.metadata.height
+          h: image.metadata.height,
+          title: `${ image.caption } from ${ image.location }`
         };
       });
     const options = {
-      index: event.target.getAttribute('data-index')
+      index: parseInt(event.target.getAttribute('data-index'))
     };
     const gallery = new PhotoSwipe(galleryElement, PhotoSwipeUI_Default, items, options);
     gallery.init();

@@ -1,43 +1,36 @@
 
 #results {
+  select.form-control {
+    display: inline-block;
+    width: auto;
+  }
 
   img {
     width: 100%;
+    padding: 0px;
   }
 
   .col {
     padding: 0;
   }
 
-//    display: flex;
-//    flex-wrap: wrap;
-//    font-size: 0;
+  .pswp__caption__center {
+    text-align: center;
+  }
 
-//    li {
-//      display: inline-block;
-//      font-size: 16px;
-//      margin-left: 4px;
-//      margin-right: 4px;
-//      margin-bottom: 8px;
-//    }
-    //li {
-    //  margin: 4px;
-    //  width: 400px;
-    //  height: 400px;
-    //  overflow: hidden;
-    //  position: relative;
-    //}
-    //img {
-    //  position: absolute;
-    //  margin: auto;
-    //  min-height: 100%;
-    //  max-width: 100%;
-    //
-    //  /* For the following settings we set 100%, but it can be higher if needed
-    //  See the answer's update */
-    //  left: -100%;
-    //  right: -100%;
-    //  top: -100%;
-    //  bottom: -100%;
-    //}
+  .image-grid {
+    position: relative;
+
+    .caption {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      bottom: 0;
+      height: 48px;
+      color: rgba(255, 255, 255, 0.8);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 }
