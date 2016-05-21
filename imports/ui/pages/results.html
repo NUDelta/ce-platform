@@ -1,19 +1,19 @@
 <template name="results">
   <div id="results">
+    <h3>{{experience.name}}</h3>
+    <h5>Filter by:
+      <select id="filter-dropdown" class="form-control">
+        <option selected>Location</option>
+        <option>NU North Campus</option>
+        <option>NU South Campus</option>
+        <option>Off-campus Evanston</option>
+        <option>Greater Chicago, IL Area</option>
+        <option>Greater New York, NY Area</option>
+        <option>Greater Buffalo,NY Area</option>
+        <option>Greater St. Louis, MO Area</option>
+      </select>
+    </h5>
     {{#if moduleChosen "camera"}}
-      <h3>{{experience.name}}</h3>
-      <h5>Filter by: 
-        <select id="pic-dropdown" class="form-control">
-          <option value="anywhere" selected>Location</option>
-          <option value="north-campus">NU North Campus</option>
-          <option value="south-campus">NU South Campus</option>
-          <option value="offcampus-evanston">Off-campus Evanston</option>
-          <option value="greater-chicago">Greater Chicago, IL Area</option>
-          <option value="greater-new-york">Greater New York, NY Area</option>
-          <option value="greater-buffalo">Greater Buffalo,NY Area</option>
-          <option value="greater-st-louis">Greater St. Louis, MO Area</option>
-        </select>
-      </h5>
       <div class="row">
         {{#each image in images}}
           <div class="image-grid col-xs-6 col-sm-4 col-md-2 col">
@@ -28,20 +28,6 @@
       </div>
     {{/if}}
     {{#if $and (moduleChosen "text") ($not (moduleChosen "camera"))}}
-      <h3>Here's what everyone wrote for {{experience.name}}</h3>
-      <!--<h5>View only submissions from:-->
-        <!--<select id="text-dropdown">-->
-          <!--<option value="anywhere" selected>Anywhere</option>-->
-          <!--<option value="north-campus">NU North Campus</option>-->
-          <!--<option value="south-campus">NU South Campus</option>-->
-          <!--<option value="offcampus-evanston">Off-campus Evanston</option>-->
-          <!--<option value="greater-chicago">Greater Chicago, IL Area</option>-->
-          <!--<option value="greater-new-york">Greater New York, NY Area</option>-->
-          <!--<option value="greater-buffalo">Greater Buffalo,NY Area</option>-->
-          <!--<option value="greater-st-louis">Greater St. Louis, MO Area</option>-->
-        <!--</select>-->
-      <!--</h5>-->
-      <br/>
       {{#each textEntry in textEntries}}
         <p>"{{textEntry.text}}" ...submitted from {{textEntry.location}}</p>
       {{/each}}

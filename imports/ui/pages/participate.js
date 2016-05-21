@@ -150,11 +150,11 @@ Template.participate.events({
               }
             }
           );
-          setTimeout(() => {
-            Router.go('results', { _id: incidentId });
-          }, 5000);
+          Router.go('results', { _id: incidentId });
         }
       });
+    } else {
+      Router.go('results', { _id: incidentId });
     }
   },
   'click #flashlight-off-btn'(event, instance) {

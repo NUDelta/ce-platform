@@ -14,8 +14,6 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
-
 Template.results.onCreated(function() {
   const incidentId = Router.current().params._id;
   
@@ -70,10 +68,9 @@ Template.results.helpers({
 });
 
 Template.results.events({
-  'change #pic-dropdown'(event, instance) {
-    const newValue = event.target.value;
+  'change #filter-dropdown'(event, instance) {
+    const newValue = $('#filter-dropdown option:selected').text();
     const newFilter = { incidentId: instance.state.get('incidentId') };
-
     if (newValue != instance.filter.get() && newValue != 'Anywhere') {
       newFilter.location = newValue;
     }
@@ -96,20 +93,5 @@ Template.results.events({
     const gallery = new PhotoSwipe(galleryElement, PhotoSwipeUI_Default, items, options);
     gallery.init();
   }
-  // 'change #text-dropdown'(event, instance) {
-  //   let newValue =  $('#text-dropdown option:selected').text();
-  //   let oldValue = Session.get('textFilter');
-  //   let newFilter = { incidentId: this._id };
-  //
-  //   if (newValue != oldValue && newValue != 'Anywhere') {
-  //     // value changed, let's do something
-  //     newFilter.location = newValue;
-  //   }
-  //
-  //   console.log(newFilter);
-  //   Session.set('textFilter', newFilter);
-  // }
 });
 
-Template.results.onRendered(() => {
-});
