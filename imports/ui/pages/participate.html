@@ -20,14 +20,12 @@
                 {{/if}}
               {{/if}}
               {{#if (moduleChosen "camera")}}
-                  <div class="fileinput fileinput-new" data-provides="fileinput">
-                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
-                    <span class="glyphicon glyphicon-camera fileinput-new" data-trigger="fileinput"></span>
-                    <span class="glyphicon glyphicon-remove fileinput-exists" data-dismiss="fileinput"></span>
-                    <div>
-                      <input type="file" name="photo" required>
-                    </div>
-                  </div>
+                <label class="fileinput">
+                  <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
+                  <div class="glyphicon glyphicon-camera fileinput-new unselectable"></div>
+                  <div class="glyphicon glyphicon-remove fileinput-exists unselectable"></div>
+                </label>
+                <input type="file" name="photo" required>
               {{/if}}
               {{#if (moduleChosen "text")}}
                 <div class="form-group">

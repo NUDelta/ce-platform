@@ -46,7 +46,9 @@ LocationManagerClient = class LocationManagerClient {
   }
 
   currentLocation() {
-    return Geolocation.latLng();
+    // TODO: hack for prevent errors, FIXME: asap
+    const location = Geolocation.latLng() || { lat: 0, lng: 0 };
+    return location;
   }
 
   othersLocations(query = {}) {

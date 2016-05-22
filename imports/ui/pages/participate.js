@@ -178,10 +178,6 @@ Template.participate.events({
   'click #participate-btn'(event, instance) {
     event.preventDefault();
 
-    //const longitude = -(Math.random()*(90-70+1)+70);
-    //const latitude = Math.random()*(50-30+1)+30;
-    //const loc = {lat: latitude, lng: longitude};
-
     //for when mobile works
     const loc = LocationManager.currentLocation();
     const incidentId = Incidents.findOne()._id;
@@ -214,5 +210,32 @@ Template.participate.events({
         }
       });
     }
+  },
+  'click .fileinput, click .glyphicon-camera'(event, target) {
+    // TODO: sometimes trigger twice?
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    $('input[name=photo]').trigger('click');
+  },
+  'click .glyphicon-remove, touchstart .glyphicon-remove'(event, target) {
+    // TODO: I don't work
+    $('input[name=photo]')[0].value = null;
+  },
+  'change input[name=photo]'(event, target) {
+    const files = event.target.files;
+    if (files && files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event2) => {
+        $('.fileinput-new').hide();
+        $('.fileinput-exists').show();
+        $('.fileinput-preview').attr('src', event2.target.result);
+      };
+      reader.readAsDataURL(files[0]);
+    } else {
+      $('.fileinput-exists').hide();
+      $('.fileinput-new').show();
+    }
   }
 });
+
