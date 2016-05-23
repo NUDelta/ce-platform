@@ -211,16 +211,24 @@ Template.participate.events({
       });
     }
   },
-  'click .fileinput, click .glyphicon-camera'(event, target) {
-    // TODO: sometimes trigger twice?
-    event.preventDefault();
+  'click .fileinput, touchstart .glyphicon-camera'(event, target) {
+    // NOTE: oddly, touchstart seems to happily trigger events, but
+    // click won't.
     event.stopImmediatePropagation();
     event.stopPropagation();
     $('input[name=photo]').trigger('click');
   },
-  'click .glyphicon-remove, touchstart .glyphicon-remove'(event, target) {
-    // TODO: I don't work
-    $('input[name=photo]')[0].value = null;
+  'click .glyphicon-remove'(event, target) {
+    // NOTE: 5/22/16: simpler methods don't seem to work here
+    // e.g. $fileInput.val('');
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    const $fileInput = $('input[name=photo]');
+    $fileInput.replaceWith($fileInput.val('').clone(true));
+
+    $('.fileinput-preview').attr('src', '#');
+    $('.fileinput-exists').hide();
+    $('.fileinput-new').show();
   },
   'change input[name=photo]'(event, target) {
     const files = event.target.files;
@@ -232,9 +240,6 @@ Template.participate.events({
         $('.fileinput-preview').attr('src', event2.target.result);
       };
       reader.readAsDataURL(files[0]);
-    } else {
-      $('.fileinput-exists').hide();
-      $('.fileinput-new').show();
     }
   }
 });

@@ -1,11 +1,13 @@
 #participate {
   .fileinput {
+    display: block;
     border: 1px solid #ddd;
     border-radius: 4px;
     height: 200px;
     width: 100%;
     position: relative;
     text-align: center;
+    margin-bottom: 10px;
   }
   .fileinput-preview {
     max-height: 100%;
