@@ -64,6 +64,24 @@
                spellcheck="false" data-source="categories">
       </div>
     </div>
+    <div class="form-group">
+      <label class="control-label" for="radius">
+        Radius
+      </label>
+      <div class="controls">
+        <input name="radius" id="radius" type="number" class="form-control"
+               placeholder="Radius around location that should be searched." required/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="duration">
+        Duration (if scheduled, in minutes)
+      </label>
+      <div class="controls">
+        <input name="duration" id="duration" type="number" class="form-control"
+               placeholder="Apologies if your number is big" required/>
+      </div>
+    </div>
     <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 </template>

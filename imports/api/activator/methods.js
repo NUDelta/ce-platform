@@ -122,7 +122,10 @@ export const launchDurationExperience = new ValidatedMethod({
 
         let query = {};
         if (experience.location) {
-          const atLocation = Cerebro.liveQuery(experience.location);
+          const options = {
+            radius: experience.radius
+          };
+          const atLocation = Cerebro.liveQuery(experience.location, options);
           const newlyAtLocation = _.difference(atLocation, usersReached);
           query = {
             'profile.subscriptions': experience._id,

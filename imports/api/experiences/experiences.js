@@ -65,6 +65,16 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'The current incident for this experience',
     optional: true
+  },
+  duration: {
+    type: Number,
+    label: 'The duration this experience will run, in minutes',
+    optional: true
+  },
+  radius: {
+    type: Number,
+    label: 'The estimated size of the location / radius around which to look for people',
+    optional: true
   }
   /*
    * start condition

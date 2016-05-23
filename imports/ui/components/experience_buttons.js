@@ -28,10 +28,12 @@ Template.experienceButtons.events({
   'click .schedule-btn:not(.disabled)'(event, instance) {
     event.preventDefault();
 
+    // TODO: revamp me
+    const counts = instance.data.experience.duration;
     Meteor.call('launcher.duration', {
       duration: {
         interval: 1,
-        counts: 2
+        counts: counts || 2
       },
       experience: instance.data.experience,
       notificationOptions: {

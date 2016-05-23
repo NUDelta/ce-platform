@@ -26,6 +26,8 @@ Template.creator.events({
     const name = event.target.name.value;
     const desc = event.target.desc.value;
     const startText = event.target.start.value;
+    const radius = event.target.radius.value;
+    const duration = event.target.duration.value;
 
     // Parse out modules
     let modules = [];
@@ -58,14 +60,16 @@ Template.creator.events({
     }
 
     Experiences.insert({
-      name: name,
+      name,
       description: desc,
       author: Meteor.userId(),
       activeIncident: null,
-      modules: modules,
-      startText: startText,
-      requirements: requirements,
-      location: location
+      modules,
+      startText,
+      requirements,
+      location,
+      duration,
+      radius
     }, (err, experienceId) => {
       if (err) {
         alert(err);
