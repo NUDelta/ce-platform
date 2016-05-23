@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Geolocation } from 'meteor/mdg:geolocation';
+import { _ } from 'meteor/underscore';
 
 import { Locations } from '../locations.js';
 import { updateLocation } from '../methods.js';
@@ -46,8 +46,10 @@ LocationManagerClient = class LocationManagerClient {
   }
 
   currentLocation() {
-    // TODO: hack for prevent errors, FIXME: asap
-    const location = Geolocation.latLng() || { lat: 0, lng: 0 };
+    const lastPosition = navigator.geolocation.lastPosition.coords;
+    const location = Geolocation.latLng() ||
+      { lat: lastPosition.latitude, lng: lastPosition.longitude } ||
+      { lat: 0, lng: 0 };
     return location;
   }
 
