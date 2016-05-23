@@ -26,7 +26,6 @@ Template.participate.onCreated(function() {
   const experienceId = Router.current().params._id;
 
   const experiencesHandle = this.subscribe('experiences.single', experienceId);
-  this.subscribe('images', experienceId);
   this.subscribe('participation_locations');
 
   this.submitting = new ReactiveVar(false);
@@ -38,6 +37,10 @@ Template.participate.onCreated(function() {
       const experience = Experiences.findOne(experienceId);
       this.state.set('experience', experience);
       this.state.set('modules', this.state.get('experience').modules);
+
+      if (experience.activeIncident) {
+        this.subscribe('images', experience.activeIncident);
+      }
     }
   });
 
@@ -150,7 +153,17 @@ Template.participate.events({
               }
             }
           );
-          Router.go('results', { _id: incidentId });
+          // This is a bit unfortunate...(waiting for a completed callback)
+          // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
+          const cursor = Images.find(imageFile._id).observe({
+            changed(newImage) {
+              console.log(newImage);
+              if (newImage.isUploaded()) {
+                cursor.stop();
+                Router.go('results', { _id: incidentId });
+              }
+            }
+          });
         }
       });
     } else {

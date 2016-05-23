@@ -46,7 +46,8 @@ LocationManagerClient = class LocationManagerClient {
   }
 
   currentLocation() {
-    const lastPosition = navigator.geolocation.lastPosition.coords;
+    const lastPosition = navigator.geolocation.lastPosition &&
+      navigator.geolocation.lastPosition.coords;
     const location = Geolocation.latLng() ||
       { lat: lastPosition.latitude, lng: lastPosition.longitude } ||
       { lat: 0, lng: 0 };

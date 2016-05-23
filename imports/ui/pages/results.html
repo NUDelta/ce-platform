@@ -17,7 +17,11 @@
       <div class="row">
         {{#each image in images}}
           <div class="image-grid col-xs-6 col-sm-4 col-md-2 col">
-            <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+            {{#if image.isUploaded}}
+              <!-- small amount of lag before url is ready -->
+              <!-- probably should add a loading animation here -->
+              <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+            {{/if}}
             {{#if moduleChosen "text"}}
               <div class="caption">
                 {{image.caption}}, from {{image.location}}

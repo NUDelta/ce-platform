@@ -32,11 +32,20 @@ Meteor.startup(() => {
 
   if (Meteor.isDevelopment && CONFIG.CLEAR_DB) {
     log.warning(`Clearing database...`);
+    Meteor.users.update({}, {
+      $set: {
+        'profile.activeExperiences': [],
+        'profile.pastIncidents': []
+      }
+    }, {
+      multi: true
+    });
     Experiences.remove({});
     Locations.remove({});
     Images.remove({});
     TextEntries.remove({});
     ParticipationLocations.remove({});
+    Incidents.remove({});
   }
 
   if (Meteor.isDevelopment && CONFIG.CLEAR_ACTIVE) {

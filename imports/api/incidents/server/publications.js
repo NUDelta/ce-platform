@@ -9,7 +9,11 @@ Meteor.publish('incidents', function() {
 
 Meteor.publish('incidents.byExperience', function(experienceId) {
   const experience = Experiences.findOne(experienceId);
-  return Incidents.find(experience.activeIncident);
+  if (experience) {
+    return Incidents.find(experience.activeIncident);
+  } else {
+    this.ready();
+  }
 });
 
 Meteor.publish('incidents.byId', function(incidentId) {
