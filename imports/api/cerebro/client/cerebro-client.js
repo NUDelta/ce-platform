@@ -49,7 +49,7 @@ CerebroClient = class CerebroClient extends CerebroCore {
       chain: chain
     });
   }
-  
+
   getSubmissionLocation(latStr, lngStr) {
     const lat = parseFloat(latStr);
     const lng = parseFloat(lngStr);
@@ -60,7 +60,7 @@ CerebroClient = class CerebroClient extends CerebroCore {
       return "NU South Campus";
     } else if (lat <= 42.078932 && lat > 42.019184 && lng >= -87.711036 && lng < -87.669491) {
       return "Off-campus Evanston";
-    } else if (lat <= 42.009091 && lat > 41.683914 && lng >= -87.940299 && lng < -87.669491) {
+    } else if (lat <= 42.1796 && lat > 41.683914 && lng >= -87.940299 && lng < -87.669491) {
       return "Greater Chicago, IL Area";
     } else if (lat <= 43.153463 && lat > 42.696882 && lng >= -79.038439 && lng < -78.656952) {
       return "Greater Buffalo, NY Area";

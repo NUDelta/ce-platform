@@ -16,7 +16,7 @@ import { Incidents } from '../../api/incidents/incidents.js';
 
 Template.results.onCreated(function() {
   const incidentId = Router.current().params._id;
-  
+
   this.subscribe('images', incidentId);
   this.subscribe('textEntries.byIncident', incidentId);
   const incHandle = this.subscribe('incidents.byId', incidentId);
@@ -71,7 +71,7 @@ Template.results.events({
   'change #filter-dropdown'(event, instance) {
     const newValue = $('#filter-dropdown option:selected').text();
     const newFilter = { incidentId: instance.state.get('incidentId') };
-    if (newValue != instance.filter.get() && newValue != 'Anywhere') {
+    if (newValue != instance.filter.get() && newValue != 'Location') {
       newFilter.location = newValue;
     }
     instance.filter.set(newFilter);
@@ -94,4 +94,3 @@ Template.results.events({
     gallery.init();
   }
 });
-
