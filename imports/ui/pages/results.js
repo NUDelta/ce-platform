@@ -51,6 +51,7 @@ Template.results.helpers({
   },
   images() {
     // TODO: filter out incomplete uploads
+    // TODO: sort images in order? might require a timestamp
     const instance = Template.instance();
     return Images.find(instance.filter.get());
   },
