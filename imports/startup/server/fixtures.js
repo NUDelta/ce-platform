@@ -65,7 +65,7 @@ Meteor.startup(() => {
     log.warning(`Clearing locations...`);
     Locations.remove({});
   }
-  
+
   if (Meteor.isDevelopment && CONFIG.CLEAR_SUBMISSIONS) {
     log.warning(`Clearing submissions...`);
     Images.remove({});
@@ -172,7 +172,7 @@ Meteor.startup(() => {
     log.info(`Populated ${ Experiences.find().count() } experiences`);
   }
 
-  if (Locations.find().count() === 0) {
+  if (Meteor.isDevelopment && Locations.find().count() === 0) {
     const kevin = findUserByEmail('kevinjchen94@gmail.com');
     const shannon = findUserByEmail('shannon@shannon.com');
     const ryan = findUserByEmail('ryanm36@gmail.com');
@@ -210,7 +210,7 @@ Meteor.startup(() => {
   }
 
 
-  if (Images.find().count() === 0) {
+  if (Meteor.isDevelopment && Images.find().count() === 0) {
     const stellaTime = Experiences.findOne({ name: 'Stella Time' });
     const kevin = findUserByEmail('kevinjchen94@gmail.com');
     const incidentId = activateNewIncident.call({

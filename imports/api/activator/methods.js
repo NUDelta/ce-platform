@@ -152,7 +152,7 @@ export const launchDurationExperience = new ValidatedMethod({
         if (!this.isSimulation) {
           Cerebro.notify({
             userIds: newlyReached,
-            experienceID: experience._id,
+            experienceId: experience._id,
             subject: notificationOptions.subject,
             text: notificationOptions.text,
             route: notificationOptions.route
