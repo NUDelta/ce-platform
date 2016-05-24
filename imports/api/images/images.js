@@ -9,13 +9,17 @@ const createSquareThumb = (fileObj, readStream, writeStream) => {
 const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
     const transformer = gm(readStream, fileObj.name()).autoOrient();
     transformer.stream().pipe(writeStream);
-    transformer.size({ bufferStream: true }, FS.Utility.safeCallback((err, size) => {
+    transformer.identify({ bufferStream: true }, FS.Utility.safeCallback((err, metadata) => {
       if (err) {
         // handle the error
       } else {
-        // autoOrient settings don't seem to progress over, reverse
-        // TODO: more clear solution? figure out how to edit meta?
-        fileObj.update({ $set: { 'metadata.width': size.height, 'metadata.height': size.width } });
+        const orientation = metadata.Orientation;
+        const size = metadata.size;
+        if (orientation == 'RightTop') {
+          fileObj.update({ $set: { 'metadata.width': size.height, 'metadata.height': size.width } });
+        } else {
+          fileObj.update({ $set: { 'metadata.width': size.width, 'metadata.height': size.height } });
+        }
       }
     }));
 };
@@ -40,6 +44,10 @@ Expected metadata:
     incidentId: incidentId,
     lat: location.lat,
     lng: location.lng,
-    location: place
+    location: place,
+    metadata: {
+      height: height,
+      width: width
+    }
   }
  */

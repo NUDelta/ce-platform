@@ -50,6 +50,7 @@ Template.results.helpers({
     return _.contains(modules, module);
   },
   images() {
+    // TODO: filter out incomplete uploads
     const instance = Template.instance();
     return Images.find(instance.filter.get());
   },
@@ -78,8 +79,9 @@ Template.results.events({
   },
   'click img'(event, instance) {
     const galleryElement = document.getElementById('gallery');
-    const items = Images.find(instance.filter.get()).fetch().map(
-      (image) => {
+    const items = Images.find(instance.filter.get()).fetch()
+      .filter(image => image.metadata) // in case of incomplete uploads
+      .map((image) => {
         return {
           src: image.url(),
           w: image.metadata.width,

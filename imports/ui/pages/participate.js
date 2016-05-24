@@ -119,7 +119,6 @@ Template.participate.events({
     const picture = event.target.photo && event.target.photo.files[0];
 
     const location = LocationManager.currentLocation();
-    console.log(location);
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const experienceId = Router.current().params._id;
     const incidentId = Incidents.findOne()._id; // TODO: might need to handle error cases?
@@ -154,11 +153,11 @@ Template.participate.events({
               }
             }
           );
+          // TODO: setTimeout for automatically moving on if upload takes too long
           // This is a bit unfortunate...(waiting for a completed callback)
           // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
           const cursor = Images.find(imageFile._id).observe({
             changed(newImage) {
-              console.log(newImage);
               if (newImage.isUploaded()) {
                 cursor.stop();
                 Router.go('results', { _id: incidentId });
