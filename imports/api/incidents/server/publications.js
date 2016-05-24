@@ -19,3 +19,14 @@ Meteor.publish('incidents.byExperience', function(experienceId) {
 Meteor.publish('incidents.byId', function(incidentId) {
   return Incidents.find(incidentId);
 });
+
+Meteor.publish('incidents.byUser', function() {
+  if (!this.userId) {
+    this.ready();
+  } else {
+    const user = Meteor.users.findOne(this.userId);
+    return Incidents.find({
+      _id: { $in: user.profile.pastIncidents }
+    });
+  }
+});

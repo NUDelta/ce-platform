@@ -1,10 +1,15 @@
 <template name="profile">
-  {{#if currentUser }}
-  <h4>Results From Past Experiences</h4>
-  {{#each pastIncident in pastIncidents}}
-    {{> resultLink (resultLinkArgs pastIncident)}}
-  {{/each}}
+  {{#if currentUser}}
+    {{#if Template.subscriptionsReady}}
+      <h4>Results From Past Experiences</h4>
+      {{#each pastIncident in pastIncidents}}
+        {{> resultLink (resultLinkArgs pastIncident)}}
+      {{/each}}
+    {{else}}
+      <!-- TODO: get a loading template -->
+      Loading...
+    {{/if}}
   {{else}}
-  <h4>Sign In To See Existing Experiences</h4>
+    <h4>Sign In To See Existing Experiences</h4>
   {{/if}}
 </template>

@@ -10,6 +10,17 @@ Meteor.publish('experiences.single', function(experienceId) {
   return Experiences.find(experienceId);
 });
 
+Meteor.publish('experiences.activeUser', function() {
+  if (!this.userId) {
+    this.ready();
+  } else {
+    const user = Meteor.users.findOne(this.userId);
+    return Experiences.find({
+      _id: { $in: user.profile.activeExperiences }
+    });
+  }
+});
+
 Meteor.publish('experiences.byIncident', function(incidentId) {
   const incident = Incidents.findOne(incidentId);
   if (incident) {
