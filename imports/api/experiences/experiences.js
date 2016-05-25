@@ -75,6 +75,11 @@ Schema.Experience = new SimpleSchema({
     type: Number,
     label: 'The estimated size of the location / radius around which to look for people',
     optional: true
+  },
+  optIn: {
+    type: Boolean,
+    label: 'Subscription model of the experience',
+    optional: true
   }
   /*
    * start condition

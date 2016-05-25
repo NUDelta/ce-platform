@@ -2,32 +2,38 @@
   <h4>Create an Experience</h4>
   <form class="main form page">
     <div class="form-group">
-      <label class="control-label" for="name">Name your experience.</label>
-      <div class="controls">
-          <input name="name" id="name" type="text" placeholder="e.g. Sunsetogether"
-                 class="form-control" required/>
+      <!-- <label class="control-label" for="name">Name your experience.</label> -->
+      <div class="row">
+        <div class="col-xs-7">
+          <div class="controls">
+            <input name="name" id="name" type="text" placeholder="Experience Name"
+            class="form-control" required/>
+          </div>
+        </div>
+        <div class="col-xs-5">
+          <div class="controls">
+            <input name="duration" id="duration" type="number" class="form-control"
+            placeholder="Duration (min)" required/>
+          </div>
+        </div>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="desc">
-        Description
-      </label>
+      <!-- <label class="control-label" for="desc">Description</label> -->
       <div class="controls">
-          <input name="desc" id="desc" type="text" class="form-control"
-                 placeholder="This will be shown on the participation page." required/>
+        <input name="desc" id="desc" type="text" class="form-control"
+        placeholder="Description" required/>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="start">
-        Notification Text
-      </label>
+      <!-- <label class="control-label" for="start">Notification Text</label> -->
       <div class="controls">
         <input name="start" id="start" type="text" class="form-control"
-               placeholder="This will be the text in your notifications." required/>
+        placeholder="Notification Text" required/>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="module">Tell us what participants will do on Cerebro.</label>
+      <label class="control-label" for="module">What will participants do?</label>
       <div class="checkbox">
         <label>
           <input name="photo" type="checkbox" id="photo" value="photo">
@@ -57,31 +63,30 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="location">Tell us who we should ask to participate in your experience.</label>
-      <div class="controls">
-        <span>People at</span>
-        <input name="location" class="form-control typeahead" type="text" autocomplete="off" placeholder="e.g. bakeries"
-               spellcheck="false" data-source="categories">
+      <label class="control-label" for="options">Experience Options</label>
+      <div class="checkbox">
+        <label>
+          <input name="photo" type="checkbox" id="optin" value="optin">
+          Opt-in
+        </label>
+        <br>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label" for="radius">
-        Radius
-      </label>
+      <label class="control-label" for="location">Location Targeting (optional)</label>
+      <div class="controls">
+        <!-- <span>People at</span> -->
+        <input name="location" class="form-control typeahead" type="text" autocomplete="off" placeholder="Location (e.g. bakeries)"
+        spellcheck="false" data-source="categories">
+      </div>
+    </div>
+    <div class="form-group">
+      <!-- <label class="control-label" for="radius">Radius</label> -->
       <div class="controls">
         <input name="radius" id="radius" type="number" class="form-control"
-               placeholder="Radius around location that should be searched. (m)" required/>
+        placeholder="Radius (m)" required/>
       </div>
     </div>
-    <div class="form-group">
-      <label class="control-label" for="duration">
-        Duration (if scheduled, in minutes)
-      </label>
-      <div class="controls">
-        <input name="duration" id="duration" type="number" class="form-control"
-               placeholder="Apologies if your number is big" required/>
-      </div>
-    </div>
-    <input type="submit" value="Submit" class="btn btn-primary">
+    <input type="submit" value="Submit" class="btn btn-primary btn-block">
   </form>
 </template>

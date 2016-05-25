@@ -131,7 +131,8 @@ Meteor.startup(() => {
         description: 'Come play an online telephone game with people across the world.',
         startText: 'Telephone is about to start!',
         modules: ['chain'],
-        requirements: []
+        requirements: [],
+        optIn: false
       },
       {
         name: 'Storytime',
@@ -139,7 +140,8 @@ Meteor.startup(() => {
         description: 'Let\'s all write a story together!',
         startText: 'Storytime is about to start!',
         modules: ['chain', 'text'],
-        requirements: []
+        requirements: [],
+        optIn: false
       },
       {
         name: 'Nightlight',
@@ -147,7 +149,8 @@ Meteor.startup(() => {
         description: 'Shine your phone\'s flashlight into the night sky in solidarity with everyone walking in the dark',
         startText: 'Come be a part of Nightlight!',
         modules: ['map'],
-        requirements: []
+        requirements: [],
+        optIn: true
       },
       {
         name: 'Stella Time',
@@ -155,7 +158,8 @@ Meteor.startup(() => {
         description: 'We just want to play with Stella. Take a picture and tell a joke!',
         startText: 'Pet Stella now and take a picture!',
         modules: ['camera', 'text'],
-        requirements: ['hasCamera']
+        requirements: ['hasCamera'],
+        optIn: false
       },
       {
         name: 'I\'m Hungry',
@@ -164,7 +168,8 @@ Meteor.startup(() => {
         startText: 'Take a picture of your food please!',
         modules: ['camera'],
         requirements: ['hasCamera'],
-        location: 'restaurants'
+        location: 'restaurants',
+        optIn: false
       }
     ];
 

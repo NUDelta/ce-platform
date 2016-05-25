@@ -49,6 +49,10 @@ Template.creator.events({
       modules.push('flashlight');
     }
 
+    // Process options
+    const optIn = event.target.optin.checked;
+    console.log(optIn);
+
     // Process location
     let location = _.find(Schema.YelpCategories, (category) => {
       return category.title == event.target.location.value;
@@ -69,12 +73,18 @@ Template.creator.events({
       requirements,
       location,
       duration,
-      radius
+      radius,
+      optIn
     }, (err, experienceId) => {
       if (err) {
         alert(err);
       } else {
-        Meteor.call('users.subscribeAllUsersToExperience', {experienceId: experienceId});
+        if (optIn) {
+          Meteor.call('users.subscribeUserToExperience', {experienceId: experienceId});
+        }
+        else {
+          Meteor.call('users.subscribeAllUsersToExperience', {experienceId: experienceId});
+        }
         Router.go('participate', { _id: experienceId });
       }
     });
