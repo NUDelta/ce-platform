@@ -1,6 +1,6 @@
 body {
   font-size: 16px;
-  margin-top: 15px;
+  // margin-top: 55px;
   margin-bottom: 65px;
 }
 
@@ -29,6 +29,29 @@ img.logo {
 /* Constrain autocomplete dropdown to viewport width */
 .twitter-typeahead, .twitter-typeahead > .form-control, .tt-menu {
   max-width: 100% !important;
+}
+
+// header nav
+.navbar-text {
+  margin-top: 9px;
+  margin-left: 10px;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.navbar-header {
+  float: left;
+}
+
+.navbar-nav {
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+
+.dropdown-toggle {
+  float: right;
 }
 
 // footer nav
