@@ -53,8 +53,8 @@ img.logo {
   white-space: normal;
   border-right: 1px solid #e7e7e7;
 
-  &.active {
-    background-color: #ddd;
+  &.active .fa, &.active .nav-text {
+    color: #337ab7;
   }
 
   &:last-child {
@@ -71,10 +71,13 @@ img.logo {
 .nav-item .fa {
   font-size: 24px;
   display: block;
+  transition: all 0.4s ease;
+  color: #333;
 }
 
 .nav-item .nav-text {
-
+  transition: all 0.4s ease;
+  color: #333;
 }
 
 .btn-participate {
