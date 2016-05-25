@@ -63,6 +63,24 @@
       </div>
     </div>
     <div class="form-group">
+      <label class="control-label" for="location">Location Targeting (optional)</label>
+      <div class="row">
+        <div class="col-xs-7">
+          <div class="controls">
+            <!-- <span>People at</span> -->
+            <input name="location" class="form-control typeahead" type="text" autocomplete="off" placeholder="Location" spellcheck="false" data-source="categories">
+          </div>
+        </div>
+        <div class="col-xs-5">
+          <!-- <label class="control-label" for="radius">Radius</label> -->
+          <div class="controls">
+            <input name="radius" id="radius" type="number" class="form-control"
+            placeholder="Radius (m)" required/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
       <label class="control-label" for="options">Experience Options</label>
       <div class="checkbox">
         <label>
@@ -70,21 +88,6 @@
           Opt-in
         </label>
         <br>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="location">Location Targeting (optional)</label>
-      <div class="controls">
-        <!-- <span>People at</span> -->
-        <input name="location" class="form-control typeahead" type="text" autocomplete="off" placeholder="Location (e.g. bakeries)"
-        spellcheck="false" data-source="categories">
-      </div>
-    </div>
-    <div class="form-group">
-      <!-- <label class="control-label" for="radius">Radius</label> -->
-      <div class="controls">
-        <input name="radius" id="radius" type="number" class="form-control"
-        placeholder="Radius (m)" required/>
       </div>
     </div>
     <input type="submit" value="Submit" class="btn btn-primary btn-block">
