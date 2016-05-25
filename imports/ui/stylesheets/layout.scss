@@ -1,7 +1,8 @@
 body {
   font-size: 16px;
-  // margin-top: 55px;
+  margin-top: 55px;
   margin-bottom: 65px;
+  background-color: #f8f8ff;
 }
 
 img.logo {
@@ -108,7 +109,7 @@ img.logo {
   color: #333;
 }
 
-.btn-participate {
+.btn-participate, .btn-subscribe, .btn-unsubscribe {
   margin-top: 8px;
 }
 

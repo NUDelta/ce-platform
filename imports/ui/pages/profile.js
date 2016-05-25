@@ -23,5 +23,8 @@ Template.profile.helpers({
       incidentId: pastIncident,
       experience: Experiences.findOne(incident.experienceId)
     }
+  },
+  experiences: function() {
+    return Experiences.find({author: Meteor.userId()}).fetch();
   }
 });

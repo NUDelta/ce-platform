@@ -2,8 +2,14 @@
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
       <h4>Results From Past Experiences</h4>
+      <div class="list-group">
       {{#each pastIncident in pastIncidents}}
         {{> resultLink (resultLinkArgs pastIncident)}}
+      {{/each}}
+      </div>
+      <h4>Your Created Experiences</h4>
+      {{#each experience in experiences}}
+        {{> subscribeExperience experience}}
       {{/each}}
     {{else}}
       <!-- TODO: get a loading template -->
