@@ -39,9 +39,9 @@ Template.creator.events({
     if (event.target.text.checked) {
       modules.push('text');
     }
-    if (event.target.chain.checked) {
-      modules.push('chain');
-    }
+    // if (event.target.chain.checked) {
+    //   modules.push('chain');
+    // }
     if (event.target.map.checked) {
       modules.push('map');
     }
