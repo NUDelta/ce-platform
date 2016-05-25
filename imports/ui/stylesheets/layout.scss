@@ -51,14 +51,14 @@ img.logo {
   padding: 7px 0px 5px 0px;
   font-size: 14px;
   white-space: normal;
-  border-right: 1px solid #e7e7e7;
+  // border-right: 1px solid #e7e7e7;
 
   &.active .fa, &.active .nav-text {
     color: #337ab7;
   }
 
   &:last-child {
-    border-right: none;
+    // border-right: none;
   }
 
 }
