@@ -14,6 +14,12 @@ Template.profile_question.onCreated(function() {
 Template.profile_question.helpers({
   question: function () {
     return Questions[Session.get('qualification')];
+  },
+  unansweredQuestions: function () {
+    let qualifications = Meteor.user().profile.qualifications;
+    let answer = _.any(_.values(qualifications), function (v) { return _.isNull(v) });
+    console.log(answer);
+    return answer;
   }
 });
 
