@@ -102,5 +102,21 @@ export const unsubscribeUserFromExperience = new ValidatedMethod({
   }
 });
 
+export const setQualification = new ValidatedMethod({
+  name: 'users.setQualification',
+  validate: new SimpleSchema({
+    qualification: {
+      type: String
+    },
+    value: {
+      type: Boolean
+    }
+  }).validator(),
+  run({qualification, value}) {
+    console.log("Setting " + qualification + " to " + value);
+    return Meteor.users.update({_id: this.userId}, {$set: {['profile.qualifications.' + qualification]: value} });
+  }
+})
+
 
 
