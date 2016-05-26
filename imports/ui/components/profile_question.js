@@ -29,7 +29,10 @@ Template.profile_question.events({
 });
 
 let setNewQualification = function() {
-  let qualification = Schema.CEQualifications[Math.floor(Math.random()*Schema.CEQualifications.length)];
+  let qualification = Session.get('qualification');
+  while (qualification === Session.get('qualification')) {
+    qualification = Schema.CEQualifications[Math.floor(Math.random()*Schema.CEQualifications.length)];
+  }
   console.log(qualification);
   Session.set('qualification', qualification);
 };
