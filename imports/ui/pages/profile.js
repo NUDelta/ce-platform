@@ -7,6 +7,7 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
 import '../components/result_link.js';
+import '../components/profile_question.js';
 
 Template.profile.onCreated(function() {
   this.subscribe('experiences');
