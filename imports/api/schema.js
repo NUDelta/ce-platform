@@ -11,7 +11,9 @@ Schema.CEModules = [
 
 Schema.CEQualifications = [
   'hasDog',
-  'hasCamera'
+  'hasCamera',
+  'isGirl',
+  'livesOnCampus'
 ];
 
 Schema.YelpCategories = [
