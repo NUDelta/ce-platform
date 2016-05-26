@@ -6,8 +6,6 @@ import { Router } from 'meteor/iron:router';
 
 import { Experiences } from '../../api/experiences/experiences.js';
 
-import '../partials/home_profile.js';
-import '../partials/home_subscriptions.js';
 import '../components/active_experience.js';
 
 Template.home.onCreated(function() {
