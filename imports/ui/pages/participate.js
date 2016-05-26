@@ -20,8 +20,6 @@ import '../components/experience_buttons.js';
 import '../components/map.js';
 import '../components/loading_overlay.js';
 
-import '../partials/participate_last_submission.js';
-
 Template.participate.onCreated(function() {
   const experienceId = Router.current().params._id;
 
