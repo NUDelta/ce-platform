@@ -13,7 +13,7 @@ Schema.CEQualifications = [
   'hasDog',
   'hasCamera',
   'isGirl',
-  'livesOnCampus'
+  'isBoy',
 ];
 
 Schema.YelpCategories = [

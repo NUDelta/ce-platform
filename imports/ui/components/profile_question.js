@@ -5,13 +5,15 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Schema } from '../../api/schema.js';
 
+import { Questions } from '../../api/users/qualification_questions.js';
+
 Template.profile_question.onCreated(function() {
   setNewQualification();
 });
 
 Template.profile_question.helpers({
   question: function () {
-    return Session.get('qualification');
+    return Questions[Session.get('qualification')];
   }
 });
 
