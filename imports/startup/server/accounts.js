@@ -12,7 +12,7 @@ Accounts.onCreateUser(function (options, user) {
     user.profile.subscriptions.push(obj._id);
   });
   for(let qualification of Schema.CEQualifications) {
-    user.profile.qualifications[qualification] = false;
+    user.profile.qualifications[qualification] = null;
   }
   return user;
 });
