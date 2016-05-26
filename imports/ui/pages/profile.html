@@ -1,11 +1,7 @@
 <template name="profile">
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
-      <div class="panel panel-default">
-        <div class="panel-body">
-          {{> profile_question}}
-        </div>
-      </div>
+      {{> profile_question}}
       <h4>Results From Past Experiences</h4>
       <div class="list-group">
       {{#each pastIncident in pastIncidents}}
