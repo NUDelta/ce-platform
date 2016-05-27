@@ -17,30 +17,43 @@ Template.profile_question.helpers({
   },
   unansweredQuestions: function () {
     let qualifications = Meteor.user().profile.qualifications;
-    let answer = _.any(_.values(qualifications), function (v) { return _.isNull(v) });
-    console.log(answer);
-    return answer;
+    return _.any(_.values(qualifications), function (v) { return _.isNull(v) });
   }
 });
 
 Template.profile_question.events({
   'click .btn-yes': function () {
     let qualification = Session.get('qualification');
-    Meteor.call('users.setQualification', {qualification, value: true});
-    setNewQualification();
+    Meteor.call('users.setQualification', {qualification, value: true}, function(err, res) {
+      if (err) {
+        alert(err);
+      }
+      else {
+        setNewQualification();
+      }
+    });
   },
   'click .btn-no': function () {
     let qualification = Session.get('qualification');
-    Meteor.call('users.setQualification', {qualification, value: false});
-    setNewQualification();
+    Meteor.call('users.setQualification', {qualification, value: false}, function(err, res) {
+      if (err) {
+        alert(err);
+      }
+      else {
+        setNewQualification();
+      }
+    });
   }
 });
 
 let setNewQualification = function() {
-  let qualification = Session.get('qualification');
-  while (qualification === Session.get('qualification')) {
-    qualification = Schema.CEQualifications[Math.floor(Math.random()*Schema.CEQualifications.length)];
-  }
+  let qualifications = Meteor.user().profile.qualifications;
+  let qualification = _.find(Schema.CEQualifications, function(q) {
+    if (qualifications[q] === null) {
+      return true;
+    }
+  });
   console.log(qualification);
   Session.set('qualification', qualification);
+  return true;
 };
