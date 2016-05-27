@@ -232,30 +232,41 @@ Meteor.startup(() => {
       {
         title: 'stella1.jpg',
         url: 'fixtures/stella_time/stella1.jpg',
-        incidentId: incidentId
+        incidentId: incidentId,
+        location: LOCATIONS.TECH,
+        caption: 'Stella is asleep!'
       },
       {
         title: 'stella2.jpg',
         url: 'fixtures/stella_time/stella2.jpg',
-        incidentId: incidentId
+        incidentId: incidentId,
+        location: LOCATIONS.FUNKY_MONK,
+        caption: 'Stella at the Funky Monk'
       },
       {
         title: 'stella3.jpg',
         url: 'fixtures/stella_time/stella3.jpg',
-        incidentId: incidentId
+        incidentId: incidentId,
+        location: LOCATIONS.CRISP,
+        caption: 'i <3 stella'
       },
       {
         title: 'stella4.jpg',
         url: 'fixtures/stella_time/stella4.jpg',
-        incidentId: incidentId
+        incidentId: incidentId,
+        location: LOCATIONS.EDZOS,
+        caption: 'begging!'
       }
     ];
 
     images.forEach((image) => {
+      // TODO: text entry
       const buffer = new Buffer(Assets.getBinary(image.url));
       insertPhoto.call({
         incidentId: image.incidentId,
-        image: buffer.toString('base64')
+        image: buffer.toString('base64'),
+        location: image.location,
+        caption: image.caption
       });
     });
 

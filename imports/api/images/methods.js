@@ -1,9 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Images } from './images.js';
 
-let _getBase64Data = (doc, callback) => {
+import { Cerebro } from '../cerebro/server/cerebro-server.js';
+import { Images } from './images.js';
+import { Schema } from '../schema.js';
+
+const _getBase64Data = (doc, callback) => {
   let buffer = new Buffer(0),
     readStream = doc.createReadStream();
   readStream.on('data', (chunk) => {
@@ -27,19 +30,34 @@ export const insertPhoto = new ValidatedMethod({
     image: {
       type: String // base64 string?
     },
+    location: {
+      type: Schema.Location
+    },
+    caption: {
+      type: String
+    },
     title: {
       type: String,
       optional: true
     }
   }).validator(),
-  run({ incidentId, image, title = 'upload.png' }) {
+  run({ incidentId, image, location, caption, title = 'upload.png' }) {
     const newFile = new FS.File();
     newFile.attachData(new Buffer(image, 'base64'), { type: 'image/png' }, (error) => {
       if (error) throw error;
       newFile.name(title);
       let image = Images.insert(newFile);
       image = Images.findOne(image._id);
-      Images.update({ _id: image._id }, {$set : { incidentId: incidentId }});
+      Images.update({ _id: image._id }, 
+        {
+          $set: { 
+            incidentId: incidentId,
+            lat: location.lat,
+            lng: location.lng,
+            location: Cerebro.getSubmissionLocation(location.lat, location.lng),
+            caption: caption
+          }
+        });
     });
   }
 });
