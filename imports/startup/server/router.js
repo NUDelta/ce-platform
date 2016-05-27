@@ -25,11 +25,8 @@ Example location object:
   }
 */
   .post(function() {
-    log.debug(this.request.body);
     const userId = this.request.body.userId;
     const location = this.request.body.location;
-    log.debug(`[${ moment().tz('America/Chicago').format('dd h:mm:ssa') }]: Got update from ${ userId }`);
-    log.debug(location);
     updateLocation.call({
       uid: userId,
       lat: location.latitude,
@@ -39,7 +36,6 @@ Example location object:
     this.response.end('ok');
   })
   .put(function() {
-    console.log(this.request.body);
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
   });

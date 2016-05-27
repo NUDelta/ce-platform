@@ -69,7 +69,8 @@ Schema.Experience = new SimpleSchema({
   duration: {
     type: Number,
     label: 'The duration this experience will run, in minutes',
-    optional: true
+    optional: true,
+    defaultValue: 120
   },
   radius: {
     type: Number,

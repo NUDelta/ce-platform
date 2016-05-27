@@ -1,3 +1,5 @@
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // @Deprecated
 const Notification = {
@@ -26,3 +28,22 @@ export const AUTH = {
   accessTokenSecret: "GGs0J7wWWshnazwoOHB01j3A2sM",
   oauth_signature_method: "HMAC-SHA1"
 };
+
+export const getConfig = new ValidatedMethod({
+  name: 'config.get',
+  validate: null,
+  run() {
+    return CONFIG;
+  }
+});
+
+export const toggleDebugPush = new ValidatedMethod({
+  name: 'config.togglePush',
+  validate: new SimpleSchema({
+    on: { type: Boolean }
+  }).validator(),
+  run({ on }) {
+    CONFIG.DEBUG_PUSH = on;
+    return CONFIG.DEBUG_PUSH;
+  }
+});
