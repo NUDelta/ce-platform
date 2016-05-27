@@ -33,7 +33,8 @@
     {{/if}}
     {{#if $and (moduleChosen "text") ($not (moduleChosen "camera"))}}
       {{#each textEntry in textEntries}}
-        <p>"{{textEntry.text}}" ...submitted from {{textEntry.location}}</p>
+        <p>{{textEntry.text}}<br/><span class="submission-tag">&nbsp;&nbsp;&nbsp;- submitted from {{textEntry.location}}</span></p>
+        <br/>
       {{/each}}
     {{/if}}
     {{#if isActive}}

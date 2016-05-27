@@ -8,7 +8,7 @@ const Notification = {
 };
 
 export const CONFIG = {
-  CLEAR_DB: 0,
+  CLEAR_DB: 1,
   CLEAR_USERS: 0,
   CLEAR_ACTIVE: 0,
   CLEAR_LOCATIONS: 0,
