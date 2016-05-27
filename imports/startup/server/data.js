@@ -1,4 +1,3 @@
-
 export const LOCATIONS = {
   FUNKY_MONK: {
     lat: 42.047913,

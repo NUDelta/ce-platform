@@ -4,6 +4,21 @@ import { Schema } from '../schema.js';
 
 export const Locations = new Mongo.Collection('locations');
 
+Schema.Location = new SimpleSchema({
+  lat: {
+    type: Number,
+    decimal: true,
+    min: -90,
+    max: 90
+  },
+  lng: {
+    type: Number,
+    decimal: true,
+    min: -180,
+    max: 180
+  }
+});
+
 Schema.Locations = new SimpleSchema({
   uid: {
     type: String,
