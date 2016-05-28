@@ -55,6 +55,10 @@ Template.results.helpers({
     const instance = Template.instance();
     return Images.find(instance.filter.get());
   },
+  noImages() {
+    const instance = Template.instance();
+    return Images.find(instance.filter.get()).count() == 0;
+  },
   textEntries() {
     const instance = Template.instance();
     return TextEntries.find(instance.filter.get());

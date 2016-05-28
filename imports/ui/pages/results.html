@@ -30,6 +30,9 @@
           </div>
         {{/each}}
       </div>
+      {{#if noImages}}
+        <p>Oh no! It doesn't look like anyone has uploaded any pictures from this location yet.</p>
+      {{/if}}
     {{/if}}
     {{#if $and (moduleChosen "text") ($not (moduleChosen "camera"))}}
       {{#each textEntry in textEntries}}
