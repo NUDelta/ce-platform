@@ -1,9 +1,9 @@
 <template name="results">
   <div id="results">
     <h3>{{experience.name}}</h3>
-    <h5>Filter by:
+    <h5>View submissions from:
       <select id="filter-dropdown" class="form-control">
-        <option selected>Location</option>
+        <option selected>Anywhere</option>
         <option>NU North Campus</option>
         <option>NU South Campus</option>
         <option>Off-campus Evanston</option>
@@ -36,6 +36,9 @@
         <p>{{textEntry.text}}<br/><span class="submission-tag">&nbsp;&nbsp;&nbsp;- submitted from {{textEntry.location}}</span></p>
         <br/>
       {{/each}}
+      {{#if noTextEntries}}
+        <p>Oh no! It doesn't look like anyone has written anything at this location yet.</p>
+      {{/if}}
     {{/if}}
     {{#if isActive}}
       <a href="/participate/{{experience._id}}">Back to upload</a>

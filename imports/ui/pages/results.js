@@ -59,6 +59,10 @@ Template.results.helpers({
     const instance = Template.instance();
     return TextEntries.find(instance.filter.get());
   },
+  noTextEntries() {
+    const instance = Template.instance();
+    return TextEntries.find(instance.filter.get()).count() == 0;
+  },
   experience() {
     const instance = Template.instance();
     return instance.state.get('experience');
@@ -73,7 +77,7 @@ Template.results.events({
   'change #filter-dropdown'(event, instance) {
     const newValue = $('#filter-dropdown option:selected').text();
     const newFilter = { incidentId: instance.state.get('incidentId') };
-    if (newValue != instance.filter.get() && newValue != 'Location') {
+    if (newValue != instance.filter.get() && newValue != 'Anywhere') {
       newFilter.location = newValue;
     }
     instance.filter.set(newFilter);
