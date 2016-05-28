@@ -5,6 +5,9 @@
     {{#each experience in experiences}}
       {{> subscribeExperience experience}}
     {{/each}}
+    {{#if noExperiences}}
+      <p>Oh snap! Nobody has made any experiences. Head to the Create tab to make your own!</p>
+    {{/if}}
   </div>
   {{/if}}
 </template>

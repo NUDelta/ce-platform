@@ -14,5 +14,8 @@ Template.browse.onCreated(function() {
 Template.browse.helpers({
   experiences: function () {
     return Experiences.find().fetch();
+  },
+  noExperiences: function() {
+    return Experiences.find().count() == 0;
   }
 });

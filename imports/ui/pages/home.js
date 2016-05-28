@@ -16,6 +16,9 @@ Template.home.helpers({
   activeExperiences() {
     return Meteor.users.findOne(Meteor.userId()).profile.activeExperiences;
   },
+  noActiveExperiences() {
+    return Meteor.users.findOne(Meteor.userId()).profile.activeExperiences.length == 0;
+  },
   activeExperienceArgs(experienceId) {
     return {
       experience: Experiences.findOne(experienceId)

@@ -19,11 +19,9 @@ Template.subscribeExperience.helpers({
 Template.subscribeExperience.events({
   'click .btn-subscribe': function () {
     Meteor.call('users.subscribeUserToExperience', {experienceId: this._id});
-    console.log(this);
     alert('Yay! You\'ve successfully subscribed to ' + this.name + '. We\'ll notify you when it\'s time to participate!');
   },
   'click .btn-unsubscribe': function () {
-    console.log(this);
     Meteor.call('users.unsubscribeUserFromExperience', {experienceId: this._id});
     alert('You\'ve successfully unsubscribed from ' + this.name + '. We\'ll stop sending you notifications about it ASAP. Just know, we\'ll collectively miss you very much.');
   }
