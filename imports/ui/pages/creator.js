@@ -34,7 +34,7 @@ Template.creator.events({
     let requirements = [];
     if (event.target.photo.checked) {
       modules.push('camera');
-      requirements.push('hasCamera');
+      //requirements.push('hasCamera');
     }
     if (event.target.text.checked) {
       modules.push('text');
@@ -51,7 +51,6 @@ Template.creator.events({
 
     // Process options
     const optIn = event.target.optin.checked;
-    console.log(optIn);
 
     // Process location
     let location = _.find(Schema.YelpCategories, (category) => {
