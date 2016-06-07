@@ -51,4 +51,4 @@ Sort all imports in this order and into these groups, omitting any groups that d
 4. If client page `.js` file, include other template components used inside. Do `components/` first, then `partials`.
 
 ### Methods
-You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the (Github Repo)[https://github.com/meteor/validated-method/] and the (guide page)[http://guide.meteor.com/methods.html] about this, but be sure to use these.
+You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the [Github Repo](https://github.com/meteor/validated-method/) and the [guide page](http://guide.meteor.com/methods.html) about this, but be sure to use these.
