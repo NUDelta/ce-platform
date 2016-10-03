@@ -65,7 +65,8 @@ Template.admin_locations.helpers({
     if (GoogleMaps.loaded() && latLng) {
       return {
         center: new google.maps.LatLng(latLng.lat, latLng.lng),
-        zoom: 17
+        zoom: 17,
+        key: 'AIzaSyA4LczQjd7IBHE0VV-WDRo0qkkGPQJBn6I'
       };
     }
   }
