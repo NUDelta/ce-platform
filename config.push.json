@@ -1,6 +1,6 @@
 {
   "apn": {
-    "passphrase": "limo",
+    "passphrase": "cerebro",
     "key": "iosGp/apn-prod/key.pem",
     "cert": "iosGp/apn-prod/cert.pem",
     "gateway": "gateway.push.apple.com"
