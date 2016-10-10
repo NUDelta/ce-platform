@@ -18,6 +18,10 @@
     text-align: center;
   }
 
+  #change-layout {
+    margin-bottom: 8px;
+  }
+
   .image-grid {
     position: relative;
 
@@ -31,7 +35,7 @@
       transform: translateX(-50%);
       height: 48px;
       line-height: 48px;
-      color: rgba(255, 255, 255, 0.8);
+      /*rgba(255, 255, 255, 0.8);*/
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;

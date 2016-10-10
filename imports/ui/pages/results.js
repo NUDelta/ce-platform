@@ -14,6 +14,8 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
+isImageFullSize = false;
+
 Template.results.onCreated(function() {
   const incidentId = Router.current().params._id;
 
@@ -85,6 +87,22 @@ Template.results.events({
       newFilter.location = newValue;
     }
     instance.filter.set(newFilter);
+  },
+  'click #image-layout'(event, instance) {
+    isImageFullSize = !isImageFullSize;
+    elements = document.getElementsByClassName("image-row");
+    //console.log(elements.length)
+    if (isImageFullSize){
+      for (let i = 0; i < elements.length; i++) {
+        //console.log(elements[i])
+        elements[i].className = "image-row";
+      }
+    }
+    else {
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].className = "image-row image-grid col-xs-6 col-sm-4 col-md-2 col";
+      }
+    }
   },
   'click img'(event, instance) {
     const galleryElement = document.getElementById('gallery');
