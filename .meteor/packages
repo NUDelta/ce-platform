@@ -4,47 +4,47 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-base             # Packages every Meteor app needs to have
-mobile-experience       # Packages for a great mobile UX
-mongo                   # The database Meteor supports right now
-blaze-html-templates    # Compile .html files into Meteor Blaze views
-session                 # Client-side reactive dictionary for your app
-jquery                  # Helpful client-side library
-tracker                 # Meteor's client-side reactive programming library
+meteor-base@1.0.4             # Packages every Meteor app needs to have
+mobile-experience@1.0.4       # Packages for a great mobile UX
+mongo@1.1.12_1                   # The database Meteor supports right now
+blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
+session@1.1.6                 # Client-side reactive dictionary for your app
+jquery@1.11.9                  # Helpful client-side library
+tracker@1.1.0                 # Meteor's client-side reactive programming library
 
-es5-shim                # ECMAScript 5 compatibility for older browsers.
-ecmascript              # Enable ECMAScript2015+ syntax in app code
+es5-shim@4.6.14_1                # ECMAScript 5 compatibility for older browsers.
+ecmascript@0.5.8_1              # Enable ECMAScript2015+ syntax in app code
 
-insecure                # Allow all DB writes from clients (for prototyping)
-accounts-password
+insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
+accounts-password@1.3.0
 twbs:bootstrap
 iron:router
-random
-reload
-check
-spacebars
-email
+random@1.0.10
+reload@1.1.10
+check@1.2.3
+spacebars@1.0.12
+email@1.1.17_1
 cfs:filesystem
 cfs:gridfs
 cfs:standard-packages
-ejson
+ejson@1.0.12
 aldeed:collection2
 raix:push
-browser-policy
+browser-policy@1.0.9
 sergeyt:typeahead
 dburles:google-maps
-standard-minifier-css
-standard-minifier-js
+standard-minifier-css@1.2.0_1
+standard-minifier-js@1.2.0_1
 mdg:validated-method
 fourseven:scss
-oauth
+oauth@1.1.11
 nooitaf:colors
 percolate:synced-cron
-oauth1
+oauth1@1.1.10
 mirrorcell:background-geolocation-plus
 mdg:geolocation
 mrt:moment-timezone
-force-ssl
 cfs:graphicsmagick
 ian:accounts-ui-bootstrap-3
 msavin:mongol
+shell-server
