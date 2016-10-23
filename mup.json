@@ -13,15 +13,11 @@
   "setupPhantom": true,
   "enableUploadProgressBar": true,
   "appName": "ce-platform",
-  "app": "<full-app-path-here>",
+  "app": "/Users/Ryan/Documents/GitHub/ce-platform",
   "env": {
     "ROOT_URL": "https://yo-star.xyz",
     "PORT": 4000,
     "MAIL_URL": "smtp://postmaster@sandbox31e59e1446774315b14003638c8f64ba.mailgun.org:fe2c40e92b55de91104c823fdec0967c@smtp.mailgun.org:587"
-  },
-  "ssl": {
-    "certificate": "./ssl/fullchain.pem",
-    "key": "./ssl/privkey.pem"
   },
   "deployCheckWaitTime": 90
 }
