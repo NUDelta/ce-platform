@@ -81,6 +81,11 @@ Schema.Experience = new SimpleSchema({
     type: Boolean,
     label: 'Subscription model of the experience',
     optional: true
+  },
+  route: {
+    type: String,
+    label: 'Route to use in place of experience ID',
+    optional: true
   }
   /*
    * start condition

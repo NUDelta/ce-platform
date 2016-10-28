@@ -177,6 +177,22 @@ Meteor.startup(() => {
     log.info(`Populated ${ Experiences.find().count() } experiences`);
   }
 
+  if (Experiences.find({route: 'button_game'}).count() === 0) {
+    const ryan = findUserByEmail('ryanm36@gmail.com');
+    const button_game = {
+      name: 'Button Game',
+      author: ryan._id,
+      description: 'Play a mysterious button game with the community!',
+      startText: 'The clock is ticking!',
+      modules: [],
+      requirements: [],
+      route: 'button_game',
+      optIn: false
+    };
+
+    Experiences.insert(button_game);
+  }
+
   if (Meteor.isDevelopment && Locations.find().count() === 0) {
     const kevin = findUserByEmail('kevinjchen94@gmail.com');
     const shannon = findUserByEmail('shannon@shannon.com');

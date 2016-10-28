@@ -29,3 +29,7 @@ Meteor.publish('experiences.byIncident', function(incidentId) {
     this.ready();
   }
 });
+
+Meteor.publish('experiences.byRoute', function(route) {
+  return Experiences.find({route: route});
+})

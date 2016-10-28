@@ -10,6 +10,7 @@ import '../../ui/pages/home.js';
 import '../../ui/pages/admin_experiences.js';
 import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/archive.js';
+import '../../ui/pages/button_game.js';
 import '../../ui/pages/creator.js';
 import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
@@ -39,6 +40,10 @@ Router.route('/create', {
   name: 'creator'
 });
 
+Router.route('/participate/button_game', {
+  template: 'button_game'
+});
+
 // TODO: Fix up subscription management patterns
 Router.route('/participate/:_id', {
   name: 'participate'
@@ -60,4 +65,8 @@ Router.route('/browse', {
 
 Router.route('/profile', {
   name: 'profile'
+});
+
+Router.route('/buttongame', {
+  template: 'button_game'
 });

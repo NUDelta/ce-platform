@@ -43,6 +43,11 @@ Schema.Incident = new SimpleSchema({
     label: 'Submission id of latest submission',
     regEx: SimpleSchema.RegEx.Id,
     optional: true
+  },
+  data: {
+    type: Object,
+    label: 'Arbitrary data for custom experiences',
+    optional: true
   }
 });
 
