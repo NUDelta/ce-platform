@@ -62,6 +62,8 @@ LocationManagerClient = class LocationManagerClient {
   }
 
   updateUserLocation(location) {
+    // TODO remove this return statement and fix this function from ruining performance
+    return;
     if (Meteor.userId() && location) {
       updateLocation.call({
         uid: Meteor.userId(),
