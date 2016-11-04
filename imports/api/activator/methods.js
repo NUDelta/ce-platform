@@ -211,7 +211,9 @@ export const endInstantExperience = new ValidatedMethod({
   }).validator(),
   run({ experience, notificationOptions }) {
     // TODO: encode some sense of who participate / should be included instead of just sending this
-    const userIds = getUsersToNotify(experience);
-    endExperience(experience, userIds, notificationOptions);
+    if (experience.activeIncident) {
+      const userIds = getUsersToNotify(experience);
+      endExperience(experience, userIds, notificationOptions);
+    }
   }
 });
