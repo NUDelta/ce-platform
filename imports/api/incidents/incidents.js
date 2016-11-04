@@ -47,7 +47,8 @@ Schema.Incident = new SimpleSchema({
   data: {
     type: Object,
     label: 'Arbitrary data for custom experiences',
-    optional: true
+    optional: true,
+    blackbox: true
   }
 });
 

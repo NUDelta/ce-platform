@@ -78,4 +78,3 @@ export const removeExperience = new ValidatedMethod({
     Experiences.remove(experienceId);
   }
 });
-
