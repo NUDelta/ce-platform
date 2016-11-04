@@ -55,7 +55,3 @@ Template.admin_experiences.events({
     });
   }
 });
-
-Template.admin_experiences.onRendered(function() {
-  $('[data-toggle=toggle]').bootstrapToggle();
-});
