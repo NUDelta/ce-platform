@@ -1,5 +1,7 @@
 import './button_results.html';
 
+import { Incidents } from '../../api/incidents/incidents.js';
+
 Template.button_results.onCreated(function() {
   const incidentId = Router.current().params._id;
   const incHandle = this.subscribe('incidents.byId', incidentId);
