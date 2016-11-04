@@ -1,0 +1,13 @@
+<template name="button_results">
+  <div class="row text-center">
+    <h2>Button Game Recap</h2>
+    {{#if pressers}}
+    <p>{{pressers}} people pressed the button!</p>
+    {{/if}}
+    {{#if record}}
+    <p>The button was kept alive for {{record}} seconds</p>
+    {{else}}
+    <p>Loading...</p>
+    {{/if}}
+  </div>
+</template>

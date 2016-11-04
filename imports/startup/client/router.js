@@ -11,6 +11,7 @@ import '../../ui/pages/admin_experiences.js';
 import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/archive.js';
 import '../../ui/pages/button_game.js';
+import '../../ui/pages/button_results.js';
 import '../../ui/pages/creator.js';
 import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
@@ -48,6 +49,12 @@ Router.route('/participate/button_game', {
 Router.route('/participate/:_id', {
   name: 'participate'
 });
+
+Router.route('/results/button_game/:_id', {
+  template: 'button_results',
+  layoutTemplate: 'spreadLayout'
+});
+
 
 Router.route('/results/:_id', {
   name: 'results',

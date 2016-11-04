@@ -31,6 +31,9 @@ Template.results.onCreated(function() {
   this.autorun(() => {
     if (expHandle.ready() && incHandle.ready()) {
       const experience = Experiences.findOne();
+      if (experience.route == 'button_game') {
+        Router.go(`/results/button_game/${incidentId}`);
+      }
       const incident = Incidents.findOne();
       this.state.set({
         incident: incident,
