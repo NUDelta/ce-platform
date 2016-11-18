@@ -11,6 +11,20 @@ Template.admin_locations.onCreated(function() {
   const handle = this.subscribe('locations');
 
   this.markers = [];
+  this.plotLocations = () => {
+    console.log("Plotting locations...");
+    this.markers = [];
+    Locations.find().forEach((location) => {
+      let icon;
+      icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(location.lat, location.lng),
+        map: this.map,
+        icon: icon
+      });
+      this.markers.push(marker);
+    });
+  };
   this.doLiveQuery = (locationType, radius) => {
     this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
@@ -25,9 +39,9 @@ Template.admin_locations.onCreated(function() {
           Locations.find().forEach((location) => {
             let icon;
             if (_.contains(users, location.uid)) {
-              icon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+              icon = 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
             } else {
-              icon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+              icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
             }
             const marker = new google.maps.Marker({
               position: new google.maps.LatLng(location.lat, location.lng),
@@ -37,13 +51,14 @@ Template.admin_locations.onCreated(function() {
             this.markers.push(marker);
           });
         }
-    });
+      });
   };
   GoogleMaps.ready('map', (map) => {
     this.autorun(() => {
       this.map = map.instance;
       if (handle.ready()) {
-        this.doLiveQuery('restaurants', 200);
+        //this.doLiveQuery('restaurants', 200);
+        this.plotLocations();
       }
     });
   });
