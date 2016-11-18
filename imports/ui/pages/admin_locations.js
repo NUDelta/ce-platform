@@ -11,8 +11,10 @@ Template.admin_locations.onCreated(function() {
   const handle = this.subscribe('locations');
 
   this.markers = [];
+
   this.plotLocations = () => {
     console.log("Plotting locations...");
+    this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
     Locations.find().forEach((location) => {
       let icon;
@@ -25,6 +27,7 @@ Template.admin_locations.onCreated(function() {
       this.markers.push(marker);
     });
   };
+
   this.doLiveQuery = (locationType, radius) => {
     this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
