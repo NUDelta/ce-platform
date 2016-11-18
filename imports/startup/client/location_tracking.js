@@ -45,7 +45,12 @@ if (Meteor.isCordova) {
   //   });
   // });
 } else {
-  Meteor.startup(() => {
-    LocationManager.trackUpdates(Tracker, () => {}, () => {});
-  });
 }
+
+Meteor.startup(() => {
+  trackerInterval = Meteor.setInterval(updateLocation, 10000);
+});
+
+var updateLocation = function() {
+   LocationManager.trackUpdates(Tracker, () => {}, () => {});
+};

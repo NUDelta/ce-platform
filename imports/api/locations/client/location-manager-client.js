@@ -12,7 +12,8 @@ LocationManagerClient = class LocationManagerClient {
   }
 
   trackUpdates(tracker, addTransform, changeCallback) {
-    tracker.autorun(() => {
+    //tracker.autorun(() => {
+      console.log("yay!");
       let uid = Meteor.userId(),
         latLng = Geolocation.latLng();
 
@@ -21,7 +22,7 @@ LocationManagerClient = class LocationManagerClient {
         this._current.struct = addTransform(latLng);
       }
       changeCallback(this._current.struct, latLng);
-    });
+    //});
   }
 
   trackOthersUpdates(query, addTransform, changeCallback, removeCallback) {
@@ -63,7 +64,7 @@ LocationManagerClient = class LocationManagerClient {
 
   updateUserLocation(location) {
     // TODO remove this return statement and fix this function from ruining performance
-    return;
+    //return;
     if (Meteor.userId() && location) {
       updateLocation.call({
         uid: Meteor.userId(),
