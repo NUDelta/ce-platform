@@ -27,6 +27,7 @@ Example location object:
   .post(function() {
     const userId = this.request.body.userId;
     const location = this.request.body.location;
+    console.log("BG GEO LOGGED");
     updateLocation.call({
       uid: userId,
       lat: location.latitude,
