@@ -8,9 +8,9 @@ if (Meteor.isCordova) {
   Meteor.startup(() => {
     //Configure Plugin
     BackgroundLocation.configure({
-      desiredAccuracy: 5, // Desired Accuracy of the location updates (lower = more accurate).
+      desiredAccuracy: 1, // Desired Accuracy of the location updates (lower = more accurate).
       distanceFilter: 1, // (Meters) Distance between points aquired.
-      debug: true, // Show debugging info on device.
+      debug: false, // Show debugging info on device.
       interval: 5000, // (Milliseconds) Requested Interval in between location updates.
       useActivityDetection : true, // Shuts off GPS when your phone is still, increasing battery life enormously
 
