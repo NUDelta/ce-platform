@@ -160,16 +160,6 @@ Meteor.startup(() => {
         modules: ['camera', 'text'],
         requirements: ['hasCamera'],
         optIn: false
-      },
-      {
-        name: 'I\'m Hungry',
-        author: kevin._id,
-        description: 'Take a pic of yo meal at a restaurant right now!',
-        startText: 'Take a picture of your food please!',
-        modules: ['camera'],
-        requirements: ['hasCamera'],
-        location: 'restaurants',
-        optIn: false
       }
     ];
 

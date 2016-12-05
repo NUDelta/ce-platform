@@ -17,6 +17,7 @@ import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
 import '../../ui/pages/browse.js';
 import '../../ui/pages/profile.js';
+import '../../ui/pages/test.js';
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -76,4 +77,9 @@ Router.route('/profile', {
 
 Router.route('/buttongame', {
   template: 'button_game'
+});
+
+/////
+Router.route('/test', {
+  template: 'test'
 });

@@ -1,3 +1,4 @@
+//user query methods
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
@@ -5,6 +6,7 @@ import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Cerebro } from './cerebro-server.js';
 import { Experiences } from '../../experiences/experiences.js';
+//import { LocationManager } from '../../locations/client/location-manager-client.js';
 import { Schema } from '../../schema.js';
 import { log } from '../../logs.js';
 
@@ -35,7 +37,6 @@ export const notify = new ValidatedMethod({
         query;
     subject = subject || experience.name;
     text = text || experience.startText;
-
     if (experience.location) {
       log.cerebro(`Notifying users for experience "${ experience.name }" in ${ experience.location }`);
       let atLocation = Cerebro.liveQuery(experience.location);
@@ -43,8 +44,9 @@ export const notify = new ValidatedMethod({
         'profile.subscriptions': experienceId,
         _id: { $in: atLocation }
       };
-    } else {
-      log.cerebro(`Notifying users for experience "${ experience.name }". No location detected, so notifying everyone.`);
+    }
+    else {
+      log.cerebro(`Notifying users for experience "${ experience.name }". No detected, so notifying everyone.`);
       query = {
         'profile.subscriptions': experienceId
       };
@@ -233,5 +235,54 @@ export const doLiveQuery = new ValidatedMethod({
   }).validator(),
   run({ locationType, radius }) {
     return Cerebro.liveQuery(locationType, { radius });
+  }
+});
+
+export const notifyOnAffordances = new ValidatedMethod({
+  name: 'cerebro.notifyOnAffordances',
+  validate: new SimpleSchema ({
+    lat: {
+      type: String,
+      label: 'latitude'
+    },
+    lng: {
+      type: String,
+      label: 'longitude'
+    },
+    uid: {
+      type: String,
+      label: 'uid'
+    },
+    experience: {
+      type: Object,
+      label: 'experience',
+      blackbox: true,
+    },
+    notificationOptions: {
+      type: Object,
+      label: 'notificationOptions',
+      blackbox: true
+    }
+  }).validator(),
+  run({ lat, lng, uid, experience, notificationOptions}) {
+    let request = require('request');
+    let url = 'https://affordanceaware.herokuapp.com/conditions/' + lat + '/' + lng;
+    request(url, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+          let res = JSON.parse(body);
+          let userIds = [uid];
+          if (_.contains(res.affordances, experience.affordance)) {
+            Cerebro.setActiveExperiences(userIds, experience._id);
+            Cerebro.addIncidents(userIds, activeIncident);
+            Cerebro.notify({
+              userIds: userIds,
+              experienceId: experience._id,
+              subject: notificationOptions.subject,
+              text: notificationOptions.text,
+              route: notificationOptions.route
+            });
+          }
+      }
+    });
   }
 });

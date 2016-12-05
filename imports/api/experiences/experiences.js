@@ -55,11 +55,16 @@ Schema.Experience = new SimpleSchema({
     label: 'User characteristic requirements',
     allowedValues: Schema.CEQualifications
   },
-  location: {
+  /**location: {
     type: String,
     label: 'Desired location of participants',
     optional: true,
     allowedValues: _.map(Schema.YelpCategories, category => category.alias)
+  },**/
+  affordance: {
+    type: String,
+    label: 'Affordances of the experience',
+    optional: true
   },
   activeIncident: {
     type: String,
@@ -72,11 +77,11 @@ Schema.Experience = new SimpleSchema({
     optional: true,
     defaultValue: 120
   },
-  radius: {
+  /*radius: {
     type: Number,
     label: 'The estimated size of the location / radius around which to look for people',
     optional: true
-  },
+  },**/
   optIn: {
     type: Boolean,
     label: 'Subscription model of the experience',

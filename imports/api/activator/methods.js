@@ -1,8 +1,10 @@
+//launch experience methods
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Cerebro } from '../cerebro/server/cerebro-server.js';
+import { notifyOnAffordances } from '../cerebro/server/methods.js';
 import { Experiences } from '../experiences/experiences.js';
 import { Schema } from '../schema.js';
 import { log } from '../logs.js';
@@ -10,6 +12,22 @@ import { CONFIG } from '../config.js';
 
 import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
+import { Locations } from '../locations/locations.js';
+
+function asyncNotifyUsers(experience, notificationOptions) {
+  let locations = Locations.find().fetch();
+  for (let location of locations){
+    Meteor.call('cerebro.notifyOnAffordances', {
+      lat: location.lat.toString(),
+      lng: location.lng.toString(),
+      uid: location.uid,
+      experience: experience,
+      notificationOptions, notificationOptions,
+    }, (err, res) => {
+      if (err) { console.log(err);}
+    });
+  }
+}
 
 function getUsersToNotify(experience) {
   let query = {};
@@ -20,7 +38,8 @@ function getUsersToNotify(experience) {
       'profile.subscriptions': experience._id,
       _id: { $in: atLocation }
     };
-  } else {
+  }
+  else {
     log.cerebro(`Notifying users for experience "${ experience.name }". No location detected, so notifying everyone.`);
     query = {
       'profile.subscriptions': experience._id
@@ -69,16 +88,20 @@ export const launchInstantExperience = new ValidatedMethod({
       experienceId: experience._id,
       launcher: this.userId
     });
-    const userIds = getUsersToNotify(experience);
-    Cerebro.setActiveExperiences(userIds, experience._id);
-    Cerebro.addIncidents(userIds, activeIncident);
-    Cerebro.notify({
-      userIds: userIds,
-      experienceId: experience._id,
-      subject: notificationOptions.subject,
-      text: notificationOptions.text,
-      route: notificationOptions.route
-    });
+    if (experience.affordance) {
+      asyncNotifyUsers(experience, notificationOptions);
+    } else {
+      const userIds = getUsersToNotify(experience);
+      Cerebro.setActiveExperiences(userIds, experience._id);
+      Cerebro.addIncidents(userIds, activeIncident);
+      Cerebro.notify({
+        userIds: userIds,
+        experienceId: experience._id,
+        subject: notificationOptions.subject,
+        text: notificationOptions.text,
+        route: notificationOptions.route
+      });
+    }
   }
 });
 

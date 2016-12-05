@@ -54,7 +54,7 @@ Template.admin_locations.events({
     event.preventDefault();
     const locationType = event.target.locationType.value;
     const radius = parseInt(event.target.radius.value);
-    
+
     instance.doLiveQuery(locationType, radius);
   }
 });

@@ -26,8 +26,10 @@ Template.creator.events({
     const name = event.target.name.value;
     const desc = event.target.desc.value;
     const startText = event.target.start.value;
-    const radius = event.target.radius.value;
+    //const radius = event.target.radius.value;
     const duration = event.target.duration.value;
+    const affordance = event.target.affordance.value;
+    console.log(affordance);
 
     // Parse out modules
     let modules = [];
@@ -53,14 +55,14 @@ Template.creator.events({
     const optIn = event.target.optin.checked;
 
     // Process location
-    let location = _.find(Schema.YelpCategories, (category) => {
+    /**let location = _.find(Schema.YelpCategories, (category) => {
       return category.title == event.target.location.value;
     });
     if (location) {
       location = location.alias;
     } else {
       location = '';
-    }
+    }**/
 
     Experiences.insert({
       name,
@@ -70,9 +72,9 @@ Template.creator.events({
       modules,
       startText,
       requirements,
-      location,
+      affordance,
       duration,
-      radius,
+    //  radius,
       optIn
     }, (err, experienceId) => {
       if (err) {
