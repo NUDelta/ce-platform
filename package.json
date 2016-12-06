@@ -7,7 +7,8 @@
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
-    "photoswipe": "4.1.1"
+    "photoswipe": "4.1.1",
+    "request": "^2.79.0"
   },
   "devDependencies": {},
   "scripts": {},
