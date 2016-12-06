@@ -14,7 +14,7 @@ import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
 
-function asyncNotifyUsers(experience, notificationOptions) {
+function asyncNotifyUsers(experience, notificationOptions, activeIncident) {
   let locations = Locations.find().fetch();
   for (let location of locations){
     Meteor.call('cerebro.notifyOnAffordances', {
@@ -23,6 +23,7 @@ function asyncNotifyUsers(experience, notificationOptions) {
       uid: location.uid,
       experience: experience,
       notificationOptions, notificationOptions,
+      incident: activeIncident
     }, (err, res) => {
       if (err) { console.log(err);}
     });
@@ -89,7 +90,7 @@ export const launchInstantExperience = new ValidatedMethod({
       launcher: this.userId
     });
     if (experience.affordance) {
-      asyncNotifyUsers(experience, notificationOptions);
+      asyncNotifyUsers(experience, notificationOptions, activeIncident);
     } else {
       const userIds = getUsersToNotify(experience);
       Cerebro.setActiveExperiences(userIds, experience._id);

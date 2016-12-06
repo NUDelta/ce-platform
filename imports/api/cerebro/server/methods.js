@@ -262,12 +262,16 @@ export const notifyOnAffordances = new ValidatedMethod({
       type: Object,
       label: 'notificationOptions',
       blackbox: true
+    },
+    incident: {
+      type: String,
+      label: 'activeIncident',
     }
   }).validator(),
-  run({ lat, lng, uid, experience, notificationOptions}) {
+  run({ lat, lng, uid, experience, notificationOptions, incident}) {
     let request = require('request');
     let url = 'https://affordanceaware.herokuapp.com/conditions/' + lat + '/' + lng;
-    request(url, function (error, response, body) {
+    request(url, Meteor.bindEnvironment(function (error, response, body) {
       if (!error && response.statusCode == 200) {
           let res = JSON.parse(body);
           let userIds = [uid];
@@ -277,7 +281,7 @@ export const notifyOnAffordances = new ValidatedMethod({
             console.log('Notifying user');
             console.log(userIds);
             Cerebro.setActiveExperiences(userIds, experience._id);
-            Cerebro.addIncidents(userIds, activeIncident);
+            Cerebro.addIncidents(userIds, incident);
             Cerebro.notify({
               userIds: userIds,
               experienceId: experience._id,
@@ -287,6 +291,6 @@ export const notifyOnAffordances = new ValidatedMethod({
             });
           }
       }
-    });
+    }));
   }
 });
