@@ -271,7 +271,11 @@ export const notifyOnAffordances = new ValidatedMethod({
       if (!error && response.statusCode == 200) {
           let res = JSON.parse(body);
           let userIds = [uid];
+          console.log(res.affordances);
+          console.log(experience.affordance);
           if (_.contains(res.affordances, experience.affordance)) {
+            console.log('Notifying user');
+            console.log(userIds);
             Cerebro.setActiveExperiences(userIds, experience._id);
             Cerebro.addIncidents(userIds, activeIncident);
             Cerebro.notify({
