@@ -13,7 +13,6 @@ LocationManagerClient = class LocationManagerClient {
 
   trackUpdates(tracker, addTransform, changeCallback) {
     //tracker.autorun(() => {
-      console.log("yay!");
       let uid = Meteor.userId(),
         latLng = Geolocation.latLng();
 
