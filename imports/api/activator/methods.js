@@ -90,7 +90,7 @@ export const launchInstantExperience = new ValidatedMethod({
       launcher: this.userId
     });
     if (experience.affordance) {
-      for (int i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i++) {
         setTimeout(function() {
           asyncNotifyUsers(experience, notificationOptions, activeIncident);
         }, 5000);
