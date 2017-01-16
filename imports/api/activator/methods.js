@@ -90,10 +90,12 @@ export const launchInstantExperience = new ValidatedMethod({
       launcher: this.userId
     });
     if (experience.affordance) {
+      console.log("before for loop")
       for (let i = 0; i < 10; i++) {
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           asyncNotifyUsers(experience, notificationOptions, activeIncident);
         }, 120000);
+        console.log("call successful")
       }
       /**asyncNotifyUsers(experience, notificationOptions, activeIncident);**/
     } else {
