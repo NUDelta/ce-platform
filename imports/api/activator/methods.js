@@ -90,7 +90,12 @@ export const launchInstantExperience = new ValidatedMethod({
       launcher: this.userId
     });
     if (experience.affordance) {
-      asyncNotifyUsers(experience, notificationOptions, activeIncident);
+      for (int i = 0; i < 10; i++) {
+        setTimeout(function() {
+          asyncNotifyUsers(experience, notificationOptions, activeIncident);
+        }, 5000);
+      }
+      /**asyncNotifyUsers(experience, notificationOptions, activeIncident);**/
     } else {
       const userIds = getUsersToNotify(experience);
       Cerebro.setActiveExperiences(userIds, experience._id);
