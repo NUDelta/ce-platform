@@ -1,0 +1,19 @@
+<template name="available_experiences">
+<style type="text/css">
+  p { text-indent: 30px; }
+</style>
+
+  <h3>Available Experiences</h3>
+
+  <br>
+
+  {{#each experience in experiences}}
+    <h4>{{experience.name}} -- {{experience.affordance}} </h4>
+    {{#each loc in locations}}
+      <p>{{loc.uid}} -- {{loc.lat}}, {{loc.lng}}, {{loc.affordances}}</p>
+
+    {{/each}}
+    <br>
+  {{/each}}
+
+</template>

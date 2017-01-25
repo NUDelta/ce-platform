@@ -36,6 +36,10 @@ Schema.Locations = new SimpleSchema({
     decimal: true,
     min: -180,
     max: 180
+  },
+  affordances: {
+    type: [String],
+    optional: true
   }
 });
 
