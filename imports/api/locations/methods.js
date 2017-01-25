@@ -14,6 +14,13 @@ export const updateLocation = new ValidatedMethod({
     const entry = Locations.findOne({ uid: uid });
     if (entry) {
 
+      console.log("inside update location function");
+
+      Locations.update(entry._id, { $set: {
+        lat: lat,
+        lng: lng
+      }});
+
       Meteor.call('locations.findAffordances', {
         lat: lat.toString(),
         lng: lng.toString(),
@@ -22,10 +29,7 @@ export const updateLocation = new ValidatedMethod({
         if(err){ console.log(err);}
       });
 
-      // Locations.update(entry._id, { $set: {
-      //   lat: lat,
-      //   lng: lng
-      // }});
+      
 
     } else {
       Locations.insert({ uid: uid, lat: lat, lng: lng });
