@@ -52,3 +52,6 @@ Sort all imports in this order and into these groups, omitting any groups that d
 
 ### Methods
 You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the [Github Repo](https://github.com/meteor/validated-method/) and the [guide page](http://guide.meteor.com/methods.html) about this, but be sure to use these.
+
+### Dev Tips and Tricks
+- To clear the database and therefore propagate changes to dummy data in `fixture.js`, set the `CLEAR_DB` boolean in `config.js` to 1

@@ -4,6 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Incidents } from '../incidents/incidents.js';
 import { Schema } from '../schema.js';
+import { Locations } from '../locations/locations.js';
 
 // TODO: cascade delete incidents and remove from active, etc.
 class ExperiencesCollection extends Mongo.Collection {
@@ -64,6 +65,11 @@ Schema.Experience = new SimpleSchema({
   affordance: {
     type: String,
     label: 'Affordances of the experience',
+    optional: true
+  },
+  available_users:{
+    type: [Schema.Locations],
+    label: 'Users who can participate',
     optional: true
   },
   activeIncident: {

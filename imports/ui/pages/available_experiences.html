@@ -6,14 +6,11 @@
   <h3>Available Experiences</h3>
 
   <br>
-
   {{#each experience in experiences}}
-    <h4>{{experience.name}} -- {{experience.affordance}} </h4>
-    {{#each loc in locations}}
-      <p>{{loc.uid}} -- {{loc.lat}}, {{loc.lng}}, {{loc.affordances}}</p>
-
+    <h4>{{experience.name}} - {{experience.affordance}} </h4>
+    {{#each user in (experience.available_users)}}
+      <p> {{user.uid}} </p>
     {{/each}}
-    <br>
   {{/each}}
 
 </template>

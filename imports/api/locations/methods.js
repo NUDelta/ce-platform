@@ -29,11 +29,9 @@ export const updateLocation = new ValidatedMethod({
         if(err){ console.log(err);}
       });
 
-      
 
     } else {
       Locations.insert({ uid: uid, lat: lat, lng: lng });
     }
   }
 });
-

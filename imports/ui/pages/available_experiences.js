@@ -18,7 +18,7 @@ Template.available_experiences.onCreated(function() {
       this.state.set('config', config);
     }
   });
-  
+
 });
 
 Template.available_experiences.helpers({
@@ -27,5 +27,8 @@ Template.available_experiences.helpers({
   },
   locations() {
     return Locations.find({});
+  },
+  test(input){
+    return input;
   }
 });

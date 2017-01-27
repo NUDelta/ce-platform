@@ -132,7 +132,8 @@ Meteor.startup(() => {
         startText: 'Telephone is about to start!',
         modules: ['chain'],
         requirements: [],
-        optIn: false
+        optIn: false,
+        affordance: "talk"
       },
       {
         name: 'Storytime',
@@ -141,7 +142,8 @@ Meteor.startup(() => {
         startText: 'Storytime is about to start!',
         modules: ['chain', 'text'],
         requirements: [],
-        optIn: false
+        optIn: false,
+        affordance: "sit"
       },
       {
         name: 'Nightlight',
@@ -150,7 +152,8 @@ Meteor.startup(() => {
         startText: 'Come be a part of Nightlight!',
         modules: ['map'],
         requirements: [],
-        optIn: true
+        optIn: true,
+        affordance: "darkness"
       },
       {
         name: 'Stella Time',
@@ -159,7 +162,8 @@ Meteor.startup(() => {
         startText: 'Pet Stella now and take a picture!',
         modules: ['camera', 'text'],
         requirements: ['hasCamera'],
-        optIn: false
+        optIn: false,
+        affordance: "play"
       }
     ];
 
