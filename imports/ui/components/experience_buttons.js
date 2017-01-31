@@ -25,6 +25,44 @@ Template.experienceButtons.events({
       }
     });
   },
+  'click .continuous-btn:not(.disabled)'(event, instance) {
+    event.preventDefault();
+    console.log("clicked!");
+    // Importing exports causes problematic dependencies between server/client here
+    Meteor.call('launcher.continuous', {
+      experience: instance.data.experience,
+      notificationOptions: {
+        subject: `Participate in "${instance.data.experience.name}"!`,
+        text: instance.data.experience.startText,
+        route: 'participate'
+      }
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        alert(`Launched continuous experience ${instance.data.experience.name}`);
+      }
+    });
+  },
+  'click .end-continuous-btn:not(.disabled)'(event, instance) {
+    event.preventDefault();
+    console.log("clicked!");
+    // Importing exports causes problematic dependencies between server/client here
+    Meteor.call('launcher.endContinuous', {
+      experience: instance.data.experience,
+      notificationOptions: {
+        subject: `Participate in "${instance.data.experience.name}"!`,
+        text: instance.data.experience.startText,
+        route: 'participate'
+      }
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        alert(`Ending continuous experience ${instance.data.experience.name}`);
+      }
+    });
+  },
   'click .schedule-btn:not(.disabled)'(event, instance) {
     event.preventDefault();
 

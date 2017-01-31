@@ -37,7 +37,6 @@ export const findAffordances = new ValidatedMethod({
               if (err) { console.log(err); }
               else { }
             });
-
             update_available();
           }
       }));

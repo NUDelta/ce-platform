@@ -40,6 +40,10 @@ Schema.Locations = new SimpleSchema({
   affordances: {
     type: [String],
     optional: true
+  },
+  lastNotification: {
+    type: Number,
+    optional: true
   }
 });
 

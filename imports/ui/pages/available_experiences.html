@@ -9,7 +9,7 @@
   {{#each experience in experiences}}
     <h4>{{experience.name}} - {{experience.affordance}} </h4>
     {{#each user in (experience.available_users)}}
-      <p> {{user.uid}} </p>
+      <p> {{user.uid}}: {{user.affordances}} </p>
     {{/each}}
   {{/each}}
 

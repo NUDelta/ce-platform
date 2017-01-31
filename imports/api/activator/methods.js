@@ -14,6 +14,83 @@ import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
 
+var send_notifications;
+
+export const launchContinuousExperience = new ValidatedMethod({
+  name: 'launcher.continuous',
+  validate: new SimpleSchema({
+    experience: {
+      type: Schema.Experience
+    },
+    notificationOptions: {
+      type: Schema.NotificationOptions
+    }
+  }).validator(),
+  run({experience, notificationOptions }) {
+    const activeIncident = activateNewIncident.call({
+      name: experience.name,
+      experienceId: experience._id,
+      launcher: this.userId
+    });
+
+    console.log("we are launching a constant experience " + experience.name);
+    send_notifications = Meteor.setInterval(function(){
+      removeFromAllActiveExperiences.call({ experienceId: experience._id });
+      experience.available_users = Locations.find().fetch();
+      for (let user of experience.available_users){
+        now = Date.parse(new Date());
+        if(user.lastNotification == null || (now - user.lastNotification) > 60000){
+          console.log("here we go :)")
+          console.log(user._id)
+          Locations.update(user._id, { $set: {
+            lastNotification : now //updated_affordances
+          }}, (err, docs) => {
+            if (err) { console.log(err); }
+            else {}
+          });
+
+          Cerebro.setActiveExperiences([user._id], experience._id);
+          Cerebro.notify({
+            userIds: [user._id],
+            experienceId: experience._id,
+            subject: notificationOptions.subject,
+            text: notificationOptions.text,
+            route: notificationOptions.route
+          });
+          console.log(user.uid);
+
+        }else{
+          console.log("notification sentt too recently to " + user.uid)
+        }
+      }
+    }, 10000);
+  }
+});
+
+export const endContinuousExperience = new ValidatedMethod({
+  name: 'launcher.endContinuous',
+  validate: new SimpleSchema({
+    experience: {
+      type: Schema.Experience
+    },
+    notificationOptions: {
+      type: Schema.NotificationOptions
+    },
+  }).validator(),
+  run({ experience, notificationOptions }) {
+    // TODO: encode some sense of who participate / should be included instead of just sending this
+    console.log("ending continuous experience, no more notifications");
+    const activeIncidentId = experience.activeIncident;
+    removeFromAllActiveExperiences.call({ experienceId: experience._id });
+    Meteor.clearInterval(send_notifications);
+    Experiences.update({
+      _id: experience._id
+    }, {
+      $unset: { 'activeIncident': 0 }
+    });
+  }
+});
+
 function asyncNotifyUsers(experience, notificationOptions, activeIncident) {
   let locations = Locations.find().fetch();
   for (let location of locations){
@@ -90,14 +167,7 @@ export const launchInstantExperience = new ValidatedMethod({
       launcher: this.userId
     });
     if (experience.affordance) {
-      console.log("before for loop")
-      for (let i = 0; i < 10; i++) {
-        Meteor.setTimeout(function() {
-          asyncNotifyUsers(experience, notificationOptions, activeIncident);
-        }, 120000);
-        console.log("call successful")
-      }
-      /**asyncNotifyUsers(experience, notificationOptions, activeIncident);**/
+      asyncNotifyUsers(experience, notificationOptions, activeIncident);
     } else {
       const userIds = getUsersToNotify(experience);
       Cerebro.setActiveExperiences(userIds, experience._id);
