@@ -36,7 +36,8 @@ export const launchContinuousExperience = new ValidatedMethod({
     console.log("we are launching a constant experience " + experience.name);
     send_notifications = Meteor.setInterval(function(){
       removeFromAllActiveExperiences.call({ experienceId: experience._id });
-      experience.available_users = Locations.find().fetch();
+      experience.available_users = Meteor.users.find().fetch();
+      console.log(experience.available_users)
       for (let user of experience.available_users){
         now = Date.parse(new Date());
         if(user.lastNotification == null || (now - user.lastNotification) > 60000){
