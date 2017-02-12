@@ -68,8 +68,8 @@ Schema.Experience = new SimpleSchema({
     optional: true
   },
   available_users:{
-    type: [Schema.Locations],
-    label: 'Users who can participate',
+    type: [String],
+    label: 'Users ids for those who can participate',
     optional: true
   },
   activeIncident: {

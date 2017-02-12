@@ -14,8 +14,6 @@ export const updateLocation = new ValidatedMethod({
     const entry = Locations.findOne({ uid: uid });
     if (entry) {
 
-      console.log("inside update location function");
-
       Locations.update(entry._id, { $set: {
         lat: lat,
         lng: lng

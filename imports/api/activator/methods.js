@@ -43,7 +43,7 @@ export const launchContinuousExperience = new ValidatedMethod({
       for (let user_id of experience.available_users){
         let user_location = Locations.findOne({uid: user_id});
         if(user_location == null){
-          console.log("userlocation is null, you messed up");
+          console.log("userlocation is null, you messed up " + user_id + "is the uid you were trying to find");
         }else{
           console.log(user_id);
           now = Date.parse(new Date());
