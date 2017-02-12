@@ -13,6 +13,7 @@ import { CONFIG } from '../config.js';
 import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
+import { Users } from '../users/users.js';
 
 var send_notifications;
 
@@ -36,30 +37,43 @@ export const launchContinuousExperience = new ValidatedMethod({
     console.log("we are launching a constant experience " + experience.name);
     send_notifications = Meteor.setInterval(function(){
       removeFromAllActiveExperiences.call({ experienceId: experience._id });
+      console.log("available_users");
       console.log(experience.available_users)
-      for (let user of experience.available_users){
-        now = Date.parse(new Date());
-        if(user.lastNotification == null || (now - user.lastNotification) > 300000){
-          console.log("here we go :)")
-          console.log(user._id)
-          Locations.update(user._id, { $set: {
-            lastNotification : now //updated_affordances
-          }}, (err, docs) => {
-            if (err) { console.log(err); }
-            else {}
-          });
-          Cerebro.setActiveExperiences([user._id], experience._id);
-          Cerebro.notify({
-            userIds: [user._id],
-            experienceId: experience._id,
-            subject: notificationOptions.subject,
-            text: notificationOptions.text,
-            route: notificationOptions.route
-          });
-          console.log(user.uid);
 
+      for (let user_id of experience.available_users){
+        let user_location = Locations.findOne({uid: user_id});
+        if(user_location == null){
+          console.log("userlocation is null, you messed up");
         }else{
-          console.log("notification sentt too recently to " + user.uid)
+          console.log(user_id);
+          now = Date.parse(new Date());
+
+          console.log(user_location.lastNotification);
+
+          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 300000){
+            Locations.update({uid: user_id}, { $set: {
+              lastNotification : now //updated_affordances
+            }}, (err, docs) => {
+              if (err) { console.log(err); }
+              else {}
+            });
+
+            Cerebro.setActiveExperiences([user_id], experience._id);
+            Cerebro.addIncidents([user_id], activeIncident);
+            console.log("notifiying " + user_id)
+            Cerebro.notify({
+              userIds: [user_id],
+              experienceId: experience._id,
+              subject: notificationOptions.subject,
+              text: notificationOptions.text,
+              route: notificationOptions.route
+            });
+            console.log("notifification sent to " + user_id)
+
+
+          }else{
+            console.log("notification sentt too recently to " + user_id)
+          }
         }
       }
     }, 10000);
@@ -109,7 +123,7 @@ function asyncNotifyUsers(experience, notificationOptions, activeIncident) {
 function getUsersToNotify(experience) {
   let query = {};
   if (experience.location) {
-      log.cerebro(`Notifying users for experience "${ experience.name }" in ${ experience.location }`);
+    log.cerebro(`Notifying users for experience "${ experience.name }" in ${ experience.location }`);
     const atLocation = Cerebro.liveQuery(experience.location);
     query = {
       'profile.subscriptions': experience._id,
