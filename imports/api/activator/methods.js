@@ -38,9 +38,10 @@ export const launchContinuousExperience = new ValidatedMethod({
     send_notifications = Meteor.setInterval(function(){
       removeFromAllActiveExperiences.call({ experienceId: experience._id });
       console.log("available_users");
-      console.log(experience.available_users)
+      let curr_experience = Experiences.findOne(experience._id);
+      console.log(curr_experience);
 
-      for (let user_id of experience.available_users){
+      for (let user_id of curr_experience.available_users){
         let user_location = Locations.findOne({uid: user_id});
         if(user_location == null){
           console.log("userlocation is null, you messed up " + user_id + "is the uid you were trying to find");
