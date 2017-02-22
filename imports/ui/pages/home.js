@@ -14,6 +14,7 @@ Template.home.onCreated(function() {
 
 Template.home.helpers({
   activeExperiences() {
+    console.log(Meteor.users.findOne(Meteor.userId()).profile.activeExperiences);
     return Meteor.users.findOne(Meteor.userId()).profile.activeExperiences;
   },
   noActiveExperiences() {
