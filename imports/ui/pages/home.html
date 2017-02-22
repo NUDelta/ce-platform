@@ -5,12 +5,12 @@
       <h4>Your Experiences Running Now</h4>
 
       {{#each experienceId in activeExperiences}}
-        {{> activeExperience (activeExperienceArgs experienceId)}}
+
       {{/each}}
 
     {{else}}
       <!-- TODO: get a loading template -->
-      <p>{ {Template.subscriptionsReady}} Well we should really not be Loading...</p>
+      <p> {{Template.subscriptionsReady}} Well we should really not be Loading...</p>
     {{/if}}
   {{else}}
     <h4>Sign In To Participate In Experiences</h4>
