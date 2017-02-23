@@ -1,16 +1,18 @@
 <template name="home">
   {{#if currentUser}}
-    <p> username is:{{currentUser.username}}  // user is: {{currentUser}} // {{Template.subscriptionsReady}} </p>
-    {{#if Template.subscriptionsReady }}
+    {{#if Template.subscriptionsReady}}
       <h4>Your Experiences Running Now</h4>
-
+      <div class="list-group">
       {{#each experienceId in activeExperiences}}
         {{> activeExperience (activeExperienceArgs experienceId)}}
       {{/each}}
-
+      {{#if noActiveExperiences}}
+        <p>Darn! It looks like none of the experiences you have subscribed to are running right now. Be sure to check out the Browse tab to find some new experiences you might like to participate in.</p>
+      {{/if}}
+      </div>
     {{else}}
       <!-- TODO: get a loading template -->
-      <p> {{Template.subscriptionsReady}} Well we should really not be Loading...</p>
+      Loading...
     {{/if}}
   {{else}}
     <h4>Sign In To Participate In Experiences</h4>

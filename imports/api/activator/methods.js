@@ -33,10 +33,9 @@ export const launchContinuousExperience = new ValidatedMethod({
       experienceId: experience._id,
       launcher: this.userId
     });
-
+    var first_time = true;
     console.log("we are launching a constant experience " + experience.name);
     send_notifications = Meteor.setInterval(function(){
-      removeFromAllActiveExperiences.call({ experienceId: experience._id });
       console.log("available_users");
       let curr_experience = Experiences.findOne(experience._id);
       console.log(curr_experience);
@@ -51,7 +50,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
           console.log(user_location.lastNotification);
 
-          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 300000){
+          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 60000){
             Locations.update({uid: user_id}, { $set: {
               lastNotification : now //updated_affordances
             }}, (err, docs) => {
@@ -59,8 +58,14 @@ export const launchContinuousExperience = new ValidatedMethod({
               else {}
             });
 
-            Cerebro.setActiveExperiences([user_id], experience._id);
-            Cerebro.addIncidents([user_id], activeIncident);
+            if(first_time){
+              console.log("trying to add experience as an active experience");
+              Cerebro.setActiveExperiences([user_id], experience._id);
+              Cerebro.addIncidents([user_id], activeIncident);
+              first_time = false;
+            }
+
+
             console.log("notifiying " + user_id)
             Cerebro.notify({
               userIds: [user_id],
