@@ -24,10 +24,11 @@ Schema.Profile = new SimpleSchema({
     label: 'Subscribed experiences',
     regEx: SimpleSchema.RegEx.Id
   },
-  qualifications: {
-    type: Schema.Qualification,
-    label: 'User qualifications'
-  },
+  // qualifications: {
+  //   type: Schema.Qualification,
+  //   label: 'User qualifications',
+  //   optional: true
+  // },
   activeExperiences: {
     type: [String],
     label: 'Active experiences',
