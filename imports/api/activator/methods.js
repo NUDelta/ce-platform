@@ -40,6 +40,13 @@ export const launchContinuousExperience = new ValidatedMethod({
       let curr_experience = Experiences.findOne(experience._id);
       console.log(curr_experience);
 
+      if(first_time){
+        console.log("adding an active experiences to an array of avalible users" + curr_experience.available_users)
+        Cerebro.setActiveExperiences(curr_experience.available_users, experience._id);
+        Cerebro.addIncidents(curr_experience.available_users, activeIncident);
+        first_time = false;
+      }
+
       for (let user_id of curr_experience.available_users){
         let user_location = Locations.findOne({uid: user_id});
         if(user_location == null){
@@ -58,12 +65,11 @@ export const launchContinuousExperience = new ValidatedMethod({
               else {}
             });
 
-            if(first_time){
-              console.log("trying to add experience as an active experience");
-              Cerebro.setActiveExperiences([user_id], experience._id);
-              Cerebro.addIncidents([user_id], activeIncident);
-              first_time = false;
-            }
+            // if(not_first_time.indexOf(user_id) == -1){
+            //   console.log("firt time we've seen user, so lets add then ");
+            //
+            //   first_time = false;
+            // }
 
 
             console.log("notifiying " + user_id)
@@ -82,7 +88,7 @@ export const launchContinuousExperience = new ValidatedMethod({
           }
         }
       }
-    }, 10000);
+    }, 100000);
   }
 });
 
