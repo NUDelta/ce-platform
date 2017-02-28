@@ -1,7 +1,7 @@
 <template name="profile">
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
-      {{> profile_question}}
+      <!-- {{> profile_question}} -->
       <h4>Results From Past Experiences</h4>
       <div class="list-group">
       {{#each pastIncident in pastIncidents}}
@@ -10,7 +10,7 @@
       </div>
       <h4>Your Created Experiences</h4>
       {{#each experience in experiences}}
-        {{> subscribeExperience experience}}
+        <!-- {{> subscribeExperience experience}} -->
       {{/each}}
     {{else}}
       <!-- TODO: get a loading template -->
