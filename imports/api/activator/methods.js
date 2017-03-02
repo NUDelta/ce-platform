@@ -84,7 +84,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
 
           }else{
-            console.log("notification sentt too recently to " + user_id)
+            console.log("notification sent too recently to " + user_id)
           }
         }
       }
