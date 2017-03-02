@@ -1,7 +1,7 @@
 <template name="home">
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
-      <h4>Your Experiences Running Now</h4>
+      <h4>Your Experiences Running Now!!!</h4>
       <div class="list-group">
       {{#each experienceId in activeExperiences}}
         {{> activeExperience (activeExperienceArgs experienceId)}}
