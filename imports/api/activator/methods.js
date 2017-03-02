@@ -34,13 +34,13 @@ export const launchContinuousExperience = new ValidatedMethod({
       launcher: this.userId
     });
     var first_time = true;
-    console.log("we are launching a constant experience " + experience.name);
+    console.log("we are launching a constant experience " + experience.name + "   " +  first_time);
     send_notifications = Meteor.setInterval(function(){
       console.log("available_users");
       let curr_experience = Experiences.findOne(experience._id);
       console.log(curr_experience);
 
-      if(first_time){
+      if(first_time == true){
         console.log("adding an active experiences to an array of avalible users" + curr_experience.available_users)
         Cerebro.setActiveExperiences(curr_experience.available_users, experience._id);
         Cerebro.addIncidents(curr_experience.available_users, activeIncident);
@@ -88,7 +88,7 @@ export const launchContinuousExperience = new ValidatedMethod({
           }
         }
       }
-    }, 100000);
+    }, 10000);
   }
 });
 
