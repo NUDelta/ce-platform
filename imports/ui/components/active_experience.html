@@ -3,7 +3,7 @@
       <h4 class="list-group-item-heading">{{experience.name}}</h4>
       <p class="list-group-item-text">{{experience.description}}</p>
       {{#if experience.route}}
-      <a class="btn btn-primary btn-participate btn-block" href="/participate/{{experience.route}}">
+      <a class="btn btn-primary btn-participate btn-block" href="/participate/{{experience.route}}/{{experience._id}}">
         Participate
       </a>
       {{else}}

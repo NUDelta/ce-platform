@@ -15,12 +15,21 @@ import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { CONFIG } from '../../api/config.js'
-
+import { photoInput } from '../globalHelpers.js';
+import { photoUpload } from '../globalHelpers.js';
+import '../globalHelpers.js';
 import '../components/experience_buttons.js';
 import '../components/map.js';
 import '../components/loading_overlay.js';
 
+
+Router.route('/participate/custom/:_id', {
+  template: 'custom'
+});
+
+
 Template.custom.onCreated(function() {
+
   this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
   const experiencesHandle = this.subscribe('experiences.byRoute', 'custom');
@@ -47,65 +56,11 @@ Template.custom.onCreated(function() {
   //need to deal with what happens when an experience ends (time stamp incidents?)
 });
 
-Template.custom.helpers({
-  experience() {
-    const instance = Template.instance();
-    return instance.state.get('experience');
-  },
-  moduleChosen(module) {
-    const instance = Template.instance();
-    const modules = instance.state.get('modules');
-    return _.contains(modules, module);
-  },
-  lastEntry(module) {
-    const instance = Template.instance();
-    if (module == 'text') {
-      const entry = TextEntries.findOne(instance.state.get('text'));
-      return entry && entry.text;
-    }
-  },
-  ownExperience() {
-    const instance = Template.instance();
-    const experience = instance.state.get('experience');
-    return experience && experience.author == Meteor.userId();
-  },
-  uploadRequired() {
-    const instance = Template.instance();
-    const modules = instance.state.get('modules');
-    return _.contains(modules, 'camera') ||
-        _.contains(modules, 'text') ||
-        _.contains(modules, 'chain');
-  },
-  mapArgs() {
-    const instance = Template.instance();
-    const incident = Incidents.findOne();
-
-    return {
-      incidentId: incident && incident._id
-    };
-  },
-  experienceButtonsArgs() {
-    const instance = Template.instance();
-    return {
-      experience: instance.state.get('experience')
-    };
-  },
-  isDebugUser() {
-    return Meteor.isDevelopment || _.contains(CONFIG.DEBUG_USERS, Meteor.userId());
-  },
-  experienceIsActive() {
-    const instance = Template.instance();
-    const experience = Experiences.findOne({name: "Custom"});
-    return experience.activeIncident;
-  },
-  isSubmitting() {
-    const instance = Template.instance();
-    return instance.submitting.get();
-  }
-});
 
 Template.custom.events({
   'submit form'(event, instance) {
+
+
     event.preventDefault();
 
     instance.submitting.set(true);
@@ -221,11 +176,7 @@ Template.custom.events({
     }
   },
   'click .fileinput, touchstart .glyphicon-camera'(event, target) {
-    // NOTE: oddly, touchstart seems to happily trigger events, but
-    // click won't.
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    $('input[name=photo]').trigger('click');
+    photoInput(event);
   },
   'click .glyphicon-remove'(event, target) {
     // NOTE: 5/22/16: simpler methods don't seem to work here
@@ -240,15 +191,6 @@ Template.custom.events({
     $('.fileinput-new').show();
   },
   'change input[name=photo]'(event, target) {
-    const files = event.target.files;
-    if (files && files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event2) => {
-        $('.fileinput-new').hide();
-        $('.fileinput-exists').show();
-        $('.fileinput-preview').attr('src', event2.target.result);
-      };
-      reader.readAsDataURL(files[0]);
-    }
+    photoUpload(event);
   }
 });

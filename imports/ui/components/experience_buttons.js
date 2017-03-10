@@ -109,6 +109,45 @@ Template.experienceButtons.events({
     event.preventDefault();
     Cerebro.startChain(instance.data.experience._id);
     alert(`Starting chain for ${ instance.data.experience.name }`);
+  },
+  'click .custom-btn:not(.disabled)'(event, instance) {
+    event.preventDefault();
+    console.log("clicked!");
+    console.log(instance.data.experience)
+    // Importing exports causes problematic dependencies between server/client here
+    Meteor.call('launcher.custom', {
+      experience: instance.data.experience,
+      notificationOptions: {
+        subject: `Participate in "${instance.data.experience.name}"!`,
+        text: instance.data.experience.startText,
+        route: 'participate'
+      }
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        alert(`Launched custom experience ${instance.data.experience.name}`);
+      }
+    });
+  },
+  'click .end-custom-btn:not(.disabled)'(event, instance) {
+    event.preventDefault();
+    console.log("clicked!");
+    // Importing exports causes problematic dependencies between server/client here
+    Meteor.call('launcher.endCustom', {
+      experience: instance.data.experience,
+      notificationOptions: {
+        subject: `Participate in "${instance.data.experience.name}"!`,
+        text: instance.data.experience.startText,
+        route: 'participate'
+      }
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        alert(`Ending custom experience ${instance.data.experience.name}`);
+      }
+    });
   }
 });
 

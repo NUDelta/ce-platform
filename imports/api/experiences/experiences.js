@@ -97,6 +97,11 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Route to use in place of experience ID',
     optional: true
+  },
+  custom_notification: {
+    type: String,
+    label: 'Notification function to be used instead of default',
+    optional: true
   }
   /*
    * start condition

@@ -1,5 +1,3 @@
-import './participate.html';
-
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -7,104 +5,98 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
-import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
-import { LocationManager } from '../../api/locations/client/location-manager-client.js';
-import { CONFIG } from '../../api/config.js'
+import { Cerebro } from '../api/cerebro/client/cerebro-client.js';
+import { Experiences } from '../api/experiences/experiences.js';
+import { Incidents } from '../api/incidents/incidents.js';
+import { Images } from '../api/images/images.js';
+import { TextEntries } from '../api/text-entries/text-entries.js';
+import { ParticipationLocations } from '../api/participation-locations/participation_locations.js';
+import { LocationManager } from '../api/locations/client/location-manager-client.js';
+import { CONFIG } from '../api/config.js'
 
-import '../globalHelpers.js';
-import '../components/experience_buttons.js';
-import '../components/map.js';
-import '../components/loading_overlay.js';
+import './components/experience_buttons.js';
+import './components/map.js';
+import './components/loading_overlay.js';
 
-Template.participate.onCreated(function() {
-  const experienceId = Router.current().params._id;
 
-  const experiencesHandle = this.subscribe('experiences.single', experienceId);
-  this.subscribe('participation_locations');
+export const photoInput = function(event){
 
-  this.submitting = new ReactiveVar(false);
-  this.state = new ReactiveDict();
-  this.autorun(() => {
-    this.subscribe('incidents.byExperience', experienceId);
+  // NOTE: oddly, touchstart seems to happily trigger events, but
+  // click won't.
+  event.stopImmediatePropagation();
+  event.stopPropagation();
+  $('input[name=photo]').trigger('click');
+}
 
-    if (experiencesHandle.ready()) {
-      const experience = Experiences.findOne(experienceId);
-      this.state.set('experience', experience);
-      this.state.set('modules', this.state.get('experience').modules);
+export const photoUpload = function(event){
+  const files = event.target.files;
+  if (files && files[0]) {
+    const reader = new FileReader();
+    reader.onload = (event2) => {
+      $('.fileinput-new').hide();
+      $('.fileinput-exists').show();
+      $('.fileinput-preview').attr('src', event2.target.result);
+    };
+    reader.readAsDataURL(files[0]);
+  }
+}
 
-      if (experience.activeIncident) {
-        this.subscribe('images', experience.activeIncident);
-      }
-    }
-  });
 
-  this.usesModule = (module) => {
-    return _.contains(this.state.get('modules'), module);
-  };
 
-  //need to deal with what happens when an experience ends (time stamp incidents?)
-});
-
-Template.participate.helpers({
-  experience() {
+Template.registerHelper( 'gExperience', () => {
     const instance = Template.instance();
     return instance.state.get('experience');
-  },
-  moduleChosen(module) {
-    const instance = Template.instance();
-    const modules = instance.state.get('modules');
-    return _.contains(modules, module);
-  },
-  lastEntry(module) {
-    const instance = Template.instance();
-    if (module == 'text') {
-      const entry = TextEntries.findOne(instance.state.get('text'));
-      return entry && entry.text;
-    }
-  },
-  ownExperience() {
-    const instance = Template.instance();
-    const experience = instance.state.get('experience');
-    return experience && experience.author == Meteor.userId();
-  },
-  uploadRequired() {
-    const instance = Template.instance();
-    const modules = instance.state.get('modules');
-    return _.contains(modules, 'camera') ||
-        _.contains(modules, 'text') ||
-        _.contains(modules, 'chain');
-  },
-  mapArgs() {
-    const instance = Template.instance();
-    const incident = Incidents.findOne();
-
-    return {
-      incidentId: incident && incident._id
-    };
-  },
-  experienceButtonsArgs() {
-    const instance = Template.instance();
-    return {
-      experience: instance.state.get('experience')
-    };
-  },
-  isDebugUser() {
-    return Meteor.isDevelopment || _.contains(CONFIG.DEBUG_USERS, Meteor.userId());
-  },
-  experienceIsActive() {
-    const instance = Template.instance();
-    const experience = instance.state.get('experience');
-    return experience.activeIncident;
-  },
-  isSubmitting() {
-    const instance = Template.instance();
-    return instance.submitting.get();
+});
+Template.registerHelper( 'gModuleChosen', (module) => {
+  const instance = Template.instance();
+  const modules = instance.state.get('modules');
+  return _.contains(modules, module);
+});
+Template.registerHelper( 'glboalLastEntry', (module) => {
+  const instance = Template.instance();
+  if (module == 'text') {
+    const entry = TextEntries.findOne(instance.state.get('text'));
+    return entry && entry.text;
   }
+});
+
+Template.registerHelper( 'gOwnExperience', () => {
+  const instance = Template.instance();
+  const experience = instance.state.get('experience');
+  return experience && experience.author == Meteor.userId();
+});
+Template.registerHelper( 'gUploadRequired', () => {
+  const instance = Template.instance();
+  const modules = instance.state.get('modules');
+  return _.contains(modules, 'camera') ||
+      _.contains(modules, 'text') ||
+      _.contains(modules, 'chain');
+});
+Template.registerHelper( 'gMapArgs', () => {
+  const instance = Template.instance();
+  const incident = Incidents.findOne();
+
+  return {
+    incidentId: incident && incident._id
+  };
+});
+Template.registerHelper( 'gExperienceButtonsArgs', () => {
+  const instance = Template.instance();
+  return {
+    experience: instance.state.get('experience')
+  };
+});
+Template.registerHelper( 'gIsDebugUser', () => {
+  return Meteor.isDevelopment || _.contains(CONFIG.DEBUG_USERS, Meteor.userId());
+});
+Template.registerHelper( 'gExperienceIsActive', () => {
+  const instance = Template.instance();
+  const experience = instance.state.get('experience');
+  return experience.activeIncident;
+});
+Template.registerHelper( 'gIsSubmitting', () => {
+  const instance = Template.instance();
+  return instance.submitting.get();
 });
 
 

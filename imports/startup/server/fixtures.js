@@ -172,7 +172,8 @@ Meteor.startup(() => {
         modules: ['camera', 'text'],
         requirements: ['hasCamera'],
         optIn: false,
-        route: 'custom'
+        route: 'custom',
+        custom_notification: 'testNotification'
       }
     ];
 

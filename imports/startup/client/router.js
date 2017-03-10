@@ -18,8 +18,7 @@ import '../../ui/pages/results.js';
 import '../../ui/pages/browse.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/available_experiences.js';
-import '../../ui/pages/custom.js';
-import '../../ui/pages/customresult.js';
+import '../../ui/custom_exports.js';
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -79,15 +78,6 @@ Router.route('/profile', {
 
 Router.route('/buttongame', {
   template: 'button_game'
-});
-
-
-Router.route('/participate/custom', {
-  template: 'custom'
-});
-
-Router.route('/results/custom/:_id', {
-  name: 'customresult',
 });
 
 Router.route('/available', {

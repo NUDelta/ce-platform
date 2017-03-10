@@ -16,6 +16,10 @@ import { Incidents } from '../../api/incidents/incidents.js';
 
 isImageFullSize = false;
 
+Router.route('/results/custom/:_id', {
+  template: 'customresult',
+});
+
 Template.customresult.onCreated(function() {
   const incidentId = Router.current().params._id;
 
@@ -30,9 +34,6 @@ Template.customresult.onCreated(function() {
 
   this.autorun(() => {
     if (expHandle.ready() && incHandle.ready()) {
-      if (experience.route == 'custom') {
-        Router.go(`/results/custom/${incidentId}`);
-      }
       const experience = Experiences.findOne();
       const incident = Incidents.findOne();
       this.state.set({

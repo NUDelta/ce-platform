@@ -15,7 +15,35 @@ import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
 import { Users } from '../users/users.js';
 
+import './custom_options.js'
+
 var send_notifications;
+
+
+export const launchCustom = new ValidatedMethod({
+  name: 'launcher.custom',
+  validate: new SimpleSchema({
+    experience: {
+      type: Schema.Experience
+    },
+    notificationOptions: {
+      type: Schema.NotificationOptions
+    }
+  }).validator(),
+  run({experience, notificationOptions }) {
+    console.log("the custom is: " + experience.custom_notification);
+    if(experience.custom_notification){
+      Meteor.call(experience.custom_notification, {
+        experience: experience,
+        notificationOptions: notificationOptions
+      }, (err, res) => {
+        if (err) { console.log(err);}
+      });
+    }
+  }
+});
+
+
 
 export const launchContinuousExperience = new ValidatedMethod({
   name: 'launcher.continuous',
