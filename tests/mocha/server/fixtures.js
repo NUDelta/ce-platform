@@ -22,7 +22,6 @@ let profiles = [{
     experiences: [],
     subscriptions: [],
     qualifications: {
-      hasDog: true,
       hasCamera: false
     }
   }
@@ -37,7 +36,6 @@ let profiles = [{
     experiences: ['sunset', 'dogsaregreat'],
     subscriptions: [],
     qualifications: {
-      hasDog: true,
       hasCamera: true
     }
   }
@@ -52,7 +50,6 @@ let profiles = [{
     experiences: ['dogsaregreat'],
     subscriptions: [],
     qualifications: {
-      hasDog: true,
       hasCamera: false
     }
   }
@@ -65,7 +62,6 @@ let experiences = [{
   description: 'Upload a picture of the sunset where you are right now!',
   startText: '<p>Get your camera ready because it\'s time to post a picture of the sunset. Follow this <a href="http://sunset.meteor.com/upload">link</a></p>',
   modules: ['camera'],
-  requirements: ['hasCamera']
 }, {
   _id: 'dogsaregreat',
   name: 'Pet Dog',
@@ -73,5 +69,4 @@ let experiences = [{
   description: 'Upload a picture of you petting your dog right now!',
   startText: '<p>Get your camera ready because it\'s time to post a picture of the yourself petting a dog. Follow this <a href="http://dogs-are-great.meteor.com">link</a></p>',
   modules: ['camera'],
-  requirements: ['hasDog']
 }];

@@ -5,7 +5,7 @@
     "cert": "ios/cc.pem",
     "gateway": "gateway.push.apple.com"
   },
-  "production": true,
+  "production": false,
   "badge": true,
   "sound": true,
   "alert": true,

@@ -1,4 +1,4 @@
-import './custom_result.html';
+import './customresult.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
@@ -16,7 +16,7 @@ import { Incidents } from '../../api/incidents/incidents.js';
 
 isImageFullSize = false;
 
-Template.custom_result.onCreated(function() {
+Template.customresult.onCreated(function() {
   const incidentId = Router.current().params._id;
 
   this.subscribe('images', incidentId);
@@ -44,7 +44,7 @@ Template.custom_result.onCreated(function() {
   });
 });
 
-Template.custom_result.helpers({
+Template.customresult.helpers({
   incident() {
     const instance = Template.instance();
     return instance.state.get('incident');
@@ -82,7 +82,7 @@ Template.custom_result.helpers({
   }
 });
 
-Template.custom_result.events({
+Template.customresult.events({
   'change #filter-dropdown'(event, instance) {
     const newValue = $('#filter-dropdown option:selected').text();
     const newFilter = { incidentId: instance.state.get('incidentId') };

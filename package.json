@@ -6,10 +6,11 @@
     "test": "tests"
   },
   "dependencies": {
-    "babel-runtime": "^6.22.0",
+    "babel-runtime": "^6.23.0",
     "bcrypt": "^0.8.7",
-    "photoswipe": "4.1.1",
-    "request": "^2.79.0"
+    "meteor-node-stubs": "^0.2.5",
+    "photoswipe": "^4.1.1",
+    "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {},
