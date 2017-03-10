@@ -163,7 +163,16 @@ Meteor.startup(() => {
         modules: ['camera', 'text'],
         requirements: ['hasCamera'],
         optIn: false,
-        affordance: "play"
+      },
+      {
+        name: 'Custom',
+        author: kevin._id,
+        description: 'custom description',
+        startText: 'custom experience',
+        modules: ['camera', 'text'],
+        requirements: ['hasCamera'],
+        optIn: false,
+        route: 'custom'
       }
     ];
 

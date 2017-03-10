@@ -1,6 +1,5 @@
 <template name="activeExperience">
   <a href="/results/{{ experience.activeIncident }}" class="list-group-item">
-    <!-- <div class="list-group-item"> -->
       <h4 class="list-group-item-heading">{{experience.name}}</h4>
       <p class="list-group-item-text">{{experience.description}}</p>
       {{#if experience.route}}
@@ -12,6 +11,5 @@
         Participate
       </a>
       {{/if}}
-    <!-- </div> -->
   </a>
 </template>

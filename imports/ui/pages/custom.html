@@ -1,0 +1,60 @@
+<template name="custom">
+  {{#if Template.subscriptionsReady}}
+    <div id="participate">
+      {{#if ownExperience}}
+        <i class="secret">This is what your experience looks like to experiencers.</i>
+      {{/if}}
+      {{#if isSubmitting}}
+        {{> loadingOverlay}}
+      {{/if}}
+      <div class="row">
+        <h3>{{ experience.name}}</h3>
+        <p>{{ experience.description}}</p>
+        {{#if experienceIsActive}}
+          {{#if uploadRequired}}
+            <form class="col col-xs-12">
+              {{#if (moduleChosen "chain")}}
+                <p>Last submission: </p>
+                {{#if (moduleChosen "text")}}
+                  <p>Text: {{lastEntry "text"}}</p>
+                {{/if}}
+              {{/if}}
+              {{#if (moduleChosen "camera")}}
+                <label class="fileinput">
+                  <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
+                  <div class="glyphicon glyphicon-camera fileinput-new"></div>
+                  <div class="glyphicon glyphicon-remove fileinput-exists"></div>
+                </label>
+                <input type="file" name="photo" required>
+              {{/if}}
+              {{#if (moduleChosen "text")}}
+                <div class="form-group">
+                  <input name="write" type="text" class="form-control" placeholder="Write your thing here" required>
+                </div>
+              {{/if}}
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+          {{else}}
+            {{#if (moduleChosen "flashlight")}}
+              <button id="participate-btn">Turn on flashlight</button>
+              <button id="flashlight-off-btn" style="display: none">Turn flashlight off</button>
+            {{else}}
+              <button id="participate-btn">I did it!</button>
+            {{/if}}
+            <br/><br/>
+            {{#if (moduleChosen "map")}}
+              {{> map mapArgs}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+      {{#if isDebugUser}}
+        <br/>
+        <br/>
+        <i class="secret">Psst {{currentUser.username}}! When you're ready to start the experience...</i>
+        <br/>
+        {{> experienceButtons experienceButtonsArgs}}
+      {{/if}}
+    </div>
+  {{/if}}
+</template>

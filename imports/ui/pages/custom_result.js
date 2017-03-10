@@ -1,4 +1,4 @@
-import './results.html';
+import './custom_result.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
@@ -16,7 +16,7 @@ import { Incidents } from '../../api/incidents/incidents.js';
 
 isImageFullSize = false;
 
-Template.results.onCreated(function() {
+Template.custom_result.onCreated(function() {
   const incidentId = Router.current().params._id;
 
   this.subscribe('images', incidentId);
@@ -30,13 +30,10 @@ Template.results.onCreated(function() {
 
   this.autorun(() => {
     if (expHandle.ready() && incHandle.ready()) {
-      const experience = Experiences.findOne();
-      if (experience.route == 'button_game') {
-        Router.go(`/results/button_game/${incidentId}`);
-      }
       if (experience.route == 'custom') {
         Router.go(`/results/custom/${incidentId}`);
       }
+      const experience = Experiences.findOne();
       const incident = Incidents.findOne();
       this.state.set({
         incident: incident,
@@ -47,7 +44,7 @@ Template.results.onCreated(function() {
   });
 });
 
-Template.results.helpers({
+Template.custom_result.helpers({
   incident() {
     const instance = Template.instance();
     return instance.state.get('incident');
@@ -85,7 +82,7 @@ Template.results.helpers({
   }
 });
 
-Template.results.events({
+Template.custom_result.events({
   'change #filter-dropdown'(event, instance) {
     const newValue = $('#filter-dropdown option:selected').text();
     const newFilter = { incidentId: instance.state.get('incidentId') };

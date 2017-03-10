@@ -1,0 +1,96 @@
+<template name="custom_result">
+  <div id="results">
+    <h3>{{experience.name}}</h3>
+    <h5>View submissions from:
+      <select id="filter-dropdown" class="form-control">
+        <option selected>Anywhere</option>
+        <option>NU North Campus</option>
+        <option>NU South Campus</option>
+        <option>Off-campus Evanston</option>
+        <option>Greater Chicago, IL Area</option>
+        <option>Greater New York, NY Area</option>
+        <option>Greater Buffalo,NY Area</option>
+        <option>Greater St. Louis, MO Area</option>
+      </select>
+    </h5>
+    <div id = "change-layout">
+      <button id="image-layout" class="btn" >
+        Change Layout
+      </button>
+    </div>
+    {{#if moduleChosen "camera"}}
+      <div class="row">
+        {{#each image in images}}
+          <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+            {{#if image.isUploaded}}
+              <!--small amount of lag before url is ready-->
+              <!--probably should add a loading animation here-->
+              <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+            {{/if}}
+
+            {{#if moduleChosen "text"}}
+              <div class="caption">
+                {{image.caption}}, from {{image.location}}
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+      {{#if noImages}}
+        <p>Oh no! It doesn't look like anyone has uploaded any pictures from this location yet.</p>
+      {{/if}}
+    {{/if}}
+    {{#if $and (moduleChosen "text") ($not (moduleChosen "camera"))}}
+      {{#each textEntry in textEntries}}
+        <p>{{textEntry.text}}<br/><span class="submission-tag">&nbsp;&nbsp;&nbsp;- submitted from {{textEntry.location}}</span></p>
+        <br/>
+      {{/each}}
+      {{#if noTextEntries}}
+        <p>Oh no! It doesn't look like anyone has written anything at this location yet.</p>
+      {{/if}}
+    {{/if}}
+    {{#if isActive}}
+      <a href="/participate/{{experience._id}}">Back to upload</a>
+    {{/if}}
+    {{#if moduleChosen "camera"}}
+      <div id="gallery" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+
+          <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+          </div>
+
+          <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+              <div class="pswp__counter"></div>
+              <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+              <button class="pswp__button pswp__button--share" title="Share"></button>
+              <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+              <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+              <div class="pswp__preloader">
+                <div class="pswp__preloader__icn">
+                  <div class="pswp__preloader__cut">
+                    <div class="pswp__preloader__donut"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+              <div class="pswp__share-tooltip"></div>
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+              <div class="pswp__caption__center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</template>
