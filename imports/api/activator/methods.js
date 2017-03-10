@@ -57,7 +57,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
           console.log(user_location.lastNotification);
 
-          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 60000){
+          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 200000){
             Locations.update({uid: user_id}, { $set: {
               lastNotification : now //updated_affordances
             }}, (err, docs) => {
