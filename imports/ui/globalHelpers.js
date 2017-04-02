@@ -20,7 +20,6 @@ import './components/loading_overlay.js';
 
 
 export const photoInput = function(event){
-
   // NOTE: oddly, touchstart seems to happily trigger events, but
   // click won't.
   event.stopImmediatePropagation();
@@ -40,8 +39,6 @@ export const photoUpload = function(event){
     reader.readAsDataURL(files[0]);
   }
 }
-
-
 
 Template.registerHelper( 'gExperience', () => {
     const instance = Template.instance();
@@ -99,6 +96,19 @@ Template.registerHelper( 'gIsSubmitting', () => {
   return instance.submitting.get();
 });
 
+//methods used in customresult.js
+Template.registerHelper( 'gImages', () => {
+  const instance = Template.instance();
+  return Images.find(instance.filter.get());
+});
+Template.registerHelper( 'gTextEntries', () => {
+  const instance = Template.instance();
+  return TextEntries.find(instance.filter.get());
+});
+Template.registerHelper( 'gNoSubmissions', () => {
+  const instance = Template.instance();
+  return Images.find(instance.filter.get()).count() == 0 && TextEntries.find(instance.filter.get()).count() == 0;
+});
 
 Template.body.events({
   'submit form'(event, instance) {
