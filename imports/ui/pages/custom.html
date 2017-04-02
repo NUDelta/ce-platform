@@ -1,121 +1,12 @@
 <template name="custom">
   {{#if Template.subscriptionsReady}}
-    <div id="participate">
-      {{#if gOwnExperience}}
-        <i class="secret">This is what your experience looks like to experiencers.</i>
-      {{/if}}
       {{#if gIsSubmitting}}
-        {{> gLoadingOverlay}}
+        {{> LoadingOverlay}}
       {{/if}}
-      <div class="row">
-        <h3>{{ gExperience.name}} WOOOH</h3>
+        <h3>{{ gExperience.name}} WOOOH WOOOH</h3>
         <p>{{ gExperience.description}}</p>
         {{#if gExperienceIsActive}}
-          {{#if gUploadRequired}}
-            <form class="col col-xs-12">
-              {{#if (gModuleChosen "chain")}}
-                <p>Last submission: </p>
-                {{#if (gModuleChosen "text")}}
-                  <p>Text: {{gLastEntry "text"}}</p>
-                {{/if}}
-              {{/if}}
-              {{#if (gModuleChosen "camera")}}
-                <label class="fileinput">
-                  <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
-                  <div class="glyphicon glyphicon-camera fileinput-new"></div>
-                  <div class="glyphicon glyphicon-remove fileinput-exists"></div>
-                </label>
-                <input type="file" name="photo" required>
-              {{/if}}
-              {{#if (gModuleChosen "text")}}
-                <div class="form-group">
-                  <input name="write" type="text" class="form-control" placeholder="Write your thing here" required>
-                </div>
-              {{/if}}
-              <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-          {{else}}
-            {{#if (gModuleChosen "flashlight")}}
-              <button id="participate-btn">Turn on flashlight</button>
-              <button id="flashlight-off-btn" style="display: none">Turn flashlight off</button>
-            {{else}}
-              <button id="participate-btn">I did it!</button>
-            {{/if}}
-            <br/><br/>
-            {{#if (gModuleChosen "map")}}
-              {{> gMap mapArgs}}
-            {{/if}}
-          {{/if}}
+            {{> Template.dynamic template="cameraUpload" data=options}}
         {{/if}}
-      </div>
-      {{#if gIsDebugUser}}
-        <br/>
-        <br/>
-        <i class="secret">Psst {{gCurrentUser.username}}! When you're ready to start the experience...</i>
-        <br/>
-        {{> experienceButtons gExperienceButtonsArgs}}
-      {{/if}}
-    </div>
   {{/if}}
 </template>
-
-<!-- <template name="custom">
-  {{#if Template.SubscriptionsReady}}
-    <div id="custom">
-      {{#if gOwnExperience}}
-        <i class="secret">This is what your experience looks like to experiencers.</i>
-      {{/if}}
-      {{#if gIsSubmitting}}
-        {{> loadingOverlay}}
-      {{/if}}
-      <div class="row">
-        <h3>{{ gExperience.name}}</h3>
-        <p>{{ gExperience.description}}</p>
-        {{#if gExperienceIsActive}}
-          {{#if gUploadRequired}}
-            <form class="col col-xs-12">
-              {{#if (gModuleChosen "chain")}}
-                <p>Last submission: </p>
-                {{#if (gModuleChosen "text")}}
-                  <p>Text: {{gLastEntry "text"}}</p>
-                {{/if}}
-              {{/if}}
-              {{#if (gModuleChosen "camera")}}
-                <label class="fileinput">
-                  <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
-                  <div class="glyphicon glyphicon-camera fileinput-new"></div>
-                  <div class="glyphicon glyphicon-remove fileinput-exists"></div>
-                </label>
-                <input type="file" name="photo" required>
-              {{/if}}
-              {{#if (gModuleChosen "text")}}
-                <div class="form-group">
-                  <input name="write" type="text" class="form-control" placeholder="Write your thing here" required>
-                </div>
-              {{/if}}
-              <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-          {{else}}
-            {{#if (gModuleChosen "flashlight")}}
-              <button id="participate-btn">Turn on flashlight</button>
-              <button id="flashlight-off-btn" style="display: none">Turn flashlight off</button>
-            {{else}}
-              <button id="participate-btn">I did it!</button>
-            {{/if}}
-            <br/><br/>
-            {{#if (gModuleChosen "map")}}
-              {{> gMap mapArgs}}
-            {{/if}}
-          {{/if}}
-        {{/if}}
-      </div>
-      {{#if gIsDebugUser}}
-        <br/>
-        <br/>
-        <i class="secret">Psst {{gCurrentUser.username}}! When you're ready to start the experience...</i>
-        <br/>
-        {{> gExperienceButtons experienceButtonsArgs}}
-      {{/if}}
-    </div>
-  {{/if}}
-</template> -->
