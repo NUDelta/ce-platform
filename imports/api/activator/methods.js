@@ -62,11 +62,18 @@ export const launchContinuousExperience = new ValidatedMethod({
       launcher: this.userId
     });
     var first_time = true;
-    console.log("we are launching a constant experience " + experience.name);
+    console.log("we are launching a constant experience " + experience.name + "   " +  first_time);
     send_notifications = Meteor.setInterval(function(){
       console.log("available_users");
       let curr_experience = Experiences.findOne(experience._id);
       console.log(curr_experience);
+
+      if(first_time == true){
+        console.log("adding an active experiences to an array of avalible users" + curr_experience.available_users)
+        Cerebro.setActiveExperiences(curr_experience.available_users, experience._id);
+        Cerebro.addIncidents(curr_experience.available_users, activeIncident);
+        first_time = false;
+      }
 
       for (let user_id of curr_experience.available_users){
         let user_location = Locations.findOne({uid: user_id});
@@ -78,7 +85,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
           console.log(user_location.lastNotification);
 
-          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 60000){
+          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 200000){
             Locations.update({uid: user_id}, { $set: {
               lastNotification : now //updated_affordances
             }}, (err, docs) => {
@@ -86,12 +93,11 @@ export const launchContinuousExperience = new ValidatedMethod({
               else {}
             });
 
-            if(first_time){
-              console.log("trying to add experience as an active experience");
-              Cerebro.setActiveExperiences([user_id], experience._id);
-              Cerebro.addIncidents([user_id], activeIncident);
-              first_time = false;
-            }
+            // if(not_first_time.indexOf(user_id) == -1){
+            //   console.log("firt time we've seen user, so lets add then ");
+            //
+            //   first_time = false;
+            // }
 
 
             console.log("notifiying " + user_id)
@@ -106,7 +112,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
 
           }else{
-            console.log("notification sentt too recently to " + user_id)
+            console.log("notification sent too recently to " + user_id)
           }
         }
       }
