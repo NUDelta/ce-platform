@@ -1,0 +1,21 @@
+<template name="sunsetresult">
+        <head>
+            <style>
+                .my_container{
+                    position:relative;
+                    width:100%;
+                    height:300px;
+                    border-radius:5px;
+                    border:1px solid red;
+                    overflow:hidden;
+                }
+            </style>
+        </head>
+        <body>
+        <div id="imgGallary" class="my_container">
+          {{#each image in gImages }}
+            <img src="{{image.url store="thumbs"}}" alt="image loading..." class="slide" width="100%" height="300"/><!-- slides -->
+          {{/each}}
+          </div>
+        </body>
+</template>
