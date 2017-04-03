@@ -22,7 +22,7 @@ import '../components/loading_overlay.js';
 import '../components/camera_upload.js';
 
 
-Router.route('/participate/custom/:_id', {
+Router.route('/participate/sunset/:_id', {
   template: 'sunset'
 });
 

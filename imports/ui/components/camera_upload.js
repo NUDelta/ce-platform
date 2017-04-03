@@ -15,6 +15,7 @@ import { ParticipationLocations } from '../../api/participation-locations/partic
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { CONFIG } from '../../api/config.js'
 import '../globalHelpers.js';
+import '../custom_exports.js';
 import '../components/experience_buttons.js';
 import '../components/map.js';
 import '../components/loading_overlay.js';
@@ -45,6 +46,7 @@ Template.cameraUpload.events({
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const experienceId = Router.current().params._id;
+    const experienceRoute = Experiences.findOne({_id: experienceId}).route;
     const incidentId = Incidents.findOne()._id; // TODO: might need to handle error cases?
 
     if (instance.data.text) {
@@ -84,14 +86,14 @@ Template.cameraUpload.events({
             changed(newImage) {
               if (newImage.isUploaded()) {
                 cursor.stop();
-                Router.go('results', { _id: incidentId });
+                Router.go('/results/'+experienceRoute+'/'+incidentId);
               }
             }
           });
         }
       });
     } else {
-      Router.go('results', { _id: incidentId });
+      Router.go('/results/'+experienceRoute+'/'+incidentId);
     }
   },
   'click #participate-btn'(event, instance) {

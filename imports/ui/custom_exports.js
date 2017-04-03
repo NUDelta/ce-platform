@@ -1,2 +1,2 @@
-export * from './pages/custom.js'
-export * from './pages/customresult.js'
+export * from './pages/sunset.js'
+export * from './pages/sunsetresult.js'

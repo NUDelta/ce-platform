@@ -15,7 +15,7 @@ import '../globalHelpers.js';
 isImageFullSize = false;
 
 
-Router.route('/results/custom/:_id', {
+Router.route('/results/sunset/:_id', {
   template: 'sunsetresult',
 });
 

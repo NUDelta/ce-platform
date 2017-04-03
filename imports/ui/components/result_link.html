@@ -1,3 +1,8 @@
 <template name="resultLink">
+  {{#if experience.route}}
+    <a href="/results/{{ incidentId }}" class="list-group-item">{{ experience.name }}</a>
+    {{else}}
   <a href="/results/{{ incidentId }}" class="list-group-item">{{ experience.name }}</a>
+  {{/if}}
+
 </template>
