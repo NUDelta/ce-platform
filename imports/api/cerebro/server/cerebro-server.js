@@ -16,13 +16,16 @@ CerebroServer = class CerebroServer extends CerebroCore {
 
   // experienceId could be experience OR incident id
   notify({ userIds, experienceId, subject, text, route }) {
+
     switch(CONFIG.NOTIFY_METHOD) {
       // @Deprecated
       // case CerebroCore.EMAIL:
       //   this._sendEmails(users, server, subject, text);
       //   break;
       case CerebroCore.PUSH:
-        this._sendPush(userIds, subject, text, route, experienceId);
+        if(userIds.length > 0){
+          this._sendPush(userIds, subject, text, route, experienceId);
+        }
         break;
       default:
         log.warn('Invalid notification method set');

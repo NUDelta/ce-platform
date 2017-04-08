@@ -44,6 +44,44 @@ export const launchCustom = new ValidatedMethod({
 });
 
 
+WAIT_TIME = 200000;
+
+function usersAvalibleNow(possibleUserIds){
+  console.log("calling usersAvalibleNow")
+  console.log("to start, the possible user ids are: " + possibleUserIds)
+
+  userIdsAvalibleNow = []
+
+  for(let i in possibleUserIds){
+    userId = possibleUserIds[i]
+    console.log("one id is: " + userId);
+    let user_location = Locations.findOne({uid: userId});
+    if(user_location == null){
+      console.log("userlocation is null, you messed up " + userId + " is the uid you were trying to find");
+      continue;
+    }
+
+    now = Date.parse(new Date());
+    if(user_location.lastNotification == null || (now - user_location.lastNotification) > WAIT_TIME){
+      //they are avalible
+      userIdsAvalibleNow.push(userId);
+    }
+  }
+  console.log("now, the user ids currenlty avalible are: " + userIdsAvalibleNow)
+
+  return userIdsAvalibleNow;
+}
+
+function prepareToNofityUsers(userIds, experience, activeIncident){
+  Cerebro.setActiveExperiences(userIds, experience._id);
+  Cerebro.addIncidents(userIds, activeIncident);
+  Locations.update({uid: {$in: userIds}}, { $set: {
+    lastNotification : now //updated_affordances
+  }}, (err, docs) => {
+    if (err) { console.log(err); }
+    else { " we updated the lastNotification time!" }
+  });
+}
 
 export const launchContinuousExperience = new ValidatedMethod({
   name: 'launcher.continuous',
@@ -56,66 +94,33 @@ export const launchContinuousExperience = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
+    //create a new incident
     const activeIncident = activateNewIncident.call({
       name: experience.name,
       experienceId: experience._id,
       launcher: this.userId
     });
-    var first_time = true;
-    console.log("we are launching a constant experience " + experience.name + "   " +  first_time);
+
     send_notifications = Meteor.setInterval(function(){
-      console.log("available_users");
+
       let curr_experience = Experiences.findOne(experience._id);
-      console.log(curr_experience);
 
-      if(first_time == true){
-        console.log("adding an active experiences to an array of avalible users" + curr_experience.available_users)
-        Cerebro.setActiveExperiences(curr_experience.available_users, experience._id);
-        Cerebro.addIncidents(curr_experience.available_users, activeIncident);
-        first_time = false;
-      }
+      //function to return who can get a notification right now
+      usersAvalibleNowIds = usersAvalibleNow(curr_experience.available_users)
 
-      for (let user_id of curr_experience.available_users){
-        let user_location = Locations.findOne({uid: user_id});
-        if(user_location == null){
-          console.log("userlocation is null, you messed up " + user_id + "is the uid you were trying to find");
-        }else{
-          console.log(user_id);
-          now = Date.parse(new Date());
+      //here we could use logic to decide only some of the avalible users should participate
+      usersForExperienceIds = usersAvalibleNowIds
 
-          console.log(user_location.lastNotification);
+      //update that they have been notified
+      prepareToNofityUsers(usersForExperienceIds, curr_experience, activeIncident);
 
-          if(user_location.lastNotification == null || (now - user_location.lastNotification) > 200000){
-            Locations.update({uid: user_id}, { $set: {
-              lastNotification : now //updated_affordances
-            }}, (err, docs) => {
-              if (err) { console.log(err); }
-              else {}
-            });
-
-            // if(not_first_time.indexOf(user_id) == -1){
-            //   console.log("firt time we've seen user, so lets add then ");
-            //
-            //   first_time = false;
-            // }
-
-
-            console.log("notifiying " + user_id)
-            Cerebro.notify({
-              userIds: [user_id],
-              experienceId: experience._id,
-              subject: notificationOptions.subject,
-              text: notificationOptions.text,
-              route: notificationOptions.route
-            });
-            console.log("notifification sent to " + user_id)
-
-
-          }else{
-            console.log("notification sent too recently to " + user_id)
-          }
-        }
-      }
+      Cerebro.notify({
+        userIds: usersForExperienceIds, //get the user ids of usersAvalibleNow
+        experienceId: experience._id,
+        subject: notificationOptions.subject,
+        text: notificationOptions.text,
+        route: notificationOptions.route
+      });
     }, 10000);
   }
 });

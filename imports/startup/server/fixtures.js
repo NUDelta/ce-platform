@@ -165,14 +165,14 @@ Meteor.startup(() => {
         optIn: false,
       },
       {
-        name: 'Custom',
+        name: 'Sunset',
         author: kevin._id,
         description: 'custom description',
         startText: 'custom experience',
-        modules: ['camera', 'text'],
+        modules: ['camera'],
         requirements: ['hasCamera'],
         optIn: false,
-        route: 'custom',
+        route: 'sunset',
         custom_notification: 'testNotification'
       }
     ];
