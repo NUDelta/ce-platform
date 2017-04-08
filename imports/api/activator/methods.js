@@ -33,7 +33,7 @@ export const launchCustom = new ValidatedMethod({
   run({experience, notificationOptions }) {
     console.log("the custom is: " + experience.custom_notification);
     if(experience.custom_notification){
-      Meteor.call(experience.custom_notification, {
+      Meteor.call("customNotification."+ experience.custom_notification, {
         experience: experience,
         notificationOptions: notificationOptions
       }, (err, res) => {
@@ -46,7 +46,7 @@ export const launchCustom = new ValidatedMethod({
 
 WAIT_TIME = 200000;
 
-function usersAvalibleNow(possibleUserIds){
+export const usersAvalibleNow = function(possibleUserIds){
   console.log("calling usersAvalibleNow")
   console.log("to start, the possible user ids are: " + possibleUserIds)
 
@@ -69,15 +69,18 @@ function usersAvalibleNow(possibleUserIds){
   return userIdsAvalibleNow;
 }
 
-function prepareToNofityUsers(userIds, experience, activeIncident){
-  Cerebro.setActiveExperiences(userIds, experience._id);
-  Cerebro.addIncidents(userIds, activeIncident);
-  Locations.update({uid: {$in: userIds}}, { $set: {
-    lastNotification : now //updated_affordances
-  }}, (err, docs) => {
-    if (err) { console.log(err); }
-    else { }
-  });
+export const prepareToNofityUsers = function(userIds, experience, activeIncident){
+  if(userIds.length > 0){
+    Cerebro.setActiveExperiences(userIds, experience._id);
+    Cerebro.addIncidents(userIds, activeIncident);
+    Locations.update({uid: {$in: userIds}}, { $set: {
+      lastNotification : now //updated_affordances
+    }}, (err, docs) => {
+      if (err) { console.log(err); }
+      else { }
+    });
+  }
+
 }
 
 export const launchContinuousExperience = new ValidatedMethod({

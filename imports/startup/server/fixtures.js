@@ -123,7 +123,6 @@ Meteor.startup(() => {
   if (Experiences.find().count() === 0) {
     const kevin = findUserByEmail('kevinjchen94@gmail.com');
     const shannon = findUserByEmail('shannon@shannon.com');
-
     const experiences = [
       {
         name: 'Telephone',
@@ -140,10 +139,11 @@ Meteor.startup(() => {
         author: kevin._id,
         description: 'Let\'s all write a story together!',
         startText: 'Storytime is about to start!',
-        modules: ['chain', 'text'],
+        modules: ['text'],
         requirements: [],
         optIn: false,
-        affordance: "sit"
+        affordance: "sit",
+        custom_notification: 'require2users'
       },
       {
         name: 'Nightlight',
@@ -167,13 +167,13 @@ Meteor.startup(() => {
       {
         name: 'Sunset',
         author: kevin._id,
-        description: 'custom description',
-        startText: 'custom experience',
+        description: 'Take a picture of the sunset!',
+        startText: 'Take a picture of the sunset to help us make a timelapse video!',
         modules: ['camera'],
         requirements: ['hasCamera'],
         optIn: false,
         route: 'sunset',
-        custom_notification: 'testNotification'
+        custom_notification: 'require2users'
       }
     ];
 

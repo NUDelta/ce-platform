@@ -134,7 +134,7 @@ Template.experienceButtons.events({
     event.preventDefault();
     console.log("clicked!");
     // Importing exports causes problematic dependencies between server/client here
-    Meteor.call('launcher.endCustom', {
+    Meteor.call('launcher.endContinuous', {
       experience: instance.data.experience,
       notificationOptions: {
         subject: `Participate in "${instance.data.experience.name}"!`,
