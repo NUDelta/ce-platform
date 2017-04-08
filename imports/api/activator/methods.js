@@ -54,10 +54,8 @@ function usersAvalibleNow(possibleUserIds){
 
   for(let i in possibleUserIds){
     userId = possibleUserIds[i]
-    console.log("one id is: " + userId);
     let user_location = Locations.findOne({uid: userId});
     if(user_location == null){
-      console.log("userlocation is null, you messed up " + userId + " is the uid you were trying to find");
       continue;
     }
 
@@ -67,7 +65,6 @@ function usersAvalibleNow(possibleUserIds){
       userIdsAvalibleNow.push(userId);
     }
   }
-  console.log("now, the user ids currenlty avalible are: " + userIdsAvalibleNow)
 
   return userIdsAvalibleNow;
 }
@@ -79,7 +76,7 @@ function prepareToNofityUsers(userIds, experience, activeIncident){
     lastNotification : now //updated_affordances
   }}, (err, docs) => {
     if (err) { console.log(err); }
-    else { " we updated the lastNotification time!" }
+    else { }
   });
 }
 
