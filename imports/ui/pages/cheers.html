@@ -1,0 +1,27 @@
+<template name="cheers">
+  <head>
+      <style>
+          .fileinput{
+              width: 400px !important;
+              height: 300px !important;
+              border: 4px solid red !important;
+              background-image: url('http://i.huffpost.com/gen/1313689/images/o-BEER-CHEERS-facebook.jpg') !important;
+              background-position: center !important;
+              background-size: cover !important;
+          }
+          .btn{
+            width: 400px !important;
+          }
+      </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+        <h3>{{ gExperience.name}}</h3>
+        <p>{{ gExperience.description}}</p>
+        <br> cheers with us and take a pic!
+        <br> then chug ur beer as fast as possible haha
+        {{#if gExperienceIsActive}}
+            {{> Template.dynamic template="cameraUpload" data=options}}
+        {{/if}}
+  {{/if}}
+
+</template>
