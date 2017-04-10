@@ -63,7 +63,7 @@ Schema.Experience = new SimpleSchema({
     allowedValues: _.map(Schema.YelpCategories, category => category.alias)
   },**/
   affordance: {
-    type: String,
+    type: [String],
     label: 'Affordances of the experience',
     optional: true
   },
