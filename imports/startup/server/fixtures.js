@@ -174,6 +174,17 @@ Meteor.startup(() => {
         optIn: false,
         route: 'sunset',
         custom_notification: 'require2users'
+      },
+      {
+        name: 'cheers',
+        author: kevin._id,
+        description: 'cheers yay',
+        startText: 'cheers with us and take a pic',
+        modules: ['camera'],
+        requirements: ['hasCamera'],
+        optIn: false,
+        route: 'cheers',
+        // custom_notification: 'require2users'
       }
     ];
 

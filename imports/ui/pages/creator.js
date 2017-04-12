@@ -28,8 +28,21 @@ Template.creator.events({
     const startText = event.target.start.value;
     //const radius = event.target.radius.value;
     const duration = event.target.duration.value;
-    const affordance = event.target.affordance.value;
+    // const affordance = event.target.affordance.value;
+    let affordance = [];
+    let affordances = event.target.affordance.value;
+
+    var res = affordances.split(" ");
+    console.log("res: " + res);
+    console.log(res.length);
+    for (let i = 0, l = res.length; i < l; i++) {
+      if (res[i]) {
+        affordance.push(res[i]);
+        console.log(res[i]);
+      }
+    }
     console.log(affordance);
+    console.log("creator: " + affordance);
 
     // Parse out modules
     let modules = [];
@@ -51,7 +64,7 @@ Template.creator.events({
       modules.push('flashlight');
     }
 
-    // Process options
+    // Process affordances
     const optIn = event.target.optin.checked;
 
     // Process location
