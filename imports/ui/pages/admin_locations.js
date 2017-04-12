@@ -1,4 +1,5 @@
 import './admin_locations.html';
+import { Meteor } from 'meteor/meteor';
 
 import { Template } from 'meteor/templating';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
@@ -6,6 +7,8 @@ import { _ } from 'meteor/underscore';
 
 import { Locations } from '../../api/locations/locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
+import { Users } from '../../api/users/users.js';
+
 
 Template.admin_locations.onCreated(function() {
   const handle = this.subscribe('locations');
@@ -18,11 +21,20 @@ Template.admin_locations.onCreated(function() {
     this.markers = [];
     Locations.find().forEach((location) => {
       let icon;
-      icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+      icon = {
+        url: 'https://maps.google.com/mapfiles/ms/icons/red.png',
+        scaledSize: new google.maps.Size(50, 50),
+        labelOrigin: new google.maps.Size(50, 50)
+      }
       const marker = new google.maps.Marker({
         position: new google.maps.LatLng(location.lat, location.lng),
+        label: {
+            text: location.uid.slice(0,3),
+            color: "#fff",
+            fontSize: "12px",
+          },
         map: this.map,
-        icon: icon
+        //icon: icon
       });
       this.markers.push(marker);
     });
@@ -79,11 +91,11 @@ Template.admin_locations.events({
 
 Template.admin_locations.helpers({
   mapOptions: () => {
-    let latLng = LocationManager.currentLocation();
-    if (GoogleMaps.loaded() && latLng) {
+    if (GoogleMaps.loaded()) {
+      let latLng = LocationManager.currentLocation();
       return {
-        center: new google.maps.LatLng(latLng.lat, latLng.lng),
-        zoom: 17
+        center: {lat: 42.059311, lng: -87.676318},
+        zoom: 15
       };
     }
   }

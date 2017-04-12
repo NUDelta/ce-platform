@@ -28,11 +28,10 @@ export const testNotification = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
-    console.log("We are in a custom thingsssss " + experience)
   }
 });
 
-export const launchContinuousExperience = new ValidatedMethod({
+export const require2users = new ValidatedMethod({
   name: 'customNotification.require2users',
   validate: new SimpleSchema({
     experience: {
@@ -43,7 +42,7 @@ export const launchContinuousExperience = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
-    console.log("in custom nofitication function")
+    console.log("In require2users!")
     //create a new incident
     const activeIncident = activateNewIncident.call({
       name: experience.name,

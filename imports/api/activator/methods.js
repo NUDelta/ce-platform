@@ -31,7 +31,6 @@ export const launchCustom = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
-    console.log("the custom is: " + experience.custom_notification);
     if(experience.custom_notification){
       Meteor.call("customNotification."+ experience.custom_notification, {
         experience: experience,
@@ -47,9 +46,6 @@ export const launchCustom = new ValidatedMethod({
 WAIT_TIME = 200000;
 
 export const usersAvalibleNow = function(possibleUserIds){
-  console.log("calling usersAvalibleNow")
-  console.log("to start, the possible user ids are: " + possibleUserIds)
-
   userIdsAvalibleNow = []
 
   for(let i in possibleUserIds){
@@ -73,11 +69,13 @@ export const prepareToNofityUsers = function(userIds, experience, activeIncident
   if(userIds.length > 0){
     Cerebro.setActiveExperiences(userIds, experience._id);
     Cerebro.addIncidents(userIds, activeIncident);
-    Locations.update({uid: {$in: userIds}}, { $set: {
-      lastNotification : now //updated_affordances
-    }}, (err, docs) => {
-      if (err) { console.log(err); }
-      else { }
+    userIds.map( userId => {
+      Locations.update({uid: userId}, { $set: {
+        lastNotification : now //updated_affordances
+      }}, (err, docs) => {
+        if (err) { console.log(err); }
+        else { }
+      });
     });
   }
 
@@ -94,6 +92,7 @@ export const launchContinuousExperience = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
+    console.log("starting a continous experience " + experience.name);
     //create a new incident
     const activeIncident = activateNewIncident.call({
       name: experience.name,
@@ -137,7 +136,7 @@ export const endContinuousExperience = new ValidatedMethod({
   }).validator(),
   run({ experience, notificationOptions }) {
     // TODO: encode some sense of who participate / should be included instead of just sending this
-    console.log("ending continuous experience, no more notifications");
+    console.log("ending a continuous experience " + experience.name);
     const activeIncidentId = experience.activeIncident;
     removeFromAllActiveExperiences.call({ experienceId: experience._id });
     Meteor.clearInterval(send_notifications);
