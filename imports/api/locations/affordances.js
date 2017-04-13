@@ -45,9 +45,10 @@ function update_available(){
     Locations.find().forEach((loc) => {
       if(experience.affordance){
         if (_.contains(loc.affordances, experience.affordance)) {
-
           available.push(loc.uid);
         }
+      }else{
+        available.push(loc.uid);
       }
     });
     Experiences.update(experience._id, { $set: {

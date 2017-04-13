@@ -1,0 +1,35 @@
+<template name="debug">
+  <head>
+      <style>
+          button{
+              margin: 10px;
+          },
+          input{
+            margin: 10px;
+          }
+      </style>
+  </head>
+
+  <h3>Debugging and Testing Panel! </h3>
+  <button id="clear_db"> Clear DB </button>
+  <br>
+  <button id="add_users"> Add Users </button>
+  <br>
+  <button id="add_locations"> Add Locatoins </button>
+  <br>
+  {{#each u in userIds}}
+   "hi"{{ u }}
+  {{/each}}
+  Change user locations:
+  <form >
+    User id: <input name="id"><br>
+    User lat: <input name="lat"><br>
+    User long: <input name="long"><br>
+    <input type="submit" value="Submit">
+  </form>
+
+
+{{> admin_locations }}
+
+
+</template>

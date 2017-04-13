@@ -19,6 +19,8 @@ import '../../ui/pages/browse.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/available_experiences.js';
 import '../../ui/custom_exports.js';
+import '../../ui/pages/debug.html';
+import '../../ui/pages/debug.js';
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -26,6 +28,12 @@ Router.configure({
 
 Router.route('/', {
   name: 'home'
+});
+
+Router.route('/admin/debug', {
+  name: 'admin.debug',
+  template: 'debug',
+  // waitOn: function() { return Meteor.subscribe('experiences'); }
 });
 
 Router.route('/admin', {
