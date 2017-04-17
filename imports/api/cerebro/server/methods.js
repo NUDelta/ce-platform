@@ -275,11 +275,14 @@ export const notifyOnAffordances = new ValidatedMethod({
       if (!error && response.statusCode == 200) {
           let res = JSON.parse(body);
           let userIds = [uid];
-          console.log(res.affordances);
-          console.log(experience.affordance);
-          if (_.contains(res.affordances, experience.affordance)) {
+          console.log("res affordances: " + res.affordances);
+          console.log("experience affordances: " + experience.affordance);
+          console.log("difference: " + _.difference(experience.affordance, res.affordances))
+
+          // if (_.contains(res.affordances, experience.affordance)) {
+          if (_.difference(experience.affordance, res.affordances) == 0) {
             console.log('Notifying user');
-            console.log(userIds);
+            console.log('notifying: ' + userIds);
             Cerebro.setActiveExperiences(userIds, experience._id);
             Cerebro.addIncidents(userIds, incident);
             Cerebro.notify({
