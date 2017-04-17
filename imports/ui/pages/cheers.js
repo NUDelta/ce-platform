@@ -28,12 +28,15 @@ Router.route('/participate/cheers/:_id', {
 
 Template.cheers.helpers({
   options() {
-    return {"camera": true, "text": false}
+    var side = "left";
+    if(Images.find().count() % 2 == 0){
+      side =  "right";
+    }
+    return {"camera": true, "text": false, "details": side}
   }
 });
 
 Template.cheers.onCreated(function() {
-
   this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
   const experiencesHandle = this.subscribe('experiences.byRoute', 'cheers');

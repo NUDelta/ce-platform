@@ -6,6 +6,24 @@
       <p>No submissions yet.</p>
     {{/if}}
 
+    {{#each image in gImages}}
+      <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+        {{#if image.isUploaded}}
+          <!--small amount of lag before url is ready-->
+          <!--probably should add a loading animation here-->
+
+          {{#if isLeft image}}
+            "LEFTTT"
+            <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+          {{else}}
+            "RIGHT"
+            <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+          {{/if}}
+          
+        {{/if}}
+      </div>
+    {{/each}}
+
     <!-- insert code here -->
 
   </div>

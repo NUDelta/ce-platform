@@ -67,6 +67,10 @@ Template.cameraUpload.events({
           // shouldn't happen
           alert(err);
         } else {
+          var dets = "";
+          if(instance.data.details){
+            dets = instance.data.details;
+          }
           Images.update(imageFile._id,
             {
               $set: {
@@ -75,7 +79,8 @@ Template.cameraUpload.events({
                 incidentId: incidentId,
                 lat: location.lat,
                 lng: location.lng,
-                location: place
+                location: place,
+                details:dets
               }
             }
           );

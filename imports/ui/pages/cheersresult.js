@@ -43,7 +43,13 @@ Template.cheersresult.onCreated(function() {
 });
 
 Template.cheersresult.helpers({
-  // insert code here
+  isLeft(image){
+    if(image.details == "left"){
+      return true;
+    }
+    return false;
+
+  }
 });
 
 Template.cheersresult.events({

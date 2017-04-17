@@ -132,6 +132,16 @@ const experiences = [
     affordance: ['beach']
   },
   {
+    name: 'Cheers',
+    author: "B5YpTavGbmrihS8jq",
+    description: 'Raise yo glass',
+    startText: 'Pic that drink',
+    modules: ['camera'],
+    requirements: ['hasCamera'],
+    optIn: false,
+    route: 'cheers',
+  },
+  {
     name: 'Highfive!',
     author: "B5YpTavGbmrihS8jq",
     description: 'highfive anybody!',
