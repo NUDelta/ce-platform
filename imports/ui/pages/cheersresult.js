@@ -10,12 +10,31 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Incidents } from '../../api/incidents/incidents.js';
-
 import '../globalHelpers.js';
 
+isImageFullSize = false;
+
+
 Router.route('/results/cheers/:_id', {
-  template: 'cheersresult'
+  template: 'cheersresult',
 });
+
+var play = function(){
+        var imgLen = document.getElementById('imgGallary');
+        var images = imgLen.getElementsByTagName('img');
+        var counter = 1;
+
+        if(counter <= images.length){
+            setInterval(function(){
+                images[0].src = images[counter].src;
+                counter++;
+
+                if(counter === images.length){
+                    counter = 1;
+                }
+            }, 800);
+        }
+};
 
 Template.cheersresult.onCreated(function() {
   const incidentId = Router.current().params._id;
@@ -31,6 +50,7 @@ Template.cheersresult.onCreated(function() {
 
   this.autorun(() => {
     if (expHandle.ready() && incHandle.ready()) {
+      play();
       const experience = Experiences.findOne();
       const incident = Incidents.findOne();
       this.state.set({
@@ -40,12 +60,4 @@ Template.cheersresult.onCreated(function() {
       });
     }
   });
-});
-
-Template.cheersresult.helpers({
-  // insert code here
-});
-
-Template.cheersresult.events({
-  // insert code here
 });

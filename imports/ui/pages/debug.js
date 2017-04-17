@@ -140,5 +140,15 @@ const experiences = [
     requirements: [],
     optIn: false,
     custom_notification: 'require2users'
+  },
+  {
+    name: 'Cheers!',
+    author: "B5YpTavGbmrihS8jq",
+    description: 'cheers!',
+    startText: 'cheers!',
+    modules: ['camera'],
+    requirements: ['hasCamera'],
+    optIn: false,
+    route: 'cheers'
   }
 ];
