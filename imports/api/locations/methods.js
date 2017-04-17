@@ -26,7 +26,8 @@ export const updateLocation = new ValidatedMethod({
         lng: lng.toString(),
         uid: uid
       }, (err, res) => {
-        if(err){ console.log(err);}
+        if(err){ console.log(err);}else{
+        }
       });
 
 

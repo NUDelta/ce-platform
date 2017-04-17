@@ -19,8 +19,11 @@ Template.debug.onCreated(function() {
 
 Template.debug.helpers({
   userIds(){
-    console.log(Meteor.users.find())
-    return Meteor.users.find();
+    console.log(Meteor.users.findOne({_id: "YCksuDh5hub8858BS"}));
+    return Meteor.users.findOne({_id: "YCksuDh5hub8858BS"});
+  },
+  locations(){
+    return Locations.find();
   }
 
 });
@@ -86,7 +89,6 @@ const experiences = [
     modules: ['chain'],
     requirements: [],
     optIn: false,
-    affordance: "talk"
   },
   {
     name: 'Storytime',
@@ -96,7 +98,7 @@ const experiences = [
     modules: ['text'],
     requirements: [],
     optIn: false,
-    affordance: "sit",
+    affordance: ["sit"],
     custom_notification: 'require2users'
   },
   {
@@ -107,7 +109,7 @@ const experiences = [
     modules: ['map'],
     requirements: [],
     optIn: true,
-    affordance: "darkness"
+    affordance: ["nighttime"]
   },
   {
     name: 'Stella Time',
@@ -127,7 +129,7 @@ const experiences = [
     requirements: ['hasCamera'],
     optIn: false,
     route: 'sunset',
-    affordance: 'beach'
+    affordance: ['beach']
   },
   {
     name: 'Highfive!',

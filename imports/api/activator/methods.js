@@ -71,7 +71,7 @@ export const prepareToNofityUsers = function(userIds, experience, activeIncident
     Cerebro.addIncidents(userIds, activeIncident);
     userIds.map( userId => {
       Locations.update({uid: userId}, { $set: {
-        lastNotification : now //updated_affordances
+        lastNotification : now 
       }}, (err, docs) => {
         if (err) { console.log(err); }
         else { }

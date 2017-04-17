@@ -78,7 +78,7 @@ export const addLocations = Meteor.methods({
 });
 
 export const addExperience = Meteor.methods({
-  'addExperience' ({}){
+  'addExperience' ({experience}){
       console.log("adding experience to the db");
       Experiences.insert(experience)
   }

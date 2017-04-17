@@ -15,11 +15,13 @@
   <br>
   <button id="add_users"> Add Users </button>
   <br>
-  <button id="add_locations"> Add Locatoins </button>
+  <button id="add_locations"> Add Locatoins (press twice) </button>
   <br>
-  {{#each u in userIds}}
-   "hi"{{ u }}
+
+  {{#each u in locations}}
+   {{ u.uid }},
   {{/each}}
+  <br><br>
   Change user locations:
   <form >
     User id: <input name="id"><br>
