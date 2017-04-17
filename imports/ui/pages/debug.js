@@ -142,12 +142,13 @@ const experiences = [
     custom_notification: 'require2users'
   },
   {
-    name: 'Cheers!',
+    name: 'Cheers',
     author: "B5YpTavGbmrihS8jq",
-    description: 'cheers!',
-    startText: 'cheers!',
+    description: 'Cheers with a friend!',
+    startText: 'Cheers with a friend!',
     modules: ['camera'],
     requirements: ['hasCamera'],
+    affordance: ['bar'],
     optIn: false,
     route: 'cheers'
   }

@@ -61,3 +61,19 @@ Template.cheersresult.onCreated(function() {
     }
   });
 });
+
+Template.cheersresult.helpers({
+  isLeft(image){
+    if(image.details == "left"){
+      return true;
+    }
+    return false;
+  },
+  totalNum(){
+    return Images.find().count();
+  }
+});
+
+Template.cheersresult.events({
+  // insert code here
+});
