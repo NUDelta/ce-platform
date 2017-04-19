@@ -270,17 +270,17 @@ export const notifyOnAffordances = new ValidatedMethod({
   }).validator(),
   run({ lat, lng, uid, experience, notificationOptions, incident}) {
     let request = require('request');
-    let url = 'https://affordanceaware.herokuapp.com/conditions/' + lat + '/' + lng;
+    let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat + '/' + lng;
     request(url, Meteor.bindEnvironment(function (error, response, body) {
       if (!error && response.statusCode == 200) {
           let res = JSON.parse(body);
           let userIds = [uid];
-          console.log("res affordances: " + res.affordances);
+          console.log("res affordances: " + res);
           console.log("experience affordances: " + experience.affordance);
-          console.log("difference: " + _.difference(experience.affordance, res.affordances))
+          console.log("difference: " + _.difference(experience.affordance, res))
 
           // if (_.contains(res.affordances, experience.affordance)) {
-          if (_.difference(experience.affordance, res.affordances) == 0) {
+          if (_.difference(experience.affordance, res) == 0) {
             console.log('Notifying user');
             console.log('notifying: ' + userIds);
             Cerebro.setActiveExperiences(userIds, experience._id);
