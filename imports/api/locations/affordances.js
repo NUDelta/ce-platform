@@ -44,7 +44,7 @@ function update_available(){
     available = [];
     Locations.find().forEach((loc) => {
       if(experience.affordance){
-        if (_.contains(loc.affordances, experience.affordance[0])) {
+        if (_.contains(loc.affordances.toLowerCase(), experience.affordance[0].toLowerCase())) {
           available.push(loc.uid);
         }
       }else{
