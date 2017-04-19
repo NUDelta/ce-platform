@@ -23,12 +23,12 @@ export const findAffordances = new ValidatedMethod({
   run({ lat, lng, uid}) {
     let updated_affordances = [];
     let request = require('request');
-    let url = 'https://affordanceaware.herokuapp.com/conditions/' + lat + '/' + lng;
+    let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat + '/' + lng;
     request(url, Meteor.bindEnvironment(function (error, response, body) {
         if (!error && response.statusCode == 200) {
             let res = JSON.parse(body);
             Locations.update({uid: uid}, { $set: {
-              affordances : res.affordances //updated_affordances
+              affordances : res //updated_affordances
             }}, (err, docs) => {
               if (err) { console.log(err); }
               else { }
