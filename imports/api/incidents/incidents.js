@@ -49,6 +49,18 @@ Schema.Incident = new SimpleSchema({
     label: 'Arbitrary data for custom experiences',
     optional: true,
     blackbox: true
+  },
+  to_do: {
+    type: [Number],
+    optional: true
+  },
+  in_progress_ids: {
+    type: [String],
+    optional: true
+  },
+  in_progress_numbers: {
+    type: [Number],
+    optional: true
   }
 });
 

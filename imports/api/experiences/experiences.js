@@ -102,7 +102,15 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Notification function to be used instead of default',
     optional: true
-  }
+  },
+  participate_template: {
+    type: String,
+    optional: true
+  },
+  versions: {
+    type: Number,
+    optional: true
+  },
   /*
    * start condition
    * end condition

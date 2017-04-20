@@ -151,5 +151,16 @@ const experiences = [
     affordance: ['bar'],
     optIn: false,
     route: 'cheers'
+  },
+  {
+    name: 'Custom TEST',
+    author: "B5YpTavGbmrihS8jq",
+    description: 'Rainbow hehe',
+    startText: 'Test some colors',
+    modules: ['camera'],
+    requirements: [],
+    optIn: false,
+    participate_template: "rainbow",
+    versions: 6
   }
 ];

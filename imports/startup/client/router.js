@@ -21,9 +21,19 @@ import '../../ui/pages/available_experiences.js';
 import '../../ui/custom_exports.js';
 import '../../ui/pages/debug.html';
 import '../../ui/pages/debug.js';
+import '../../ui/pages/api_custom.html';
+import '../../ui/pages/api_custom.js';
 
 Router.configure({
   layoutTemplate: 'layout'
+});
+
+Router.route('/apicustom/:_id', {
+  name: 'api.custom',
+  template: 'api_custom',
+  onStop: function() {
+        console.log("someone left the page");
+    }
 });
 
 Router.route('/', {

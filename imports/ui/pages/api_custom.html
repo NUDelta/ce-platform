@@ -1,0 +1,18 @@
+<template name="api_custom">
+  {{#if Template.subscriptionsReady}}
+      {{ > Template.dynamic template="rainbow" data=data2pass}}
+
+      {{findUserNumber }}
+  {{/if}}
+</template>
+
+
+<template name="rainbow">
+  "HI"
+  
+  {{ > Template.dynamic template="cameraUpload" data=camera_options}}
+  {{ this.experience }}
+
+  {{ this.usernum }}
+
+</template>

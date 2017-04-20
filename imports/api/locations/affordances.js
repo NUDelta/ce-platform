@@ -23,12 +23,12 @@ export const findAffordances = new ValidatedMethod({
   run({ lat, lng, uid}) {
     let updated_affordances = [];
     let request = require('request');
-    let url = 'https://affordanceaware.herokuapp.com/conditions/' + lat + '/' + lng;
+    let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat + '/' + lng;
     request(url, Meteor.bindEnvironment(function (error, response, body) {
         if (!error && response.statusCode == 200) {
             let res = JSON.parse(body);
             Locations.update({uid: uid}, { $set: {
-              affordances : res.affordances //updated_affordances
+              affordances : res //updated_affordances
             }}, (err, docs) => {
               if (err) { console.log(err); }
               else { }
@@ -40,11 +40,16 @@ export const findAffordances = new ValidatedMethod({
 });
 
 function update_available(){
+  console.log("updating available for the experience!")
   Experiences.find().forEach((experience) => {
     available = [];
     Locations.find().forEach((loc) => {
+      console.log("experience affordance is: ", experience.affordance);
+      console.log("location affordances are: ", loc.affordances);
+
       if(experience.affordance){
-        if (_.contains(loc.affordances, experience.affordance)) {
+        if (_.contains(loc.affordances, experience.affordance[0])) {
+          console.log("adding user to the experience ", loc.uid)
           available.push(loc.uid);
         }
       }else{

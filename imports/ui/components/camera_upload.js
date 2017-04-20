@@ -27,7 +27,7 @@ var permissions;
 Template.cameraUpload.onCreated(function() {
   this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
-  console.log(this.data.text, this.data.camera);
+  console.log(this.data.text);
   permissions = this.data;
 });
 

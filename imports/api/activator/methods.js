@@ -71,7 +71,7 @@ export const prepareToNofityUsers = function(userIds, experience, activeIncident
     Cerebro.addIncidents(userIds, activeIncident);
     userIds.map( userId => {
       Locations.update({uid: userId}, { $set: {
-        lastNotification : now 
+        lastNotification : now
       }}, (err, docs) => {
         if (err) { console.log(err); }
         else { }
@@ -103,10 +103,8 @@ export const launchContinuousExperience = new ValidatedMethod({
     send_notifications = Meteor.setInterval(function(){
 
       let curr_experience = Experiences.findOne(experience._id);
-
       //function to return who can get a notification right now
       usersAvalibleNowIds = usersAvalibleNow(curr_experience.available_users)
-
       //here we could use logic to decide only some of the avalible users should participate
       usersForExperienceIds = usersAvalibleNowIds
 

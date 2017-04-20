@@ -75,5 +75,35 @@ export const clickButton = new ValidatedMethod({
   }
 })
 
+export const getNumberOfUser = Meteor.methods({
+'incident.getNumberOfUser'({userId, inc_id}){
+    console.log("in here pepele", inc_id);
+    var incident = Incidents.findOne({_id:inc_id });
+    console.log("incident", incident);
+
+    var to_do = incident.to_do;
+    var user_num = to_do.pop();
+
+    Incidents.update({_id: inc_id}, {$push: {'in_progress_ids':userId, "in_progress_numbers" : user_num}});
+    Incidents.update({_id: inc_id}, {$pop: {'to_do':1}});
+
+  }
+
+});
 
 
+// export const removeUser = Meteor.methods({
+// 'incident.getNumberOfUser'({userId, inc_id}){
+//     console.log("in here pepele", inc_id);
+//     var incident = Incidents.findOne({_id:inc_id });
+//     console.log("incident", incident);
+//
+//     var to_do = incident.to_do;
+//     var user_num = to_do.pop();
+//
+//     Incidents.update({_id: inc_id}, {$addToSet: {'in_progress_ids':userId, "in_progress_numbers" : user_num}});
+//     Incidents.update({_id: inc_id}, {$pop: {'to_do':1}});
+//
+//   }
+//
+// });
