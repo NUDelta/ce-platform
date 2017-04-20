@@ -111,6 +111,20 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+  removeAllOldActiveExperiences(userIds, experienceId){
+    Meteor.users.update({
+      _id: { $nin: userIds }
+    }, {
+      $pull: {
+        'profile.activeExperiences': experienceId
+      }
+    }, {
+      multi: true
+    });
+
+  }
+
+
   removeActiveExperiences(userIds, experienceId) {
     Meteor.users.update({
       _id: { $in: userIds }

@@ -49,6 +49,9 @@ export const launchCustom = new ValidatedMethod({
 WAIT_TIME = 200000;
 
 export const usersAvalibleNow = function(possibleUserIds){
+
+  // Cerebro.removeAllOldActiveExperiences(possibleUserIds, experience._id);
+
   userIdsAvalibleNow = []
 
   for(let i in possibleUserIds){
@@ -105,8 +108,10 @@ export const launchContinuousExperience = new ValidatedMethod({
 
     send_notifications = Meteor.setInterval(function(){
 
+
       let curr_experience = Experiences.findOne(experience._id);
       //function to return who can get a notification right now
+
       usersAvalibleNowIds = usersAvalibleNow(curr_experience.available_users)
       //here we could use logic to decide only some of the avalible users should participate
       usersForExperienceIds = usersAvalibleNowIds
