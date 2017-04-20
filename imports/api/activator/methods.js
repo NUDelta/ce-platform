@@ -31,7 +31,10 @@ export const launchCustom = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
+    console.log("you are launching a custom notfication method!");
     if(experience.custom_notification){
+      console.log("that method is called " + experience.custom_notification);
+
       Meteor.call("customNotification."+ experience.custom_notification, {
         experience: experience,
         notificationOptions: notificationOptions

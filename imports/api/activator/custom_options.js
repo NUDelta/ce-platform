@@ -42,7 +42,7 @@ export const require2users = new ValidatedMethod({
     }
   }).validator(),
   run({experience, notificationOptions }) {
-    console.log("In require2users!")
+    console.log("In require2users!");
     //create a new incident
     const activeIncident = activateNewIncident.call({
       name: experience.name,
@@ -65,6 +65,7 @@ export const require2users = new ValidatedMethod({
       usersForExperienceIds = []
 
       if(usersAvalibleNowIds.length > 1){
+        console.log("we found two users");
         usersForExperienceIds = usersAvalibleNowIds.slice(0, 2);
       }
 

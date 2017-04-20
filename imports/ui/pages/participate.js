@@ -108,7 +108,7 @@ Template.participate.helpers({
 });
 
 
-Template.body.events({
+Template.participate.events({
   'submit form'(event, instance) {
     event.preventDefault();
 
