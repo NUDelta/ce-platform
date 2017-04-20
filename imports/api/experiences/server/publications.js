@@ -11,8 +11,6 @@ Meteor.publish('experiences.single', function(experienceId) {
 });
 
 Meteor.publish('experiences.activeUser', function() {
-  console.log("we are publishing experiences.activeUser");
-  console.log("userid:", this.userId);
   if (!this.userId) {
     this.ready();
   } else {

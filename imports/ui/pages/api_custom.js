@@ -1,4 +1,4 @@
-import './api_custom.html';
+// import './api_custom.html';
 
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -61,18 +61,17 @@ Template.api_custom.onCreated(function() {
   this.state = new ReactiveDict();
   const incidentHandle = this.subscribe('incidents.byId', incidentId);
 
-
   var first_run = true;
   this.autorun(() => {
 
-
     if (experiencesHandle.ready() && incidentHandle.ready()) {
-
-      var inc = this.state.get('incident');
+      const incidentOG = Incidents.findOne(incidentId);
+      this.state.set('incident', incidentOG);
+      var inc = incidentOG;
+      console.log(incidentOG);
 
       if(first_run){
-        console.log("is useId in the array alraeyd?",  inc == null || ! (Meteor.userId() in inc.in_progress_ids));
-        if( inc == null || ! (Meteor.userId() in inc.in_progress_ids)){
+        if( inc == null || inc.in_progress_ids.indexOf(Meteor.userId()) == -1){
           console.log("UPDATING AGAIN OOP")
 
           Meteor.call('incident.getNumberOfUser',{userId: Meteor.userId(), inc_id:  incidentId},

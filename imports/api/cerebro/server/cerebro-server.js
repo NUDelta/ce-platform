@@ -103,7 +103,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     Meteor.users.update({
       _id: { $in: userIds }
     }, {
-      $push: {
+      $addToSet: {
         'profile.activeExperiences': experienceId
       }
     }, {
@@ -127,7 +127,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     Meteor.users.update({
       _id: { $in: userIds }
     }, {
-      $push: {
+      $addToSet: {
         'profile.pastIncidents': incidentId
       }
     }, {
