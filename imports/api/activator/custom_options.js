@@ -16,6 +16,7 @@ import { Users } from '../users/users.js';
 import {usersAvalibleNow} from './methods.js';
 import {prepareToNofityUsers} from './methods.js';
 
+WAIT_TIME = 200;
 
 export const testNotification = new ValidatedMethod({
   name: 'customNotification.ctions.testNotification',
@@ -79,6 +80,6 @@ export const require2users = new ValidatedMethod({
         text: notificationOptions.text,
         route: notificationOptions.route
       });
-    }, 20000);
+    }, WAIT_TIME);
   }
 });

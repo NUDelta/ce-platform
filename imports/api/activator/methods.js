@@ -46,7 +46,7 @@ export const launchCustom = new ValidatedMethod({
 });
 
 
-WAIT_TIME = 200000;
+WAIT_TIME = 200;
 
 export const usersAvalibleNow = function(possibleUserIds){
 
@@ -108,7 +108,7 @@ export const launchContinuousExperience = new ValidatedMethod({
 
     send_notifications = Meteor.setInterval(function(){
 
-
+      console.log("looking to notify for " + experience.name);
       let curr_experience = Experiences.findOne(experience._id);
       //function to return who can get a notification right now
 
@@ -126,7 +126,7 @@ export const launchContinuousExperience = new ValidatedMethod({
         text: notificationOptions.text,
         route: notificationOptions.route
       });
-    }, 10000);
+    }, WAIT_TIME);
   }
 });
 
