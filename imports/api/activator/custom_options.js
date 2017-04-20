@@ -16,7 +16,7 @@ import { Users } from '../users/users.js';
 import {usersAvalibleNow} from './methods.js';
 import {prepareToNofityUsers} from './methods.js';
 
-WAIT_TIME = 200;
+WAIT_TIME = 180000;
 
 export const testNotification = new ValidatedMethod({
   name: 'customNotification.ctions.testNotification',

@@ -30,7 +30,6 @@ export const activateNewIncident = new ValidatedMethod({
       launcher: launcher
     });
     const experience = Experiences.findOne({route: 'button_game'});
-    console.log(experience);
     if (experience) {
       let now = Date.parse(new Date());
       Incidents.update({_id: incidentId}, {$set: {'data.time': now, 'data.pressers': [], 'data.start': now}}, (err, res) => {

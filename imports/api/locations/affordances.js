@@ -21,7 +21,6 @@ export const findAffordances = new ValidatedMethod({
     }
   }).validator(),
   run({ lat, lng, uid}) {
-    console.log("getting new locations for the user")
     let updated_affordances = [];
     let request = require('request');
     let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat + '/' + lng;
@@ -41,7 +40,6 @@ export const findAffordances = new ValidatedMethod({
 });
 
 function update_available(){
-  console.log("updating available for the experience!")
   Experiences.find().forEach((experience) => {
     available = [];
     Locations.find().forEach((loc) => {

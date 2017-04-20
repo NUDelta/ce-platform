@@ -24,7 +24,6 @@ export const cleardb = new ValidatedMethod({
 
 export const updateLocationById = Meteor.methods({
   'updateLocationById' ({id, lat, long}){
-    console.log("updating the location of " + id);
     updateLocation.call({
       uid: Meteor.users.findOne({ '_id': id })._id,
       lat: lat,

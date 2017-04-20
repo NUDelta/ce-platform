@@ -13,7 +13,6 @@ export const updateLocation = new ValidatedMethod({
   name: 'locations.updateUser',
   validate: Schema.Locations.validator(),
   run({ uid, lat, lng }) {
-    console.log("UPDATING THE LOCATIONS")
     const entry = Locations.findOne({ uid: uid });
     if (entry) {
 
