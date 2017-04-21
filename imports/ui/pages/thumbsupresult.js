@@ -44,7 +44,7 @@ Template.thumbsupresult.onCreated(function() {
 
 Template.thumbsupresult.helpers({
   isLeft(image){
-    if(image.details == "left"){
+    if(image.details.includes("left")){
       return true;
     }
     return false;
