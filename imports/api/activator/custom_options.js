@@ -51,7 +51,7 @@ export const require2users = new ValidatedMethod({
       launcher: this.userId
     });
     console.log("added the new activeIncident");
-    send_notifications = Meteor.setInterval(function(){
+    var send_notifications = Meteor.setInterval(function(){
       console.log("in the interval");
 
       let curr_experience = Experiences.findOne(experience._id);
