@@ -104,6 +104,11 @@ export const launchContinuousExperience = new ValidatedMethod({
     });
     send_notifications = Meteor.setInterval(function(){
 
+      if(curr_experience.activeIncident == null){
+        Meteor.clearInterval(send_notifications);
+      }
+
+
       console.log("looking to notify for " + experience.name);
       let curr_experience = Experiences.findOne(experience._id);
       //function to return who can get a notification right now
