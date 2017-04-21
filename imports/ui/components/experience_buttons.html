@@ -1,10 +1,10 @@
 <template name="experienceButtons">
   <div class="btn-group" role="group" aria-label="...">
     <button class="start-btn btn btn-default {{#if isRunning}}disabled{{/if}}">Start</button>
-    <button class="schedule-btn btn btn-default {{#if isRunning}}disabled{{/if}}">Schedule</button>
-    <button class="end-btn btn btn-default {{#if isRunning}}{{else}}disabled{{/if}}">End</button>
+    <!-- <button class="schedule-btn btn btn-default {{#if isRunning}}disabled{{/if}}">Schedule</button>
+    <button class="end-btn btn btn-default {{#if isRunning}}{{else}}disabled{{/if}}">End</button> -->
     <button class="continuous-btn btn btn-default {{#if isRunning}}disabled{{else}}{{/if}}">Continuous</button>
-    <button class="end-continuous-btn btn btn-default {{#if isRunning}}{{else}}disabled{{/if}}">End Continuous</button>
+    <button class="end-continuous-btn btn btn-default">End</button>
     <button class="custom-btn btn btn-default {{#if isRunning}}disabled{{else}}{{/if}}">CUSTOM</button>
     <button class="end-custom-btn btn btn-default {{#if isRunning}}{{else}}disabled{{/if}}">End CUSTOM</button>
     <!-- <button class="chain-btn btn btn-default">start chain</button> -->
