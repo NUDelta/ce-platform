@@ -1,5 +1,8 @@
 <template name="cameraUpload">
 <div id="participate">
+  {{#if gIsSubmitting}}
+    {{> loadingOverlay}}
+  {{/if}}
     <form class="col col-xs-12">
       {{#if this.camera}}
         <label class="fileinput">

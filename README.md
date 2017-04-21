@@ -55,3 +55,7 @@ You'll notice that, to match what's recommended from Meteor 1.3, all of the meth
 
 ### Dev Tips and Tricks
 - To clear the database and therefore propagate changes to dummy data in `fixture.js`, set the `CLEAR_DB` boolean in `config.js` to 1
+
+
+- if notifications stop working, check that production is set to true in config.push.json
+- to see logs in terminal: heroku logs - t --app ce-platform
