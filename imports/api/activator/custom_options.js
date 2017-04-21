@@ -50,15 +50,20 @@ export const require2users = new ValidatedMethod({
       experienceId: experience._id,
       launcher: this.userId
     });
-
+    console.log("added the new activeIncident");
     send_notifications = Meteor.setInterval(function(){
+      console.log("in the interval");
 
       let curr_experience = Experiences.findOne(experience._id);
 
       if(curr_experience.activeIncident == null){
         Meteor.clearInterval(send_notifications);
+        console.log("meteor clearing the interval for notificaitons");
       }
 
+      console.log("looking to notify users for " + curr_experience.name)
+
+      console.log("available users are " + curr_experience.available_users)
       //function to return who can get a notification right now
       usersAvalibleNowIds = usersAvalibleNow(curr_experience.available_users)
 
@@ -80,6 +85,6 @@ export const require2users = new ValidatedMethod({
         text: notificationOptions.text,
         route: notificationOptions.route
       });
-    }, WAIT_TIME);
+    }, 180000);
   }
 });
