@@ -1,0 +1,12 @@
+<template name="thumbsup">
+  {{#if Template.subscriptionsReady}}
+        <h3>{{ gExperience.name}}</h3>
+        <p>{{ gExperience.description}}</p>
+        <br>Give someone else a thumbs up with your <b>{{options.details}}</b> hand and take a pic!
+        Check out the results page to see who gives you a thumbs up back!
+         {{#if gExperienceIsActive}}
+            {{> Template.dynamic template="cameraUpload" data=options}}
+        {{/if}}
+  {{/if}}
+
+</template>

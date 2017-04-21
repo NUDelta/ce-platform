@@ -153,6 +153,17 @@ const experiences = [
     route: 'cheers'
   },
   {
+    name: 'Thumbsup',
+    author: "B5YpTavGbmrihS8jq",
+    description: "You're doing a great job in DTR, so spread the encouragement!",
+    startText: 'Spread the DTR love with a thumbsup!',
+    modules: ['camera'],
+    requirements: [],
+    optIn: false,
+    route: 'thumbsup',
+    custom_notification: 'require2users'
+  },
+  {
     name: 'Custom TEST',
     author: "B5YpTavGbmrihS8jq",
     description: 'Rainbow hehe',
