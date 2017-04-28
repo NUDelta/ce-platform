@@ -17,6 +17,21 @@ class IncidentCollection extends Mongo.Collection {
   }
 }
 
+
+Schema.IncidentPartition = new SimpleSchema({
+  name:{
+    type: String
+  },
+  users: {
+    type: [String],
+    optional: true
+  }
+});
+export const IncidentPartitions = new IncidentCollection('incidentPartition');
+
+IncidentPartitions.attachSchema(Schema.IncidentPartition);
+
+
 export const Incidents = new IncidentCollection('incidents');
 
 Schema.Incident = new SimpleSchema({
@@ -50,18 +65,18 @@ Schema.Incident = new SimpleSchema({
     optional: true,
     blackbox: true
   },
-  to_do: {
-    type: [Number],
+  userMappings:{
+    type: [Schema.IncidentPartition],
     optional: true
   },
-  in_progress_ids: {
-    type: [String],
-    optional: true
-  },
-  in_progress_numbers: {
-    type: [Number],
-    optional: true
-  }
+
+  // "partitioned_users.$": {
+  //     type: Object
+  // },
+  // to_do: {
+  //   type: [Schema.IncidentPartition],
+  //   optional: true
+  // }
 });
 
 Incidents.attachSchema(Schema.Incident);

@@ -23,6 +23,8 @@ import '../../ui/pages/debug.html';
 import '../../ui/pages/debug.js';
 import '../../ui/pages/api_custom.html';
 import '../../ui/pages/api_custom.js';
+import '../../ui/pages/api_custom_results.html';
+import '../../ui/pages/api_custom_results.js';
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -31,6 +33,14 @@ Router.configure({
 Router.route('/apicustom/:_id', {
   name: 'api.custom',
   template: 'api_custom',
+  onStop: function() {
+        console.log("someone left the page");
+    }
+});
+
+Router.route('/apicustomresults/:_id', {
+  name: 'api.custom.results',
+  template: 'api_custom_results',
   onStop: function() {
         console.log("someone left the page");
     }

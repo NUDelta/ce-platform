@@ -1,13 +1,7 @@
 <template name="experienceButtons">
   <div class="btn-group" role="group" aria-label="...">
-    <button class="start-btn btn btn-default {{#if isRunning}}disabled{{/if}}">Start</button>
-    <!-- <button class="schedule-btn btn btn-default {{#if isRunning}}disabled{{/if}}">Schedule</button>
-    <button class="end-btn btn btn-default {{#if isRunning}}{{else}}disabled{{/if}}">End</button> -->
-    <button class="continuous-btn btn btn-default {{#if isRunning}}disabled{{else}}{{/if}}">Continuous</button>
-    <button class="end-continuous-btn btn btn-default">End</button>
-    <button class="custom-btn btn btn-default {{#if isRunning}}disabled{{else}}{{/if}}">CUSTOM</button>
-    <button class="end-custom-btn btn btn-default">End CUSTOM</button>
-    <!-- <button class="chain-btn btn btn-default">start chain</button> -->
+    <button class="full-custom-btn btn btn-default">FULL CUSTOM</button>
+
   </div>
   <p>
     (the experience is planned to run for {{experience.duration}} minutes, if scheduled)

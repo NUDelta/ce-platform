@@ -73,6 +73,26 @@ export const addLocations = Meteor.methods({
         lat: 42.046131,  //edzos
         lng: -87.681559
       });
+      updateLocation.call({
+        uid: Accounts.findUserByEmail('g@gmail.com')._id,
+        lat: 42.044314,  //nevins
+        lng: -87.682157
+      });
+      updateLocation.call({
+        uid: Accounts.findUserByEmail('h@gmail.com')._id,
+        lat: 42.045398,  //pubs 
+        lng: -87.682431
+      });
+      updateLocation.call({
+        uid: Accounts.findUserByEmail('i@gmail.com')._id,
+        lat: 42.047621, //grocery, whole foods
+        lng: -87.679488
+      });
+      updateLocation.call({
+        uid: Accounts.findUserByEmail('j@gmail.com')._id,
+        lat: 42.042617, //beach
+        lng: -87.671474
+      });
   }
 });
 

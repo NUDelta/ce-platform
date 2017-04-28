@@ -21,6 +21,33 @@ class ExperiencesCollection extends Mongo.Collection {
   }
 }
 
+
+Schema.Partition = new SimpleSchema({
+  name:{
+    type: String
+  },
+  description: {
+    type:String,
+    optional: true
+  },
+  affordance: {
+    type: String,
+    optional: true
+  },
+  available_users: {
+    type: [String],
+    optional: true
+  },
+  max: {
+    type: Number,
+    optional: true
+  }
+});
+
+export const Partitions = new ExperiencesCollection('partitions');
+Partitions.attachSchema(Schema.Parition);
+
+
 export const Experiences = new ExperiencesCollection('experiences');
 
 Schema.Experience = new SimpleSchema({
@@ -103,12 +130,16 @@ Schema.Experience = new SimpleSchema({
     label: 'Notification function to be used instead of default',
     optional: true
   },
-  participate_template: {
-    type: String,
-    optional: true
-  },
-  versions: {
-    type: Number,
+  // participate_template: {
+  //   type: String,
+  //   optional: true
+  // },
+  // results_template: {
+  //   type: String,
+  //   optional: true
+  // },
+  parts:{
+    type: [Schema.Partition],
     optional: true
   },
   /*
@@ -117,5 +148,6 @@ Schema.Experience = new SimpleSchema({
    * schedule
    */
 });
+
 
 Experiences.attachSchema(Schema.Experience);

@@ -27,36 +27,15 @@ export const findAffordances = new ValidatedMethod({
     request(url, Meteor.bindEnvironment(function (error, response, body) {
         if (!error && response.statusCode == 200) {
             let res = JSON.parse(body);
-            Locations.update({uid: uid}, { $set: {
-              affordances : res //updated_affordances
-            }}, (err, docs) => {
-              if (err) { console.log(err); }
-              else { }
-            });
-            update_available();
+            // Locations.update({uid: uid}, { $set: {
+            //   affordances : res //updated_affordances
+            // }}, (err, docs) => {
+            //   if (err) { console.log(err); }
+            //   else {     console.log("updating affordacnes for " + uid); }
+            // });
           }
       }));
+    //update_available();
+
     }
 });
-
-function update_available(){
-  Experiences.find().forEach((experience) => {
-    available = [];
-    Locations.find().forEach((loc) => {
-      if(experience.affordance){
-        if (_.contains(loc.affordances, experience.affordance[0].toLowerCase())) {
-          available.push(loc.uid);
-        }
-      }else{
-        available.push(loc.uid);
-      }
-    });
-    Experiences.update(experience._id, { $set: {
-      available_users : available
-    }}, (err, docs) => {
-      if (err) { console.log(err); }
-      else {}
-    });
-  });
-
-}

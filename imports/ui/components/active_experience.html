@@ -1,20 +1,10 @@
 <template name="activeExperience">
-  {{#if experience.route}}
-  <a href="/results/{{ experience.route }}/{{ experience.activeIncident }}" class="list-group-item">
+  <a href="/apicustomresults/{{ experience.activeIncident }}" class="list-group-item">
       <h4 class="list-group-item-heading">{{experience.name}}</h4>
       <p class="list-group-item-text">{{experience.description}}</p>
-      <a class="btn btn-primary btn-participate btn-block" href="/participate/{{ experience.route }}/{{experience._id}}">
+      <a class="btn btn-primary btn-participate btn-block" href="/apicustom/{{ experience.activeIncident }}">
         Participate
       </a>
   </a>
-{{else}}
-  <a href="/results/{{ experience.activeIncident }}" class="list-group-item">
-      <h4 class="list-group-item-heading">{{experience.name}}</h4>
-      <p class="list-group-item-text">{{experience.description}}</p>
-      <a class="btn btn-primary btn-participate btn-block" href="/participate/{{experience._id}}">
-        Participate
-      </a>
-  </a>
-{{/if}}
 
 </template>

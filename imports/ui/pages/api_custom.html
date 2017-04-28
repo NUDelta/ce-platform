@@ -1,18 +1,26 @@
 <template name="api_custom">
   {{#if Template.subscriptionsReady}}
-      {{ > Template.dynamic template="rainbow" data=data2pass}}
+      {{ > Template.dynamic template=template_name data=data2pass}}
 
       {{findUserNumber }}
   {{/if}}
 </template>
 
 
-<template name="rainbow">
+<template name="flag">
   "HI"
-  
+<p> Take a picture of something {{get_name}} </p>
   {{ > Template.dynamic template="cameraUpload" data=camera_options}}
-  {{ this.experience }}
 
-  {{ this.usernum }}
 
 </template>
+<!--
+<template name="cheers1">
+  "HI"
+  {{ experience.description }}
+
+  {{get_description}}{{get_name}}
+
+  {{  this.user_partition }}
+
+</template> -->

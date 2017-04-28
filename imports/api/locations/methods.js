@@ -20,7 +20,6 @@ export const updateLocation = new ValidatedMethod({
         lat: lat,
         lng: lng
       }});
-
       Meteor.call('locations.findAffordances', {
         lat: lat.toString(),
         lng: lng.toString(),

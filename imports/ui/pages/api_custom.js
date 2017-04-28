@@ -1,4 +1,4 @@
-// import './api_custom.html';
+import './api_custom.html';
 
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -21,35 +21,50 @@ import { CONFIG } from '../../api/config.js'
 import { getNumberOfUser } from '../../api/incidents/methods.js';
 
 
-Template.rainbow.helpers({
+Template.flag.helpers({
   camera_options(){
-    const instance = Template.instance();
-    return {"camera": true, "text": false, "versions":this.versions}
-  }
+    return {"camera": true, "text": false, "details":this.user_mapping}
+  },
+  get_description(){
+    var um  = this.incident.userMappings;
+    console.log(um)
+    um.filter(function(x){
+      return x.name == this.user_mapping;
+    })
+    console.log(um[0])
 
+    return um[0].description;
+  },
+  get_name(){
+    return this.user_mapping;
+  }
 });
+
 
 
 Template.api_custom.helpers({
   data2pass(){
     const instance = Template.instance();
-    return {"incident": instance.state.get('incident'), "experience": instance.state.get('experience'), "usernum" : instance.state.get('usernum')}
+    var userTag;
+    var incident = instance.state.get('incident');
+
+    incident.userMappings.forEach((uM)=>{
+      if(uM.users.includes(Meteor.userId())){
+        userTag = uM.name;
+      }
+    });
+
+    console.log(Meteor.userId())
+    console.log("user group is" + userTag);
+    return {"incident": incident, "experience": instance.state.get('experience'), "user_mapping": userTag }
   },
   template_name() {
     const inst = Template.instance();
-    console.log("temp name:", inst.state.get('experience').participate_template);
-    return inst.state.get('experience').participate_template;
+    console.log("temp name:", inst.state.get('experience').name.toLowerCase());
+    return inst.state.get('experience').name.toLowerCase();
   },
-  findUserNumber(){
-    const inst = Template.instance();
 
-    // var test = getNumberOfUser.call({userId: Meteor.userId(), inc_id: inst.state.get('incident')._id});
-  return 0;
-  }
 });
-
-
-
 
 Template.api_custom.onCreated(function() {
   const incidentId = Router.current().params._id;
@@ -65,35 +80,8 @@ Template.api_custom.onCreated(function() {
   this.autorun(() => {
 
     if (experiencesHandle.ready() && incidentHandle.ready()) {
-      const incidentOG = Incidents.findOne(incidentId);
-      this.state.set('incident', incidentOG);
-      var inc = incidentOG;
-      console.log(incidentOG);
-
-      if(first_run){
-        if( inc == null || inc.in_progress_ids.indexOf(Meteor.userId()) == -1){
-          console.log("UPDATING AGAIN OOP")
-
-          Meteor.call('incident.getNumberOfUser',{userId: Meteor.userId(), inc_id:  incidentId},
-            function(error, result){
-              if(error){
-                console.log('Error');
-              }else{
-                console.log("it worked");
-              }
-            });
-          first_run = false;
-
-        }
-
-      }
       const incident = Incidents.findOne(incidentId);
       this.state.set('incident', incident);
-
-      var userArr =  incident.in_progress_ids;
-      this.state.set('usernum', incident.in_progress_numbers[userArr.indexOf(Meteor.userId())]);
-      console.log("usernum as saved in state", this.state.get('usernum'));
-
 
       const experience = Experiences.findOne(incident.experienceId);
       this.state.set('experience', experience);

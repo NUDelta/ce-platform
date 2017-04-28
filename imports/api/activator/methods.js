@@ -15,367 +15,278 @@ import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
 import { Users } from '../users/users.js';
 
+import { Incidents } from '../incidents/incidents.js';
+import { Images } from '../images/images.js';
+
+
 import './custom_options.js'
-
-var send_notifications;
-
-
-export const launchCustom = new ValidatedMethod({
-  name: 'launcher.custom',
+var interval;
+export const stop = new ValidatedMethod({
+  name: 'stopFlag',
   validate: new SimpleSchema({
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
+    experienceId:{
+      type: String
     }
   }).validator(),
-  run({experience, notificationOptions }) {
-    console.log("you are launching a custom notfication method!");
-    if(experience.custom_notification){
-      console.log("that method is called " + experience.custom_notification);
-
-      Meteor.call("customNotification."+ experience.custom_notification, {
-        experience: experience,
-        notificationOptions: notificationOptions
-      }, (err, res) => {
-        if (err) { console.log(err);}
-      });
-    }
-  }
-});
-
-
-WAIT_TIME = 180000;
-
-export const usersAvalibleNow = function(possibleUserIds){
-  userIdsAvalibleNow = []
-
-  for(let i in possibleUserIds){
-    userId = possibleUserIds[i]
-    let user_location = Locations.findOne({uid: userId});
-    if(user_location == null){
-      continue;
-    }
-
-    now = Date.parse(new Date());
-    if(user_location.lastNotification == null || (now - user_location.lastNotification) > WAIT_TIME){
-      //they are avalible
-      userIdsAvalibleNow.push(userId);
-    }
-  }
-
-  return userIdsAvalibleNow;
-}
-
-export const prepareToNofityUsers = function(userIds, experience, activeIncident){
-  if(userIds.length > 0){
-    Cerebro.setActiveExperiences(userIds, experience._id);
-    Cerebro.addIncidents(userIds, activeIncident);
-    userIds.map( userId => {
-      Locations.update({uid: userId}, { $set: {
-        lastNotification : now
-      }}, (err, docs) => {
-        if (err) { console.log(err); }
-        else { }
-      });
-    });
-  }
-
-}
-
-export const launchContinuousExperience = new ValidatedMethod({
-  name: 'launcher.continuous',
-  validate: new SimpleSchema({
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
-    }
-  }).validator(),
-  run({experience, notificationOptions }) {
-    console.log("starting a continous experience " + experience.name);
-    //create a new incident
-    const activeIncident = activateNewIncident.call({
-      name: experience.name,
-      experienceId: experience._id,
-      launcher: this.userId
-    });
-    send_notifications = Meteor.setInterval(function(){
-
-      console.log("looking to notify for " + experience.name);
-      let curr_experience = Experiences.findOne(experience._id);
-      //function to return who can get a notification right now
-
-      usersAvalibleNowIds = usersAvalibleNow(curr_experience.available_users)
-      Cerebro.removeAllOldActiveExperiences(curr_experience.available_users, experience._id);
-
-      //here we could use logic to decide only some of the avalible users should participate
-      usersForExperienceIds = usersAvalibleNowIds
-
-      //update that they have been notified
-      prepareToNofityUsers(usersForExperienceIds, curr_experience, activeIncident);
-
-      Cerebro.notify({
-        userIds: usersForExperienceIds, //get the user ids of usersAvalibleNow
-        experienceId: experience._id,
-        subject: notificationOptions.subject,
-        text: notificationOptions.text,
-        route: notificationOptions.route
-      });
-    }, 10000);
-  }
-});
-
-export const endContinuousExperience = new ValidatedMethod({
-  name: 'launcher.endContinuous',
-  validate: new SimpleSchema({
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
-    },
-  }).validator(),
-  run({ experience, notificationOptions }) {
-    // TODO: encode some sense of who participate / should be included instead of just sending this
-    console.log("ending a continuous experience " + experience.name);
-    const activeIncidentId = experience.activeIncident;
-    removeFromAllActiveExperiences.call({ experienceId: experience._id });
-    Meteor.clearInterval(send_notifications);
+  run({experienceId}){
+    console.log("STOPPING");
+    //TODO: also remove the experience for the users
+    Meteor.clearInterval(interval);
+    removeFromAllActiveExperiences.call({ experienceId: experienceId });
     Experiences.update({
-      _id: experience._id
+      _id: experienceId
     }, {
       $unset: { 'activeIncident': 0 }
     });
   }
 });
 
-function asyncNotifyUsers(experience, notificationOptions, activeIncident) {
-  let locations = Locations.find().fetch();
-  for (let location of locations){
-    Meteor.call('cerebro.notifyOnAffordances', {
-      lat: location.lat.toString(),
-      lng: location.lng.toString(),
-      uid: location.uid,
-      experience: experience,
-      notificationOptions, notificationOptions,
-      incident: activeIncident
-    }, (err, res) => {
-      if (err) { console.log(err);}
-    });
-  }
-}
-
-function getUsersToNotify(experience) {
-  let query = {};
-  if (experience.location) {
-    log.cerebro(`Notifying users for experience "${ experience.name }" in ${ experience.location }`);
-    const atLocation = Cerebro.liveQuery(experience.location);
-    query = {
-      'profile.subscriptions': experience._id,
-      _id: { $in: atLocation }
-    };
-  }
-  else {
-    log.cerebro(`Notifying users for experience "${ experience.name }". No location detected, so notifying everyone.`);
-    query = {
-      'profile.subscriptions': experience._id
-    };
-  }
-
-  if (CONFIG.NOTIFY_ALL) {
-    log.info('Debug enabled. Ignoring user subscriptions.');
-    delete query['profile.subscriptions'];
-  }
-
-  return Meteor.users.find(query, { fields: { _id: 1 } }).fetch().map(user => user._id);
-}
-
-function endExperience(experience, userIds, notificationOptions) {
-  // TODO: encode what users were in the OG experience
-  const activeIncidentId = experience.activeIncident;
-  removeFromAllActiveExperiences.call({ experienceId: experience._id });
-  Experiences.update({
-    _id: experience._id
-  }, {
-    $unset: { 'activeIncident': 0 }
-  });
-  Cerebro.notify({
-    userIds: userIds,
-    experienceId: activeIncidentId,
-    subject: notificationOptions.subject,
-    text: notificationOptions.text,
-    route: notificationOptions.route
-  });
-}
-
-export const launchInstantExperience = new ValidatedMethod({
-  name: 'launcher.instant',
+export const americanFlag = new ValidatedMethod({
+  name: 'api.americanFlag',
   validate: new SimpleSchema({
+    experienceId:{
+      type: String
+    }
+  }).validator(),
+  run({experienceId}){
+    console.log("starting American Flag")
+    var mainGoal = function(results, experience){
+      var paritions = experience.parts;
+      console.log("checking main goal to see if we have met our main goal")
+      return (getResultsByTag(results, "blue").length >= getP(paritions, "blue").max && (getResultsByTag(results, "red").length  >= getP(paritions, "red").max) && (getResultsByTag(results, "white").length  >= getP(paritions, "white").max));
+    };
+    var miniGoal = function(part_name, results, experience){
+      console.log("checking mini goal for " + part_name)
+      return getResultsByTag(results, part_name).length >= getP(experience.parts, part_name).max;
+    };
+
+    var experience = Experiences.findOne(experienceId);
+    var incidentId = Meteor.call('api.createIncident', {experience: experience, launcher_id: this.userId})
+    interval =  Meteor.setInterval(function(){
+      var results = Images.find({incidentId: incidentId}).fetch();
+
+      experience = Experiences.findOne(experienceId);
+
+      if(mainGoal(results, experience)){
+        console.log("DONE WE FINISHED!")
+        Meteor.call("stopFlag", {experienceId: experienceId})
+        return true;
+      }
+      console.log("we have not met main goal so lets go!");
+
+      var parts = experience.parts;
+      var available_users = [];
+
+
+      //TODO: if a user looses an affordance, their activeIncident
+      for(var i = 0; i < parts.length; i++){
+        if(miniGoal(parts[i].name, results, experience) == false){
+          console.log("still looking for " + parts[i].name);
+          var possible_users = queryFor(parts[i].affordance)
+          available_users.push({"name": parts[i].name, "users": usersAvalibleNow(possible_users)});
+        }else{
+          console.log("met our mini goal, so not looking at " + parts[i].name);
+          //available_users.push({"name": parts[i].name, "users": []});
+
+        }
+      }
+
+      var userMappings = notifyUsersEvenly(available_users);
+
+      Meteor.call("notify", {userMappings, experience, incidentId});
+
+    }, 10000, true)
+  }
+});
+
+export const notify = new ValidatedMethod({
+  name: 'notify',
+  validate: new SimpleSchema({
+    userMappings: {
+      type: [Schema.IncidentPartition],
+      blackbox: true
+    },
     experience: {
       type: Schema.Experience
     },
-    notificationOptions: {
-      type: Schema.NotificationOptions
+    incidentId:{
+      type: String
     }
   }).validator(),
-  run({ experience, notificationOptions }) {
-    const activeIncident = activateNewIncident.call({
-      name: experience.name,
-      experienceId: experience._id,
-      launcher: this.userId
+  run({userMappings, experience, incidentId}){
+    var ogUm = Incidents.findOne({_id: incidentId}).userMappings;
+
+    userMappings.forEach((userMap, index )=>{
+      var newUsers = userMap.users;
+      newUsers.forEach((u)=>{
+        if(!ogUm[index].users.includes(u)){
+          ogUm[index].users.push(u);
+        }
+
+      });
+
     });
-    if (experience.affordance) {
-      asyncNotifyUsers(experience, notificationOptions, activeIncident);
-    } else {
-      const userIds = getUsersToNotify(experience);
+    Incidents.update({_id: incidentId}, {$set: {"userMappings": ogUm}}, (err, docs) => {
+      if (err) { console.log(err); }
+    });
+
+    ogUm.forEach((userMap) =>{
+      prepareToNofityUsers(userMap["users"], experience, incidentId);
+      Cerebro.notify({
+        userIds: userMap["users"],
+        experienceId: experience._id,
+        subject: "Event " + experience.name + " is starting for " + userMap["name"],
+        text: experience.startText,
+        route: "apiCustom"
+      });
+
+    })
+  }
+});
+
+
+function getP(parts, tag){
+  var filtered = parts.filter(function(x){
+    return (x.name == tag);
+  });
+  return filtered[0];
+}
+
+function queryFor(search_aff){
+  var locs = Locations.find().fetch();
+  var filtered = locs.filter(function(x){
+    if(x.affordances == null){
+      return false;
+    }
+    return (x.affordances.toString().search(search_aff) > -1);
+  });
+  var mapped = filtered.map(function(x){
+    return x.uid;
+  });
+
+  return mapped;
+}
+
+function getResultsByTag(results, tag){
+  if(results.length == 0){
+    return [];
+  }
+  var filtered = results.filter(function(x){
+    return x.details == tag;
+  })
+  return filtered;
+}
+
+export const runExperience = new ValidatedMethod({
+  name: 'api.runExperience',
+  validate: new SimpleSchema({
+    experience: {
+      type: Schema.Experience
+    }
+  }).validator(),
+  run({experience}){
+    Meteor.call('api.americanFlag', experience._id)
+  }
+});
+
+function notifyUsersEvenly(available_users){
+  usersToNotify = [];
+  for(var j = 0; j< available_users.length; j++){
+    usersToNotify.push({"name": available_users[j].name, "users":[]})
+  }
+
+  while(available_users.length > 0){
+    available_users.sort(function(a,b){
+      return a.users.length - b.users.length;
+    });
+
+    var user = available_users[0].users.pop();
+
+    if(user == null){
+      available_users = available_users.slice(1);
+    }else{
+      var filtered = usersToNotify.filter(function(x){
+        return x.name == available_users[0].name;});
+
+        var alreadyAdded = usersToNotify.map(function(x){
+          return x.users.includes(user)
+        });
+
+        if(!(alreadyAdded.includes(true))){
+          filtered[0].users.push(user);
+        }
+      }
+    }
+    return usersToNotify;
+  }
+
+  export const createIncident = new ValidatedMethod({
+    name: 'api.createIncident',
+    validate: new SimpleSchema({
+      experience: {
+        type: Schema.Experience
+      },
+      launcher_id: {
+        type: String
+      }
+    }).validator(),
+    run({experience, launcher_id}) {
+      var pu = [];
+      for(var i =0; i < experience.parts.length; i++){
+        pu.push({"name": experience.parts[i].name, "users": []});
+      }
+      const incidentId = Incidents.insert({
+        date: Date.parse(new Date()),
+        name: experience.name,
+        experienceId: experience._id,
+        launcher: launcher_id,
+        userMappings: pu
+      },  (err, docs) => {
+        if (err) { console.log("errorrr", err); }
+        else {}
+      });
+      Experiences.update( experience._id, { $set: { activeIncident: incidentId } });
+      return incidentId;
+    }
+  });
+
+
+  WAIT_TIME = 180000;
+
+  export const usersAvalibleNow = function(possibleUserIds){
+    userIdsAvalibleNow = []
+
+    for(let i in possibleUserIds){
+      userId = possibleUserIds[i]
+      let user_location = Locations.findOne({uid: userId});
+      if(user_location == null){
+        continue;
+      }
+
+      now = Date.parse(new Date());
+
+      if(user_location.lastNotification == null || (now - user_location.lastNotification) > (5*60000)){
+        //they are avalible
+        userIdsAvalibleNow.push(userId);
+      }
+    }
+
+    return userIdsAvalibleNow;
+  }
+
+  export const prepareToNofityUsers = function(userIds, experience, activeIncident){
+    console.log(userIds)
+    if(userIds.length > 0){
       Cerebro.setActiveExperiences(userIds, experience._id);
       Cerebro.addIncidents(userIds, activeIncident);
-      Cerebro.notify({
-        userIds: userIds,
-        experienceId: experience._id,
-        subject: notificationOptions.subject,
-        text: notificationOptions.text,
-        route: notificationOptions.route
+      userIds.map( userId => {
+        Locations.update({uid: userId}, { $set: {
+          lastNotification : now
+        }}, (err, docs) => {
+          if (err) { console.log(err); }
+          else { console.log("updated notif time"); }
+        });
       });
     }
+
   }
-});
-
-export const launchDurationExperience = new ValidatedMethod({
-  name: 'launcher.duration',
-  validate: new SimpleSchema({
-    duration: {
-      // TODO: Encode within experience?
-      type: Schema.Duration
-    },
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
-    },
-  }).validator(),
-  run({ duration, experience, notificationOptions }) {
-    const jobName = `Notifying users for experience ${ experience._id }`;
-    let usersReached = [];
-    let n = 1;
-
-    const activeIncident = activateNewIncident.call({
-      name: experience.name,
-      experienceId: experience._id,
-      launcher: this.userId
-    });
-
-    log.cerebro(`Scheduling notifications for users for experience "${ experience.name }" in ${ experience.location }`);
-
-    // TODO: what about launching multiple incidents of the same experience??
-    SyncedCron.remove(jobName);
-    SyncedCron.add({
-      name: jobName,
-      schedule(parser) {
-        const laterjsSchedule = `every ${ duration.interval } min`;
-        return parser.text(laterjsSchedule);
-      },
-      job() {
-        log.job(`Starting job ${ n } for ${ experience._id }`);
-
-        let query = {};
-        if (experience.location) {
-          const options = {
-            radius: experience.radius
-          };
-          const atLocation = Cerebro.liveQuery(experience.location, options);
-          const newlyAtLocation = _.difference(atLocation, usersReached);
-          query = {
-            'profile.subscriptions': experience._id,
-            _id: { $in: newlyAtLocation }
-          };
-        } else {
-          query = {
-            'profile.subscriptions': experience._id
-          };
-        }
-
-        if (CONFIG.NOTIFY_ALL) {
-          delete query['profile.subscriptions'];
-        }
-
-        const newlyReached = Meteor.users.find(
-          query,
-          { fields: { _id: 1 } }
-        ).fetch().map(user => user._id);
-        Cerebro.setActiveExperiences(newlyReached, experience._id);
-        Cerebro.addIncidents(newlyReached, activeIncident);
-        usersReached.push(...newlyReached);
-
-        if (!this.isSimulation) {
-          Cerebro.notify({
-            userIds: newlyReached,
-            experienceId: experience._id,
-            subject: notificationOptions.subject,
-            text: notificationOptions.text,
-            route: notificationOptions.route
-          });
-        }
-        log.debug(usersReached);
-
-        const result = `Reached ${ newlyReached.length } new users, for a total of ${ usersReached.length } users.`;
-        log.job(`Complete job ${ n } from ${ experience._id }`);
-        log.job(result);
-
-        n += 1;
-        if (n > duration.counts) {
-          // TODO: probably do at start of next job?
-          SyncedCron.remove(jobName);
-          Meteor.setTimeout(() => {
-            endExperience(experience, usersReached, notificationOptions);
-          }, 60 * 1000); // FIXME: 1 minute delay right now
-        }
-
-        return result;
-      }
-    });
-
-    return jobName;
-  }
-});
-
-export const launchChainExperience = new ValidatedMethod({
-  name: 'launcher.chain',
-  validate: new SimpleSchema({
-    // TODO: encode in experience?
-    chainLength: {
-      type: Number
-    },
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
-    }
-  }).validator(),
-  run({ experience, notificationOptions }) {
-  }
-});
-
-export const endInstantExperience = new ValidatedMethod({
-  name: 'launcher.endInstant',
-  validate: new SimpleSchema({
-    experience: {
-      type: Schema.Experience
-    },
-    notificationOptions: {
-      type: Schema.NotificationOptions
-    },
-  }).validator(),
-  run({ experience, notificationOptions }) {
-    // TODO: encode some sense of who participate / should be included instead of just sending this
-    if (experience.activeIncident) {
-      const userIds = getUsersToNotify(experience);
-      endExperience(experience, userIds, notificationOptions);
-    }
-  }
-});

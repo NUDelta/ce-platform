@@ -39,6 +39,10 @@ export const insertPhoto = new ValidatedMethod({
     title: {
       type: String,
       optional: true
+    },
+    tag : {
+      type: String,
+      optional: true
     }
   }).validator(),
   run({ incidentId, image, location, caption, title = 'upload.png' }) {
@@ -48,9 +52,9 @@ export const insertPhoto = new ValidatedMethod({
       newFile.name(title);
       let image = Images.insert(newFile);
       image = Images.findOne(image._id);
-      Images.update({ _id: image._id }, 
+      Images.update({ _id: image._id },
         {
-          $set: { 
+          $set: {
             incidentId: incidentId,
             lat: location.lat,
             lng: location.lng,
@@ -74,6 +78,23 @@ export const getPhotos = new ValidatedMethod({
     let pics = [];
     Images.find({ incidentId: incidentId }).forEach((pic) => {
       pics.push(getBase64Data(pic));
+    });
+    return pics
+  }
+});
+
+export const getPhotosByPartition = new ValidatedMethod({
+  name: 'images.findByPartition',
+  validate: new SimpleSchema({
+    incidentId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+  run({ incidentId }) {
+    let pics = [];
+    Images.find({ incidentId: incidentId }).forEach((pic) => {
+      pics[pic.partition_num].push(getBase64Data(pic));
     });
     return pics
   }

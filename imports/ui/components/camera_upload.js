@@ -45,9 +45,11 @@ Template.cameraUpload.events({
 
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
-    const experienceId = Router.current().params._id;
-    const experienceRoute = Experiences.findOne({_id: experienceId}).route;
-    const incidentId = Incidents.findOne()._id; // TODO: might need to handle error cases?
+    const incidentId = Router.current().params._id;
+    const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
+    const experienceId = incident.experienceId;
+
+    const experienceRoute = incident.name;
 
     if (instance.data.text) {
       TextEntries.insert({
@@ -70,6 +72,7 @@ Template.cameraUpload.events({
           var dets = "";
           if(instance.data.details){
             dets = instance.data.details;
+            console.log("dets")
           }
           Images.update(imageFile._id,
             {
@@ -91,14 +94,14 @@ Template.cameraUpload.events({
             changed(newImage) {
               if (newImage.isUploaded()) {
                 cursor.stop();
-                Router.go('/results/'+experienceRoute+'/'+incidentId);
+                Router.go('/apicustomresults/'+incidentId);
               }
             }
           });
         }
       });
     } else {
-      Router.go('/results/'+experienceRoute+'/'+incidentId);
+      Router.go('/apicustomresults/'+incidentId);
     }
   },
   'click #participate-btn'(event, instance) {
