@@ -53,9 +53,10 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
       type: String,
       regEx: SimpleSchema.RegEx.Id
     }
-    
+
   }).validator(),
   run({ experienceId }) {
+    console.log("experience ended so removing frmo user profiles")
     return Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
   }
 });
@@ -117,6 +118,3 @@ export const setQualification = new ValidatedMethod({
     return Meteor.users.update({_id: this.userId}, {$set: {['profile.qualifications.' + qualification]: value} });
   }
 })
-
-
-

@@ -58,20 +58,18 @@ Meteor.startup(() => {
         modules: ['camera'],
         requirements: [],
         optIn: false,
-        parts: [{"name": "red", "description": "stripes", "affordance": "grocery", "max": 1},
-                    {"name": "white", "description": "stripes", "affordance": "clouds", "max": 1},
-                    {"name": "blue", "description": "stars", "affordance": "beach", "max": 1}]
+        parts: [{"name": "red", "description": "stripes", "affordance": "grocery", "max": 1}, {"name": "white", "description": "stripes", "affordance": "rain", "max": 1}, {"name": "blue", "description": "stars", "affordance": "beaches", "max": 1}]
       },
-      // {
-      //   name: 'cheers1',
-      //   author: jennie._id,
-      //   description: "Raise your glass!",
-      //   startText: "Raise your glass and cheers with someone else!",
-      //   modules: ['camera'],
-      //   requirements: [],
-      //   optIn: false,
-      //   parts: [{"name": "left", "available_users":[""],"description": "", "affordance": "bar", "max": 4},
-      //               {"name": "right","available_users":[""], "description": "", "affordance": "bar", "max": 4}]      }
+      {
+        name: 'cheers1',
+        author: jennie._id,
+        description: "Raise your glass!",
+        startText: "Raise your glass and cheers with someone else!",
+        modules: ['camera'],
+        requirements: [],
+        optIn: false,
+        parts: [{"name": "left","description": "", "affordance": "pubs", "max": 2}, {"name": "right", "description": "", "affordance": "pubs", "max": 2}]
+      }
     ];
 
     experiences.forEach(experience => Experiences.insert(experience));

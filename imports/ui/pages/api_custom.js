@@ -25,19 +25,14 @@ Template.flag.helpers({
   camera_options(){
     return {"camera": true, "text": false, "details":this.user_mapping}
   },
-  get_description(){
-    var um  = this.incident.userMappings;
-    console.log(um)
-    um.filter(function(x){
-      return x.name == this.user_mapping;
-    })
-    console.log(um[0])
-
-    return um[0].description;
-  },
   get_name(){
     return this.user_mapping;
   }
+});
+
+Template.registerHelper('camera_options', (detail) => {
+  console.log("IN camera", detail)
+  return {"camera": true, "text": false, "details":detail}
 });
 
 

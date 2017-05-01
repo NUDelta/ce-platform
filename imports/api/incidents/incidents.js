@@ -67,7 +67,8 @@ Schema.Incident = new SimpleSchema({
   },
   userMappings:{
     type: [Schema.IncidentPartition],
-    optional: true
+    optional: true,
+    blackbox: true
   },
 
   // "partitioned_users.$": {

@@ -10,17 +10,20 @@
 <template name="flag">
   "HI"
 <p> Take a picture of something {{get_name}} </p>
-  {{ > Template.dynamic template="cameraUpload" data=camera_options}}
+{{ > Template.dynamic template="cameraUpload" data=camera_options}}
+
 
 
 </template>
-<!--
+
 <template name="cheers1">
   "HI"
   {{ experience.description }}
 
-  {{get_description}}{{get_name}}
+  {{this.user_mapping}}
 
-  {{  this.user_partition }}
+  {{ > Template.dynamic template="cameraUpload" data=camera_options}}
 
-</template> -->
+
+
+</template>

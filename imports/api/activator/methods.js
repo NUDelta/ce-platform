@@ -14,6 +14,7 @@ import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
 import { Users } from '../users/users.js';
+import { _ } from 'meteor/underscore';
 
 import { Incidents } from '../incidents/incidents.js';
 import { Images } from '../images/images.js';
@@ -22,7 +23,7 @@ import { Images } from '../images/images.js';
 import './custom_options.js'
 var interval;
 export const stop = new ValidatedMethod({
-  name: 'stopFlag',
+  name: 'stop',
   validate: new SimpleSchema({
     experienceId:{
       type: String
@@ -38,6 +39,97 @@ export const stop = new ValidatedMethod({
     }, {
       $unset: { 'activeIncident': 0 }
     });
+  }
+});
+export const cheers = new ValidatedMethod({
+  name: 'api.cheers',
+  validate: new SimpleSchema({
+    experienceId:{
+      type: String
+    }
+  }).validator(),
+  run({experienceId}){
+    console.log("starting Cheers")
+    var mainGoal = function(results, experience){
+      var paritions = experience.parts;
+      console.log("checking main goal to see if we have met our main goal")
+      return (getResultsByTag(results, "left").length >= getP(paritions, "left").max && (getResultsByTag(results, "right").length  >= getP(paritions, "right").max) );
+    };
+    var miniGoal = function(part_name, results, experience){
+      console.log("checking mini goal for " + part_name)
+      return getResultsByTag(results, part_name).length >= getP(experience.parts, part_name).max;
+    };
+
+    var experience = Experiences.findOne(experienceId);
+    var incidentId = Meteor.call('api.createIncident', {experience: experience, launcher_id: this.userId})
+
+    interval =  Meteor.setInterval(function(){
+      var results = Images.findOne({incidentId: incidentId}).fetch();
+
+      experience = Experiences.findOne(experienceId);
+
+      if(mainGoal(results, experience)){
+        console.log("DONE WE FINISHED!")
+        Meteor.call("stopCheers", {experienceId: experienceId})
+        return true;
+      }
+      console.log("we have not met main goal so lets go!");
+      var incident = Incidents.findOne(incidentId);
+      var parts = experience.parts;
+      var available_users = [];
+
+
+      //TODO: if a user looses an affordance, their activeIncident
+      for(var i = 0; i < parts.length; i++){
+        if(miniGoal(parts[i].name, results, experience) == false){
+          removeOldUsers(incident.userMappings[i].users, parts[i].affordance, experienceId)
+          console.log("still looking for " + parts[i].name);
+          var possible_users = queryFor(parts[i].affordance)
+          available_users.push({"name": parts[i].name, "users": usersAvalibleNow(possible_users)});
+        }else{
+          console.log("met our mini goal, so not looking at " + parts[i].name);
+          //available_users.push({"name": parts[i].name, "users": []});
+
+        }
+      }
+      var userMappings = notifyUsersIfTwoFree(available_users);
+      console.log("about to call notify with", userMappings)
+      Meteor.call("notify", {userMappings, experience, incidentId});
+
+    }, 15000, true)
+  }
+});
+
+
+function notifyUsersIfTwoFree(available_users){
+  console.log("calling notifyUsersIfTwoFree", available_users)
+  usersToNotify = [];
+  for(var j = 0; j< available_users.length; j++){
+    usersToNotify.push({"name": available_users[j].name, "users":[]})
+  }
+  var all_users = _.union(available_users[0].users, available_users[1].users)
+
+  if(all_users.length > 1){
+    usersToNotify[0].users.push(all_users.pop())
+    usersToNotify[1].users.push(all_users.pop())
+
+  }
+  console.log("returning notifyUsersIfTwoFree", usersToNotify)
+
+  return usersToNotify;
+
+}
+
+export const test = new ValidatedMethod({
+  name: 'api.test',
+  validate: new SimpleSchema({
+    experienceId:{
+      type: String
+    }
+  }).validator(),
+  run({experienceId}){
+    console.log("Hiellllloooo test tes tes");
+
   }
 });
 
@@ -60,28 +152,30 @@ export const americanFlag = new ValidatedMethod({
       return getResultsByTag(results, part_name).length >= getP(experience.parts, part_name).max;
     };
 
-    var experience = Experiences.findOne(experienceId);
-    var incidentId = Meteor.call('api.createIncident', {experience: experience, launcher_id: this.userId})
+    console.log("made it this far", experienceId, this.userId);
+
+    var incidentId = Meteor.call('api.createIncident', {experience_id: experienceId, launcher_id: this.userId})
+    console.log("inc id is now ", incidentId)
     interval =  Meteor.setInterval(function(){
       var results = Images.find({incidentId: incidentId}).fetch();
 
-      experience = Experiences.findOne(experienceId);
+      experience = Experiences.findOne({_id:experienceId});
 
       if(mainGoal(results, experience)){
         console.log("DONE WE FINISHED!")
-        Meteor.call("stopFlag", {experienceId: experienceId})
+        Meteor.call("stop", {experienceId: experienceId})
         return true;
       }
       console.log("we have not met main goal so lets go!");
 
       var parts = experience.parts;
       var available_users = [];
-
-
+      var incident = Incidents.findOne({_id: incidentId});
       //TODO: if a user looses an affordance, their activeIncident
       for(var i = 0; i < parts.length; i++){
         if(miniGoal(parts[i].name, results, experience) == false){
           console.log("still looking for " + parts[i].name);
+          removeOldUsers(incident.userMappings[i].users, parts[i].affordance, experienceId)
           var possible_users = queryFor(parts[i].affordance)
           available_users.push({"name": parts[i].name, "users": usersAvalibleNow(possible_users)});
         }else{
@@ -99,12 +193,14 @@ export const americanFlag = new ValidatedMethod({
   }
 });
 
+
+
 export const notify = new ValidatedMethod({
   name: 'notify',
   validate: new SimpleSchema({
     userMappings: {
       type: [Schema.IncidentPartition],
-      blackbox: true
+      // blackbox: true
     },
     experience: {
       type: Schema.Experience
@@ -122,7 +218,6 @@ export const notify = new ValidatedMethod({
         if(!ogUm[index].users.includes(u)){
           ogUm[index].users.push(u);
         }
-
       });
 
     });
@@ -130,7 +225,7 @@ export const notify = new ValidatedMethod({
       if (err) { console.log(err); }
     });
 
-    ogUm.forEach((userMap) =>{
+    userMappings.forEach((userMap) =>{
       prepareToNofityUsers(userMap["users"], experience, incidentId);
       Cerebro.notify({
         userIds: userMap["users"],
@@ -158,14 +253,18 @@ function queryFor(search_aff){
     if(x.affordances == null){
       return false;
     }
-    return (x.affordances.toString().search(search_aff) > -1);
+    return (containsAffordance(x.affordances, search_aff));
   });
   var mapped = filtered.map(function(x){
     return x.uid;
   });
-
+  console.log("query returned", mapped)
   return mapped;
 }
+function containsAffordance(user_affordances, search_affordance){
+  return user_affordances.includes(search_affordance);
+}
+
 
 function getResultsByTag(results, tag){
   if(results.length == 0){
@@ -223,14 +322,16 @@ function notifyUsersEvenly(available_users){
   export const createIncident = new ValidatedMethod({
     name: 'api.createIncident',
     validate: new SimpleSchema({
-      experience: {
-        type: Schema.Experience
+      experience_id: {
+        type: String
       },
       launcher_id: {
         type: String
       }
     }).validator(),
-    run({experience, launcher_id}) {
+    run({experience_id, launcher_id}) {
+      var experience = Experiences.findOne({_id:experience_id});
+      console.log("THE experimence is", experience)
       var pu = [];
       for(var i =0; i < experience.parts.length; i++){
         pu.push({"name": experience.parts[i].name, "users": []});
@@ -253,7 +354,30 @@ function notifyUsersEvenly(available_users){
 
   WAIT_TIME = 180000;
 
+
+function removeOldUsers(users, affordance, experienceId){
+  userIdsToRemove = []
+
+  users.forEach((user)=>{
+    var user_location = Locations.findOne({uid:user})
+    console.log(user_location.affordances, affordance);
+    if(! containsAffordance(user_location.affordances, affordance)){
+      console.log("yo doesn't contain affordance anymore")
+      userIdsToRemove.push(user);
+    }
+
+  });
+
+
+  if(userIdsToRemove.length > 0){
+    console.log("removing usrs", userIdsToRemove, experienceId)
+    Cerebro.removeActiveExperiences(userIdsToRemove, experienceId);
+  }
+
+
+}
   export const usersAvalibleNow = function(possibleUserIds){
+    console.log("calling users avalible now")
     userIdsAvalibleNow = []
 
     for(let i in possibleUserIds){
@@ -265,11 +389,13 @@ function notifyUsersEvenly(available_users){
 
       now = Date.parse(new Date());
 
-      if(user_location.lastNotification == null || (now - user_location.lastNotification) > (5*60000)){
+      if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
         //they are avalible
+        console.log(now - user_location.lastNotification)
         userIdsAvalibleNow.push(userId);
       }
     }
+    console.log("returing users avalible now", userIdsAvalibleNow)
 
     return userIdsAvalibleNow;
   }
@@ -284,7 +410,7 @@ function notifyUsersEvenly(available_users){
           lastNotification : now
         }}, (err, docs) => {
           if (err) { console.log(err); }
-          else { console.log("updated notif time"); }
+          else {  }
         });
       });
     }

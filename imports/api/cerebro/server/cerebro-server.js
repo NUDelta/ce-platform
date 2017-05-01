@@ -7,6 +7,9 @@ import { CerebroCore } from '../cerebro-core.js';
 import { log } from '../../logs.js';
 import { CONFIG, AUTH } from '../../config.js';
 
+import { Incidents } from '../../incidents/incidents.js';
+
+
 const yelpEndpoint = 'http://api.yelp.com/v2/search';
 
 CerebroServer = class CerebroServer extends CerebroCore {
@@ -23,6 +26,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       //   this._sendEmails(users, server, subject, text);
       //   break;
       case CerebroCore.PUSH:
+        console.log("notify called with uerIds", userIds)
         if(userIds.length > 0){
           this._sendPush(userIds, subject, text, route, experienceId);
         }
@@ -126,6 +130,36 @@ CerebroServer = class CerebroServer extends CerebroCore {
 
 
   removeActiveExperiences(userIds, experienceId) {
+    console.log("in remove active inc, ", userIds, experienceId )
+    var incidentId = Experiences.findOne({_id:experienceId}).activeIncident;
+    console.log("in inc id, ",incidentId )
+
+    var userMappings = Incidents.findOne({_id:incidentId}).userMappings;
+    console.log("in inc usermappings, ",userMappings )
+
+    userIds.forEach((id)=>{
+      for(index in userMappings){
+        if(userMappings[index].users.indexOf(id) > -1){
+          console.log("found the user Id", id)
+          var i = userMappings[index].users.indexOf(id);
+          console.log(i)
+          userMappings[index].users.splice(i, 1)
+          console.log("we hve updadate an index", userMappings[index])
+        }
+      }
+    })
+    console.log("userMappings is now", userMappings)
+    Incidents.update({
+      _id: incidentId
+    }, {
+      $set: {
+        'userMappings': userMappings
+      }
+    }, (err, docs) => {
+      if (err) { console.log(err); }else{ console.log("worked", docs)}
+    });
+
+
     Meteor.users.update({
       _id: { $in: userIds }
     }, {
