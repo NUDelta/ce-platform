@@ -21,14 +21,6 @@ import { CONFIG } from '../../api/config.js'
 import { getNumberOfUser } from '../../api/incidents/methods.js';
 
 
-Template.flag.helpers({
-  camera_options(){
-    return {"camera": true, "text": false, "details":this.user_mapping}
-  },
-  get_name(){
-    return this.user_mapping;
-  }
-});
 
 Template.registerHelper('camera_options', (detail) => {
   console.log("IN camera", detail)

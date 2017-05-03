@@ -9,8 +9,8 @@
 
 <template name="flag">
   "HI"
-<p> Take a picture of something {{get_name}} </p>
-{{ > Template.dynamic template="cameraUpload" data=camera_options}}
+<p> Take a picture of something {{this.user_mapping}} to help us build the French Flag! </p>
+{{ > Template.dynamic template="cameraUpload" data=(camera_options this.user_mapping)}}
 
 
 

@@ -72,7 +72,7 @@ Template.cameraUpload.events({
           var dets = "";
           if(instance.data.details){
             dets = instance.data.details;
-            console.log("dets")
+            console.log("dets", dets)
           }
           Images.update(imageFile._id,
             {
