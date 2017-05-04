@@ -17,6 +17,22 @@ class IncidentCollection extends Mongo.Collection {
   }
 }
 
+Schema.SituationalNeedInstance = new SimpleSchema({
+  id: {
+    type: String
+  },
+  affordance: {
+    type: String,
+    optional: true
+  },
+  stopping_criteria : {
+    type: Schema.StoppingCritera,
+    optional: true
+  }
+});
+
+export const SituationalNeedInstance = new IncidentCollection('situationalneedinstance');
+SituationalNeedInstance.attachSchema(Schema.SituationalNeedInstance);
 
 Schema.IncidentPartition = new SimpleSchema({
   name:{
@@ -30,6 +46,31 @@ Schema.IncidentPartition = new SimpleSchema({
 export const IncidentPartitions = new IncidentCollection('incidentPartition');
 
 IncidentPartitions.attachSchema(Schema.IncidentPartition);
+
+Schema.NeedInstancesWithUsers = new SimpleSchema({
+  situational_need_name:{
+    type: String
+  },
+  id: {
+    type: String
+  },
+  affordance: {
+    type: String,
+    optional: true
+  },
+  stopping_criteria : {
+    type: Schema.StoppingCritera,
+    optional: true
+  },
+  users: {
+    type: [String],
+    optional: true
+  }
+});
+export const NeedInstancesWithUsers = new IncidentCollection('needinstanceswithusers');
+
+NeedInstancesWithUsers.attachSchema(Schema.NeedInstancesWithUsers);
+
 
 
 export const Incidents = new IncidentCollection('incidents');
@@ -51,7 +92,8 @@ Schema.Incident = new SimpleSchema({
   launcher: {
     type: String,
     label: 'Launcher user id',
-    regEx: SimpleSchema.RegEx.Id
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true
   },
   latestSubmission: {
     type: String,
@@ -70,6 +112,11 @@ Schema.Incident = new SimpleSchema({
     optional: true,
     blackbox: true
   },
+  users_need_mapping: {
+    type: [Schema.NeedInstancesWithUsers],
+    optional: true
+  },
+
 
   // "partitioned_users.$": {
   //     type: Object

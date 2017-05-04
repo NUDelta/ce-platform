@@ -19,8 +19,236 @@ import { _ } from 'meteor/underscore';
 import { Incidents } from '../incidents/incidents.js';
 import { Images } from '../images/images.js';
 
+import { Random } from 'meteor/random'
 
 import './custom_options.js'
+
+export const leggo = new ValidatedMethod({
+  name: 'api.leggo',
+  validate: new SimpleSchema({
+    experienceId:{
+      type: String
+    }
+  }).validator(),
+  run({experienceId}){
+    var incidentId = Meteor.call('api.makeIncident', {experienceId: experienceId});
+    Meteor.call('api.addNeedInstances', {incidentId: incidentId});
+
+    console.log("starting experience with new incident ", incidentId)
+
+    interval =  Meteor.setInterval(function(){
+      var results = Images.find({incidentId: incidentId}).fetch();
+      var experience = Experiences.findOne({_id:experienceId});
+      var incident = Incidents.findOne({_id: incidentId});
+
+      var wipInstanceNeeds = getUnfinsihedNeeds(results, experience, incident);
+
+      if(wipInstanceNeeds.length == 0){
+        console.log("DONE WE FINISHED!")
+        Meteor.call("stop", {experienceId: experienceId})
+        return true;
+      }
+
+      console.log("we have not met main goal so lets go!");
+
+      var available_users = {};
+      wipInstanceNeeds.forEach((need)=>{
+        //removeOldUsers()
+          //have to first get into situtaional groups, make this a seperate function
+        var situtationAffordance;
+        experience.situation_groups.forEach((group)=>{
+          var situation = group.filter(function(s){
+            return s.name ==  need.situational_need_name })[0];
+          if(situation){
+            situtationAffordance = situation.affordance;
+          }
+        });
+        var possible_users = queryFor([situtationAffordance, need.affordance]);
+        if(available_users[need.situational_need_name]== null){
+          available_users[need.situational_need_name] = possible_users;
+        }else{
+          available_users[need.situational_need_name] = available_users[need.situational_need_name].concat(possible_users)
+        }
+        console.log(available_users)
+      });
+
+      var reFormatted = [];
+      Object.keys(available_users).forEach((key)=>{
+        console.log(key);
+        reFormatted.push({"name": key, "users": available_users[key]})
+      });
+      console.log(reFormatted)
+      var userMappings = greedyOrganization(reFormatted);
+      console.log("userMappings: ", userMappings)
+      //
+      // Meteor.call("notify", {userMappings, experience, incidentId});
+
+    }, 10000, true)
+  }
+});
+
+function greedyOrganization(available_users){
+  console.log("in greedy organization", available_users)
+  usersToNotify = [];
+  for(var j = 0; j< available_users.length; j++){
+    usersToNotify.push({"name": available_users[j].name, "users":[]})
+  }
+  console.log("usersToNotify", usersToNotify)
+  while(available_users.length > 0){
+    available_users.sort(function(a,b){
+      return a.users.length - b.users.length;
+    });
+
+    var user = available_users[0].users.pop();
+    console.log("user", user)
+    if(user == null){
+      available_users = available_users.slice(1);
+    }else{
+      var filtered = usersToNotify.filter(function(x){
+        return x.name == available_users[0].name;});
+
+        var alreadyAdded = usersToNotify.map(function(x){
+          return x.users.includes(user)
+        });
+
+        if(!(alreadyAdded.includes(true))){
+          filtered[0].users.push(user);
+        }
+      }
+    }
+    return usersToNotify;
+}
+
+function getUnfinsihedNeeds(results, experience, incident){
+  var unfinished = [];
+  experience.situation_groups.forEach((group)=>{
+    group.forEach((sitNeed)=>{
+      var stopping_criteria = sitNeed.stopping_criteria;
+      if("total" in stopping_criteria){
+        var total = results.filter(function(x){ x.name == sitNeed.name}).length;
+        if(total < stopping_criteria.total){
+          var matchingInstances = incident.users_need_mapping.filter(function(x){
+            return x.situational_need_name == sitNeed.name});
+          matchingInstances.forEach((instance)=>{
+            if(instance.stopping_criteria == null){
+              unfinished.push(instance)
+            }
+            else if("total" in instance.stopping_criteria){
+              var total = results.filter(function(x){ return x.id == instance.id}).length;
+              if(total < instance.stopping_criteria.total){
+                unfinished.push(instance)
+              }
+            }
+          });
+        }
+      }
+    });
+  });
+  console.log(unfinished)
+  return unfinished;
+}
+
+export const makeExperience = new ValidatedMethod({
+  name: 'api.makeExperience',
+  validate: new SimpleSchema({
+    name:{
+      type: String
+    }
+  }).validator(),
+  run({name}){
+    var redNeed = {
+      "name" : "red",
+      "affordance" : "grocery",
+      "contributions" : [ "photo" ],
+       "stopping_criteria" : {"total" : 1 }
+     };
+     var whiteNeed = {
+       "name" : "white",
+       "affordance" : "clouds",
+       "contributions" : [ "photo" ],
+        "stopping_criteria" : {"total" : 1 }
+      };
+      var blueNeed = {
+        "name" : "blue",
+        "affordance" : "beaches",
+        "contributions" : [ "photo" ],
+         "stopping_criteria" : {"total" : 1 }
+       };
+
+    const experience = {
+        name: 'FLAGTEST',
+        notificationText: "blach",
+        situation_groups: [ [blueNeed], [whiteNeed], [redNeed] ],
+    }
+    Experiences.insert(experience, (err, docs) => {
+      if (err) {
+        console.log(err);
+      }else{
+        console.log(docs);
+      }
+    });
+    console.log("Hiellllloooo test tes tes");
+
+  }
+});
+
+export const makeIncident = new ValidatedMethod({
+  name: 'api.makeIncident',
+  validate: new SimpleSchema({
+    experienceId:{
+      type: String
+    }
+  }).validator(),
+  run({experienceId}){
+    console.log("making an indcidnet for ", experienceId)
+    var experience = Experiences.findOne(experienceId);
+    const incident = {
+      experienceId: experienceId,
+      name: experience.name,
+      date: Date.parse(new Date()),
+      users_need_mapping: [],
+    }
+    var incidentId = Incidents.insert(incident);
+
+    Experiences.update(experienceId, {
+      $set: {activeIncident: incidentId}
+    });
+    console.log("Incident added!", incidentId);
+    return incidentId;
+  }
+});
+
+export const addNeedInstances = new ValidatedMethod({
+  name: 'api.addNeedInstances',
+  validate: new SimpleSchema({
+    incidentId:{
+      type: String
+    }
+  }).validator(),
+  run({incidentId}){
+    var incident = Incidents.findOne(incidentId);
+    const needInstance =
+
+    Incidents.update({_id: incidentId},
+      {$push: {users_need_mapping:
+        {$each:
+          [{situational_need_name: "red", id: Random.id(), affordance: null, stopping_criteria: null, users:[]},
+          {situational_need_name: "blue", id: Random.id(), affordance: null, stopping_criteria: null, users:[]},
+          {situational_need_name: "white", id: Random.id(), affordance: null, stopping_criteria: null, users:[]}]
+        }
+      }
+      },(err, docs) => {
+      if (err) {
+        console.log(err);
+      }else{
+        console.log(docs);
+      }
+    });
+    console.log("needs added!");
+
+  }
+});
+
 var interval;
 export const stop = new ValidatedMethod({
   name: 'stop',
@@ -41,64 +269,7 @@ export const stop = new ValidatedMethod({
     });
   }
 });
-export const cheers = new ValidatedMethod({
-  name: 'api.cheers',
-  validate: new SimpleSchema({
-    experienceId:{
-      type: String
-    }
-  }).validator(),
-  run({experienceId}){
-    console.log("starting Cheers")
-    var mainGoal = function(results, experience){
-      var paritions = experience.parts;
-      console.log("checking main goal to see if we have met our main goal")
-      return (getResultsByTag(results, "left").length >= getP(paritions, "left").max && (getResultsByTag(results, "right").length  >= getP(paritions, "right").max) );
-    };
-    var miniGoal = function(part_name, results, experience){
-      console.log("checking mini goal for " + part_name)
-      return getResultsByTag(results, part_name).length >= getP(experience.parts, part_name).max;
-    };
 
-    var experience = Experiences.findOne(experienceId);
-    var incidentId = Meteor.call('api.createIncident', {experience: experience, launcher_id: this.userId})
-
-    interval =  Meteor.setInterval(function(){
-      var results = Images.findOne({incidentId: incidentId}).fetch();
-
-      experience = Experiences.findOne(experienceId);
-
-      if(mainGoal(results, experience)){
-        console.log("DONE WE FINISHED!")
-        Meteor.call("stopCheers", {experienceId: experienceId})
-        return true;
-      }
-      console.log("we have not met main goal so lets go!");
-      var incident = Incidents.findOne(incidentId);
-      var parts = experience.parts;
-      var available_users = [];
-
-
-      //TODO: if a user looses an affordance, their activeIncident
-      for(var i = 0; i < parts.length; i++){
-        if(miniGoal(parts[i].name, results, experience) == false){
-          removeOldUsers(incident.userMappings[i].users, parts[i].affordance, experienceId)
-          console.log("still looking for " + parts[i].name);
-          var possible_users = queryFor(parts[i].affordance)
-          available_users.push({"name": parts[i].name, "users": usersAvalibleNow(possible_users)});
-        }else{
-          console.log("met our mini goal, so not looking at " + parts[i].name);
-          //available_users.push({"name": parts[i].name, "users": []});
-
-        }
-      }
-      var userMappings = notifyUsersIfTwoFree(available_users);
-      console.log("about to call notify with", userMappings)
-      Meteor.call("notify", {userMappings, experience, incidentId});
-
-    }, 15000, true)
-  }
-});
 
 
 function notifyUsersIfTwoFree(available_users){
@@ -258,11 +429,13 @@ function queryFor(search_aff){
   var mapped = filtered.map(function(x){
     return x.uid;
   });
-  console.log("query returned", mapped)
   return mapped;
 }
+
 function containsAffordance(user_affordances, search_affordance){
-  return user_affordances.includes(search_affordance);
+  search_affordance = search_affordance.filter(function(x){return x != null;});
+  var intersect = _.intersection(user_affordances, search_affordance)
+  return intersect.length == search_affordance.length;
 }
 
 

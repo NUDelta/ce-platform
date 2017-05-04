@@ -21,6 +21,57 @@ class ExperiencesCollection extends Mongo.Collection {
   }
 }
 
+Schema.StoppingCritera = new SimpleSchema({
+  total:{
+    type: Number,
+    optional: true
+  },
+  time: {
+    type: String,
+    optional: true
+  },
+  complete_instances:{
+    type: Number,
+    optional: true
+  }
+});
+
+export const StoppingCritera = new ExperiencesCollection('stoppingcritera');
+StoppingCritera.attachSchema(Schema.StoppingCritera);
+
+
+Schema.SituationalNeed = new SimpleSchema({
+  name:{
+    type: String
+  },
+  contributions:{
+    type: [String]
+  },
+  affordance: {
+    type: String,
+    optional: true
+  },
+  stopping_criteria : {
+    type: Schema.StoppingCritera,
+    optional: true,
+  }
+});
+
+export const SituationalNeed = new ExperiencesCollection('situationalneed');
+SituationalNeed.attachSchema(Schema.SituationalNeed);
+
+
+
+Schema.NeedGroup = new SimpleSchema({
+  situational_needs:{
+    type: [Schema.SituationalNeed],
+  }
+});
+
+export const NeedGroup = new ExperiencesCollection('needgroup');
+NeedGroup.attachSchema(Schema.NeedGroup);
+
+
 
 Schema.Partition = new SimpleSchema({
   name:{
@@ -58,30 +109,39 @@ Schema.Experience = new SimpleSchema({
   },
   name: {
     type: String,
-    label: 'Experience name'
+    label: 'Experience name',
   },
   author: {
     type: String,
     label: 'Author user id',
-    regEx: SimpleSchema.RegEx.Id
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true
   },
   description: {
     type: String,
-    label: 'Experience description'
+    label: 'Experience description',
+    optional: true
+
   },
   startText: {
     type: String,
-    label: 'Experience starting email text'
+    label: 'Experience starting email text',
+    optional: true
+
   },
   modules: {
     type: [String],
     label: 'Integrated collective experience modules',
-    allowedValues: Schema.CEModules
+    allowedValues: Schema.CEModules,
+    optional: true
+
   },
   requirements: {
     type: [String],
     label: 'User characteristic requirements',
-    allowedValues: Schema.CEQualifications
+    allowedValues: Schema.CEQualifications,
+    optional: true
+
   },
   /**location: {
     type: String,
@@ -90,7 +150,7 @@ Schema.Experience = new SimpleSchema({
     allowedValues: _.map(Schema.YelpCategories, category => category.alias)
   },**/
   affordance: {
-    type: [String],
+    type: String,
     label: 'Affordances of the experience',
     optional: true
   },
@@ -108,7 +168,7 @@ Schema.Experience = new SimpleSchema({
     type: Number,
     label: 'The duration this experience will run, in minutes',
     optional: true,
-    defaultValue: 120
+    //defaultValue: 120
   },
   /*radius: {
     type: Number,
@@ -138,16 +198,54 @@ Schema.Experience = new SimpleSchema({
   //   type: String,
   //   optional: true
   // },
-  parts:{
-    type: [Schema.Partition],
+  // parts:{
+  //   type: [Schema.Partition],
+  //   optional: true
+  // },
+//   turns: {  type: Array   }
+// "turns.$": { type: Array }
+// "turns.$.$": { type: Object }
+// "turns.$.$.user_id": { type: String }
+
+  situation_groups: {
+    type: Array, //[[Schema.SituationalNeed]],
+    optional: true, //TODO: 
+    blackbox: true
+  },
+  "situation_groups.$":{
+    type: Array,
+    optional:true
+  },
+  "situation_groups.$.$":{
+    type: Object,
+    optional:true
+  },
+  "situation_groups.$.$.name":{
+    type: String,
+  },
+  "situation_groups.$.$.contributions":{
+    type: [String]
+  },
+  "situation_groups.$.$.affordance": {
+    type: String,
     optional: true
   },
+  "situation_groups.$.$.stopping_criteria": {
+    type: Schema.StoppingCritera,
+    optional: true,
+  },
+  notificationText : {
+    type: String,
+    optional: true
+  }
   /*
    * start condition
    * end condition
    * schedule
    */
 });
+
+
 
 
 Experiences.attachSchema(Schema.Experience);
