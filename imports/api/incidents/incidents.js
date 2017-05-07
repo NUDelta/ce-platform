@@ -17,59 +17,35 @@ class IncidentCollection extends Mongo.Collection {
   }
 }
 
-Schema.SituationalNeedInstance = new SimpleSchema({
-  id: {
-    type: String
-  },
-  affordance: {
-    type: String,
-    optional: true
-  },
-  stopping_criteria : {
-    type: Schema.StoppingCritera,
-    optional: true
-  }
-});
 
-export const SituationalNeedInstance = new IncidentCollection('situationalneedinstance');
-SituationalNeedInstance.attachSchema(Schema.SituationalNeedInstance);
 
-Schema.IncidentPartition = new SimpleSchema({
+Schema.SituationNeed = new SimpleSchema({
   name:{
     type: String
   },
-  users: {
-    type: [String],
-    optional: true
-  }
-});
-export const IncidentPartitions = new IncidentCollection('incidentPartition');
-
-IncidentPartitions.attachSchema(Schema.IncidentPartition);
-
-Schema.NeedInstancesWithUsers = new SimpleSchema({
-  situational_need_name:{
-    type: String
-  },
-  id: {
-    type: String
-  },
   affordance: {
     type: String,
     optional: true
   },
-  stopping_criteria : {
+  contributionTemplate:{
+    type: String
+  },
+  softStoppingCriteria : {
     type: Schema.StoppingCritera,
     optional: true
   },
-  users: {
+  availableUsers: {
     type: [String],
-    optional: true
+    default: []
+  },
+  done: {
+    type: Boolean,
+    default: false
   }
 });
-export const NeedInstancesWithUsers = new IncidentCollection('needinstanceswithusers');
+export const SituationNeed = new IncidentCollection('situationneed');
 
-NeedInstancesWithUsers.attachSchema(Schema.NeedInstancesWithUsers);
+SituationNeed.attachSchema(Schema.SituationNeed);
 
 
 
@@ -107,24 +83,10 @@ Schema.Incident = new SimpleSchema({
     optional: true,
     blackbox: true
   },
-  userMappings:{
-    type: [Schema.IncidentPartition],
+  situationNeeds:{
+    type: [Schema.SitutaionNeed],
     optional: true,
-    blackbox: true
-  },
-  users_need_mapping: {
-    type: [Schema.NeedInstancesWithUsers],
-    optional: true
-  },
-
-
-  // "partitioned_users.$": {
-  //     type: Object
-  // },
-  // to_do: {
-  //   type: [Schema.IncidentPartition],
-  //   optional: true
-  // }
+  }
 });
 
 Incidents.attachSchema(Schema.Incident);

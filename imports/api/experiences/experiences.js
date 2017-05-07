@@ -29,11 +29,11 @@ Schema.StoppingCritera = new SimpleSchema({
   time: {
     type: String,
     optional: true
-  },
-  complete_instances:{
-    type: Number,
-    optional: true
   }
+  // complete_instances:{
+  //   type: Number,
+  //   optional: true
+  // }
 });
 
 export const StoppingCritera = new ExperiencesCollection('stoppingcritera');
@@ -47,7 +47,7 @@ Schema.SituationalNeedTemplate = new SimpleSchema({
   contributions:{
     type: [String]
   },
-  affordance: {
+  completionCallback:{
     type: String,
     optional: true
   }
@@ -56,8 +56,9 @@ Schema.SituationalNeedTemplate = new SimpleSchema({
 export const SituationalNeedTemplate = new ExperiencesCollection('situationalneedtemplate');
 SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
 
-Schema.NeedGroup = new SimpleSchema({
-  needTypes:{
+
+Schema.ContributionGroup = new SimpleSchema({
+  contributionTemplates:{
     type: [Schema.SituationalNeedTemplate],
   },
   stopping_criteria: {
@@ -65,33 +66,8 @@ Schema.NeedGroup = new SimpleSchema({
   }
 });
 
-export const NeedGroup = new ExperiencesCollection('needgroup');
-NeedGroup.attachSchema(Schema.NeedGroup);
-
-Schema.Partition = new SimpleSchema({
-  name:{
-    type: String
-  },
-  description: {
-    type:String,
-    optional: true
-  },
-  affordance: {
-    type: String,
-    optional: true
-  },
-  available_users: {
-    type: [String],
-    optional: true
-  },
-  max: {
-    type: Number,
-    optional: true
-  }
-});
-
-export const Partitions = new ExperiencesCollection('partitions');
-Partitions.attachSchema(Schema.Parition);
+export const ContributionGroup = new ExperiencesCollection('contributiongroup');
+ContributionGroup.attachSchema(Schema.ContributionGroup);
 
 
 export const Experiences = new ExperiencesCollection('experiences');
@@ -124,26 +100,6 @@ Schema.Experience = new SimpleSchema({
     optional: true
 
   },
-  modules: {
-    type: [String],
-    label: 'Integrated collective experience modules',
-    allowedValues: Schema.CEModules,
-    optional: true
-
-  },
-  requirements: {
-    type: [String],
-    label: 'User characteristic requirements',
-    allowedValues: Schema.CEQualifications,
-    optional: true
-
-  },
-  /**location: {
-    type: String,
-    label: 'Desired location of participants',
-    optional: true,
-    allowedValues: _.map(Schema.YelpCategories, category => category.alias)
-  },**/
   affordance: {
     type: String,
     label: 'Affordances of the experience',
@@ -159,76 +115,17 @@ Schema.Experience = new SimpleSchema({
     label: 'The current incident for this experience',
     optional: true
   },
-  duration: {
-    type: Number,
-    label: 'The duration this experience will run, in minutes',
-    optional: true,
-    //defaultValue: 120
-  },
-  /*radius: {
-    type: Number,
-    label: 'The estimated size of the location / radius around which to look for people',
-    optional: true
-  },**/
-  optIn: {
-    type: Boolean,
-    label: 'Subscription model of the experience',
-    optional: true
-  },
-  route: {
+  participateTemplate: {
     type: String,
-    label: 'Route to use in place of experience ID',
-    optional: true
   },
-  custom_notification: {
+  resultsTemplate: {
     type: String,
-    label: 'Notification function to be used instead of default',
-    optional: true
   },
-  // participate_template: {
-  //   type: String,
-  //   optional: true
-  // },
-  // results_template: {
-  //   type: String,
-  //   optional: true
-  // },
-  // parts:{
-  //   type: [Schema.Partition],
-  //   optional: true
-  // },
-//   turns: {  type: Array   }
-// "turns.$": { type: Array }
-// "turns.$.$": { type: Object }
-// "turns.$.$.user_id": { type: String }
-
-  needGroups: {
-    type: [Schema.NeedGroup], //Array, //[[Schema.SituationalNeed]],
+  contributionGroups: {
+    type: [Schema.ContributionGroup], //Array, //[[Schema.SituationalNeed]],
     optional: true, //TODO:
     //blackbox: true
   },
-  // "situation_groups.$":{
-  //   type: Array,
-  //   optional:true
-  // },
-  // "situation_groups.$.$":{
-  //   type: Object,
-  //   optional:true
-  // },
-  // "situation_groups.$.$.name":{
-  //   type: String,
-  // },
-  // "situation_groups.$.$.contributions":{
-  //   type: [String]
-  // },
-  // "situation_groups.$.$.affordance": {
-  //   type: String,
-  //   optional: true
-  // },
-  // "situation_groups.$.$.stopping_criteria": {
-  //   type: Schema.StoppingCritera,
-  //   optional: true,
-  // },
   notificationText : {
     type: String,
     optional: true
