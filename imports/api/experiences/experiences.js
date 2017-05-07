@@ -40,7 +40,7 @@ export const StoppingCritera = new ExperiencesCollection('stoppingcritera');
 StoppingCritera.attachSchema(Schema.StoppingCritera);
 
 
-Schema.SituationalNeed = new SimpleSchema({
+Schema.SituationalNeedTemplate = new SimpleSchema({
   name:{
     type: String
   },
@@ -50,28 +50,23 @@ Schema.SituationalNeed = new SimpleSchema({
   affordance: {
     type: String,
     optional: true
-  },
-  stopping_criteria : {
-    type: Schema.StoppingCritera,
-    optional: true,
   }
 });
 
-export const SituationalNeed = new ExperiencesCollection('situationalneed');
-SituationalNeed.attachSchema(Schema.SituationalNeed);
-
-
+export const SituationalNeedTemplate = new ExperiencesCollection('situationalneedtemplate');
+SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
 
 Schema.NeedGroup = new SimpleSchema({
-  situational_needs:{
-    type: [Schema.SituationalNeed],
+  needTypes:{
+    type: [Schema.SituationalNeedTemplate],
+  },
+  stopping_criteria: {
+    type: Schema.StoppingCritera
   }
 });
 
 export const NeedGroup = new ExperiencesCollection('needgroup');
 NeedGroup.attachSchema(Schema.NeedGroup);
-
-
 
 Schema.Partition = new SimpleSchema({
   name:{
@@ -207,33 +202,33 @@ Schema.Experience = new SimpleSchema({
 // "turns.$.$": { type: Object }
 // "turns.$.$.user_id": { type: String }
 
-  situation_groups: {
-    type: Array, //[[Schema.SituationalNeed]],
-    optional: true, //TODO: 
-    blackbox: true
+  needGroups: {
+    type: [Schema.NeedGroup], //Array, //[[Schema.SituationalNeed]],
+    optional: true, //TODO:
+    //blackbox: true
   },
-  "situation_groups.$":{
-    type: Array,
-    optional:true
-  },
-  "situation_groups.$.$":{
-    type: Object,
-    optional:true
-  },
-  "situation_groups.$.$.name":{
-    type: String,
-  },
-  "situation_groups.$.$.contributions":{
-    type: [String]
-  },
-  "situation_groups.$.$.affordance": {
-    type: String,
-    optional: true
-  },
-  "situation_groups.$.$.stopping_criteria": {
-    type: Schema.StoppingCritera,
-    optional: true,
-  },
+  // "situation_groups.$":{
+  //   type: Array,
+  //   optional:true
+  // },
+  // "situation_groups.$.$":{
+  //   type: Object,
+  //   optional:true
+  // },
+  // "situation_groups.$.$.name":{
+  //   type: String,
+  // },
+  // "situation_groups.$.$.contributions":{
+  //   type: [String]
+  // },
+  // "situation_groups.$.$.affordance": {
+  //   type: String,
+  //   optional: true
+  // },
+  // "situation_groups.$.$.stopping_criteria": {
+  //   type: Schema.StoppingCritera,
+  //   optional: true,
+  // },
   notificationText : {
     type: String,
     optional: true

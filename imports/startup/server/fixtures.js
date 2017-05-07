@@ -30,6 +30,7 @@ Meteor.startup(() => {
     Incidents.remove({});
   }
   if (Meteor.users.find().count() === 0) {
+  //if(true){
     const users = [
       {email: 'gotjennie@gmail.com', password: 'password'},
       {email: 'a@gmail.com', password: 'password'},
