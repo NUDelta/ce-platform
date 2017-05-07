@@ -3,6 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 import { Experiences } from './experiences.js';
+import { Schema } from '../schema.js';
 
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({
@@ -76,5 +77,50 @@ export const removeExperience = new ValidatedMethod({
   }).validator(),
   run({ experienceId }) {
     Experiences.remove(experienceId);
+  }
+});
+
+export const createExperience = new ValidatedMethod({
+  name: 'api.createExperience',
+  validate: new SimpleSchema({
+    name:{
+      type: String
+    },
+    description: {
+      type: String,
+      label: 'Experience description',
+      optional: true
+    },
+    participateTemplate:{
+      type: String
+    },
+    resultsTemplate:{
+      type: String
+    },
+    contributionGroups: {
+      type: [Schema.ContributionGroup]
+    },
+    notificationText: {
+      type: String
+    }
+  }).validator(),
+  run({name, description, participateTemplate, resultsTemplate, contributionGroups, notificationText}) {
+    const experience = {
+        name: name,
+        description: description,
+        participateTemplate: participateTemplate,
+        resultsTemplate: resultsTemplate,
+        contributionGroups: contributionGroups,
+        notificationText: notificationText
+    }
+    var id = Experiences.insert(experience, (err, docs) => {
+      if (err) {
+        console.log(err);
+      } else{
+        console.log(docs);
+      }
+    });
+    console.log("Experience created" + id);
+    return id;
   }
 });

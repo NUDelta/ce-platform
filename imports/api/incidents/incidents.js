@@ -36,11 +36,11 @@ Schema.SituationNeed = new SimpleSchema({
   },
   availableUsers: {
     type: [String],
-    default: []
+    defaultValue: []
   },
   done: {
     type: Boolean,
-    default: false
+    defaultValue: false
   }
 });
 export const SituationNeed = new IncidentCollection('situationneed');
@@ -65,18 +65,6 @@ Schema.Incident = new SimpleSchema({
     type: String,
     label: 'Date of incident launch'
   },
-  launcher: {
-    type: String,
-    label: 'Launcher user id',
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true
-  },
-  latestSubmission: {
-    type: String,
-    label: 'Submission id of latest submission',
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true
-  },
   data: {
     type: Object,
     label: 'Arbitrary data for custom experiences',
@@ -84,7 +72,8 @@ Schema.Incident = new SimpleSchema({
     blackbox: true
   },
   situationNeeds:{
-    type: [Schema.SitutaionNeed],
+    type: [Schema.SitutationNeed],
+    defaultValue: [],
     optional: true,
   }
 });

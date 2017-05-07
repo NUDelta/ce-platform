@@ -90,6 +90,28 @@ export const getNumberOfUser = Meteor.methods({
 
 });
 
+export const createIncident = new ValidatedMethod({
+  name: 'api.createIncident',
+  validate: new SimpleSchema({
+    experienceId: {
+      type: String
+    }
+  }).validator(),
+  run({experienceId}) {
+    var experience = Experiences.findOne({_id:experienceId});
+    console.log(experience);
+    const incidentId = Incidents.insert({
+      date: Date.parse(new Date()),
+      name: experience.name,
+      experienceId: experience._id,
+    },  (err, docs) => {
+      if (err) { console.log("errorrr", err); }
+      else { console.log(docs)}
+    });
+    Experiences.update( experience._id, { $set: { activeIncident: incidentId } });
+    return incidentId;
+  }
+});
 
 // export const removeUser = Meteor.methods({
 // 'incident.getNumberOfUser'({userId, inc_id}){

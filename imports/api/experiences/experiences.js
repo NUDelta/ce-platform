@@ -21,7 +21,7 @@ class ExperiencesCollection extends Mongo.Collection {
   }
 }
 
-Schema.StoppingCritera = new SimpleSchema({
+Schema.StoppingCriteria = new SimpleSchema({
   total:{
     type: Number,
     optional: true
@@ -36,8 +36,8 @@ Schema.StoppingCritera = new SimpleSchema({
   // }
 });
 
-export const StoppingCritera = new ExperiencesCollection('stoppingcritera');
-StoppingCritera.attachSchema(Schema.StoppingCritera);
+export const StoppingCriteria = new ExperiencesCollection('stoppingCriteria');
+StoppingCriteria.attachSchema(Schema.StoppingCriteria);
 
 
 Schema.SituationalNeedTemplate = new SimpleSchema({
@@ -61,8 +61,8 @@ Schema.ContributionGroup = new SimpleSchema({
   contributionTemplates:{
     type: [Schema.SituationalNeedTemplate],
   },
-  stopping_criteria: {
-    type: Schema.StoppingCritera
+  stoppingCriteria: {
+    type: Schema.StoppingCriteria
   }
 });
 
@@ -82,32 +82,9 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Experience name',
   },
-  author: {
-    type: String,
-    label: 'Author user id',
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true
-  },
   description: {
     type: String,
     label: 'Experience description',
-    optional: true
-
-  },
-  startText: {
-    type: String,
-    label: 'Experience starting email text',
-    optional: true
-
-  },
-  affordance: {
-    type: String,
-    label: 'Affordances of the experience',
-    optional: true
-  },
-  available_users:{
-    type: [String],
-    label: 'Users ids for those who can participate',
     optional: true
   },
   activeIncident: {
@@ -123,21 +100,13 @@ Schema.Experience = new SimpleSchema({
   },
   contributionGroups: {
     type: [Schema.ContributionGroup], //Array, //[[Schema.SituationalNeed]],
-    optional: true, //TODO:
     //blackbox: true
   },
   notificationText : {
     type: String,
     optional: true
   }
-  /*
-   * start condition
-   * end condition
-   * schedule
-   */
 });
-
-
 
 
 Experiences.attachSchema(Schema.Experience);

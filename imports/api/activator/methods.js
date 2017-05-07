@@ -148,50 +148,6 @@ function getUnfinsihedNeeds(results, experience, incident){
   return unfinished;
 }
 
-export const makeExperience = new ValidatedMethod({
-  name: 'api.makeExperience',
-  validate: new SimpleSchema({
-    name:{
-      type: String
-    }
-  }).validator(),
-  run({name}){
-    var redNeed = {
-      "name" : "red",
-      "affordance" : "grocery",
-      "contributions" : [ "photo" ],
-       "stopping_criteria" : {"total" : 1 }
-     };
-     var whiteNeed = {
-       "name" : "white",
-       "affordance" : "clouds",
-       "contributions" : [ "photo" ],
-        "stopping_criteria" : {"total" : 1 }
-      };
-      var blueNeed = {
-        "name" : "blue",
-        "affordance" : "beaches",
-        "contributions" : [ "photo" ],
-         "stopping_criteria" : {"total" : 1 }
-       };
-
-    const experience = {
-        name: 'FLAGTEST',
-        notificationText: "blach",
-        situation_groups: [ [blueNeed], [whiteNeed], [redNeed] ],
-    }
-    Experiences.insert(experience, (err, docs) => {
-      if (err) {
-        console.log(err);
-      }else{
-        console.log(docs);
-      }
-    });
-    console.log("Hiellllloooo test tes tes");
-
-  }
-});
-
 export const makeIncident = new ValidatedMethod({
   name: 'api.makeIncident',
   validate: new SimpleSchema({
@@ -306,65 +262,35 @@ export const test = new ValidatedMethod({
 
 export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',
-  validate: new SimpleSchema({
-    experienceId:{
-      type: String
-    }
-  }).validator(),
-  run({experienceId}){
-    console.log("starting American Flag")
-    var mainGoal = function(results, experience){
-      var paritions = experience.parts;
-      console.log("checking main goal to see if we have met our main goal")
-      return (getResultsByTag(results, "blue").length >= getP(paritions, "blue").max && (getResultsByTag(results, "red").length  >= getP(paritions, "red").max) && (getResultsByTag(results, "white").length  >= getP(paritions, "white").max));
+  validate: null,
+  run(){
+    var redTemplate = {
+      "name" : "red",
+      "contributions" : ["photo"],
     };
-    var miniGoal = function(part_name, results, experience){
-      console.log("checking mini goal for " + part_name)
-      return getResultsByTag(results, part_name).length >= getP(experience.parts, part_name).max;
+    var whiteTemplate = {
+     "name" : "white",
+     "contributions" : ["photo"],
     };
-
-    console.log("made it this far", experienceId, this.userId);
-
-    var incidentId = Meteor.call('api.createIncident', {experience_id: experienceId, launcher_id: this.userId})
-    console.log("inc id is now ", incidentId)
-    interval =  Meteor.setInterval(function(){
-      var results = Images.find({incidentId: incidentId}).fetch();
-
-      experience = Experiences.findOne({_id:experienceId});
-
-      if(mainGoal(results, experience)){
-        console.log("DONE WE FINISHED!")
-        Meteor.call("stop", {experienceId: experienceId})
-        return true;
-      }
-      console.log("we have not met main goal so lets go!");
-
-      var parts = experience.parts;
-      var available_users = [];
-      var incident = Incidents.findOne({_id: incidentId});
-      //TODO: if a user looses an affordance, their activeIncident
-      for(var i = 0; i < parts.length; i++){
-        if(miniGoal(parts[i].name, results, experience) == false){
-          console.log("still looking for " + parts[i].name);
-          removeOldUsers(incident.userMappings[i].users, parts[i].affordance, experienceId)
-          var possible_users = queryFor(parts[i].affordance)
-          available_users.push({"name": parts[i].name, "users": usersAvalibleNow(possible_users)});
-        }else{
-          console.log("met our mini goal, so not looking at " + parts[i].name);
-          //available_users.push({"name": parts[i].name, "users": []});
-
-        }
-      }
-
-      var userMappings = notifyUsersEvenly(available_users);
-
-      Meteor.call("notify", {userMappings, experience, incidentId});
-
-    }, 10000, true)
+    var blueTemplate = {
+      "name" : "blue",
+      "contributions" : ["photo"],
+    };
+    const experienceId = Meteor.call("api.createExperience", {
+      name: "FLAGTEST",
+      description: "Build a flag",
+      participateTemplate: "photoUpload", //pass in: user
+      resultsTemplate: "collage",
+      notificationText: "blah",
+      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 2}},
+                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 50}},
+                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 100}}]
+    })
+    const incidentId = Meteor.call("api.createIncident", {
+      experienceId: experienceId
+    });
   }
 });
-
-
 
 export const notify = new ValidatedMethod({
   name: 'notify',
@@ -492,38 +418,6 @@ function notifyUsersEvenly(available_users){
     return usersToNotify;
   }
 
-  export const createIncident = new ValidatedMethod({
-    name: 'api.createIncident',
-    validate: new SimpleSchema({
-      experience_id: {
-        type: String
-      },
-      launcher_id: {
-        type: String
-      }
-    }).validator(),
-    run({experience_id, launcher_id}) {
-      var experience = Experiences.findOne({_id:experience_id});
-      console.log("THE experimence is", experience)
-      var pu = [];
-      for(var i =0; i < experience.parts.length; i++){
-        pu.push({"name": experience.parts[i].name, "users": []});
-      }
-      const incidentId = Incidents.insert({
-        date: Date.parse(new Date()),
-        name: experience.name,
-        experienceId: experience._id,
-        launcher: launcher_id,
-        userMappings: pu
-      },  (err, docs) => {
-        if (err) { console.log("errorrr", err); }
-        else {}
-      });
-      Experiences.update( experience._id, { $set: { activeIncident: incidentId } });
-      return incidentId;
-    }
-  });
-
 
   WAIT_TIME = 180000;
 
@@ -538,7 +432,6 @@ function removeOldUsers(users, affordance, experienceId){
       console.log("yo doesn't contain affordance anymore")
       userIdsToRemove.push(user);
     }
-
   });
 
 
