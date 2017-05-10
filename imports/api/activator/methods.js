@@ -289,6 +289,26 @@ export const americanFlag = new ValidatedMethod({
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
     });
+
+    var blueCASitutationNeed = {
+      "name": "california",
+      "contributionTemplate" : blueTemplate,
+      "affordance": "beaches && california",
+      "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    };
+    var redSitutationNeed = {
+      "name": "redNeed",
+      "contributionTemplate" : redTemplate,
+      "affordance": "grocery_store",
+      "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    };
+    var whiteSitutationNeed = {
+      "name": "whiteNeed",
+      "contributionTemplate" : whiteTemplate,
+      "affordance": "clouds",
+      "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    };
+
   }
 });
 
