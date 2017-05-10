@@ -83,7 +83,8 @@ Template.cameraUpload.events({
                 lat: location.lat,
                 lng: location.lng,
                 location: place,
-                details:dets
+                contributionTemplate: instance.data.contributionTemplate,
+                situationNeed: instance.data.situationNeed
               }
             }
           );

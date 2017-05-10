@@ -109,6 +109,18 @@ function greedyOrganization(available_users){
     return usersToNotify;
 }
 
+function checkNeedsSoftFinished(results, situationNeed){
+    isSoftFinished = false;
+    if (situationNeed.done == true){
+      return isSoftFinished = true;
+    }
+    var soft_stopping_criteria = situationNeed.softStoppingCriteria
+    if("total" in soft_stopping_criteria){
+      var numResults = results.filter(function(x){
+        return results.details == situationNeed.name}).length;
+    }
+}
+
 function getUnfinsihedNeeds(results, experience, incident){
   var unfinished = [];
   experience.contributionGroups.forEach((group)=>{
@@ -253,7 +265,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "whiteNeed",
         "contributionTemplate" : "white",
         "affordance": "clear",
-        //"softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -262,7 +274,7 @@ export const americanFlag = new ValidatedMethod({
           "name": "redNeed",
           "contributionTemplate" : "red",
           "affordance": "grocery",
-          //"softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
         }
     });
 
@@ -272,7 +284,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "california",
         "contributionTemplate" : "blue",
         "affordance": "beaches",
-        //"softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
 

@@ -24,7 +24,7 @@ import { getNumberOfUser } from '../../api/incidents/methods.js';
 
 Template.registerHelper('camera_options', (detail) => {
   console.log("IN camera", detail)
-  return {"camera": true, "text": false, "details":detail}
+  return {"camera": true, "text": false, "situtionNeed":detail, "contributionTemplate": asdf }
 });
 
 

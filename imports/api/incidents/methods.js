@@ -99,14 +99,14 @@ export const createIncident = new ValidatedMethod({
   }).validator(),
   run({experienceId}) {
     var experience = Experiences.findOne({_id:experienceId});
-    console.log(experience);
+    console.log("experience", experience);
     const incidentId = Incidents.insert({
       date: Date.parse(new Date()),
       name: experience.name,
       experienceId: experience._id,
     },  (err, docs) => {
       if (err) { console.log("errorrr", err); }
-      else { console.log(docs)}
+      else { console.log("incident id", docs)}
     });
     Experiences.update( experience._id, { $set: { activeIncident: incidentId } });
     return incidentId;
@@ -131,6 +131,7 @@ export const addSituationNeeds = new ValidatedMethod({
         name:need.name,
         affordance:need.affordance,
         contributionTemplate:need.contributionTemplate,
+        softStoppingCriteria:need.softStoppingCriteria,
         availableUsers: [],
         done: false
         }
