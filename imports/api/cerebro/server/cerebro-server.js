@@ -134,26 +134,24 @@ CerebroServer = class CerebroServer extends CerebroCore {
     var incidentId = Experiences.findOne({_id:experienceId}).activeIncident;
     console.log("in inc id, ",incidentId )
 
-    var userMappings = Incidents.findOne({_id:incidentId}).userMappings;
-    console.log("in inc usermappings, ",userMappings )
+    var situationNeeds = Incidents.findOne({_id:incidentId}).situationNeeds;
+    console.log("in inc usermappings, ", situationNeeds )
 
     userIds.forEach((id)=>{
-      for(index in userMappings){
-        if(userMappings[index].users.indexOf(id) > -1){
+      for(index in situationNeeds){
+        if(situationNeeds[index].availableUsers.indexOf(id) > -1){
           console.log("found the user Id", id)
-          var i = userMappings[index].users.indexOf(id);
+          var i = situationNeeds[index].availableUsers.indexOf(id);
           console.log(i)
-          userMappings[index].users.splice(i, 1)
-          console.log("we hve updadate an index", userMappings[index])
+          situationNeeds[index].availableUsers.splice(i, 1)
         }
       }
     })
-    console.log("userMappings is now", userMappings)
     Incidents.update({
       _id: incidentId
     }, {
       $set: {
-        'userMappings': userMappings
+        'situationNeeds': situationNeeds
       }
     }, (err, docs) => {
       if (err) { console.log(err); }else{ console.log("worked", docs)}

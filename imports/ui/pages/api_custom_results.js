@@ -26,8 +26,8 @@ Template.api_custom_results.helpers({
   },
   template_name() {
     const instance = Template.instance();
-    console.log("temp name:", instance.state.get('experience').name.toLowerCase()+"_results");
-    return instance.state.get('experience').name.toLowerCase()+"_results";
+    console.log("temp name:", instance.state.get('experience').resultsTemplate);
+    return instance.state.get('experience').resultsTemplate;
   },
 
 });

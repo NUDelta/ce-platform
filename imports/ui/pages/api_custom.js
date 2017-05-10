@@ -35,20 +35,21 @@ Template.api_custom.helpers({
     var userTag;
     var incident = instance.state.get('incident');
 
-    incident.userMappings.forEach((uM)=>{
-      if(uM.users.includes(Meteor.userId())){
-        userTag = uM.name;
+    incident.situationNeeds.forEach((sitNeed)=>{
+      if(sitNeed.availableUsers.includes(Meteor.userId())){
+        userTag = sitNeed.contributionTemplate;
       }
     });
 
     console.log(Meteor.userId())
     console.log("user group is" + userTag);
+    console.log(incident, instance.state.get('experience'))
     return {"incident": incident, "experience": instance.state.get('experience'), "user_mapping": userTag }
   },
   template_name() {
     const inst = Template.instance();
-    console.log("temp name:", inst.state.get('experience').name.toLowerCase());
-    return inst.state.get('experience').name.toLowerCase();
+    console.log("temp name:", inst.state.get('experience').participateTemplate);
+    return inst.state.get('experience').participateTemplate;
   },
 
 });

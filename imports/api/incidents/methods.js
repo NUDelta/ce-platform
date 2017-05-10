@@ -113,6 +113,41 @@ export const createIncident = new ValidatedMethod({
   }
 });
 
+export const addSituationNeeds = new ValidatedMethod({
+  name: 'api.addSituationNeeds',
+  validate: new SimpleSchema({
+    incidentId:{
+      type: String
+    },
+    need:{
+      type: Schema.SituationNeed
+    }
+  }).validator(),
+  run({incidentId, need}){
+    var incident = Incidents.findOne(incidentId);
+
+    Incidents.update({_id: incidentId},
+      {$push: { situationNeeds: {
+        name:need.name,
+        affordance:need.affordance,
+        contributionTemplate:need.contributionTemplate,
+        availableUsers: [],
+        done: false
+        }
+      }
+      },(err, docs) => {
+      if (err) {
+        console.log(err);
+      }else{
+        console.log(docs);
+      }
+    });
+
+    console.log("needs added!");
+
+  }
+});
+
 // export const removeUser = Meteor.methods({
 // 'incident.getNumberOfUser'({userId, inc_id}){
 //     console.log("in here pepele", inc_id);

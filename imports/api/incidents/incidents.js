@@ -21,32 +21,34 @@ class IncidentCollection extends Mongo.Collection {
 
 Schema.SituationNeed = new SimpleSchema({
   name:{
-    type: String
+    type: String,
   },
   affordance: {
     type: String,
     optional: true
   },
   contributionTemplate:{
-    type: String
+    type: String,
+    optional: true
   },
   softStoppingCriteria : {
-    type: Schema.StoppingCritera,
+    type: Schema.StoppingCriteria,
     optional: true
   },
   availableUsers: {
     type: [String],
-    defaultValue: []
+    defaultValue: [],
+    optional: true
   },
   done: {
     type: Boolean,
-    defaultValue: false
+    defaultValue: false,
+    optional: true
   }
 });
 export const SituationNeed = new IncidentCollection('situationneed');
 
 SituationNeed.attachSchema(Schema.SituationNeed);
-
 
 
 export const Incidents = new IncidentCollection('incidents');
@@ -72,7 +74,7 @@ Schema.Incident = new SimpleSchema({
     blackbox: true
   },
   situationNeeds:{
-    type: [Schema.SitutationNeed],
+    type: [Schema.SituationNeed],
     defaultValue: [],
     optional: true,
   }

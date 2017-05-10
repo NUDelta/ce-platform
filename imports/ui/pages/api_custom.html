@@ -1,16 +1,17 @@
 <template name="api_custom">
   {{#if Template.subscriptionsReady}}
+    HIHIHI
+    {{data2pass}}
       {{ > Template.dynamic template=template_name data=data2pass}}
 
-      {{findUserNumber }}
   {{/if}}
 </template>
 
 
-<template name="flag">
-  "HI"
-<p> Take a picture of something {{this.user_mapping}} to help us build the French Flag! </p>
-{{ > Template.dynamic template="cameraUpload" data=(camera_options this.user_mapping)}}
+<template name="americanFlag">
+  "hello dummy"
+  <p> Take a picture of something {{this.user_mapping}} to help us build the French Flag! </p>
+  {{ > Template.dynamic template="cameraUpload" data=(camera_options this.user_mapping)}}
 
 
 
