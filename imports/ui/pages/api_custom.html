@@ -11,7 +11,9 @@
 <template name="americanFlag">
   "hello dummy"
   <p> Take a picture of something {{this.user_mapping}} to help us build the French Flag! </p>
-  {{ > Template.dynamic template="cameraUpload" data=(camera_options this.user_mapping)}}
+  {{this.situationNeed}} {{this.contributionTemplate}}
+  {{camera_options this.situationNeed this.contributionTemplate}}
+  {{ > Template.dynamic template="cameraUpload" data=(camera_options this.situationNeed this.contributionTemplate)}}
 
 
 

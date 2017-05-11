@@ -70,10 +70,9 @@ Template.cameraUpload.events({
           alert(err);
         } else {
           var dets = "";
-          if(instance.data.details){
-            dets = instance.data.details;
-            console.log("dets", dets)
-          }
+          console.log(instance.data.contributionTemplate)
+          console.log(instance.data.situationNeed)
+
           Images.update(imageFile._id,
             {
               $set: {

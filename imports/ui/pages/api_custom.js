@@ -22,9 +22,9 @@ import { getNumberOfUser } from '../../api/incidents/methods.js';
 
 
 
-Template.registerHelper('camera_options', (detail) => {
-  console.log("IN camera", detail)
-  return {"camera": true, "text": false, "situtionNeed":detail, "contributionTemplate": asdf }
+Template.registerHelper('camera_options', (situationNeed, contributionTemplate) => {
+  console.log("got arguetns", situationNeed, contributionTemplate)
+  return {"camera": true, "text": false, "situationNeed":situationNeed, "contributionTemplate": contributionTemplate }
 });
 
 
@@ -37,14 +37,13 @@ Template.api_custom.helpers({
 
     incident.situationNeeds.forEach((sitNeed)=>{
       if(sitNeed.availableUsers.includes(Meteor.userId())){
-        userTag = sitNeed.contributionTemplate;
+        contributionTemplate = sitNeed.contributionTemplate;
+        situationNeed = sitNeed.name;
       }
     });
 
     console.log(Meteor.userId())
-    console.log("user group is" + userTag);
-    console.log(incident, instance.state.get('experience'))
-    return {"incident": incident, "experience": instance.state.get('experience'), "user_mapping": userTag }
+    return {"incident": incident, "experience": instance.state.get('experience'), "situationNeed": situationNeed, "contributionTemplate": contributionTemplate }
   },
   template_name() {
     const inst = Template.instance();

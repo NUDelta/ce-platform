@@ -22,12 +22,12 @@ Meteor.startup(() => {
   SyncedCron.start();
   if(false){
     Meteor.users.remove({});
-    //Experiences.remove({});
+    Experiences.remove({});
     Locations.remove({});
     Images.remove({});
     TextEntries.remove({});
     ParticipationLocations.remove({});
-    //Incidents.remove({});
+    Incidents.remove({});
   }
   if (Meteor.users.find().count() === 0) {
   //if(true){
@@ -73,8 +73,8 @@ Meteor.startup(() => {
       }
     ];
 
-    experiences.forEach(experience => Experiences.insert(experience));
-    log.info(`Populated ${ Experiences.find().count() } experiences`);
+    //experiences.forEach(experience => Experiences.insert(experience));
+    //log.info(`Populated ${ Experiences.find().count() } experiences`);
   }
 });
 

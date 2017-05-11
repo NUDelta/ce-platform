@@ -41,7 +41,7 @@ export const leggo = new ValidatedMethod({
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
 
-      var wipInstanceNeeds = getUnfinsihedNeeds(results, experience, incident);
+      var wipInstanceNeeds = getUnfinsihedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
         console.log("DONE WE FINISHED!")
         Meteor.call("stop", {experienceId: experienceId})
@@ -109,58 +109,105 @@ function greedyOrganization(available_users){
     return usersToNotify;
 }
 
-function checkNeedsSoftFinished(results, situationNeed){
-    isSoftFinished = false;
-    if (situationNeed.done == true){
-      return isSoftFinished = true;
+
+
+//call callback
+//remove incident from users
+//            Cerebro.removeActiveExperiences(need.availableUsers, experience._id);
+export const setNeedAsDone = new ValidatedMethod({
+  name: 'api.setNeedAsDone',
+  validate: new SimpleSchema({
+    incidentId:{
+      type: String
+    },
+    situationNeed:{
+      type: Schema.SituationNeed
     }
-    var soft_stopping_criteria = situationNeed.softStoppingCriteria
+  }).validator(),
+  run({incidentId, situationNeed}){
+    var experienceId = Incident.find(incidentId).experienceId;
+    Cerebro.removeActiveExperiences(situationNeed.availableUsers, experience._id);
+
+    Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
+      {$set :
+        { 'situationNeeds.$.done':  true }
+      }, (err, docs) => {
+        if (err) { console.log(err); } else{
+          console.log("docs", docs);
+        }
+    });
+    console.log("helo");
+  }
+});
+
+function checkIfSituationNeedFinished(results, situationNeed){
+    var soft_stopping_criteria = situationNeed.softStoppingCriteria;
+    if(results.length == 0){
+      return false;
+    }
+    var incidentId = results[0].incidentId;
+    if(situationNeed.done == true){
+      return true;
+    }
     if("total" in soft_stopping_criteria){
-      var numResults = results.filter(function(x){
-        return results.details == situationNeed.name}).length;
+      var numFinished = results.filter(function(n){
+          return situationNeed == situationNeed.name;
+        }).length;
+      if (situationNeed.done == false && numFinished > soft_stopping_criteria["total"]){
+          Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed})
+          return true;
+      }
     }
+
+    return false;
 }
 
-function getUnfinsihedNeeds(results, experience, incident){
+function checkIfContributionFinished(incident, results, contributionTemplate){
+  var numDone = results.filter(function(r){
+    return r.contributionTemplate == contributionTemplate.name
+  }).length;
+
+  var notFinished = [];
+
+  var situationNeeds = incident.situationNeeds.filter(function(x){
+    return x.contributionTemplate == contributionTemplate.name});
+
+  situationNeeds.forEach((need)=>{
+    if(!checkIfSituationNeedFinished(results, need)){
+      notFinished.push(need)
+    }
+  });
+
+  return {numFinished: numDone, notFinished: notFinished};
+}
+
+function checkIfGroupFinished(incident, results, group){
+  var notFinished = []
+  var numFinished = 0;
+
+  group.contributionTemplates.forEach((contributionTemplate)=>{
+    var info = checkIfContributionFinished(incident, results, contributionTemplate);
+    numFinished += info.numFinished;
+    notFinished = notFinished.concat(info.notFinished);
+
+  });
+
+  if(numFinished >= group.stoppingCriteria.total){
+    return []
+  }else{
+    if(notFinished == []){
+      log("All situation needs are done but the group isn't ahhh what to do here!?");
+    }
+    return notFinished;
+  }
+}
+
+function getUnfinsihedNeeds(incident, results, experience){
   var unfinished = [];
   experience.contributionGroups.forEach((group)=>{
-    console.log("group", group);
-    group.contributionTemplates.forEach((contrib)=>{
-      console.log("contribuationTempate", contrib)
-      var stopping_criteria = group.stoppingCriteria;
-      if("total" in stopping_criteria){
-        var total = results.filter(function(x){
-          console.log(x.details, contrib.name)
-          return x.details == contrib.name}).length;
-        console.log("we have ", total + contrib.name + " results so far")
-        if(total < stopping_criteria.total){
-          var matchingInstances = incident.situationNeeds.filter(function(x){
-            return x.contributionTemplate == contrib.name});
-          matchingInstances.forEach((instance)=>{
-            if(instance.stoppingCriteria == null){
-              unfinished.push(instance)
-            }
-            else if("total" in instance.stoppingCriteria){
-              var total = results.filter(function(x){ return x.id == instance.id}).length;
-              if(total < instance.stoppingCriteria.total){
-                unfinished.push(instance)
-              }
-            }
-          });
-        }else{
-          var needsToRemove = incident.situationNeeds.filter(function(x){
-            console.log(x.contributionTemplate, contrib.name)
-            return x.contributionTemplate == contrib.name});
-          console.log("needs to remove", needsToRemove);
-          needsToRemove.forEach((need)=>{
-            console.log('removing need', need)
-            Cerebro.removeActiveExperiences(need.availableUsers, experience._id);
-          });
-        }
-      }
-    });
+    console.log("results are ", results)
+    unfinished = unfinished.concat(checkIfGroupFinished(incident, results, group));
   });
-  console.log(unfinished)
   return unfinished;
 }
 

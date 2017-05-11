@@ -61,6 +61,10 @@ Schema.SituationNeed = new SimpleSchema({
     type: Boolean,
     defaultValue: false,
     optional: true
+  },
+  callback: {
+    type: String,
+    optional: true
   }
 });
 export const SituationNeed = new IncidentCollection('situationneed');
