@@ -8,9 +8,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
-
 import '../components/camera_upload.js';
-
 
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Images } from '../../api/images/images.js';
@@ -20,37 +18,65 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 import { CONFIG } from '../../api/config.js'
 import { getNumberOfUser } from '../../api/incidents/methods.js';
 
-
-
-Template.registerHelper('camera_options', (situationNeed, contributionTemplate) => {
-  console.log("got arguetns", situationNeed, contributionTemplate)
-  return {"camera": true, "text": false, "situationNeed":situationNeed, "contributionTemplate": contributionTemplate }
+Template.registerHelper('camera_options', (situationNeedName, contributionTemplate) => {
+  console.log("got arguments", situationNeedName, contributionTemplate)
+  return {"camera": true,
+          "text": false,
+          "situationNeed":situationNeedName,
+          "contributionTemplate": contributionTemplate }
 });
 
 
+Template.registerHelper('storyContribs', (contributions)=> {
+  var dict = {camera: 0, text: 0};
+  numPhotos = 0;
+  numText = 0;
+  for (var key in contributions) {
+    var value = contributions[key];
+    if (value == "Image") {
+      numPhotos++;
+      dict.camera = numPhotos;
+    }
+    if (value == "String"){
+      numText++;
+      dict.text = numText;
+    }
+  }
+  console.log(dict)
+  return dict;
+});
 
 Template.api_custom.helpers({
   data2pass(){
-    const instance = Template.instance();
-    var userTag;
-    var incident = instance.state.get('incident');
-
+    const inst = Template.instance();
+    var incident = inst.state.get('incident');
+    // TODO: fix, dont want to get by experience
+    var exp = inst.state.get('experience')
+    aContribTemplate = exp.contributionGroups[0].contributionTemplates[0];
+    contributions = aContribTemplate.contributions;
+    var illustration = contributions.illustration;
+    var nextSentence = contributions.nextSentence;
+    var nextAffordance = contributions.nextAffordance;
     incident.situationNeeds.forEach((sitNeed)=>{
       if(sitNeed.availableUsers.includes(Meteor.userId())){
+        situationNeedName = sitNeed.name;
         contributionTemplate = sitNeed.contributionTemplate;
-        situationNeed = sitNeed.name;
+        affordance = sitNeed.affordance
       }
     });
-
-    console.log(Meteor.userId())
-    return {"incident": incident, "experience": instance.state.get('experience'), "situationNeed": situationNeed, "contributionTemplate": contributionTemplate }
+    return {"incident": incident,
+            "situationNeedName": situationNeedName,
+            "contributionTemplate": contributionTemplate,
+            "affordance": affordance,
+            "contributions": contributions,
+            "illustration": illustration,
+            "nextAffordance": nextAffordance}
   },
   template_name() {
     const inst = Template.instance();
     console.log("temp name:", inst.state.get('experience').participateTemplate);
     return inst.state.get('experience').participateTemplate;
-  },
-
+  }
 });
 
 Template.api_custom.onCreated(function() {

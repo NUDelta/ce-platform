@@ -14,8 +14,6 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
-
-
 Template.api_custom_results.helpers({
   data2pass(){
     const instance = Template.instance();
