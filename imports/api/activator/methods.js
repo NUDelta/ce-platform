@@ -52,6 +52,8 @@ export const leggo = new ValidatedMethod({
       console.log("we have not met main goal so lets go!");
 
       var available_users = {};
+      hello= 5;
+
       wipInstanceNeeds.forEach((need)=>{
         //removeOldUsers(need.availableUsers, need.affordance, experienceId)
         var possible_users = queryFor([need.affordance]);
@@ -311,7 +313,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "whiteNeed",
         "contributionTemplate" : "white",
-        "affordance": "clear",
+        "affordance": "clouds",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });

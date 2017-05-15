@@ -27,12 +27,12 @@ export const findAffordances = new ValidatedMethod({
     request(url, Meteor.bindEnvironment(function (error, response, body) {
         if (!error && response.statusCode == 200) {
             let res = JSON.parse(body);
-            Locations.update({uid: uid}, { $set: {
-              affordances : res //updated_affordances
-            }}, (err, docs) => {
-              if (err) { console.log(err); }
-              else {     console.log("updating affordacnes for " + uid); }
-            });
+            // Locations.update({uid: uid}, { $set: {
+            //   affordances : res //updated_affordances
+            // }}, (err, docs) => {
+            //   if (err) { console.log(err); }
+            //   else {     console.log("updating affordacnes for " + uid); }
+            // });
           }
       }));
     //update_available();
