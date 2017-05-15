@@ -31,6 +31,16 @@ Template.cameraUpload.onCreated(function() {
   permissions = this.data;
 });
 
+Template.cameraUpload.helpers({
+  loopCount: function(count){
+    var countArr = [];
+    for (var i=0; i<count; i++){
+      countArr.push({});
+    }
+    return countArr;
+  }
+});
+
 Template.cameraUpload.events({
   'submit form'(event, instance) {
     console.log("cameraUpload");
@@ -50,6 +60,8 @@ Template.cameraUpload.events({
     const experienceId = incident.experienceId;
 
     const experienceRoute = incident.name;
+
+    // SUBMISSION.INSERT
 
     if (instance.data.text) {
       TextEntries.insert({

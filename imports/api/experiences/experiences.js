@@ -45,7 +45,8 @@ Schema.SituationalNeedTemplate = new SimpleSchema({
     type: String
   },
   contributions:{
-    type: [String]
+    type: Object, //{String: String}
+    blackbox: true
   },
   completionCallback:{
     type: String,

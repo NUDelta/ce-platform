@@ -41,7 +41,7 @@ export const leggo = new ValidatedMethod({
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
 
-      var wipInstanceNeeds = getUnfinsihedNeeds(incident, results, experience);
+      var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
         console.log("DONE WE FINISHED!")
         Meteor.call("stop", {experienceId: experienceId})
@@ -124,6 +124,9 @@ export const setNeedAsDone = new ValidatedMethod({
     },
     situationNeed:{
       type: Schema.SituationNeed
+    },
+    contributionTemplate:{
+      type: Schema.SituationalNeedTemplate
     }
   }).validator(),
   run({incidentId, situationNeed}){
@@ -138,11 +141,14 @@ export const setNeedAsDone = new ValidatedMethod({
           console.log("docs", docs);
         }
     });
+    if (contributionTemplate.completionCallback != null) {
+      eval("(" + contributionTemplate.completionCallback + ")(situationNeed)");
+    }
     console.log("helo");
   }
 });
 
-function checkIfSituationNeedFinished(results, situationNeed){
+function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
     var soft_stopping_criteria = situationNeed.softStoppingCriteria;
     if(results.length == 0){
       return false;
@@ -156,7 +162,7 @@ function checkIfSituationNeedFinished(results, situationNeed){
           return situationNeed == situationNeed.name;
         }).length;
       if (situationNeed.done == false && numFinished > soft_stopping_criteria["total"]){
-          Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed})
+          Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
           return true;
       }
     }
@@ -173,9 +179,10 @@ function checkIfContributionFinished(incident, results, contributionTemplate){
 
   var situationNeeds = incident.situationNeeds.filter(function(x){
     return x.contributionTemplate == contributionTemplate.name});
+    console.log("situationneeds are: ", situationNeeds)
 
   situationNeeds.forEach((need)=>{
-    if(!checkIfSituationNeedFinished(results, need)){
+    if(!checkIfSituationNeedFinished(results, need, contributionTemplate)){
       notFinished.push(need)
     }
   });
@@ -188,6 +195,7 @@ function checkIfGroupFinished(incident, results, group){
   var numFinished = 0;
 
   group.contributionTemplates.forEach((contributionTemplate)=>{
+    console.log("contributionTemplate is: ", contributionTemplate)
     var info = checkIfContributionFinished(incident, results, contributionTemplate);
     numFinished += info.numFinished;
     notFinished = notFinished.concat(info.notFinished);
@@ -204,9 +212,10 @@ function checkIfGroupFinished(incident, results, group){
   }
 }
 
-function getUnfinsihedNeeds(incident, results, experience){
+function getUnfinishedNeeds(incident, results, experience){
   var unfinished = [];
   experience.contributionGroups.forEach((group)=>{
+    console.log("group is:", group)
     console.log("results are ", results)
     unfinished = unfinished.concat(checkIfGroupFinished(incident, results, group));
   });
@@ -274,6 +283,54 @@ export const test = new ValidatedMethod({
 
   }
 });
+
+
+export const storyBook = new ValidatedMethod({
+  name: 'api.storyBook',
+  validate: null,
+  run(){
+    var createNewPageNeed = function(mostRecentSubmission) {
+      var nextAffordance = TextEntries.find(mostRecentSubmission.contributions.nextAffordance).text;
+      Meteor.call("api.addSituationNeeds", {
+        incidentId: incidentId,
+        need: {
+          "name": "nextScene",
+          "contributionTemplate" : "scene",
+          "affordance": nextAffordance,
+          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        }
+      });
+    }
+    // SituationalNeedTemplate
+    var storyPageTemplate = {
+      "name" : "scene",
+      "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": "String"},
+      "completionCallback": createNewPageNeed.toString()
+    };
+    const experienceId = Meteor.call("api.createExperience", {
+      name: "STORYTEST",
+      description: "Write a story",
+      participateTemplate: "storyPage", //pass in: user
+      resultsTemplate: "storyPageResults",
+      notificationText: "blah",
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 3}}]
+    });
+    const incidentId = Meteor.call("api.createIncident", {
+      experienceId: experienceId
+    });
+
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "page0",
+        "contributionTemplate" : "scene",
+        // "contributionTemplate" : storyPageTemplate,
+        "affordance": "clear",
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+      }
+    });
+    Meteor.call("api.leggo", {incidentId: incidentId});
+}})
 
 export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',

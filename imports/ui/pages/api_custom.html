@@ -1,12 +1,8 @@
 <template name="api_custom">
   {{#if Template.subscriptionsReady}}
-    HIHIHI
-    {{data2pass}}
-      {{ > Template.dynamic template=template_name data=data2pass}}
-
+    {{ > Template.dynamic template=template_name data=data2pass}}
   {{/if}}
 </template>
-
 
 <template name="americanFlag">
   "hello dummy"
@@ -14,9 +10,6 @@
   {{this.situationNeed}} {{this.contributionTemplate}}
   {{camera_options this.situationNeed this.contributionTemplate}}
   {{ > Template.dynamic template="cameraUpload" data=(camera_options this.situationNeed this.contributionTemplate)}}
-
-
-
 </template>
 
 <template name="cheers1">
@@ -26,7 +19,13 @@
   {{this.user_mapping}}
 
   {{ > Template.dynamic template="cameraUpload" data=camera_options}}
+</template>
 
-
-
+<template name="storyPage">
+  1. Take a picture of something "{{this.affordance}}"
+  <br>
+  2. Write the next sentence in the story
+  <br>
+  3. Add an affordance that goes with your sentence
+  {{ > Template.dynamic template="cameraUpload" data=(storyContribs this.contributions)}}
 </template>
