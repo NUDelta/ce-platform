@@ -39,7 +39,6 @@
   {{#each submission in this.submissions}}
     {{@index}}
     {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
-
     <br>
     <div>
     {{getText submission.content.nextSentence}}<br>

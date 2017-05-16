@@ -129,20 +129,23 @@ export const setNeedAsDone = new ValidatedMethod({
       type: Schema.SituationalNeedTemplate
     }
   }).validator(),
-  run({incidentId, situationNeed}){
-    var experienceId = Incident.find(incidentId).experienceId;
-    Cerebro.removeActiveExperiences(situationNeed.availableUsers, experience._id);
+  run({incidentId, situationNeed, contributionTemplate}){
+    var experienceId = Incidents.find(incidentId).experienceId;
+    //Cerebro.removeActiveExperiences(situationNeed.availableUsers, experienceId);
 
-    Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
-      {$set :
-        { 'situationNeeds.$.done':  true }
-      }, (err, docs) => {
-        if (err) { console.log(err); } else{
-          console.log("docs", docs);
-        }
-    });
+    // Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
+    //   {$set :
+    //     { 'situationNeeds.$.done':  true }
+    //   }, (err, docs) => {
+    //     if (err) { console.log(err); } else{
+    //       console.log("docs", docs);
+    //     }
+    // });
     if (contributionTemplate.completionCallback != null) {
-      eval("(" + contributionTemplate.completionCallback + ")("+situationNeed+")");
+      var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0];
+      console.log(mostRecent)
+      var fstring = '(' + contributionTemplate.completionCallback + ')('+mostRecent+')';
+      eval(fstring);
     }
     console.log("helo");
   }
@@ -150,6 +153,9 @@ export const setNeedAsDone = new ValidatedMethod({
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
     var soft_stopping_criteria = situationNeed.softStoppingCriteria;
+    console.log("results are: ", results)
+    console.log("situationNeed is: ", situationNeed)
+
     if(results.length == 0){
       return false;
     }
@@ -159,9 +165,11 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
     }
     if("total" in soft_stopping_criteria){
       var numFinished = results.filter(function(n){
-          return situationNeed == situationNeed.name;
+        console.log("compare", situationNeed.name , n.situationNeed)
+          return situationNeed.name === n.situationNeed;
         }).length;
-      if (situationNeed.done == false && numFinished > soft_stopping_criteria["total"]){
+        console.log("numFinished", numFinished)
+      if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
           Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
           return true;
       }
@@ -290,7 +298,8 @@ export const storyBook = new ValidatedMethod({
   validate: null,
   run(){
     var createNewPageNeed = function(mostRecentSubmission) {
-      var nextAffordance = TextEntries.find(mostRecentSubmission.contributions.nextAffordance).text;
+      var textId = mostRecentSubmission.content.nextAffordance;
+      var nextAffordance = TextEntries.findOne({_id: textId}).text;
       Meteor.call("api.addSituationNeeds", {
         incidentId: incidentId,
         need: {
