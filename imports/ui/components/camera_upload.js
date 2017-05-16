@@ -10,6 +10,8 @@ import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
+import { Submissions } from '../../api/submissions/submissions.js';
+
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
@@ -27,7 +29,6 @@ var permissions;
 Template.cameraUpload.onCreated(function() {
   this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
-  console.log(this.data.text);
   permissions = this.data;
 });
 
@@ -50,7 +51,10 @@ Template.cameraUpload.events({
     instance.submitting.set(true);
 
     // TODO: Probably can generalize this logic
-    const caption = event.target.write && event.target.write.value || '';
+    var forms = event.target.getElementsByClassName("form-control")
+
+    // const captions = event.target.write && event.target.write.value || '';
+    // console.log("captions are ", captions)
     const picture = event.target.photo && event.target.photo.files[0];
 
     const location = LocationManager.currentLocation();
@@ -62,39 +66,44 @@ Template.cameraUpload.events({
     const experienceRoute = incident.name;
 
     // SUBMISSION.INSERT
+    var submissions = {};
 
-    if (instance.data.text) {
-      TextEntries.insert({
-        submitter: Meteor.userId(),
-        text: caption,
-        experienceId: experienceId,
-        incidentId: incidentId,
-        lat: location.lat,
-        lng: location.lng,
-        location: place
-      });
-    }
 
-    if (instance.data.camera) {
-      Images.insert(picture, (err, imageFile) => {
+    for(var i =0; i < forms.length; i++){
+      console.log("text is ", forms[i].value);
+      console.log("contribution is", forms[i].id)
+        var id = TextEntries.insert({
+          submitter: Meteor.userId(),
+          text: forms[i].value,
+          contribution: forms[i].id,
+          experienceId: experienceId,
+          incidentId: incidentId,
+          lat: location.lat,
+          lng: location.lng,
+          location: place,
+        });
+        submissions[forms[i].id] = id;
+      }
+
+
+    if (instance.data.imageContributions) {
+      console.log("adding an image to the db", instance.data.imageContributions)
+
+      var imageFile = Images.insert(picture, (err, imageFile) => {
         if (err) {
           // shouldn't happen
           alert(err);
         } else {
-          var dets = "";
-          console.log(instance.data.contributionTemplate)
-          console.log(instance.data.situationNeed)
-
           Images.update(imageFile._id,
             {
               $set: {
                 experienceId: experienceId,
-                caption: caption,
+                //caption: caption,
                 incidentId: incidentId,
                 lat: location.lat,
                 lng: location.lng,
                 location: place,
-                contributionTemplate: instance.data.contributionTemplate,
+                contributionTemplate: instance.data.contributionTemplateName,
                 situationNeed: instance.data.situationNeed
               }
             }
@@ -115,6 +124,23 @@ Template.cameraUpload.events({
     } else {
       Router.go('/apicustomresults/'+incidentId);
     }
+    console.log("we got the image ID!", imageFile._id)
+    submissions[instance.data.imageContributions] = imageFile._id;
+    console.log(submissions)
+
+    Submissions.insert({
+      submitter: Meteor.userId(),
+      experienceId: experienceId,
+      incidentId: incidentId,
+      content: submissions
+    }, (err, docs) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("submission susccesss",docs);
+      }});
+
+    console.log("WE REACHED THE ENDEEEDDDDD")
   },
   'click #participate-btn'(event, instance) {
     event.preventDefault();

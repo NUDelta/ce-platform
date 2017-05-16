@@ -142,7 +142,7 @@ export const setNeedAsDone = new ValidatedMethod({
         }
     });
     if (contributionTemplate.completionCallback != null) {
-      eval("(" + contributionTemplate.completionCallback + ")(situationNeed)");
+      eval("(" + contributionTemplate.completionCallback + ")("+situationNeed+")");
     }
     console.log("helo");
   }
@@ -324,7 +324,6 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        // "contributionTemplate" : storyPageTemplate,
         "affordance": "clear",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
@@ -338,15 +337,15 @@ export const americanFlag = new ValidatedMethod({
   run(){
     var redTemplate = {
       "name" : "red",
-      "contributions" : ["photo"],
+      "contributions" : {"photo": "Image"},
     };
     var whiteTemplate = {
      "name" : "white",
-     "contributions" : ["photo"],
+     "contributions" : {"photo": "Image"},
     };
     var blueTemplate = {
       "name" : "blue",
-      "contributions" : ["photo"],
+      "contributions" : {"photo": "Image"},
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "FLAGTEST",

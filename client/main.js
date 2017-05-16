@@ -7,5 +7,6 @@ if (Meteor.isDevelopment) {
   Incidents = require('../imports/api/incidents/incidents.js').Incidents;
   Locations = require('../imports/api/locations/locations.js').Locations;
   TextEntries = require('../imports/api/text-entries/text-entries.js').TextEntries;
+  Submissions = require('../imports/api/submissions/submissions.js').Submissions;
   ParticipationLocations = require('../imports/api/participation-locations/participation_locations.js').ParticipationLocations;
 }

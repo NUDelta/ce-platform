@@ -4,23 +4,20 @@
     {{> loadingOverlay}}
   {{/if}}
     <form class="col col-xs-12">
-      {{#if this.camera}}
-        {{#each loopCount this.camera}}
+      {{this.imageContributions}}
+      {{#if this.imageContributions}}
           <label class="fileinput">
             <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
             <div class="glyphicon glyphicon-camera fileinput-new"></div>
             <div class="glyphicon glyphicon-remove fileinput-exists"></div>
           </label>
           <input type="file" name="photo" required>
-          {{/each}}
         {{/if}}
-        {{#if this.text}}
-        {{#each loopCount this.text}}
+        {{#each key in this.textContributions}}
           <div class="form-group">
-            <input name="write" type="text" class="form-control" placeholder="Write your thing here" required>
+            <input id={{key}} name="write" type="text" class="form-control" placeholder="Write your thing here" required>
           </div>
-          {{/each}}
-        {{/if}}
+        {{/each}}
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>

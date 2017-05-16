@@ -1,8 +1,6 @@
 <template name="api_custom_results">
   {{#if Template.subscriptionsReady}}
       {{ > Template.dynamic template=template_name data=data2pass}}
-
-      RESULTS
   {{/if}}
 </template>
 
@@ -37,16 +35,29 @@
 </template>
 
 <template name="storyPageResults">
-  "HI"
-  {{#each image in this.images}}
-    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
-      {{#if image.isUploaded}}
-        <!--small amount of lag before url is ready-->
-        <!--probably should add a loading animation here-->
-        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}" style="width=50%">
-        {{image.situationNeed}}
-        {{image.contributionTemplate}}
-      {{/if}}
-    </div>
+  StoryPageReusults <br><br>
+  {{#each submission in this.submissions}}
+    {{@index}}
+    {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
+
+    <br>
+    <div>
+    {{getText submission.content.nextSentence}}<br>
+    {{getText submission.content.nextAffordance}}<br>
+  </div>
   {{/each}}
+
 </template>
+
+<!--
+{{#each textObject in this.text}}
+  {{textObject.text}}
+{{/each}}
+{{#each image in this.images}}
+  <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+    {{#if image.isUploaded}}
+      <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}" style="width=50%">
+
+    {{/if}}
+  </div>
+{{/each}} -->

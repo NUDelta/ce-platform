@@ -27,22 +27,28 @@ Template.registerHelper('camera_options', (situationNeedName, contributionTempla
 });
 
 
-Template.registerHelper('storyContribs', (contributions)=> {
-  var dict = {camera: 0, text: 0};
-  numPhotos = 0;
-  numText = 0;
+Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
+  var dict = {}
+  var textContributions = [];
+  var imageContributions = false;
+  var contributions = contributionTemplate.contributions;
   for (var key in contributions) {
     var value = contributions[key];
     if (value == "Image") {
-      numPhotos++;
-      dict.camera = numPhotos;
+      imageContributions = key;
     }
     if (value == "String"){
-      numText++;
-      dict.text = numText;
+      textContributions.push(key);
     }
   }
+
+  dict["situationNeed"] = situationNeedName,
+  dict["contributionTemplateName"] = contributionTemplate.name
+  dict["textContributions"] = textContributions
+  dict["imageContributions"] = imageContributions
+
   console.log(dict)
+
   return dict;
 });
 
@@ -60,17 +66,25 @@ Template.api_custom.helpers({
     incident.situationNeeds.forEach((sitNeed)=>{
       if(sitNeed.availableUsers.includes(Meteor.userId())){
         situationNeedName = sitNeed.name;
-        contributionTemplate = sitNeed.contributionTemplate;
+        contributionTemplateName = sitNeed.contributionTemplate;
         affordance = sitNeed.affordance
       }
     });
+    var contributionTemplate;
+
+    exp.contributionGroups.forEach((group)=>{
+      group.contributionTemplates.forEach((template)=>{
+        if(template.name == contributionTemplateName){
+          contributionTemplate = template
+        }
+      });
+    });
+
+    console.log(contributionTemplate)
+
     return {"incident": incident,
             "situationNeedName": situationNeedName,
-            "contributionTemplate": contributionTemplate,
-            "affordance": affordance,
-            "contributions": contributions,
-            "illustration": illustration,
-            "nextAffordance": nextAffordance}
+            "contributionTemplate": contributionTemplate}
   },
   template_name() {
     const inst = Template.instance();
