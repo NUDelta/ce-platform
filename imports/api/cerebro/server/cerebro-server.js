@@ -116,8 +116,9 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   removeAllOldActiveExperiences(userIds, experienceId){
+    console.log("removeAllOldActiveExperiences", userIds)
     Meteor.users.update({
-      _id: { $nin: userIds }
+      _id: { $in: userIds }
     }, {
       $pull: {
         'profile.activeExperiences': experienceId

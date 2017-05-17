@@ -220,7 +220,7 @@ function checkIfContributionFinished(incident, results, contributionTemplate){
     return r.contributionTemplate == contributionTemplate.name
   }).length;
 
-  var notFinished = [];
+  var notFinished = []; 
 
   var situationNeeds = incident.situationNeeds.filter(function(x){
     return x.contributionTemplate == contributionTemplate.name});
@@ -350,7 +350,7 @@ export const storyBook = new ValidatedMethod({
       Meteor.call("api.addSituationNeeds", {
         incidentId: incidentId,
         need: {
-          "name": "nextScene" + nextAffordance,
+          "name": "nextScene"+ nextAffordance + Random.id(3),
           "contributionTemplate" : "scene",
           "affordance": nextAffordance,
           "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
@@ -371,7 +371,7 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage", //pass in: user
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 3}}]
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
     });
 
     registerCallback(experienceId, "scene", createNewPageNeed);

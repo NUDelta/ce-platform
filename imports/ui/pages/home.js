@@ -22,8 +22,11 @@ Template.home.helpers({
     return activeExperiences == null || activeExperiences.length == 0;
   },
   activeExperienceArgs(experienceId) {
+    console.log("experience id is ", experienceId)
+    console.log("all experiences ", Experiences.find().fetch())
+
     return {
-      experience: Experiences.findOne(experienceId)
+      experience: Experiences.findOne({_id: experienceId})
     };
   }
 });
