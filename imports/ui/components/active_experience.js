@@ -9,7 +9,7 @@ import { Schema } from '../../api/schema.js';
 
 Template.activeExperience.onCreated(function() {
   this.autorun(() => {
-    console.log(Template.currentData())
+    console.log("Current data for the template is", Template.currentData())
     new SimpleSchema({
       experience: {
         type: Schema.Experience,

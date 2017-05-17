@@ -23,14 +23,70 @@ import { Random } from 'meteor/random'
 
 import './custom_options.js'
 
+//[ { name: 'page0', users: [ 'SQN7YB7aRxK58xuZB' ] }, ]
+// if not in available_users, no longer have affordance, remove user
+// get next user to notify
+var notifyOneUser = function(available_users, sitNeeds){
+  var usersToNotify = [];
+
+  sitNeeds.forEach((sitNeed)=>{
+    currentAvailableUsers = available_users.filter(function(x){
+        return x.name == sitNeed.name;})[0].users;
+    sitNeed.availableUsers.forEach((user)=>{
+      if (!currentAvailableUsers.includes(user)){
+        // remove user, add user from currentavailable
+        
+        usersToNotify.push({"name": sitNeed.name, "users":[user]})
+      }    
+    })
+  })
+}
+
+
+var greedyOrganization = function(available_users){
+  console.log("in greedy organization", available_users)
+  var usersToNotify = [];
+  for(var j = 0; j< available_users.length; j++){
+    usersToNotify.push({"name": available_users[j].name, "users":[]})
+  }
+  while(available_users.length > 0){
+    available_users.sort(function(a,b){
+      return a.users.length - b.users.length;
+    });
+
+    var user = available_users[0].users.pop();
+    console.log("user", user)
+    if(user == null){
+      available_users = available_users.slice(1);
+    }else{
+      var filtered = usersToNotify.filter(function(x){
+        return x.name == available_users[0].name;});
+
+        var alreadyAdded = usersToNotify.map(function(x){
+          return x.users.includes(user)
+        });
+
+        if(!(alreadyAdded.includes(true))){
+          filtered[0].users.push(user);
+        }
+      }
+    }
+    return usersToNotify;
+}
+
+var notificationFunctions = {"greedyOrganization": greedyOrganization, "notifyOneUser": notifyOneUser};
+
 export const leggo = new ValidatedMethod({
   name: 'api.leggo',
   validate: new SimpleSchema({
     incidentId:{
       type: String
-    }
+    },
+    notificationStrategy: {
+      type:String
+    },
   }).validator(),
-  run({incidentId}){
+  run({incidentId, notificationStrategy}){
 
     console.log("starting experience with incident ", incidentId)
 
@@ -63,14 +119,17 @@ export const leggo = new ValidatedMethod({
         }
         console.log("available users", available_users)
       });
-
+      // UPDATE USERS IN SITUATION NEED
       var reFormatted = [];
       Object.keys(available_users).forEach((key)=>{
         console.log(key);
         reFormatted.push({"name": key, "users": available_users[key]})
       });
       console.log(reFormatted)
-      var userMappings = greedyOrganization(reFormatted);
+
+      var f = notificationFunctions[notificationStrategy]
+      console.log("we tried to get a funciton but it was ", f)
+      var userMappings = f(reFormatted);
       console.log("userMappings: ", userMappings)
 
       Meteor.call("notify", {userMappings, experience, incidentId});
@@ -78,37 +137,6 @@ export const leggo = new ValidatedMethod({
     }, 10000, true)
   }
 });
-
-function greedyOrganization(available_users){
-  console.log("in greedy organization", available_users)
-  var usersToNotify = [];
-  for(var j = 0; j< available_users.length; j++){
-    usersToNotify.push({"name": available_users[j].name, "users":[]})
-  }
-  while(available_users.length > 0){
-    available_users.sort(function(a,b){
-      return a.users.length - b.users.length;
-    });
-
-    var user = available_users[0].users.pop();
-    console.log("user", user)
-    if(user == null){
-      available_users = available_users.slice(1);
-    }else{
-      var filtered = usersToNotify.filter(function(x){
-        return x.name == available_users[0].name;});
-
-        var alreadyAdded = usersToNotify.map(function(x){
-          return x.users.includes(user)
-        });
-
-        if(!(alreadyAdded.includes(true))){
-          filtered[0].users.push(user);
-        }
-      }
-    }
-    return usersToNotify;
-}
 
 
 var globalCallbacks = {}
@@ -385,11 +413,11 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clear",
+        "affordance": "daytime",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId});
+    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
 }})
 
 export const americanFlag = new ValidatedMethod({

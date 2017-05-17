@@ -9,7 +9,9 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import '../components/active_experience.js';
 
 Template.home.onCreated(function() {
-  this.subscribe('experiences.activeUser'); // TODO: make more specific
+    this.autorun(() => {
+      this.subscribe('experiences.activeUser'); // TODO: make more specific
+    });
 });
 
 Template.home.helpers({
@@ -22,8 +24,7 @@ Template.home.helpers({
     return activeExperiences == null || activeExperiences.length == 0;
   },
   activeExperienceArgs(experienceId) {
-    console.log("experience id is ", experienceId)
-    console.log("all experiences ", Experiences.find().fetch())
+    console.log("all the experiences returned by subscription", Experiences.find().fetch())
 
     return {
       experience: Experiences.findOne({_id: experienceId})
