@@ -42,17 +42,16 @@ export const leggo = new ValidatedMethod({
       var experience = Experiences.findOne({_id:experienceId});
 
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
-      if(wipInstanceNeeds.length == 0){
-        console.log("DONE WE FINISHED!")
-        Meteor.call("stop", {experienceId: experienceId})
-        return true;
-      }
+      // if(wipInstanceNeeds.length == 0){
+      //   console.log("DONE WE FINISHED!")
+      //   Meteor.call("stop", {experienceId: experienceId})
+      //   return true;
+      // }
       console.log("unmet needs", wipInstanceNeeds);
 
       console.log("we have not met main goal so lets go!");
 
       var available_users = {};
-      hello= 5;
 
       wipInstanceNeeds.forEach((need)=>{
         //removeOldUsers(need.availableUsers, need.affordance, experienceId)
@@ -62,7 +61,7 @@ export const leggo = new ValidatedMethod({
         }else{
           available_users[need.name] = available_users[need.name].concat(possible_users)
         }
-        console.log("AVALABILE USRES", available_users)
+        console.log("available users", available_users)
       });
 
       var reFormatted = [];
@@ -82,7 +81,7 @@ export const leggo = new ValidatedMethod({
 
 function greedyOrganization(available_users){
   console.log("in greedy organization", available_users)
-  usersToNotify = [];
+  var usersToNotify = [];
   for(var j = 0; j< available_users.length; j++){
     usersToNotify.push({"name": available_users[j].name, "users":[]})
   }
@@ -112,6 +111,20 @@ function greedyOrganization(available_users){
 }
 
 
+var globalCallbacks = {}
+
+//{experienceId : {situationNeed: callback, situationNeed, callback}}
+
+function registerCallback(experienceId, templateName, callback){
+  console.log("template name is ", templateName)
+  if(experienceId in globalCallbacks){
+    globalCallbacks[experienceId][templateName]= callback;
+  }else{
+    globalCallbacks[experienceId]= {};
+    globalCallbacks[experienceId][templateName] = callback;
+  }
+  console.log("globalCallbacks", globalCallbacks)
+}
 
 //call callback
 //remove incident from users
@@ -130,23 +143,42 @@ export const setNeedAsDone = new ValidatedMethod({
     }
   }).validator(),
   run({incidentId, situationNeed, contributionTemplate}){
-    var experienceId = Incidents.find(incidentId).experienceId;
+    console.log("incidentId is", incidentId)
+    var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
+
     //Cerebro.removeActiveExperiences(situationNeed.availableUsers, experienceId);
 
-    // Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
-    //   {$set :
-    //     { 'situationNeeds.$.done':  true }
-    //   }, (err, docs) => {
-    //     if (err) { console.log(err); } else{
-    //       console.log("docs", docs);
-    //     }
-    // });
-    if (contributionTemplate.completionCallback != null) {
-      var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0];
-      console.log(mostRecent)
-      var fstring = '(' + contributionTemplate.completionCallback + ')('+mostRecent+')';
-      eval(fstring);
+    Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
+      {$set :
+        { 'situationNeeds.$.done':  true }
+      }, (err, docs) => {
+        if (err) { console.log(err); } else{
+          console.log("docs", docs);
+        }
+    });
+
+    var callback = null;
+    console.log("we are looking inside globalCallbacks", globalCallbacks, experienceId)
+    if(experienceId in globalCallbacks){
+      console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
+      if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
+        callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
+        console.log("callback is", callback)
+        var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
+        console.log("ABOUT TO TCLAL THE CALLBACK")
+        callback(mostRecent)
+      }
     }
+
+
+    // if (contributionTemplate.completionCallback != null) {
+    //   var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
+    //   console.log(mostRecent)
+    //   var fstring = '(' + contributionTemplate.completionCallback + ')('+mostRecent+')';
+    //   console.log("fstring is,", fstring);
+    //
+    //   eval(fstring);
+    // }
     console.log("helo");
   }
 });
@@ -169,7 +201,7 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
           return situationNeed.name === n.situationNeed;
         }).length;
         console.log("numFinished", numFinished)
-      if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
+      if (numFinished >= soft_stopping_criteria["total"]){
           Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
           return true;
       }
@@ -214,7 +246,7 @@ function checkIfGroupFinished(incident, results, group){
     return []
   }else{
     if(notFinished == []){
-      log("All situation needs are done but the group isn't ahhh what to do here!?");
+      console.log("All situation needs are done but the group isn't ahhh what to do here!?");
     }
     return notFinished;
   }
@@ -298,6 +330,7 @@ export const storyBook = new ValidatedMethod({
   validate: null,
   run(){
     var createNewPageNeed = function(mostRecentSubmission) {
+      console.log("createNewPageNeed being called right now");
       var textId = mostRecentSubmission.content.nextAffordance;
       var nextAffordance = TextEntries.findOne({_id: textId}).text;
       Meteor.call("api.addSituationNeeds", {
@@ -314,8 +347,10 @@ export const storyBook = new ValidatedMethod({
     var storyPageTemplate = {
       "name" : "scene",
       "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": "String"},
-      "completionCallback": createNewPageNeed.toString()
+      //"completionCallback": createNewPageNeed.toString()
     };
+
+
     const experienceId = Meteor.call("api.createExperience", {
       name: "STORYTEST",
       description: "Write a story",
@@ -324,6 +359,9 @@ export const storyBook = new ValidatedMethod({
       notificationText: "blah",
       contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 3}}]
     });
+
+    registerCallback(experienceId, "scene", createNewPageNeed);
+
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
     });

@@ -6,3 +6,4 @@ deploy.sh
 ssl/
 node_modules/
 *.swp
+.eslintrc.json

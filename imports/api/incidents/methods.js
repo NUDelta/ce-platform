@@ -124,12 +124,12 @@ export const addSituationNeeds = new ValidatedMethod({
     }
   }).validator(),
   run({incidentId, need}){
-    var incident = Incidents.findOne(incidentId);
-
+    console.log("adding situational needs for ", incidentId)
+    console.log("need", need)
     Incidents.update({_id: incidentId},
       {$push: { situationNeeds: {
         name:need.name,
-        affordance:need.affordance,
+        affordance: need.affordance,
         contributionTemplate:need.contributionTemplate,
         softStoppingCriteria:need.softStoppingCriteria,
         availableUsers: [],
@@ -138,9 +138,9 @@ export const addSituationNeeds = new ValidatedMethod({
       }
       },(err, docs) => {
       if (err) {
-        console.log(err);
+        console.log("there was an error", err);
       }else{
-        console.log(docs);
+        console.log("the need was successfully added, ", docs);
       }
     });
 
