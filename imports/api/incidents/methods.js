@@ -126,7 +126,7 @@ export const addSituationNeeds = new ValidatedMethod({
   run({incidentId, need}){
     console.log("adding situational needs for ", incidentId)
     console.log("need", need)
-    Incidents.update({_id: incidentId},
+    var res = Incidents.update({_id: incidentId},
       {$push: { situationNeeds: {
         name:need.name,
         affordance: need.affordance,
@@ -136,15 +136,16 @@ export const addSituationNeeds = new ValidatedMethod({
         done: false
         }
       }
-      },(err, docs) => {
-      if (err) {
-        console.log("there was an error", err);
-      }else{
-        console.log("the need was successfully added, ", docs);
-      }
+      // },(err, docs) => {
+      // if (err) {
+      //   console.log("there was an error", err);
+      // }else{
+      //   console.log("the need was successfully added, ", docs);
+      // }
     });
 
-    console.log("needs added!");
+    console.log("needs added!", res);
+    return res;
 
   }
 });

@@ -146,16 +146,18 @@ export const setNeedAsDone = new ValidatedMethod({
     console.log("incidentId is", incidentId)
     var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
 
+    clearUsersfromNeed(situationNeed, experienceId, incidentId);
+
     //Cerebro.removeActiveExperiences(situationNeed.availableUsers, experienceId);
 
-    Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
+    var test = Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
       {$set :
         { 'situationNeeds.$.done':  true }
-      }, (err, docs) => {
-        if (err) { console.log(err); } else{
-          console.log("docs", docs);
-        }
-    });
+      // }, (err, docs) => {
+      //   if (err) { console.log(err); } else{
+      //     console.log("docs", docs);
+      //   }
+    }); 
 
     var callback = null;
     console.log("we are looking inside globalCallbacks", globalCallbacks, experienceId)
@@ -164,24 +166,26 @@ export const setNeedAsDone = new ValidatedMethod({
       if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
         callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
         console.log("callback is", callback)
-        var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
-        console.log("ABOUT TO TCLAL THE CALLBACK")
-        callback(mostRecent)
+        var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
+        // Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
+        console.log("ABOUT TO TCLAL THE CALLBACK");
+        console.log("most recent: ", mostRecent);
+        return callback(mostRecent);
+       
       }
     }
-
-
-    // if (contributionTemplate.completionCallback != null) {
-    //   var mostRecent = Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
-    //   console.log(mostRecent)
-    //   var fstring = '(' + contributionTemplate.completionCallback + ')('+mostRecent+')';
-    //   console.log("fstring is,", fstring);
-    //
-    //   eval(fstring);
-    // }
-    console.log("helo");
   }
 });
+
+function clearUsersfromNeed(situationNeed, experienceId, incidentId){
+  console.log("situationneed name", situationNeed.name);
+  console.log("incidentID:", incidentId);
+  Cerebro.removeAllOldActiveExperiences(situationNeed.availableUsers, experienceId);
+  Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name}, 
+   {$set :
+        { 'situationNeeds.$.availableUsers':  [] }
+    });
+}
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
     var soft_stopping_criteria = situationNeed.softStoppingCriteria;
@@ -193,6 +197,7 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
     }
     var incidentId = results[0].incidentId;
     if(situationNeed.done == true){
+      console.log("our situation need is done so not calling a callbkac", situationNeed)
       return true;
     }
     if("total" in soft_stopping_criteria){
@@ -201,8 +206,8 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
           return situationNeed.name === n.situationNeed;
         }).length;
         console.log("numFinished", numFinished)
-      if (numFinished >= soft_stopping_criteria["total"]){
-          Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
+      if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
+          var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
           return true;
       }
     }
@@ -243,10 +248,19 @@ function checkIfGroupFinished(incident, results, group){
   });
 
   if(numFinished >= group.stoppingCriteria.total){
+    console.log("we have enough group results so we are done!")
     return []
   }else{
-    if(notFinished == []){
+    if(notFinished.length == 0){
+      var updatedIncident = Incidents.findOne({_id: incident._id})
+      console.log('updatedIncident: ', updatedIncident);
+      var notDone = updatedIncident.situationNeeds.filter(function(x){
+        return x.done == false;
+      })
+      console.log('notDone: ', notDone);
       console.log("All situation needs are done but the group isn't ahhh what to do here!?");
+      return notDone;hink 
+      //return incident.situationNeeds;
     }
     return notFinished;
   }
@@ -336,7 +350,7 @@ export const storyBook = new ValidatedMethod({
       Meteor.call("api.addSituationNeeds", {
         incidentId: incidentId,
         need: {
-          "name": "nextScene",
+          "name": "nextScene" + nextAffordance,
           "contributionTemplate" : "scene",
           "affordance": nextAffordance,
           "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore

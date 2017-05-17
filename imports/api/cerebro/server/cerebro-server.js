@@ -143,7 +143,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
           console.log("found the user Id", id)
           var i = situationNeeds[index].availableUsers.indexOf(id);
           console.log(i)
-          situationNeeds[index].avalibleUsersusers.splice(i, 1)
+          situationNeeds[index].avalibleUsers.splice(i, 1)
           console.log("we hve updadate an index", userMappings[index])
         }
       }
