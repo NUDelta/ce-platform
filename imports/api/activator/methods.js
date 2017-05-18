@@ -30,12 +30,12 @@ var notifyOneUser = function(available_users, sitNeeds){
   sitNeeds.forEach((sitNeed)=>{
     currentAvailableUsers = available_users.filter(function(x){
         return x.name == sitNeed.name;})[0].users;
-      sitNeed.availableUsers.forEach((user)=>{
+      sitNeed.notifiedUsers.forEach((user)=>{
         if (!currentAvailableUsers.includes(user)){
           // remove user, add user from currentavailable
-          var index = sitNeed.availableUsers.indexOf(user);
+          var index = sitNeed.notifiedUsers.indexOf(user);
           if (index > -1) {
-            sitNeed.availableUsers.splice(index, 1);
+            sitNeed.notifiedUsers.splice(index, 1);
           }
           usersToNotify.push({"name": sitNeed.name, "users":[user]})
         }
@@ -109,23 +109,20 @@ export const leggo = new ValidatedMethod({
 
       console.log("we have not met main goal so lets go!");
 
-      var available_users = {};
+      var usersToNotify = {};
 
       wipInstanceNeeds.forEach((need)=>{
-        removeOldUsers(need.availableUsers, need.affordance, experienceId)
-        var possible_users = queryFor([need.affordance]);
-        if(available_users[need.name]== null){
-          available_users[need.name] = possible_users;
-        }else{
-          available_users[need.name] = available_users[need.name].concat(possible_users)
-        }
-        console.log("available users", available_users)
+        var allUsersWithAffordance = queryFor([need.affordance]); 
+        removeUsersWhoMovedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
+        var possible_users = usersNotNotified(allUsersWithAffordance); //possible_users haven't been notified
+        usersToNotify[need.name] = possible_users;
+        console.log("available users", usersToNotify)
       });
-      // UPDATE USERS IN SITUATION NEED
+
       var reFormatted = [];
-      Object.keys(available_users).forEach((key)=>{
+      Object.keys(usersToNotify).forEach((key)=>{
         console.log(key);
-        reFormatted.push({"name": key, "users": available_users[key]})
+        reFormatted.push({"name": key, "users": usersToNotify[key]})
       });
       console.log(reFormatted)
 
@@ -151,9 +148,6 @@ function registerCallback(experienceId, templateName, callback){
   }
 }
 
-//call callback
-//remove incident from users
-//            Cerebro.removeActiveExperiences(need.availableUsers, experience._id);
 export const setNeedAsDone = new ValidatedMethod({
   name: 'api.setNeedAsDone',
   validate: new SimpleSchema({
@@ -170,9 +164,7 @@ export const setNeedAsDone = new ValidatedMethod({
   run({incidentId, situationNeed, contributionTemplate}){
     var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
 
-    clearUsersfromNeed(situationNeed, experienceId, incidentId);
-
-    //Cerebro.removeActiveExperiences(situationNeed.availableUsers, experienceId);
+    clearUsersFromNeed(situationNeed, experienceId, incidentId);
 
     var test = Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
       {$set :
@@ -199,12 +191,21 @@ export const setNeedAsDone = new ValidatedMethod({
   }
 });
 
-function clearUsersfromNeed(situationNeed, experienceId, incidentId){
-  Cerebro.removeAllOldActiveExperiences(situationNeed.availableUsers, experienceId);
+function clearUsersFromNeed(situationNeed, experienceId, incidentId){
+  removeSpecificUsersFromNeed(situationNeed.notifiedUsers, situationNeed, experienceId, incidentId);
+}
+
+function removeSpecificUsersFromNeed(users, situationNeed, experienceId, incidentId){
+  Cerebro.removeAllOldActiveExperiences(users, experienceId);
   Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
-   {$set :
-        { 'situationNeeds.$.availableUsers':  [] }
+   {$pull :
+        { 'situationNeeds.$.notifiedUsers':  { $in: users }}
     });
+}
+
+function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
+  var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
+  removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId);
 }
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
@@ -395,7 +396,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "nighttime",
+        "affordance": "clouds",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -470,37 +471,6 @@ function getSitutationNeedByName(sitatuionNeeds, name){
   })[0];
 }
 
-//[ { name: 'page0', users: [ 'SQN7YB7aRxK58xuZB' ] }, ]
-// if user has been assigned to a situation need, situation need is already fulfilled -->
-// if not in available_users, no longer have affordance, remove user from sitNeed users
-
-function updateSitNeedUsers(available_users, situationNeed){
-  // if user in available_users has been notified, take out of situationNeed.availableUsers
-  console.log("hello hello this is update SitNeedUsers")
-  console.log("available_users what??", available_users)
-  console.log("situationNeed availableUsers",situationNeed.availableUsers);
-  // available_users.forEach((user)=>{
-  //
-  // })
-}
-//
-//
-// var notifyOneUser = function(available_users, sitNeeds){
-//   var usersToNotify = [];
-//
-//   sitNeeds.forEach((sitNeed)=>{
-//     currentAvailableUsers = available_users.filter(function(x){
-//         return x.name == sitNeed.name;})[0].users;
-//     sitNeed.availableUsers.forEach((user)=>{
-//       if (!currentAvailableUsers.includes(user)){
-//         // remove user, add user from currentavailable
-//
-//         usersToNotify.push({"name": sitNeed.name, "users":[user]})
-//       }
-//     })
-//   })
-// }
-
 export const notify = new ValidatedMethod({
   name: 'notify',
   validate: new SimpleSchema({
@@ -523,8 +493,8 @@ export const notify = new ValidatedMethod({
       newUsers.forEach((u)=>{
         var sitNeed = getSitutationNeedByName(situationNeeds, userMap.name)
         console.log("got the sitNeed for ", userMap.name, sitNeed)
-        if(!sitNeed.availableUsers.includes(u)){
-          sitNeed.availableUsers.push(u);
+        if(!sitNeed.notifiedUsers.includes(u)){
+          sitNeed.notifiedUsers.push(u);
         }
       });
 
@@ -564,7 +534,7 @@ function queryFor(search_aff){
   var mapped = filtered.map(function(x){
     return x.uid;
   });
-  return usersAvalibleNow(mapped);
+  return mapped;
 }
 
 function containsAffordance(user_affordances, search_affordance){
@@ -648,7 +618,7 @@ function removeOldUsers(users, affordance, experienceId){
   }
 }
 
-  export const usersAvalibleNow = function(possibleUserIds){
+  export const usersNotNotified = function(possibleUserIds){
     console.log("calling users avalible now")
     userIdsAvalibleNow = []
 

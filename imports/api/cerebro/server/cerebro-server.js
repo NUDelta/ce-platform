@@ -140,9 +140,9 @@ CerebroServer = class CerebroServer extends CerebroCore {
 
     userIds.forEach((id)=>{
       for(index in situationNeeds){
-        if(situationNeeds[index].availableUsers.indexOf(id) > -1){
+        if(situationNeeds[index].notifiedUsers.indexOf(id) > -1){
           console.log("found the user Id", id)
-          var i = situationNeeds[index].availableUsers.indexOf(id);
+          var i = situationNeeds[index].notifiedUsers.indexOf(id);
           console.log(i)
           situationNeeds[index].avalibleUsers.splice(i, 1)
           console.log("we hve updadate an index", userMappings[index])

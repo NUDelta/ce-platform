@@ -64,7 +64,7 @@ Template.api_custom.helpers({
     var nextSentence = contributions.nextSentence;
     var nextAffordance = contributions.nextAffordance;
     incident.situationNeeds.forEach((sitNeed)=>{
-      if(sitNeed.availableUsers.includes(Meteor.userId())){
+      if(sitNeed.notifiedUsers.includes(Meteor.userId())){
         situationNeedName = sitNeed.name;
         contributionTemplateName = sitNeed.contributionTemplate;
         affordance = sitNeed.affordance

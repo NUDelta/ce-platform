@@ -52,7 +52,7 @@ Schema.SituationNeed = new SimpleSchema({
     type: Schema.SoftStoppingCriteria,
     optional: true
   },
-  availableUsers: {
+  notifiedUsers: {
     type: [String],
     defaultValue: [],
     optional: true

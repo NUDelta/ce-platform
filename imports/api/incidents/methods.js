@@ -132,7 +132,7 @@ export const addSituationNeeds = new ValidatedMethod({
         affordance: need.affordance,
         contributionTemplate:need.contributionTemplate,
         softStoppingCriteria:need.softStoppingCriteria,
-        availableUsers: [],
+        notifiedUsers: [],
         done: false
         }
       }
