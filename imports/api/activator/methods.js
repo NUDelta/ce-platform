@@ -21,8 +21,6 @@ import { Images } from '../images/images.js';
 
 import { Random } from 'meteor/random'
 
-import './custom_options.js'
-
 var notifyOneUser = function(available_users, sitNeeds){
   var usersToNotify = [];
   sitNeeds.forEach((sitNeed)=>{
@@ -185,7 +183,8 @@ function removeSpecificUsersFromNeed(users, situationNeed, experienceId, inciden
 
 function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
-  removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId);
+  var wait = 5*60*100
+  Meteor.setTimeout(removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId), wait)
 }
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){

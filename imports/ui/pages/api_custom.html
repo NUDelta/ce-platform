@@ -22,11 +22,22 @@
 
 <template name="storyPage">
   <!-- also need acess to most recent submision here -->
-  1. Take a picture of something "{{this.affordance}}"
-  <br>
-  2. Write the next sentence in the story
-  <br>
-  3. Add an affordance that goes with your sentence
-  {{this.situationNeedName}}
-  {{ > Template.dynamic template="cameraUpload" data=(storyContribs this.situationNeedName this.contributionTemplate)}}
+  Help us write and illustrate a story! You're on page {{this.pageNum}} <br>
+  {{#if this.hasSubs}}
+    1. Take a picture of something that illustrates the following sentence: <br>
+    <!-- {{#if (shouldLoadText @index) }} -->
+      <div class=“text”>{{getText (getNextSentenceId @index) }}</div>
+    <!-- {{/if}} -->
+    <br>
+    2. Write the next sentence in the story
+    <br>
+    3. Add an affordance that goes with your sentence
+    {{ > Template.dynamic template="cameraUpload" data=(storyContribs this.situationNeedName this.contributionTemplate)}}
+  {{else}}
+    1. Take a photo that illustrates the following sentence: <br>
+        It was a dark and stormy night. <br>
+    2. Write the next sentence in the story <br>
+    3. Add an affordance that goes with your sentence <br>
+    {{ > Template.dynamic template="cameraUpload" data=(storyContribs this.situationNeedName this.contributionTemplate)}}
+  {{/if}}
 </template>

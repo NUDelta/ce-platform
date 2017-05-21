@@ -11,6 +11,7 @@ import { _ } from 'meteor/underscore';
 import '../components/camera_upload.js';
 
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
+import { Submissions } from '../../api/submissions/submissions.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
@@ -19,13 +20,11 @@ import { CONFIG } from '../../api/config.js'
 import { getNumberOfUser } from '../../api/incidents/methods.js';
 
 Template.registerHelper('camera_options', (situationNeedName, contributionTemplate) => {
-  console.log("got arguments", situationNeedName, contributionTemplate)
   return {"camera": true,
           "text": false,
           "situationNeed":situationNeedName,
           "contributionTemplate": contributionTemplate }
 });
-
 
 Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
   var dict = {}
@@ -41,23 +40,46 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
       textContributions.push(key);
     }
   }
-
   dict["situationNeed"] = situationNeedName,
   dict["contributionTemplateName"] = contributionTemplate.name
   dict["textContributions"] = textContributions
   dict["imageContributions"] = imageContributions
-
-  console.log(dict)
-
   return dict;
 });
 
+// Template.registerHelper('getText', (id) => {
+//  var text = TextEntries.findOne({_id: id});
+//  console.log("text: ", text.text);
+//  console.log("getting text for ", id)
+//  return text.text;
+// });
+//
+// getNextSentenceId(photoIndex){
+//    const instance = Template.instance()
+//
+//    var submission = instance.data.submissions[photoIndex-1];
+//    console.log(submission)
+//    console.log(submission.content.nextSentence)
+//    return submission.content.nextSentence
+//  },
+//
+
 Template.api_custom.helpers({
   data2pass(){
-    const inst = Template.instance();
-    var incident = inst.state.get('incident');
+    const instance = Template.instance();
+    var incident = instance.state.get('incident');
+
+    var subs = Submissions.find({incidentId: incident._id}).fetch();
+
+    hasSubs = false;
+    if (subs.length > 0) {
+      hasSubs = true;
+    }
+    console.log("subs are", subs);
+    console.log(subs.length);
+
     // TODO: fix, dont want to get by experience
-    var exp = inst.state.get('experience')
+    var exp = instance.state.get('experience')
     aContribTemplate = exp.contributionGroups[0].contributionTemplates[0];
     contributions = aContribTemplate.contributions;
     var illustration = contributions.illustration;
@@ -80,21 +102,26 @@ Template.api_custom.helpers({
       });
     });
 
-    console.log(contributionTemplate)
-
     return {"incident": incident,
             "situationNeedName": situationNeedName,
-            "contributionTemplate": contributionTemplate}
+            "contributionTemplate": contributionTemplate,
+            "hasSubs": hasSubs,
+            "pageNum": subs.length +1}
   },
   template_name() {
-    const inst = Template.instance();
-    console.log("temp name:", inst.state.get('experience').participateTemplate);
-    return inst.state.get('experience').participateTemplate;
+    const instance = Template.instance();
+    console.log("temp name:", instance.state.get('experience').participateTemplate);
+    return instance.state.get('experience').participateTemplate;
   }
 });
 
 Template.api_custom.onCreated(function() {
   const incidentId = Router.current().params._id;
+  this.subscribe('images', incidentId);
+  this.subscribe('submissions', incidentId);
+  this.subscribe('textEntries.byIncident', incidentId);
+  const incHandle = this.subscribe('incidents.byId', incidentId);
+  const expHandle = this.subscribe('experiences.byIncident', incidentId);
 
   const experiencesHandle = this.subscribe('experiences.byIncident', incidentId);
   this.subscribe('participation_locations');
