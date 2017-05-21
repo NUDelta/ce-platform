@@ -1,9 +1,5 @@
 <template name="displayImage">
-<h1>Hello</h1>
-{{this}}
-<div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
   {{#if this.img.isUploaded}}
-    <img src="{{this.img.url store="thumbs"}}" alt="" style="width=50%">
+    <img src="{{this.img.url store="thumbs"}}" alt="image">
   {{/if}}
-</div>
 </template>
