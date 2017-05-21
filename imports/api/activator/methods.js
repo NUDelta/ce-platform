@@ -23,27 +23,24 @@ import { Random } from 'meteor/random'
 
 import './custom_options.js'
 
-// if not in available_users, no longer have affordance, remove user
-// get next user to notify
 var notifyOneUser = function(available_users, sitNeeds){
   var usersToNotify = [];
   sitNeeds.forEach((sitNeed)=>{
     currentAvailableUsers = available_users.filter(function(x){
         return x.name == sitNeed.name;})[0].users;
-      sitNeed.notifiedUsers.forEach((user)=>{
-        if (!currentAvailableUsers.includes(user)){
-          // remove user, add user from currentavailable
-          var index = sitNeed.notifiedUsers.indexOf(user);
-          if (index > -1) {
-            sitNeed.notifiedUsers.splice(index, 1);
-          }
-          usersToNotify.push({"name": sitNeed.name, "users":[user]})
+    sitNeed.notifiedUsers.forEach((user)=>{
+      if (!currentAvailableUsers.includes(user)){
+        // remove user, add user from currentavailable
+        var index = sitNeed.notifiedUsers.indexOf(user);
+        if (index > -1) {
+          sitNeed.notifiedUsers.splice(index, 1);
         }
-      })
+        usersToNotify.push({"name": sitNeed.name, "users":[user]})
+      }
     })
-    return usersToNotify;
+  })
+  return usersToNotify;
 }
-
 
 var greedyOrganization = function(available_users){
   console.log("in greedy organization", available_users)
@@ -57,23 +54,21 @@ var greedyOrganization = function(available_users){
     });
 
     var user = available_users[0].users.pop();
-    console.log("user", user)
     if(user == null){
       available_users = available_users.slice(1);
-    }else{
+    }
+    else{
       var filtered = usersToNotify.filter(function(x){
         return x.name == available_users[0].name;});
-
-        var alreadyAdded = usersToNotify.map(function(x){
-          return x.users.includes(user)
-        });
-
-        if(!(alreadyAdded.includes(true))){
-          filtered[0].users.push(user);
-        }
+      var alreadyAdded = usersToNotify.map(function(x){
+        return x.users.includes(user)
+      });
+      if(!(alreadyAdded.includes(true))){
+        filtered[0].users.push(user);
       }
     }
-    return usersToNotify;
+  }
+  return usersToNotify;
 }
 
 var notificationFunctions = {"greedyOrganization": greedyOrganization, "notifyOneUser": notifyOneUser};
@@ -89,16 +84,12 @@ export const leggo = new ValidatedMethod({
     },
   }).validator(),
   run({incidentId, notificationStrategy}){
-
     console.log("starting experience with incident ", incidentId)
-
     interval =  Meteor.setInterval(function(){
       var incident = Incidents.findOne({_id: incidentId});
-
       var results = Images.find({incidentId: incidentId}).fetch();
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
-
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       // if(wipInstanceNeeds.length == 0){
       //   console.log("DONE WE FINISHED!")
@@ -107,12 +98,10 @@ export const leggo = new ValidatedMethod({
       // }
       console.log("unmet needs", wipInstanceNeeds);
 
-      console.log("we have not met main goal so lets go!");
-
       var usersToNotify = {};
 
       wipInstanceNeeds.forEach((need)=>{
-        var allUsersWithAffordance = queryFor([need.affordance]); 
+        var allUsersWithAffordance = queryFor([need.affordance]);
         removeUsersWhoMovedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
         var possible_users = usersNotNotified(allUsersWithAffordance); //possible_users haven't been notified
         usersToNotify[need.name] = possible_users;
@@ -121,28 +110,23 @@ export const leggo = new ValidatedMethod({
 
       var reFormatted = [];
       Object.keys(usersToNotify).forEach((key)=>{
-        console.log(key);
         reFormatted.push({"name": key, "users": usersToNotify[key]})
       });
-      console.log(reFormatted)
 
       var f = notificationFunctions[notificationStrategy]
       var userMappings = f(reFormatted);
-      console.log("userMappings: ", userMappings)
       Meteor.call("notify", {userMappings, experience, incidentId});
     }, 10000, true)
   }
 });
 
-
 var globalCallbacks = {}
-
-//{experienceId : {situationNeed: callback, situationNeed, callback}}
 
 function registerCallback(experienceId, templateName, callback){
   if(experienceId in globalCallbacks){
     globalCallbacks[experienceId][templateName]= callback;
-  }else{
+  }
+  else{
     globalCallbacks[experienceId]= {};
     globalCallbacks[experienceId][templateName] = callback;
   }
@@ -163,9 +147,7 @@ export const setNeedAsDone = new ValidatedMethod({
   }).validator(),
   run({incidentId, situationNeed, contributionTemplate}){
     var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
-
     clearUsersFromNeed(situationNeed, experienceId, incidentId);
-
     var test = Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
       {$set :
         { 'situationNeeds.$.done':  true }
@@ -181,11 +163,9 @@ export const setNeedAsDone = new ValidatedMethod({
       if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
         callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
         var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-        // Submissions.find({incidentId:incidentId}).fetch()[0]; //TODO: get this is right
-        console.log("ABOUT TO TCLAL THE CALLBACK");
+        console.log("ABOUT TO CALL THE CALLBACK");
         console.log("most recent: ", mostRecent);
         return callback(mostRecent);
-
       }
     }
   }
@@ -209,27 +189,27 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
 }
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
-    var soft_stopping_criteria = situationNeed.softStoppingCriteria;
-    if(results.length == 0){
-      return false;
-    }
-    var incidentId = results[0].incidentId;
-    if(situationNeed.done == true){
-      console.log("our situation need is done so not calling a callbkac", situationNeed)
-      return true;
-    }
-    if("total" in soft_stopping_criteria){
-      var numFinished = results.filter(function(n){
-        console.log("compare", situationNeed.name , n.situationNeed)
-          return situationNeed.name === n.situationNeed;
-        }).length;
-        console.log("numFinished", numFinished)
-      if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
-          var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
-          return true;
-      }
-    }
+  var soft_stopping_criteria = situationNeed.softStoppingCriteria;
+  if(results.length == 0){
     return false;
+  }
+  var incidentId = results[0].incidentId;
+  if(situationNeed.done == true){
+    console.log("our situation need is done so not calling a callback", situationNeed)
+    return true;
+  }
+  if("total" in soft_stopping_criteria){
+    var numFinished = results.filter(function(n){
+      console.log("compare", situationNeed.name , n.situationNeed)
+        return situationNeed.name === n.situationNeed;
+      }).length;
+      console.log("numFinished", numFinished)
+    if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
+        var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
+        return true;
+    }
+  }
+  return false;
 }
 
 function checkIfContributionFinished(incident, results, contributionTemplate){
@@ -266,17 +246,15 @@ function checkIfGroupFinished(incident, results, group){
     console.log("we have enough group results so we are done!")
     return []
   }
-  else{
-    if(notFinished.length == 0){
+  else {
+    if(notFinished.length == 0) {
       var updatedIncident = Incidents.findOne({_id: incident._id})
       console.log('updatedIncident: ', updatedIncident);
       var notDone = updatedIncident.situationNeeds.filter(function(x){
         return x.done == false;
       })
-      console.log('notDone: ', notDone);
       console.log("All situation needs are done but the group isn't ahhh what to do here!?");
-      return notDone;hink
-      //return incident.situationNeeds;
+      return notDone;
     }
     return notFinished;
   }
@@ -285,8 +263,6 @@ function checkIfGroupFinished(incident, results, group){
 function getUnfinishedNeeds(incident, results, experience){
   var unfinished = [];
   experience.contributionGroups.forEach((group)=>{
-    console.log("group is:", group)
-    console.log("results are ", results)
     unfinished = unfinished.concat(checkIfGroupFinished(incident, results, group));
   });
   return unfinished;
@@ -300,7 +276,6 @@ export const makeIncident = new ValidatedMethod({
     }
   }).validator(),
   run({experienceId}){
-    console.log("making an indcidnet for ", experienceId)
     var experience = Experiences.findOne(experienceId);
     const incident = {
       experienceId: experienceId,
@@ -309,11 +284,9 @@ export const makeIncident = new ValidatedMethod({
       users_need_mapping: [],
     }
     var incidentId = Incidents.insert(incident);
-
     Experiences.update(experienceId, {
       $set: {activeIncident: incidentId}
     });
-    console.log("Incident added!", incidentId);
     return incidentId;
   }
 });
@@ -339,19 +312,6 @@ export const stop = new ValidatedMethod({
   }
 });
 
-
-export const test = new ValidatedMethod({
-  name: 'api.test',
-  validate: new SimpleSchema({
-    experienceId:{
-      type: String
-    }
-  }).validator(),
-  run({experienceId}){
-    console.log("Hiellllloooo test tes tes");
-  }
-});
-
 export const storyBook = new ValidatedMethod({
   name: 'api.storyBook',
   validate: null,
@@ -365,21 +325,18 @@ export const storyBook = new ValidatedMethod({
           "name": "nextScene"+ nextAffordance + Random.id(3),
           "contributionTemplate" : "scene",
           "affordance": nextAffordance,
-          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+          "softStoppingCriteria": {"total": 1}
         }
       });
     }
-    // SituationalNeedTemplate
     var storyPageTemplate = {
       "name" : "scene",
       "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": "String"},
-      //"completionCallback": createNewPageNeed.toString()
     };
-
     const experienceId = Meteor.call("api.createExperience", {
       name: "STORYTEST",
       description: "Write a story",
-      participateTemplate: "storyPage", //pass in: user
+      participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
       contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
@@ -390,18 +347,18 @@ export const storyBook = new ValidatedMethod({
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
     });
-
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
         "affordance": "clouds",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1}
       }
     });
     Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
-}})
+  }
+})
 
 export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',
@@ -422,7 +379,7 @@ export const americanFlag = new ValidatedMethod({
     const experienceId = Meteor.call("api.createExperience", {
       name: "FLAGTEST",
       description: "Build a flag",
-      participateTemplate: "americanFlag", //pass in: user
+      participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
       notificationText: "blah",
       contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 1}},
@@ -461,7 +418,7 @@ export const americanFlag = new ValidatedMethod({
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId});
+    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
   }
 });
 
@@ -487,17 +444,14 @@ export const notify = new ValidatedMethod({
   }).validator(),
   run({userMappings, experience, incidentId}){
     var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
-
     userMappings.forEach((userMap )=>{
       var newUsers = userMap.users;
       newUsers.forEach((u)=>{
         var sitNeed = getSitutationNeedByName(situationNeeds, userMap.name)
-        console.log("got the sitNeed for ", userMap.name, sitNeed)
         if(!sitNeed.notifiedUsers.includes(u)){
           sitNeed.notifiedUsers.push(u);
         }
       });
-
     });
     Incidents.update({_id: incidentId}, {$set: {"situationNeeds": situationNeeds}}, (err, docs) => {
       if (err) { console.log(err); }
@@ -508,13 +462,12 @@ export const notify = new ValidatedMethod({
         userIds: userMap["users"],
         experienceId: experience._id,
         subject: "Event " + experience.name + " is starting for " + userMap["name"],
-        text: "Let's go!",
+        text: experience.notificationText,
         route: "apiCustom"
       });
     })
   }
 });
-
 
 function getP(parts, tag){
   var filtered = parts.filter(function(x){
@@ -538,12 +491,11 @@ function queryFor(search_aff){
 }
 
 function containsAffordance(user_affordances, search_affordance){
-  search_affordance = search_affordance
+  search_affordance = search_affordance;
   search_affordance = search_affordance.filter(function(x){return x != null;});
   var intersect = _.intersection(user_affordances, search_affordance)
   return intersect.length == search_affordance.length;
 }
-
 
 function getResultsByTag(results, tag){
   if(results.length == 0){
@@ -571,89 +523,66 @@ function notifyUsersEvenly(available_users){
   for(var j = 0; j< available_users.length; j++){
     usersToNotify.push({"name": available_users[j].name, "users":[]})
   }
-
   while(available_users.length > 0){
     available_users.sort(function(a,b){
       return a.users.length - b.users.length;
     });
-
     var user = available_users[0].users.pop();
 
     if(user == null){
       available_users = available_users.slice(1);
-    }else{
+    }
+    else{
       var filtered = usersToNotify.filter(function(x){
         return x.name == available_users[0].name;});
 
-        var alreadyAdded = usersToNotify.map(function(x){
-          return x.users.includes(user)
-        });
+      var alreadyAdded = usersToNotify.map(function(x){
+        return x.users.includes(user)
+      });
 
-        if(!(alreadyAdded.includes(true))){
-          filtered[0].users.push(user);
-        }
+      if(!(alreadyAdded.includes(true))){
+        filtered[0].users.push(user);
       }
     }
-    return usersToNotify;
   }
-
-
-  WAIT_TIME = 180000;
-
-
-function removeOldUsers(users, affordance, experienceId){
-  userIdsToRemove = []
-  users.forEach((user)=>{
-    var user_location = Locations.findOne({uid:user})
-    console.log("affordances of user old ornew??", user_location.affordances)
-    if(! containsAffordance(user_location.affordances, affordance)){
-      console.log("yo doesn't contain affordance anymore")
-      userIdsToRemove.push(user);
-      users.splice(users.indexOf(user), 1);
-    }
-  });
-  if(userIdsToRemove.length > 0){
-    console.log("removing usrs", userIdsToRemove, experienceId)
-    Cerebro.removeActiveExperiences(userIdsToRemove, experienceId);
-  }
+  return usersToNotify;
 }
 
-  export const usersNotNotified = function(possibleUserIds){
-    console.log("calling users avalible now")
-    userIdsAvalibleNow = []
+WAIT_TIME = 180000;
 
-    for(let i in possibleUserIds){
-      userId = possibleUserIds[i]
-      let user_location = Locations.findOne({uid: userId});
-      if(user_location == null){
-        continue;
-      }
+export const usersNotNotified = function(possibleUserIds){
+  console.log("calling users avalible now")
+  userIdsAvalibleNow = []
 
-      now = Date.parse(new Date());
-
-      if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
-        //they are avalible
-        console.log(now - user_location.lastNotification)
-        userIdsAvalibleNow.push(userId);
-      }
+  for(let i in possibleUserIds){
+    userId = possibleUserIds[i]
+    let user_location = Locations.findOne({uid: userId});
+    if(user_location == null){
+      continue;
     }
-    console.log("returing users avalible now", userIdsAvalibleNow)
-
-    return userIdsAvalibleNow;
+    now = Date.parse(new Date());
+    if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
+      //they are avalible
+      console.log(now - user_location.lastNotification)
+      userIdsAvalibleNow.push(userId);
+    }
   }
+  console.log("returing users avalible now", userIdsAvalibleNow)
+  return userIdsAvalibleNow;
+}
 
-  export const prepareToNofityUsers = function(userIds, experience, activeIncident){
-    console.log(userIds)
-    if(userIds.length > 0){
-      Cerebro.setActiveExperiences(userIds, experience._id);
-      Cerebro.addIncidents(userIds, activeIncident);
-      userIds.map( userId => {
-        Locations.update({uid: userId}, { $set: {
-          lastNotification : now
-        }}, (err, docs) => {
-          if (err) { console.log(err); }
-          else {  }
-        });
+export const prepareToNofityUsers = function(userIds, experience, activeIncident){
+  console.log(userIds)
+  if(userIds.length > 0){
+    Cerebro.setActiveExperiences(userIds, experience._id);
+    Cerebro.addIncidents(userIds, activeIncident);
+    userIds.map( userId => {
+      Locations.update({uid: userId}, { $set: {
+        lastNotification : now
+      }}, (err, docs) => {
+        if (err) { console.log(err); }
+        else {  }
       });
-    }
+    });
   }
+}
