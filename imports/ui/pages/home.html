@@ -1,15 +1,16 @@
 <template name="home">
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
-      <h4>Your Experiences Running Now!!!</h4>
-      <div class="list-group">
-      {{#each experienceId in activeExperiences}}
-        {{> activeExperience (activeExperienceArgs experienceId)}}
-      {{/each}}
-      {{#if noActiveExperiences}}
-        <p>There are no experiences where you are right now. Walk around and see if any pop up!</p>
-      {{/if}}
-      </div>
+      <button class="refresh btn btn-primary btn-participate btn-block"> Refresh </button>
+        <h4>Your Experiences Running Now!!!</h4>
+        <div class="list-group">
+        {{#each experienceId in activeExperiences}}
+          {{> activeExperience (activeExperienceArgs experienceId this.render)}}
+        {{/each}}
+        {{#if noActiveExperiences}}
+          <p>There are no experiences where you are right now. Walk around and see if any pop up!</p>
+        {{/if}}
+        </div>
     {{else}}
       <!-- TODO: get a loading template -->
       Loading...

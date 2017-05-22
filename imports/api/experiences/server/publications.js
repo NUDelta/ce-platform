@@ -10,7 +10,8 @@ Meteor.publish('experiences.single', function(experienceId) {
   return Experiences.find(experienceId);
 });
 
-Meteor.publish('experiences.activeUser', function() {
+Meteor.publish('experiences.activeUser', function(render) {
+  console.log("subscribing")
   if (!this.userId) {
     this.ready();
   } else {

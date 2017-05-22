@@ -58,4 +58,4 @@ You'll notice that, to match what's recommended from Meteor 1.3, all of the meth
 
 
 - if notifications stop working, check that production is set to true in config.push.json
-- to see logs in terminal: heroku logs - t --app ce-platform
+- to see logs in terminal: heroku logs -t --app ce-platform
