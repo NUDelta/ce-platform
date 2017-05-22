@@ -12,7 +12,7 @@ import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/archive.js';
 import '../../ui/pages/button_game.js';
 import '../../ui/pages/button_results.js';
-import '../../ui/pages/creator.js';
+// import '../../ui/pages/creator.js';
 import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
 // import '../../ui/pages/browse.js';
