@@ -47,44 +47,33 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
   return dict;
 });
 
-// Template.registerHelper('getText', (id) => {
-//  var text = TextEntries.findOne({_id: id});
-//  console.log("text: ", text.text);
-//  console.log("getting text for ", id)
-//  return text.text;
-// });
-//
-// getNextSentenceId(photoIndex){
-//    const instance = Template.instance()
-//
-//    var submission = instance.data.submissions[photoIndex-1];
-//    console.log(submission)
-//    console.log(submission.content.nextSentence)
-//    return submission.content.nextSentence
-//  },
-//
+Template.registerHelper('getText', (id) => {
+ var text = TextEntries.findOne({_id: id});
+ console.log("text: ", text.text);
+ console.log("getting text for ", id)
+ return text.text;
+});
 
 Template.api_custom.helpers({
   data2pass(){
     const instance = Template.instance();
     var incident = instance.state.get('incident');
-
     var subs = Submissions.find({incidentId: incident._id}).fetch();
-
     hasSubs = false;
     if (subs.length > 0) {
       hasSubs = true;
     }
-    console.log("subs are", subs);
-    console.log(subs.length);
+    var submission = subs[subs.length-1];
+    console.log(submission)
+    var id = submission.content.nextSentence
+    console.log(id)
+    var text = TextEntries.findOne({_id: id}).text;
+    console.log(text);
 
     // TODO: fix, dont want to get by experience
     var exp = instance.state.get('experience')
     aContribTemplate = exp.contributionGroups[0].contributionTemplates[0];
     contributions = aContribTemplate.contributions;
-    var illustration = contributions.illustration;
-    var nextSentence = contributions.nextSentence;
-    var nextAffordance = contributions.nextAffordance;
     incident.situationNeeds.forEach((sitNeed)=>{
       if(sitNeed.notifiedUsers.includes(Meteor.userId())){
         situationNeedName = sitNeed.name;
@@ -93,7 +82,6 @@ Template.api_custom.helpers({
       }
     });
     var contributionTemplate;
-
     exp.contributionGroups.forEach((group)=>{
       group.contributionTemplates.forEach((template)=>{
         if(template.name == contributionTemplateName){
@@ -101,17 +89,31 @@ Template.api_custom.helpers({
         }
       });
     });
-
     return {"incident": incident,
             "situationNeedName": situationNeedName,
             "contributionTemplate": contributionTemplate,
             "hasSubs": hasSubs,
-            "pageNum": subs.length +1}
+            "pageNum": subs.length +1,
+            "prevSentence": text}
   },
   template_name() {
     const instance = Template.instance();
     console.log("temp name:", instance.state.get('experience').participateTemplate);
     return instance.state.get('experience').participateTemplate;
+  },
+  getPrevSentenceId(photoIndex){
+    const instance = Template.instance()
+    var incident = instance.state.get('incident');
+    console.log("incident")
+    var subs = Submissions.find({incidentId: incident._id}).fetch();
+    console.log("whate", subs)
+    // var submission = instance.data.submissions[photoIndex-1];
+    // console.log(submission)
+    // console.log(submission.content.nextSentence)
+    var id = submission.content.nextSentence
+    var text = TextEntries.findOne({_id: id});
+    console.log("text: ", text.text);
+    return text.text;
   }
 });
 
@@ -150,6 +152,5 @@ Template.api_custom.onCreated(function() {
   this.usesModule = (module) => {
     return _.contains(this.state.get('modules'), module);
   };
-
   //need to deal with what happens when an experience ends (time stamp incidents?)
 });

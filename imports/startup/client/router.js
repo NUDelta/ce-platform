@@ -15,7 +15,7 @@ import '../../ui/pages/button_results.js';
 import '../../ui/pages/creator.js';
 import '../../ui/pages/participate.js';
 import '../../ui/pages/results.js';
-import '../../ui/pages/browse.js';
+// import '../../ui/pages/browse.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/available_experiences.js';
 import '../../ui/custom_exports.js';
@@ -67,9 +67,9 @@ Router.route('/admin/locations', {
   template: 'admin_locations'
 });
 
-Router.route('/create', {
-  name: 'creator'
-});
+// Router.route('/create', {
+//   name: 'creator'
+// });
 
 Router.route('/participate/button_game', {
   template: 'button_game'
@@ -96,9 +96,9 @@ Router.route('/archive', {
   waitOn: function() { return Meteor.subscribe('experiences'); }
 });
 
-Router.route('/browse', {
-  name: 'browse'
-});
+// Router.route('/browse', {
+//   name: 'browse'
+// });
 
 Router.route('/profile', {
   name: 'profile'
