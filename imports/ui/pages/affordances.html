@@ -1,6 +1,10 @@
 <template name="affordances">
     {{#if currentUser}}
         {{#if Template.subscriptionsReady}}
+
+            <h4> Your location </h4>
+            {{location}}
+            <br><br>
             <h4> Your current affordances </h4>
             {{#each aff in affordances}}
                 {{aff}} <br>
