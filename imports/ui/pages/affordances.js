@@ -21,9 +21,11 @@ Template.affordances.onCreated(function() {
 
 Template.affordances.helpers({
     affordances(){
-        console.log(Meteor.userId())
         var location = Locations.findOne({uid: Meteor.userId()})
-        console.log('location: ', location);
         return location.affordances
+    },
+    location(){
+        var location = Locations.findOne({uid: Meteor.userId()})
+        return location.lat + " / " + location.lng
     }
 });
