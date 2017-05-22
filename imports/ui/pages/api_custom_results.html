@@ -52,51 +52,72 @@
     }
 
     /* Next & previous buttons */
-    .prev, .next {
+    #prev, #next {
       cursor: pointer;
-      position: absolute;
-      top: 50%;
-      width: auto;
-      padding: 16px;
-      margin-top: -22px;
-      color: white;
+      bottom: 0px;
+      color: black;
       font-weight: bold;
       font-size: 18px;
-      transition: 0.6s ease;
-      border-radius: 0 3px 3px 0;
+      border-radius: 0 3px 3px 0;*/
     }
 
     /* Position the "next button" to the right */
-    .next {
-      right: 0;
-      border-radius: 3px 0 0 3px;
+    #next {
+      border-radius: 3px 0 0 3px;*/
     }
 
-    /* On hover, add a black background color with a little bit see-through */
-    .prev:hover, .next:hover {
-      background-color: rgba(0,0,0,0.8);
+    .caption {
+      margin-top:15px;
+    }
+
+    .caption-text {
+      word-wrap: break-word;
+      margin: 0 auto;
+    }
+
+    .illustration {
+      height: 350px;
+      overflow: hidden;
+      margin-top:10px;
+    }
+    .img {
+      height: 350px;
+    }
+    #img0 {
+      display: inline;
     }
   </style>
 </head>
 
 <div class="slideshow-container">
   {{#each submission in this.submissions}}
-  <div class="mySlides" style="">
-    submission is {{submission.content.illustration}}
-    {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
-    
-    {{#if (shouldLoadText @index) }}
-      <div class="text">{{getText (getNextSentenceId @index) }}</div>
-    {{else}}
-      It was a dark and stormy night.
-    {{/if}}
-
-  </div>
-    <br>
+    <div class="mySlides" id="img{{@index}}">
+      <div class="illustration row">
+        {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
+      </div>
+      <div class="row caption">
+        <div class="col-xs-2">
+          {{#if (isFirst @index) }}
+          <a class="prev">&#10094;</a>
+          {{/if}}
+        </div>
+        <div class="caption-text col-xs-8">
+          {{#if (isFirst @index) }}
+            {{getText (getNextSentenceId @index) }}
+          {{else}}
+            It was a dark and stormy night.
+          {{/if}}
+        </div>
+        <div class="col-xs-2">
+          {{#if (notLast @index)}}
+          <a class="next">&#10095;</a>
+          {{/if}}
+        </div>
+      </div>
+    </div>
   {{/each}}
-  <a class="prev">&#10094;</a>
-  <a class="next">&#10095;</a>
 
 </div>
+  
 
 </template>

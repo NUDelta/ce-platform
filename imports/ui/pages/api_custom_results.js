@@ -22,7 +22,6 @@ import { Incidents } from '../../api/incidents/incidents.js';
 Template.api_custom_results.helpers({
   data2pass(){
     const instance = Template.instance();
-    console.log(instance.state.get("incidentId"));
     var imgs =  Images.find({incidentId: instance.state.get("incidentId")}).fetch();
     var text =  TextEntries.find({incidentId: instance.state.get("incidentId")}).fetch();
     var subs = Submissions.find({incidentId: instance.state.get("incidentId")}).fetch();
@@ -30,7 +29,6 @@ Template.api_custom_results.helpers({
   },
   template_name() {
     const instance = Template.instance();
-    console.log("temp name:", instance.state.get('experience').resultsTemplate);
     return instance.state.get('experience').resultsTemplate;
   },
 });
@@ -40,9 +38,6 @@ Template.registerHelper( 'getImage', (id) => {
 });
 Template.registerHelper( 'getText', (id) => {
   var text = TextEntries.findOne({_id: id});
-  console.log('text: ', text.text);
-  console.log('getting text for ', id)
-
   return text.text;
 });
 
@@ -97,7 +92,6 @@ function currentSlide(n) {
 function showSlides(n) {
   var i;
   var slides = document.getElementsByClassName("mySlides");
-
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
@@ -108,7 +102,6 @@ function showSlides(n) {
 
 Template.storyPageResults.onCreated(function() {
   this.autorun(() => {
-    console.log("loaded")
     window.onload = function () {
       showSlides(slideIndex);
     }
@@ -118,27 +111,27 @@ Template.storyPageResults.onCreated(function() {
 Template.storyPageResults.helpers({
   getNextSentenceId(photoIndex){
     const instance = Template.instance()
-
     var submission = instance.data.submissions[photoIndex-1];
-    console.log(submission)
-    console.log(submission.content.nextSentence)
     return submission.content.nextSentence
 
   },
-  shouldLoadText(index){
+  isFirst(index){
     return index > 0;
+  },
+  notLast(index){
+    const instance = Template.instance()
+    var length = instance.data.submissions.length
+    return index < length-1;
   }
 });
 
 Template.storyPageResults.events({
   'click .prev'(event, instance) {
     event.preventDefault();
-    console.log("LEFTT");
     plusSlides(-1)
   },
   'click .next'(event, instance) {
     event.preventDefault();
-    console.log("RIGHT");
     plusSlides(1)
   }
 });
