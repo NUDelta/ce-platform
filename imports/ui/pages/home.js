@@ -19,7 +19,6 @@ Template.home.onCreated(function() {
       this.subscribe('experiences.activeUser', Template.instance().state.get('render')); // TODO: make more specific
     });
     
-
 });
 
 Template.home.events({
@@ -27,9 +26,9 @@ Template.home.events({
     ///Template.instance().state.set('render', false);
     var rend = Template.instance().state.get('render');
     Template.instance().state.set('render', false);
+    location.reload();
 
   }
-
 })
 
 Template.home.helpers({

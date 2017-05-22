@@ -25,9 +25,15 @@ import '../../ui/pages/api_custom.html';
 import '../../ui/pages/api_custom.js';
 import '../../ui/pages/api_custom_results.html';
 import '../../ui/pages/api_custom_results.js';
+import '../../ui/pages/affordances.js';
 
 Router.configure({
   layoutTemplate: 'layout'
+});
+
+Router.route('/affordances', {
+  name: 'affordances',
+  template: 'affordances'
 });
 
 Router.route('/apicustom/:_id', {

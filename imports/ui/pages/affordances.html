@@ -1,0 +1,15 @@
+<template name="affordances">
+    {{#if currentUser}}
+        {{#if Template.subscriptionsReady}}
+            <h4> Your current affordances </h4>
+            {{#each aff in affordances}}
+                {{aff}} <br>
+            {{/each}}
+        {{else}}
+        Loading...
+        {{/if}}
+    {{else}}
+        <h4>Sign in to see your affordances</h4>
+    {{/if}}
+
+</template>
