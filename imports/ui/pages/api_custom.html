@@ -5,18 +5,15 @@
 </template>
 
 <template name="americanFlag">
-  "hello dummy"
+  <h4>Let's build the French flag</h4>
   <p> Take a picture of something {{this.user_mapping}} to help us build the French Flag! </p>
-
   {{ > Template.dynamic template="cameraUpload" data=(storyContribs this.situationNeedName this.contributionTemplate)}}
 </template>
 
 <template name="cheers1">
   "HI"
   {{ experience.description }}
-
   {{this.user_mapping}}
-
   {{ > Template.dynamic template="cameraUpload" data=camera_options}}
 </template>
 
@@ -25,7 +22,7 @@
   <h4>Help us write and illustrate a story! You're on page {{this.pageNum}}. </h4>
   {{#if this.hasSubs}}
     1. Take a picture for the following sentence: <br>
-        <div style="padding-left:30px">{{this.prevSentence}}</div>
+        <div style="padding-left:30px">{{getPrevSentence this.submissions}}</div>
     2. Write the next sentence in the story
     <br>
     3. Add an affordance for the sentence

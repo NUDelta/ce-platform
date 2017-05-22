@@ -47,11 +47,11 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
   return dict;
 });
 
-Template.registerHelper('getText', (id) => {
- var text = TextEntries.findOne({_id: id});
- console.log("text: ", text.text);
- console.log("getting text for ", id)
- return text.text;
+Template.registerHelper('getPrevSentence', (subs) => {
+  var submission = subs[subs.length-1];
+  var id = submission.content.nextSentence
+  var prevSentence = TextEntries.findOne({_id: id}).text;
+  return prevSentence;
 });
 
 Template.api_custom.helpers({
@@ -63,13 +63,6 @@ Template.api_custom.helpers({
     if (subs.length > 0) {
       hasSubs = true;
     }
-    var submission = subs[subs.length-1];
-    console.log(submission)
-    var id = submission.content.nextSentence
-    console.log(id)
-    var text = TextEntries.findOne({_id: id}).text;
-    console.log(text);
-
     // TODO: fix, dont want to get by experience
     var exp = instance.state.get('experience')
     aContribTemplate = exp.contributionGroups[0].contributionTemplates[0];
@@ -94,7 +87,7 @@ Template.api_custom.helpers({
             "contributionTemplate": contributionTemplate,
             "hasSubs": hasSubs,
             "pageNum": subs.length +1,
-            "prevSentence": text}
+            "submissions": subs}
   },
   template_name() {
     const instance = Template.instance();
