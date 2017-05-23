@@ -41,8 +41,9 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
       textContributions.push(key);
     }
     if(typeof value == "object"){
-      console.log('value: ', value);
-      dropDownContributions.push({key: value[1]});
+      var newDict = {}
+      newDict[key] = value[1]
+      dropDownContributions.push(newDict);
     }
   }
   dict["situationNeed"] = situationNeedName,

@@ -20,6 +20,7 @@
         {{#each dict in this.dropDownContributions}}
           <select class= "dropdown" id = {{getKey dict}}>
             {{#each option in (getOptions dict)}}
+            {{option}}
               <option value="{{option}}">{{option}}</option>
             {{/each}}
           </select>

@@ -34,10 +34,12 @@ Template.cameraUpload.onCreated(function() {
 
 Template.cameraUpload.helpers({
   getKey(dict){
+
     return Object.keys(dict)[0];
   },
   getOptions(dict){
-    return Object.values(dict);
+    return Object.values(dict)[0];
+    
   }
   
 });
@@ -52,7 +54,7 @@ Template.cameraUpload.events({
 
     // TODO: Probably can generalize this logic
     var forms = event.target.getElementsByClassName("form-control")
-    var dropdowns = event.target.getElementsByClassName("dropdown")
+    var dropDowns = event.target.getElementsByClassName("dropdown")
 
     // const captions = event.target.write && event.target.write.value || '';
     // console.log("captions are ", captions)
@@ -68,25 +70,22 @@ Template.cameraUpload.events({
 
     // SUBMISSION.INSERT
     var submissions = {};
-    for(var i =0; i < dropdowns.length; i++){
-      var index = dropdowns[i].selectedIndex;
-      console.log("text is ", dropdowns[i][index].value);
+    for(var i =0; i < dropDowns.length; i++){
+      var index = dropDowns[i].selectedIndex;
         var id = TextEntries.insert({
           submitter: Meteor.userId(),
-          text: dropdowns[i][index].value,
-          contribution: dropdowns[i].id,
+          text: dropDowns[i][index].value,
+          contribution: dropDowns[i].id,
           experienceId: experienceId,
           incidentId: incidentId,
           lat: location.lat,
           lng: location.lng,
           location: place,
         });
-        submissions[forms[i].id] = id;
+        submissions[dropDowns[i].id] = id;
       }
     
     for(var i =0; i < forms.length; i++){
-      console.log("text is ", forms[i].value);
-      console.log("contribution is", forms[i].id)
         var id = TextEntries.insert({
           submitter: Meteor.userId(),
           text: forms[i].value,
@@ -102,8 +101,6 @@ Template.cameraUpload.events({
 
 
     if (instance.data.imageContributions) {
-      console.log("adding an image to the db", instance.data.imageContributions)
-
       var imageFile = Images.insert(picture, (err, imageFile) => {
         if (err) {
           // shouldn't happen
@@ -139,10 +136,7 @@ Template.cameraUpload.events({
     } else {
       Router.go('/apicustomresults/'+incidentId);
     }
-    console.log("we got the image ID!", imageFile._id)
     submissions[instance.data.imageContributions] = imageFile._id;
-    console.log(submissions)
-
     Submissions.insert({
       submitter: Meteor.userId(),
       experienceId: experienceId,
@@ -152,10 +146,8 @@ Template.cameraUpload.events({
       if (err) {
         console.log(err);
       } else {
-        console.log("submission susccesss",docs);
       }});
 
-    console.log("WE REACHED THE ENDEEEDDDDD")
   },
   'click #participate-btn'(event, instance) {
     event.preventDefault();
