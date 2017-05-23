@@ -29,6 +29,7 @@ Template.registerHelper('camera_options', (situationNeedName, contributionTempla
 Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
   var dict = {}
   var textContributions = [];
+  var dropDownContributions = [];
   var imageContributions = false;
   var contributions = contributionTemplate.contributions;
   for (var key in contributions) {
@@ -39,11 +40,16 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
     if (value == "String"){
       textContributions.push(key);
     }
+    if(typeof value == "object"){
+      console.log('value: ', value);
+      dropDownContributions.push({key: value[1]});
+    }
   }
   dict["situationNeed"] = situationNeedName,
   dict["contributionTemplateName"] = contributionTemplate.name
   dict["textContributions"] = textContributions
   dict["imageContributions"] = imageContributions
+  dict["dropDownContributions"] = dropDownContributions
   return dict;
 });
 

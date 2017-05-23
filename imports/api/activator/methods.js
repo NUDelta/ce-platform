@@ -330,7 +330,7 @@ export const storyBook = new ValidatedMethod({
     }
     var storyPageTemplate = {
       "name" : "scene",
-      "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": "String"},
+      "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace"]] }
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "STORYTEST",

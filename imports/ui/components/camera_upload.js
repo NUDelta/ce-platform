@@ -33,13 +33,13 @@ Template.cameraUpload.onCreated(function() {
 });
 
 Template.cameraUpload.helpers({
-  loopCount: function(count){
-    var countArr = [];
-    for (var i=0; i<count; i++){
-      countArr.push({});
-    }
-    return countArr;
+  getKey(dict){
+    return Object.keys(dict)[0];
+  },
+  getOptions(dict){
+    return Object.values(dict);
   }
+  
 });
 
 Template.cameraUpload.events({
@@ -52,6 +52,7 @@ Template.cameraUpload.events({
 
     // TODO: Probably can generalize this logic
     var forms = event.target.getElementsByClassName("form-control")
+    var dropdowns = event.target.getElementsByClassName("dropdown")
 
     // const captions = event.target.write && event.target.write.value || '';
     // console.log("captions are ", captions)
@@ -67,8 +68,22 @@ Template.cameraUpload.events({
 
     // SUBMISSION.INSERT
     var submissions = {};
-
-
+    for(var i =0; i < dropdowns.length; i++){
+      var index = dropdowns[i].selectedIndex;
+      console.log("text is ", dropdowns[i][index].value);
+        var id = TextEntries.insert({
+          submitter: Meteor.userId(),
+          text: dropdowns[i][index].value,
+          contribution: dropdowns[i].id,
+          experienceId: experienceId,
+          incidentId: incidentId,
+          lat: location.lat,
+          lng: location.lng,
+          location: place,
+        });
+        submissions[forms[i].id] = id;
+      }
+    
     for(var i =0; i < forms.length; i++){
       console.log("text is ", forms[i].value);
       console.log("contribution is", forms[i].id)

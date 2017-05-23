@@ -17,6 +17,13 @@
             <input id={{key}} name="write" type="text" class="form-control" placeholder="Write your thing here" required>
           </div>
         {{/each}}
+        {{#each dict in this.dropDownContributions}}
+          <select class= "dropdown" id = {{getKey dict}}>
+            {{#each option in (getOptions dict)}}
+              <option value="{{option}}">{{option}}</option>
+            {{/each}}
+          </select>
+        {{/each}}
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
