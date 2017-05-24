@@ -103,7 +103,7 @@ export const createIncident = new ValidatedMethod({
     const incidentId = Incidents.insert({
       date: Date.parse(new Date()),
       name: experience.name,
-      experienceId: experience._id,
+      experienceId: experience._id
     },  (err, docs) => {
       if (err) { console.log("errorrr", err); }
       else { console.log(docs)}

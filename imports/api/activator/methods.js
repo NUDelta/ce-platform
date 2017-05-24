@@ -21,48 +21,73 @@ import { Images } from '../images/images.js';
 
 import { Random } from 'meteor/random'
 
-var notifyOneUser = function(available_users, sitNeeds){
-  var usersToNotify = [];
-  sitNeeds.forEach((sitNeed)=>{
-    currentAvailableUsers = available_users.filter(function(x){
-        return x.name == sitNeed.name;})[0].users;
-    sitNeed.notifiedUsers.forEach((user)=>{
-      if (!currentAvailableUsers.includes(user)){
-        // remove user, add user from currentavailable
-        var index = sitNeed.notifiedUsers.indexOf(user);
-        if (index > -1) {
-          sitNeed.notifiedUsers.splice(index, 1);
-        }
-        usersToNotify.push({"name": sitNeed.name, "users":[user]})
-      }
+var notifyOneUser = function (potentialUsers, situationalNeeds) {
+  var usersToNotify = {};
+  var alreadyNotified = [];
+
+  var ogKeys = Object.keys(potentialUsers)
+
+  //remove the potentialUsers for situationalNeeds that already have a users who have been notified
+  for (var i = 0; i < ogKeys.length; i++) {
+    var numAlreadyNotified = situationalNeeds.filter(function (s) {
+      return s.name == ogKeys[i];
+    })[0].notifiedUsers.length;
+
+    if (numAlreadyNotified > 0) {
+      delete potentialUsers[ogKeys[i]]
+    }
+  }
+
+  while (Object.keys(potentialUsers).length > 0) {
+    var keys = Object.keys(potentialUsers);
+    keys.sort(function (a, b) {
+      return potentialUsers[a].length - potentialUsers[b].length;
     })
-  })
+
+    var theKey = keys[0];
+    var user = potentialUsers[theKey].pop();
+
+    if (alreadyNotified.includes(user)) {
+      continue;
+    }
+    if (user == null) {
+      delete potentialUsers[theKey]
+    }
+    else {
+      usersToNotify[theKey] = [user];
+      delete potentialUsers[theKey];
+      alreadyNotified.push(user);
+    }
+  }
   return usersToNotify;
 }
 
-var greedyOrganization = function(available_users){
-  console.log("in greedy organization", available_users)
-  var usersToNotify = [];
-  for(var j = 0; j< available_users.length; j++){
-    usersToNotify.push({"name": available_users[j].name, "users":[]})
-  }
-  while(available_users.length > 0){
-    available_users.sort(function(a,b){
-      return a.users.length - b.users.length;
-    });
+var greedyOrganization = function (potentialUsers) {
+  var usersToNotify = {};
+  var alreadyNotified = [];
 
-    var user = available_users[0].users.pop();
-    if(user == null){
-      available_users = available_users.slice(1);
+  while (Object.keys(potentialUsers).length > 0) {
+    var keys = Object.keys(potentialUsers);
+    keys.sort(function (a, b) {
+      return potentialUsers[a].length - potentialUsers[b].length;
+    })
+    var theKey = keys[0];
+
+    var user = potentialUsers[theKey].pop();
+    if (alreadyNotified.includes(user)) {
+      continue;
     }
-    else{
-      var filtered = usersToNotify.filter(function(x){
-        return x.name == available_users[0].name;});
-      var alreadyAdded = usersToNotify.map(function(x){
-        return x.users.includes(user)
-      });
-      if(!(alreadyAdded.includes(true))){
-        filtered[0].users.push(user);
+    if (user == null) {
+      delete potentialUsers[theKey]
+    }
+    else {
+      if (theKey in usersToNotify) {
+        usersToNotify[theKey].push(user);
+        alreadyNotified.push(user);
+
+      } else {
+        usersToNotify[theKey] = [user];
+        alreadyNotified.push(user);
       }
     }
   }
@@ -96,24 +121,22 @@ export const leggo = new ValidatedMethod({
       }
       console.log("unmet needs", wipInstanceNeeds);
 
-      var usersToNotify = {};
+      var potentialUsersToNotify = {};
 
       wipInstanceNeeds.forEach((need)=>{
         var allUsersWithAffordance = queryFor([need.affordance]);
         removeUsersWhoMovedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
         var possible_users = usersNotNotified(allUsersWithAffordance); //possible_users haven't been notified
-        usersToNotify[need.name] = possible_users;
-        console.log("available users", usersToNotify)
+        potentialUsersToNotify[need.name] = possible_users;
+        console.log("available users", potentialUsersToNotify)
       });
 
-      var reFormatted = [];
-      Object.keys(usersToNotify).forEach((key)=>{
-        reFormatted.push({"name": key, "users": usersToNotify[key]})
-      });
 
-      var f = notificationFunctions[notificationStrategy]
-      var userMappings = f(reFormatted);
-      Meteor.call("notify", {userMappings, experience, incidentId});
+      var assignWhoToNotify = notificationFunctions[notificationStrategy]
+      var usersToNotify = assignWhoToNotify(potentialUsersToNotify, wipInstanceNeeds);
+      console.log('usersToNotify: ', usersToNotify);
+
+      Meteor.call('notify', {usersToNotify, experience, incidentId});
     }, 10000, true)
   }
 });
@@ -184,8 +207,10 @@ function removeSpecificUsersFromNeed(users, situationNeed, experienceId, inciden
 function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
   var wait = 5*60*100
-  Meteor.setTimeout(removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId), wait)
-}
+  Meteor.setTimeout(function(){
+    removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
+  }, wait)
+} 
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
   var soft_stopping_criteria = situationNeed.softStoppingCriteria;
@@ -333,7 +358,7 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace"]] }
     };
     const experienceId = Meteor.call("api.createExperience", {
-      name: "STORYTEST",
+      name: "Storytime",
       description: "Write a story",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
@@ -355,7 +380,7 @@ export const storyBook = new ValidatedMethod({
         "softStoppingCriteria": {"total": 1}
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
+    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "notifyOneUser"});
   }
 })
 
@@ -430,8 +455,8 @@ function getSitutationNeedByName(sitatuionNeeds, name){
 export const notify = new ValidatedMethod({
   name: 'notify',
   validate: new SimpleSchema({
-    userMappings: {
-      type: [Object],
+    usersToNotify: {
+      type: Object,
       blackbox: true
     },
     experience: {
@@ -441,12 +466,13 @@ export const notify = new ValidatedMethod({
       type: String
     }
   }).validator(),
-  run({userMappings, experience, incidentId}){
+  run({usersToNotify, experience, incidentId}){
     var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
-    userMappings.forEach((userMap )=>{
-      var newUsers = userMap.users;
+
+    Object.keys(usersToNotify).forEach((key)=>{
+      var newUsers = usersToNotify[key]
       newUsers.forEach((u)=>{
-        var sitNeed = getSitutationNeedByName(situationNeeds, userMap.name)
+        var sitNeed = getSitutationNeedByName(situationNeeds, key)
         if(!sitNeed.notifiedUsers.includes(u)){
           sitNeed.notifiedUsers.push(u);
         }
@@ -455,12 +481,12 @@ export const notify = new ValidatedMethod({
     Incidents.update({_id: incidentId}, {$set: {"situationNeeds": situationNeeds}}, (err, docs) => {
       if (err) { console.log(err); }
     });
-    userMappings.forEach((userMap) =>{
-      prepareToNofityUsers(userMap["users"], experience, incidentId);
+    Object.keys(usersToNotify).forEach((key) =>{
+      prepareToNofityUsers(usersToNotify[key], experience, incidentId);
       Cerebro.notify({
-        userIds: userMap["users"],
+        userIds: usersToNotify[key],
         experienceId: experience._id,
-        subject: "Event " + experience.name + " is starting for " + userMap["name"],
+        subject: "Event " + experience.name + " is starting for " + key,
         text: experience.notificationText,
         route: "apiCustom"
       });
