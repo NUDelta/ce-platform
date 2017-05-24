@@ -25,6 +25,7 @@ Template.api_custom_results.helpers({
     var imgs =  Images.find({incidentId: instance.state.get("incidentId")}).fetch();
     var text =  TextEntries.find({incidentId: instance.state.get("incidentId")}).fetch();
     var subs = Submissions.find({incidentId: instance.state.get("incidentId")}).fetch();
+    console.log(subs)
     return {"images": imgs, "text": text, "submissions": subs}
   },
   template_name() {

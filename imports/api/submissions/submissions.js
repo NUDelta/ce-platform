@@ -24,6 +24,10 @@ Schema.Submission = new SimpleSchema({
     type: String,
     label: 'name of the situationNeed',
   },
+  contributionTemplate: {
+     type: String,
+    label: 'name of the contributionTemplate',
+  },
   content: {
     type: Object, //Dictionary (ids of contributions)
     blackbox: true

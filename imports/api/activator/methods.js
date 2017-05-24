@@ -245,13 +245,14 @@ function checkIfContributionFinished(incident, results, contributionTemplate){
 
   var situationNeeds = incident.situationNeeds.filter(function(x){
     return x.contributionTemplate == contributionTemplate.name});
-    console.log("situationneeds are: ", situationNeeds)
 
-  situationNeeds.forEach((need)=>{
+  situationNeeds.forEach((need)=>{ 
     if(!checkIfSituationNeedFinished(results, need, contributionTemplate)){
       notFinished.push(need)
     }
   });
+    console.log('number done for ', contributionTemplate.name,  numDone);
+
   return {numFinished: numDone, notFinished: notFinished};
 }
 
@@ -260,7 +261,6 @@ function checkIfGroupFinished(incident, results, group){
   var numFinished = 0;
 
   group.contributionTemplates.forEach((contributionTemplate)=>{
-    console.log("contributionTemplate is: ", contributionTemplate)
     var info = checkIfContributionFinished(incident, results, contributionTemplate);
     numFinished += info.numFinished;
     notFinished = notFinished.concat(info.notFinished);
@@ -273,7 +273,6 @@ function checkIfGroupFinished(incident, results, group){
   else {
     if(notFinished.length == 0) {
       var updatedIncident = Incidents.findOne({_id: incident._id})
-      console.log('updatedIncident: ', updatedIncident);
       var notDone = updatedIncident.situationNeeds.filter(function(x){
         return x.done == false;
       })
@@ -363,7 +362,7 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 2}}]
     });
 
     registerCallback(experienceId, "scene", createNewPageNeed);
