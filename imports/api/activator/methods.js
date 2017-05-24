@@ -354,7 +354,9 @@ export const storyBook = new ValidatedMethod({
     }
     var storyPageTemplate = {
       "name" : "scene",
-      "contributions" : {"illustration": "Image", "nextSentence": "String", "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace"]] }
+      "contributions" : {"illustration": "Image", 
+                        "nextSentence": "String",  
+                        "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace", "end_of_f_wing", "atrium", "k_wing", "l_wing", "starbucks", "coffee", "donuts", "collegeuniv", "sushi"]] }
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime",
@@ -362,7 +364,7 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 2}}]
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
     });
 
     registerCallback(experienceId, "scene", createNewPageNeed);

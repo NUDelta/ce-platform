@@ -165,7 +165,7 @@ Template.storyPage.helpers({
         return text.text;
     },
     getPageNum(){
-      return this.submissions.length + 1;
+      return this.submissions.length;
     },
     notLastPage(){
       return this.submissions.length <= 9;
