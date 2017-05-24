@@ -21,6 +21,7 @@ Template.profile.helpers({
     const incident = Incidents.findOne(pastIncident);
     return {
       incidentId: pastIncident,
+      date: incident.date,
       experience: Experiences.findOne(incident.experienceId)
     }
   },

@@ -1,3 +1,15 @@
 <template name="resultLink">
-    <a href="/apicustomresults/{{ incidentId }}" class="list-group-item">{{ experience.name }}</a>
+    <a href="/apicustomresults/{{ incidentId }}" class="list-group-item">
+    
+    <div class="row">
+        <div class="col-xs-7">
+             {{ experience.name }}
+        </div>
+        <div class="col-xs-5">
+            {{formatDate date}} 
+
+        </div>
+    </div>
+    
+    </a>
 </template>

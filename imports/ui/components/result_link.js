@@ -13,6 +13,9 @@ Template.resultLink.onCreated(function () {
         type: String,
         regEx: SimpleSchema.RegEx.Id
       },
+      date:{
+        type: String
+      },
       experience: {
         type: Schema.Experience
       }
@@ -20,3 +23,13 @@ Template.resultLink.onCreated(function () {
   });
 });
 
+
+Template.resultLink.helpers({
+  formatDate(date){
+    var d = new Date(parseInt(date));
+    var string = ""
+    string += d.getMonth()+1 + "/" + d.getDate() + ", " + d.getHours() + ":" + d.getMinutes();
+    return string;
+  }
+
+});

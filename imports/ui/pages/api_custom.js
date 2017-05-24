@@ -1,4 +1,5 @@
 import './api_custom.html';
+import '../components/contributions.html';
 
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -8,16 +9,16 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
-import '../components/camera_upload.js';
-
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Submissions } from '../../api/submissions/submissions.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
-import { CONFIG } from '../../api/config.js'
-import { getNumberOfUser } from '../../api/incidents/methods.js';
+
+import { photoInput } from '../globalHelpers.js';
+import { photoUpload } from '../globalHelpers.js';
+
 
 Template.registerHelper('camera_options', (situationNeedName, contributionTemplate) => {
   return {"camera": true,
@@ -55,11 +56,29 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
 });
 
 Template.registerHelper('getPrevSentence', (subs) => {
+  if(subs.length == 0){
+    return "It was a dark and stormy night."
+  }
   var submission = subs[subs.length-1];
   var id = submission.content.nextSentence
   var prevSentence = TextEntries.findOne({_id: id}).text;
   return prevSentence;
 });
+
+Template.registerHelper('passContributionName', (name) => {
+      const instance = Template.instance();
+      console.log('instance: ', instance);
+      var contributions = instance.data.contributionTemplate.contributions;
+      console.log('contributions: ', contributions);
+      if(typeof contributions[name] == "object"){
+        console.log(name, contributions[name][1])
+        return {key:name, options: contributions[name][1]}
+      }
+      return {key: name}
+
+});
+
+
 
 Template.api_custom.helpers({
   data2pass(){
@@ -92,28 +111,12 @@ Template.api_custom.helpers({
     return {"incident": incident,
             "situationNeedName": situationNeedName,
             "contributionTemplate": contributionTemplate,
-            "hasSubs": hasSubs,
-            "pageNum": subs.length +1,
             "submissions": subs}
   },
   template_name() {
     const instance = Template.instance();
     console.log("temp name:", instance.state.get('experience').participateTemplate);
     return instance.state.get('experience').participateTemplate;
-  },
-  getPrevSentenceId(photoIndex){
-    const instance = Template.instance()
-    var incident = instance.state.get('incident');
-    console.log("incident")
-    var subs = Submissions.find({incidentId: incident._id}).fetch();
-    console.log("whate", subs)
-    // var submission = instance.data.submissions[photoIndex-1];
-    // console.log(submission)
-    // console.log(submission.content.nextSentence)
-    var id = submission.content.nextSentence
-    var text = TextEntries.findOne({_id: id});
-    console.log("text: ", text.text);
-    return text.text;
   }
 });
 
@@ -153,4 +156,189 @@ Template.api_custom.onCreated(function() {
     return _.contains(this.state.get('modules'), module);
   };
   //need to deal with what happens when an experience ends (time stamp incidents?)
+});
+
+Template.storyPage.helpers({
+    getPrevSentenceId(photoIndex){
+        const instance = Template.instance()
+        var incident = instance.state.get('incident');
+        console.log("incident")
+        var subs = Submissions.find({incidentId: incident._id}).fetch();
+        console.log("whate", subs)
+        // var submission = instance.data.submissions[photoIndex-1];
+        // console.log(submission)
+        // console.log(submission.content.nextSentence)
+        var id = submission.content.nextSentence
+        var text = TextEntries.findOne({_id: id});
+        console.log("text: ", text.text);
+        return text.text;
+    },
+    getPageNum(){
+      return this.submissions.length + 1;
+    },
+    notLastPage(){
+      return this.submissions.length <= 9;
+    }
+  });
+
+  Template.api_custom.events({
+  'submit form'(event, instance) {
+    console.log("cameraUpload");
+
+    event.preventDefault();
+
+    instance.submitting.set(true);
+
+    // TODO: Probably can generalize this logic
+
+    // const captions = event.target.write && event.target.write.value || '';
+    // console.log("captions are ", captions)
+    const picture = event.target.photo && event.target.photo.files[0];
+
+    const location = LocationManager.currentLocation();
+    const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
+    const incidentId = Router.current().params._id;
+    const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
+    const experienceId = incident.experienceId;
+
+    const experienceRoute = incident.name;
+    
+    var submissions = {};
+
+    var dropDowns = event.target.getElementsByClassName("dropdown")
+    for(var i =0; i < dropDowns.length; i++){
+      var index = dropDowns[i].selectedIndex;
+        var id = TextEntries.insert({
+          submitter: Meteor.userId(),
+          text: dropDowns[i][index].value,
+          contribution: dropDowns[i].id,
+          experienceId: experienceId,
+          incidentId: incidentId,
+          lat: location.lat,
+          lng: location.lng,
+          location: place,
+        });
+        submissions[dropDowns[i].id] = id;
+      }
+    
+    var forms = event.target.getElementsByClassName("form-control")
+    for(var i =0; i < forms.length; i++){
+        var id = TextEntries.insert({
+          submitter: Meteor.userId(),
+          text: forms[i].value,
+          contribution: forms[i].id,
+          experienceId: experienceId,
+          incidentId: incidentId,
+          lat: location.lat,
+          lng: location.lng,
+          location: place,
+        });
+        submissions[forms[i].id] = id;
+      }
+
+
+      var images = event.target.getElementsByClassName("fileinput")
+      if(images.length== 0){
+        Router.go('/apicustomresults/'+incidentId);
+      }
+      for(var i =0; i < images.length; i++){
+        var imageFile = Images.insert(picture, (err, imageFile) => {
+            if (err) {
+              // shouldn't happen
+              alert(err);
+            } else {
+              Images.update(imageFile._id,
+                {
+                  $set: {
+                    experienceId: experienceId,
+                    //caption: caption,
+                    incidentId: incidentId,
+                    lat: location.lat,
+                    lng: location.lng,
+                    location: place,
+                  }
+                }
+              );
+              // TODO: setTimeout for automatically moving on if upload takes too long
+              // This is a bit unfortunate...(waiting for a completed callback)
+              // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
+              const cursor = Images.find(imageFile._id).observe({
+                changed(newImage) {
+                  if (newImage.isUploaded()) {
+                    cursor.stop();
+                    Router.go('/apicustomresults/'+incidentId);
+                  }
+                }
+              });
+            }
+          });
+
+
+
+    submissions[images[i].id] = imageFile._id;
+    Submissions.insert({
+      submitter: Meteor.userId(),
+      experienceId: experienceId,
+      incidentId: incidentId,
+      content: submissions
+    }, (err, docs) => {
+      if (err) {
+        console.log(err);
+      } else {
+      }});
+      }
+      
+
+  },
+  'click #participate-btn'(event, instance) {
+    event.preventDefault();
+
+    //for when mobile works
+    const loc = LocationManager.currentLocation();
+    const incidentId = Incidents.findOne()._id;
+
+    let participationLocLog = {
+      incidentId: incidentId,
+      experience: Router.current().params._id,
+      userId: Meteor.userId(),
+      lat: loc.lat,
+      lng: loc.lng
+    };
+
+    let submissionId = ParticipationLocations.insert(participationLocLog);
+    instance.autorun(() => {
+      const newLoc = LocationManager.currentLocation();
+      ParticipationLocations.update(submissionId, {$set: {lat: newLoc.lat, lng: newLoc.lng}});
+    });
+
+    //can only participate once, will need to be made smarter in the future
+    document.getElementById('participate-btn').style.display = "none";
+
+  },
+  'click .fileinput, touchstart .glyphicon-camera'(event, target) {
+    photoInput(event);
+  },
+  'click .glyphicon-remove'(event, target) {
+    // NOTE: 5/22/16: simpler methods don't seem to work here
+    // e.g. $fileInput.val('');
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    const $fileInput = $('input[name=photo]');
+    $fileInput.replaceWith($fileInput.val('').clone(true));
+
+    $('.fileinput-preview').attr('src', '#');
+    $('.fileinput-exists').hide();
+    $('.fileinput-new').show();
+  },
+  'change input[name=photo]'(event, target) {
+    photoUpload(event);
+  }
+
+
+
+
+
+
+
+
 });

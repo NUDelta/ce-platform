@@ -89,11 +89,11 @@ export const leggo = new ValidatedMethod({
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
-      // if(wipInstanceNeeds.length == 0){
-      //   console.log("DONE WE FINISHED!")
-      //   Meteor.call("stop", {experienceId: experienceId})
-      //   return true;
-      // }
+      if(wipInstanceNeeds.length == 0){
+        console.log("DONE WE FINISHED!")
+        Meteor.call("stop", {experienceId: experienceId})
+        return true;
+      }
       console.log("unmet needs", wipInstanceNeeds);
 
       var usersToNotify = {};
@@ -365,15 +365,15 @@ export const americanFlag = new ValidatedMethod({
   run(){
     var redTemplate = {
       "name" : "red",
-      "contributions" : {"photo": "Image"},
+      "contributions" : {"red": "Image"},
     };
     var whiteTemplate = {
      "name" : "white",
-     "contributions" : {"photo": "Image"},
+     "contributions" : {"white": "Image"},
     };
     var blueTemplate = {
       "name" : "blue",
-      "contributions" : {"photo": "Image"},
+      "contributions" : {"blue": "Image"},
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "FLAGTEST",
