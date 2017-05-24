@@ -20,6 +20,10 @@ Schema.Submission = new SimpleSchema({
     label: 'Incident',
     regEx: SimpleSchema.RegEx.Id
   },
+  situationNeed: {
+    type: String,
+    label: 'name of the situationNeed',
+  },
   content: {
     type: Object, //Dictionary (ids of contributions)
     blackbox: true

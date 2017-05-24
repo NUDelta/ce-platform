@@ -20,12 +20,6 @@ import { photoInput } from '../globalHelpers.js';
 import { photoUpload } from '../globalHelpers.js';
 
 
-Template.registerHelper('camera_options', (situationNeedName, contributionTemplate) => {
-  return {"camera": true,
-          "text": false,
-          "situationNeed":situationNeedName,
-          "contributionTemplate": contributionTemplate }
-});
 
 Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
   var dict = {}
@@ -67,11 +61,8 @@ Template.registerHelper('getPrevSentence', (subs) => {
 
 Template.registerHelper('passContributionName', (name) => {
       const instance = Template.instance();
-      console.log('instance: ', instance);
       var contributions = instance.data.contributionTemplate.contributions;
-      console.log('contributions: ', contributions);
       if(typeof contributions[name] == "object"){
-        console.log(name, contributions[name][1])
         return {key:name, options: contributions[name][1]}
       }
       return {key: name}
@@ -108,6 +99,10 @@ Template.api_custom.helpers({
         }
       });
     });
+    instance.state.set('situationNeedName', situationNeedName);
+    instance.state.set('contributionTemplate', contributionTemplate);
+
+    
     return {"incident": incident,
             "situationNeedName": situationNeedName,
             "contributionTemplate": contributionTemplate,
@@ -115,7 +110,6 @@ Template.api_custom.helpers({
   },
   template_name() {
     const instance = Template.instance();
-    console.log("temp name:", instance.state.get('experience').participateTemplate);
     return instance.state.get('experience').participateTemplate;
   }
 });
@@ -162,15 +156,12 @@ Template.storyPage.helpers({
     getPrevSentenceId(photoIndex){
         const instance = Template.instance()
         var incident = instance.state.get('incident');
-        console.log("incident")
         var subs = Submissions.find({incidentId: incident._id}).fetch();
-        console.log("whate", subs)
         // var submission = instance.data.submissions[photoIndex-1];
         // console.log(submission)
         // console.log(submission.content.nextSentence)
         var id = submission.content.nextSentence
         var text = TextEntries.findOne({_id: id});
-        console.log("text: ", text.text);
         return text.text;
     },
     getPageNum(){
@@ -186,6 +177,8 @@ Template.storyPage.helpers({
     console.log("cameraUpload");
 
     event.preventDefault();
+    console.log("instance during event", instance)
+   console.log(instance.state.get('situationNeedName'))
 
     instance.submitting.set(true);
 
@@ -200,8 +193,6 @@ Template.storyPage.helpers({
     const incidentId = Router.current().params._id;
     const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
     const experienceId = incident.experienceId;
-
-    const experienceRoute = incident.name;
     
     var submissions = {};
 
@@ -274,17 +265,23 @@ Template.storyPage.helpers({
           });
 
 
-
     submissions[images[i].id] = imageFile._id;
-    Submissions.insert({
+    var submissionObject = {
       submitter: Meteor.userId(),
       experienceId: experienceId,
       incidentId: incidentId,
+      situationNeed: instance.state.get('situationNeedName'),
+      contributionTemplate: instance.state.get('contributionTemplate').name,
       content: submissions
-    }, (err, docs) => {
+    }
+    
+    console.log('submissionObject: ', submissionObject);
+
+    Submissions.insert(submissionObject, (err, docs) => {
       if (err) {
-        console.log(err);
+        console.log("Didn't submit", err);
       } else {
+        console.log("DID SUBMIT", docs)
       }});
       }
       

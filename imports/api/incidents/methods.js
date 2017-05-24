@@ -104,10 +104,8 @@ export const createIncident = new ValidatedMethod({
       date: Date.parse(new Date()),
       name: experience.name,
       experienceId: experience._id
-    },  (err, docs) => {
-      if (err) { console.log("errorrr", err); }
-      else { console.log(docs)}
-    });
+    }
+    );
     Experiences.update( experience._id, { $set: { activeIncident: incidentId } });
     return incidentId;
   }

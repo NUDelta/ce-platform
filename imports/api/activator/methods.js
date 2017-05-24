@@ -4,15 +4,13 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Cerebro } from '../cerebro/server/cerebro-server.js';
-import { notifyOnAffordances } from '../cerebro/server/methods.js';
 import { Experiences } from '../experiences/experiences.js';
 import { Schema } from '../schema.js';
-import { log } from '../logs.js';
-import { CONFIG } from '../config.js';
 
-import { activateNewIncident } from '../incidents/methods.js';
 import { removeFromAllActiveExperiences } from '../users/methods.js';
 import { Locations } from '../locations/locations.js';
+import { Submissions } from '../submissions/submissions.js';
+
 import { Users } from '../users/users.js';
 import { _ } from 'meteor/underscore';
 
@@ -110,9 +108,11 @@ export const leggo = new ValidatedMethod({
     console.log("starting experience with incident ", incidentId)
     interval =  Meteor.setInterval(function(){
       var incident = Incidents.findOne({_id: incidentId});
-      var results = Images.find({incidentId: incidentId}).fetch();
+
+      var results = Submissions.find({incidentId: incidentId}).fetch();
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
+
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
         console.log("DONE WE FINISHED!")
