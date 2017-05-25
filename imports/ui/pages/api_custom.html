@@ -19,6 +19,9 @@
 
 <template name="storyPage">
   <div id="participate">
+    {{#if gIsSubmitting}}
+      {{> loadingOverlay}}
+    {{/if}}
     <form class="col col-xs-12">
       <div class="row">
         <h4>Help us write and illustrate a story!  </h4>
