@@ -165,10 +165,10 @@ Template.storyPage.helpers({
         return text.text;
     },
     getPageNum(){
-      return this.submissions.length;
+      return this.submissions.length+1;
     },
     notLastPage(){
-      return this.submissions.length <= 9;
+      return this.submissions.length < 10;
     }
   });
 

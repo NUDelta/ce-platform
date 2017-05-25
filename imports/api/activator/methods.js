@@ -361,7 +361,7 @@ export const storyBook = new ValidatedMethod({
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime",
       description: "Write a story",
-      participateTemplate: "storyPage",
+      participateTemplate: "storyPage", 
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
       contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
