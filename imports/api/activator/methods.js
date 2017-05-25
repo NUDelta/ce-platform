@@ -15,9 +15,6 @@ import { Users } from '../users/users.js';
 import { _ } from 'meteor/underscore';
 
 import { Incidents } from '../incidents/incidents.js';
-import { Images } from '../images/images.js';
-
-import { Random } from 'meteor/random'
 
 // METHODS FOR NOTIFICATION STRATEGIES
 var notifyOneUser = function (potentialUsers, situationalNeeds) {
@@ -32,7 +29,6 @@ var notifyOneUser = function (potentialUsers, situationalNeeds) {
       delete potentialUsers[ogKeys[i]]
     }
   }
-
   while (Object.keys(potentialUsers).length > 0) {
     var keys = Object.keys(potentialUsers);
     keys.sort(function (a, b) {
@@ -67,7 +63,6 @@ var greedyOrganization = function (potentialUsers) {
       return potentialUsers[a].length - potentialUsers[b].length;
     })
     var theKey = keys[0];
-
     var user = potentialUsers[theKey].pop();
     if (alreadyNotified.includes(user)) {
       continue;
@@ -95,10 +90,10 @@ var notificationFunctions = {"greedyOrganization": greedyOrganization, "notifyOn
 var globalCallbacks = {}
 
 export const registerCallback = function(experienceId, templateName, callback){
-  if(experienceId in globalCallbacks){
+  if (experienceId in globalCallbacks){
     globalCallbacks[experienceId][templateName]= callback;
   }
-  else{
+  else {
     globalCallbacks[experienceId]= {};
     globalCallbacks[experienceId][templateName] = callback;
   }
@@ -125,6 +120,39 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
   }, wait)
 }
 
+// METHODS FOR CHECKING NEED & CONTRIBUTION FULFILLMENT
+export const setNeedAsDone = new ValidatedMethod({
+  name: 'api.setNeedAsDone',
+  validate: new SimpleSchema({
+    incidentId:{
+      type: String
+    },
+    situationNeed:{
+      type: Schema.SituationNeed
+    },
+    contributionTemplate:{
+      type: Schema.SituationalNeedTemplate
+    }
+  }).validator(),
+  run({incidentId, situationNeed, contributionTemplate}){
+    var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
+    clearUsersFromNeed(situationNeed, experienceId, incidentId);
+    var test = Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
+      {$set :
+        { 'situationNeeds.$.done':  true }
+    });
+    var callback = null;
+    if(experienceId in globalCallbacks){
+      console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
+      if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
+        callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
+        var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
+        return callback(mostRecent);
+      }
+    }
+  }
+});
+
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
   var soft_stopping_criteria = situationNeed.softStoppingCriteria;
   if(results.length == 0){
@@ -148,40 +176,6 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
   }
   return false;
 }
-
-// METHODS FOR CHECKING NEED & CONTRIBUTION FULFILLMENT
-export const setNeedAsDone = new ValidatedMethod({
-  name: 'api.setNeedAsDone',
-  validate: new SimpleSchema({
-    incidentId:{
-      type: String
-    },
-    situationNeed:{
-      type: Schema.SituationNeed
-    },
-    contributionTemplate:{
-      type: Schema.SituationalNeedTemplate
-    }
-  }).validator(),
-  run({incidentId, situationNeed, contributionTemplate}){
-    var experienceId = Incidents.findOne({_id: incidentId}).experienceId;
-    clearUsersFromNeed(situationNeed, experienceId, incidentId);
-    var test = Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
-      {$set :
-        { 'situationNeeds.$.done':  true }
-    });
-
-    var callback = null;
-    if(experienceId in globalCallbacks){
-      console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
-      if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
-        callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
-        var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-        return callback(mostRecent);
-      }
-    }
-  }
-});
 
 function checkIfContributionFinished(incident, results, contributionTemplate){
   var numDone = results.filter(function(r){
@@ -314,7 +308,6 @@ export const notify = new ValidatedMethod({
   }).validator(),
   run({usersToNotify, experience, incidentId}){
     var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
-
     Object.keys(usersToNotify).forEach((key)=>{
       var newUsers = usersToNotify[key]
       newUsers.forEach((u)=>{
@@ -355,11 +348,9 @@ export const leggo = new ValidatedMethod({
     console.log("starting experience with incident ", incidentId)
     interval =  Meteor.setInterval(function(){
       var incident = Incidents.findOne({_id: incidentId});
-
       var results = Submissions.find({incidentId: incidentId}).fetch();
       var experienceId = incident.experienceId;
       var experience = Experiences.findOne({_id:experienceId});
-
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
         console.log("DONE WE FINISHED!")

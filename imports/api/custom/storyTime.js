@@ -13,6 +13,8 @@ import { _ } from 'meteor/underscore';
 import { Incidents } from '../incidents/incidents.js';
 
 import { registerCallback } from '../activator/methods.js';
+import { Random } from 'meteor/random'
+
 
 export const storyBook = new ValidatedMethod({
   name: 'api.storyBook',

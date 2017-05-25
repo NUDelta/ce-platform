@@ -19,8 +19,6 @@ import { LocationManager } from '../../api/locations/client/location-manager-cli
 import { photoInput } from '../globalHelpers.js';
 import { photoUpload } from '../globalHelpers.js';
 
-
-
 Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
   var dict = {}
   var textContributions = [];
@@ -102,7 +100,7 @@ Template.api_custom.helpers({
     instance.state.set('situationNeedName', situationNeedName);
     instance.state.set('contributionTemplate', contributionTemplate);
 
-    
+
     return {"incident": incident,
             "situationNeedName": situationNeedName,
             "contributionTemplate": contributionTemplate,
@@ -194,7 +192,7 @@ Template.storyPage.helpers({
     const incidentId = Router.current().params._id;
     const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
     const experienceId = incident.experienceId;
-    
+
     var submissions = {};
 
     var dropDowns = event.target.getElementsByClassName("dropdown")
@@ -212,7 +210,7 @@ Template.storyPage.helpers({
         });
         submissions[dropDowns[i].id] = id;
       }
-    
+
     var forms = event.target.getElementsByClassName("form-control")
     for(var i =0; i < forms.length; i++){
         var id = TextEntries.insert({
@@ -275,7 +273,7 @@ Template.storyPage.helpers({
       contributionTemplate: instance.state.get('contributionTemplate').name,
       content: submissions
     }
-    
+
     console.log('submissionObject: ', submissionObject);
 
     Submissions.insert(submissionObject, (err, docs) => {
@@ -285,7 +283,7 @@ Template.storyPage.helpers({
         console.log("DID SUBMIT", docs)
       }});
       }
-      
+
 
   },
   'click #participate-btn'(event, instance) {
@@ -331,12 +329,4 @@ Template.storyPage.helpers({
   'change input[name=photo]'(event, target) {
     photoUpload(event);
   }
-
-
-
-
-
-
-
-
 });

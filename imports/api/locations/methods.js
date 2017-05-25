@@ -8,14 +8,12 @@ import { Schema } from '../schema.js';
 
 import { findAffordances } from './affordances.js'
 
-
 export const updateLocation = new ValidatedMethod({
   name: 'locations.updateUser',
   validate: Schema.Locations.validator(),
   run({ uid, lat, lng }) {
     const entry = Locations.findOne({ uid: uid });
     if (entry) {
-
       Locations.update(entry._id, { $set: {
         lat: lat,
         lng: lng
@@ -28,9 +26,8 @@ export const updateLocation = new ValidatedMethod({
         if(err){ console.log(err);}else{
         }
       });
-
-
-    } else {
+    }
+    else {
       Locations.insert({ uid: uid, lat: lat, lng: lng });
     }
   }

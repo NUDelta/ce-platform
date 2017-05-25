@@ -13,7 +13,6 @@ import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
 
 import { updateLocation } from '../../api/locations/methods.js';
 import { insertPhoto } from '../../api/images/methods.js';
-import { activateNewIncident } from '../../api/incidents/methods.js';
 import { log } from '../../api/logs.js';
 
 import { LOCATIONS } from './data.js';
@@ -33,6 +32,7 @@ Meteor.startup(() => {
   //if(true){
     const users = [
       {email: 'gotjennie@gmail.com', password: 'password'},
+      {email: 'allisun.96@gmail.com', password: 'password'},
       {email: 'a@gmail.com', password: 'password'},
       {email: 'b@gmail.com', password: 'password'},
       {email: 'c@gmail.com', password: 'password'},
@@ -200,17 +200,6 @@ function findUserByEmail(email) {
 //         affordance: "talk"
 //       },
 //       {
-//         name: 'Storytime',
-//         author: kevin._id,
-//         description: 'Let\'s all write a story together!',
-//         startText: 'Storytime is about to start!',
-//         modules: ['text'],
-//         requirements: [],
-//         optIn: false,
-//         affordance: "sit",
-//         custom_notification: 'require2users'
-//       },
-//       {
 //         name: 'Nightlight',
 //         author: kevin._id,
 //         description: 'Shine your phone\'s flashlight into the night sky in solidarity with everyone walking in the dark',
@@ -228,28 +217,6 @@ function findUserByEmail(email) {
 //         modules: ['camera', 'text'],
 //         requirements: ['hasCamera'],
 //         optIn: false,
-//       },
-//       {
-//         name: 'Sunset',
-//         author: kevin._id,
-//         description: 'Take a picture of the sunset!',
-//         startText: 'Take a picture of the sunset to help us make a timelapse video!',
-//         modules: ['camera'],
-//         requirements: ['hasCamera'],
-//         optIn: false,
-//         route: 'sunset',
-//         custom_notification: 'require2users'
-//       },
-//       {
-//         name: 'cheers',
-//         author: kevin._id,
-//         description: 'cheers yay',
-//         startText: 'cheers with us and take a pic',
-//         modules: ['camera'],
-//         requirements: ['hasCamera'],
-//         optIn: false,
-//         route: 'cheers',
-//         // custom_notification: 'require2users'
 //       }
 //     ];
 //
@@ -314,11 +281,6 @@ function findUserByEmail(email) {
 //   if (Meteor.isDevelopment && Images.find().count() === 0) {
 //     const stellaTime = Experiences.findOne({ name: 'Stella Time' });
 //     const kevin = findUserByEmail('kevinjchen94@gmail.com');
-//     const incidentId = activateNewIncident.call({
-//       name: stellaTime.name,
-//       experienceId: stellaTime._id,
-//       launcher: kevin._id
-//     });
 //
 //     const userIds = Meteor.users.find().fetch().map(user => user._id);
 //     Cerebro.setActiveExperiences(userIds, stellaTime._id);

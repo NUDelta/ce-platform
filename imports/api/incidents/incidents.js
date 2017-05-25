@@ -17,7 +17,6 @@ class IncidentCollection extends Mongo.Collection {
   }
 }
 
-
 Schema.SoftStoppingCriteria = new SimpleSchema({
   total:{
     type: Number,

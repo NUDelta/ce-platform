@@ -91,17 +91,6 @@ const experiences = [
     optIn: false,
   },
   {
-    name: 'Storytime',
-    author: "B5YpTavGbmrihS8jq",
-    description: 'Let\'s all write a story together!',
-    startText: 'Storytime is about to start!',
-    modules: ['text'],
-    requirements: [],
-    optIn: false,
-    affordance: ["sit"],
-    custom_notification: 'require2users'
-  },
-  {
     name: 'Nightlight',
     author: "B5YpTavGbmrihS8jq",
     description: 'Shine your phone\'s flashlight into the night sky in solidarity with everyone walking in the dark',
@@ -130,48 +119,5 @@ const experiences = [
     optIn: false,
     route: 'sunset',
     affordance: ['beach']
-  },
-  {
-    name: 'Highfive!',
-    author: "B5YpTavGbmrihS8jq",
-    description: 'highfive anybody!',
-    startText: 'You get a partner!',
-    modules: ['text'],
-    requirements: [],
-    optIn: false,
-    custom_notification: 'require2users'
-  },
-  {
-    name: 'Cheers',
-    author: "B5YpTavGbmrihS8jq",
-    description: 'Cheers with a friend!',
-    startText: 'Cheers with a friend!',
-    modules: ['camera'],
-    requirements: ['hasCamera'],
-    affordance: ['bar'],
-    optIn: false,
-    route: 'cheers'
-  },
-  {
-    name: 'Thumbsup',
-    author: "B5YpTavGbmrihS8jq",
-    description: "You're doing a great job in DTR, so spread the encouragement!",
-    startText: 'Spread the DTR love with a thumbsup!',
-    modules: ['camera'],
-    requirements: [],
-    optIn: false,
-    route: 'thumbsup',
-    custom_notification: 'require2users'
-  },
-  {
-    name: 'Custom TEST',
-    author: "B5YpTavGbmrihS8jq",
-    description: 'Rainbow hehe',
-    startText: 'Test some colors',
-    modules: ['camera'],
-    requirements: [],
-    optIn: false,
-    participate_template: "rainbow",
-    versions: 6
   }
 ];

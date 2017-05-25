@@ -36,37 +36,6 @@ export const updateUserExperiences = new ValidatedMethod({
   }
 });
 
-export const setAllActiveExperiences = new ValidatedMethod({
-  name: 'experiences.setAllActive',
-  validate: new SimpleSchema({
-    experienceId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id
-    }
-  }).validator(),
-  run({ experienceId }) {
-    Meteor.users.update({}, { $set: { 'profile.activeExperience': experienceId }}, { multi: true });
-  }
-});
-
-/**
- * Mobile methods
- */
-export const getExperiences = new ValidatedMethod({
-  name: 'experiences.find',
-  validate: new SimpleSchema({
-    query: {
-      type: Object
-    },
-    options: {
-      type: Object
-    }
-  }).validator(),
-  run({ query, options }) {
-    return Experiences.find(query, options).fetch();
-  }
-});
-
 export const removeExperience = new ValidatedMethod({
   name: 'experiences.remove',
   validate: new SimpleSchema({
