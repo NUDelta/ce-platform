@@ -143,7 +143,7 @@ export const leggo = new ValidatedMethod({
 
 var globalCallbacks = {}
 
-function registerCallback(experienceId, templateName, callback){
+export const registerCallback = function(experienceId, templateName, callback){
   if(experienceId in globalCallbacks){
     globalCallbacks[experienceId][templateName]= callback;
   }
@@ -184,8 +184,6 @@ export const setNeedAsDone = new ValidatedMethod({
       if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
         callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
         var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-        console.log("ABOUT TO CALL THE CALLBACK");
-        console.log("most recent: ", mostRecent);
         return callback(mostRecent);
       }
     }
@@ -210,7 +208,7 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
   Meteor.setTimeout(function(){
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
   }, wait)
-} 
+}
 
 function checkIfSituationNeedFinished(results, situationNeed, contributionTemplate){
   var soft_stopping_criteria = situationNeed.softStoppingCriteria;
@@ -246,7 +244,7 @@ function checkIfContributionFinished(incident, results, contributionTemplate){
   var situationNeeds = incident.situationNeeds.filter(function(x){
     return x.contributionTemplate == contributionTemplate.name});
 
-  situationNeeds.forEach((need)=>{ 
+  situationNeeds.forEach((need)=>{
     if(!checkIfSituationNeedFinished(results, need, contributionTemplate)){
       notFinished.push(need)
     }
@@ -332,118 +330,6 @@ export const stop = new ValidatedMethod({
     }, {
       $unset: { 'activeIncident': 0 }
     });
-  }
-});
-
-export const storyBook = new ValidatedMethod({
-  name: 'api.storyBook',
-  validate: null,
-  run(){
-    var createNewPageNeed = function(mostRecentSubmission) {
-      var textId = mostRecentSubmission.content.nextAffordance;
-      var nextAffordance = TextEntries.findOne({_id: textId}).text;
-      Meteor.call("api.addSituationNeeds", {
-        incidentId: incidentId,
-        need: {
-          "name": "nextScene"+ nextAffordance + Random.id(3),
-          "contributionTemplate" : "scene",
-          "affordance": nextAffordance,
-          "softStoppingCriteria": {"total": 1}
-        }
-      });
-    }
-    var storyPageTemplate = {
-      "name" : "scene",
-      "contributions" : {"illustration": "Image", 
-                        "nextSentence": "String",  
-                        "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace", "end_of_f_wing", "atrium", "k_wing", "l_wing", "starbucks", "coffee", "donuts", "collegeuniv", "sushi"]] }
-    };
-    const experienceId = Meteor.call("api.createExperience", {
-      name: "Storytime",
-      description: "Write a story",
-      participateTemplate: "storyPage", 
-      resultsTemplate: "storyPageResults",
-      notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
-    });
-
-    registerCallback(experienceId, "scene", createNewPageNeed);
-
-    const incidentId = Meteor.call("api.createIncident", {
-      experienceId: experienceId
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "page0",
-        "contributionTemplate" : "scene",
-        "affordance": "clouds",
-        "softStoppingCriteria": {"total": 1}
-      }
-    });
-    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "notifyOneUser"});
-  }
-})
-
-export const americanFlag = new ValidatedMethod({
-  name: 'api.americanFlag',
-  validate: null,
-  run(){
-    var redTemplate = {
-      "name" : "red",
-      "contributions" : {"red": "Image"},
-    };
-    var whiteTemplate = {
-     "name" : "white",
-     "contributions" : {"white": "Image"},
-    };
-    var blueTemplate = {
-      "name" : "blue",
-      "contributions" : {"blue": "Image"},
-    };
-    const experienceId = Meteor.call("api.createExperience", {
-      name: "FLAGTEST",
-      description: "Build a flag",
-      participateTemplate: "americanFlag",
-      resultsTemplate: "americanFlagResults",
-      notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 1}},
-                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 1}},
-                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 1}}]
-    });
-    console.log(experienceId)
-    const incidentId = Meteor.call("api.createIncident", {
-      experienceId: experienceId
-    });
-
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "whiteNeed",
-        "contributionTemplate" : "white",
-        "affordance": "clouds",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-          "name": "redNeed",
-          "contributionTemplate" : "red",
-          "affordance": "grocery",
-          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-        }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "california",
-        "contributionTemplate" : "blue",
-        "affordance": "beaches",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
   }
 });
 

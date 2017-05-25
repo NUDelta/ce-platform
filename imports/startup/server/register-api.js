@@ -13,3 +13,5 @@ import '../../api/participation-locations/server/publications.js';
 import '../../api/activator/activator.js';
 import '../../api/activator/methods.js';
 import '../../api/submissions/server/publications.js';
+import '../../api/custom/storyTime.js';
+import '../../api/custom/americanFlag.js';
