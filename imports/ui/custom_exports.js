@@ -1,6 +1,0 @@
-export * from './pages/sunset.js'
-export * from './pages/sunsetresult.js'
-export * from './pages/cheers.js'
-export * from './pages/cheersresult.js'
-export * from './pages/thumbsup.js'
-export * from './pages/thumbsupresult.js'

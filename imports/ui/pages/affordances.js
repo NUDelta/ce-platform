@@ -6,13 +6,11 @@ import { Template } from 'meteor/templating';
 import { Locations } from '../../api/locations/locations.js';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
 
-
-
 Template.affordances.onCreated(function() {
 
     this.autorun(() => {
       this.subscribe('locations');
-      
+
        // TODO: make more specific
     });
 
@@ -23,7 +21,7 @@ Template.affordances.onCreated(function() {
       map: map.instance
     });
   });
-    
+
 });
 
 Template.affordances.helpers({

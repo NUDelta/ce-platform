@@ -148,20 +148,6 @@ Template.experienceButtons.events({
         alert(`Ending custom experience ${instance.data.experience.name}`);
       }
     });
-  },
-  'click .full-custom-btn:not(.disabled)'(event, instance) {
-    event.preventDefault();
-    console.log("clicked!");
-    // Importing exports causes problematic dependencies between server/client here
-    Meteor.call('api.runExperience', {
-      experience: instance.data.experience
-    }, (err, res) => {
-      if (err) {
-        alert(err);
-      } else {
-        alert(`Starting fully custom experience ${instance.data.experience.name}`);
-      }
-    });
   }
 });
 

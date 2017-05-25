@@ -14,11 +14,9 @@ import '../globalHelpers.js';
 
 isImageFullSize = false;
 
-
 Router.route('/results/sunset/:_id', {
   template: 'sunsetresult',
 });
-
 
 var play = function(){
         var imgLen = document.getElementById('imgGallary');

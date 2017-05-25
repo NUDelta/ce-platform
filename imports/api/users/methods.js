@@ -18,34 +18,6 @@ export const getEmails = new ValidatedMethod({
   }
 });
 
-export const getUsers = new ValidatedMethod({
-  name: 'users.find',
-  validate: new SimpleSchema({
-    query: {
-      type: Object
-    },
-    options: {
-      type: Object
-    }
-  }).validator(),
-  run({ query, options }) {
-    return Meteor.users.find(query, options).fetch();
-  }
-});
-
-export const getSubscriptions = new ValidatedMethod({
-  name: 'users.getSubscriptions',
-  validate: new SimpleSchema({
-    userId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id
-    }
-  }).validator(),
-  run({ userId }) {
-    return Meteor.users.findOne(userId, { fields: { 'profile.subscriptions': 1 }});
-  }
-});
-
 export const removeFromAllActiveExperiences = new ValidatedMethod({
   name: 'users.removeFromAllActiveExperiences',
   validate: new SimpleSchema({
@@ -102,19 +74,3 @@ export const unsubscribeUserFromExperience = new ValidatedMethod({
     return Meteor.users.update({_id: this.userId, 'profile.subscriptions': experienceId}, {$pull: {'profile.subscriptions': experienceId}});
   }
 });
-
-export const setQualification = new ValidatedMethod({
-  name: 'users.setQualification',
-  validate: new SimpleSchema({
-    qualification: {
-      type: String
-    },
-    value: {
-      type: Boolean
-    }
-  }).validator(),
-  run({qualification, value}) {
-    console.log("Setting " + qualification + " to " + value);
-    return Meteor.users.update({_id: this.userId}, {$set: {['profile.qualifications.' + qualification]: value} });
-  }
-})

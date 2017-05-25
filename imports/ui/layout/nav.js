@@ -15,6 +15,4 @@ Template.nav.helpers({
 const adjustActive = function() {
   $('.nav-item').removeClass('active');
   const route = Router.current().route.getName();
-  // if (route === 'home') { $('#browse').addClass('active'); }
-  // if (route === 'creator') { $('#create').addClass('active'); }
 };

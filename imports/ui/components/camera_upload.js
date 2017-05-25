@@ -17,7 +17,6 @@ import { ParticipationLocations } from '../../api/participation-locations/partic
 import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { CONFIG } from '../../api/config.js'
 import '../globalHelpers.js';
-import '../custom_exports.js';
 import '../components/experience_buttons.js';
 import '../components/map.js';
 import '../components/loading_overlay.js';
@@ -39,9 +38,9 @@ Template.cameraUpload.helpers({
   },
   getOptions(dict){
     return Object.values(dict)[0];
-    
+
   }
-  
+
 });
 
 Template.cameraUpload.events({
@@ -84,7 +83,7 @@ Template.cameraUpload.events({
         });
         submissions[dropDowns[i].id] = id;
       }
-    
+
     for(var i =0; i < forms.length; i++){
         var id = TextEntries.insert({
           submitter: Meteor.userId(),

@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-
 import { CerebroCore } from '../cerebro-core.js';
 
 // TODO: change these to validatedmethod calls?
@@ -15,23 +14,6 @@ CerebroClient = class CerebroClient extends CerebroCore {
       text: text,
       appendIncident: appendIncident,
       route: route
-    }, (err, res) => {
-      if (err) {
-        console.log('error', err);
-      } else {
-
-      }
-    });
-  }
-
-  scheduleNotifications({ experienceId, subject, text, appendIncident }) {
-    let schedule = 'every 1 mins';
-    Meteor.call('cerebro.scheduleNotifications', {
-      experienceId: experienceId,
-      subject: subject,
-      text: text,
-      schedule: schedule,
-      appendIncident: appendIncident
     }, (err, res) => {
       if (err) {
         console.log('error', err);

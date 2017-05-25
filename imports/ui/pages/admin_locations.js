@@ -40,39 +40,10 @@ Template.admin_locations.onCreated(function() {
     });
   };
 
-  this.doLiveQuery = (locationType, radius) => {
-    this.markers.forEach(marker => marker.setMap(null));
-    this.markers = [];
-
-    Meteor.call('cerebro.liveQuery',
-      { locationType, radius },
-      (err, users) => {
-        if (err) {
-          console.log(err);
-          alert(err)
-        } else {
-          Locations.find().forEach((location) => {
-            let icon;
-            if (_.contains(users, location.uid)) {
-              icon = 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
-            } else {
-              icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
-            }
-            const marker = new google.maps.Marker({
-              position: new google.maps.LatLng(location.lat, location.lng),
-              map: this.map,
-              icon: icon
-            });
-            this.markers.push(marker);
-          });
-        }
-      });
-  };
   GoogleMaps.ready('map', (map) => {
     this.autorun(() => {
       this.map = map.instance;
       if (handle.ready()) {
-        //this.doLiveQuery('restaurants', 200);
         this.plotLocations();
       }
     });
@@ -85,7 +56,6 @@ Template.admin_locations.events({
     const locationType = event.target.locationType.value;
     const radius = parseInt(event.target.radius.value);
 
-    instance.doLiveQuery(locationType, radius);
   }
 });
 

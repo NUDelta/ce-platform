@@ -9,9 +9,6 @@ import { CONFIG, AUTH } from '../../config.js';
 
 import { Incidents } from '../../incidents/incidents.js';
 
-
-const yelpEndpoint = 'http://api.yelp.com/v2/search';
-
 CerebroServer = class CerebroServer extends CerebroCore {
   constructor() {
     super();
@@ -80,25 +77,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
       payload: payload,
       query: {
         userId: { $in: pushUsers }
-      }
-    });
-  }
-
-  //@Unused
-  _broadcastPush(subject, text) {
-    log.cerebro('Broadcasting push notifications');
-    Push.send({
-      from: 'push',
-      title: subject,
-      text: text,
-      badge: 1,
-      sound: 'airhorn.caf',
-      payload: {
-        title: subject,
-        text: text,
-      },
-      query: {
-        // this sends to all users
       }
     });
   }
@@ -184,57 +162,9 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  liveQuery(locationType, options = {}) {
-    options.location = options.location || 'Evanston+IL';
-    options.locationRadius = options.locationRadius || 200;
-    options.radius = options.radius || 20;
-    options.limit = options.limit || 20;
-
-    const locations = _.map(
-      this._yelpQuery(locationType, options.location, options.locationRadius, options.limit),
-      (business) => {
-        return {
-          lat: business.location.coordinate.latitude,
-          lng: business.location.coordinate.longitude
-        }
-      });
-    return LocationManager.findUsersNearLocations(locations, options.radius);
-  }
-
   pointsQuery(locations, options = {}) {
     options.radius = options.radius || 200;
     return LocationManager.findUsersNearLocations(locations);
-  }
-
-  _yelpQuery(locationType, location, radius, limit) {
-    // TODO: refactor this
-    // TODO: add support for *any* location
-    // TODO: might want to unblock this
-    // TODO: paginate
-    let params = _.clone(AUTH);
-    params.category_filter = locationType;
-
-    if (location.lat && location.lng) {
-      params.ll = `${location.lat},${location.lng}`;
-    } else {
-      params.location = location;
-    }
-
-    params.limit = limit;
-    params.radius = radius;
-
-    let config = {
-      consumerKey: AUTH.oauth_consumer_key,
-      secret: AUTH.oauth_consumer_secret
-    }, urls = {
-      requestToken: yelpEndpoint,
-      accessToken: AUTH.oauth_token
-    }, oauthBinding = new OAuth1Binding(config, urls);
-    oauthBinding.accessTokenSecret = AUTH.accessTokenSecret;
-    let headers = oauthBinding._buildHeader();
-
-    // TODO: check if this is blocking -- fix up if it is
-    return oauthBinding._call('GET', yelpEndpoint, headers, params).data.businesses;
   }
 
   query(userQuery) {

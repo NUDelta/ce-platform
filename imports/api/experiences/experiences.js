@@ -30,10 +30,6 @@ Schema.StoppingCriteria = new SimpleSchema({
     type: String,
     optional: true
   }
-  // complete_instances:{
-  //   type: Number,
-  //   optional: true
-  // }
 });
 
 export const StoppingCriteria = new ExperiencesCollection('stoppingCriteria');
@@ -101,13 +97,11 @@ Schema.Experience = new SimpleSchema({
   },
   contributionGroups: {
     type: [Schema.ContributionGroup], //Array, //[[Schema.SituationalNeed]],
-    //blackbox: true
   },
   notificationText : {
     type: String,
     optional: true
   }
 });
-
 
 Experiences.attachSchema(Schema.Experience);
