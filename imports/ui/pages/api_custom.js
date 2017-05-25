@@ -168,7 +168,8 @@ Template.storyPage.helpers({
       return this.submissions.length+1;
     },
     notLastPage(){
-      return this.submissions.length < 10;
+      //TODO: pass in stopping critera
+      return this.submissions.length < 10-1;
     }
   });
 

@@ -32,6 +32,8 @@
         {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
 
       </div>
+    {{#if notLastPage}}
+
       <div class="row">
         Now help us create page {{getPageNum}} out of 10 by continuing the story.
         <br>
@@ -40,7 +42,6 @@
         {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}
 
       </div>
-      {{#if notLastPage}}
         <div class="row">
           3. Write the next sentence in the story
           {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
