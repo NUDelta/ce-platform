@@ -52,7 +52,7 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
 
 Template.registerHelper('getPrevSentence', (subs) => {
   if(subs.length == 0){
-    return "It was a dark and stormy night."
+    return "Jimmy feel asleep while watching the clouds move across the sky."
   }
   var submission = subs[subs.length-1];
   var id = submission.content.nextSentence
@@ -82,8 +82,6 @@ Template.api_custom.helpers({
     }
     // TODO: fix, dont want to get by experience
     var exp = instance.state.get('experience')
-    aContribTemplate = exp.contributionGroups[0].contributionTemplates[0];
-    contributions = aContribTemplate.contributions;
     incident.situationNeeds.forEach((sitNeed)=>{
       if(sitNeed.notifiedUsers.includes(Meteor.userId())){
         situationNeedName = sitNeed.name;
