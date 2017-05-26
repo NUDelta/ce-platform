@@ -18,39 +18,47 @@
 </template>
 
 <template name="storyPage">
+  <head>
+    <style>
+      h3 {
+        font-size: 20px;
+      }
+      h4 {
+        font-size: 18px;
+      }
+      #prevSentence {
+        padding: 10px;
+        font-weight: 700;
+      }
+      #dropdown {
+        padding: 5px;
+      }
+    </style>
+  </head>
   <div id="participate">
     {{#if gIsSubmitting}}
       {{> loadingOverlay}}
     {{/if}}
     <form class="col col-xs-12">
       <div class="row">
-        <h4>Help us write and illustrate a story!  </h4>
-        We are working on creating a story, but need help finishing.
+        <h3>Help us write and illustrate a story!  </h3>
       </div>
-
+      <h4>1. Illustrate a scene</h4>
       <div class="row">
-        The previous sentence in the story was:
-        <i>{{getPrevSentence this.submissions}}</i><br>
-        Can you take a picture to illustrate the sentence?
+        Take a photo that describes the previous sentence in the story:
+        <div id="prevSentence"><i>"{{getPrevSentence this.submissions}}"</i></div>
         {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
-
       </div>
     {{#if notLastPage}}
-
+      <h4>2. Continue the story: Page {{getPageNum}} of 10</h4>
       <div class="row">
-        Now help us create page {{getPageNum}} out of 10 by continuing the story.
-        <br>
-        What best describes the scene for the next sentence in the story?
-
-        {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}
-
+        Write the next sentence and select an object that best illustrates your sentence.<br>
+        <div id="dropdown">Featured object: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
       </div>
         <div class="row">
-          3. Write the next sentence in the story
           {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
         </div>
       {{/if}}
-
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
   </div>
