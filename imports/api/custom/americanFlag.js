@@ -66,9 +66,9 @@ export const americanFlag = new ValidatedMethod({
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
-        "name": "california",
+        "name": "blueNeed",
         "contributionTemplate" : "blue",
-        "affordance": "beaches",
+        "affordance": "nighttime",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });

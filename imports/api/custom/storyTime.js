@@ -37,7 +37,8 @@ export const storyBook = new ValidatedMethod({
       "name" : "scene",
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
-                        "nextAffordance": ["Dropdown", ["daytime", "clouds", "hackerspace", "end_of_f_wing", "atrium", "k_wing", "l_wing", "starbucks", "coffee", "donuts", "collegeuniv", "sushi"]] }
+                        "nextAffordance": ["Dropdown", 
+                        ["daytime", "clouds", "hackerspace", "end_of_f_wing", "atrium", "k_wing", "l_wing", "starbucks", "coffee", "donuts", "collegeuniv", "sushi"]] }
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime",

@@ -5,20 +5,34 @@
 </template>
 
 <template name="americanFlagResults">
-  "HI"
-  {{#each image in this.images}}
-    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
-      {{#if image.isUploaded}}
-        <!--small amount of lag before url is ready-->
-        <!--probably should add a loading animation here-->
-        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}" style="width=50%">
-        {{image.situationNeed}}
-        {{image.contributionTemplate}}
+   
 
-      {{/if}}
-    </div>
-  {{/each}}
+
+      {{ > Template.dynamic template="star" data=(getStarBuildInfo 1)}}
+
 </template>
+
+<template name="star">
+  STAR
+  <svg class="star" id="{{this.starId}}" width="700" height="660">
+    <defs>
+      <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
+        {{#if this.hasImage}}
+        <image xlink:href={{this.imageUrl}} x="0" y="0" /> {{else}}
+        <rect width="700" height="700" fill="{{this.color}}" /> {{/if}}
+      </pattern>
+    </defs>
+    <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
+      fill="url(#img1)" />
+  </svg>
+</template>
+
+
+
+
+
+
+
 
 <template name="cheers1_results">
   "HI"
@@ -56,12 +70,12 @@
       color: black;
       font-weight: bold;
       font-size: 50px !important;
-      border-radius: 0 3px 3px 0;*/
+      border-radius: 0 3px 3px 0;
     }
 
     /* Position the "next button" to the right */
     #next {
-      border-radius: 3px 0 0 3px;*/
+      border-radius: 3px 0 0 3px;
     }
 
     .caption {

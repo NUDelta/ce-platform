@@ -1,5 +1,8 @@
 import './api_custom.html';
 import '../components/contributions.html';
+import '../components/loading_overlay.html';
+import '../components/loading_overlay.js';
+import '../components/loading_overlay.scss';
 
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -68,7 +71,6 @@ Template.registerHelper('passContributionName', (name) => {
 });
 
 
-
 Template.api_custom.helpers({
   data2pass(){
     const instance = Template.instance();
@@ -123,7 +125,6 @@ Template.api_custom.onCreated(function() {
   const experiencesHandle = this.subscribe('experiences.byIncident', incidentId);
   this.subscribe('participation_locations');
 
-  this.submitting = new ReactiveVar(false);
   this.state = new ReactiveDict();
   const incidentHandle = this.subscribe('incidents.byId', incidentId);
 
@@ -149,6 +150,7 @@ Template.api_custom.onCreated(function() {
   };
   //need to deal with what happens when an experience ends (time stamp incidents?)
 });
+
 
 Template.storyPage.helpers({
     getPrevSentenceId(photoIndex){
@@ -176,10 +178,10 @@ Template.storyPage.helpers({
     console.log("cameraUpload");
 
     event.preventDefault();
-    console.log("instance during event", instance)
-   console.log(instance.state.get('situationNeedName'))
-
-    instance.submitting.set(true);
+        // instance.submitting.set(true);
+    console.log('event.target.: ', event.target);
+    event.target.getElementsByClassName("overlay")[0].style.display = "initial";
+    
 
     // TODO: Probably can generalize this logic
 

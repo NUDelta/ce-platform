@@ -26,6 +26,8 @@ Template.api_custom_results.helpers({
     var text =  TextEntries.find({incidentId: instance.state.get("incidentId")}).fetch();
     var subs = Submissions.find({incidentId: instance.state.get("incidentId")}).fetch();
     console.log(subs)
+    console.log(subs[0].contributionTemplate)
+
     return {"images": imgs, "text": text, "submissions": subs}
   },
   template_name() {
@@ -33,6 +35,8 @@ Template.api_custom_results.helpers({
     return instance.state.get('experience').resultsTemplate;
   },
 });
+
+//these helpers shouldn't be db calls
 Template.registerHelper( 'getImage', (id) => {
   var img =  Images.findOne({_id: id});
   return {img: Images.findOne({_id: id})};
@@ -134,5 +138,36 @@ Template.storyPageResults.events({
   'click .next'(event, instance) {
     event.preventDefault();
     plusSlides(1)
+  }
+});
+
+
+
+Template.star.helpers({
+  getId(){
+      const instance = Template.instance()
+      var starId = instance.data.starId;
+      return starId;
+
+  }
+
+});
+
+
+function getImages(submission, name){
+  submissions.filter(function(s){
+    return s.contributionTemplate == name;
+  })
+}
+
+
+
+Template.americanFlagResults.helpers({
+  getStarBuildInfo(index){
+    console.log("getStarBuildInfo", index);
+    if(this.images.length < index){
+      return {starId: index, imageUrl: null, hasImage: false, color: "red"}
+    }
+    return {starId: index, imageUrl: null, hasImage: false, color: "red"};
   }
 });
