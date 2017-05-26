@@ -3,7 +3,7 @@ body {
   margin-top: 55px;
   margin-bottom: 65px;
   // background-color: #f8f8ff;
-  background-color: #fcfcfc;
+  background-color: #fbfbfb;
   font-family: 'Roboto', 'Montserrat', Helvetica;
 }
 
@@ -22,15 +22,6 @@ img.logo {
 
 .secret {
 	color: #a6a6a6;
-}
-
-.table-subscription {
-  max-width: 300px;
-}
-
-.table-subscription td {
-  padding-top: 10px;
-  text-align: left;
 }
 
 /* Constrain autocomplete dropdown to viewport width */
@@ -59,7 +50,7 @@ img.logo {
 }
 
 .navbar-nav {
-  margin-top: 3px;
+  margin-top: 5px;
   margin-bottom: 0px;
 }
 
@@ -93,11 +84,6 @@ img.logo {
   &.active .fa, &.active .nav-text {
     color: #3e50b4;
   }
-
-  &:last-child {
-    // border-right: none;
-  }
-
 }
 
 .nav-item .deco-none {
@@ -126,6 +112,10 @@ img.logo {
   width: 100%;
 }
 
+.btn {
+  border-radius: 2px;
+}
+
 hr {
   color: #000;
   margin: 5px;
@@ -140,4 +130,35 @@ hr {
 
 .margin-med {
   margin: 15px;
+}
+
+.participate-chunk {
+  background-color: #fff;
+  border-radius: 0px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.desc-text {
+  color: #777;
+}
+//
+// .title-text{
+//   width: 90%;
+//   float: left;
+// }
+//
+// .refresh {
+//   width: 10%;
+//   float:right;
+// }
+//
+// .title-chunk {
+//   display: inline-block;
+// }
+
+.col-md-6 {
+  padding-left: 5px;
+  padding-right: 5px;
 }
