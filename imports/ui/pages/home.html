@@ -2,7 +2,6 @@
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
       <div class="title-chunk">
-        <button class="refresh btn btn-primary btn-participate btn-block hi"><i class="fa fa-refresh"></i></button>
         <h4 class="title-text hi">Experiences available now</h4>
       </div>
       <div class="list-group">
@@ -11,6 +10,8 @@
       {{/each}}
       {{#if noActiveExperiences}}
         <p>There are no experiences where you are right now. Walk around and see if any pop up!</p>
+      {{else}}
+        <button class="refresh btn btn-primary btn-participate btn-block hi">Load experiences  <i class="fa fa-refresh"></i></button>
       {{/if}}
       </div>
     {{else}}
