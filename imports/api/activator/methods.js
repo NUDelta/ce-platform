@@ -243,6 +243,7 @@ function queryFor(search_aff){
     if(x.affordances == null){
       return false;
     }
+    console.log("contains??", containsAffordance(x.affordances, search_aff));
     return (containsAffordance(x.affordances, search_aff));
   });
   var mapped = filtered.map(function(x){
@@ -252,14 +253,44 @@ function queryFor(search_aff){
 }
 
 function containsAffordance(user_affordances, search_affordance){
-  search_affordance = search_affordance;
-  search_affordance = search_affordance.filter(function(x){return x != null;});
-  var intersect = _.intersection(user_affordances, search_affordance)
-  return intersect.length == search_affordance.length;
+  // && affordances
+  if (search_affordance.search(" and ") > 0) {
+    return andAffordances(user_affordances, search_affordance);
+  }
+  // || affordances
+  else if (search_affordance.search(" or ") > 0) {
+    return orAffordances(user_affordances, search_affordance);
+  }
+  // single affordance
+  else {
+    return (_.contains(user_affordances, search_affordance));
+  }
+}
+
+function andAffordances(user_affordances, search_affordance){
+  let affordances = [];
+  let str = search_affordance;
+  affordances = search_affordance.split(" and ");
+  differences =  _.difference(affordances, user_affordances)
+  return differences.length == 0
+}
+
+function orAffordances(user_affordances, search_affordance){
+  let affordances = [];
+  let contains = false;
+  affordances = search_affordance.split(" or ");
+  for (i = 0; i < affordances.length; i++){
+    anAffordance = affordances[i];
+    if (_.contains(user_affordances, anAffordance)){
+      contains = true;
+      break;
+    }
+  }
+  return contains;
 }
 
 export const usersNotNotified = function(possibleUserIds){
-  console.log("calling users avalible now")
+  console.log("calling users available now")
   userIdsAvalibleNow = []
 
   for(let i in possibleUserIds){
@@ -276,7 +307,7 @@ export const usersNotNotified = function(possibleUserIds){
     console.log("last participate boolean", ((now - lastParticipated) > (20*60000) || lastParticipated== null));
     console.log("last participate dif", now - lastParticipated)
     if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (20*60000) || lastParticipated== null)){
-      
+
       //they are avalible
       console.log(now - user_location.lastNotification)
       userIdsAvalibleNow.push(userId);
@@ -388,7 +419,7 @@ export const leggo = new ValidatedMethod({
       var potentialUsersToNotify = {};
 
       wipInstanceNeeds.forEach((need)=>{
-        var allUsersWithAffordance = queryFor([need.affordance]);
+        var allUsersWithAffordance = queryFor(need.affordance);
         removeUsersWhoMovedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
         var possible_users = usersNotNotified(allUsersWithAffordance); //possible_users haven't been notified
         potentialUsersToNotify[need.name] = possible_users;
