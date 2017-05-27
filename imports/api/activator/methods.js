@@ -113,9 +113,12 @@ function removeSpecificUsersFromNeed(users, situationNeed, experienceId, inciden
 }
 
 function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
+  console.log('removeUsersWhoMovedFromNeed');
+
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
-  var wait = 5*60*100
+  var wait = 5*60*1000
   Meteor.setTimeout(function(){
+    console.log("after watiting we are now actually removing the user", usersToRemove)
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
   }, wait)
 }

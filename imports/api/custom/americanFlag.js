@@ -50,7 +50,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "whiteNeed",
         "contributionTemplate" : "white",
-        "affordance": "clouds",
+        "affordance": "rain",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -68,7 +68,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "blueNeed",
         "contributionTemplate" : "blue",
-        "affordance": "nighttime",
+        "affordance": "beaches",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
