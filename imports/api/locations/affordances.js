@@ -36,6 +36,5 @@ export const findAffordances = new ValidatedMethod({
           }
       }));
     //update_available();
-
     }
 });
