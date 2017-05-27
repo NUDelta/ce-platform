@@ -5,21 +5,42 @@
 </template>
 
 <template name="americanFlagResults">
+
+  <head>
+    <style>
+      svg { 
+        width: 6em;
+        height: 6em;
+        position: absolute;
+        padding-top: 100px;
+        padding-left: 20px;
+    }
+    </style>
+  </head>
    
+{{#each submission in this.submissions}}
+
+{{/each}}
+
+{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+{{ > Template.dynamic template="star" data=(getStarBuildInfo 1)}}
+{{ > Template.dynamic template="star" data=(getStarBuildInfo 2)}}
+{{ > Template.dynamic template="star" data=(getStarBuildInfo 3)}}
 
 
-      {{ > Template.dynamic template="star" data=(getStarBuildInfo 1)}}
+
 
 </template>
 
 <template name="star">
-  STAR
   <svg class="star" id="{{this.starId}}" width="700" height="660">
     <defs>
       <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
-        {{#if this.hasImage}}
-        <image xlink:href={{this.imageUrl}} x="0" y="0" /> {{else}}
-        <rect width="700" height="700" fill="{{this.color}}" /> {{/if}}
+       
+        {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
+
+        <!--<image xlink:href= "{{getImage this.imageId}}.url" x="0" y="0" /> {{else}}-->
+        <!--<rect width="700" height="700" fill="{{this.color}}" /> {{/if}}-->
       </pattern>
     </defs>
     <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"

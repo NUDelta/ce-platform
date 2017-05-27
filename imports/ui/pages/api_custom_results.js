@@ -37,8 +37,8 @@ Template.api_custom_results.helpers({
 });
 
 //these helpers shouldn't be db calls
+
 Template.registerHelper( 'getImage', (id) => {
-  var img =  Images.findOne({_id: id});
   return {img: Images.findOne({_id: id})};
 });
 Template.registerHelper( 'getText', (id) => {
@@ -153,21 +153,37 @@ Template.star.helpers({
 
 });
 
+function getColor(submissions, color){
+    var filtered = submissions.filter(function(s){
+      return s.contributionTemplate == color;
+    });
 
-function getImages(submission, name){
-  submissions.filter(function(s){
-    return s.contributionTemplate == name;
-  })
+    var mapped = filtered.map(function(s){
+      var content = s.content;
+      return Object.values(content)[0]
+    });
+    
+    return mapped;
 }
 
-
+Template.star.onCreated(function(){
+  console.log(this)
+  console.log(Template.instance())
+})
 
 Template.americanFlagResults.helpers({
   getStarBuildInfo(index){
-    console.log("getStarBuildInfo", index);
-    if(this.images.length < index){
-      return {starId: index, imageUrl: null, hasImage: false, color: "red"}
+    var submissions = Template.instance().data.submissions;
+    console.log('submissions: ', submissions);
+    
+    var redImages = getColor(submissions, "white");
+    console.log('redImages: ', redImages);
+    console.log(redImages.length, index)
+    if(redImages.length > index){
+      console.log("yes")
+      return {starId: index, imageId: redImages[index], hasImage: true, color: "red"}
     }
-    return {starId: index, imageUrl: null, hasImage: false, color: "red"};
+    console.log("no")
+    return {starId: index, imageId: null, hasImage: false, color: "red"};
   }
 });
