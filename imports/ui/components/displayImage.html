@@ -1,8 +1,8 @@
 <template name="displayImage">
   {{#if this.img.isUploaded}}
-  <img src="{{this.img.url}}" alt="image didn't load'"> {{/if}}
+    <img src="{{this.img.url store="thumbs"}}" alt="image">
+  {{/if}}
 </template>
-
 <template name="displaySVGImage">
   {{#if this.img.isUploaded}}
     <image xlink:href="{{this.img.url}}" x="0" y="0"/>
