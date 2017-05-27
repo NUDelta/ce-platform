@@ -38,7 +38,7 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        ["grocery", "pizza", "coffee", "chair", "train", "trees", "grass"]]}
+                        ["grocery", "clear", "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
                         //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
 
     };
@@ -48,7 +48,7 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 10}}]
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 5}}]
     });
 
     registerCallback(experienceId, "scene", createNewPageNeed);
