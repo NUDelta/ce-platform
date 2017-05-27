@@ -53,7 +53,6 @@ Schema.SituationalNeedTemplate = new SimpleSchema({
 export const SituationalNeedTemplate = new ExperiencesCollection('situationalneedtemplate');
 SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
 
-
 Schema.ContributionGroup = new SimpleSchema({
   contributionTemplates:{
     type: [Schema.SituationalNeedTemplate],

@@ -38,8 +38,9 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        []
+                        ["grocery", "pizza", "coffee", "chair", "train", "trees", "grass"]]}
                         //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
+
     };
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime",
@@ -60,7 +61,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clouds",
+        "affordance": "daytime",
         "softStoppingCriteria": {"total": 1}
       }
     });
