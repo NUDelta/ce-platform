@@ -263,23 +263,47 @@ export const usersNotNotified = function(possibleUserIds){
   userIdsAvalibleNow = []
 
   for(let i in possibleUserIds){
-    userId = possibleUserIds[i]
+    var userId = possibleUserIds[i]
+    var user = Meteor.users.findOne({_id: userId});
+    let lastParticipated = user.profile.lastParticipated;
     let user_location = Locations.findOne({uid: userId});
+
     if(user_location == null){
       continue;
     }
-    now = Date.parse(new Date());
-    if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
+    var now = Date.parse(new Date());
+    console.log('last notified boolean', (user_location.lastNotification == null || (now - user_location.lastNotification) > (1*60000)));
+    console.log("last participate boolean", ((now - lastParticipated) > (20*60000) || lastParticipated== null));
+    console.log("last participate dif", now - lastParticipated)
+    if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (20*60000) || lastParticipated== null)){
+      
       //they are avalible
       console.log(now - user_location.lastNotification)
       userIdsAvalibleNow.push(userId);
     }
   }
   return userIdsAvalibleNow;
+
+  // for(let i in possibleUserIds){
+  //   userId = possibleUserIds[i]
+  //   let user_location = Locations.findOne({uid: userId});
+  //   if(user_location == null){
+  //     continue;
+  //   }
+  //   now = Date.parse(new Date());
+  //   if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
+  //     //they are avalible
+  //     console.log(now - user_location.lastNotification)
+  //     userIdsAvalibleNow.push(userId);
+  //   }
+  // }
+  // return userIdsAvalibleNow;
 }
 
 export const prepareToNotifyUsers = function(userIds, experience, activeIncident){
   console.log(userIds)
+  var now = Date.parse(new Date());
+
   if(userIds.length > 0){
     Cerebro.setActiveExperiences(userIds, experience._id);
     Cerebro.addIncidents(userIds, activeIncident);

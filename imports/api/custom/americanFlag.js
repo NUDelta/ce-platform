@@ -36,9 +36,9 @@ export const americanFlag = new ValidatedMethod({
       participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
       notificationText: "blah",
-      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 1}},
-                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 1}},
-                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 1}}]
+      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 2}},
+                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 2}},
+                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 2}}]
     });
     console.log(experienceId)
     const incidentId = Meteor.call("api.createIncident", {
@@ -51,7 +51,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "whiteNeed",
         "contributionTemplate" : "white",
         "affordance": "rain",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -60,7 +60,7 @@ export const americanFlag = new ValidatedMethod({
           "name": "redNeed",
           "contributionTemplate" : "red",
           "affordance": "grocery",
-          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+          "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
         }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -69,7 +69,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "blueNeed",
         "contributionTemplate" : "blue",
         "affordance": "beaches",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});

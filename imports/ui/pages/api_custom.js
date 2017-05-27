@@ -8,6 +8,8 @@ import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
+import { Users } from '../../api/users/users.js';
+
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
@@ -113,6 +115,7 @@ Template.api_custom.helpers({
 });
 
 Template.api_custom.onCreated(function() {
+  console.log("user id that is logged in", Meteor.userId())
   const incidentId = Router.current().params._id;
   this.subscribe('images', incidentId);
   this.subscribe('submissions', incidentId);
@@ -174,6 +177,7 @@ Template.storyPage.helpers({
   Template.api_custom.events({
   'submit form'(event, instance) {
     console.log("cameraUpload");
+    console.log("userID on submission is", Meteor.userId())
 
     event.preventDefault();
         // instance.submitting.set(true);
@@ -262,7 +266,7 @@ Template.storyPage.helpers({
               });
             }
           });
-
+    
 
     submissions[images[i].id] = imageFile._id;
     var submissionObject = {
@@ -282,7 +286,11 @@ Template.storyPage.helpers({
       } else {
         console.log("DID SUBMIT", docs)
       }});
-      }
+    }
+    
+    Meteor.users.update({_id: Meteor.userId()}, {
+      $set: {"profile.lastParticipated": Date.parse(new Date()) }
+    })
 
 
   },

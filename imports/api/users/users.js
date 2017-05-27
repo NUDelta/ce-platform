@@ -33,6 +33,10 @@ Schema.Profile = new SimpleSchema({
     type: [String],
     label: 'Previous incidents the user was notified of',
     optional: true
+  },
+  lastParticipated: {
+    type: String,
+    optional: true
   }
 });
 
