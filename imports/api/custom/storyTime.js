@@ -38,11 +38,15 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
-                        ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "tree"], 
-                        ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "park"]
-                        ["relax in a chair", "relax_in_a_chair"], ["smell flower", "park"], ["lie on a bench", "park"] ]
-                         ]} 
+                        [["nighttime", "nighttime"], ["bask in the sun", "clear and daytime"], ["stargaze", "nighttime and clear"],
+                         ["daytime", "daytime"], ["cloudy", "cloudy"], ["sunny", "clear"]
+                        ]
+                         ]}
+                        // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
+                        // ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "trees"], 
+                        // ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "parks"],
+                        // ["relax in a chair", "relax_in_a_chair"], ["smell flower", "parks"], ["lie on a bench", "parks"] ]
+                         //]} 
                          //, "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
                         //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
 

@@ -22,8 +22,8 @@
 
 {{/each}}
 <div class="row">
-  <div class = "col-xs-12">
-    <img id="whiteTop" class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="100px">
+  <div class = "col-xs-12" style="padding-top:5em">
+    <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
   </div>
 </div>
 <div class="row">
@@ -40,26 +40,21 @@
   {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
 </div>
 </div>
-<div class="row" style="padding-top:100px">
+<div class="row">
   <div class = "col-xs-12">
-    <img id="whiteTop" class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="100px">
+    <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
   </div>
 </div>
-
-
-
 
 </template>
 
 <template name="star">
-  <svg class="star" id="{{this.starId}}" width="700" height="660">
+  <svg class="star" id="{{this.starId}}" width="100" height="100">
     <defs>
       <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
        
         {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
 
-        <!--<image xlink:href= "{{getImage this.imageId}}.url" x="0" y="0" /> {{else}}-->
-        <!--<rect width="700" height="700" fill="{{this.color}}" /> {{/if}}-->
       </pattern>
     </defs>
     <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
