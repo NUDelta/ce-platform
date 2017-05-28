@@ -3,7 +3,7 @@
 </template>
 
 <template name="americanFlag">
- 
+
   <h4>Let's build the French flag</h4>
   <p> Take a picture of something {{this.contributionTemplate.name}} to help us build the French Flag! </p>
     <div id="participate">
@@ -22,12 +22,20 @@
   <head>
     <style>
       h3 {
-        /*font-size: 20px;*/
+        font-size: 20px;
       }
       #title-storybook{
-        background-color:#2980b9;
+        background-color:#3e50b4;
+        border-radius: 2px;
         color:white;
+        padding-top: 0px;
         padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      a{
+        padding-bottom: 0px;
+        margin-bottom: 0px;
       }
       p{
         font-size:0.9em;
@@ -50,22 +58,26 @@
       }
       .glyphicon-chevron-down{
         position:relative !important;
-        margin: 10px 50% 150px 50%;
+        padding-top: 40px;
+        margin-left: 50%;
+        margin-bottom: 0px !important;
+        padding-bottom: 0px !important;
+        /*margin: 10px 50% 10% 50%;*/
         font-size: 1.8em;
       }
-      .btn-primary{
-        margin: 15px 0px 115px 0px;
+      .btn-primary {
+        margin: 15px 0px 180px 0px;
       }
     </style>
   </head>
+
   <div id="participate">
-    
     <form class="col col-xs-12">
       <div class="row">
-        <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story!  </h3>
+        <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story!</h3>
         <p>We're creating a collaborative story by asking different people to contribute photos and text.</p>
       </div>
-      <h4>Illustrate the previous page</h4>
+      <h4>Illustrate a page in the story</h4>
       <div class="row">
         <p>
           Take a photo that describes the below sentence from the story. We think you'd a good job because you're in a location where you can {{getPrevAffordance this.submissions}}!
