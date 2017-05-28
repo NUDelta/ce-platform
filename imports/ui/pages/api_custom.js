@@ -62,6 +62,17 @@ Template.registerHelper('getPrevSentence', (subs) => {
   return prevSentence;
 });
 
+Template.registerHelper('getPrevAffordance', (subs) => {
+  if(subs.length == 0){
+    return "cloud watch";
+  }
+  var submission = subs[subs.length-1];
+  var id = submission.content.nextAffordance
+  var prevAff = TextEntries.findOne({_id: id}).text;
+  return prevAff;
+});
+
+
 Template.registerHelper('passContributionName', (name) => {
       const instance = Template.instance();
       var contributions = instance.data.contributionTemplate.contributions;

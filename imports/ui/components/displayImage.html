@@ -5,6 +5,6 @@
 </template>
 <template name="displaySVGImage">
   {{#if this.img.isUploaded}}
-    <image xlink:href="{{this.img.url}}" x="0" y="0"/>
+    <image xlink:href="{{this.img.url store="thumbs"}}" x="0" y="0"/>
   {{/if}}
 </template>

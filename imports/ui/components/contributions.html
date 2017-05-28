@@ -17,7 +17,7 @@
 <template name="dropdown">
     <select class="dropdown" id={{this.key}}>
         {{#each option in this.options}}
-            <option value="{{option}}">{{option}}</option>
+            <option value="{{option.[1]}}">{{option.[0]}} </option>
         {{/each}}
     </select>
 </template>

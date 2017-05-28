@@ -22,10 +22,21 @@
   <head>
     <style>
       h3 {
-        font-size: 20px;
+        /*font-size: 20px;*/
+      }
+      #title-storybook{
+        background-color:#2980b9;
+        color:white;
+        padding: 10px;
+      }
+      p{
+        font-size:0.9em;
+        line-height:1.7em;
+        color: #616161;
       }
       h4 {
         font-size: 18px;
+        margin-bottom: 20px;
       }
       #prevSentence {
         padding: 10px;
@@ -34,31 +45,48 @@
       #dropdown {
         padding: 5px;
       }
+      hr {
+        margin-bottom:50px;
+      }
+      .glyphicon-chevron-down{
+        position:relative !important;
+        margin: 10px 50% 150px 50%;
+        font-size: 1.8em;
+      }
+      .btn-primary{
+        margin: 15px 0px 115px 0px;
+      }
     </style>
   </head>
   <div id="participate">
     
     <form class="col col-xs-12">
       <div class="row">
-        <h3>Help us write and illustrate a story!  </h3>
+        <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story!  </h3>
+        <p>We're creating a collaborative story by asking different people to contribute photos and text.</p>
       </div>
-      <h4>1. Illustrate a scene</h4>
+      <h4>1. Illustrate the previous page</h4>
       <div class="row">
-        Take a photo that describes the previous sentence in the story:
-        <div id="prevSentence"><i>"{{getPrevSentence this.submissions}}"</i></div>
-        {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
+        <p>
+          Take a photo that describes the below sentence from the story. We think you'd a good job because you're in a location where you can {{getPrevAffordance this.submissions}}!
+        </p>
+          {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
+          <div id="prevSentence" class="text-center"><em>"{{getPrevSentence this.submissions}}"</em></div>
       </div>
+      <a href="#storybook-part2"><div class="glyphicon glyphicon-chevron-down"></div></a>
     {{#if notLastPage}}
-      <h4>2. Continue the story: Page {{getPageNum}} of 5</h4>
+      <h4 id="storybook-part2">2. Write what happens on page {{getPageNum}} of 10</h4>
       <div class="row">
-        Write the next sentence and select an object that best illustrates your sentence.<br>
-        <div id="dropdown">Featured object: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
+        <p>
+          Select a verb phrase and write the next sentence in the story using the selected phrase. This will help us find the next person to illustrate your sentence.<br>
+        </p>
+        <div id="dropdown">Verb phrase: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
       </div>
         <div class="row">
           {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
         </div>
       {{/if}}
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit" class="btn btn-default btn-primary">Submit</button>
     </form>
   </div>
 

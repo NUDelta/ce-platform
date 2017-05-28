@@ -38,16 +38,21 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        ["grocery", "clear", "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
+                        [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
+                        ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "tree"], 
+                        ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "park"]
+                        ["relax in a chair", "relax_in_a_chair"], ["smell flower", "park"], ["lie on a bench", "park"] ]
+                         ]} 
+                         //, "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
                         //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
 
-    };
+    }; 
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime",
       description: "Write a story",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
-      notificationText: "blah",
+      notificationText: "Help us illustrate and write a story!",
       contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 5}}]
     });
 

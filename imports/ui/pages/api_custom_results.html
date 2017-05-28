@@ -9,11 +9,11 @@
   <head>
     <style>
       svg { 
-        width: 6em;
-        height: 6em;
-        position: absolute;
+        /*width: 2em;
+        height: 2em;*/
+        /*position: absolute;
         padding-top: 100px;
-        padding-left: 20px;
+        padding-left: 20px;*/
     }
     </style>
   </head>
@@ -21,11 +21,30 @@
 {{#each submission in this.submissions}}
 
 {{/each}}
-
-{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-{{ > Template.dynamic template="star" data=(getStarBuildInfo 1)}}
-{{ > Template.dynamic template="star" data=(getStarBuildInfo 2)}}
-{{ > Template.dynamic template="star" data=(getStarBuildInfo 3)}}
+<div class="row">
+  <div class = "col-xs-12">
+    <img id="whiteTop" class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="100px">
+  </div>
+</div>
+<div class="row">
+<div class="col-xs-2">
+  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+</div>
+<div class="col-xs-2">
+  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+</div>
+<div class="col-xs-2">
+  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+</div>
+<div class="col-xs-2">
+  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+</div>
+</div>
+<div class="row" style="padding-top:100px">
+  <div class = "col-xs-12">
+    <img id="whiteTop" class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="100px">
+  </div>
+</div>
 
 
 
