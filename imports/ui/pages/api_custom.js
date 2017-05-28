@@ -177,7 +177,7 @@ Template.storyPage.helpers({
         return text.text;
     },
     getPageNum(){
-      return this.submissions.length+1;
+      return this.submissions.length+2;
     },
     notLastPage(){
       //TODO: pass in stopping critera
