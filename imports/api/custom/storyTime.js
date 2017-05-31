@@ -38,8 +38,9 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        [["nighttime", "nighttime"], ["bask in the sun", "clear and daytime"], ["stargaze", "nighttime and clear"],
-                         ["daytime", "daytime"], ["cloudy", "cloudy"], ["sunny", "clear"]
+                        [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"], ["cloudwatch", "clouds and daytime and grass"],
+                          ["nighttime", "nighttime"], ["bask in the sun", "clear and daytime"], ["stargaze", "nighttime and clear"],
+                          ["daytime", "daytime"], ["cloudy", "cloudy"], ["sunny", "clear"], ["study", "atrium"], ["surf the interweb", "hackerspace"]
                         ]
                          ]}
                         // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],

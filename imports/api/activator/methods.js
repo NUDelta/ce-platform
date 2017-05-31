@@ -303,7 +303,7 @@ export const usersNotNotified = function(possibleUserIds){
       continue;
     }
     var now = Date.parse(new Date());
-    console.log('last notified boolean', (user_location.lastNotification == null || (now - user_location.lastNotification) > (1*60000)));
+    console.log('last notified boolean', (user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)));
     console.log("last participate boolean", ((now - lastParticipated) > (20*60000) || lastParticipated== null));
     console.log("last participate dif", now - lastParticipated)
     if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (20*60000) || lastParticipated== null)){
