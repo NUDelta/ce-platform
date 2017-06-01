@@ -38,7 +38,7 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
-                        [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"], ["cloudwatch", "clouds and daytime and grass"],
+                        [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"],
                           ["bask in the sun", "clear and daytime"], ["study", "atrium or coffee"], ["surf the interweb", "hackerspace"],
                           ["pick a leaf", "atrium or parks"], ["smell the flowers", "parks"], ["grocery shop", "grocery"], ["browse vodka selection", "beer_and_wine"],
                           ["people watch out window", "coffee or hackerspace" ]
@@ -72,7 +72,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "daytime",
+        "affordance": "grass and daytime and clear",
         "softStoppingCriteria": {"total": 1}
       }
     });

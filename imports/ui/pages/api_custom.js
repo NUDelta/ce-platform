@@ -54,7 +54,7 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
 
 Template.registerHelper('getPrevSentence', (subs) => {
   if(subs.length == 0){
-    return "Jimmy feel asleep while watching the clouds move across the sky."
+    return "Jimmy feel asleep while sunbathing in the grass."
   }
   var submission = subs[subs.length-1];
   var id = submission.content.nextSentence
