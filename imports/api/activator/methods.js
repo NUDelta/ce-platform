@@ -116,7 +116,7 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
   console.log('removeUsersWhoMovedFromNeed');
 
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
-  var wait = 5*60*1000
+  var wait = 2*60*1000
   Meteor.setTimeout(function(){
     console.log("after watiting we are now actually removing the user", usersToRemove)
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
@@ -304,9 +304,9 @@ export const usersNotNotified = function(possibleUserIds){
     }
     var now = Date.parse(new Date());
     console.log('last notified boolean', (user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)));
-    console.log("last participate boolean", ((now - lastParticipated) > (20*60000) || lastParticipated== null));
+    console.log("last participate boolean", ((now - lastParticipated) > (10*60000) || lastParticipated== null));
     console.log("last participate dif", now - lastParticipated)
-    if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (20*60000) || lastParticipated== null)){
+    if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (10*60000) || lastParticipated== null)){
 
       //they are avalible
       console.log(now - user_location.lastNotification)

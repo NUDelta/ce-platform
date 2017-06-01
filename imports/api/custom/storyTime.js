@@ -39,8 +39,9 @@ export const storyBook = new ValidatedMethod({
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown", 
                         [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"], ["cloudwatch", "clouds and daytime and grass"],
-                          ["nighttime", "nighttime"], ["bask in the sun", "clear and daytime"], ["stargaze", "nighttime and clear"],
-                          ["daytime", "daytime"], ["cloudy", "cloudy"], ["sunny", "clear"], ["study", "atrium"], ["surf the interweb", "hackerspace"]
+                          ["bask in the sun", "clear and daytime"], ["study", "atrium or coffee"], ["surf the interweb", "hackerspace"],
+                          ["pick a leaf", "atrium or parks"], ["smell the flowers", "parks"], ["grocery shop", "grocery"], ["browse vodka selection", "beer_and_wine"],
+                          ["people watch out window", "coffee or hackerspace" ]
                         ]
                          ]}
                         // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
@@ -58,7 +59,7 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "Help us illustrate and write a story!",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 5}}]
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 8}}]
     });
 
     registerCallback(experienceId, "scene", createNewPageNeed);

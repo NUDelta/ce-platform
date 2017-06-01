@@ -82,6 +82,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   setActiveExperiences(userIds, experienceId) {
+    console.log('setActiveExperiences', userIds, experienceId);
     Meteor.users.update({
       _id: { $in: userIds }
     }, {

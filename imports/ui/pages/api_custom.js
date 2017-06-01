@@ -181,7 +181,7 @@ Template.storyPage.helpers({
     },
     notLastPage(){
       //TODO: pass in stopping critera
-      return this.submissions.length < 5-1;
+      return this.submissions.length+2 < 8;
     }
   });
 
