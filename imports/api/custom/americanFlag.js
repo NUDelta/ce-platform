@@ -36,6 +36,7 @@ export const americanFlag = new ValidatedMethod({
       participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
       notificationText: "blah",
+      notificationStrategy: "greedyOrganization",
       contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 2}},
                           {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 2}},
                           {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 2}}]
@@ -50,7 +51,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "whiteNeed",
         "contributionTemplate" : "white",
-        "affordance": "rain",
+        "affordance": "clouds",
         "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
       }
     });
@@ -72,6 +73,6 @@ export const americanFlag = new ValidatedMethod({
         "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "greedyOrganization"});
+    Meteor.call("api.leggo", {incidentId: incidentId});
   }
 });

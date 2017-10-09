@@ -16,6 +16,8 @@ import { _ } from 'meteor/underscore';
 
 import { Incidents } from '../incidents/incidents.js';
 
+import { WIPQueue } from '../../startup/server/WIPQueue.js'
+
 // METHODS FOR NOTIFICATION STRATEGIES
 var notifyOneUser = function (potentialUsers, situationalNeeds) {
   var usersToNotify = {};
@@ -144,15 +146,34 @@ export const setNeedAsDone = new ValidatedMethod({
       {$set :
         { 'situationNeeds.$.done':  true }
     });
-    var callback = null;
-    if(experienceId in globalCallbacks){
-      console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
-      if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
-        callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
-        var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-        return callback(mostRecent);
-      }
+    console.log("set need as done")
+    var experience = Experiences.findOne({_id: experienceId})
+    console.log(experience)
+    console.log(experience.callbackPair)
+
+    var callbackPair = experience.callbackPair;
+
+    var callback = callbackPair.filter(function(n){
+        console.log(n.templateName)
+        return n.templateName == situationNeed.contributionTemplate;
+      });
+    console.log("callback is", callback)
+    if(callback.length > 0){
+      fun = callback[0]["callback"];
+      var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
+      console.log("MOST RECENT IS", mostRecent)
+      console.log("fun IS", fun)
+
+      return eval("(" + fun+ "(" + JSON.stringify(mostRecent) + "))")
     }
+
+    // if(experienceId in globalCallbacks){
+    //   console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
+    //   if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
+    //     callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
+    //     return callback(mostRecent);
+    //   }
+    // }
   }
 });
 
@@ -174,7 +195,10 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
       console.log("numFinished", numFinished)
     if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
         var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
-        return true;
+        Meteor.setTimeout(function(){
+            return true;
+        }, 100)
+
     }
   }
   return false;
@@ -211,11 +235,13 @@ function checkIfGroupFinished(incident, results, group){
   }
   else {
     if (notFinished.length == 0) {
+
       var updatedIncident = Incidents.findOne({_id: incident._id})
       var notDone = updatedIncident.situationNeeds.filter(function(x){
         return x.done == false;
       })
       console.log("All situation needs are done but the group isn't ahhh what to do here!?");
+      console.log(notDone);
       return notDone;
     }
     return notFinished;
@@ -398,12 +424,14 @@ export const leggo = new ValidatedMethod({
     incidentId:{
       type: String
     },
-    notificationStrategy: {
-      type:String
-    },
   }).validator(),
-  run({incidentId, notificationStrategy}){
+  run({incidentId}){
     console.log("starting experience with incident ", incidentId)
+
+    if( WIPQueue.findOne({incidentId:incidentId}) == null){
+      WIPQueue.insert({incidentId: incidentId});
+    }
+
     interval =  Meteor.setInterval(function(){
       var incident = Incidents.findOne({_id: incidentId});
       var results = Submissions.find({incidentId: incidentId}).fetch();
@@ -426,7 +454,7 @@ export const leggo = new ValidatedMethod({
         console.log("available users", potentialUsersToNotify)
       });
 
-      var assignWhoToNotify = notificationFunctions[notificationStrategy]
+      var assignWhoToNotify = notificationFunctions[experience.notificationStrategy]
       var usersToNotify = assignWhoToNotify(potentialUsersToNotify, wipInstanceNeeds);
       console.log('usersToNotify: ', usersToNotify);
       Meteor.call('notify', {usersToNotify, experience, incidentId});
@@ -444,8 +472,14 @@ export const stop = new ValidatedMethod({
     }
   }).validator(),
   run({experienceId}){
-    console.log("STOPPING");
+    var experience = Experiences.findOne({_id: experienceId})
+
+    console.log("STOPPING, removing from wip ", experience.activeIncident );
     //TODO: also remove the experience for the users
+
+    WIPQueue.remove({incidentId: {$eq: experience.activeIncident} });
+
+
     Meteor.clearInterval(interval);
     removeFromAllActiveExperiences.call({ experienceId: experienceId });
     Experiences.update({

@@ -20,6 +20,8 @@ export const storyBook = new ValidatedMethod({
   name: 'api.storyBook',
   validate: null,
   run(){
+    console.log("RUNNING STORYBOOK!! THIS ONE!")
+
     var createNewPageNeed = function(mostRecentSubmission) {
       var textId = mostRecentSubmission.content.nextAffordance;
       var nextAffordance = TextEntries.findOne({_id: textId}).text;
@@ -33,11 +35,12 @@ export const storyBook = new ValidatedMethod({
         }
       });
     }
+
     var storyPageTemplate = {
       "name" : "scene",
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
-                        "nextAffordance": ["Dropdown", 
+                        "nextAffordance": ["Dropdown",
                         [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"],
                           ["bask in the sun", "clear and daytime"], ["study", "atrium or coffee"], ["surf the interweb", "hackerspace"],
                           ["pick a leaf", "atrium or parks"], ["smell the flowers", "parks"], ["grocery shop", "grocery"], ["browse vodka selection", "beer_and_wine"],
@@ -45,24 +48,26 @@ export const storyBook = new ValidatedMethod({
                         ]
                          ]}
                         // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
-                        // ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "trees"], 
+                        // ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "trees"],
                         // ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "parks"],
                         // ["relax in a chair", "relax_in_a_chair"], ["smell flower", "parks"], ["lie on a bench", "parks"] ]
-                         //]} 
+                         //]}
                          //, "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
                         //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
 
-    }; 
+    };
+
+    console.log("about to create an experience")
     const experienceId = Meteor.call("api.createExperience", {
-      name: "Storytime",
+      name: "Storytime yay",
       description: "Write a story",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "Help us illustrate and write a story!",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 8}}]
+      notificationStrategy: "notifyOneUser",
+      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 8}}],
+      callbackPair:[{templateName: "scene", callback: createNewPageNeed.toString()}]
     });
-
-    registerCallback(experienceId, "scene", createNewPageNeed);
 
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
@@ -72,10 +77,10 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "grass and daytime and clear",
+        "affordance": "clouds",
         "softStoppingCriteria": {"total": 1}
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId, notificationStrategy: "notifyOneUser"});
+    Meteor.call("api.leggo", {incidentId: incidentId});
   }
 })
