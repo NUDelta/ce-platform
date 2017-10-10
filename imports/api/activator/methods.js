@@ -465,7 +465,7 @@ export const leggo = new ValidatedMethod({
 // STOP EXPERIENCE
 var interval;
 export const stop = new ValidatedMethod({
-  name: 'stop',
+  name: 'api.stop',
   validate: new SimpleSchema({
     experienceId:{
       type: String
