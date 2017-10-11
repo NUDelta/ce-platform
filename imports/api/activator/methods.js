@@ -125,6 +125,22 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
   }, wait)
 }
 
+function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
+  console.log('removeUsersWhoMovedFromNeed');
+  var now = Date.parse(new Date());
+  var timeCutoff = now - 1*60000
+
+  var submissions = Submissions.find({incidentId: {$eq: incidentId}, timestamp: {$gt: timeCutoff }}).fetch();
+  var users = submissions.map(function(x){
+    return x.submitter
+  });
+
+  var unique_users = _.uniq(users)
+
+  removeSpecificUsersFromNeed(unique_users, situationNeed, experienceId, incidentId)
+
+}
+
 // METHODS FOR CHECKING NEED & CONTRIBUTION FULFILLMENT
 export const setNeedAsDone = new ValidatedMethod({
   name: 'api.setNeedAsDone',
@@ -449,6 +465,7 @@ export const leggo = new ValidatedMethod({
       wipInstanceNeeds.forEach((need)=>{
         var allUsersWithAffordance = queryFor(need.affordance);
         removeUsersWhoMovedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
+        removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, need, experienceId, incidentId);
         var possible_users = usersNotNotified(allUsersWithAffordance); //possible_users haven't been notified
         potentialUsersToNotify[need.name] = possible_users;
         console.log("available users", potentialUsersToNotify)

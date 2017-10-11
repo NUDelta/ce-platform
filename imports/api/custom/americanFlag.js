@@ -18,6 +18,7 @@ export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',
   validate: null,
   run(){
+    console.log("calling american flag");
     var redTemplate = {
       "name" : "red",
       "contributions" : {"red": "Image"},
@@ -37,9 +38,10 @@ export const americanFlag = new ValidatedMethod({
       resultsTemplate: "americanFlagResults",
       notificationText: "blah",
       notificationStrategy: "greedyOrganization",
-      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 2}}]
+      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 4}},
+                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 4}},
+                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 4 }}],
+      callbackPair: []
     });
     console.log(experienceId)
     const incidentId = Meteor.call("api.createIncident", {
@@ -52,7 +54,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "whiteNeed",
         "contributionTemplate" : "white",
         "affordance": "clouds",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 4} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -60,8 +62,8 @@ export const americanFlag = new ValidatedMethod({
       need: {
           "name": "redNeed",
           "contributionTemplate" : "red",
-          "affordance": "grocery",
-          "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+          "affordance": "grocery or hackerspace",
+          "softStoppingCriteria": {"total": 4} //if finished but experience isn't then ignore
         }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -69,8 +71,8 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "blueNeed",
         "contributionTemplate" : "blue",
-        "affordance": "beaches",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "affordance": "clear and daytime",
+        "softStoppingCriteria": {"total": 4} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.leggo", {incidentId: incidentId});
