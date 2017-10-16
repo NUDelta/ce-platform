@@ -140,6 +140,7 @@ Template.cameraUpload.events({
       submitter: Meteor.userId(),
       experienceId: experienceId,
       incidentId: incidentId,
+      timestamp: Date.parse(new Date()),
       content: submissions
     }, (err, docs) => {
       if (err) {

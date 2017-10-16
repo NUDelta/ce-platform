@@ -10,6 +10,7 @@ import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
+import { WIPQueue } from './WIPQueue.js'
 
 import { updateLocation } from '../../api/locations/methods.js';
 import { insertPhoto } from '../../api/images/methods.js';
@@ -17,7 +18,18 @@ import { log } from '../../api/logs.js';
 
 import { LOCATIONS } from './data.js';
 
+
+
 Meteor.startup(() => {
+
+  var incidentsToContinue = WIPQueue.find().fetch();
+
+  incidentsToContinue.forEach((incident) =>{
+    console.log("restarting incident with id: ", incident.incidentId);
+    Meteor.call("api.leggo", {incidentId: incident.incidentId});
+  });
+
+
   SyncedCron.start();
   if(false){
     Meteor.users.remove({});

@@ -65,6 +65,19 @@ Schema.ContributionGroup = new SimpleSchema({
 export const ContributionGroup = new ExperiencesCollection('contributiongroup');
 ContributionGroup.attachSchema(Schema.ContributionGroup);
 
+Schema.CallbackPair = new SimpleSchema({
+  templateName:{
+    type: String
+  },
+  callback: {
+    type: String
+  }
+});
+
+export const CallbackPair = new ExperiencesCollection('callbackpair');
+CallbackPair.attachSchema(Schema.CallbackPair);
+
+
 
 export const Experiences = new ExperiencesCollection('experiences');
 
@@ -100,7 +113,15 @@ Schema.Experience = new SimpleSchema({
   notificationText : {
     type: String,
     optional: true
-  }
+  },
+  notificationStrategy: {
+    type: String,
+    optional: true
+  },
+  callbackPair:  {
+    type:[Schema.CallbackPair],
+    optional: true
+  },
 });
 
 Experiences.attachSchema(Schema.Experience);

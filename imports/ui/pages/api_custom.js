@@ -194,7 +194,7 @@ Template.storyPage.helpers({
         // instance.submitting.set(true);
     console.log('event.target.: ', event.target);
     event.target.getElementsByClassName("overlay")[0].style.display = "initial";
-    
+
 
     // TODO: Probably can generalize this logic
 
@@ -277,7 +277,7 @@ Template.storyPage.helpers({
               });
             }
           });
-    
+
 
     submissions[images[i].id] = imageFile._id;
     var submissionObject = {
@@ -286,7 +286,8 @@ Template.storyPage.helpers({
       incidentId: incidentId,
       situationNeed: instance.state.get('situationNeedName'),
       contributionTemplate: instance.state.get('contributionTemplate').name,
-      content: submissions
+      content: submissions,
+      timestamp: Date.parse(new Date()),
     }
 
     console.log('submissionObject: ', submissionObject);
@@ -298,7 +299,7 @@ Template.storyPage.helpers({
         console.log("DID SUBMIT", docs)
       }});
     }
-    
+
     Meteor.users.update({_id: Meteor.userId()}, {
       $set: {"profile.lastParticipated": Date.parse(new Date()) }
     })

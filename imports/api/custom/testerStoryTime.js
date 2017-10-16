@@ -16,11 +16,11 @@ import { registerCallback } from '../activator/methods.js';
 import { Random } from 'meteor/random'
 
 
-export const storyBook = new ValidatedMethod({
-  name: 'api.storyBook',
+export const testerStoryBook = new ValidatedMethod({
+  name: 'api.testerStoryBook',
   validate: null,
   run(){
-    console.log("RUNNING STORYBOOK!! THIS ONE!")
+    console.log("RUNNING tester STORYBOOK")
 
     var createNewPageNeed = function(mostRecentSubmission) {
       var textId = mostRecentSubmission.content.nextAffordance;
@@ -41,19 +41,10 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown",
-                        [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"],
-                          ["bask in the sun", "clear and daytime"], ["study", "atrium or coffee"], ["surf the interweb", "hackerspace"],
-                          ["pick a leaf", "atrium or parks"], ["smell the flowers", "parks"], ["grocery shop", "grocery"], ["browse vodka selection", "beer_and_wine"],
-                          ["people watch out window", "coffee or hackerspace" ]
+                        [ ["sunny day", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
+                          ["cloudy day", "clouds and daytime"], ["nightime", "nighttime"], ["drink at a bar", "bars"]
                         ]
                          ]}
-                        // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
-                        // ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "trees"],
-                        // ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "parks"],
-                        // ["relax in a chair", "relax_in_a_chair"], ["smell flower", "parks"], ["lie on a bench", "parks"] ]
-                         //]}
-                         //, "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
-                        //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
 
     };
 
@@ -77,7 +68,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clouds",
+        "affordance": "daytime",
         "softStoppingCriteria": {"total": 1}
       }
     });

@@ -69,18 +69,28 @@ export const createExperience = new ValidatedMethod({
     contributionGroups: {
       type: [Schema.ContributionGroup]
     },
+    notificationStrategy: {
+      type: String
+    },
     notificationText: {
       type: String
-    }
+    },
+    callbackPair: {
+      type: [Schema.CallbackPair]
+    },
   }).validator(),
-  run({name, description, participateTemplate, resultsTemplate, contributionGroups, notificationText}) {
+  run({name, description, participateTemplate, resultsTemplate, contributionGroups,
+    notificationStrategy, notificationText, callbackPair}) {
+    console.log("creating the experience")
     const experience = {
         name: name,
         description: description,
         participateTemplate: participateTemplate,
         resultsTemplate: resultsTemplate,
         contributionGroups: contributionGroups,
-        notificationText: notificationText
+        notificationStrategy: notificationStrategy,
+        notificationText: notificationText,
+        callbackPair: callbackPair
     }
     var id = Experiences.insert(experience, (err, docs) => {
       if (err) {

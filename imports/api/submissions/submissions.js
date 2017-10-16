@@ -31,6 +31,10 @@ Schema.Submission = new SimpleSchema({
   content: {
     type: Object, //Dictionary (ids of contributions)
     blackbox: true
+  },
+  timestamp: {
+    type: Number,
+    optional: true
   }
 });
 
