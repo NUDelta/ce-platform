@@ -41,8 +41,11 @@ export const testerStoryBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown",
-                        [ ["sunny day", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
-                          ["cloudy day", "clouds and daytime"], ["nightime", "nighttime"], ["drink at a bar", "bars"]
+                        [ ["bask in sun", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
+                          ["cloud watch", "clouds and daytime"], ["gaze at the moon", "clear and nighttime"],
+                          ["buy food", "grocery"], ["lounge at home", "nighttime && apartment"],
+                          ["people watch", "atrium or coffee or hackerspace"],["work out", "gym"],
+                          ["pass by noisy construction", "chicago_sheridan and daytime"],
                         ]
                          ]}
 
@@ -50,7 +53,7 @@ export const testerStoryBook = new ValidatedMethod({
 
     console.log("about to create an experience")
     const experienceId = Meteor.call("api.createExperience", {
-      name: "Storytime yay",
+      name: "Storytime with Jimmy",
       description: "Write a story",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",

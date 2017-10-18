@@ -35,10 +35,15 @@ Template.debug.events({
       if (err) { console.log(err);}
     });
   },
+  'click #clear_participation'(event, instance){
+    Meteor.call("clearParticipation", {}, (err, res) => {
+      if (err) { console.log(err);}
+    });
+  },
   'click #add_users'(event, instance){
-    console.log("you clicked add users");
+    // console.log("you clicked add users");
     users.forEach(user => Meteor.call("addUsers", {user: user}));
-    experiences.forEach(experience => Meteor.call("addExperience", {experience: experience}));
+    // experiences.forEach(experience => Meteor.call("addExperience", {experience: experience}));
 
 
      //how to create user with out logging in?

@@ -17,6 +17,8 @@ import { _ } from 'meteor/underscore';
 import { Incidents } from '../incidents/incidents.js';
 
 import { WIPQueue } from '../../startup/server/WIPQueue.js'
+import { NotificationLog } from '../cerebro/cerebro-core.js'
+
 
 // METHODS FOR NOTIFICATION STRATEGIES
 var notifyOneUser = function (potentialUsers, situationalNeeds) {
@@ -118,7 +120,7 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
   console.log('removeUsersWhoMovedFromNeed');
 
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
-  var wait = 2*60*1000
+  var wait = 2*60*1000 //WAIT LAG FOR AFTER A USER LEAVES A SITUATION
   Meteor.setTimeout(function(){
     console.log("after watiting we are now actually removing the user", usersToRemove)
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
@@ -128,7 +130,7 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
 function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
   console.log('removeUsersWhoMovedFromNeed');
   var now = Date.parse(new Date());
-  var timeCutoff = now - 1*60000
+  var timeCutoff = now - 1*60000 //find people who participated recently
 
   var submissions = Submissions.find({incidentId: {$eq: incidentId}, timestamp: {$gt: timeCutoff }}).fetch();
   var users = submissions.map(function(x){
@@ -211,9 +213,7 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
       console.log("numFinished", numFinished)
     if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
         var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
-        Meteor.setTimeout(function(){
-            return true;
-        }, 100)
+        return true;
 
     }
   }
@@ -345,10 +345,11 @@ export const usersNotNotified = function(possibleUserIds){
       continue;
     }
     var now = Date.parse(new Date());
-    console.log('last notified boolean', (user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)));
-    console.log("last participate boolean", ((now - lastParticipated) > (10*60000) || lastParticipated== null));
-    console.log("last participate dif", now - lastParticipated)
-    if((user_location.lastNotification == null || (now - user_location.lastNotification) > (3*60000)) && ((now - lastParticipated) > (10*60000) || lastParticipated== null)){
+    var waitTimeAfterNotification = 1*60*60000 //first number is the number of hours
+    var waitTimeAfterParticipating = 3*60*60000
+
+    if((user_location.lastNotification == null ||
+      (now - user_location.lastNotification) > waitTimeAfterNotification) && ((now - lastParticipated) > waitTimeAfterParticipating || lastParticipated== null)){
 
       //they are avalible
       console.log(now - user_location.lastNotification)
@@ -407,6 +408,8 @@ export const notify = new ValidatedMethod({
     }
   }).validator(),
   run({usersToNotify, experience, incidentId}){
+    console.log("Sending notification!!!!!!!")
+    console.log(usersToNotify)
     var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
     Object.keys(usersToNotify).forEach((key)=>{
       var newUsers = usersToNotify[key]
@@ -420,8 +423,16 @@ export const notify = new ValidatedMethod({
     Incidents.update({_id: incidentId}, {$set: {"situationNeeds": situationNeeds}}, (err, docs) => {
       if (err) { console.log(err); }
     });
+
     Object.keys(usersToNotify).forEach((key) =>{
       prepareToNotifyUsers(usersToNotify[key], experience, incidentId);
+      usersToNotify[key].forEach((user)=>{
+        NotificationLog.insert({userId: user, task: key, experienceId: experience._id, incidentId: incidentId}, (err, docs) => {
+          if (err) { console.log(err); }
+        });
+      })
+
+
       Cerebro.notify({
         userIds: usersToNotify[key],
         experienceId: experience._id,

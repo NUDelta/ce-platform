@@ -4,6 +4,10 @@ import { Locations } from '../imports/api/locations/locations.js';
 import { Images } from '../imports/api/images/images.js';
 import { TextEntries } from '../imports/api/text-entries/text-entries.js';
 import { ParticipationLocations } from '../imports/api/participation-locations/participation_locations.js';
+import { NotificationLog } from '../imports/api/cerebro/cerebro-core.js';
+import { WIPQueue } from '../imports/startup/server/WIPQueue.js';
+
+
 import { updateLocation } from '../imports/api/locations/methods.js';
 
 export const cleardb = new ValidatedMethod({
@@ -19,6 +23,18 @@ export const cleardb = new ValidatedMethod({
     TextEntries.remove({});
     ParticipationLocations.remove({});
     Incidents.remove({});
+    WIPQueue.remove({});
+    NotificationLog.remove({});
+
+  }
+});
+
+export const clearParticipation = new ValidatedMethod({
+  name: 'clearParticipation',
+  validate: new SimpleSchema({
+  }).validator(),
+  run() {
+    Meteor.users.update({}, {$set: {'profile.lastParticipated': null}}, { multi: true })
   }
 });
 
@@ -80,7 +96,7 @@ export const addLocations = Meteor.methods({
       });
       updateLocation.call({
         uid: Accounts.findUserByEmail('h@gmail.com')._id,
-        lat: 42.045398,  //pubs 
+        lat: 42.045398,  //pubs
         lng: -87.682431
       });
       updateLocation.call({

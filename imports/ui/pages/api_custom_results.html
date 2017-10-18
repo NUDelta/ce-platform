@@ -8,7 +8,7 @@
 
   <head>
     <style>
-      svg { 
+      svg {
         /*width: 2em;
         height: 2em;*/
         /*position: absolute;
@@ -17,7 +17,7 @@
     }
     </style>
   </head>
-   
+
 {{#each submission in this.submissions}}
 
 {{/each}}
@@ -52,7 +52,7 @@
   <svg class="star" id="{{this.starId}}" width="100" height="100">
     <defs>
       <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
-       
+
         {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
 
       </pattern>
@@ -152,7 +152,7 @@
           {{#if (isFirst @index) }}
             {{getText (getNextSentenceId @index) }}
           {{else}}
-            Jimmy feel asleep while watching the clouds move across the sky.
+            Jimmy woke up with a start.
           {{/if}}
         </div>
         <div class="col-xs-2">

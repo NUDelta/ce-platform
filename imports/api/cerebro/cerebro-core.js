@@ -31,3 +31,20 @@ Schema.NotificationOptions = new SimpleSchema({
   }
 });
 
+Schema.NotificationLog = new SimpleSchema({
+  userId: {
+    type: String
+  },
+  task: {
+    type: String
+  },
+  experienceId: {
+    type: String
+  },
+  incidentId: {
+    type: String
+  },
+
+});
+export const NotificationLog = new Mongo.Collection('notificationlog');
+NotificationLog.attachSchema(Schema.NotificationLog);
