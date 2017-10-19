@@ -20,7 +20,6 @@ export const storyBook = new ValidatedMethod({
   name: 'api.storyBook',
   validate: null,
   run(){
-    console.log("RUNNING STORYBOOK!! THIS ONE!")
 
     var createNewPageNeed = function(mostRecentSubmission) {
       var textId = mostRecentSubmission.content.nextAffordance;
@@ -57,7 +56,6 @@ export const storyBook = new ValidatedMethod({
 
     };
 
-    console.log("about to create an experience")
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime yay",
       description: "Write a story",

@@ -81,7 +81,6 @@ export const createExperience = new ValidatedMethod({
   }).validator(),
   run({name, description, participateTemplate, resultsTemplate, contributionGroups,
     notificationStrategy, notificationText, callbackPair}) {
-    console.log("creating the experience")
     const experience = {
         name: name,
         description: description,

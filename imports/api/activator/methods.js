@@ -117,18 +117,14 @@ function removeSpecificUsersFromNeed(users, situationNeed, experienceId, inciden
 }
 
 function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
-  console.log('removeUsersWhoMovedFromNeed');
-
   var usersToRemove = _.difference(situationNeed.notifiedUsers, allUsersWithAffordance);
   var wait = 2*60*1000 //WAIT LAG FOR AFTER A USER LEAVES A SITUATION
   Meteor.setTimeout(function(){
-    console.log("after watiting we are now actually removing the user", usersToRemove)
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
   }, wait)
 }
 
 function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
-  console.log('removeUsersWhoMovedFromNeed');
   var now = Date.parse(new Date());
   var timeCutoff = now - 1*60000 //find people who participated recently
 
@@ -164,34 +160,18 @@ export const setNeedAsDone = new ValidatedMethod({
       {$set :
         { 'situationNeeds.$.done':  true }
     });
-    console.log("set need as done")
     var experience = Experiences.findOne({_id: experienceId})
-    console.log(experience)
-    console.log(experience.callbackPair)
 
     var callbackPair = experience.callbackPair;
 
     var callback = callbackPair.filter(function(n){
-        console.log(n.templateName)
         return n.templateName == situationNeed.contributionTemplate;
       });
-    console.log("callback is", callback)
     if(callback.length > 0){
       fun = callback[0]["callback"];
       var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-      console.log("MOST RECENT IS", mostRecent)
-      console.log("fun IS", fun)
-
       return eval("(" + fun+ "(" + JSON.stringify(mostRecent) + "))")
     }
-
-    // if(experienceId in globalCallbacks){
-    //   console.log("we are looking for", situationNeed.contributionTemplate, "inside ", globalCallbacks[experienceId])
-    //   if(situationNeed.contributionTemplate in globalCallbacks[experienceId]){
-    //     callback = globalCallbacks[experienceId][situationNeed.contributionTemplate]
-    //     return callback(mostRecent);
-    //   }
-    // }
   }
 });
 
@@ -202,15 +182,12 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
   }
   var incidentId = results[0].incidentId;
   if(situationNeed.done == true){
-    console.log("situation need is done so not calling a callback", situationNeed)
     return true;
   }
   if("total" in soft_stopping_criteria){
     var numFinished = results.filter(function(n){
-      console.log("compare", situationNeed.name , n.situationNeed)
         return situationNeed.name === n.situationNeed;
       }).length;
-      console.log("numFinished", numFinished)
     if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
         var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
         return true;
@@ -246,7 +223,6 @@ function checkIfGroupFinished(incident, results, group){
   });
 
   if(numFinished >= group.stoppingCriteria.total){
-    console.log("we have enough group results so we are done!")
     return []
   }
   else {
@@ -285,7 +261,6 @@ function queryFor(search_aff){
     if(x.affordances == null){
       return false;
     }
-    console.log("contains??", containsAffordance(x.affordances, search_aff));
     return (containsAffordance(x.affordances, search_aff));
   });
   var mapped = filtered.map(function(x){
@@ -332,7 +307,6 @@ function orAffordances(user_affordances, search_affordance){
 }
 
 export const usersNotNotified = function(possibleUserIds){
-  console.log("calling users available now")
   userIdsAvalibleNow = []
 
   for(let i in possibleUserIds){
@@ -345,37 +319,21 @@ export const usersNotNotified = function(possibleUserIds){
       continue;
     }
     var now = Date.parse(new Date());
-    var waitTimeAfterNotification = 1*60*60000 //first number is the number of hours
-    var waitTimeAfterParticipating = 3*60*60000
+    var waitTimeAfterNotification = .5*60*60000 //first number is the number of hours
+    var waitTimeAfterParticipating = 2*60*60000
 
     if((user_location.lastNotification == null ||
       (now - user_location.lastNotification) > waitTimeAfterNotification) && ((now - lastParticipated) > waitTimeAfterParticipating || lastParticipated== null)){
 
       //they are avalible
-      console.log(now - user_location.lastNotification)
       userIdsAvalibleNow.push(userId);
     }
   }
   return userIdsAvalibleNow;
 
-  // for(let i in possibleUserIds){
-  //   userId = possibleUserIds[i]
-  //   let user_location = Locations.findOne({uid: userId});
-  //   if(user_location == null){
-  //     continue;
-  //   }
-  //   now = Date.parse(new Date());
-  //   if(user_location.lastNotification == null || (now - user_location.lastNotification) > (7*60000)){
-  //     //they are avalible
-  //     console.log(now - user_location.lastNotification)
-  //     userIdsAvalibleNow.push(userId);
-  //   }
-  // }
-  // return userIdsAvalibleNow;
 }
 
 export const prepareToNotifyUsers = function(userIds, experience, activeIncident){
-  console.log(userIds)
   var now = Date.parse(new Date());
 
   if(userIds.length > 0){
@@ -408,8 +366,6 @@ export const notify = new ValidatedMethod({
     }
   }).validator(),
   run({usersToNotify, experience, incidentId}){
-    console.log("Sending notification!!!!!!!")
-    console.log(usersToNotify)
     var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
     Object.keys(usersToNotify).forEach((key)=>{
       var newUsers = usersToNotify[key]
@@ -501,9 +457,6 @@ export const stop = new ValidatedMethod({
   }).validator(),
   run({experienceId}){
     var experience = Experiences.findOne({_id: experienceId})
-
-    console.log("STOPPING, removing from wip ", experience.activeIncident );
-    //TODO: also remove the experience for the users
 
     WIPQueue.remove({incidentId: {$eq: experience.activeIncident} });
 
