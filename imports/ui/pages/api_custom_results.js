@@ -141,29 +141,23 @@ Template.storyPageResults.events({
   }
 });
 
-
-
 Template.star.helpers({
   getId(){
       const instance = Template.instance()
       var starId = instance.data.starId;
       return starId;
-
   }
-
 });
 
 function getColor(submissions, color){
-    var filtered = submissions.filter(function(s){
-      return s.contributionTemplate == color;
-    });
-
-    var mapped = filtered.map(function(s){
-      var content = s.content;
-      return Object.values(content)[0]
-    });
-    
-    return mapped;
+  var filtered = submissions.filter(function(s){
+    return s.contributionTemplate == color;
+  });
+  var mapped = filtered.map(function(s){
+    var content = s.content;
+    return Object.values(content)[0]
+  });
+  return mapped;
 }
 
 Template.star.onCreated(function(){
@@ -174,16 +168,26 @@ Template.star.onCreated(function(){
 Template.americanFlagResults.helpers({
   getStarBuildInfo(index){
     var submissions = Template.instance().data.submissions;
-    console.log('submissions: ', submissions);
-    
-    var redImages = getColor(submissions, "white");
-    console.log('redImages: ', redImages);
-    console.log(redImages.length, index)
+    var redImages = getColor(submissions, "red");
     if(redImages.length > index){
-      console.log("yes")
       return {starId: index, imageId: redImages[index], hasImage: true, color: "red"}
     }
-    console.log("no")
     return {starId: index, imageId: null, hasImage: false, color: "red"};
+  },
+  getColorInfo(index, color){
+      var submissions = Template.instance().data.submissions;
+      var colorImages = getColor(submissions, color);
+      if(colorImages.length > index){
+        return {colorId: index, imageId: colorImages[index], hasImage: true, color: color}
+      }
+      return {colorId: index, imageId: null, hasImage: false, color: color};
+  },
+  noImage(color){
+    var submissions = Template.instance().data.submissions;
+    var colorImages = getColor(submissions, color);
+    if(colorImages.length > 0){
+      return false;
+    }
+    return true;
   }
 });
