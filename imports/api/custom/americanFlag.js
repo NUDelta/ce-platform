@@ -23,12 +23,10 @@ export const americanFlag = new ValidatedMethod({
       "name" : "red",
       "contributions" : {"red": "Image"},
     };
-
     var whiteTemplate = {
      "name" : "white",
      "contributions" : {"white": "Image"},
     };
-
     var blueTemplate = {
       "name" : "blue",
       "contributions" : {"blue": "Image"},
@@ -57,6 +55,7 @@ export const americanFlag = new ValidatedMethod({
     const experienceId = Meteor.call("api.createExperience", {
       name: "Create a rainbow!",
       description: "Take a photo to help complete the rainbow!",
+      image: "http://www.publicdomainpictures.net/pictures/120000/velka/rainbow-colors-background.jpg",
       participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
       notificationText: "Contribute a photo towards our rainbow",

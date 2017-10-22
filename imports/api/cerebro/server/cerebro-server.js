@@ -23,7 +23,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       //   this._sendEmails(users, server, subject, text);
       //   break;
       case CerebroCore.PUSH:
-        console.log("notify called with uerIds", userIds)
+        console.log("notify called with userIds", userIds)
         if(userIds.length > 0){
           this._sendPush(userIds, subject, text, route, experienceId);
         }

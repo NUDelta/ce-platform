@@ -59,6 +59,7 @@ export const storyBook = new ValidatedMethod({
     const experienceId = Meteor.call("api.createExperience", {
       name: "Storytime yay",
       description: "Write a story",
+      image: "https://cnet3.cbsistatic.com/img/0g1dNigk0BNakKeWo1EKCYm7GXw=/fit-in/970x0/2015/04/24/4bed63b8-48cf-4327-8618-811a3179c921/jcblog459.jpg",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "Help us illustrate and write a story!",
@@ -75,7 +76,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clouds",
+        "affordance": "clear",
         "softStoppingCriteria": {"total": 1}
       }
     });

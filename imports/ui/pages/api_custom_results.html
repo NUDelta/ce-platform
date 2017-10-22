@@ -1,6 +1,6 @@
 <template name="api_custom_results">
   {{#if Template.subscriptionsReady}}
-      {{ > Template.dynamic template=template_name data=data2pass}}
+    {{ > Template.dynamic template=template_name data=data2pass}}
   {{/if}}
 </template>
 
@@ -8,31 +8,29 @@
 <template name="americanFlagResults">
   <head>
     <style>
-    .row {
-      padding: 5px;
-    }
-    .column {
-        float: left;
+      .column {
         width: 100%;
         overflow: hidden;
         max-height: 150px;
         padding: 5px 10px 5px 10px;
-    }
-    .column img {
-        margin-top: 2px;
+      }
+      .column img {
         width: 100%;
-    }
-    .box{
-      	width:100%;
-      	height:100px;
+      }
+      .box {
+        width:100%;
+        height:100px;
+        text-align:center;
+        vertical-align: middle;
+        line-height: 100px;
       }
     </style>
   </head>
 
-  <div class="row">
+  <div class="row" style="padding:5px">
     <div class="column">
       {{#if (noImage "red")}}
-        <div class="box red" style="border:1px solid red; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box red" style="border:1px solid red;">
           We're still waiting for a red photo...
         </div>
       {{else}}
@@ -42,7 +40,7 @@
 
     <div class="column">
       {{#if (noImage "orange")}}
-        <div class="box orange" style="border:1px solid orange; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box orange" style="border:1px solid orange;">
           We're still waiting for an orange photo...
         </div>
       {{else}}
@@ -52,7 +50,7 @@
 
     <div class="column">
       {{#if (noImage "yellow")}}
-        <div class="box yellow" style="border:1px solid yellow; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box yellow" style="border:1px solid yellow;">
           We're still waiting for a yellow photo...
         </div>
       {{else}}
@@ -62,7 +60,7 @@
 
     <div class="column">
       {{#if (noImage "green")}}
-        <div class="box green" style="border:1px solid green; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box green" style="border:1px solid green;">
           We're still waiting for a green photo...
         </div>
       {{else}}
@@ -72,7 +70,7 @@
 
     <div class="column">
       {{#if (noImage "blue")}}
-        <div class="box blue" style="border:1px solid blue; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box blue" style="border:1px solid blue;">
           We're still waiting for a blue photo...
         </div>
       {{else}}
@@ -82,7 +80,7 @@
 
     <div class="column">
       {{#if (noImage "purple")}}
-        <div class="box purple" style="border:1px solid purple; text-align:center; vertical-align: middle; line-height: 100px;">
+        <div class="box purple" style="border:1px solid purple;">
           We're still waiting for a purple photo...
         </div>
       {{else}}
@@ -92,13 +90,19 @@
 
     <div class="column">
       {{#if (noImage "black")}}
-      <div class="box black" style="border:1px solid black; text-align:center; vertical-align: middle; line-height: 100px;">
+      <div class="box black" style="border:1px solid black;">
         We're still waiting for a black photo...
       </div>
       {{else}}
         {{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}
       {{/if}}
     </div>
+  </div>
+</template>
+
+<template name="color">
+  <div class="colorBlock" id="{{this.colorId}}">
+    {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
   </div>
 </template>
 
@@ -112,11 +116,9 @@
         /*position: absolute;
         padding-top: 100px;
         padding-left: 20px;*/
-    }
+      }
     </style>
   </head>
-  {{#each submission in this.submissions}}
-  {{/each}}
   <div class="row">
     <div class = "col-xs-12" style="padding-top:5em">
       <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
@@ -153,12 +155,6 @@
     <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
       fill="url(#img1)" />
   </svg>
-</template>
-
-<template name="color">
-  <div class="colorBlock" id="{{this.colorId}}">
-      {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
-  </div>
 </template>
 
 <!-- TEMPLATE FOR CHEERS -->

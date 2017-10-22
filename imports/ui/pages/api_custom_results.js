@@ -18,7 +18,6 @@ import { Submissions } from '../../api/submissions/submissions.js';
 
 import { Incidents } from '../../api/incidents/incidents.js';
 
-
 Template.api_custom_results.helpers({
   data2pass(){
     const instance = Template.instance();

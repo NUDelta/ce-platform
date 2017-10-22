@@ -112,7 +112,7 @@ function removeSpecificUsersFromNeed(users, situationNeed, experienceId, inciden
   Cerebro.removeAllOldActiveExperiences(users, experienceId);
   Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeed.name},
    {$pull :
-        { 'situationNeeds.$.notifiedUsers':  { $in: users }}
+      { 'situationNeeds.$.notifiedUsers':  { $in: users }}
     });
 }
 
@@ -134,9 +134,7 @@ function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed
   });
 
   var unique_users = _.uniq(users)
-
   removeSpecificUsersFromNeed(unique_users, situationNeed, experienceId, incidentId)
-
 }
 
 // METHODS FOR CHECKING NEED & CONTRIBUTION FULFILLMENT
@@ -161,9 +159,7 @@ export const setNeedAsDone = new ValidatedMethod({
         { 'situationNeeds.$.done':  true }
     });
     var experience = Experiences.findOne({_id: experienceId})
-
     var callbackPair = experience.callbackPair;
-
     var callback = callbackPair.filter(function(n){
         return n.templateName == situationNeed.contributionTemplate;
       });
@@ -191,7 +187,6 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
     if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
         var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
         return true;
-
     }
   }
   return false;
@@ -227,13 +222,11 @@ function checkIfGroupFinished(incident, results, group){
   }
   else {
     if (notFinished.length == 0) {
-
       var updatedIncident = Incidents.findOne({_id: incident._id})
       var notDone = updatedIncident.situationNeeds.filter(function(x){
         return x.done == false;
       })
-      console.log("All situation needs are done but the group isn't ahhh what to do here!?");
-      console.log(notDone);
+      console.log("group done yet?: ", notDone);
       return notDone;
     }
     return notFinished;
@@ -307,7 +300,7 @@ function orAffordances(user_affordances, search_affordance){
 }
 
 export const usersNotNotified = function(possibleUserIds){
-  userIdsAvalibleNow = []
+  userIdsAvailableNow = []
 
   for(let i in possibleUserIds){
     var userId = possibleUserIds[i]
@@ -324,13 +317,10 @@ export const usersNotNotified = function(possibleUserIds){
 
     if((user_location.lastNotification == null ||
       (now - user_location.lastNotification) > waitTimeAfterNotification) && ((now - lastParticipated) > waitTimeAfterParticipating || lastParticipated== null)){
-
-      //they are avalible
-      userIdsAvalibleNow.push(userId);
+      userIdsAvailableNow.push(userId);
     }
   }
-  return userIdsAvalibleNow;
-
+  return userIdsAvailableNow;
 }
 
 export const prepareToNotifyUsers = function(userIds, experience, activeIncident){
@@ -388,7 +378,6 @@ export const notify = new ValidatedMethod({
         });
       })
 
-
       Cerebro.notify({
         userIds: usersToNotify[key],
         experienceId: experience._id,
@@ -419,6 +408,7 @@ export const leggo = new ValidatedMethod({
       var incident = Incidents.findOne({_id: incidentId});
       var results = Submissions.find({incidentId: incidentId}).fetch();
       var experienceId = incident.experienceId;
+      console.log("experienceId: ", experienceId)
       var experience = Experiences.findOne({_id:experienceId});
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
@@ -459,7 +449,6 @@ export const stop = new ValidatedMethod({
     var experience = Experiences.findOne({_id: experienceId})
 
     WIPQueue.remove({incidentId: {$eq: experience.activeIncident} });
-
 
     Meteor.clearInterval(interval);
     removeFromAllActiveExperiences.call({ experienceId: experienceId });
