@@ -2,7 +2,7 @@
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
       <h4>Results from past experiences</h4>
-      <div class="list-group results-list">
+      <div class="list-group">
         {{#each pastIncident in pastIncidents}}
             {{> resultLink (resultLinkArgs pastIncident)}}
         {{/each}}

@@ -53,6 +53,10 @@ img.logo {
   margin-bottom: 0px;
 }
 
+select {
+  width: 30%
+}
+
 .dropdown-toggle {
   float: right;
 }
@@ -105,10 +109,19 @@ img.logo {
   background-color: #3e50b4;
   color: #fff;
   border: none;
-  width: 100%;
+  width: 50%;
 }
 
 .btn-participate {
+  margin: 0 auto;
+  background-color: #3e50b4;
+  color: #fff;
+  // border: 2px solid #3e50b4;
+  border-radius: 20px;
+  width: 50%;
+}
+
+.btn-submit {
   margin: 0 auto;
   background-color: #3e50b4;
   border-radius: 100px;
