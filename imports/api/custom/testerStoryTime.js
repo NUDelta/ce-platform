@@ -43,7 +43,7 @@ export const testerStoryBook = new ValidatedMethod({
                         "nextAffordance": ["Dropdown",
                         [ ["bask in sun", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
                           ["cloud watch", "clouds and daytime"],
-                          ["buy food", "grocery"], 
+                          ["buy food", "grocery"], ["watch the rain", "rain and daytime"],
                           ["people watch", "atrium or coffee or hackerspace"],["work out", "gym"],
                           ["pass by noisy construction", "chicago_sheridan and daytime"],
                         ]
