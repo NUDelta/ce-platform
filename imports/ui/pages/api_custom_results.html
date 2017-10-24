@@ -4,6 +4,18 @@
   {{/if}}
 </template>
 
+<!-- TEMPLATE FOR CHAIR POSES -->
+<template name="chairCollage">
+  {{#each image in this.images}}
+    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+      {{#if image.isUploaded}}
+        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+        {{image.details}}
+      {{/if}}
+    </div>
+  {{/each}}
+</template>
+
 <!-- TEMPLATE FOR RAINBOW COLLAGE -->
 <template name="americanFlagResults">
   <head>
