@@ -22,12 +22,10 @@ export const americanFlag = new ValidatedMethod({
       "name" : "red",
       "contributions" : {"red": "Image"},
     };
-
     var whiteTemplate = {
      "name" : "white",
      "contributions" : {"white": "Image"},
     };
-
     var blueTemplate = {
       "name" : "blue",
       "contributions" : {"blue": "Image"},
@@ -54,20 +52,21 @@ export const americanFlag = new ValidatedMethod({
     };
 
     const experienceId = Meteor.call("api.createExperience", {
-      name: "Create a rainbow!",
-      description: "Take a photo to help complete the rainbow!",
+      name: "Create a rainbow",
+      description: "Take a photo to help build a rainbow collage",
+      image: "http://www.publicdomainpictures.net/pictures/120000/velka/rainbow-colors-background.jpg",
       participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
-      notificationText: "Contribute a photo towards our rainbow",
+      notificationText: "We found an experience for you! Help us create a rainbow collage 🌈",
       notificationStrategy: "greedyOrganization",
-      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [greenTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [purpleTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [orangeTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [blackTemplate], stoppingCriteria: {"total": 2}},
-                          {contributionTemplates: [yellowTemplate], stoppingCriteria: {"total": 2}}],
+      contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [greenTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [purpleTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [orangeTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [blackTemplate], stoppingCriteria: {"total": 1}},
+                          {contributionTemplates: [yellowTemplate], stoppingCriteria: {"total": 1}}],
       callbackPair: []
     });
 
@@ -84,7 +83,6 @@ export const americanFlag = new ValidatedMethod({
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
-
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
@@ -166,7 +164,6 @@ export const americanFlag = new ValidatedMethod({
         "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
       }
     });
-
     Meteor.call("api.leggo", {incidentId: incidentId});
   }
 });

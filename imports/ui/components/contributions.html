@@ -15,9 +15,20 @@
 </template>
 
 <template name="dropdown">
-    <select class="dropdown" id={{this.key}}>
-        {{#each option in this.options}}
-            <option value="{{option.[1]}}">{{option.[0]}} </option>
-        {{/each}}
-    </select>
+  <head>
+    <style>
+      .dropdown-storytime {
+        height: 32px;
+        border: 1px solid rgba(34, 36, 38, 0.15);
+        color: rgba(0, 0, 0, 0.87);
+        background: #ffffff;
+        width: 80%;
+      }
+    </style>
+  </head>
+  <select class="dropdown-storytime" id={{this.key}}>
+      {{#each option in this.options}}
+          <option value="{{option.[1]}}">{{option.[0]}} </option>
+      {{/each}}
+  </select>
 </template>

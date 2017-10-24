@@ -2,22 +2,24 @@
   {{#if Template.subscriptionsReady}} {{ > Template.dynamic template=template_name data=data2pass}} {{/if}}
 </template>
 
+<!--  TEMPLATE FOR RAINBOW COLLAGE -->
 <template name="americanFlag">
-
-  <h4>Let's build a rainbow of our Northwestern experience!</h4>
-  <p> Take a picture of something ~~ <i><b>{{this.contributionTemplate.name}}</b></i> ~~ to help us showcase all the colors! </p>
+  <h4>We're building a rainbow collage of our Northwestern experience</h4>
+  <p> Take a picture of something ~~ <i><b>{{this.contributionTemplate.name}}</b></i>~~ to help us showcase all the colors!</p>
     <div id="participate">
       <form class="col col-xs-12">
         {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
       </form>
     </div>
 </template>
 
+<!-- TEMLATE FOR CHEERS -->
 <template name="cheers1">
   "HI" {{ experience.description }} {{this.user_mapping}} {{ > Template.dynamic template="cameraUpload" data=camera_options}}
 </template>
 
+<!-- TEMPLATE FOR STORYTIME -->
 <template name="storyPage">
   <head>
     <style>
@@ -33,40 +35,30 @@
         margin-top: 5px;
         margin-bottom: 5px;
       }
-      a{
+      a {
         padding-bottom: 0px;
         margin-bottom: 0px;
       }
-      p{
+      p {
         font-size:0.9em;
         line-height:1.7em;
         color: #616161;
       }
-      h4 {
+      .step-content {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .step, h4 {
         font-size: 18px;
+        margin-left: -15px;
         margin-bottom: 20px;
       }
       #prevSentence {
-        padding: 10px;
+        padding: 5px;
         font-weight: 700;
       }
       #dropdown {
-        padding: 5px;
-      }
-      hr {
-        margin-bottom:50px;
-      }
-      .glyphicon-chevron-down{
-        position:relative !important;
-        padding-top: 40px;
-        margin-left: 50%;
-        margin-bottom: 0px !important;
-        padding-bottom: 0px !important;
-        /*margin: 10px 50% 10% 50%;*/
-        font-size: 1.8em;
-      }
-      .btn-primary {
-        margin: 15px 0px 180px 0px;
+        padding-bottom: 10px;
       }
     </style>
   </head>
@@ -74,33 +66,35 @@
   <div id="participate">
     <form class="col col-xs-12">
       <div class="row">
-        <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story!</h3>
-        <p>We're creating a collaborative story by asking different people to contribute photos and text.</p>
+        <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story</h3>
+        <p>We're creating a collaborative story by asking people to contribute photos and text.</p>
       </div>
-      <h4>Illustrate a page in the story</h4>
-      <div class="row">
+
+      <h4 class="step">Step 1: Illustrate a sentence</h4>
+      <div class="row step-content">
         <p>
-          Take a photo that describes the below sentence from the story.
-          <!--We think you'd a good job because you're in a location where you can {{getPrevAffordance this.submissions}}!-->
+          Take a photo that describes the sentence below.
         </p>
-          {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
-          <div id="prevSentence" class="text-center"><em>"{{getPrevSentence this.submissions}}"</em></div>
+        <div id="prevSentence" class="text-center">
+          <em>"{{getPrevSentence this.submissions}}"</em>
+        </div>
+        {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
       </div>
-      <a href="#storybook-part2"><div class="glyphicon glyphicon-chevron-down"></div></a>
-    {{#if notLastPage}}
-      <h4 id="storybook-part2">Write what happens on page {{getPageNum}} of 8</h4>
-      <div class="row">
-        <p>
-          Select a verb phrase and write the next sentence in the story using the selected phrase. This will help us find the next person to illustrate your sentence.<br>
-        </p>
-        <div id="dropdown">Verb phrase: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
-      </div>
-        <div class="row">
+
+      {{#if notLastPage}}
+        <h4 class="step">Step 2: Write the next sentence</h4>
+        <div class="row step-content">
+          <p>
+            Select a phrase and write the next sentence on page {{getPageNum}} of 8 in the story using that phrase.<br>
+          </p>
+          <div id="dropdown">Phrase: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
+        </div>
+        <div class="row step-content">
           {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
         </div>
       {{/if}}
-      <button type="submit" class="btn btn-default btn-primary">Submit</button>
+
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
     </form>
   </div>
-
 </template>

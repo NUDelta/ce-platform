@@ -77,8 +77,6 @@ Schema.CallbackPair = new SimpleSchema({
 export const CallbackPair = new ExperiencesCollection('callbackpair');
 CallbackPair.attachSchema(Schema.CallbackPair);
 
-
-
 export const Experiences = new ExperiencesCollection('experiences');
 
 Schema.Experience = new SimpleSchema({
@@ -94,6 +92,11 @@ Schema.Experience = new SimpleSchema({
   description: {
     type: String,
     label: 'Experience description',
+    optional: true
+  },
+  image: {
+    type: String,
+    label: 'Experience image url',
     optional: true
   },
   activeIncident: {

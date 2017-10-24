@@ -60,6 +60,11 @@ export const createExperience = new ValidatedMethod({
       label: 'Experience description',
       optional: true
     },
+    image: {
+      type: String,
+      label: 'Experience image url',
+      optional: true
+    },
     participateTemplate:{
       type: String
     },
@@ -79,11 +84,12 @@ export const createExperience = new ValidatedMethod({
       type: [Schema.CallbackPair]
     },
   }).validator(),
-  run({name, description, participateTemplate, resultsTemplate, contributionGroups,
+  run({name, description, image, participateTemplate, resultsTemplate, contributionGroups,
     notificationStrategy, notificationText, callbackPair}) {
     const experience = {
         name: name,
         description: description,
+        image: image,
         participateTemplate: participateTemplate,
         resultsTemplate: resultsTemplate,
         contributionGroups: contributionGroups,

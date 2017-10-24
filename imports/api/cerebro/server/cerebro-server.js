@@ -23,7 +23,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       //   this._sendEmails(users, server, subject, text);
       //   break;
       case CerebroCore.PUSH:
-        console.log("notify called with uerIds", userIds)
+        console.log("notify called with userIds", userIds)
         if(userIds.length > 0){
           this._sendPush(userIds, subject, text, route, experienceId);
         }
@@ -105,9 +105,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     }, {
       multi: true
     });
-
   }
-
 
   removeActiveExperiences(userIds, experienceId) {
     console.log("in remove active inc, ", userIds, experienceId )
@@ -139,7 +137,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
       if (err) { console.log(err); }else{ console.log("worked", docs)}
     });
 
-
     Meteor.users.update({
       _id: { $in: userIds }
     }, {
@@ -161,11 +158,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
     }, {
       multi: true
     });
-  }
-
-  pointsQuery(locations, options = {}) {
-    options.radius = options.radius || 200;
-    return LocationManager.findUsersNearLocations(locations);
   }
 
   query(userQuery) {

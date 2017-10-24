@@ -1,11 +1,113 @@
 <template name="api_custom_results">
   {{#if Template.subscriptionsReady}}
-      {{ > Template.dynamic template=template_name data=data2pass}}
+    {{ > Template.dynamic template=template_name data=data2pass}}
   {{/if}}
 </template>
 
+<!-- TEMPLATE FOR RAINBOW COLLAGE -->
 <template name="americanFlagResults">
+  <head>
+    <style>
+      .column {
+        width: 100%;
+        overflow: hidden;
+        max-height: 150px;
+        padding: 5px 10px 5px 10px;
+      }
+      .column img {
+        width: 100%;
+      }
+      .box {
+        width:100%;
+        height:100px;
+        text-align:center;
+        vertical-align: middle;
+        line-height: 100px;
+      }
+    </style>
+  </head>
 
+  <div class="row" style="padding:5px">
+    <div class="column">
+      {{#if (noImage "red")}}
+        <div class="box red" style="border:1px solid red;">
+          We're still waiting for a red photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "red")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "orange")}}
+        <div class="box orange" style="border:1px solid orange;">
+          We're still waiting for an orange photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "orange")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "yellow")}}
+        <div class="box yellow" style="border:1px solid yellow;">
+          We're still waiting for a yellow photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "yellow")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "green")}}
+        <div class="box green" style="border:1px solid green;">
+          We're still waiting for a green photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "green")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "blue")}}
+        <div class="box blue" style="border:1px solid blue;">
+          We're still waiting for a blue photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "blue")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "purple")}}
+        <div class="box purple" style="border:1px solid purple;">
+          We're still waiting for a purple photo...
+        </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "purple")}}
+      {{/if}}
+    </div>
+
+    <div class="column">
+      {{#if (noImage "black")}}
+      <div class="box black" style="border:1px solid black;">
+        We're still waiting for a black photo...
+      </div>
+      {{else}}
+        {{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="color">
+  <div class="colorBlock" id="{{this.colorId}}">
+    {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
+  </div>
+</template>
+
+<!-- TEMPLATE FOR AMERICAN FLAG -->
+<template name="americanFlagResults2">
   <head>
     <style>
       svg {
@@ -14,47 +116,40 @@
         /*position: absolute;
         padding-top: 100px;
         padding-left: 20px;*/
-    }
+      }
     </style>
   </head>
-
-{{#each submission in this.submissions}}
-
-{{/each}}
-<div class="row">
-  <div class = "col-xs-12" style="padding-top:5em">
-    <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
+  <div class="row">
+    <div class = "col-xs-12" style="padding-top:5em">
+      <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
+    </div>
   </div>
-</div>
-<div class="row">
-<div class="col-xs-2">
-  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-</div>
-<div class="col-xs-2">
-  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-</div>
-<div class="col-xs-2">
-  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-</div>
-<div class="col-xs-2">
-  {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-</div>
-</div>
-<div class="row">
-  <div class = "col-xs-12">
-    <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
+  <div class="row">
+    <div class="col-xs-2">
+      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    </div>
+    <div class="col-xs-2">
+      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    </div>
+    <div class="col-xs-2">
+      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    </div>
+    <div class="col-xs-2">
+      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    </div>
   </div>
-</div>
-
+  <div class="row">
+    <div class = "col-xs-12">
+      <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
+    </div>
+  </div>
 </template>
 
 <template name="star">
   <svg class="star" id="{{this.starId}}" width="100" height="100">
     <defs>
       <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
-
         {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
-
       </pattern>
     </defs>
     <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
@@ -62,15 +157,8 @@
   </svg>
 </template>
 
-
-
-
-
-
-
-
+<!-- TEMPLATE FOR CHEERS -->
 <template name="cheers1_results">
-  "HI"
   {{#each image in this.images}}
     <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
       {{#if image.isUploaded}}
@@ -83,85 +171,77 @@
   {{/each}}
 </template>
 
-
-<!--Storybook-->
+<!--TEMPLATE FOR STORYTIME-->
 <template name="storyPageResults">
-<head>
-  <style>
+  <head>
+    <style>
+      .mySlides {display:none}
+      /* Slideshow container */
+      .slideshow-container {
+        max-width: 1000px;
+        position: relative;
+        margin: auto;
+      }
+      /* Next & previous buttons */
+      #prev, #next {
+        cursor: pointer;
+        bottom: 0px;
+        color: black;
+        font-weight: bold;
+        font-size: 50px !important;
+        border-radius: 0 3px 3px 0;
+      }
+      /* Position the "next button" to the right */
+      #next {
+        border-radius: 3px 0 0 3px;
+      }
+      .caption {
+        margin-top:15px;
+      }
+      .caption-text {
+        word-wrap: break-word;
+        margin: 0 auto;
+      }
+      .illustration {
+        height: 350px;
+        overflow: hidden;
+        margin-top:10px;
+      }
+      .img {
+        height: 350px;
+      }
+      #img0 {
+        display: inline;
+      }
+    </style>
+  </head>
 
-    .mySlides {display:none}
-
-    /* Slideshow container */
-    .slideshow-container {
-      max-width: 1000px;
-      position: relative;
-      margin: auto;
-    }
-
-    /* Next & previous buttons */
-    #prev, #next {
-      cursor: pointer;
-      bottom: 0px;
-      color: black;
-      font-weight: bold;
-      font-size: 50px !important;
-      border-radius: 0 3px 3px 0;
-    }
-
-    /* Position the "next button" to the right */
-    #next {
-      border-radius: 3px 0 0 3px;
-    }
-
-    .caption {
-      margin-top:15px;
-    }
-
-    .caption-text {
-      word-wrap: break-word;
-      margin: 0 auto;
-    }
-
-    .illustration {
-      height: 350px;
-      overflow: hidden;
-      margin-top:10px;
-    }d
-    .img {
-      height: 350px;
-    }
-    #img0 {
-      display: inline;
-    }
-  </style>
-</head>
-
-<div class="slideshow-container">
-  {{#each submission in this.submissions}}
-    <div class="mySlides" id="img{{@index}}">
-      <div class="illustration row">
-        {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
-      </div>
-      <div class="row caption">
-        <div class="col-xs-2">
-          {{#if (isFirst @index) }}
-          <a class="prev" style="font-size: 50px !important">&#10094;</a>
-          {{/if}}
+  <div class="slideshow-container">
+    {{#each submission in this.submissions}}
+      <div class="mySlides" id="img{{@index}}">
+        <div class="illustration row">
+          {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
         </div>
-        <div class="caption-text col-xs-8">
-          {{#if (isFirst @index) }}
-            {{getText (getNextSentenceId @index) }}
-          {{else}}
-            Jimmy woke up with a start.
-          {{/if}}
-        </div>
-        <div class="col-xs-2">
-          {{#if (notLast @index)}}
-          <a class="next" style="font-size: 50px !important">&#10095;</a>
-          {{/if}}
+        <div class="row caption">
+          <div class="col-xs-2">
+            {{#if (isFirst @index) }}
+              <a class="prev" style="font-size: 50px !important">&#10094;</a>
+            {{/if}}
+          </div>
+          <div class="caption-text col-xs-8">
+            {{#if (isFirst @index) }}
+              {{getText (getNextSentenceId @index) }}
+            {{else}}
+              Jimmy woke up with a start.
+            {{/if}}
+          </div>
+          <div class="col-xs-2">
+            {{#if (notLast @index)}}
+              <a class="next" style="font-size: 50px !important">&#10095;</a>
+            {{/if}}
+          </div>
         </div>
       </div>
-    </div>
-  {{/each}}
-</div>
+    {{/each}}
+  </div>
 </template>
