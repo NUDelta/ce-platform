@@ -123,6 +123,16 @@ function removeUsersWhoMovedFromNeed(allUsersWithAffordance, situationNeed, expe
     removeSpecificUsersFromNeed(usersToRemove, situationNeed, experienceId, incidentId)
   }, wait)
 }
+// 
+// function removeUsersWhoHasNotParticpatedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
+//   var now = Date.parse(new Date());
+//   var submissions = Submissions.find({incidentId: {$eq: incidentId}}).fetch();
+//   var users_who_submitted= submissions.map(function(x){
+//     return x.submitter
+//   });
+//
+// }
+
 
 function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed, experienceId, incidentId) {
   var now = Date.parse(new Date());

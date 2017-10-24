@@ -18,7 +18,6 @@ export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',
   validate: null,
   run(){
-    console.log("calling american flag");
     var redTemplate = {
       "name" : "red",
       "contributions" : {"red": "Image"},
@@ -71,7 +70,6 @@ export const americanFlag = new ValidatedMethod({
                           {contributionTemplates: [yellowTemplate], stoppingCriteria: {"total": 2}}],
       callbackPair: []
     });
-    console.log(experienceId)
 
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
@@ -83,7 +81,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "whiteClouds",
         "contributionTemplate" : "white",
         "affordance": "clouds and daytime",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
 
@@ -93,7 +91,7 @@ export const americanFlag = new ValidatedMethod({
           "name": "redNeed",
           "contributionTemplate" : "red",
           "affordance": "grocery or hackerspace",
-          "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+          "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
         }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -102,7 +100,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "blueNeed",
         "contributionTemplate" : "blue",
         "affordance": "clear and daytime",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
