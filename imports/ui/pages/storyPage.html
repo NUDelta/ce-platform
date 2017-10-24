@@ -1,0 +1,36 @@
+<template name="storyPage">
+  <div id="participate">
+    <form class="col col-xs-12">
+      <div class="row">
+        <h4>Help us write and illustrate a story!  </h4>
+        We are working on creating a story, but need help finishing.
+      </div>
+
+      <div class="row">
+        The previous sentence in the story was:
+        <i>{{getPrevSentence this.submissions}}</i><br>
+        Can you take a picture to illustrate the sentence?
+        {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
+
+      </div>
+    {{#if notLastPage}}
+
+      <div class="row">
+        Now help us create page {{getPageNum}} out of 10 by continuing the story.
+        <br>
+        What best describes the scene for the next sentence in the story?
+
+        {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}
+
+      </div>
+        <div class="row">
+          3. Write the next sentence in the story
+          {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
+        </div>
+      {{/if}}
+
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+
+</template>

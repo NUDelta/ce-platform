@@ -42,8 +42,8 @@ export const testerStoryBook = new ValidatedMethod({
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown",
                         [ ["bask in sun", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
-                          ["cloud watch", "clouds and daytime"], ["gaze at the moon", "clear and nighttime"],
-                          ["buy food", "grocery"], ["lounge at home", "nighttime && apartment"],
+                          ["cloud watch", "clouds and daytime"],
+                          ["buy food", "grocery"], ["watch the rain", "rain and daytime"],
                           ["people watch", "atrium or coffee or hackerspace"],["work out", "gym"],
                           ["pass by noisy construction", "chicago_sheridan and daytime"],
                         ]
