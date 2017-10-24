@@ -17,7 +17,6 @@ export const createIncident = new ValidatedMethod({
   }).validator(),
   run({experienceId}) {
     var experience = Experiences.findOne({_id:experienceId});
-    console.log("experience", experience);
     const incidentId = Incidents.insert({
       date: Date.parse(new Date()),
       name: experience.name,
@@ -40,8 +39,6 @@ export const addSituationNeeds = new ValidatedMethod({
     }
   }).validator(),
   run({incidentId, need}){
-    console.log("adding situational needs for ", incidentId)
-    console.log("need", need)
     var res = Incidents.update({_id: incidentId},
       {$push: { situationNeeds: {
         name:need.name,

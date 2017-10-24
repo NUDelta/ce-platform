@@ -35,6 +35,8 @@ export const clearParticipation = new ValidatedMethod({
   }).validator(),
   run() {
     Meteor.users.update({}, {$set: {'profile.lastParticipated': null}}, { multi: true })
+    Locations.update({}, {$set: {'lastNotification': null}}, { multi: true })
+
   }
 });
 

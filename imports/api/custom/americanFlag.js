@@ -58,7 +58,7 @@ export const americanFlag = new ValidatedMethod({
       participateTemplate: "americanFlag",
       resultsTemplate: "americanFlagResults",
       notificationText: "We found an experience for you! Help us create a rainbow collage 🌈",
-      notificationStrategy: "greedyOrganization",
+      notificationStrategy: "notifyOneUser",
       contributionGroups: [{contributionTemplates: [redTemplate], stoppingCriteria: {"total": 1}},
                           {contributionTemplates: [blueTemplate], stoppingCriteria: {"total": 1}},
                           {contributionTemplates: [whiteTemplate], stoppingCriteria: {"total": 1}},
@@ -113,19 +113,10 @@ export const americanFlag = new ValidatedMethod({
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
-        "name": "blackCoffeeNeed",
-        "contributionTemplate" : "black",
-        "affordance": "coffee",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
         "name": "purpleNeed",
         "contributionTemplate" : "purple",
         "affordance": "collegeuniv",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -134,7 +125,7 @@ export const americanFlag = new ValidatedMethod({
         "name": "greenNeed",
         "contributionTemplate" : "green",
         "affordance": "park or grocery",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -146,22 +137,22 @@ export const americanFlag = new ValidatedMethod({
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "orangeNeed",
-        "contributionTemplate" : "orange",
-        "affordance": "bar and nighttime",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-      }
-    });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "orangeNeed",
+    //     "contributionTemplate" : "orange",
+    //     "affordance": "bar and nighttime",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
         "name": "yellowNeed",
         "contributionTemplate" : "yellow",
         "affordance": "grocery or hackerspace",
-        "softStoppingCriteria": {"total": 2} //if finished but experience isn't then ignore
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     Meteor.call("api.leggo", {incidentId: incidentId});
