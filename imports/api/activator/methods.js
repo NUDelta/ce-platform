@@ -437,7 +437,7 @@ export const leggo = new ValidatedMethod({
       var wipInstanceNeeds = getUnfinishedNeeds(incident, results, experience);
       if(wipInstanceNeeds.length == 0){
         console.log("DONE WE FINISHED!")
-        Meteor.call("stop", {experienceId: experienceId})
+        Meteor.call("api.stop", {experienceId: experienceId})
         return true;
       }
 

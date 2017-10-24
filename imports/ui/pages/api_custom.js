@@ -54,7 +54,7 @@ Template.registerHelper('storyContribs', (situationNeedName, contributionTemplat
 
 Template.registerHelper('getPrevSentence', (subs) => {
   if(subs.length == 0){
-    return "Jimmy woke up with a start."
+    return "Jimmy looked up at the sky."
   }
   var submission = subs[subs.length-1];
   var id = submission.content.nextSentence
