@@ -35,6 +35,15 @@ Schema.NotificationLog = new SimpleSchema({
   userId: {
     type: String
   },
+  lat: {
+    type: Number,
+    decimal: true
+
+  },
+  lng:{
+    type: Number,
+    decimal: true
+  },
   task: {
     type: String
   },

@@ -12,8 +12,8 @@ Router.route('/api/geolocation', { where: 'server' })
   })
 /*
 Example location object:
-  { 
-	location: { 
+  {
+	location: {
 	  speed: -1,
 	  longitude: -87.67827425878073,
 	  latitude: 42.04908624208284,
@@ -27,12 +27,13 @@ Example location object:
   .post(function() {
     const userId = this.request.body.userId;
     const location = this.request.body.location;
-    console.log("BG GEO LOGGED");
+    console.log("BG GEO LOGGED", location.coords.latitude, location.coords.longitude);
     updateLocation.call({
       uid: userId,
-      lat: location.latitude,
-      lng: location.longitude
+      lat: location.coords.latitude,
+      lng: location.coords.longitude
     });
+    console.log("made it past")
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
   })
