@@ -7,6 +7,8 @@ import { Schema } from '../schema.js';
 import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
 
+import { TextEntries } from '../text-entries/text-entries.js';
+
 import { Users } from '../users/users.js';
 import { _ } from 'meteor/underscore';
 
@@ -23,8 +25,12 @@ export const testerStoryBook = new ValidatedMethod({
     console.log("RUNNING tester STORYBOOK")
 
     var createNewPageNeed = function(mostRecentSubmission) {
+      console.log("hi we r here")
       var textId = mostRecentSubmission.content.nextAffordance;
+      console.log("hi we got", textId)
+
       var nextAffordance = TextEntries.findOne({_id: textId}).text;
+      console.log("i feel like we dont get here")
       Meteor.call("api.addSituationNeeds", {
         incidentId: incidentId,
         need: {
@@ -53,8 +59,9 @@ export const testerStoryBook = new ValidatedMethod({
 
     console.log("about to create an experience")
     const experienceId = Meteor.call("api.createExperience", {
-      name: "Storytime with Jimmy",
-      description: "Write a story",
+      name: "Help us illustrate and write a collaborative story",
+      image: "https://cnet3.cbsistatic.com/img/0g1dNigk0BNakKeWo1EKCYm7GXw=/fit-in/970x0/2015/04/24/4bed63b8-48cf-4327-8618-811a3179c921/jcblog459.jpg",
+      description: "We found an experience for you! Illustrate and write a collaborative story",
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "Help us illustrate and write a story!",

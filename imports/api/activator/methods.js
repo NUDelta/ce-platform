@@ -184,7 +184,7 @@ export const setNeedAsDone = new ValidatedMethod({
     if(callback.length > 0){
       fun = callback[0]["callback"];
       var mostRecent = Submissions.findOne({incidentId:incidentId}, {sort:{$natural:-1}})
-      return eval("(" + fun+ "(" + JSON.stringify(mostRecent) + "))")
+      return eval("(" + fun + "(" + JSON.stringify(mostRecent) + "))")
     }
   }
 });
@@ -397,7 +397,8 @@ export const notify = new ValidatedMethod({
     Object.keys(usersToNotify).forEach((key) =>{
       prepareToNotifyUsers(usersToNotify[key], experience, incidentId);
       usersToNotify[key].forEach((user)=>{
-        NotificationLog.insert({userId: user, task: key, experienceId: experience._id, incidentId: incidentId}, (err, docs) => {
+        var location = Locations.findOne({uid: user})
+        NotificationLog.insert({userId: user, task: key, lat: location.lat, lng: location.lng, experienceId: experience._id, incidentId: incidentId}, (err, docs) => {
           if (err) { console.log(err); }
         });
       })
