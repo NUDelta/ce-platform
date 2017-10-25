@@ -44,7 +44,6 @@ Template.registerHelper( 'getText', (id) => {
   var text = TextEntries.findOne({_id: id});
   return text.text;
 });
-
 Template .registerHelper('var',function(name, value){
   this[name] = value;
 });
@@ -81,7 +80,6 @@ Template.api_custom_results.onCreated(function() {
   });
 });
 
-
 ///storybook
 var slideIndex = 1;
 
@@ -117,7 +115,6 @@ Template.storyPageResults.helpers({
     const instance = Template.instance()
     var submission = instance.data.submissions[photoIndex-1];
     return submission.content.nextSentence
-
   },
   isFirst(index){
     return index > 0;
@@ -142,9 +139,9 @@ Template.storyPageResults.events({
 
 Template.star.helpers({
   getId(){
-      const instance = Template.instance()
-      var starId = instance.data.starId;
-      return starId;
+    const instance = Template.instance()
+    var starId = instance.data.starId;
+    return starId;
   }
 });
 
@@ -174,12 +171,12 @@ Template.americanFlagResults.helpers({
     return {starId: index, imageId: null, hasImage: false, color: "red"};
   },
   getColorInfo(index, color){
-      var submissions = Template.instance().data.submissions;
-      var colorImages = getColor(submissions, color);
-      if(colorImages.length > index){
-        return {colorId: index, imageId: colorImages[index], hasImage: true, color: color}
-      }
-      return {colorId: index, imageId: null, hasImage: false, color: color};
+    var submissions = Template.instance().data.submissions;
+    var colorImages = getColor(submissions, color);
+    if(colorImages.length > index){
+      return {colorId: index, imageId: colorImages[index], hasImage: true, color: color}
+    }
+    return {colorId: index, imageId: null, hasImage: false, color: color};
   },
   noImage(color){
     var submissions = Template.instance().data.submissions;
@@ -188,5 +185,26 @@ Template.americanFlagResults.helpers({
       return false;
     }
     return true;
+  }
+});
+
+Template.chairPoseResults.helpers({
+  'click img'(event, instance) {
+    const galleryElement = document.getElementById('gallery');
+    const items = Images.find(instance.filter.get()).fetch()
+      .filter(image => image.metadata) // in case of incomplete uploads
+      .map((image) => {
+        return {
+          src: image.url(),
+          w: image.metadata.width,
+          h: image.metadata.height,
+          title: `${ image.caption } from ${ image.location }`
+        };
+      });
+    const options = {
+      index: parseInt(event.target.getAttribute('data-index'))
+    };
+    const gallery = new PhotoSwipe(galleryElement, PhotoSwipeUI_Default, items, options);
+    gallery.init();
   }
 });

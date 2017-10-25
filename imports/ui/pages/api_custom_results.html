@@ -5,15 +5,28 @@
 </template>
 
 <!-- TEMPLATE FOR CHAIR POSES -->
-<template name="chairCollage">
-  {{#each image in this.images}}
-    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
-      {{#if image.isUploaded}}
-        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
-        {{image.details}}
-      {{/if}}
-    </div>
-  {{/each}}
+<template name="chairPoseResults">
+  <head>
+    <style>
+      img {
+        max-width: 100%;
+        max-height: auto;
+      }
+    </style>
+  </head>
+  <h4>Check out some other chair poses people have done in this collage</h4>
+  <div class="row">
+    {{#each image in this.images}}
+      <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+        {{#if image.isUploaded}}
+          <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+        {{/if}}
+        {{#if noImages}}
+          <p>It doesn't look like anyone has uploaded any pictures yet.</p>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
 </template>
 
 <!-- TEMPLATE FOR RAINBOW COLLAGE -->

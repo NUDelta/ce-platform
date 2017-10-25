@@ -150,7 +150,6 @@ function removeUsersWhoParticpatedFromNeed(allUsersWithAffordance, situationNeed
   var unique_users = _.uniq(users)
 
   removeSpecificUsersFromNeed(unique_users, situationNeed, experienceId, incidentId)
-
 }
 
 // METHODS FOR CHECKING NEED & CONTRIBUTION FULFILLMENT
@@ -205,7 +204,6 @@ function checkIfSituationNeedFinished(results, situationNeed, contributionTempla
     if (situationNeed.done == false && numFinished >= soft_stopping_criteria["total"]){
         var res = Meteor.call("api.setNeedAsDone", {incidentId: incidentId, situationNeed: situationNeed, contributionTemplate: contributionTemplate})
         return true;
-
     }
   }
   return false;
@@ -344,7 +342,6 @@ export const usersNotNotified = function(possibleUserIds){
     }
   }
   return userIdsAvalibleNow;
-
 }
 
 export const prepareToNotifyUsers = function(userIds, experience, activeIncident){
@@ -402,7 +399,6 @@ export const notify = new ValidatedMethod({
           if (err) { console.log(err); }
         });
       })
-
 
       Cerebro.notify({
         userIds: usersToNotify[key],
@@ -475,7 +471,6 @@ export const stop = new ValidatedMethod({
     var experience = Experiences.findOne({_id: experienceId})
 
     WIPQueue.remove({incidentId: {$eq: experience.activeIncident} });
-
 
     Meteor.clearInterval(interval);
     removeFromAllActiveExperiences.call({ experienceId: experienceId });
