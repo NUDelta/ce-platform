@@ -79,7 +79,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "whiteClouds",
         "contributionTemplate" : "white",
-        "affordance": "clouds and daytime",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -88,7 +88,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
           "name": "redNeed",
           "contributionTemplate" : "red",
-          "affordance": "grocery or hackerspace",
+          "affordance": "chair",
           "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
         }
     });
@@ -97,7 +97,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "blueNeed",
         "contributionTemplate" : "blue",
-        "affordance": "clear and daytime",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -106,7 +106,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "blackNightNeed",
         "contributionTemplate" : "black",
-        "affordance": "clear and nighttime",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -115,7 +115,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "purpleNeed",
         "contributionTemplate" : "purple",
-        "affordance": "collegeuniv",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -124,7 +124,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "greenNeed",
         "contributionTemplate" : "green",
-        "affordance": "park or grocery",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
@@ -133,28 +133,91 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "orangeNeed",
         "contributionTemplate" : "orange",
-        "affordance": "chicago_sheridan and daytime",
+        "affordance": "chair",
+        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "yellowNeed",
+        "contributionTemplate" : "yellow",
+        "affordance": "chair",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });
     // Meteor.call("api.addSituationNeeds", {
     //   incidentId: incidentId,
     //   need: {
-    //     "name": "orangeNeed",
-    //     "contributionTemplate" : "orange",
-    //     "affordance": "bar and nighttime",
+    //     "name": "whiteClouds",
+    //     "contributionTemplate" : "white",
+    //     "affordance": "clouds and daytime",
     //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
     //   }
     // });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "yellowNeed",
-        "contributionTemplate" : "yellow",
-        "affordance": "grocery or hackerspace",
-        "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
-      }
-    });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //       "name": "redNeed",
+    //       "contributionTemplate" : "red",
+    //       "affordance": "grocery or hackerspace",
+    //       "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //     }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "blueNeed",
+    //     "contributionTemplate" : "blue",
+    //     "affordance": "clear and daytime",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "blackNightNeed",
+    //     "contributionTemplate" : "black",
+    //     "affordance": "clear and nighttime",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "purpleNeed",
+    //     "contributionTemplate" : "purple",
+    //     "affordance": "collegeuniv",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "greenNeed",
+    //     "contributionTemplate" : "green",
+    //     "affordance": "park or grocery",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "orangeNeed",
+    //     "contributionTemplate" : "orange",
+    //     "affordance": "chicago_sheridan and daytime",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
+    // Meteor.call("api.addSituationNeeds", {
+    //   incidentId: incidentId,
+    //   need: {
+    //     "name": "yellowNeed",
+    //     "contributionTemplate" : "yellow",
+    //     "affordance": "grocery or hackerspace",
+    //     "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
+    //   }
+    // });
     Meteor.call("api.leggo", {incidentId: incidentId});
   }
 });
