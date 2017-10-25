@@ -27,13 +27,12 @@ Example location object:
   .post(function() {
     const userId = this.request.body.userId;
     const location = this.request.body.location;
-    console.log("BG GEO LOGGED", location.coords.latitude, location.coords.longitude);
+    console.log("BG GEO LOGGED");
     updateLocation.call({
       uid: userId,
       lat: location.coords.latitude,
       lng: location.coords.longitude
     });
-    console.log("made it past")
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
   })
