@@ -331,8 +331,8 @@ export const usersNotNotified = function(possibleUserIds){
       continue;
     }
     var now = Date.parse(new Date());
-    var waitTimeAfterNotification = .5*60*60000 //first number is the number of hours
-    var waitTimeAfterParticipating = 2*60*60000
+    var waitTimeAfterNotification = 12*60000 //first number is the number of minutes
+    var waitTimeAfterParticipating = 12*60000
 
     if((user_location.lastNotification == null ||
       (now - user_location.lastNotification) > waitTimeAfterNotification) && ((now - lastParticipated) > waitTimeAfterParticipating || lastParticipated== null)){
