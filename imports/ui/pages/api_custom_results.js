@@ -185,6 +185,14 @@ Template.americanFlagResults.helpers({
       return false;
     }
     return true;
+  },
+  hasImageIndex(index, color){
+    var submissions = Template.instance().data.submissions;
+    var colorImages = getColor(submissions, color);
+    if(colorImages.length > index){
+      return true;
+    }
+    return false;
   }
 });
 //
