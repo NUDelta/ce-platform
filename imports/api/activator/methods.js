@@ -420,13 +420,20 @@ export const leggo = new ValidatedMethod({
     },
   }).validator(),
   run({incidentId}){
+
+    if(!intervals[incidentId]){
+      var newInterval;
+      intervals[incidentId] = newInterval;
+    }
+
     console.log("starting experience with incident ", incidentId)
 
     if( WIPQueue.findOne({incidentId:incidentId}) == null){
       WIPQueue.insert({incidentId: incidentId});
     }
 
-    interval =  Meteor.setInterval(function(){
+    intervals[incidentId] =  Meteor.setInterval(function(){
+      console.log("experience still running with id ", incidentId)
       var incident = Incidents.findOne({_id: incidentId});
       var results = Submissions.find({incidentId: incidentId}).fetch();
       var experienceId = incident.experienceId;
@@ -459,7 +466,7 @@ export const leggo = new ValidatedMethod({
 });
 
 // STOP EXPERIENCE
-var interval;
+var intervals = {}
 export const stop = new ValidatedMethod({
   name: 'api.stop',
   validate: new SimpleSchema({
@@ -468,11 +475,14 @@ export const stop = new ValidatedMethod({
     }
   }).validator(),
   run({experienceId}){
+    console.log("STOPPING THE EXPERIENCE", experienceId)
+
     var experience = Experiences.findOne({_id: experienceId})
+    Meteor.clearInterval(intervals[experience.activeIncident]);
+    delete intervals[experience.activeIncident];
 
     WIPQueue.remove({incidentId: {$eq: experience.activeIncident} });
 
-    Meteor.clearInterval(interval);
     removeFromAllActiveExperiences.call({ experienceId: experienceId });
     Experiences.update({
       _id: experienceId
