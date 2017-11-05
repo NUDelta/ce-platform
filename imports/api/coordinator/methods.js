@@ -27,12 +27,12 @@ const locationHandle = locationCursor.observeChanges({
     var usersExperiences = user.activeExperiences
     if(user.activeExperiences){
       usersExperiences.forEach((experienceId)=>{
-        removeUserWhoMovedFromExperience(uid, experienceId)
+        removeUserFromExperienceAfterTheyMoved(uid, experienceId)
       })
     }
 
     //check if user to available to participate right now
-    if(!userIsAvailableToParticipate){
+    if(!userIsAvailableToParticipate(user, location)){
       return;
     }
 
@@ -51,13 +51,14 @@ function userIsAvailableToParticipate(user, location){
   var waitTimeAfterNotification = 12*60000 //first number is the number of minutes
   var waitTimeAfterParticipating = 12*60000
 
+  console.log(user)
   var lastParticipated = user.profile.lastParticipated;
   var lastNotified =location.lastNotification;
 
   var now = Date.parse(new Date());
 
   var userNotYetNotified = lastParticipated === null
-  var userNotifiedTooRecently = (now - user_location.lastNotification) < waitTimeAfterNotification
+  var userNotifiedTooRecently = (now - lastNotified) < waitTimeAfterNotification
   var userNotYetParticipated = lastNotified === null
   var userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating
 
@@ -81,7 +82,7 @@ function attemptToAddUserToIncident(uid, incidentId){
       if(sn.notifiedUsers.length > 0){
         var timeSinceUserLastNotified = Date.parse(new Date()) - Locations.findOne({uid: sn.notifiedUsers[0]}).lastNotified
         if(timeSinceUserLastNotified  > 30*60000){ //time in minutes since they were asked to participate in any experience
-          removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId)
+          removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
         }else{
           //we have a user already for this need, skip and see if the next one is open
           return;
@@ -114,7 +115,7 @@ function addUserToSituationNeed(uid, incidentId, situationNeedName){
     }
   );
   //notify the user & mark as notified
-  Locations.update({uid:uid}, {lastNotification: Date.parse(new Date()) });
+  Locations.update({uid:uid},  {$set: {"lastNotification": Date.parse(new Date()) }});
 
   //add notification to notification log
   var userLocation = Locations.findOne({uid: uid})
@@ -136,28 +137,50 @@ function addUserToSituationNeed(uid, incidentId, situationNeedName){
   });
 }
 
-function removeUserFromExperience(uid, experienceId) {
-  var userAffordances = Location.findOne({uid:uid}).affordances
+function removeUserFromExperience(uid, experienceId, incidentId, situationNeedName){
+  //remove the user from the incident
+  console.log("removeing the user")
+  Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeedName},
+  {$pull :
+    { 'situationNeeds.$.notifiedUsers':  uid }
+  });
+
+  //remove the experience from the user
+  Meteor.users.update({_id: uid},
+    {$pull :
+      { 'profile.activeExperiences':  experienceId }
+    }
+  );
+}
+
+export const  removeUserAfterTheyParticipated = function(uid, experienceId){
+  console.log("going to remove users")
+  var userAffordances = Locations.findOne({uid: uid}).affordances
+  var incident = Incidents.findOne({experienceId: experienceId});
+  console.log(incident.situationNeeds)
+  for(var i in incident.situationNeeds){
+    var sn = incident.situationNeeds[i]
+    console.log(sn.name)
+    if(_.contains(sn.notifiedUsers, uid)){
+      removeUserFromExperience(uid, experienceId, incident._id, sn.name)
+      break;
+    }
+  };
+
+}
+
+function removeUserFromExperienceAfterTheyMoved(uid, experienceId) {
+  var userAffordances = Locations.findOne({uid: uid}).affordances
   var incident = Incidents.findOne({experienceId: experienceId});
   var wait = 2*60*1000 //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
 
   Meteor.setTimeout(function(){
-    for(var sn in incident.situationNeeds){
+    console.log("we're removing the userrzz")
+    for(var i in incident.situationNeeds){
+      var sn = incident.situationNeeds[i]
       if(_.contains(sn.notifiedUsers, uid)){
         if(! containsAffordance(userAffordances, sn.affordance)){
-          //remove the user from the incident
-          Incidents.update({_id: incidentId, 'situationNeeds.name': sn.name},
-          {$pull :
-            { 'situationNeeds.$.notifiedUsers':  uid }
-          });
-
-          //remove the experience from the user
-          Users.update({_id: uid},
-            {$pull :
-              { 'profile.activeExperiences':  experienceId }
-            }
-          );
-
+          removeUserFromExperience(uid, experienceId, incident._id, sn.name)
           //a user will only be in one situation need, so we can break
           break;
         }

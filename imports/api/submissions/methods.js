@@ -8,19 +8,30 @@ import { Cerebro } from '../cerebro/server/cerebro-server.js';
 import { Experiences } from '../experiences/experiences.js';
 import { Incidents } from '../incidents/incidents.js';
 import { Locations } from '../locations/locations.js';
-import { Submissions } from '../submissions/submissions.js';
+import { Submissions } from './submissions.js';
 import { WIPQueue } from '../../startup/server/WIPQueue.js'
 import { NotificationLog } from '../cerebro/cerebro-core.js'
 import { Users } from '../users/users.js';
 
+import { removeUserAfterTheyParticipated } from  '../coordinator/methods.js'
+
+var totalNumber = Submissions.find().count();
 const submissionsCursor = Submissions.find();
 const submissionsHandle = submissionsCursor.observe({
-  changed(submission){
+  added(submission){
+    if(totalNumber == Submissions.find().count()){
+      return;
+    }
+    console.log("received a submission")
     //when a user participates add it to their past experiences
     Cerebro.addIncidents(submission.submitter, submission.incidentId);
 
+    //remove user/experience from each other
+    removeUserAfterTheyParticipated(submission.submitter, submission.experienceId)
+
     //see if there is a callback
-    var callbackPairs = experience.callbackPair;
+
+    var callbackPairs = Experiences.findOne({_id: submission.experienceId}).callbackPair;
 
     var callback = callbackPairs.filter(function(cp){
         return cp.templateName == submission.templateName;
@@ -48,7 +59,7 @@ const submissionsHandle = submissionsCursor.observe({
 
     var numberSubmissionsRequired =situationNeed.softStoppingCriteria;
 
-    if(numberSubmissionsRequired =< numberSubmissionsFound){
+    if(numberSubmissionsRequired <= numberSubmissionsFound){
       Incidents.update({_id: submission.incidentId, 'situationNeeds.name': submission.situationNeed},
         {$set :
           { 'situationNeeds.$.done':  true }
@@ -56,7 +67,7 @@ const submissionsHandle = submissionsCursor.observe({
     }
 
     //check if the experience is done
-    var isIncidentFinished = Incidents.count({_id: submission.incidentId, "situationNeeds.done": false });
+    var isIncidentFinished = Incidents.find({_id: submission.incidentId, "situationNeeds.done": false }).count();
     console.log(isIncidentFinished)
     if(isIncidentFinished == 0){
       log.cerebro("Experience " + submission.experienceId + " is finished!")
