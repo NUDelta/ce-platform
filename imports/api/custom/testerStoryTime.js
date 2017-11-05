@@ -14,7 +14,7 @@ import { _ } from 'meteor/underscore';
 
 import { Incidents } from '../incidents/incidents.js';
 
-import { registerCallback } from '../activator/methods.js';
+import { registerCallback } from '../coordinator/methods.js';
 import { Random } from 'meteor/random'
 
 
@@ -82,6 +82,5 @@ export const testerStoryBook = new ValidatedMethod({
         "softStoppingCriteria": {"total": 1}
       }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId});
   }
 })

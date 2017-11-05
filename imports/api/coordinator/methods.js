@@ -1,0 +1,206 @@
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
+import { _ } from 'meteor/underscore';
+import { Schema } from '../schema.js';
+
+import { Cerebro } from '../cerebro/server/cerebro-server.js';
+import { Experiences } from '../experiences/experiences.js';
+import { Incidents } from '../incidents/incidents.js';
+import { Locations } from '../locations/locations.js';
+import { Submissions } from '../submissions/submissions.js';
+import { WIPQueue } from '../../startup/server/WIPQueue.js'
+import { NotificationLog } from '../cerebro/cerebro-core.js'
+import { Users } from '../users/users.js';
+
+
+const locationCursor = Locations.find();
+const locationHandle = locationCursor.observeChanges({
+  changed(id, fields){
+    console.log("what we are given", id, fields)
+    //check if now that they've moved they...
+    var location = Locations.findOne({_id: id});
+    var uid = location.uid;
+
+    //need to be removed from an experience they're currently in
+    var user = Meteor.users.findOne({_id: uid})
+    var usersExperiences = user.activeExperiences
+    if(user.activeExperiences){
+      usersExperiences.forEach((experienceId)=>{
+        removeUserWhoMovedFromExperience(uid, experienceId)
+      })
+    }
+
+    //check if user to available to participate right now
+    if(!userIsAvailableToParticipate){
+      return;
+    }
+
+    //can be added to a new experience
+    var allExperiences = Experiences.find({activeIncident: {$exists: true}}).fetch()
+    allExperiences.forEach((experience)=>{
+      //maybe come up with a way to sort priority of incidents?
+      console.log(experience)
+      attemptToAddUserToIncident(uid, experience.activeIncident)
+    })
+  }
+
+});
+
+function userIsAvailableToParticipate(user, location){
+  var waitTimeAfterNotification = 12*60000 //first number is the number of minutes
+  var waitTimeAfterParticipating = 12*60000
+
+  var lastParticipated = user.profile.lastParticipated;
+  var lastNotified =location.lastNotification;
+
+  var now = Date.parse(new Date());
+
+  var userNotYetNotified = lastParticipated === null
+  var userNotifiedTooRecently = (now - user_location.lastNotification) < waitTimeAfterNotification
+  var userNotYetParticipated = lastNotified === null
+  var userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating
+
+  if((!userNotYetNotified && userNotifiedTooRecently) || (!userNotYetParticipated && userParticipatedTooRecently)){
+    return false;
+  }else{
+    return true;
+  }
+
+}
+
+function attemptToAddUserToIncident(uid, incidentId){
+  var incident = Incidents.findOne({_id: incidentId});
+  var userAffordances = Locations.findOne({uid:uid}).affordances
+  var minParticipation = Math.min(); //this is infinity
+  var minSituationNeed = null;
+
+  incident.situationNeeds.forEach((sn)=>{
+    if(sn.done === false && containsAffordance(userAffordances, sn.affordance)){
+      //need has a user, but lets see if time to kick them out
+      if(sn.notifiedUsers.length > 0){
+        var timeSinceUserLastNotified = Date.parse(new Date()) - Locations.findOne({uid: sn.notifiedUsers[0]}).lastNotified
+        if(timeSinceUserLastNotified  > 30*60000){ //time in minutes since they were asked to participate in any experience
+          removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId)
+        }else{
+          //we have a user already for this need, skip and see if the next one is open
+          return;
+        }
+      }
+      var numberDone = Submissions.find({incidentId:incident._id, situationNeed:sn.name}).count()
+      if(numberDone < minParticipation){
+        minSituationNeed = sn.name;
+      }
+    }
+  });
+
+  if(minSituationNeed != null){
+    addUserToSituationNeed(uid, incidentId, minSituationNeed)
+  }
+}
+
+function addUserToSituationNeed(uid, incidentId, situationNeedName){
+  var experience = Experiences.findOne({activeIncident: incidentId});
+  var experienceId = experience._id;
+
+  //add active experience to the user
+  Cerebro.setActiveExperiences(uid, experienceId);
+
+  //add user to the incident
+  Incidents.update(
+    {_id: incidentId, 'situationNeeds.name': situationNeedName},
+    {$push :
+      { 'situationNeeds.$.notifiedUsers':  uid }
+    }
+  );
+  //notify the user & mark as notified
+  Locations.update({uid:uid}, {lastNotification: Date.parse(new Date()) });
+
+  //add notification to notification log
+  var userLocation = Locations.findOne({uid: uid})
+  NotificationLog.insert({userId: uid,
+    task: situationNeedName,
+    lat: userLocation.lat,
+    lng: userLocation.lng,
+    experienceId: experienceId,
+    incidentId: incidentId
+  });
+
+  //send notification
+  Cerebro.notify({
+    userId: uid,
+    experienceId: experienceId,
+    subject: "Event " + experience.name + " is starting for " + key,
+    text: experience.notificationText,
+    route: "apiCustom"
+  });
+}
+
+function removeUserFromExperience(uid, experienceId) {
+  var userAffordances = Location.findOne({uid:uid}).affordances
+  var incident = Incidents.findOne({experienceId: experienceId});
+  var wait = 2*60*1000 //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
+
+  Meteor.setTimeout(function(){
+    for(var sn in incident.situationNeeds){
+      if(_.contains(sn.notifiedUsers, uid)){
+        if(! containsAffordance(userAffordances, sn.affordance)){
+          //remove the user from the incident
+          Incidents.update({_id: incidentId, 'situationNeeds.name': sn.name},
+          {$pull :
+            { 'situationNeeds.$.notifiedUsers':  uid }
+          });
+
+          //remove the experience from the user
+          Users.update({_id: uid},
+            {$pull :
+              { 'profile.activeExperiences':  experienceId }
+            }
+          );
+
+          //a user will only be in one situation need, so we can break
+          break;
+        }
+      }
+    };
+  }, wait)
+}
+
+
+// METHODS FOR AFFORDANCE SEARCH
+function containsAffordance(user_affordances, search_affordance){
+  // && affordances
+  if (search_affordance.search(" and ") > 0) {
+    return andAffordances(user_affordances, search_affordance);
+  }
+  // || affordances
+  else if (search_affordance.search(" or ") > 0) {
+    return orAffordances(user_affordances, search_affordance);
+  }
+  // single affordance
+  else {
+    return (_.contains(user_affordances, search_affordance));
+  }
+}
+
+function andAffordances(user_affordances, search_affordance){
+  let affordances = [];
+  let str = search_affordance;
+  affordances = search_affordance.split(" and ");
+  differences =  _.difference(affordances, user_affordances)
+  return differences.length == 0
+}
+
+function orAffordances(user_affordances, search_affordance){
+  let affordances = [];
+  let contains = false;
+  affordances = search_affordance.split(" or ");
+  for (i = 0; i < affordances.length; i++){
+    anAffordance = affordances[i];
+    if (_.contains(user_affordances, anAffordance)){
+      contains = true;
+      break;
+    }
+  }
+  return contains;
+}

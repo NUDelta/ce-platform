@@ -10,12 +10,10 @@ import { Experiences } from '../api/experiences/experiences.js';
 import { Incidents } from '../api/incidents/incidents.js';
 import { Images } from '../api/images/images.js';
 import { TextEntries } from '../api/text-entries/text-entries.js';
-import { ParticipationLocations } from '../api/participation-locations/participation_locations.js';
-import { LocationManager } from '../api/locations/client/location-manager-client.js';
+//import { LocationManager } from '../api/locations/client/location-manager-client.js';
 import { CONFIG } from '../api/config.js'
 
 import './components/experience_buttons.js';
-import './components/map.js';
 import './components/loading_overlay.js';
 
 
@@ -119,7 +117,7 @@ Template.body.events({
     // TODO: Probably can generalize this logic
     const caption = event.target.write && event.target.write.value || '';
     const picture = event.target.photo && event.target.photo.files[0];
-
+    console.log("SUbmitting a form!!!!!")
     const location = LocationManager.currentLocation();
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const experienceId = Router.current().params._id;
@@ -172,44 +170,12 @@ Template.body.events({
       Router.go('results', { _id: incidentId });
     }
   },
-  'click #flashlight-off-btn'(event, instance) {
-    const incidentId = Incidents.findOne()._id;
-
-    window.plugins.flashlight.available(function(isAvailable) {
-      if (isAvailable) {
-        // switch on
-        window.plugins.flashlight.toggle();
-        document.getElementById('participate-btn').style.display = "block";
-        document.getElementById('flashlight-off-btn').style.display = "none";
-      } else {
-        alert("Flashlight not available on this device");
-      }
-    });
-
-    let entryToRemove = ParticipationLocations.findOne({incidentId: incidentId, userId: Meteor.userId()});
-    ParticipationLocations.remove({_id: entryToRemove._id});
-
-  },
   'click #participate-btn'(event, instance) {
     event.preventDefault();
 
     //for when mobile works
     const loc = LocationManager.currentLocation();
     const incidentId = Incidents.findOne()._id;
-
-    let participationLocLog = {
-      incidentId: incidentId,
-      experience: Router.current().params._id,
-      userId: Meteor.userId(),
-      lat: loc.lat,
-      lng: loc.lng
-    };
-
-    let submissionId = ParticipationLocations.insert(participationLocLog);
-    instance.autorun(() => {
-      const newLoc = LocationManager.currentLocation();
-      ParticipationLocations.update(submissionId, {$set: {lat: newLoc.lat, lng: newLoc.lng}});
-    });
 
     //can only participate once, will need to be made smarter in the future
     document.getElementById('participate-btn').style.display = "none";

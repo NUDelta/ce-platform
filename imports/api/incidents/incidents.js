@@ -17,24 +17,6 @@ class IncidentCollection extends Mongo.Collection {
   }
 }
 
-Schema.SoftStoppingCriteria = new SimpleSchema({
-  total:{
-    type: Number,
-    optional: true
-  },
-  time: {
-    type: String,
-    optional: true
-  }
-  // complete_instances:{
-  //   type: Number,
-  //   optional: true
-  // }
-});
-
-export const SoftStoppingCriteria = new IncidentCollection('SoftStoppingCriteria');
-SoftStoppingCriteria.attachSchema(Schema.SoftStoppingCriteria);
-
 Schema.SituationNeed = new SimpleSchema({
   name:{
     type: String,
@@ -48,7 +30,7 @@ Schema.SituationNeed = new SimpleSchema({
     optional: true
   },
   softStoppingCriteria : {
-    type: Schema.SoftStoppingCriteria,
+    type: Number,
     optional: true
   },
   notifiedUsers: {

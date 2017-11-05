@@ -9,6 +9,8 @@ import { Router } from 'meteor/iron:router';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Users } from '../../api/users/users.js';
+import { Locations } from '../../api/locations/locations.js';
+
 
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -18,8 +20,6 @@ import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Submissions } from '../../api/submissions/submissions.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
-import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 import { photoInput } from '../globalHelpers.js';
 import { photoUpload } from '../globalHelpers.js';
@@ -127,6 +127,7 @@ Template.api_custom.helpers({
 
 Template.api_custom.onCreated(function() {
   console.log("user id that is logged in", Meteor.userId())
+
   const incidentId = Router.current().params._id;
   this.subscribe('images', incidentId);
   this.subscribe('submissions', incidentId);
@@ -136,6 +137,7 @@ Template.api_custom.onCreated(function() {
 
   const experiencesHandle = this.subscribe('experiences.byIncident', incidentId);
   this.subscribe('participation_locations');
+  const locHandle = this.subscribe('locations');
 
   this.state = new ReactiveDict();
   const incidentHandle = this.subscribe('incidents.byId', incidentId);
@@ -143,9 +145,13 @@ Template.api_custom.onCreated(function() {
   var first_run = true;
   this.autorun(() => {
 
-    if (experiencesHandle.ready() && incidentHandle.ready()) {
+    if (experiencesHandle.ready() && incidentHandle.ready() && locHandle.ready()) {
       const incident = Incidents.findOne(incidentId);
       this.state.set('incident', incident);
+
+      const location = Locations.findOne({uid: Meteor.userId()})
+      console.log(location)
+      this.state.set('location', location);
 
       const experience = Experiences.findOne(incident.experienceId);
       this.state.set('experience', experience);
@@ -201,8 +207,9 @@ Template.storyPage.helpers({
     // const captions = event.target.write && event.target.write.value || '';
     // console.log("captions are ", captions)
     const picture = event.target.photo && event.target.photo.files[0];
-
-    const location = LocationManager.currentLocation();
+    console.log("SUbmitting here here!!!!")
+    const location = instance.state.get('location');
+    console.log(location)
     const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const incidentId = Router.current().params._id;
     const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
@@ -310,22 +317,10 @@ Template.storyPage.helpers({
     event.preventDefault();
 
     //for when mobile works
-    const loc = LocationManager.currentLocation();
+    console.log("clicked participate")
+
+    const loc = instance.state.get('location');
     const incidentId = Incidents.findOne()._id;
-
-    let participationLocLog = {
-      incidentId: incidentId,
-      experience: Router.current().params._id,
-      userId: Meteor.userId(),
-      lat: loc.lat,
-      lng: loc.lng
-    };
-
-    let submissionId = ParticipationLocations.insert(participationLocLog);
-    instance.autorun(() => {
-      const newLoc = LocationManager.currentLocation();
-      ParticipationLocations.update(submissionId, {$set: {lat: newLoc.lat, lng: newLoc.lng}});
-    });
 
     //can only participate once, will need to be made smarter in the future
     document.getElementById('participate-btn').style.display = "none";

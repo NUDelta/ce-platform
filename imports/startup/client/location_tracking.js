@@ -2,20 +2,39 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
 import { log, serverLog } from '../../api/logs.js';
-import { LocationManager } from '../../api/locations/client/location-manager-client.js';
+////import { LocationManager } from '../../api/locations/client/location-manager-client.js';
+
+///Example location object returned
+// {
+//     "timestamp":     [Date],     // <-- Javascript Date instance
+//     "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
+//     "uuid":          [String],   // <-- Universally unique identifier
+//     "coords": {
+//         "latitude":  [Float],
+//         "longitude": [Float],
+//         "accuracy":  [Float],
+//         "speed":     [Float],
+//         "heading":   [Float],
+//         "altitude":  [Float]
+//     },
+//     "activity": {
+//         "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
+//         "confidence": [0-100%]
+//     },
+//     "battery": {
+//         "level": [Float],
+//         "is_charging": [Boolean]
+//     }
+// }
 
 if (Meteor.isCordova) {
   Meteor.startup(() => {
     //Configure Plugin
     var bgGeo = window.BackgroundGeolocation;
 
-
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function(location) {
-        var coords = location.false;
-        var lat    = coords.latitude;
-        var lng    = coords.longitude;
-        console.log('- Location: ', JSON.stringify(location));
+      console.log('- Location: ', JSON.stringify(location));
 
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
@@ -24,7 +43,7 @@ if (Meteor.isCordova) {
             userId: Meteor.userId()
           }
         }, (err, res) => {
-
+          console.log("Error with client/location-tracking sending location update to server")
         });
       }
     };
@@ -32,16 +51,14 @@ if (Meteor.isCordova) {
     var failureFn = function(errorCode) {
        console.warn('- BackgroundGeoLocation error: ', errorCode);
      }
-     // Listen to location events & errors.
+
+    // Listen to location events & errors.
     bgGeo.on('location', callbackFn, failureFn);
     // Fired whenever state changes from moving->stationary or vice-versa.
     bgGeo.on('motionchange', function(isMoving) {
       console.log('- onMotionChange: ', isMoving);
     });
-    // Fired whenever a geofence transition occurs.
-    bgGeo.on('geofence', function(geofence) {
-      console.log('- onGeofence: ', geofence.identifier, geofence.location);
-    });
+
     // Fired whenever an HTTP response is received from your server.
     bgGeo.on('http', function(response) {
       console.log('http success: ', response.responseText);
@@ -85,11 +102,3 @@ if (Meteor.isCordova) {
   });
 } else {
 }
-
-Meteor.startup(() => {
-  trackerInterval = Meteor.setInterval(updateLocation, 10000);
-});
-
-var updateLocation = function() {
-   LocationManager.trackUpdates(Tracker, () => {}, () => {});
-};

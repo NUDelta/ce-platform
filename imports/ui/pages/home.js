@@ -12,13 +12,13 @@ import '../components/active_experience.js';
 Template.home.onCreated(function() {
     this.state = new ReactiveDict();
     this.state.set('render', true);
-
+    console.log("hello")
     var handle = this.autorun(() => {
       console.log("rerunning")
       Template.instance().state.set('render', true);
       this.subscribe('experiences.activeUser', Template.instance().state.get('render')); // TODO: make more specific
     });
-    
+
 });
 
 Template.home.events({

@@ -43,10 +43,6 @@ Schema.SituationalNeedTemplate = new SimpleSchema({
   contributions:{
     type: Object, //{String: String}
     blackbox: true
-  },
-  completionCallback:{
-    type: String,
-    optional: true
   }
 });
 
@@ -56,9 +52,6 @@ SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
 Schema.ContributionGroup = new SimpleSchema({
   contributionTemplates:{
     type: [Schema.SituationalNeedTemplate],
-  },
-  stoppingCriteria: {
-    type: Schema.StoppingCriteria
   }
 });
 

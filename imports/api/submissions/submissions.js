@@ -35,6 +35,14 @@ Schema.Submission = new SimpleSchema({
   timestamp: {
     type: Number,
     optional: true
+  },
+  lat:{
+    type: Number,
+    optional: true
+  },
+  lng:{
+    type: Number,
+    optional: true
   }
 });
 

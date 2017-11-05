@@ -71,14 +71,11 @@ export const createExperience = new ValidatedMethod({
     resultsTemplate:{
       type: String
     },
-    contributionGroups: {
-      type: [Schema.ContributionGroup]
-    },
-    notificationStrategy: {
-      type: String
-    },
     notificationText: {
       type: String
+    },
+    contributionGroups: {
+      type: [Schema.ContributionGroup]
     },
     callbackPair: {
       type: [Schema.CallbackPair]
@@ -86,6 +83,7 @@ export const createExperience = new ValidatedMethod({
   }).validator(),
   run({name, description, image, participateTemplate, resultsTemplate, contributionGroups,
     notificationStrategy, notificationText, callbackPair}) {
+      console.log("validated")
     const experience = {
         name: name,
         description: description,

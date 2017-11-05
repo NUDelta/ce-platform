@@ -15,6 +15,9 @@ export const log = {
   warning(message) {
     _log(`[warn]: ${ process(message) }`, 'yellow');
   },
+  error(message) {
+    _log(`[error]: ${ process(message) }`, 'red');
+  },
 
   job(message) {
     _log(`[job]: ${ process(message) }`, 'magenta');

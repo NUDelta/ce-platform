@@ -12,12 +12,9 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
-import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { CONFIG } from '../../api/config.js'
 import '../globalHelpers.js';
 import '../components/experience_buttons.js';
-import '../components/map.js';
 import '../components/loading_overlay.js';
 import '../components/camera_upload.js';
 

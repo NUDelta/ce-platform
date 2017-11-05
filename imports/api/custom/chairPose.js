@@ -12,7 +12,7 @@ import { _ } from 'meteor/underscore';
 
 import { Incidents } from '../incidents/incidents.js';
 
-import { registerCallback } from '../activator/methods.js';
+import { registerCallback } from '../coordinator/methods.js';
 
 export const chairPose = new ValidatedMethod({
   name: 'api.chairPose',
@@ -47,6 +47,5 @@ export const chairPose = new ValidatedMethod({
           "softStoppingCriteria": {"total": 20} //if finished but experience isn't then ignore
         }
     });
-    Meteor.call("api.leggo", {incidentId: incidentId});
   }
 });

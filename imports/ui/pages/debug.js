@@ -8,7 +8,6 @@ import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { ParticipationLocations } from '../../api/participation-locations/participation_locations.js';
 import { updateLocation } from '../../api/locations/methods.js';
 
 Template.debug.onCreated(function() {
@@ -54,7 +53,7 @@ Template.debug.events({
   'submit form'(event, instance){
     event.preventDefault();
     console.log("updating a location");
-    Meteor.call('updateLocationById', {id: event.target.id.value, lat:parseFloat(event.target.lat.value), long:parseFloat(event.target.long.value) });
+    Meteor.call('locations.updateUserLocationAndAffordances', {uid: event.target.id.value, lat:parseFloat(event.target.lat.value), lng:parseFloat(event.target.long.value) });
   }
 });
 

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 import { Push } from 'meteor/raix:push';
 
-import { LocationManager } from '../../locations/server/location-manager-server.js';
+// import { LocationManager } from '../../locations/server/location-manager-server.js';
 import { CerebroCore } from '../cerebro-core.js';
 import { log } from '../../logs.js';
 import { CONFIG, AUTH } from '../../config.js';
@@ -15,18 +15,11 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   // experienceId could be experience OR incident id
-  notify({ userIds, experienceId, subject, text, route }) {
+  notify({ userId, experienceId, subject, text, route }) {
 
     switch(CONFIG.NOTIFY_METHOD) {
-      // @Deprecated
-      // case CerebroCore.EMAIL:
-      //   this._sendEmails(users, server, subject, text);
-      //   break;
       case CerebroCore.PUSH:
-        console.log("notify called with userIds", userIds)
-        if(userIds.length > 0){
-          this._sendPush(userIds, subject, text, route, experienceId);
-        }
+          this._sendPush([userId], subject, text, route, experienceId);
         break;
       default:
         log.warn('Invalid notification method set');
@@ -34,20 +27,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
     }
   }
 
-  // @Deprecated
-  _sendEmails(users, server, subject, text) {
-    log.cerebro('Sending emails.');
-    server.unblock();
-    users.forEach((user) => {
-      this._addActiveExperience(user._id, experienceId);
-      Email.send({
-        to: user.emails[0].address,
-        from: 'shannonnachreiner2012@u.northwestern.edu',
-        subject: subject,
-        html: text
-      });
-    });
-  }
 
   _sendPush(userIds, subject, text, route, experienceId) {
     const payload = {
@@ -63,7 +42,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     let pushUsers = [];
     if (CONFIG.DEBUG_PUSH) {
       log.info(`Debug push enabled. Sending to debug set.`);
-      pushUsers = CONFIG.DEBUG_USERS;
+      pushUsers = _.intersection(userIds, CONFIG.DEBUG_USERS);
     } else {
       pushUsers = userIds
     }
@@ -81,16 +60,14 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  setActiveExperiences(userIds, experienceId) {
-    console.log('setActiveExperiences', userIds, experienceId);
+  setActiveExperiences(userId, experienceId) {
+    console.log('setActiveExperiences', userId, experienceId);
     Meteor.users.update({
-      _id: { $in: userIds }
+      _id: userId
     }, {
       $addToSet: {
         'profile.activeExperiences': experienceId
       }
-    }, {
-      multi: true
     });
   }
 
@@ -148,15 +125,13 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  addIncidents(userIds, incidentId) {
+  addIncidents(userId, incidentId) {
     Meteor.users.update({
-      _id: { $in: userIds }
+      _id: userId
     }, {
       $addToSet: {
         'profile.pastIncidents': incidentId
       }
-    }, {
-      multi: true
     });
   }
 
