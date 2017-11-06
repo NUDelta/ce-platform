@@ -4,9 +4,6 @@ import { Locations } from '../imports/api/locations/locations.js';
 import { Images } from '../imports/api/images/images.js';
 import { TextEntries } from '../imports/api/text-entries/text-entries.js';
 import { NotificationLog } from '../imports/api/cerebro/cerebro-core.js';
-import { WIPQueue } from '../imports/startup/server/WIPQueue.js';
-
-
 import { updateLocation } from '../imports/api/locations/methods.js';
 
 export const cleardb = new ValidatedMethod({
@@ -21,7 +18,6 @@ export const cleardb = new ValidatedMethod({
     Images.remove({});
     TextEntries.remove({});
     Incidents.remove({});
-    WIPQueue.remove({});
     NotificationLog.remove({});
 
   }

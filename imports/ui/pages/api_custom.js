@@ -4,54 +4,27 @@ import '../components/loading_overlay.html';
 import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
-import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Users } from '../../api/users/users.js';
-import { Locations } from '../../api/locations/locations.js';
-
-
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { _ } from 'meteor/underscore';
 
+import { Template } from 'meteor/templating';
+import { Router } from 'meteor/iron:router';
+
+import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
+import { Users } from '../../api/users/users.js';
+import { Locations } from '../../api/locations/locations.js';
 import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Submissions } from '../../api/submissions/submissions.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 
-import { photoInput } from '../globalHelpers.js';
-import { photoUpload } from '../globalHelpers.js';
+import { photoInput } from './photoUploadHelpers.js'
+import { photoUpload } from './photoUploadHelpers.js'
 
-Template.registerHelper('storyContribs', (situationNeedName, contributionTemplate)=> {
-  var dict = {}
-  var textContributions = [];
-  var dropDownContributions = [];
-  var imageContributions = false;
-  var contributions = contributionTemplate.contributions;
-  for (var key in contributions) {
-    var value = contributions[key];
-    if (value == "Image") {
-      imageContributions = key;
-    }
-    if (value == "String"){
-      textContributions.push(key);
-    }
-    if(typeof value == "object"){
-      var newDict = {}
-      newDict[key] = value[1]
-      dropDownContributions.push(newDict);
-    }
-  }
-  dict["situationNeed"] = situationNeedName,
-  dict["contributionTemplateName"] = contributionTemplate.name
-  dict["textContributions"] = textContributions
-  dict["imageContributions"] = imageContributions
-  dict["dropDownContributions"] = dropDownContributions
-  return dict;
-});
 
+// HELPER FUNCTIONS FOR STORYTIME
 Template.registerHelper('getPrevSentence', (subs) => {
   if(subs.length == 0){
     return "Jimmy looked up at the sky."
@@ -74,18 +47,42 @@ Template.registerHelper('getPrevAffordance', (subs) => {
 
 
 Template.registerHelper('passContributionName', (name) => {
-      const instance = Template.instance();
-      var contributions = instance.data.contributionTemplate.contributions;
-      if(typeof contributions[name] == "object"){
-        return {key:name, options: contributions[name][1]}
-      }
-      return {key: name}
+  const instance = Template.instance();
+  var contributions = instance.data.contributionTemplate.contributions;
+  if(typeof contributions[name] == "object"){
+    return {key:name, options: contributions[name][1]}
+  }
+  return {key: name}
 
 });
 
 
+Template.storyPage.helpers({
+  getPrevSentenceId(photoIndex){
+    const instance = Template.instance()
+    var incident = instance.state.get('incident');
+    var subs = Submissions.find({incidentId: incident._id}).fetch();
+    // var submission = instance.data.submissions[photoIndex-1];
+    // console.log(submission)
+    // console.log(submission.content.nextSentence)
+    var id = submission.content.nextSentence
+    var text = TextEntries.findOne({_id: id});
+    return text.text;
+  },
+  getPageNum(){
+    return this.submissions.length+2;
+  },
+  notLastPage(){
+    //TODO: pass in stopping critera
+    return this.submissions.length+2 < 8;
+  }
+});
+
+
+// HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
   data2pass(){
+    //TODO: clean up this hot mess of a function
     const instance = Template.instance();
     var incident = instance.state.get('incident');
     var subs = Submissions.find({incidentId: incident._id}).fetch();
@@ -115,9 +112,9 @@ Template.api_custom.helpers({
 
 
     return {"incident": incident,
-            "situationNeedName": situationNeedName,
-            "contributionTemplate": contributionTemplate,
-            "submissions": subs}
+    "situationNeedName": situationNeedName,
+    "contributionTemplate": contributionTemplate,
+    "submissions": subs}
   },
   template_name() {
     const instance = Template.instance();
@@ -126,222 +123,165 @@ Template.api_custom.helpers({
 });
 
 Template.api_custom.onCreated(function() {
-  console.log("user id that is logged in", Meteor.userId())
 
   const incidentId = Router.current().params._id;
-  this.subscribe('images', incidentId);
-  this.subscribe('submissions', incidentId);
-  this.subscribe('textEntries.byIncident', incidentId);
+  const imgHangle = this.subscribe('images', incidentId);
   const incHandle = this.subscribe('incidents.byId', incidentId);
   const expHandle = this.subscribe('experiences.byIncident', incidentId);
-
-  const experiencesHandle = this.subscribe('experiences.byIncident', incidentId);
-  this.subscribe('participation_locations');
-  const locHandle = this.subscribe('locations');
+  const locHandle = this.subscribe('locations.byUser', Meteor.userId());
+  //do we really need all of these?
+  // const subHangle = this.subscribe('submissions', incidentId);
+  // const textHangle = this.subscribe('textEntries.byIncident', incidentId);
 
   this.state = new ReactiveDict();
-  const incidentHandle = this.subscribe('incidents.byId', incidentId);
 
-  var first_run = true;
   this.autorun(() => {
-
-    if (experiencesHandle.ready() && incidentHandle.ready() && locHandle.ready()) {
+    if (this.subscriptionsReady()) {
+      console.log("subscriptions are now ready")
       const incident = Incidents.findOne(incidentId);
       this.state.set('incident', incident);
 
       const location = Locations.findOne({uid: Meteor.userId()})
-      console.log(location)
       this.state.set('location', location);
 
+      //not sure if we need these last two?
       const experience = Experiences.findOne(incident.experienceId);
       this.state.set('experience', experience);
-      this.state.set('modules', this.state.get('experience').modules);
 
-      if (experience.activeIncident) {
-        this.subscribe('images', experience.activeIncident);
-      }
+      // if (experience.activeIncident) {
+      //   this.subscribe('images', experience.activeIncident);
+      // }
     }
   });
-
-  this.usesModule = (module) => {
-    return _.contains(this.state.get('modules'), module);
-  };
-  //need to deal with what happens when an experience ends (time stamp incidents?)
 });
 
-
-Template.storyPage.helpers({
-    getPrevSentenceId(photoIndex){
-        const instance = Template.instance()
-        var incident = instance.state.get('incident');
-        var subs = Submissions.find({incidentId: incident._id}).fetch();
-        // var submission = instance.data.submissions[photoIndex-1];
-        // console.log(submission)
-        // console.log(submission.content.nextSentence)
-        var id = submission.content.nextSentence
-        var text = TextEntries.findOne({_id: id});
-        return text.text;
-    },
-    getPageNum(){
-      return this.submissions.length+2;
-    },
-    notLastPage(){
-      //TODO: pass in stopping critera
-      return this.submissions.length+2 < 8;
-    }
-  });
-
-  Template.api_custom.events({
+Template.api_custom.events({
   'submit form'(event, instance) {
-    console.log("cameraUpload");
-    console.log("userID on submission is", Meteor.userId())
-
     event.preventDefault();
-        // instance.submitting.set(true);
-    console.log('event.target.: ', event.target);
-    event.target.getElementsByClassName("overlay")[0].style.display = "initial";
 
+    //this makes the loading circle show up
+    event.target.getElementsByClassName("overlay")[0].style.display = "initial";
 
     // TODO: Probably can generalize this logic
 
-    // const captions = event.target.write && event.target.write.value || '';
-    // console.log("captions are ", captions)
-    const picture = event.target.photo && event.target.photo.files[0];
-    console.log("SUbmitting here here!!!!")
     const location = instance.state.get('location');
-    console.log(location)
-    const place = Cerebro.getSubmissionLocation(location.lat, location.lng);
     const incidentId = Router.current().params._id;
-    const incident = Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
+    const incident = instance.state.get('incident') //Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
     const experienceId = incident.experienceId;
-
+    const userId = Meteor.userId()
     var submissions = {};
 
     var dropDowns = event.target.getElementsByClassName("dropdown")
     for(var i =0; i < dropDowns.length; i++){
       var index = dropDowns[i].selectedIndex;
-        var id = TextEntries.insert({
-          submitter: Meteor.userId(),
-          text: dropDowns[i][index].value,
-          contribution: dropDowns[i].id,
-          experienceId: experienceId,
-          incidentId: incidentId,
-          lat: location.lat,
-          lng: location.lng,
-          location: place,
-        });
-        submissions[dropDowns[i].id] = id;
-      }
+      var id = TextEntries.insert({
+        submitter: userId,
+        text: dropDowns[i][index].value,
+        contribution: dropDowns[i].id,
+        experienceId: experienceId,
+        incidentId: incidentId,
+      });
+      submissions[dropDowns[i].id] = id;
+    }
 
     var forms = event.target.getElementsByClassName("form-control")
     for(var i =0; i < forms.length; i++){
-        var id = TextEntries.insert({
-          submitter: Meteor.userId(),
-          text: forms[i].value,
-          contribution: forms[i].id,
-          experienceId: experienceId,
-          incidentId: incidentId,
-          lat: location.lat,
-          lng: location.lng,
-          location: place,
-        });
-        submissions[forms[i].id] = id;
-      }
+      var id = TextEntries.insert({
+        submitter: userId,
+        text: forms[i].value,
+        contribution: forms[i].id,
+        experienceId: experienceId,
+        incidentId: incidentId,
+      });
+      submissions[forms[i].id] = id;
+    }
 
+    var images = event.target.getElementsByClassName("fileinput")
+    //no images being uploaded so we can just go right to the results page
+    if(images.length== 0){
+      Router.go('/apicustomresults/'+incidentId);
+    }
 
-      var images = event.target.getElementsByClassName("fileinput")
-      if(images.length== 0){
-        Router.go('/apicustomresults/'+incidentId);
-      }
-      for(var i =0; i < images.length; i++){
-        var imageFile = Images.insert(picture, (err, imageFile) => {
-            if (err) {
-              // shouldn't happen
-              alert(err);
-            } else {
-              Images.update(imageFile._id,
-                {
-                  $set: {
-                    experienceId: experienceId,
-                    //caption: caption,
-                    incidentId: incidentId,
-                    lat: location.lat,
-                    lng: location.lng,
-                    location: place,
-                  }
-                }
-              );
-              // TODO: setTimeout for automatically moving on if upload takes too long
-              // This is a bit unfortunate...(waiting for a completed callback)
-              // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
-              const cursor = Images.find(imageFile._id).observe({
-                changed(newImage) {
-                  if (newImage.isUploaded()) {
-                    cursor.stop();
-                    Router.go('/apicustomresults/'+incidentId);
-                  }
-                }
-              });
+    //otherwise, we do have images to upload so need to hang around for that
+    for(var i =0; i < images.length; i++){
+      const picture = event.target.photo && event.target.photo.files[i];
+      var imageFile = Images.insert(picture, (err, imageFile) => {
+        //this is a callback for after the image is inserted
+        if (err) {
+          alert(err);
+        } else {
+          //success branch of callback
+
+          //add more info about the photo
+          Images.update({_id: imageFile._id},{
+            $set: {
+              experienceId: experienceId,
+              incidentId: incidentId,
+              }
+            });
+          // TODO: setTimeout for automatically moving on if upload takes too long
+          // This is a bit unfortunate...(waiting for a completed callback)
+          // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
+
+          //watch to see when the image db has been updated, then go to results
+          const cursor = Images.find(imageFile._id).observe({
+            changed(newImage) {
+              if (newImage.isUploaded()) {
+                cursor.stop();
+                Router.go('/apicustomresults/'+incidentId);
+              }
             }
           });
+        }
+      });
+      //add the submitted image to the submissions content dictionary
+      submissions[images[i].id] = imageFile._id;
 
+    }//exit the for loop for images
 
-    submissions[images[i].id] = imageFile._id;
     var submissionObject = {
-      submitter: Meteor.userId(),
+      submitter: userId,
       experienceId: experienceId,
       incidentId: incidentId,
       situationNeed: instance.state.get('situationNeedName'),
       contributionTemplate: instance.state.get('contributionTemplate').name,
       content: submissions,
       timestamp: Date.parse(new Date()),
+      lat: location.lat,
+      lng: location.lng
     }
-
-    console.log('submissionObject: ', submissionObject);
 
     Submissions.insert(submissionObject, (err, docs) => {
       if (err) {
-        console.log("Didn't submit", err);
+        console.log("Error with submission, did not succeed", err);
       } else {
-        console.log("DID SUBMIT", docs)
       }});
+
+    },
+
+    'click #participate-btn'(event, instance) {
+      event.preventDefault();
+
+      //makes it disappear so you don't see it while image is submitting
+      document.getElementById('participate-btn').style.display = "none";
+
+    },
+    'click .fileinput, touchstart .glyphicon-camera'(event, target) {
+      photoInput(event);
+    },
+    'click .glyphicon-remove'(event, target) {
+      // NOTE: 5/22/16: simpler methods don't seem to work here
+      // e.g. $fileInput.val('');
+      event.stopImmediatePropagation();
+      event.stopPropagation();
+      const $fileInput = $('input[name=photo]');
+      $fileInput.replaceWith($fileInput.val('').clone(true));
+
+      $('.fileinput-preview').attr('src', '#');
+      $('.fileinput-exists').hide();
+      $('.fileinput-new').show();
+    },
+    'change input[name=photo]'(event, target) {
+      photoUpload(event);
     }
-
-    Meteor.users.update({_id: Meteor.userId()}, {
-      $set: {"profile.lastParticipated": Date.parse(new Date()) }
-    })
-
-
-  },
-  'click #participate-btn'(event, instance) {
-    event.preventDefault();
-
-    //for when mobile works
-    console.log("clicked participate")
-
-    const loc = instance.state.get('location');
-    const incidentId = Incidents.findOne()._id;
-
-    //can only participate once, will need to be made smarter in the future
-    document.getElementById('participate-btn').style.display = "none";
-
-  },
-  'click .fileinput, touchstart .glyphicon-camera'(event, target) {
-    photoInput(event);
-  },
-  'click .glyphicon-remove'(event, target) {
-    // NOTE: 5/22/16: simpler methods don't seem to work here
-    // e.g. $fileInput.val('');
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    const $fileInput = $('input[name=photo]');
-    $fileInput.replaceWith($fileInput.val('').clone(true));
-
-    $('.fileinput-preview').attr('src', '#');
-    $('.fileinput-exists').hide();
-    $('.fileinput-new').show();
-  },
-  'change input[name=photo]'(event, target) {
-    photoUpload(event);
-  }
-});
+  });

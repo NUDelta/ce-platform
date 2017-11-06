@@ -1,5 +1,4 @@
 import './api_custom_results.html';
-import './storyPageResults.html'
 import '../components/displayImage.html';
 
 import { Meteor } from 'meteor/meteor';

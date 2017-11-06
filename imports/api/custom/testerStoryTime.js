@@ -30,14 +30,14 @@ export const testerStoryBook = new ValidatedMethod({
       console.log("hi we got", textId)
 
       var nextAffordance = TextEntries.findOne({_id: textId}).text;
-      console.log("i feel like we dont get here")
+
       Meteor.call("api.addSituationNeeds", {
-        incidentId: incidentId,
+        incidentId: mostRecentSubmission.incidentId,
         need: {
           "name": "nextScene"+ nextAffordance + Random.id(3),
           "contributionTemplate" : "scene",
           "affordance": nextAffordance,
-          "softStoppingCriteria": {"total": 1}
+          "softStoppingCriteria": 1
         }
       });
     }
@@ -65,21 +65,23 @@ export const testerStoryBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "Help us illustrate and write a story!",
-      notificationStrategy: "notifyOneUser",
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 8}}],
+      contributionGroups: [{contributionTemplates: [storyPageTemplate]}],
       callbackPair:[{templateName: "scene", callback: createNewPageNeed.toString()}]
     });
 
     const incidentId = Meteor.call("api.createIncident", {
       experienceId: experienceId
     });
+
+    console.log("incident created", incidentId)
+
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "daytime",
-        "softStoppingCriteria": {"total": 1}
+        "affordance": "nighttime",
+        "softStoppingCriteria": 1
       }
     });
   }

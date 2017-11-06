@@ -38,11 +38,15 @@ Schema.Submission = new SimpleSchema({
   },
   lat:{
     type: Number,
-    optional: true
+    decimal: true,
+    min: -90,
+    max: 90
   },
   lng:{
     type: Number,
-    optional: true
+    decimal: true,
+    min: -180,
+    max: 180
   }
 });
 

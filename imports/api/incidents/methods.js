@@ -16,6 +16,8 @@ export const createIncident = new ValidatedMethod({
     }
   }).validator(),
   run({experienceId}) {
+    //TODO: sometimes this runs too quickly after the experience was created
+    //we should be able to fix this
     var experience = Experiences.findOne({_id:experienceId});
     const incidentId = Incidents.insert({
       date: Date.parse(new Date()),

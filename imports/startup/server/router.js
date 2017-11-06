@@ -15,8 +15,6 @@ Router.route('/api/geolocation', { where: 'server' })
     const userId = this.request.body.userId;
     const location = this.request.body.location;
     const activity = this.request.body.activity;
-    console.log("in post calling udpdate Location");
-    console.log(location)
     
     updateLocation.call({
       uid: userId,

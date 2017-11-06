@@ -9,7 +9,6 @@ import { Experiences } from '../experiences/experiences.js';
 import { Incidents } from '../incidents/incidents.js';
 import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
-import { WIPQueue } from '../../startup/server/WIPQueue.js'
 import { NotificationLog } from '../cerebro/cerebro-core.js'
 import { Users } from '../users/users.js';
 
@@ -131,7 +130,7 @@ function addUserToSituationNeed(uid, incidentId, situationNeedName){
   Cerebro.notify({
     userId: uid,
     experienceId: experienceId,
-    subject: "Event " + experience.name + " is starting for " + key,
+    subject: "Event " + experience.name + " is starting!",
     text: experience.notificationText,
     route: "apiCustom"
   });
@@ -154,10 +153,10 @@ function removeUserFromExperience(uid, experienceId, incidentId, situationNeedNa
 }
 
 export const  removeUserAfterTheyParticipated = function(uid, experienceId){
-  console.log("going to remove users")
+
   var userAffordances = Locations.findOne({uid: uid}).affordances
   var incident = Incidents.findOne({experienceId: experienceId});
-  console.log(incident.situationNeeds)
+
   for(var i in incident.situationNeeds){
     var sn = incident.situationNeeds[i]
     console.log(sn.name)
