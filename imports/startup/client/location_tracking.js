@@ -12,9 +12,9 @@ if (Meteor.isCordova) {
 
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function(location) {
-        var coords = location.false;
-        var lat    = coords.latitude;
-        var lng    = coords.longitude;
+        // var coords = location.false;
+        // var lat    = coords.latitude;
+        // var lng    = coords.longitude;
         console.log('- Location: ', JSON.stringify(location));
 
       if (Meteor.userId()) {
