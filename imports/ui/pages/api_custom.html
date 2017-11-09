@@ -6,24 +6,42 @@
 <template name="chairPose">
   <h4>We're building a collage of funny chair poses</h4>
   <p>Make a pose and take a selfie. In a bit, check out other people's submissions in your past experiences.</p>
-    <div id="participate">
-      <form class="col col-xs-12">
-        {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
-      </form>
-    </div>
+  <div id="participate">
+    <form class="col col-xs-12">
+      {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
+    </form>
+  </div>
 </template>
 
 <!--  TEMPLATE FOR RAINBOW COLLAGE -->
 <template name="americanFlag">
-  <h4>We're building a rainbow collage of our Northwestern experience</h4>
-  <p>Take a picture of something ~~ <i><b>{{this.contributionTemplate.name}}</b></i>~~ to help us showcase all the colors!</p>
-    <div id="participate">
-      <form class="col col-xs-12">
-        {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
-      </form>
-    </div>
+  <h4>We're building a rainbow collage</h4>
+  {{#if isRedContrib this.contributionTemplate.name}}
+    <p>Take a picture of red produce or something red in Delta to help us showcase all the colors.</p>
+  {{else if isOrangeContrib this.contributionTemplate.name}}
+    <p>Take a picture of orange produce to help us showcase all the colors.</p>
+  {{else if isYellowContrib this.contributionTemplate.name}}
+    <p>Take a picture of yellow produce or the yellow triangles in Delta to help us showcase all the colors.</p>
+  {{else if isGreenContrib this.contributionTemplate.name}}
+    <p>Take a picture of green produce, green trees, or green grass to help us showcase all the colors.</p>
+  {{else if isBlueContrib this.contributionTemplate.name}}
+    <p>Take a picture of the beautiful blue sky to help us showcase all the colors.</p>
+  {{else if isPurpleContrib this.contributionTemplate.name}}
+    <p>Take a picture of Northwestern Purple to help us showcase all the colors.</p>
+  {{else if isBlackContrib this.contributionTemplate.name}}
+    <p>Take a picture of coffee or the night sky to help us showcase all the colors.</p>
+  {{else if isWhiteContrib this.contributionTemplate.name}}
+    <p>Take a picture of the clouds to help us showcase all the colors.</p>
+  {{else}}
+    <p>Take a picture of something <i><b>{{this.contributionTemplate.name}}</b></i> to help us showcase all the colors.</p>
+  {{/if}}
+  <div id="participate">
+    <form class="col col-xs-12">
+      {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
+    </form>
+  </div>
 </template>
 
 <!-- TEMLATE FOR CHEERS -->

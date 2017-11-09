@@ -72,15 +72,13 @@ Template.registerHelper('getPrevAffordance', (subs) => {
   return prevAff;
 });
 
-
 Template.registerHelper('passContributionName', (name) => {
-      const instance = Template.instance();
-      var contributions = instance.data.contributionTemplate.contributions;
-      if(typeof contributions[name] == "object"){
-        return {key:name, options: contributions[name][1]}
-      }
-      return {key: name}
-
+  const instance = Template.instance();
+  var contributions = instance.data.contributionTemplate.contributions;
+  if(typeof contributions[name] == "object"){
+    return {key:name, options: contributions[name][1]}
+  }
+  return {key: name}
 });
 
 
@@ -165,27 +163,54 @@ Template.api_custom.onCreated(function() {
 
 
 Template.storyPage.helpers({
-    getPrevSentenceId(photoIndex){
-        const instance = Template.instance()
-        var incident = instance.state.get('incident');
-        var subs = Submissions.find({incidentId: incident._id}).fetch();
-        // var submission = instance.data.submissions[photoIndex-1];
-        // console.log(submission)
-        // console.log(submission.content.nextSentence)
-        var id = submission.content.nextSentence
-        var text = TextEntries.findOne({_id: id});
-        return text.text;
-    },
-    getPageNum(){
-      return this.submissions.length+2;
-    },
-    notLastPage(){
-      //TODO: pass in stopping critera
-      return this.submissions.length+2 < 8;
-    }
-  });
+  getPrevSentenceId(photoIndex){
+      const instance = Template.instance()
+      var incident = instance.state.get('incident');
+      var subs = Submissions.find({incidentId: incident._id}).fetch();
+      // var submission = instance.data.submissions[photoIndex-1];
+      // console.log(submission)
+      // console.log(submission.content.nextSentence)
+      var id = submission.content.nextSentence
+      var text = TextEntries.findOne({_id: id});
+      return text.text;
+  },
+  getPageNum(){
+    return this.submissions.length+2;
+  },
+  notLastPage(){
+    //TODO: pass in stopping critera
+    return this.submissions.length+2 < 8;
+  }
+});
 
-  Template.api_custom.events({
+Template.americanFlag.helpers({
+  isRedContrib(color){
+    return color == "red"
+  },
+  isOrangeContrib(color){
+    return color == "orange"
+  },
+  isYellowContrib(color){
+    return color == "yellow"
+  },
+  isGreenContrib(color){
+    return color == "green"
+  },
+  isBlueContrib(color){
+    return color == "blue"
+  },
+  isPurpleContrib(color){
+    return color == "purple"
+  },
+  isBlackContrib(color){
+    return color == "black"
+  },
+  isWhiteContrib(color){
+    return color == "white"
+  }
+});
+
+Template.api_custom.events({
   'submit form'(event, instance) {
     console.log("cameraUpload");
     console.log("userID on submission is", Meteor.userId())
@@ -194,7 +219,6 @@ Template.storyPage.helpers({
         // instance.submitting.set(true);
     console.log('event.target.: ', event.target);
     event.target.getElementsByClassName("overlay")[0].style.display = "initial";
-
 
     // TODO: Probably can generalize this logic
 
@@ -241,7 +265,6 @@ Template.storyPage.helpers({
         submissions[forms[i].id] = id;
       }
 
-
       var images = event.target.getElementsByClassName("fileinput")
       if(images.length== 0){
         Router.go('/apicustomresults/'+incidentId);
@@ -278,7 +301,6 @@ Template.storyPage.helpers({
             }
           });
 
-
     submissions[images[i].id] = imageFile._id;
     var submissionObject = {
       submitter: Meteor.userId(),
@@ -303,7 +325,6 @@ Template.storyPage.helpers({
     Meteor.users.update({_id: Meteor.userId()}, {
       $set: {"profile.lastParticipated": Date.parse(new Date()) }
     })
-
 
   },
   'click #participate-btn'(event, instance) {

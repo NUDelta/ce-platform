@@ -133,7 +133,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "orangeNeed",
         "contributionTemplate" : "orange",
-        "affordance": "chicago_sheridan and daytime",
+        "affordance": "grocery",
         "softStoppingCriteria": {"total": 1} //if finished but experience isn't then ignore
       }
     });

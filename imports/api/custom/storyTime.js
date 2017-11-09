@@ -76,7 +76,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clear",
+        "affordance": "nighttime",
         "softStoppingCriteria": {"total": 1}
       }
     });
