@@ -35,6 +35,7 @@ if (Meteor.isCordova) {
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function(location) {
       console.log('- Location: ', JSON.stringify(location));
+      serverLog.call({ message: "updating location" });
 
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
@@ -57,9 +58,12 @@ if (Meteor.isCordova) {
     // Fired whenever state changes from moving->stationary or vice-versa.
     bgGeo.on('motionchange', function(isMoving, location) {
       if (isMoving) {
+        serverLog.call({ message: "device just started moving!" });
           console.log('Device has just started MOVING', location);
           bgGeo.start()
       } else {
+        serverLog.call({ message: "device has stopped!" });
+
           console.log('Device has just STOPPED', location);
       }
     });
@@ -72,6 +76,7 @@ if (Meteor.isCordova) {
     });
 
     bgGeo.on('heartbeat', function(params) {
+      serverLog.call({ message: "hearbeat being called!" });
       bgGeo.getCurrentPosition(callbackFn, failureFn);
     });
 
@@ -94,7 +99,7 @@ if (Meteor.isCordova) {
             maxDaysToPersist: 1,
             // logLevel: 5, //
             preventSuspend: true,
-            heartbeatInterval: 300, 
+            heartbeatInterval: 60,
             // headers: {  // <-- Optional HTTP headers
             //     "X-FOO": "bar"
             // },

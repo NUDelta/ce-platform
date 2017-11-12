@@ -16,7 +16,6 @@ import { Users } from '../users/users.js';
 const locationCursor = Locations.find();
 const locationHandle = locationCursor.observeChanges({
   changed(id, fields){
-    console.log("what we are given", id, fields)
     //check if now that they've moved they...
     var location = Locations.findOne({_id: id});
     var uid = location.uid;
@@ -40,7 +39,6 @@ const locationHandle = locationCursor.observeChanges({
     //could randomize the order of experiences
     allExperiences.forEach((experience)=>{
       //maybe come up with a way to sort priority of incidents?
-      console.log(experience)
       if (attemptToAddUserToIncident(uid, experience.activeIncident)){
         return;
       }
@@ -53,7 +51,6 @@ function userIsAvailableToParticipate(user, location){
   var waitTimeAfterNotification = 12*60000 //first number is the number of minutes
   var waitTimeAfterParticipating = 12*60000
 
-  console.log(user)
   var lastParticipated = user.profile.lastParticipated;
   var lastNotified =location.lastNotification;
 
