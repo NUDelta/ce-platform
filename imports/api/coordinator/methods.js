@@ -37,10 +37,13 @@ const locationHandle = locationCursor.observeChanges({
 
     //can be added to a new experience
     var allExperiences = Experiences.find({activeIncident: {$exists: true}}).fetch()
+    //could randomize the order of experiences
     allExperiences.forEach((experience)=>{
       //maybe come up with a way to sort priority of incidents?
       console.log(experience)
-      attemptToAddUserToIncident(uid, experience.activeIncident)
+      if (attemptToAddUserToIncident(uid, experience.activeIncident)){
+        return;
+      }
     })
   }
 
@@ -96,7 +99,9 @@ function attemptToAddUserToIncident(uid, incidentId){
 
   if(minSituationNeed != null){
     addUserToSituationNeed(uid, incidentId, minSituationNeed)
+    return true;
   }
+  return false;
 }
 
 function addUserToSituationNeed(uid, incidentId, situationNeedName){

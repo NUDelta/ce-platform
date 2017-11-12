@@ -9,7 +9,6 @@ import { Locations } from '../../api/locations/locations.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
-import { updateLocation } from '../../api/locations/methods.js';
 import { insertPhoto } from '../../api/images/methods.js';
 import { log } from '../../api/logs.js';
 

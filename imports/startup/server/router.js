@@ -1,6 +1,6 @@
 import { Router } from 'meteor/iron:router';
 
-import { updateLocation } from '../../api/locations/methods.js';
+import { updateUserLocationAndAffordances } from '../../api/locations/methods.js';
 import { log } from '../../api/logs.js';
 
 
@@ -15,8 +15,8 @@ Router.route('/api/geolocation', { where: 'server' })
     const userId = this.request.body.userId;
     const location = this.request.body.location;
     const activity = this.request.body.activity;
-    
-    updateLocation.call({
+
+    updateUserLocationAndAffordances.call({
       uid: userId,
       lat: location.coords.latitude,
       lng: location.coords.longitude

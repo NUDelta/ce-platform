@@ -21,7 +21,7 @@ export const updateUserLocationAndAffordances = new ValidatedMethod({
         let res = JSON.parse(body);
         if(!Array.isArray(res)){
           log.warning("Locations/methods expected type array but did not receive an array, instead we are returning an empty array")
-          updateLocation(uid, lat, lng, []);
+          return updateLocation(uid, lat, lng, []);
         }
 
         return updateLocation(uid, lat, lng, res);

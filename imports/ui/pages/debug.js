@@ -8,7 +8,6 @@ import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { updateLocation } from '../../api/locations/methods.js';
 
 Template.debug.onCreated(function() {
   const users1 = Meteor.subscribe('all_users');

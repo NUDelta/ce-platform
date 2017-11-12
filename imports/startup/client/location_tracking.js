@@ -55,8 +55,13 @@ if (Meteor.isCordova) {
     // Listen to location events & errors.
     bgGeo.on('location', callbackFn, failureFn);
     // Fired whenever state changes from moving->stationary or vice-versa.
-    bgGeo.on('motionchange', function(isMoving) {
-      console.log('- onMotionChange: ', isMoving);
+    bgGeo.on('motionchange', function(isMoving, location) {
+      if (isMoving) {
+          console.log('Device has just started MOVING', location);
+          bgGeo.start()
+      } else {
+          console.log('Device has just STOPPED', location);
+      }
     });
 
     // Fired whenever an HTTP response is received from your server.
@@ -66,6 +71,9 @@ if (Meteor.isCordova) {
       console.log('http failure: ', response.status);
     });
 
+    bgGeo.on('heartbeat', function(params) {
+      bgGeo.getCurrentPosition(callbackFn, failureFn);
+    });
 
     bgGeo.configure({
             // Geolocation config
@@ -76,14 +84,17 @@ if (Meteor.isCordova) {
             activityRecognitionInterval: 10000,
             stopTimeout: 5,
             // Application config
-            debug: false,  // <-- Debug sounds & notifications.
+            debug: true,  // <-- Debug sounds & notifications.
             stopOnTerminate: false,
             startOnBoot: true,
             // HTTP / SQLite config
             //url: "http://your.server.com/locations",
             method: "POST",
             autoSync: true,
-            maxDaysToPersist: 3,
+            maxDaysToPersist: 1,
+            // logLevel: 5, //
+            preventSuspend: true,
+            heartbeatInterval: 300, 
             // headers: {  // <-- Optional HTTP headers
             //     "X-FOO": "bar"
             // },
@@ -102,3 +113,6 @@ if (Meteor.isCordova) {
   });
 } else {
 }
+
+
+// Meteor.setIn

@@ -37,19 +37,3 @@ export const Images = new FS.Collection('images', {
     }
   }
 });
-
-/*
-Expected metadata:
-  {
-    experienceId: experienceId,
-    caption: caption,
-    incidentId: incidentId,
-    lat: location.lat,
-    lng: location.lng,
-    location: place,
-    metadata: {
-      height: height,
-      width: width
-    }
-  }
- */
