@@ -52,7 +52,8 @@ function updateLocation( uid, lat, lng, givenAffordances) {
       uid: uid,
       lat: lat,
       lng: lng,
-      affordances: givenAffordances
+      affordances: givenAffordances,
+      lastNotification: null,
     }, (err, docs) => {
       if (err) {
         log.error("Locations/methods, can't add a new location", err);

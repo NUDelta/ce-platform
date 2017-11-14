@@ -10,6 +10,8 @@ import { Incidents } from '../incidents/incidents.js';
 import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
 import { NotificationLog } from '../cerebro/cerebro-core.js'
+import { AvailabilityLog } from './availabilitylog.js'
+
 import { Users } from '../users/users.js';
 
 
@@ -29,30 +31,46 @@ const locationHandle = locationCursor.observeChanges({
       })
     }
 
+    if("affordances" in fields){
+      AvailabilityLog.insert({
+        uid: uid,
+        lastParticipated: user.profile.lastParticipated,
+        lastNotified: location.lastNotification,
+        affordances: location.affordances,
+        lat: location.lat,
+        lng: location.lng,
+        now: Date.parse(new Date()),
+      });
+    }
+
     //check if user to available to participate right now
     if(!userIsAvailableToParticipate(user, location)){
+      console.log("user participated too recently")
       return;
     }
 
     //can be added to a new experience
     var allExperiences = Experiences.find({activeIncident: {$exists: true}}).fetch()
-    //could randomize the order of experiences
-    allExperiences.forEach((experience)=>{
-      //maybe come up with a way to sort priority of incidents?
-      if (attemptToAddUserToIncident(uid, experience.activeIncident)){
-        return;
-      }
-    })
-  }
 
+    //could randomize the order of experiences
+    var shuffledExperiences = _.shuffle(allExperiences)
+    for(var i in shuffledExperiences){
+      var experience = shuffledExperiences[i];
+      var result = attemptToAddUserToIncident(uid, experience.activeIncident);
+      if (result){
+        console.log("We found an experience for the user and now are stopping")
+        break;
+      }
+    }
+  }
 });
 
 function userIsAvailableToParticipate(user, location){
-  var waitTimeAfterNotification = 12*60000 //first number is the number of minutes
-  var waitTimeAfterParticipating = 12*60000
+  var waitTimeAfterNotification = 90*60000 //first number is the number of minutes
+  var waitTimeAfterParticipating = 120*60000//first number is the number of minutes
 
   var lastParticipated = user.profile.lastParticipated;
-  var lastNotified =location.lastNotification;
+  var lastNotified = location.lastNotification;
 
   var now = Date.parse(new Date());
 
@@ -84,7 +102,7 @@ function attemptToAddUserToIncident(uid, incidentId){
           removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
         }else{
           //we have a user already for this need, skip and see if the next one is open
-          return;
+          return false;
         }
       }
       var numberDone = Submissions.find({incidentId:incident._id, situationNeed:sn.name}).count()
