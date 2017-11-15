@@ -24,9 +24,10 @@ const locationHandle = locationCursor.observeChanges({
 
     //need to be removed from an experience they're currently in
     var user = Meteor.users.findOne({_id: uid})
-    var usersExperiences = user.activeExperiences
-    if(user.activeExperiences){
+    var usersExperiences = user.profile.activeExperiences
+    if(usersExperiences){
       usersExperiences.forEach((experienceId)=>{
+        console.log("removing user from experience")
         removeUserFromExperienceAfterTheyMoved(uid, experienceId)
       })
     }
@@ -199,6 +200,7 @@ function removeUserFromExperienceAfterTheyMoved(uid, experienceId) {
       var sn = incident.situationNeeds[i]
       if(_.contains(sn.notifiedUsers, uid)){
         if(! containsAffordance(userAffordances, sn.affordance)){
+          console.log("found the one to remove from!")
           removeUserFromExperience(uid, experienceId, incident._id, sn.name)
           //a user will only be in one situation need, so we can break
           break;

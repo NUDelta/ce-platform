@@ -36,6 +36,8 @@ if (Meteor.isCordova) {
     var callbackFn = function(location) {
       console.log('- Location: ', JSON.stringify(location));
       serverLog.call({ message: "updating location" });
+      serverLog.call({ message: Meteor.userId() });
+
 
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
@@ -77,6 +79,8 @@ if (Meteor.isCordova) {
 
     bgGeo.on('heartbeat', function(params) {
       serverLog.call({ message: "hearbeat being called!" });
+      serverLog.call({ message: Meteor.userId() });
+
       bgGeo.getCurrentPosition(callbackFn, failureFn);
     });
 
