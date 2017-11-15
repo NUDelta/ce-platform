@@ -103,7 +103,7 @@ if (Meteor.isCordova) {
             maxDaysToPersist: 1,
             // logLevel: 5, //
             preventSuspend: true,
-            heartbeatInterval: 900,
+            heartbeatInterval: 180,
             // headers: {  // <-- Optional HTTP headers
             //     "X-FOO": "bar"
             // },
