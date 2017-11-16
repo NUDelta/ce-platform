@@ -90,7 +90,7 @@ if (Meteor.isCordova) {
             distanceFilter: 10,
             stationaryRadius: 25,
             // Activity Recognition config
-            activityRecognitionInterval: 10000,
+            activityRecognitionInterval: 1000,
             stopTimeout: 5,
             // Application config
             debug: false,  // <-- Debug sounds & notifications.
@@ -104,6 +104,7 @@ if (Meteor.isCordova) {
             // logLevel: 5, //
             preventSuspend: true,
             heartbeatInterval: 180,
+            disableStopDetection: true,
             // headers: {  // <-- Optional HTTP headers
             //     "X-FOO": "bar"
             // },
