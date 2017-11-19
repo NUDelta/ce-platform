@@ -40,20 +40,10 @@ export const storyBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown",
-                        [ ["hug a tree", "parks"], ["sunbathe", "grass and daytime and clear"],
-                          ["bask in the sun", "clear and daytime"], ["study", "atrium or coffee"], ["surf the interweb", "hackerspace"],
-                          ["pick a leaf", "atrium or parks"], ["smell the flowers", "parks"], ["grocery shop", "grocery"], ["browse vodka selection", "beer_and_wine"],
-                          ["people watch out window", "coffee or hackerspace" ]
+                        [ ["spy on strangers", "coffee or newamerican or chinese"], ["chomp on food", "newamerican or chinese or italian or mexican or latin or dessert or hotpot or asianfusion or pizza"],
+                          ["enjoy a sunny day", "clear and daytime"], ["browse vodka selection", "grocery or beer_and_wine"], ["look at the nightsky", "nighttime"]
                         ]
                          ]}
-                        // [["bask in the sun", "clouds and daytime"], ["sunbathe", "grass and daytime"],
-                        // ["cloudwatch", "clouds and daytime and grass"], ["hug a tree", "trees"],
-                        // ["pick grass", "grass and daytime"], ["surf the interweb", "hackerspace"], ["pick a leaf", "parks"],
-                        // ["relax in a chair", "relax_in_a_chair"], ["smell flower", "parks"], ["lie on a bench", "parks"] ]
-                         //]}
-                         //, "daytime","pizza", "coffee", "chair", "train", "trees", "grass"]]}
-                        //["clouds", "computer", "castle", "chair", "waves", "trees", "grass", "coffee", "train", "sailboat"]] }
-
     };
 
     const experienceId = Meteor.call("api.createExperience", {
@@ -76,7 +66,7 @@ export const storyBook = new ValidatedMethod({
       need: {
         "name": "page0",
         "contributionTemplate" : "scene",
-        "affordance": "clear",
+        "affordance": "clear and daytime",
         "softStoppingCriteria": {"total": 1}
       }
     });
