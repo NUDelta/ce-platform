@@ -194,3 +194,42 @@ Template.americanFlagResults.helpers({
     return false;
   }
 });
+
+// FUNCTIONS FOR THANKSGIVING
+function getAffordance(submissions, affordance){
+  var filtered = submissions.filter(function(s){
+    return s.contributionTemplate == affordance;
+  });
+  var mapped = filtered.map(function(s){
+    var content = s.content;
+    return Object.values(content)[0]
+  });
+  return mapped;
+}
+
+Template.thanksgivingResults.helpers({
+  getAffordanceInfo(index, affordance){
+    var submissions = Template.instance().data.submissions;
+    var affordanceImages = getAffordance(submissions, affordance);
+    if(affordanceImages.length > index){
+      return {affordanceId: index, imageId: affordanceImages[index], hasImage: true, affordance: affordance}
+    }
+    return {affordanceId: index, imageId: null, hasImage: false, affordance: affordance};
+  },
+  noImage(affordance){
+    var submissions = Template.instance().data.submissions;
+    var affordanceImages = getAffordance(submissions, affordance);
+    if(affordanceImages.length > 0){
+      return false;
+    }
+    return true;
+  },
+  hasImageIndex(index, affordance){
+    var submissions = Template.instance().data.submissions;
+    var affordanceImages = getAffordance(submissions, affordance);
+    if(affordanceImages.length > index){
+      return true;
+    }
+    return false;
+  }
+});

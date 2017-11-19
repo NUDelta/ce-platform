@@ -6,17 +6,189 @@
 
 <!-- TEMPLATE FOR THANKGIVING RESULTS -->
 <template name="thanksgivingResults">
-  {{#each image in this.images}}
-    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
-      {{#if image.isUploaded}}
-        <!--small amount of lag before url is ready-->
-        <!--probably should add a loading animation here-->
-        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
-        {{image.details}}
+  <head>
+    <style>
+      .column-multiple {
+        width: 100%;
+        overflow: hidden;
+        padding: 5px 10px 5px 10px;
+      }
+      #photos img {
+        width: 100%;
+        height: auto;
+      }
+      .square {
+        float:left;
+        position: relative;
+        width: 100%;
+        margin:1% 2% 1%;
+      }
+      #photos {
+        line-height: 0;
+        -webkit-column-count: 5;
+        -webkit-column-gap: 0px;
+        -moz-column-count: 5;
+        -moz-column-gap: 0px;
+        column-count: 5;
+        column-gap:0px;
+      }
+      @media (max-width: 1000px) {
+        #photos {
+        -moz-column-count: 6;
+        -webkit-column-count: 6;
+        column-count: 6;
+        }
+      }
+      @media (max-width: 800px) {
+        #photos {
+        -moz-column-count: 3;
+        -webkit-column-count: 3;
+        column-count: 3;
+        }
+      }
+      @media (max-width: 500px) {
+        #photos {
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        column-count: 2;
+        }
+      }
+    </style>
+  </head>
+  <h4>This Thanksgiving break you and others are...</h4>
+  <div class="row" style="padding:5px">
+    <div class="column-multiple">
+      <p><b>Feasting</b></p>
+      {{#if (noImage "feast")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has feasted yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "feast")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "feast")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "feast")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "feast")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 4 "feast")}}
+          </div>
+        </section>
       {{/if}}
     </div>
-  {{/each}}
 
+    <div class="column-multiple">
+      <p><b>Grocery shopping</b></p>
+      {{#if (noImage "grocery")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has gone grocery shopping yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "grocery")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "grocery")}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+
+    <div class="column-multiple">
+      <p><b>Shopping</b></p>
+      {{#if (noImage "shopping")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has gone shopping yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "shopping")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "shopping")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "shopping")}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+
+    <div class="column-multiple">
+      <p><b>Chilling at the airport</b></p>
+      {{#if (noImage "airport")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has gone to the airport yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "airport")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "airport")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "airport")}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+
+    <div class="column-multiple">
+      <p><b>Hanging out at bars</b></p>
+      {{#if (noImage "bars")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has gone to bars yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "bars")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "bars")}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+
+    <div class="column-multiple">
+      <p><b>Getting coffee or boba</b></p>
+      {{#if (noImage "drinks")}}
+        <div class="waiting" style="padding-left:15px;">
+          <p>No one has gone to coffee or boba shops yet</p>
+        </div>
+      {{else}}
+        <section id="photos">
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "drinks")}}
+          </div>
+          <div class="square">
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "drinks")}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="affordance">
+  <div class="affordanceBlock" id="{{this.AffordanceId}}">
+    {{ > Template.dynamic template="displayThanksgivingImage" data=(getImage this.imageId)}}
+  </div>
 </template>
 
 <!-- TEMPLATE FOR RAINBOW COLLAGE -->

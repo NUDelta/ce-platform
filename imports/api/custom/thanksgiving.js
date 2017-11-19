@@ -69,8 +69,7 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "groceryNeed",
         "contributionTemplate": "grocery_shop",
-        // "affordance": "grocery or costco",
-        "affordance": "daytime",
+        "affordance": "grocery or costco",
         "softStoppingCriteria": 3
       }
     });
@@ -89,7 +88,7 @@ export const thanksgiving = new ValidatedMethod({
         "name": "barsNeed",
         "contributionTemplate": "bars",
         "affordance": "sportsbars or pubs or divebars or bars or beerbar or cocktailbars or irish_pubs",
-        "softStoppingCriteria": 3
+        "softStoppingCriteria": 2
       }
     });
     Meteor.call("api.addSituationNeeds", {
