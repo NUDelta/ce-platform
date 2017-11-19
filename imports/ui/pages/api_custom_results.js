@@ -194,24 +194,3 @@ Template.americanFlagResults.helpers({
     return false;
   }
 });
-//
-// Template.chairPoseResults.helpers({
-//   'click img'(event, instance) {
-//     const galleryElement = document.getElementById('gallery');
-//     const items = Images.find(instance.filter.get()).fetch()
-//       .filter(image => image.metadata) // in case of incomplete uploads
-//       .map((image) => {
-//         return {
-//           src: image.url(),
-//           w: image.metadata.width,
-//           h: image.metadata.height,
-//           title: `${ image.caption } from ${ image.location }`
-//         };
-//       });
-//     const options = {
-//       index: parseInt(event.target.getAttribute('data-index'))
-//     };
-//     const gallery = new PhotoSwipe(galleryElement, PhotoSwipeUI_Default, items, options);
-//     gallery.init();
-//   }
-// });

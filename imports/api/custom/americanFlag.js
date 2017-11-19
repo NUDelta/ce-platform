@@ -22,35 +22,27 @@ export const americanFlag = new ValidatedMethod({
       "name" : "red",
       "contributions" : {"red": "Image"},
     };
-    var whiteTemplate = {
-     "name" : "white",
-     "contributions" : {"white": "Image"},
-    };
-    var blueTemplate = {
-      "name" : "blue",
-      "contributions" : {"blue": "Image"},
+    var yellowTemplate = {
+      "name" : "yellow",
+      "contributions" : {"yellow": "Image"},
     };
     var greenTemplate = {
       "name" : "green",
       "contributions" : {"green": "Image"},
     };
-    var purpleTemplate = {
-      "name" : "purple",
-      "contributions" : {"purple": "Image"},
-    };
-    var orangeTemplate = {
-      "name" : "orange",
-      "contributions" : {"orange": "Image"},
+    var blueTemplate = {
+      "name" : "blue",
+      "contributions" : {"blue": "Image"},
     };
     var blackTemplate = {
       "name" : "black",
       "contributions" : {"black": "Image"},
     };
-    var yellowTemplate = {
-      "name" : "yellow",
-      "contributions" : {"yellow": "Image"},
+    var whiteTemplate = {
+     "name" : "white",
+     "contributions" : {"white": "Image"},
     };
-    console.log("gonna call to create an experience")
+    console.log("gonna call to create a rainbow experience")
     const experienceId = Meteor.call("api.createExperience", {
       name: "Create a rainbow",
       description: "Take a photo to help build a rainbow collage",
@@ -62,8 +54,6 @@ export const americanFlag = new ValidatedMethod({
                           {contributionTemplates: [blueTemplate]},
                           {contributionTemplates: [whiteTemplate]},
                           {contributionTemplates: [greenTemplate]},
-                          {contributionTemplates: [purpleTemplate]},
-                          {contributionTemplates: [orangeTemplate]},
                           {contributionTemplates: [blackTemplate]},
                           {contributionTemplates: [yellowTemplate]}],
       callbackPair: []
@@ -76,65 +66,11 @@ export const americanFlag = new ValidatedMethod({
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
-        "name": "whiteClouds",
-        "contributionTemplate" : "white",
-        "affordance": "clouds and daytime",
-        "softStoppingCriteria": 3 //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
           "name": "redNeed",
           "contributionTemplate" : "red",
-          "affordance": "grocery or hackerspace",
-          "softStoppingCriteria": 3 //if finished but experience isn't then ignore
+          "affordance": "womenscloth or menscloth or firedepartments",
+          "softStoppingCriteria": 4
         }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "blueNeed",
-        "contributionTemplate" : "blue",
-        "affordance": "clear and daytime",
-        "softStoppingCriteria": 1 //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "blackNightNeed",
-        "contributionTemplate" : "black",
-        "affordance": "nighttime",
-        "softStoppingCriteria": 3 //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "purpleNeed",
-        "contributionTemplate" : "purple",
-        "affordance": "collegeuniv",
-        "softStoppingCriteria": 1 //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "greenNeed",
-        "contributionTemplate" : "green",
-        "affordance": "park or grocery",
-        "softStoppingCriteria": 1 //if finished but experience isn't then ignore
-      }
-    });
-    Meteor.call("api.addSituationNeeds", {
-      incidentId: incidentId,
-      need: {
-        "name": "orangeNeed",
-        "contributionTemplate" : "orange",
-        "affordance": "chicago_sheridan and daytime",
-        "softStoppingCriteria": 1 //if finished but experience isn't then ignore
-      }
     });
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
@@ -142,7 +78,61 @@ export const americanFlag = new ValidatedMethod({
         "name": "yellowNeed",
         "contributionTemplate" : "yellow",
         "affordance": "grocery or hackerspace",
-        "softStoppingCriteria": 1 //if finished but experience isn't then ignore
+        "softStoppingCriteria": 4
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "greenNeed",
+        "contributionTemplate" : "green",
+        "affordance": "parks or grocery or skiresorts or womenscloth or menscloth",
+        "softStoppingCriteria": 4
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "blueNeed",
+        "contributionTemplate" : "blue",
+        "affordance": "clear and daytime",
+        "softStoppingCriteria": 2
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "blueNeed",
+        "contributionTemplate" : "blue",
+        "affordance": "womenscloth or menscloth or airports",
+        "softStoppingCriteria": 2
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "blackNightNeed",
+        "contributionTemplate" : "black",
+        "affordance": "coffee or casinos skiresorts",
+        "softStoppingCriteria": 4
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "whiteClouds",
+        "contributionTemplate" : "white",
+        "affordance": "clouds and daytime",
+        "softStoppingCriteria": 2
+      }
+    });
+    Meteor.call("api.addSituationNeeds", {
+      incidentId: incidentId,
+      need: {
+        "name": "whiteClouds",
+        "contributionTemplate" : "white",
+        "affordance": "newamerican or italian",
+        "softStoppingCriteria": 2
       }
     });
   }
