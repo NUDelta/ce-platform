@@ -14,5 +14,6 @@ import '../../api/submissions/methods.js';
 import '../../api/submissions/server/publications.js';
 import '../../api/custom/storyTime.js';
 import '../../api/custom/americanFlag.js';
+import '../../api/custom/thanksgiving.js';
 import '../../api/custom/chairPose.js';
 import '../../api/custom/testerStoryTime.js';

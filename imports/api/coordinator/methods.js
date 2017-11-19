@@ -18,6 +18,12 @@ import { Users } from '../users/users.js';
 const locationCursor = Locations.find();
 const locationHandle = locationCursor.observeChanges({
   changed(id, fields){
+    console.log("the location field changed", fields)
+    
+    if("lastNotification" in fields){
+      return;
+    }
+
     //check if now that they've moved they...
     var location = Locations.findOne({_id: id});
     var uid = location.uid;
@@ -27,7 +33,6 @@ const locationHandle = locationCursor.observeChanges({
     var usersExperiences = user.profile.activeExperiences
     if(usersExperiences){
       usersExperiences.forEach((experienceId)=>{
-        console.log("removing user from experience")
         removeUserFromExperienceAfterTheyMoved(uid, experienceId)
       })
     }
@@ -54,10 +59,12 @@ const locationHandle = locationCursor.observeChanges({
     var allExperiences = Experiences.find({activeIncident: {$exists: true}}).fetch()
 
     //could randomize the order of experiences
+    console.log("at the top of the for loops")
     var shuffledExperiences = _.shuffle(allExperiences)
     for(var i in shuffledExperiences){
       var experience = shuffledExperiences[i];
       var result = attemptToAddUserToIncident(uid, experience.activeIncident);
+      console.log("result", result)
       if (result){
         console.log("We found an experience for the user and now are stopping")
         break;
