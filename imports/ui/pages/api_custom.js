@@ -23,6 +23,27 @@ import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 
+// HELPER FUNCTIONS FOR THANKSGIVING
+Template.thanksgiving.helpers({
+  isGroceryContrib(affordance){
+    return affordance == "grocery_shop"
+  },
+  isShoppingContrib(affordance){
+    return affordance == "shopping"
+  },
+  isBarsContrib(affordance){
+    return affordance == "bars"
+  },
+  isFeastContrib(affordance){
+    return affordance == "feast"
+  },
+  isAirportContrib(affordance){
+    return affordance == "airport"
+  },
+  isDrinksContrib(affordance){
+    return affordance == "drinks"
+  }
+});
 
 // HELPER FUNCTIONS FOR STORYTIME
 Template.registerHelper('getPrevSentence', (subs) => {
@@ -45,7 +66,6 @@ Template.registerHelper('getPrevAffordance', (subs) => {
   return prevAff;
 });
 
-
 Template.registerHelper('passContributionName', (name) => {
   const instance = Template.instance();
   var contributions = instance.data.contributionTemplate.contributions;
@@ -53,9 +73,7 @@ Template.registerHelper('passContributionName', (name) => {
     return {key:name, options: contributions[name][1]}
   }
   return {key: name}
-
 });
-
 
 Template.storyPage.helpers({
   getPrevSentenceId(photoIndex){
@@ -77,7 +95,6 @@ Template.storyPage.helpers({
     return this.submissions.length+2 < 8;
   }
 });
-
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
@@ -109,8 +126,6 @@ Template.api_custom.helpers({
     });
     instance.state.set('situationNeedName', situationNeedName);
     instance.state.set('contributionTemplate', contributionTemplate);
-
-
     return {"incident": incident,
     "situationNeedName": situationNeedName,
     "contributionTemplate": contributionTemplate,
@@ -123,7 +138,6 @@ Template.api_custom.helpers({
 });
 
 Template.api_custom.onCreated(function() {
-
   const incidentId = Router.current().params._id;
   const imgHangle = this.subscribe('images', incidentId);
   const incHandle = this.subscribe('incidents.byId', incidentId);
@@ -132,9 +146,7 @@ Template.api_custom.onCreated(function() {
   //do we really need all of these?
   // const subHangle = this.subscribe('submissions', incidentId);
   // const textHangle = this.subscribe('textEntries.byIncident', incidentId);
-
   this.state = new ReactiveDict();
-
   this.autorun(() => {
     if (this.subscriptionsReady()) {
       console.log("subscriptions are now ready")
@@ -236,9 +248,7 @@ Template.api_custom.events({
       });
       //add the submitted image to the submissions content dictionary
       submissions[images[i].id] = imageFile._id;
-
     }//exit the for loop for images
-
     var submissionObject = {
       submitter: userId,
       experienceId: experienceId,
@@ -256,15 +266,11 @@ Template.api_custom.events({
         console.log("Error with submission, did not succeed", err);
       } else {
       }});
-
     },
-
     'click #participate-btn'(event, instance) {
       event.preventDefault();
-
       //makes it disappear so you don't see it while image is submitting
       document.getElementById('participate-btn').style.display = "none";
-
     },
     'click .fileinput, touchstart .glyphicon-camera'(event, target) {
       photoInput(event);

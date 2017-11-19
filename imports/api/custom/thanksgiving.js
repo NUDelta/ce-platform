@@ -43,14 +43,14 @@ export const thanksgiving = new ValidatedMethod({
       "contributions" : {"photo": "Image", "sentence": "String"},
     };
 
-    console.log("gonna call to create an experience")
+    console.log("gonna call to create a thanksgiving experience")
     const experienceId = Meteor.call("api.createExperience", {
-      name: "Thanksgiving",
-      description: "Take a photo to share your thanksgiving break",
+      name: "Thanksgiving Break",
+      description: "Take a photo to share what you're doing this Thanksgiving break",
       image: "https://publicholidays-us.akamaized.net/wp-content/uploads/2012/10/USA_Thanksgiving_1920_800.jpg",
       participateTemplate: "thanksgiving",
       resultsTemplate: "thanksgivingResults",
-      notificationText: "We found an experience for you! Help us create a thanksgiving break collage",
+      notificationText: "We found an experience for you! Help us create a Thanksgiving break collage 🦃",
       contributionGroups: [{contributionTemplates: [groceryShopTemplate]},
                           {contributionTemplates: [shoppingTemplate]},
                           {contributionTemplates: [barsTemplate]},
@@ -68,8 +68,9 @@ export const thanksgiving = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         "name": "groceryNeed",
-        "contributionTemplate" : "grocery_shop",
-        "affordance": "grocery or costco",
+        "contributionTemplate": "grocery_shop",
+        // "affordance": "grocery or costco",
+        "affordance": "daytime",
         "softStoppingCriteria": 3
       }
     });
@@ -77,7 +78,7 @@ export const thanksgiving = new ValidatedMethod({
       incidentId: incidentId,
       need: {
           "name": "shoppingNeed",
-          "contributionTemplate" : "shopping",
+          "contributionTemplate": "shopping",
           "affordance": "womenscloth or menscloth or deptstores",
           "softStoppingCriteria": 3
         }
@@ -86,8 +87,8 @@ export const thanksgiving = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         "name": "barsNeed",
-        "contributionTemplate" : "bars",
-        "affordance": "sportsbars or divebars or bars or beerbar or cocktailbars or irish_pubs",
+        "contributionTemplate": "bars",
+        "affordance": "sportsbars or pubs or divebars or bars or beerbar or cocktailbars or irish_pubs",
         "softStoppingCriteria": 3
       }
     });
@@ -95,7 +96,7 @@ export const thanksgiving = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         "name": "feastNeed",
-        "contributionTemplate" : "feast",
+        "contributionTemplate": "feast",
         "affordance": "chinese or hotpot or newamerican or japanese or sushi or desserts or seafood or asianfusion or pizza or italian or latin or mexican",
         "softStoppingCriteria": 5
       }
@@ -104,16 +105,16 @@ export const thanksgiving = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         "name": "airportNeed",
-        "contributionTemplate" : "airport",
+        "contributionTemplate": "airport",
         "affordance": "airports or airportlounges",
-        "softStoppingCriteria": 5
+        "softStoppingCriteria": 3
       }
     });
     Meteor.call("api.addSituationNeeds", {
       incidentId: incidentId,
       need: {
         "name": "drinksNeed",
-        "contributionTemplate" : "drinks",
+        "contributionTemplate": "drinks",
         "affordance": "coffee or bubbletea",
         "softStoppingCriteria": 3
       }
