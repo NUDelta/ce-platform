@@ -231,5 +231,10 @@ Template.thanksgivingResults.helpers({
       return true;
     }
     return false;
+  },
+  getMessage(photoIndex){
+    const instance = Template.instance()
+    var submission = instance.data.submissions[photoIndex-1];
+    return submission.content.sentence
   }
 });

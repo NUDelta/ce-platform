@@ -69,7 +69,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "groceryNeed",
         "contributionTemplate": "grocery_shop",
-        "affordance": "grocery or costco",
+        // "affordance": "grocery or costco",
+        "affordance": "nighttime",
         "softStoppingCriteria": 3
       }
     });
@@ -78,7 +79,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
           "name": "shoppingNeed",
           "contributionTemplate": "shopping",
-          "affordance": "womenscloth or menscloth or deptstores",
+          // "affordance": "womenscloth or menscloth or deptstores",
+          "affordance": "nighttime",
           "softStoppingCriteria": 3
         }
     });
@@ -105,7 +107,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "airportNeed",
         "contributionTemplate": "airport",
-        "affordance": "airports or airportlounges",
+        // "affordance": "airports or airportlounges",
+        "affordance": "nighttime",
         "softStoppingCriteria": 3
       }
     });
