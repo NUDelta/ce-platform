@@ -104,7 +104,7 @@ export const americanFlag = new ValidatedMethod({
       need: {
         "name": "blueNeed",
         "contributionTemplate" : "blue",
-        "affordance": "womenscloth or menscloth or airports",
+        "affordance": "womenscloth or menscloth or airports or lakes",
         "softStoppingCriteria": 2
       }
     });

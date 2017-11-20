@@ -69,9 +69,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "groceryNeed",
         "contributionTemplate": "grocery_shop",
-        // "affordance": "grocery or costco",
-        "affordance": "nighttime",
-        "softStoppingCriteria": 3
+        "affordance": "grocery or costco or intlgrocery",
+        "softStoppingCriteria": 4
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -79,9 +78,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
           "name": "shoppingNeed",
           "contributionTemplate": "shopping",
-          // "affordance": "womenscloth or menscloth or deptstores",
-          "affordance": "nighttime",
-          "softStoppingCriteria": 3
+          "affordance": "womenscloth or menscloth or deptstores or shoes",
+          "softStoppingCriteria": 4
         }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -89,8 +87,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "barsNeed",
         "contributionTemplate": "bars",
-        "affordance": "sportsbars or pubs or divebars or bars or beerbar or cocktailbars or irish_pubs",
-        "softStoppingCriteria": 2
+        "affordance": "sportsbars or pubs or divebars or breweries or bars or beerbar or cocktailbars or irish_pubs",
+        "softStoppingCriteria": 3
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -98,8 +96,8 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "feastNeed",
         "contributionTemplate": "feast",
-        "affordance": "chinese or hotpot or newamerican or japanese or sushi or desserts or seafood or asianfusion or pizza or italian or latin or mexican",
-        "softStoppingCriteria": 5
+        "affordance": "chinese or hotpot or vietnamese or breakfast_brunch or buffets or newamerican or korean or tradamerican or japanese or sushi or desserts or seafood or asianfusion or pizza or greek or steak or french or diners or italian or latin or mexican",
+        "softStoppingCriteria": 6
       }
     });
     Meteor.call("api.addSituationNeeds", {
@@ -107,8 +105,7 @@ export const thanksgiving = new ValidatedMethod({
       need: {
         "name": "airportNeed",
         "contributionTemplate": "airport",
-        // "affordance": "airports or airportlounges",
-        "affordance": "nighttime",
+        "affordance": "airports or airportlounges",
         "softStoppingCriteria": 3
       }
     });
@@ -118,7 +115,7 @@ export const thanksgiving = new ValidatedMethod({
         "name": "drinksNeed",
         "contributionTemplate": "drinks",
         "affordance": "coffee or bubbletea",
-        "softStoppingCriteria": 3
+        "softStoppingCriteria": 4
       }
     });
   }
