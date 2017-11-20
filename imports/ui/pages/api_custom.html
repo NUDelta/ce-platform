@@ -94,13 +94,13 @@
     <form class="col col-xs-12">
       <div class="row">
         <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate a story</h3>
-        <p>We're creating a collaborative story by asking people to contribute photos and text.</p>
+        <p>We're creating a collaborative story and we need you to submit photos and sentences.</p>
       </div>
 
       <h4 class="step">Step 1: Illustrate a sentence</h4>
       <div class="row step-content">
         <p>
-          Take a photo that describes the sentence below.
+          Take a photo that describes the sentence below and pretend you're Jimmy 😜
         </p>
         <div id="prevSentence" class="text-center">
           <em>"{{getPrevSentence this.submissions}}"</em>
@@ -112,7 +112,7 @@
         <h4 class="step">Step 2: Write the next sentence</h4>
         <div class="row step-content">
           <p>
-            Select a phrase and write the next sentence on page {{getPageNum}} of 8 in the story using that phrase.<br>
+            Select a phrase and write the next sentence using that phrase. This will be on page {{getPageNum}} of 7.<br>
           </p>
           <div id="dropdown">Phrase: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
         </div>
