@@ -106,7 +106,7 @@ function attemptToAddUserToIncident(uid, incidentId){
       //need has a user, but lets see if time to kick them out
       if(sn.notifiedUsers.length > 0){
         var timeSinceUserLastNotified = Date.parse(new Date()) - Locations.findOne({uid: sn.notifiedUsers[0]}).lastNotified
-        if(timeSinceUserLastNotified  > 15*60000){ //time in minutes since they were asked to participate in any experience
+        if(timeSinceUserLastNotified  > 30*60000){ //time in minutes since they were asked to participate in any experience
           removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
         }else{
           //we have a user already for this need, skip and see if the next one is open
