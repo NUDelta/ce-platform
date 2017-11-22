@@ -74,7 +74,7 @@ const locationHandle = locationCursor.observeChanges({
 });
 
 function userIsAvailableToParticipate(user, location){
-  var waitTimeAfterNotification = 90*60000 //first number is the number of minutes
+  var waitTimeAfterNotification = 60*60000 //first number is the number of minutes
   var waitTimeAfterParticipating = 120*60000//first number is the number of minutes
 
   var lastParticipated = user.profile.lastParticipated;
@@ -199,7 +199,7 @@ export const  removeUserAfterTheyParticipated = function(uid, experienceId){
 function removeUserFromExperienceAfterTheyMoved(uid, experienceId) {
   var userAffordances = Locations.findOne({uid: uid}).affordances
   var incident = Incidents.findOne({experienceId: experienceId});
-  var wait = 2*60*1000 //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
+  var wait = 5*60000 //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
 
   Meteor.setTimeout(function(){
     console.log("we're removing the userrzz")
