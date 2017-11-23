@@ -6,6 +6,7 @@ import { Schema } from '../schema.js';
 
 import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
+import { TextEntries } from '../text-entries/text-entries.js';
 
 import { Users } from '../users/users.js';
 import { _ } from 'meteor/underscore';

@@ -47,14 +47,10 @@ export const testerStoryBook = new ValidatedMethod({
       "contributions" : {"illustration": "Image",
                         "nextSentence": "String",
                         "nextAffordance": ["Dropdown",
-                        [ ["bask in sun", "clear and daytime"], ["study", "atrium or coffee or hackerspace"],
-                          ["cloud watch", "clouds and daytime"],
-                          ["buy food", "grocery"], ["watch the rain", "rain and daytime"],
-                          ["people watch", "atrium or coffee or hackerspace"],["work out", "gym"],
-                          ["pass by noisy construction", "chicago_sheridan and daytime"],
+                        [ ["spy on strangers", "coffee or pubs or newamerican or chinese"], ["chomp on food", "newamerican or chinese or italian or thai or mexican or latin or dessert or hotpot or asianfusion or pizza"],
+                          ["enjoy a sunny day", "clear and daytime"], ["browse vodka selection", "grocery or beer_and_wine"], ["look at the nightsky", "nighttime"]
                         ]
                          ]}
-
     };
 
     console.log("about to create an experience")
