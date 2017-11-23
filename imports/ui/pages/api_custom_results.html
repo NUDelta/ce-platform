@@ -58,12 +58,9 @@
   <h4>This Thanksgiving break you and others are...</h4>
   <div class="row" style="padding:5px">
     <div class="column-multiple">
-      <p><b>Feasting</b></p>
       {{#if (noImage "feast")}}
-        <div class="waiting" style="padding-left:15px;">
-          <p>No one has feasted yet</p>
-        </div>
       {{else}}
+        <p><b>Feasting</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "feast")}}
@@ -88,12 +85,12 @@
     </div>
 
     <div class="column-multiple">
-      <p><b>Grocery shopping</b></p>
       {{#if (noImage "grocery")}}
-        <div class="waiting" style="padding-left:15px;">
+        <!-- <div class="waiting" style="padding-left:15px;">
           <p>No one has gone grocery shopping yet</p>
-        </div>
+        </div> -->
       {{else}}
+        <p><b>Grocery shopping</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery")}}
@@ -112,12 +109,9 @@
     </div>
 
     <div class="column-multiple">
-      <p><b>Shopping</b></p>
       {{#if (noImage "shopping")}}
-        <div class="waiting" style="padding-left:15px;">
-          <p>No one has gone shopping yet</p>
-        </div>
       {{else}}
+        <p><b>Shopping</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "shopping")}}
@@ -136,12 +130,9 @@
     </div>
 
     <div class="column-multiple">
-      <p><b>Chilling at the airport</b></p>
       {{#if (noImage "airport")}}
-        <div class="waiting" style="padding-left:15px;">
-          <p>No one has gone to the airport yet</p>
-        </div>
       {{else}}
+        <p><b>Chilling at the airport</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "airport")}}
@@ -157,12 +148,9 @@
     </div>
 
     <div class="column-multiple">
-      <p><b>Hanging out at bars</b></p>
       {{#if (noImage "bars")}}
-        <div class="waiting" style="padding-left:15px;">
-          <p>No one has gone to bars yet</p>
-        </div>
       {{else}}
+        <p><b>Hanging out at bars</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "bars")}}
@@ -178,12 +166,9 @@
     </div>
 
     <div class="column-multiple">
-      <p><b>Getting coffee or boba</b></p>
       {{#if (noImage "drinks")}}
-        <div class="waiting" style="padding-left:15px;">
-          <p>No one has gone to coffee or boba shops yet</p>
-        </div>
       {{else}}
+        <p><b>Getting coffee or boba</b></p>
         <section id="photos">
           <div class="square">
             {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "drinks")}}
