@@ -51,7 +51,6 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: "storyPage",
       resultsTemplate: "storyPageResults",
       notificationText: "We found an experience for you! Help us illustrate and write a collaborative story 📖",
-      notificationStrategy: "notifyOneUser",
       contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {"total": 7}}],
       callbackPair:[{templateName: "scene", callback: createNewPageNeed.toString()}]
     });
