@@ -85,7 +85,7 @@
     </div>
 
     <div class="column-multiple">
-      {{#if (noImage "grocery")}}
+      {{#if (noImage "grocery_shop")}}
         <!-- <div class="waiting" style="padding-left:15px;">
           <p>No one has gone grocery shopping yet</p>
         </div> -->
@@ -93,16 +93,16 @@
         <p><b>Grocery shopping</b></p>
         <section id="photos">
           <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery")}}
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery_shop")}}
           </div>
           <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "grocery")}}
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "grocery_shop")}}
           </div>
           <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "grocery")}}
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "grocery_shop")}}
           </div>
           <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "grocery")}}
+            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "grocery_shop")}}
           </div>
         </section>
       {{/if}}

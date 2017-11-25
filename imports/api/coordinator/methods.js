@@ -73,8 +73,8 @@ const locationHandle = locationCursor.observeChanges({
 });
 
 function userIsAvailableToParticipate(user, location){
-  var waitTimeAfterNotification = 35*60000; //first number is the number of minutes
-  var waitTimeAfterParticipating = 100*60000;//first number is the number of minutes
+  var waitTimeAfterNotification = 30*60000; //first number is the number of minutes
+  var waitTimeAfterParticipating = 60*60000;//first number is the number of minutes
 
   var lastParticipated = user.profile.lastParticipated;
   var lastNotified = location.lastNotification;
