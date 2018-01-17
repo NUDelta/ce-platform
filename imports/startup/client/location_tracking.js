@@ -101,7 +101,7 @@ if (Meteor.isCordova) {
             method: "POST",
             autoSync: true,
             maxDaysToPersist: 1,
-            // logLevel: 5, //
+            logLevel: 5, //verbose
             preventSuspend: true,
             heartbeatInterval: 180,
             disableStopDetection: true,
