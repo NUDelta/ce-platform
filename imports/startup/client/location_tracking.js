@@ -93,7 +93,7 @@ if (Meteor.isCordova) {
             activityRecognitionInterval: 1000,
             stopTimeout: 5,
             // Application config
-            debug: false,  // <-- Debug sounds & notifications.
+            debug: true,  // <-- Debug sounds & notifications.
             stopOnTerminate: false,
             startOnBoot: true,
             // HTTP / SQLite config
