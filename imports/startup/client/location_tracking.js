@@ -78,7 +78,7 @@ if (Meteor.isCordova) {
     });
 
     bgGeo.on('heartbeat', function(params) {
-      serverLog.call({ message: "hearbeat being called!" });
+      serverLog.call({ message: "heartbeat being called!" });
       serverLog.call({ message: Meteor.userId() });
 
       bgGeo.getCurrentPosition(callbackFn, failureFn);
@@ -91,7 +91,6 @@ if (Meteor.isCordova) {
             stationaryRadius: 25,
             // Activity Recognition config
             activityRecognitionInterval: 1000,
-            stopTimeout: 5,
             // Application config
             debug: true,  // <-- Debug sounds & notifications.
             stopOnTerminate: false,
@@ -102,9 +101,9 @@ if (Meteor.isCordova) {
             autoSync: true,
             maxDaysToPersist: 1,
             logLevel: 5, //verbose
-            preventSuspend: true,
-            heartbeatInterval: 180,
-            disableStopDetection: true,
+            // preventSuspend: true,
+            // heartbeatInterval: 180,
+            pausesLocationUpdatesAutomatically: false,
             // headers: {  // <-- Optional HTTP headers
             //     "X-FOO": "bar"
             // },
