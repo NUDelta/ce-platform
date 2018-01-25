@@ -1,7 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { CerebroCore } from '../cerebro-core.js';
 
-// TODO: change these to validatedmethod calls?
+//////THIS CODE IS NO LONGER USED
+//////WARNING DEPRECATED CODE
+//////TODO: Delete this file
+
+
 CerebroClient = class CerebroClient extends CerebroCore {
   constructor() {
     super();

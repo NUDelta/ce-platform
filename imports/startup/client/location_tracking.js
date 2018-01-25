@@ -38,7 +38,6 @@ if (Meteor.isCordova) {
       serverLog.call({ message: "updating location" });
       serverLog.call({ message: Meteor.userId() });
 
-
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
           data: {
@@ -122,6 +121,3 @@ if (Meteor.isCordova) {
   });
 } else {
 }
-
-
-// Meteor.setIn

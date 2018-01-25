@@ -15,6 +15,12 @@ import { AvailabilityLog } from './availabilitylog.js'
 import { Users } from '../users/users.js';
 
 const locationCursor = Locations.find();
+
+
+/**
+ * a DB listener that responds when a user's location field changes, this includes
+ *    lat/long and the affordance array
+ */
 const locationHandle = locationCursor.observeChanges({
   changed(id, fields){
     console.log("the location field changed", fields)
@@ -72,6 +78,15 @@ const locationHandle = locationCursor.observeChanges({
   }
 });
 
+
+/**
+ * userIsAvailableToParticipate - checks if a user can participate or if they not
+ *    available to participate because they were notified too recently
+ *
+ * @param  {user document} user     user document
+ * @param  {location document} location location document for that user
+ * @return {bool}          true if a user can participate
+ */
 function userIsAvailableToParticipate(user, location){
   var waitTimeAfterNotification = 30*60000; //first number is the number of minutes
   var waitTimeAfterParticipating = 60*60000;//first number is the number of minutes

@@ -15,6 +15,19 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
   // experienceId could be experience OR incident id
+  //
+
+  /**
+   * _sendPush - sends a notification to the given user
+   *
+   * @param  {_id}    userIds      user _id
+   * @param  {string} subject      title for the notification
+   * @param  {string} text         body for the notification
+   * @param  {string} route        the base route the notification should link
+   *                                  to, currently our base route is "apiCustom", see imports/startup/client/router.js
+   * @param  {_id}    experienceId _id for the experience so it can be added to 
+   *                                  the end of the route so the notification links to the correct page
+   */
   notify({ userId, experienceId, subject, text, route }) {
 
     switch(CONFIG.NOTIFY_METHOD) {
@@ -28,6 +41,16 @@ CerebroServer = class CerebroServer extends CerebroCore {
   }
 
 
+  /**
+   * _sendPush - see above!
+   *
+   * @param  {type} userIds      description
+   * @param  {type} subject      description
+   * @param  {type} text         description
+   * @param  {type} route        description
+   * @param  {type} experienceId description
+   * @return {type}              description
+   */
   _sendPush(userIds, subject, text, route, experienceId) {
     const payload = {
       title: subject,
@@ -60,6 +83,12 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+  /**
+   * setActiveExperiences - adds an experience to a user's activeExperiences array
+   *
+   * @param  {_id} userId       user _id
+   * @param  {_id} experienceId user _id
+   */
   setActiveExperiences(userId, experienceId) {
     console.log('setActiveExperiences', userId, experienceId);
     Meteor.users.update({
@@ -71,6 +100,15 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+
+  /**
+   * removeAllOldActiveExperiences - THIS SHOULD NOT BE USED, THE FUNCTION
+   *    BELOW SHOULD BE USED INSTEAD! This just removes the given experience
+   *    from the activeExperiences array for all the given users
+   *
+   * @param  {array} userIds      array of _ids for users
+   * @param  {_id}   experienceId _id for an experience
+   */
   removeAllOldActiveExperiences(userIds, experienceId){
     console.log("removeAllOldActiveExperiences", userIds)
     Meteor.users.update({
@@ -84,6 +122,15 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+
+  /**
+   * removeActiveExperiences - remove an experience from the the
+   *    activeExperiences array for all given users, additionally removes all
+   *    given users from the incident's dictionary of situation needs for the experience
+   *
+   * @param  {array} userIds      array of _ids for users
+   * @param  {_id}   experienceId _id for an experience
+   */
   removeActiveExperiences(userIds, experienceId) {
     console.log("in remove active inc, ", userIds, experienceId )
     var incidentId = Experiences.findOne({_id:experienceId}).activeIncident;
@@ -125,6 +172,14 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+
+  /**
+   * addIncidents - adds an incident id to the array of past incidents for
+   *                the given user
+   *
+   * @param  {_id} userId     _id for a user
+   * @param  {_id} incidentId _id for an incident
+   */
   addIncidents(userId, incidentId) {
     Meteor.users.update({
       _id: userId
@@ -135,6 +190,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
+  //THIS FUNCTION IS NO LONGER USED
   query(userQuery) {
     let result = {};
     result.$or = this._queryTransform(userQuery.$any);
@@ -142,6 +198,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     return Meteor.users.find(_.pick(result, arr => arr.length > 0));
   }
 
+  //THIS FUNCTION IS NO LONGER USED
   _queryTransform(query) {
     let output = [];
     for(let attribute in query) {
@@ -155,6 +212,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     return output;
   }
 
+  //THIS FUNCTION IS NO LONGER USED
   getSubmissionLocation(latStr, lngStr) {
     const lat = parseFloat(latStr);
     const lng = parseFloat(lngStr);

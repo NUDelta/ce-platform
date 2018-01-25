@@ -10,6 +10,12 @@ import { Experiences } from '../../experiences/experiences.js';
 import { Schema } from '../../schema.js';
 import { log } from '../../logs.js';
 
+
+//////THIS CODE IS NO LONGER USED
+//////WARNING DEPRECATED CODE
+//////TODO: Delete this file
+
+
 export const startChain = new ValidatedMethod({
   name: 'cerebro.startChain',
   validate: new SimpleSchema({
