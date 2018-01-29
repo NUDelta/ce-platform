@@ -60,3 +60,4 @@ You'll notice that, to match what's recommended from Meteor 1.3, all of the meth
 - if notifications stop working, check that production is set to true in config.push.json
 - to see logs in terminal: heroku logs -t --app ce-platform
 - "quote exceed" might mean the quota of the whole db is exceeded, the limit for free is 500MB
+- make sure to update cordova packages! need to do so indvidually via `meteor add cordova:packagename@version`
