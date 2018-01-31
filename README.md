@@ -5,13 +5,14 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 - Install Meteor `curl https://install.meteor.com/ | sh`
 - Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`
 - Navigate to the project folder `cd ce-platform`
+- Run `meteor npm install` to install local dependencies.
 - Start the server `meteor`
 
 ## iOS Build
-- Deploy to Galaxy, Heroku, or start a local server
-- `meteor build <output_dir> --server=<server_location>`
-  - If running a local server, `<server_location>` is `<your_IP_address>:3000`
-- Open the xcodeproject that the build generates
+- Deploy application to Galaxy or Heroku, or start a local server.
+- Run `npm run build` to generate the xcode project.
+  - Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
+- Navigate to `../ce-platform-ios` and open the xcodeproject that the build generates. 
 - Build a `.ipa` file with DTR guides using the DeltaLab or Enterprise certificates
 - Distribute your `.ipa` to testers using [diawi.com](www.diawi.com)
 
