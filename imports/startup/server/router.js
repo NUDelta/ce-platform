@@ -27,9 +27,10 @@ Router.route('/api/geolocation', { where: 'server' })
       uid: userId,
       lat: location.coords.latitude,
       lng: location.coords.longitude,
-      time: Date.now() / 1000,
+      time: Date.parse(new Date()),
     }, (err, docs) => {
       if (err) {
+        console.log(err)
         log.error("Not adding to location log correctly", err);
       }
     });

@@ -2,8 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Schema } from '../schema.js';
 
-export const Location_log = new Mongo.Collection('Location_log');
-
+export const Location_log = new Mongo.Collection('location_log');
 
 Schema.Location_log = new SimpleSchema({
   uid: {
