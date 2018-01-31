@@ -33,7 +33,7 @@ if (Meteor.isCordova) {
     var bgGeo = window.BackgroundGeolocation;
 
     //This callback will be executed every time a geolocation is recorded in the background.
-    var callbackFn = (location) => {
+    var callbackFn = function(location) {
       console.log('- Location: ', JSON.stringify(location));
       serverLog.call({ message: "updating location" });
       serverLog.call({ message: Meteor.userId() });
@@ -50,19 +50,18 @@ if (Meteor.isCordova) {
       }
     };
 
-    var failureFn = (errorCode) => {
+    var failureFn = function(errorCode) {
        console.warn('- BackgroundGeoLocation error: ', errorCode);
-     };
+     }
 
     // Listen to location events & errors.
     bgGeo.on('location', callbackFn, failureFn);
-
     // Fired whenever state changes from moving->stationary or vice-versa.
-    bgGeo.on('motionchange', (isMoving, location) => {
+    bgGeo.on('motionchange', function(isMoving, location) {
       if (isMoving) {
         serverLog.call({ message: "device just started moving!" });
           console.log('Device has just started MOVING', location);
-          bgGeo.start();
+          bgGeo.start()
       } else {
         serverLog.call({ message: "device has stopped!" });
 
@@ -71,13 +70,13 @@ if (Meteor.isCordova) {
     });
 
     // Fired whenever an HTTP response is received from your server.
-    bgGeo.on('http', (response) => {
+    bgGeo.on('http', function(response) {
       console.log('http success: ', response.responseText);
-    }, (response) => {
+    }, function(response) {
       console.log('http failure: ', response.status);
     });
 
-    bgGeo.on('heartbeat', (params) => {
+    bgGeo.on('heartbeat', function(params) {
       serverLog.call({ message: "heartbeat being called!" });
       serverLog.call({ message: Meteor.userId() });
 
@@ -110,7 +109,7 @@ if (Meteor.isCordova) {
             // params: {   // <-- Optional HTTP params
             //     "auth_token": "maybe_your_server_authenticates_via_token_YES?"
             // }
-        }, (state) => {
+        }, function(state) {
             // This callback is executed when the plugin  is ready to use.
             console.log("BackgroundGeolocation ready: ", state);
             if (!state.enabled) {
@@ -118,6 +117,7 @@ if (Meteor.isCordova) {
             }
         });
 
+    bgGeo.start();
   });
 } else {
 }
