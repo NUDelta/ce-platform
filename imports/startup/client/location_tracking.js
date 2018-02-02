@@ -30,6 +30,7 @@ import { log, serverLog } from '../../api/logs.js';
 if (Meteor.isCordova) {
   Meteor.startup(() => {
     //Configure Plugin
+
     var bgGeo = window.BackgroundGeolocation;
 
     //This callback will be executed every time a geolocation is recorded in the background.
@@ -91,7 +92,7 @@ if (Meteor.isCordova) {
             // Activity Recognition config
             activityRecognitionInterval: 1000,
             // Application config
-            debug: true,  // <-- Debug sounds & notifications.
+            debug: false,  // <-- Debug sounds & notifications.
             stopOnTerminate: false,
             startOnBoot: true,
             // HTTP / SQLite config
