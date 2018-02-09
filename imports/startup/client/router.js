@@ -49,7 +49,7 @@ Router.route('/', {
 Router.route('/admin/debug', {
   name: 'admin.debug',
   template: 'debug',
-  // waitOn: function() { return Meteor.subscribe('experiences'); }
+  // waitOn: function() { return Meteor.subscribe('locations'); }
 });
 
 
