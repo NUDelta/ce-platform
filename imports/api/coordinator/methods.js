@@ -116,6 +116,12 @@ function attemptToAddUserToIncident(uid, incidentId){
   var minSituationNeed = null;
 
   incident.situationNeeds.forEach((sn)=>{
+    /** TODO(rlouie):
+     * 1) the situationNeed affordance is still a {String}, but should be written as "description#detectorId"
+     *    in all of the experience API creations in the custom folder
+     * 2) Function that transforms "description#detectorId" -> detectorId
+     * 3) replace with Meteor Methods call to detector.matchAffordancesWithDetector(uid, detectorId)
+     */
     if(sn.done === false && containsAffordance(userAffordances, sn.affordance)){
       //need has a user, but lets see if time to kick them out
       if(sn.notifiedUsers.length > 0){
