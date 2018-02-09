@@ -15,8 +15,7 @@ export const updateUserLocationAndAffordances = new ValidatedMethod({
 
     console.log("Info passed is", lat, lng)
     let request = require('request');
-    let url = 'http://0.0.0.0:5000/location_keyvalues/' + lat.toString() + '/' + lng.toString();
-    // let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat.toString() + '/' + lng.toString();
+    let url = 'http://affordanceaware.herokuapp.com/location_keyvalues/' + lat.toString() + '/' + lng.toString();
     request(url, Meteor.bindEnvironment(function (error, response, body) {
       if (!error && response.statusCode == 200) {
         let res = JSON.parse(body);
