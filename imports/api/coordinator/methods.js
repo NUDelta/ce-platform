@@ -8,7 +8,6 @@ import { Cerebro } from '../cerebro/server/cerebro-server.js';
 import { Experiences } from '../experiences/experiences.js';
 import { Incidents } from '../incidents/incidents.js';
 import { Locations } from '../locations/locations.js';
-import { Detectors } from '../detectors/detectors.js';
 import { Submissions } from '../submissions/submissions.js';
 import { NotificationLog } from '../cerebro/cerebro-core.js'
 import { AvailabilityLog } from './availabilitylog.js'
@@ -227,33 +226,6 @@ function removeUserFromExperienceAfterTheyMoved(uid, experienceId) {
       }
     };
   }, wait)
-}
-
-/**
- * Evaluates given the affordances of a user, if they match the definition given
- * by the detector. 
- * @param {Object} elementaryContext: key value pairs of (elementaryContext: values)
- * @param {[string]} varDecl - variable declarations of the affordance keys used
- * @param {[string]} rules - context rules as Javascript logical operations
- */
-function applyDetector(elementaryContext, varDecl, rules) {
-  var contextAsJS = keyvalues2vardecl(elementaryContext);
-  editedCode = varDecl.concat(contextAsJS)
-                      .concat(rules)
-                      .join('\n');
-  return eval(editedCode);
-}
-
-function keyvalues2vardecl(obj) {
-  // input: obj of key values
-  // returns: [String], each element of the form "var key = value;"
-  vardecl = [];
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      vardecl.push("var " + key + " = " + obj[key] + ";")      
-    }
-  }
-  return vardecl;
 }
 
 // 
