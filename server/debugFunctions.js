@@ -95,6 +95,16 @@ export const addLocations = Meteor.methods({
         lat: 42.042617, //beach
         lng: -87.671474
       });
+      Meteor.call("locations.updateUserLocationAndAffordances", {
+        uid: Accounts.findUserByEmail('k@gmail.com')._id,
+        lat: 33.7465889,  // trader joes, tustin, CA
+        lng: -117.8094046
+      });
+      Meteor.call("locations.updateUserLocationAndAffordances", {
+        uid: Accounts.findUserByEmail('l@gmail.com')._id,
+        lat: 42.03983,  // trader joes, evanston, IL
+        lng: -87.6808372
+      });
   }
 });
 

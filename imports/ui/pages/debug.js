@@ -97,6 +97,14 @@ const users = [
     email: 'j@gmail.com',
     password: 'password'
   },
+  {
+    email: 'k@gmail.com',
+    password: 'password'
+  },
+  {
+    email: 'l@gmail.com',
+    password: 'password'
+  },
 ]
 
 const experiences = [
