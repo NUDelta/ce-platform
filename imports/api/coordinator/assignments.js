@@ -3,7 +3,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Schema } from '../schema.js';
 
 Schema.Assignment = new SimpleSchema({
-    eid: {
+    iid: {
         type: String,
         regEx: SimpleSchema.RegEx.Id,
     },
