@@ -22,8 +22,8 @@ Schema.Location_log = new SimpleSchema({
         min: -180,
         max: 180
     },
-    time: {
-        type: Number,
+    timestamp: {
+        type: Date,
     },
     affordances: {
         type: [String]

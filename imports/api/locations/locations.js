@@ -37,8 +37,8 @@ Schema.Locations = new SimpleSchema({
         min: -180,
         max: 180
     },
-    time: {
-        type: Number,
+    timestamp: {
+        type: Date,
     },
 });
 

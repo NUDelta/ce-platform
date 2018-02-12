@@ -1,3 +1,4 @@
+import {Mongo} from "meteor/mongo";
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Schema } from '../schema.js';
 
@@ -5,20 +6,15 @@ Schema.UserNeedMapping = new SimpleSchema({
     needName:{
         type: String
     },
-    avUsers :{
+    users :{
         type: [String]
     },
 });
-export const UserNeedMapping = new ExperiencesCollection('userneedmapping');
+export const UserNeedMapping = new Mongo.Collection('userneedmapping');
 UserNeedMapping.attachSchema(Schema.UserNeedMapping);
 
 
-Schema.Experience = new SimpleSchema({
-    _id: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Id,
-        optional: true
-    },
+Schema.Availability = new SimpleSchema({
     eid: {
         type: String,
         regEx: SimpleSchema.RegEx.Id,
@@ -28,5 +24,5 @@ Schema.Experience = new SimpleSchema({
     },
 
 });
-export const Experiences = new ExperiencesCollection('experiences');
-Experiences.attachSchema(Schema.Experience);
+export const Availability = new Mongo.Collection('availability');
+Availability.attachSchema(Schema.Availability);

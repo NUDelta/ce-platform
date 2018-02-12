@@ -31,7 +31,7 @@ Schema.Callback = new SimpleSchema({
         type: String
     }
 });
-export const Callback = new ExperiencesCollection('callback');
+export const Callback = new Mongo.Collection('callback');
 Callback.attachSchema(Schema.Callback);
 
 Schema.SituationDescription = new SimpleSchema({
@@ -42,7 +42,7 @@ Schema.SituationDescription = new SimpleSchema({
         type: Number,
     }
 });
-export const SituationDescription = new ExperiencesCollection('situationdescription');
+export const SituationDescription = new Mongo.Collection('situationdescription');
 SituationDescription.attachSchema(Schema.SituationDescription);
 
 Schema.NeedType = new SimpleSchema({
@@ -56,9 +56,12 @@ Schema.NeedType = new SimpleSchema({
         type: Object,
         optional: true,
         //blackbox: true?
-    }
+    },
+    numberNeeded:{
+        type:Number,
+    },
 });
-export const NeedType = new ExperiencesCollection('needtype');
+export const NeedType = new Mongo.Collection('needtype');
 NeedType.attachSchema(Schema.NeedType);
 
 Schema.ContributionTypes = new SimpleSchema({
@@ -69,7 +72,7 @@ Schema.ContributionTypes = new SimpleSchema({
         type: [Schema.NeedType]
     }
 });
-export const ContributionTypes = new ExperiencesCollection('contributiontypes');
+export const ContributionTypes = new Mongo.Collection('contributiontypes');
 ContributionTypes.attachSchema(Schema.ContributionTypes);
 
 
@@ -81,7 +84,7 @@ Schema.ParticipateTemplate = new SimpleSchema({
         type: Object
     }
 });
-export const ParticipateTemplate = new ExperiencesCollection('participatetemplate');
+export const ParticipateTemplate = new Mongo.Collection('participatetemplate');
 ParticipateTemplate.attachSchema(Schema.ParticipateTemplate);
 
 
