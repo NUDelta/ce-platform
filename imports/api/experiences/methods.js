@@ -5,6 +5,18 @@ import { _ } from 'meteor/underscore';
 import { Experiences } from './experiences.js';
 import { Schema } from '../schema.js';
 
+
+//loops through all unmet needs and returns all needs a user matches with
+function findMatchesForUser(uid) -> (uid, {eid:need, eid:need}){
+
+}
+
+//checks if a user matches a need using AA/Affinder to check what affordances a user has and determine if it matches the need 2a,f
+function doesUserMatchNeed(uid, eid, needName){
+    return bool;
+}
+
+
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({
   name: 'experiences.updateUser',
@@ -75,7 +87,7 @@ export const createExperience = new ValidatedMethod({
       type: String
     },
     contributionGroups: {
-      type: [Schema.ContributionGroup]
+      type: [Schema.ContributionTypes]
     },
     callbackPair: {
       type: [Schema.CallbackPair]

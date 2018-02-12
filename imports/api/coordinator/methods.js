@@ -16,6 +16,27 @@ import { Users } from '../users/users.js';
 
 const locationCursor = Locations.find();
 
+//updates the database with the avaiablilty of the new user 2
+function updateAvalibility(user, {eid:need,eid:need}){
+
+}
+
+//sends notifications to the users, adds to the user's active experience list, marks in assignment DB 2b
+function addUsersToExperience({eid: {need: [uid, uid], need:[uid]}}){
+
+}
+
+
+//if a user's location changed and they no longer match an experience they were assigned to, OR they're taking too long and someone else is waiting to be assigned. Removes active experience from user 2c
+function removeUserFromAssigned(uid, eid, needName){
+
+}
+
+//check if an experience need can run e.g. it has the required number of people. This may call other functions that, for example, check for relationship, colocated, etc.
+function checkIfThreshold(){
+  return {eid: {need: [uid, uid], need:[uid]}}
+}
+
 
 /**
  * a DB listener that responds when a user's location field changes, this includes

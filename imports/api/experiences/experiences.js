@@ -4,120 +4,129 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Incidents } from '../incidents/incidents.js';
 import { Schema } from '../schema.js';
-import { Locations } from '../locations/locations.js';
 
 // TODO: cascade delete incidents and remove from active, etc.
 class ExperiencesCollection extends Mongo.Collection {
-  remove(selector, callback) {
-    Experiences.find(selector).forEach((experience) => {
-      Incidents.remove({ experience: experience._id });
-      Meteor.users.update({}, {
-        $pull: {
-          'profile.activeExperiences': experience._id
-        }
-      });
-    });
-    return super.remove(selector, callback);
-  }
+    remove(selector, callback) {
+        Experiences.find(selector).forEach((experience) => {
+            Incidents.remove({ experience: experience._id });
+            Meteor.users.update({}, {
+                $pull: {
+                    'profile.activeExperiences': experience._id
+                }
+            });
+        });
+        return super.remove(selector, callback);
+    }
 }
 
-Schema.StoppingCriteria = new SimpleSchema({
-  total:{
-    type: Number,
-    optional: true
-  },
-  time: {
-    type: String,
-    optional: true
-  }
+Schema.Callback = new SimpleSchema({
+    templateName:{
+        type: String
+    },
+    trigger: {
+        type: String
+    },
+    function:{
+        type: String
+    }
 });
+export const Callback = new ExperiencesCollection('callback');
+Callback.attachSchema(Schema.Callback);
 
-export const StoppingCriteria = new ExperiencesCollection('stoppingCriteria');
-StoppingCriteria.attachSchema(Schema.StoppingCriteria);
-
-
-Schema.SituationalNeedTemplate = new SimpleSchema({
-  name:{
-    type: String
-  },
-  contributions:{
-    type: Object, //{String: String}
-    blackbox: true
-  }
+Schema.SituationDescription = new SimpleSchema({
+    description:{
+        type: String
+    },
+    number:{
+        type: Number,
+    }
 });
+export const SituationDescription = new ExperiencesCollection('situationdescription');
+SituationDescription.attachSchema(Schema.SituationDescription);
 
-export const SituationalNeedTemplate = new ExperiencesCollection('situationalneedtemplate');
-SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
-
-Schema.ContributionGroup = new SimpleSchema({
-  contributionTemplates:{
-    type: [Schema.SituationalNeedTemplate],
-  }
+Schema.NeedType = new SimpleSchema({
+    needName:{
+        type: String
+    },
+    situation:{
+        type: Schema.SituationDescription
+    },
+    toPass:{
+        type: Object,
+        optional: true,
+        //blackbox: true?
+    }
 });
+export const NeedType = new ExperiencesCollection('needtype');
+NeedType.attachSchema(Schema.NeedType);
 
-export const ContributionGroup = new ExperiencesCollection('contributiongroup');
-ContributionGroup.attachSchema(Schema.ContributionGroup);
-
-Schema.CallbackPair = new SimpleSchema({
-  templateName:{
-    type: String
-  },
-  callback: {
-    type: String
-  }
+Schema.ContributionTypes = new SimpleSchema({
+    templateName:{
+        type: String
+    },
+    needs: {
+        type: [Schema.NeedType]
+    }
 });
+export const ContributionTypes = new ExperiencesCollection('contributiontypes');
+ContributionTypes.attachSchema(Schema.ContributionTypes);
 
-export const CallbackPair = new ExperiencesCollection('callbackpair');
-CallbackPair.attachSchema(Schema.CallbackPair);
+
+Schema.ParticipateTemplate = new SimpleSchema({
+    templateName:{
+        type: String
+    },
+    submissionData:{
+        type: Object
+    }
+});
+export const ParticipateTemplate = new ExperiencesCollection('participatetemplate');
+ParticipateTemplate.attachSchema(Schema.ParticipateTemplate);
+
+
 
 export const Experiences = new ExperiencesCollection('experiences');
-
 Schema.Experience = new SimpleSchema({
-  _id: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true
-  },
-  name: {
-    type: String,
-    label: 'Experience name',
-  },
-  description: {
-    type: String,
-    label: 'Experience description',
-    optional: true
-  },
-  image: {
-    type: String,
-    label: 'Experience image url',
-    optional: true
-  },
-  activeIncident: {
-    type: String,
-    label: 'The current incident for this experience',
-    optional: true
-  },
-  participateTemplate: {
-    type: String,
-  },
-  resultsTemplate: {
-    type: String,
-  },
-  contributionGroups: {
-    type: [Schema.ContributionGroup], //Array, //[[Schema.SituationalNeed]],
-  },
-  notificationText : {
-    type: String,
-    optional: true
-  },
-  notificationStrategy: {
-    type: String,
-    optional: true
-  },
-  callbackPair:  {
-    type:[Schema.CallbackPair],
-    optional: true
-  },
-});
+    _id: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        optional: true
+    },
+    name: {
+        type: String,
+        label: 'Experience name',
+    },
+    participateTemplate: {
+        type: [Schema.ParticipateTemplate],
+    },
+    resultsTemplate: {
+        type: String,
+    },
+    contributionTypes: {
+        type: [Schema.ContributionTypes],
+    },
+    callbacks: {
+        type: [Schema.Callback],
+        optional: true
+    },
+    description: {
+        type: String,
+        label: 'Experience description',
+        optional: true
+    },
+    notificationText: {
+        type: String,
+        optional: true
+    },
+    image: {
+        type: String,
+        label: 'Experience image url',
+        optional: true
+    },
 
+});
 Experiences.attachSchema(Schema.Experience);
+
+
+

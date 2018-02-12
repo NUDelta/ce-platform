@@ -6,32 +6,20 @@ import { log } from '../logs.js';
 import { Locations } from './locations.js';
 import { Schema } from '../schema.js';
 
-//updates location and affordances
-//called by location-tracking package through server/router
-export const updateUserLocationAndAffordances = new ValidatedMethod({
-  name: 'locations.updateUserLocationAndAffordances',
-  validate: Schema.Locations.validator(),
-  run({ uid, lat, lng }) {
 
-    console.log("Info passed is", lat, lng)
-    let request = require('request');
-    let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat.toString() + '/' + lng.toString();
-    request(url, Meteor.bindEnvironment(function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        let res = JSON.parse(body);
-        if(!Array.isArray(res)){
-          log.warning("Locations/methods expected type array but did not receive an array, instead we are returning an empty array")
-          return updateLocation(uid, lat, lng, []);
-        }
+//after a user's location changes, calls findMatchesFunction in User::Experience Matcher
+function sendToMatcher(uid, lat, lon) {
 
-        return updateLocation(uid, lat, lng, res);
-      }else{
-        log.warning("Locations/methods, can't retrieve affordances, instead we are returning an empty array")
-        updateLocation(uid, lat, lng, []);
-      }
-    }));
-  }
-});
+}
+
+//checks if a user can participate or if they've participated too recently because we don't want to spam them
+function userIsAvailableToParticipate(uid){
+
+  return bool;
+
+}
+
+
 
 //updates the location for a user
 function updateLocation( uid, lat, lng, givenAffordances) {
