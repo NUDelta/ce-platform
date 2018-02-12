@@ -7,29 +7,47 @@ import { Schema } from '../schema.js';
 import {getUnfinishedNeeds} from "../submissions/methods";
 
 
-//loops through all unmet needs and returns all needs a user matches with
-export const findMatchesForUser = function(uid){
-    var matches = {};
-    var unfinishedNeeds = getUnfinishedNeeds();
+//
+/**
+ * Loops through all unmet needs and returns all needs a user matches with.
+ *
+ * @param uid {string} uid of user to find matches for
+ * @returns {{}}
+ */
+export const findMatchesForUser = function(uid) {
+    let matches = {};
+    let unfinishedNeeds = getUnfinishedNeeds();
 
-    unfinishedNeeds.forEach((need) =>{
-        var matchP = doesUserMatchNeed(uid, need.eid, need.name);
-        if(matchP){
-            if(matches[eid]){
-                matches[eid] = matches[eid] + need.name;
-            }else{
-                matches[eid] = [need.name]
+    // unfinishedNeeds = {iid : [needName] }
+    _.forEach(unfinishedNeeds, (needNames, iid) => {
+        _.forEach(needNames, (needName) => {
+            let doesMatchPredicate = doesUserMatchNeed(uid, iid, needName);
+
+            if (doesMatchPredicate) {
+                if (matches[iid]) {
+                    matches[iid] = matches[iid] + needName;
+                } else {
+                    matches[iid] = [needName];
+                }
             }
-        }
+        });
     });
 
     return matches;
+};
 
-}
-
-//checks if a user matches a need using AA/Affinder to check what affordances a user has and determine if it matches the need 2a,f
-function doesUserMatchNeed(uid, eid, needName){
-    return bool;
+// TODO: ryan do this plz. we'll handle the database conversion from needName --> siutationId
+/**
+ * Checks if a user matches a need.
+ * Match determined using AA/Affinder to check what affordances a user has and determine if it matches the need.
+ *
+ * @param uid {string} uid of user
+ * @param iid {string} iid of incident to determine matching
+ * @param needName {string} name of need to determine match for
+ * @returns {boolean} whether user matches need queried for
+ */
+function doesUserMatchNeed(uid, iid, needName) {
+    return false;
 }
 
 
