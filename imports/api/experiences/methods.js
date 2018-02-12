@@ -7,7 +7,8 @@ import { Schema } from '../schema.js';
 
 
 //loops through all unmet needs and returns all needs a user matches with
-function findMatchesForUser(uid) -> (uid, {eid:need, eid:need}){
+export const findMatchesForUser = function(uid){
+    return {eid:need, eid:need};
 
 }
 

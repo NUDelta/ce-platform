@@ -16,6 +16,14 @@ import { Users } from '../users/users.js';
 
 const locationCursor = Locations.find();
 
+
+export const runCoordinatorAfterUserLocationChange = function(uid, availabilityDictionary){
+    var updatedExperiencesAndNeeds = updateAvalibility(uid, availabilityDictionary);
+    updateAssigned(uid);
+    var experiencesWithUsersToRun = checkIfThreshold(updatedExperiencesAndNeeds);
+    addUsersToExperience(experiencesWithUsersToRun)
+}
+
 //updates the database with the avaiablilty of the new user 2
 function updateAvalibility(user, {eid:need,eid:need}){
 
@@ -28,12 +36,15 @@ function addUsersToExperience({eid: {need: [uid, uid], need:[uid]}}){
 
 
 //if a user's location changed and they no longer match an experience they were assigned to, OR they're taking too long and someone else is waiting to be assigned. Removes active experience from user 2c
-function removeUserFromAssigned(uid, eid, needName){
+function updateAssigned(uid){
 
 }
 
+function removeUserFromAssigned(uid, eid, needName){
+
+}
 //check if an experience need can run e.g. it has the required number of people. This may call other functions that, for example, check for relationship, colocated, etc.
-function checkIfThreshold(){
+function checkIfThreshold(updatedExperiencesAndNeeds){
   return {eid: {need: [uid, uid], need:[uid]}}
 }
 
