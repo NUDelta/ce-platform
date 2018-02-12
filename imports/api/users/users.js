@@ -24,9 +24,9 @@ Schema.Profile = new SimpleSchema({
         label: 'Subscribed experiences',
         regEx: SimpleSchema.RegEx.Id
     },
-    activeExperiences: {
+    activeIncidents: {
         type: [String],
-        label: 'Active experiences',
+        label: 'Active incidents',
     },
     pastIncidents: {
         type: [String],

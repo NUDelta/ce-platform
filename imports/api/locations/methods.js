@@ -2,11 +2,12 @@ import {ValidatedMethod} from 'meteor/mdg:validated-method';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {log} from '../logs.js';
 import {Locations} from './locations.js';
+
 import { findMatchesForUser } from 'imports/api/experiences/methods.js'
 import { runCoordinatorAfterUserLocationChange } from 'imports/api/coordinator/methods.js'
 
 function onLocationUpdate(uid, lat, lng){
-    //update location in the db
+    updateLocationInDb(uid, lat, lng);
     sendToMatcher(uid, lat, lng)
 }
 //after a user's location changes, calls findMatchesFunction in User::Experience Matcher
@@ -17,6 +18,7 @@ function sendToMatcher(uid, lat, lng) {
 }
 
 //checks if a user can participate or if they've participated too recently because we don't want to spam them
+//should have a test flag option here
 function userIsAvailableToParticipate(uid) {
 
     return bool;
@@ -25,15 +27,14 @@ function userIsAvailableToParticipate(uid) {
 
 
 //updates the location for a user
-function updateLocation(uid, lat, lng, givenAffordances) {
+function updateLocationInDb(uid, lat, lng) {
     const entry = Locations.findOne({uid: uid});
-    console.log("our affs are", givenAffordances)
     if (entry) {
         Locations.update(entry._id, {
             $set: {
                 lat: lat,
                 lng: lng,
-                affordances: givenAffordances
+                timestamp: Date.parse(new Date()),
             }
         }, (err, docs) => {
             if (err) {
@@ -45,8 +46,7 @@ function updateLocation(uid, lat, lng, givenAffordances) {
             uid: uid,
             lat: lat,
             lng: lng,
-            affordances: givenAffordances,
-            lastNotification: null,
+            timestamp: Date.parse(new Date()),
         }, (err, docs) => {
             if (err) {
                 log.error("Locations/methods, can't add a new location", err);

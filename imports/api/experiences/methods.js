@@ -4,11 +4,26 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 import { Experiences } from './experiences.js';
 import { Schema } from '../schema.js';
+import {getUnfinishedNeeds} from "../submissions/methods";
 
 
 //loops through all unmet needs and returns all needs a user matches with
 export const findMatchesForUser = function(uid){
-    return {eid:need, eid:need};
+    var matches = {};
+    var unfinishedNeeds = getUnfinishedNeeds();
+
+    unfinishedNeeds.forEach((need) =>{
+        var matchP = doesUserMatchNeed(uid, need.eid, need.name);
+        if(matchP){
+            if(matches[eid]){
+                matches[eid] = matches[eid] + need.name;
+            }else{
+                matches[eid] = [need.name]
+            }
+        }
+    });
+
+    return matches;
 
 }
 

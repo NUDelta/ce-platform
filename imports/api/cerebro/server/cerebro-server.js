@@ -14,9 +14,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
     super();
   }
 
-  // experienceId could be experience OR incident id
-  //
-
   /**
    * _sendPush - sends a notification to the given user
    *
@@ -28,11 +25,11 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {_id}    experienceId _id for the experience so it can be added to 
    *                                  the end of the route so the notification links to the correct page
    */
-  notify({ userId, experienceId, subject, text, route }) {
-
+  notify(uids, iid, subject, text, route) {
+    //i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need" so the notification links directly to the experience
     switch(CONFIG.NOTIFY_METHOD) {
       case CerebroCore.PUSH:
-          this._sendPush([userId], subject, text, route, experienceId);
+          this._sendPush(uids, subject, text, route, iid);
         break;
       default:
         log.warn('Invalid notification method set');
@@ -51,11 +48,11 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {type} experienceId description
    * @return {type}              description
    */
-  _sendPush(userIds, subject, text, route, experienceId) {
+  _sendPush(uids, subject, text, route, iid) {
     const payload = {
       title: subject,
       text: text,
-      experienceId: experienceId,
+      iid: iid,
       route: route
     };
 
@@ -67,7 +64,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       log.info(`Debug push enabled. Sending to debug set.`);
       pushUsers = _.intersection(userIds, CONFIG.DEBUG_USERS);
     } else {
-      pushUsers = userIds
+      pushUsers = uids
     }
 
     Push.send({
@@ -79,23 +76,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
       payload: payload,
       query: {
         userId: { $in: pushUsers }
-      }
-    });
-  }
-
-  /**
-   * setActiveExperiences - adds an experience to a user's activeExperiences array
-   *
-   * @param  {_id} userId       user _id
-   * @param  {_id} experienceId user _id
-   */
-  setActiveExperiences(userId, experienceId) {
-    console.log('setActiveExperiences', userId, experienceId);
-    Meteor.users.update({
-      _id: userId
-    }, {
-      $addToSet: {
-        'profile.activeExperiences': experienceId
       }
     });
   }
@@ -190,52 +170,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
   }
 
-  //THIS FUNCTION IS NO LONGER USED
-  query(userQuery) {
-    let result = {};
-    result.$or = this._queryTransform(userQuery.$any);
-    result.$and = this._queryTransform(userQuery.$and);
-    return Meteor.users.find(_.pick(result, arr => arr.length > 0));
-  }
 
-  //THIS FUNCTION IS NO LONGER USED
-  _queryTransform(query) {
-    let output = [];
-    for(let attribute in query) {
-      let pair = {},
-        attributeVal = query[attribute],
-        key = `profile.qualifications.${attribute}`,
-        value = (attributeVal.constructor === Array) ? { $in: attributeVal } : attributeVal;
-      pair[key] = value;
-      output.push(pair);
-    }
-    return output;
-  }
-
-  //THIS FUNCTION IS NO LONGER USED
-  getSubmissionLocation(latStr, lngStr) {
-    const lat = parseFloat(latStr);
-    const lng = parseFloat(lngStr);
-
-    if (lat <= 42.062833 && lat > 42.055657 && lng >= -87.679559 && lng < -87.669491) {
-      return "NU North Campus";
-    } else if (lat <= 42.055657 && lat > 42.048593 && lng >= -87.679559 && lng < -87.669491) {
-      return "NU South Campus";
-    } else if (lat <= 42.078932 && lat > 42.019184 && lng >= -87.711036 && lng < -87.669491) {
-      return "Off-campus Evanston";
-    } else if (lat <= 42.1796 && lat > 41.683914 && lng >= -87.940299 && lng < -87.669491) {
-      return "Greater Chicago, IL Area";
-    } else if (lat <= 43.153463 && lat > 42.696882 && lng >= -79.038439 && lng < -78.656952) {
-      return "Greater Buffalo, NY Area";
-    } else if (lat <= 40.882255 && lat > 40.540665 && lng >= -74.203905 && lng < -73.756606) {
-      return "Greater New York, NY Area";
-    } else if (lat <= 38.721315 && lat > 38.564493 && lng >= -90.370798 && lng < -90.152168) {
-      return "Greater St. Louis, MO Area";
-    } else {
-      return "(" + lat + ", " + lng + ")";
-    }
-  }
-};
 
 export const Cerebro = new CerebroServer();
 

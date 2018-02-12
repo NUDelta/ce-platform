@@ -16,7 +16,7 @@ import { Users } from '../users/users.js';
 import { removeUserAfterTheyParticipated } from  '../coordinator/methods.js'
 
 //gets all unique unfilled entries from the submission DB
-function getUnfinishedNeeds(){
+export const getUnfinishedNeeds = function(){
     return {eid:need, eid:need}
 }
 

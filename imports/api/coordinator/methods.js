@@ -13,30 +13,47 @@ import { NotificationLog } from '../cerebro/cerebro-core.js'
 import { AvailabilityLog } from './availabilitylog.js'
 
 import { Users } from '../users/users.js';
+import {addActiveIncidentToUser} from "../users/methods";
 
 const locationCursor = Locations.find();
 
-
+//availabilityDictionary = {eid:[need, need], eid:need}
 export const runCoordinatorAfterUserLocationChange = function(uid, availabilityDictionary){
     var updatedExperiencesAndNeeds = updateAvalibility(uid, availabilityDictionary);
-    updateAssigned(uid);
-    var experiencesWithUsersToRun = checkIfThreshold(updatedExperiencesAndNeeds);
-    addUsersToExperience(experiencesWithUsersToRun)
+    updateAssignedAfterUserLocationChange(uid);
+    var incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+    addUsersToIncidents(incidentsWithUsersToRun)
 }
 
+//availabilityDictionary = {eid:[need, need], eid:need}
 //updates the database with the avaiablilty of the new user 2
-function updateAvalibility(user, {eid:need,eid:need}){
+function updateAvalibility(user, {eid:[need, need], eid:need}){
 
 }
 
 //sends notifications to the users, adds to the user's active experience list, marks in assignment DB 2b
-function addUsersToExperience({eid: {need: [uid, uid], need:[uid]}}){
+function addUsersToIncidents(incidentsWithUsersToRun){ //{iid: {need: [uid, uid], need:[uid]}
+    //administrative updates
+    addActiveIncidentToUser(uid, iid);
 
+    //send notifications
+    incidentsWithUsersToRun.forEach((iid)=>{
+        var incident = Incidents.findOne(iid);
+        var experience = Experiences.findOne(incident.eid)
+        var needUserMapping = incidentNeedUserMapping[iid];
+        needUserMapping.forEach((needName)=>{
+            var uids = needUserMapping[needName];
+            addUsersToAssignment(uids, iid, needName);
+            
+            var route = "apiCustom/" + iid + "/" + needName;
+            notify(uids, iid, "Event " + experience.name + " is starting!", experience.notificationText, route)
+        });
+    });
 }
 
 
 //if a user's location changed and they no longer match an experience they were assigned to, OR they're taking too long and someone else is waiting to be assigned. Removes active experience from user 2c
-function updateAssigned(uid){
+function updateAssignedAfterUserLocationChange(uid){
 
 }
 
@@ -46,6 +63,18 @@ function removeUserFromAssigned(uid, eid, needName){
 //check if an experience need can run e.g. it has the required number of people. This may call other functions that, for example, check for relationship, colocated, etc.
 function checkIfThreshold(updatedExperiencesAndNeeds){
   return {eid: {need: [uid, uid], need:[uid]}}
+}
+
+
+function addUsersToAssignment(uids, iid, needName){
+    //ahh not quite sure how to do this database push
+    Assignment.update({
+        iid: iid,
+    }, {
+        $push: { //needs.needname.users
+
+        }
+    });
 }
 
 
