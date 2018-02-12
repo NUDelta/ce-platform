@@ -17,35 +17,54 @@ import {addActiveIncidentToUser} from "../users/methods";
 
 const locationCursor = Locations.find();
 
-//availabilityDictionary = {eid:[need, need], eid:need}
-export const runCoordinatorAfterUserLocationChange = function(uid, availabilityDictionary){
-    var updatedExperiencesAndNeeds = updateAvalibility(uid, availabilityDictionary);
-    updateAssignedAfterUserLocationChange(uid);
-    var incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
-    addUsersToIncidents(incidentsWithUsersToRun)
+
+/**
+ * Runs the coordinator after a location update has occured.
+ *
+ * @param uid {string} user whose location just updated
+ * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
+ */
+export const runCoordinatorAfterUserLocationChange = function(uid, availabilityDictionary) {
+    // update availabilities of users and check if any experiecne incidents can be run
+    let updatedAvailability = updateAvailability(uid, availabilityDictionary);
+    let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
+
+    // add users to incidents to be run
+    runNeedsWithThresholdMet(incidentsWithUsersToRun);
+};
+
+
+/**
+ * Updates the database with the availabilities of a user.
+ *
+ * @param uid {string}
+ * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
+ * @return {object} object from Availability that were updated
+ */
+function updateAvailability(uid, availabilityDictionary){
+  // TODO: make the database call to update availabilities
+    return {};
 }
 
-//availabilityDictionary = {eid:[need, need], eid:need}
-//updates the database with the avaiablilty of the new user 2
-function updateAvalibility(user, {eid:[need, need], eid:need}){
-
-}
-
-//sends notifications to the users, adds to the user's active experience list, marks in assignment DB 2b
-function addUsersToIncidents(incidentsWithUsersToRun){ //{iid: {need: [uid, uid], need:[uid]}
+/**
+ * Sends notifications to the users, adds to the user's active experience list, marks in assignment DB 2b
+ * @param incidentsWithUsersToRun {object} needs to run in format of { iid: { need: [uid, uid], need:[uid] }
+ */
+function runNeedsWithThresholdMet(incidentsWithUsersToRun) { //{iid: {need: [uid, uid], need:[uid]}
     //administrative updates
     addActiveIncidentToUser(uid, iid);
 
     //send notifications
-    incidentsWithUsersToRun.forEach((iid)=>{
-        var incident = Incidents.findOne(iid);
-        var experience = Experiences.findOne(incident.eid)
-        var needUserMapping = incidentNeedUserMapping[iid];
+    // TODO: this code is WRONG, won't work with objects. refactor this
+    incidentsWithUsersToRun.forEach((iid) => {
+        let incident = Incidents.findOne(iid);
+        let experience = Experiences.findOne(incident.eid)
+        let needUserMapping = incidentNeedUserMapping[iid];
         needUserMapping.forEach((needName)=>{
-            var uids = needUserMapping[needName];
+            let uids = needUserMapping[needName];
             addUsersToAssignment(uids, iid, needName);
-            
-            var route = "apiCustom/" + iid + "/" + needName;
+
+            let route = "apiCustom/" + iid + "/" + needName;
             notify(uids, iid, "Event " + experience.name + " is starting!", experience.notificationText, route)
         });
     });
@@ -53,14 +72,27 @@ function addUsersToIncidents(incidentsWithUsersToRun){ //{iid: {need: [uid, uid]
 
 
 //if a user's location changed and they no longer match an experience they were assigned to, OR they're taking too long and someone else is waiting to be assigned. Removes active experience from user 2c
-function updateAssignedAfterUserLocationChange(uid){
+/**
+ *
+ * @param uid
+ */
+function updateAssignedAfterUserLocationChange(uid) {
 
 }
 
-function removeUserFromAssigned(uid, eid, needName){
-
+/**
+ * Removes user from assignementDB for the specified need.
+ *
+ * @param uid {string} user to remove
+ * @param iid {string} incident to remove from
+ * @param needName {string} need that user is assigned to
+ */
+function removeUserFromAssigned(uid, iid, needName){
+ // TODO: write database call here
 }
+
 //check if an experience need can run e.g. it has the required number of people. This may call other functions that, for example, check for relationship, colocated, etc.
+
 function checkIfThreshold(updatedExperiencesAndNeeds){
   return {eid: {need: [uid, uid], need:[uid]}}
 }

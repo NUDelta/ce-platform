@@ -11,5 +11,6 @@ Schema.Assignment = new SimpleSchema({
         type: [Schema.UserNeedMapping],
     },
 });
+
 export const Assignments = new Mongo.Collection('assignments');
 Assignments.attachSchema(Schema.Assignment);
