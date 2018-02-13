@@ -14,7 +14,8 @@ Schema.UserNeedMapping = new SimpleSchema({
 export const UserNeedMapping = new Mongo.Collection('userneedmapping');
 UserNeedMapping.attachSchema(Schema.UserNeedMapping);
 
-
+// TODO: refactor this to use _id for iid rather than specific iid
+// TODO: rename needs in Availability DB to needUserMap
 Schema.Availability = new SimpleSchema({
     iid: {
         type: String,
