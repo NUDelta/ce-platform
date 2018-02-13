@@ -4,9 +4,8 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {_} from 'meteor/underscore';
 import {Experiences} from './experiences.js';
 import {Schema} from '../schema.js';
-import {getUnfinishedNeeds} from "../submissions/methods";
-
-
+import {getUnfinishedNeedNames} from "../submissions/methods";
+import {Incidents} from "../incidents/incidents";
 
 
 /**
@@ -19,7 +18,7 @@ import {getUnfinishedNeeds} from "../submissions/methods";
  */
 export const findMatchesForUser = function (uid, lat, lng) {
   let matches = {};
-  let unfinishedNeeds = getUnfinishedNeeds();
+  let unfinishedNeeds = getUnfinishedNeedNames();
 
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
@@ -39,7 +38,7 @@ export const findMatchesForUser = function (uid, lat, lng) {
   return matches;
 };
 
-// TODO: ryan do this plz. we'll handle the database conversion from needName --> siutationId
+// TODO: ryan do this plz.
 /**
  * Checks if a user matches a need.
  * Match determined using AA/Affinder to check what affordances a user has and determine if it matches the need.
@@ -52,8 +51,31 @@ export const findMatchesForUser = function (uid, lat, lng) {
  * @returns {boolean} whether user matches need queried for
  */
 export const doesUserMatchNeed = function(uid, lat, lng, iid, needName) {
+  //@ryan, here is the detector for you to match with
+  let detector = getNeedFromIncidentId(iid, needName).situation.detector;
+
   return false;
 }
+
+
+/**
+ * Finds the need dictionary in an incident given the need's name
+ *
+ * @param iid {string} incident id we are looking up a need in
+ * @param needName {string} name of the need we are looking up
+ */
+function getNeedFromIncident(iid, needName){
+  let incident = Incidents.findOne(iid);
+
+  _.forEach(incident.contributionTypes, (contribution) =>{
+    _.forEach(contribution.needs, (need)=>{
+      if(need.needName === needName){
+        return need;
+      }
+    });
+  });
+}
+
 
 
 // TODO: Clean this up if possible

@@ -31,7 +31,7 @@ describe('Simple End To End', function () {
       contributionTypes: [{
         templateName: "atLocation", needs: [
           {
-            needName: "atRestaurant", situation: {description: "restaurant", number: "1"},
+            needName: "atRestaurant", situation: {detector: "restaurant", number: "1"},
             toPass: {item: "restaurant"}, numberNeeded: 10
           }]
       }],
@@ -40,7 +40,7 @@ describe('Simple End To End', function () {
     }
 
     Experiences.insert(experienceOne);
-    let iid = createIncidentFromExperience(EID);
+    let iid = createIncidentFromExperience(experienceOne);
     startRunningIncident(iid);
   });
 

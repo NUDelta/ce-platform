@@ -35,7 +35,7 @@ export const Callback = new Mongo.Collection('callback');
 Callback.attachSchema(Schema.Callback);
 
 Schema.SituationDescription = new SimpleSchema({
-    description:{
+    detector:{
         type: String
     },
     number:{
