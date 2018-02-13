@@ -1,9 +1,9 @@
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
-import { Experiences } from './experiences.js';
-import { Schema } from '../schema.js';
+import {Meteor} from 'meteor/meteor';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {_} from 'meteor/underscore';
+import {Experiences} from './experiences.js';
+import {Schema} from '../schema.js';
 import {getUnfinishedNeeds} from "../submissions/methods";
 
 
@@ -12,28 +12,30 @@ import {getUnfinishedNeeds} from "../submissions/methods";
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
+ * @param lat {float} latitude of user's new location
+ * @param lng {float} longitude of user's new location
  * @returns {{}}
  */
-export const findMatchesForUser = function(uid) {
-    let matches = {};
-    let unfinishedNeeds = getUnfinishedNeeds();
+export const findMatchesForUser = function (uid, lat, lng) {
+  let matches = {};
+  let unfinishedNeeds = getUnfinishedNeeds();
 
-    // unfinishedNeeds = {iid : [needName] }
-    _.forEach(unfinishedNeeds, (needNames, iid) => {
-        _.forEach(needNames, (needName) => {
-            let doesMatchPredicate = doesUserMatchNeed(uid, iid, needName);
+  // unfinishedNeeds = {iid : [needName] }
+  _.forEach(unfinishedNeeds, (needNames, iid) => {
+    _.forEach(needNames, (needName) => {
+      let doesMatchPredicate = doesUserMatchNeed(uid, lat, lng, iid, needName);
 
-            if (doesMatchPredicate) {
-                if (matches[iid]) {
-                    matches[iid] = matches[iid] + needName;
-                } else {
-                    matches[iid] = [needName];
-                }
-            }
-        });
+      if (doesMatchPredicate) {
+        if (matches[iid]) {
+          matches[iid] = matches[iid] + needName;
+        } else {
+          matches[iid] = [needName];
+        }
+      }
     });
+  });
 
-    return matches;
+  return matches;
 };
 
 // TODO: ryan do this plz. we'll handle the database conversion from needName --> siutationId
@@ -42,12 +44,14 @@ export const findMatchesForUser = function(uid) {
  * Match determined using AA/Affinder to check what affordances a user has and determine if it matches the need.
  *
  * @param uid {string} uid of user
+ * @param lat {float} latitude of user's new location
+ * @param lng {float} longitude of user's new location
  * @param iid {string} iid of incident to determine matching
  * @param needName {string} name of need to determine match for
  * @returns {boolean} whether user matches need queried for
  */
-function doesUserMatchNeed(uid, iid, needName) {
-    return false;
+export const doesUserMatchNeed = function(uid, lat, lng, iid, needName) {
+  return false;
 }
 
 
@@ -60,7 +64,7 @@ export const updateUserExperiences = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id
     }
   }).validator(),
-  run({ userId }) {
+  run({userId}) {
     let user = Meteor.users.findOne(userId);
     let exps = Experiences.find().fetch().filter((doc) => {
       let match = true;
@@ -90,7 +94,7 @@ export const removeExperience = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id
     }
   }).validator(),
-  run({ experienceId }) {
+  run({experienceId}) {
     Experiences.remove(experienceId);
   }
 });
@@ -98,7 +102,7 @@ export const removeExperience = new ValidatedMethod({
 export const createExperience = new ValidatedMethod({
   name: 'api.createExperience',
   validate: new SimpleSchema({
-    name:{
+    name: {
       type: String
     },
     description: {
@@ -111,10 +115,10 @@ export const createExperience = new ValidatedMethod({
       label: 'Experience image url',
       optional: true
     },
-    participateTemplate:{
+    participateTemplate: {
       type: String
     },
-    resultsTemplate:{
+    resultsTemplate: {
       type: String
     },
     notificationText: {
@@ -127,24 +131,26 @@ export const createExperience = new ValidatedMethod({
       type: [Schema.CallbackPair]
     },
   }).validator(),
-  run({name, description, image, participateTemplate, resultsTemplate, contributionGroups,
-    notificationStrategy, notificationText, callbackPair}) {
-      console.log("validated")
+  run({
+        name, description, image, participateTemplate, resultsTemplate, contributionGroups,
+        notificationStrategy, notificationText, callbackPair
+      }) {
+    console.log("validated")
     const experience = {
-        name: name,
-        description: description,
-        image: image,
-        participateTemplate: participateTemplate,
-        resultsTemplate: resultsTemplate,
-        contributionGroups: contributionGroups,
-        notificationStrategy: notificationStrategy,
-        notificationText: notificationText,
-        callbackPair: callbackPair
+      name: name,
+      description: description,
+      image: image,
+      participateTemplate: participateTemplate,
+      resultsTemplate: resultsTemplate,
+      contributionGroups: contributionGroups,
+      notificationStrategy: notificationStrategy,
+      notificationText: notificationText,
+      callbackPair: callbackPair
     }
     var id = Experiences.insert(experience, (err, docs) => {
       if (err) {
         console.log(err);
-      } else{
+      } else {
         console.log(docs);
       }
     });
