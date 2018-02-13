@@ -2,7 +2,7 @@ import {Incidents} from "./incidents";
 import {Schema} from "../schema";
 
 
-describe('my module', function () {
+describe('Incidents tests', function () {
     it('insert incident into database', function () {
         var incidentTest = {
             eid: "vC8b8hawwkKS3Hpfd",

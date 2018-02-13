@@ -3,8 +3,9 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {log} from '../logs.js';
 import {Locations} from './locations.js';
 
-import { findMatchesForUser } from 'imports/api/experiences/methods.js'
-import { runCoordinatorAfterUserLocationChange } from 'imports/api/coordinator/methods.js'
+import {findMatchesForUser} from '../experiences/methods'
+import {runCoordinatorAfterUserLocationChange} from '../coordinator/methods'
+import {updateAssignmentDbdAfterUserLocationChange} from "../coordinator/methods";
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -14,9 +15,10 @@ import { runCoordinatorAfterUserLocationChange } from 'imports/api/coordinator/m
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-function onLocationUpdate(uid, lat, lng){
-    updateLocationInDb(uid, lat, lng);
-    sendToMatcher(uid, lat, lng);
+function onLocationUpdate(uid, lat, lng) {
+  updateLocationInDb(uid, lat, lng);
+  updateAssignmentDbdAfterUserLocationChange(uid, lat, lng);
+  sendToMatcher(uid, lat, lng);
 }
 
 /**
@@ -28,13 +30,13 @@ function onLocationUpdate(uid, lat, lng){
  * @param lng {float} longitude of new location
  */
 function sendToMatcher(uid, lat, lng) {
-    // should check whether a user is available before sending to coordinator
-    let userCanParticipate = userIsAvailableToParticipate(uid, false); // TODO: replace false with config.debug global setting
+  // should check whether a user is available before sending to coordinator
+  let userCanParticipate = userIsAvailableToParticipate(uid, false); // TODO: replace false with config.debug global setting
 
-    if (userCanParticipate) {
-        let availabilityDictionary = findMatchesForUser(uid, lat, lng);
-        runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
-    }
+  if (userCanParticipate) {
+    let availabilityDictionary = findMatchesForUser(uid, lat, lng);
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+  }
 }
 
 // TODO: implement this
@@ -47,13 +49,13 @@ function sendToMatcher(uid, lat, lng) {
  * @returns {boolean} whether a user can participate in an experience
  */
 function userIsAvailableToParticipate(uid, debug) {
-    if (typeof debug === 'undefined') {
+  if (typeof debug === 'undefined') {
 
-    } else {
+  } else {
 
-    }
+  }
 
-    return true;
+  return true;
 }
 
 /**
@@ -64,29 +66,29 @@ function userIsAvailableToParticipate(uid, debug) {
  * @param lng {float} longitude of new location
  */
 function updateLocationInDb(uid, lat, lng) {
-    const entry = Locations.findOne({uid: uid});
-    if (entry) {
-        Locations.update(entry._id, {
-            $set: {
-                lat: lat,
-                lng: lng,
-                timestamp: Date.parse(new Date()),
-            }
-        }, (err) => {
-            if (err) {
-                log.error("Locations/methods, can't update a location", err);
-            }
-        });
-    } else {
-        Locations.insert({
-            uid: uid,
-            lat: lat,
-            lng: lng,
-            timestamp: Date.parse(new Date()),
-        }, (err) => {
-            if (err) {
-                log.error("Locations/methods, can't add a new location", err);
-            }
-        });
-    }
+  const entry = Locations.findOne({uid: uid});
+  if (entry) {
+    Locations.update(entry._id, {
+      $set: {
+        lat: lat,
+        lng: lng,
+        timestamp: Date.parse(new Date()),
+      }
+    }, (err) => {
+      if (err) {
+        log.error("Locations/methods, can't update a location", err);
+      }
+    });
+  } else {
+    Locations.insert({
+      uid: uid,
+      lat: lat,
+      lng: lng,
+      timestamp: Date.parse(new Date()),
+    }, (err) => {
+      if (err) {
+        log.error("Locations/methods, can't add a new location", err);
+      }
+    });
+  }
 }
