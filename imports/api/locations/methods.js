@@ -15,7 +15,7 @@ import {updateAssignmentDbdAfterUserLocationChange} from "../coordinator/methods
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-function onLocationUpdate(uid, lat, lng) {
+export const onLocationUpdate = function(uid, lat, lng) {
   updateLocationInDb(uid, lat, lng);
   updateAssignmentDbdAfterUserLocationChange(uid, lat, lng);
   sendToMatcher(uid, lat, lng);

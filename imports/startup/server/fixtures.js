@@ -20,13 +20,13 @@ Meteor.startup(() => {
 
 
   SyncedCron.start();
-  if(false){
+  if(true){
     Meteor.users.remove({});
-    Experiences.remove({});
-    Locations.remove({});
-    Images.remove({});
-    TextEntries.remove({});
-    Incidents.remove({});
+    // Experiences.remove({});
+    // Locations.remove({});
+    // Images.remove({});
+    // TextEntries.remove({});
+    // Incidents.remove({});
   }
   if (Meteor.users.find().count() === 0) {
   //if(true){
@@ -78,6 +78,3 @@ Meteor.startup(() => {
   }
 });
 
-function findUserByEmail(email) {
-  return Meteor.users.findOne({ 'emails.0.address': email });
-}

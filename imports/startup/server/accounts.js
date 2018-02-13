@@ -6,6 +6,7 @@ Accounts.onCreateUser(function (options, user) {
   user.profile.experiences = [];
   user.profile.subscriptions = [];
   user.profile.lastParticipated = null;
+  user.profile.lastNotified = null;
   user.profile.activeExperiences = [];
   user.profile.pastIncidents = [];
 
