@@ -65,7 +65,7 @@ function runNeedsWithThresholdMet(incidentsWithUsersToRun) { //{iid: {need: [uid
 //check if an experience need can run e.g. it has the required number of people. This may call other functions that, for example, check for relationship, colocated, etc.
 
 function checkIfThreshold(updatedExperiencesAndNeeds) {
-  return {eid: {need: [uid, uid], need: [uid]}}
+  return {};//{eid: {need: [uid, uid], need: [uid]}}
 }
 
 /**
