@@ -70,7 +70,7 @@ function checkIfThreshold(updatedExperiencesAndNeeds) {
         let numberPeopleNeeded = needObject.situation.number;
 
         if (need.users.length >= numberPeopleNeeded) {
-          // Todo: generate this thingy {iid: {need: [uid, uid], need:[uid]}
+          // TODO: generate this thingy {iid: {need: [uid, uid], need:[uid]}
         }
 
       });
