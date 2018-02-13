@@ -8,7 +8,7 @@ describe('Experience Tests', function () {
             participateTemplate: [{templateName: "atLocation", submissionData: {proof: "photo"}}],
             resultsTemplate: "photoCollage",
             contributionTypes: [{templateName: "atLocation", needs: [
-                {needName: "atResturant", situation: {description: "resturant", number: "1"},
+                {needName: "atResturant", situation: {detector: "resturant", number: "1"},
                     toPass: {item: "resturant"}, numberNeeded: 10}]}],
             description: "This is a simple experience for testing",
             notificationText: "Please participate in this test experience!",

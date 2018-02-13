@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
+import {Incidents} from "./incidents";
 
 
 
@@ -9,8 +10,13 @@ export const startRunningIncident = function(iid){
 
 }
 
-export const createIncidentFromExperience = function(eid){
 
+export const createIncidentFromExperience = function (experience) {
+  Incidents.insert({
+    eid: experience._id,
+    contributionTypes: experience.contributionTypes,
+    callbacks: experience.callbacks,
+  });
 }
 
 //
