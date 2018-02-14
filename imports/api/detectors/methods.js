@@ -45,16 +45,18 @@ export const matchAffordancesWithDetector = new ValidatedMethod({
 /**
  * Evaluates given the affordances of a user, if they match the definition given
  * by the detector. 
- * @param {Object} elementaryContext: key value pairs of (elementaryContext: values)
- * @param {[string]} varDecl - variable declarations of the affordance keys used
- * @param {[string]} rules - context rules as Javascript logical operations
+ * @param {Object} userAffordances: key value pairs of (userAffordances: values)
+ * @param {[String]} varDecl - variable declarations of the affordance keys used
+ * @param {[String]} rules - context rules as Javascript logical operations
+ * @return {Boolean} doesUserMatchSituation
  */
-applyDetector = function(elementaryContext, varDecl, rules) {
-  var contextAsJS = keyvalues2vardecl(elementaryContext);
-  editedCode = varDecl.concat(contextAsJS)
-                      .concat(rules)
-                      .join('\n');
-  return eval(editedCode);
+applyDetector = function(userAffordances, varDecl, rules) {
+  var affordancesAsJavascriptVars = keyvalues2vardecl(userAffordances);
+  mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
+                                      .concat(rules)
+                                      .join('\n');
+  doesUserMatchSituation = eval(mergedAffordancesWithRules);
+  return doesUserMatchSituation;
 }
 
 /**
