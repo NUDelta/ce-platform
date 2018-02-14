@@ -10,12 +10,12 @@ describe('Availability Tests', function () {
   beforeEach(function () {
     resetDatabase();
     Assignments.insert({
-      iid: ID1,
-      needs: [{needName:"need1", users: ["1", "2", "3"]}, {needName:"need2", users: ["5", "3", "4", "1"]}],
+      _id: ID1,
+      needUserMaps: [{needName:"need1", uids: ["1", "2", "3"]}, {needName:"need2", uids: ["5", "3", "4", "1"]}],
     });
     Assignments.insert({
-      iid: ID2,
-      needs: [{needName:"need3", users: ["8", "2", "5"]}, {needName:"need4", users: ["9", "14", "5"]}],
+      _id: ID2,
+      needUserMaps: [{needName:"need3", uids: ["8", "2", "5"]}, {needName:"need4", uids: ["9", "14", "5"]}],
     });
 
   });
@@ -23,30 +23,32 @@ describe('Availability Tests', function () {
 
   it('update availability', function () {
     updateAvailability("1",  {id1: ["need1"], id2: ["need3", "need4"]});
-    let firstEntry = Assignments.findOne({iid:ID1});
-    let secondEntry = Assignments.findOne({iid:ID2});
-    _.forEach(firstEntry.needs, (need) =>{
-      if(need.needName === "need1"){
-        if(need.users.indexOf("1") === -1){
-          return false;
+
+    let firstEntry = Assignments.findOne({_id:ID1});
+    let secondEntry = Assignments.findOne({_id:ID2});
+
+    _.forEach(firstEntry.needUserMaps, (needUserMap) =>{
+      if(needUserMap.needName === "need1"){
+        if(needUserMap.uids.indexOf("1") === -1){
+          chai.assert(false);
         }
       }
-      if(need.needName === "need2"){
-        if(need.users.indexOf("1") !== -1){
-          return false;
+      if(needUserMap.needName === "need2"){
+        if(needUserMap.uids.indexOf("1") !== -1){
+          chai.assert(false);
         }
       }
     });
 
-    _.forEach(secondEntry.needs, (need) =>{
-      if(need.needName === "need3"){
-        if(need.users.indexOf("1") === -1){
-          return false;
+    _.forEach(secondEntry.needUserMaps, (needUserMap) =>{
+      if(needUserMap.needName === "need3"){
+        if(needUserMap.uids.indexOf("1") === -1){
+          chai.assert(false);
         }
       }
-      if(need.needName === "need4"){
-        if(need.users.indexOf("1") !== -1){
-          return false;
+      if(needUserMap.needName === "need4"){
+        if(needUserMap.uids.indexOf("1") !== -1){
+          chai.assert(false);
         }
       }
     });

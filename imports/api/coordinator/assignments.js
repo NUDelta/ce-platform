@@ -3,11 +3,12 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {Schema} from '../schema.js';
 
 Schema.Assignment = new SimpleSchema({
-  iid: {
+  _id: {
     type: String,
+    optional: true,
     regEx: SimpleSchema.RegEx.Id,
   },
-  needs: {
+  needUserMaps: {
     type: [Schema.UserNeedMapping],
   },
 });

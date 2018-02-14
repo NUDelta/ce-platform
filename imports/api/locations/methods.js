@@ -16,6 +16,7 @@ import {updateAssignmentDbdAfterUserLocationChange} from "../coordinator/methods
  * @param lng {float} longitude of new location
  */
 export const onLocationUpdate = function(uid, lat, lng) {
+  console.log("recieved location update", lat, lng)
   updateLocationInDb(uid, lat, lng);
   updateAssignmentDbdAfterUserLocationChange(uid, lat, lng);
   sendToMatcher(uid, lat, lng);
@@ -35,6 +36,7 @@ function sendToMatcher(uid, lat, lng) {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, lat, lng);
+    console.log("found matches", availabilityDictionary)
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 }

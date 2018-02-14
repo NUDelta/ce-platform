@@ -6,6 +6,7 @@ import {Experiences} from './experiences.js';
 import {Schema} from '../schema.js';
 import {getUnfinishedNeedNames} from "../submissions/methods";
 import {Incidents} from "../incidents/incidents";
+import {getNeedFromIncidentId} from "../incidents/methods";
 
 
 /**
@@ -19,7 +20,7 @@ import {Incidents} from "../incidents/incidents";
 export const findMatchesForUser = function (uid, lat, lng) {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
-
+  console.log("unfinishedneeds", unfinishedNeeds);
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
@@ -54,26 +55,7 @@ export const doesUserMatchNeed = function(uid, lat, lng, iid, needName) {
   //@ryan, here is the detector for you to match with
   let detector = getNeedFromIncidentId(iid, needName).situation.detector;
 
-  return false;
-}
-
-
-/**
- * Finds the need dictionary in an incident given the need's name
- *
- * @param iid {string} incident id we are looking up a need in
- * @param needName {string} name of the need we are looking up
- */
-function getNeedFromIncident(iid, needName){
-  let incident = Incidents.findOne(iid);
-
-  _.forEach(incident.contributionTypes, (contribution) =>{
-    _.forEach(contribution.needs, (need)=>{
-      if(need.needName === needName){
-        return need;
-      }
-    });
-  });
+  return true;
 }
 
 
