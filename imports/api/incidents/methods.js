@@ -1,21 +1,77 @@
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {_} from 'meteor/underscore';
 import {Incidents} from "./incidents";
+import {Availability} from "../coordinator/availability";
+import {Assignments} from "../coordinator/assignments";
+import {Submissions} from "../submissions/submissions";
 
 
+export const startRunningIncident = function (iid) {
+  let incident = Incidents.findOne(iid);
+  let needUserMaps = [];
 
-export const startRunningIncident = function(iid){
+  _.forEach(incident.contributionTypes, (contribution) => {
+
+    let templateName = contribution.templateName;
+
+    _.forEach(contribution.needs, (need) => {
+
+      needUserMaps.push({needName: need.needName})
+      Submissions.insert({
+        eid: incident.eid,
+        iid: iid,
+        needName: need.needName,
+        templateName: templateName,
+      }, (err, docs) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("worked", docs)
+        }
+      });
+    });
+  });
+
+  Availability.insert({
+    _id: iid,
+    needUserMaps: needUserMaps
+  })
+
+  Assignments.insert({
+    _id: iid,
+    needUserMaps: needUserMaps
+  })
 
 }
 
-
+/**
+ * Given an experience object, creates an incident
+ * @param {string} iid of the created incident
+ */
 export const createIncidentFromExperience = function (experience) {
-  Incidents.insert({
+  return Incidents.insert({
     eid: experience._id,
     contributionTypes: experience.contributionTypes,
     callbacks: experience.callbacks,
+  });
+}
+
+/**
+ * Finds the need dictionary in an incident given the need's name
+ *
+ * @param iid {string} incident id we are looking up a need in
+ * @param needName {string} name of the need we are looking up
+ */
+export const getNeedFromIncidentId = (iid, needName) => {
+  let incident = Incidents.findOne(iid);
+
+  _.forEach(incident.contributionTypes, (contribution) => {
+    _.forEach(contribution.needs, (need) => {
+      if (need.needName === needName) {
+        return need;
+      }
+    });
   });
 }
 

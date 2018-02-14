@@ -12,7 +12,7 @@ import {createIncidentFromExperience, startRunningIncident} from "../incidents/m
 import {findUserByEmail} from "../users/methods";
 import {Assignments} from "../coordinator/assignments";
 import {Random} from 'meteor/random'
-
+import {Submissions} from "../submissions/submissions";
 
 describe('Simple End To End', function () {
 
@@ -42,6 +42,11 @@ describe('Simple End To End', function () {
     Experiences.insert(experienceOne);
     let iid = createIncidentFromExperience(experienceOne);
     startRunningIncident(iid);
+    let count = Submissions.find({
+      iid: iid
+    }).count()
+    console.log("incidentId", iid, count)
+
   });
 
   it('user gets added to experience', function () {
@@ -54,14 +59,17 @@ describe('Simple End To End', function () {
     let user = findUserByEmail("a@gmail.com");
 
     //user has incident as an active incident
-    let addedToUser = (user.activeIncidents.indexOf(iid) !== -1);
+    let addedToUser = (user.profile.activeIncidents.indexOf(iid) !== -1);
+    chai.assert(addedToUser, "active incident not added to user profile");
 
     //assignments has user assigned
-    let assignmentEntry = Assignments.findOne({iid: iid});
-    let assignedUsers = assignmentEntry.needs[0].users;
-    let addedToAssignments = (assignedUsers.indexOf(uid) !== -1);
+    let assignmentEntry = Assignments.findOne({_id: iid});
 
-    return (addedToUser && addedToAssignments);
+    let needUserMap = assignmentEntry.needUserMaps.find(function(x) {
+      return x.needName === "atRestaurant";
+    })
+    chai.assert.typeOf(needUserMap, 'array', "no needUserMap in Assignment DB")
+    chai.assert(needUserMap.uids.indexOf(uid) !== -1, "uid not in needUserMap in Assignment DB");
 
   })
 
