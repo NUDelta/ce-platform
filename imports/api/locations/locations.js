@@ -38,8 +38,7 @@ Schema.Locations = new SimpleSchema({
     max: 180
   },
   affordances: {
-    type: Object,
-    blackbox: true,
+    type: [String],
     optional: true
   },
   lastNotification: {

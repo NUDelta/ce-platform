@@ -19,3 +19,4 @@ import '../../api/custom/americanFlag.js';
 import '../../api/custom/thanksgiving.js';
 import '../../api/custom/chairPose.js';
 import '../../api/custom/testerStoryTime.js';
+import '../../api/custom/scavenger.js';
