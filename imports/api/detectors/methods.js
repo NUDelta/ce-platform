@@ -8,7 +8,7 @@ import {Detectors} from './detectors'
  * @param {Number} lat
  * @param {Number} lng
  * @param {String} detectorId
- * @param {function} callback - with argument doesLocationMatchSituation
+ * @param {function} callback - which calls with argument doesLocationMatchSituation
  */
 export const getAffordancesMatchWithDetector = function(lat, lng, detectorId, callback) {
   getAffordancesFromLocation(lat, lng, function(affordances) {
@@ -21,7 +21,7 @@ export const getAffordancesMatchWithDetector = function(lat, lng, detectorId, ca
  * Gets affordances based on location, then calls a callback
  * @param {Number} lat
  * @param {Number} lng
- * @param {function} callback which with single argument affordances
+ * @param {function} callback - which calls with single argument affordances
  */
 export const getAffordancesFromLocation = function(lat, lng, callback) {
   let request = require('request');
