@@ -54,7 +54,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       route: route
     };
 
-    log.cerebro('Sending push notifications to ' + userIds);
+    log.cerebro('Sending push notifications to ' + uids);
     log.cerebro(payload);
 
     let pushUsers = [];
@@ -139,7 +139,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
       if (err) {
         console.log(err);
       } else {
-        console.log("worked", docs)
       }
     });
 

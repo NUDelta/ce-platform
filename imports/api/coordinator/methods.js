@@ -18,6 +18,7 @@ import {
 import {Assignments} from "./assignments";
 import {Availability} from "./availability";
 import {doesUserMatchNeed} from "../experiences/methods";
+import {getNeedFromIncidentId} from "../incidents/methods";
 
 
 /**
@@ -29,8 +30,12 @@ import {doesUserMatchNeed} from "../experiences/methods";
 export const runCoordinatorAfterUserLocationChange = function (uid, availabilityDictionary) {
   // update availabilities of users and check if any experience incidents can be run
   let updatedAvailability = updateAvailability(uid, availabilityDictionary);
+  console.log("updatedAvailability", updatedAvailability[0].needUserMaps)
+
+
   let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
 
+  console.log("incidentsWithUsersToRun", incidentsWithUsersToRun)
   // add users to incidents to be run
   runNeedsWithThresholdMet(incidentsWithUsersToRun);
 };
@@ -40,8 +45,14 @@ export const runCoordinatorAfterUserLocationChange = function (uid, availability
  * @param incidentsWithUsersToRun {object} needs to run in format of { iid: { need: [uid, uid], need:[uid] }
  */
 function runNeedsWithThresholdMet(incidentsWithUsersToRun) { //{iid: {need: [uid, uid], need:[uid]}
+
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
+    console.log("needUserMapping", needUserMapping)
+    console.log("iid", iid)
+
+
     let incident = Incidents.findOne(iid);
+    console.log("incidents", incident)
     let experience = Experiences.findOne(incident.eid)
 
     _.forEach(needUserMapping, (uids, needName) => {
@@ -49,7 +60,7 @@ function runNeedsWithThresholdMet(incidentsWithUsersToRun) { //{iid: {need: [uid
       adminUpdatesForAddingUsersToIncident(uids, iid, needName);
 
       let route = "apiCustom/" + iid + "/" + needName;
-      notify(uids, iid, "Event " + experience.name + " is starting!", experience.notificationText, route)
+      Cerebro.notify(uids, iid, "Event " + experience.name + " is starting!", experience.notificationText, route)
     });
   });
 }
@@ -91,23 +102,31 @@ function chooseUsers(uids, numberPeopleNeeded) {
  */
 function checkIfThreshold(updatedIncidentsAndNeeds) {
 
+  //these are not needUsermaps
+  console.log("updatedIncidentsAndNeeds", updatedIncidentsAndNeeds[0])
+
   let incidentsWithUsersToRun = {};
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
 
-    incidentsWithUsersToRun[incidentMapping._id] = {};
+    incidentsWithUsersToRun[incidentMapping.iid] = {};
 
     _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
       // get need object for current iid/current need and number of people
-      let needObject = getNeedFromIncidentId(incidentMapping._id, needUserMap.needName);
+      console.log("needUserMap", incidentMapping.needUserMaps)
+      let needObject = getNeedFromIncidentId(incidentMapping.iid, needUserMap.needName);
+      console.log("needObject", needObject)
       let numberPeopleNeeded = needObject.situation.number;
 
+      console.log("numbers", needUserMap.uids.length, numberPeopleNeeded)
       if (needUserMap.uids.length >= numberPeopleNeeded) {
         let chosenUsers = chooseUsers(needUserMap.uids, numberPeopleNeeded);
-        incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = chosenUsers;
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chosenUsers;
       }
 
     });
   });
+
+  console.log("incidentsWithUsersToRun", incidentsWithUsersToRun)
 
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 }
@@ -124,40 +143,75 @@ function checkIfThreshold(updatedIncidentsAndNeeds) {
  * @return {[object]} array of object from Availability DB [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
 export const updateAvailability = (uid, availabilityDictionary) => {
+  console.log("updateAvailability", uid, availabilityDictionary)
   let updatedEntries = [];
 
   //remove user from all entries
-  Availability.update({
-    "needUserMaps": {"$elemMatch": {"uids": uid}}
-  }, {
-    $pull: {"needUserMaps.$.uids": uid}
-  }, {
-    multi: true
-  });
+  let availability = Availability.find().fetch();
 
-  _.forEach(availabilityDictionary, (needNames, iid) => {
-    _.forEach(needNames, (needName) => {
-      // find and update
-      Availability.update({
-        _id: iid,
-        "needUserMaps.needName": needName
-      }, {
-        $push: {"needUserMaps.$.uids": uid}
-      });
-    });
+  for (let i in availability) {
 
-    // fetch and return the updated iid
-    let updatedEntry = Availability.find({
-      _id: iid
-    });
+    let av = availability[i];
+    console.log(av._id);
 
-    // add to updatedEntries
-    delete updatedEntry['_id'];
-    updatedEntries.push(updatedEntry);
-  });
+    let iid = av._id;
+    if (!(iid in availabilityDictionary)) {
+      continue;
+    }
 
+    let updatedNeeds = {iid: iid, "needUserMaps": []};
+
+    for (let j in av.needUserMaps) {
+
+      console.log(av.needUserMaps[j])
+      let needName = av.needUserMaps[j].needName;
+
+      if (availabilityDictionary[iid].indexOf(needName) !== -1) {
+
+        Availability.update({
+          _id: iid,
+          "needUserMaps.needName": needName
+        }, {
+          $addToSet: {"needUserMaps.$.uids": uid}
+        }, (err, docs) => {
+          if (err) {
+            console.log("error,", err);
+          } else {
+            console.log("add worked", docs, needName)
+
+          }
+        });
+
+        let newusers = av.needUserMaps[j].uids;
+        newusers.push(uid);
+
+        updatedNeeds.needUserMaps.push({needName: needName, uids:newusers});
+
+      } else {
+        Availability.update({
+          _id: iid,
+          "needUserMaps.needName": needName
+        }, {
+          $pull: {"needUserMaps.$.uids": uid}
+        }, (err, docs) => {
+          if (err) {
+            console.log("error,", err);
+          } else {
+          }
+        });
+      }
+
+    }
+    console.log("updatedNeeds", updatedNeeds)
+    updatedEntries.push(updatedNeeds);
+
+  }
+  console.log("updatedEntries", updatedEntries)
   return updatedEntries;
-};
+}
+
+
+
 
 /**
  * ASSIGNMENT DB FUNCTIONS

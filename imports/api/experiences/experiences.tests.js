@@ -10,8 +10,8 @@ describe('Experience Tests', function () {
       contributionTypes: [{
         templateName: "atLocation", needs: [
           {
-            needName: "atResturant", situation: {detector: "resturant", number: "1"},
-            toPass: {item: "resturant"}, numberNeeded: 10
+            needName: "atRestaurant", situation: {detector: "restaurant", number: "1"},
+            toPass: {item: "restaurant"}, numberNeeded: 10
           }]
       }],
       description: "This is a simple experience for testing",
@@ -20,7 +20,7 @@ describe('Experience Tests', function () {
 
     let experienceInsertResult = Experiences.insert(experienceTest, (err, docs) => {
       if (err) {
-        console.log(err);
+
         chai.assert(false);
       } else {
         chai.assert(true);

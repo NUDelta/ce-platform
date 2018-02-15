@@ -53,7 +53,7 @@ export const findMatchesForUser = function (uid, lat, lng) {
  */
 export const doesUserMatchNeed = function(uid, lat, lng, iid, needName) {
   //@ryan, here is the detector for you to match with
-  let detector = getNeedFromIncidentId(iid, needName).situation.detector;
+  //let detector = getNeedFromIncidentId(iid, needName).situation.detector;
 
   return true;
 }
