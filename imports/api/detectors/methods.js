@@ -1,47 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
 import {Locations} from '../locations/locations'
 import {Detectors} from './detectors'
 
-
-export const matchAffordancesWithDetectorClient = new ValidatedMethod({
-  name: 'detectors.matchAffordancesWithDetectorClient',
-
-  validate: new SimpleSchema({
-    userId: { type: String },
-    detectorId: { type: String }
-  }).validator(),
-
-  run({ userId, detectorId }) {
-    detector_output = matchAffordancesWithDetector(userId, detectorId);
-    console.log('detector_output')
-    console.log(detector_output)
-    return detector_output;
-  }
-});
-// Test Method in Client Like So:
-// Meteor.call('detectors.matchAffordancesWithDetectorClient', {
-//   userId: 'GozT7ZtXuu3diPPWc',
-//   detectorId: 'cG4RJxsodeYfG7ATT'
-// }, (err, res) => {
-//   if (err) {
-//     alert(err);
-//   } else {
-//     console.log(res);
-//   }
-// });
-
-export const matchUserWithDetector = function(userId, detectorId, ) {
-  const userloc = Locations.findOne({ uid: userId });
-  // const userloc = Locations.findOne({ uid: userId });
-
-  if (_.isEmpty(userloc.affordances)) {
-    throw new Meteor.Error('detectors.matchAffordancesWithDetectorClient',
-      'Cannot match when a user affordances have not been sensed')
-  }
-}
 
 /**
  * Gets affordances based on location, checks if affordances of location
