@@ -15,7 +15,6 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Users } from '../../api/users/users.js';
 import { Locations } from '../../api/locations/locations.js';
-import { Cerebro } from '../../api/cerebro/client/cerebro-client.js';
 import { Submissions } from '../../api/submissions/submissions.js';
 import { Images } from '../../api/images/images.js';
 import { TextEntries } from '../../api/text-entries/text-entries.js';

@@ -22,7 +22,7 @@
 
   {{#if currentUser}}
     {{#if Template.subscriptionsReady}}
-      {{#if noActiveExperiences}}
+      {{#if noActiveIncidents}}
         <div id="empty-state">
           <h1 id="emoji">🏃‍🤔✌️</h1>
           <h4 id="title">There are no experiences near you.</h4>
@@ -33,8 +33,8 @@
           <h4 class="title-text hi">Available experiences</h4>
         </div>
         <div class="list-group">
-          {{#each experienceId in activeExperiences}}
-            {{> activeExperience (activeExperienceArgs experienceId this.render)}}
+          {{#each incidentId in activeIncidents}}
+            {{> activeExperience (getCurrentExperience incidentId)}}
           {{/each}}
         </div>
         <button class="refresh btn btn-primary btn-participate btn-block" style="border-radius: 40px; height: 38px;">Load experiences</button>
@@ -46,28 +46,3 @@
     <h4>Sign in to participate in experiences</h4>
   {{/if}}
 </template>
-
-<!-- <template name="home">
-  {{#if currentUser}}
-    {{#if Template.subscriptionsReady}}
-      <div class="title-chunk">
-        <h4 class="title-text hi">Available experiences</h4>
-      </div>
-      <div class="list-group">
-      {{#each experienceId in activeExperiences}}
-        {{> activeExperience (activeExperienceArgs experienceId this.render)}}
-      {{/each}}
-      {{#if noActiveExperiences}}
-        <h5>There are no experiences near you.</h5>
-        <p style="color:#888;">Walk around to see if any pop up. If you were notified for an experience that's no longer here, that means you took too long to participate. Try to participate faster next time!</p>
-      {{else}}
-        <button class="refresh btn btn-primary btn-participate btn-block" style="border-radius: 40px; height: 38px;">Load experiences</button>
-      {{/if}}
-      </div>
-    {{else}}
-      Loading... please quit and reopen the app
-    {{/if}}
-  {{else}}
-    <h4>Sign in to participate in experiences</h4>
-  {{/if}}
-</template> -->

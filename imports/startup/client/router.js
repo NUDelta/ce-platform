@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { Router } from 'meteor/iron:router';
 
 import '../../ui/blaze-helpers.js';

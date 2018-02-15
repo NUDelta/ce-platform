@@ -36,31 +36,31 @@ Schema.Profile = new SimpleSchema({
   },
 });
 
-Schema.User = new SimpleSchema({
-  username: {
-    type: String,
-    optional: true
-  },
-  emails: {
-    type: Array,
-  },
-  "emails.$": {
-    type: Object
-  },
-  "emails.$.address": {
-    type: String,
-    regEx: SimpleSchema.RegEx.Email
-  },
-  "emails.$.verified": {
-    type: Boolean
-  },
-  createdAt: {
-    type: Date,
-    optional: true
-  },
-  profile: {
-    type: Schema.Profile
-  },
-});
-
-Meteor.users.attachSchema(Schema.User);
+// Schema.User = new SimpleSchema({
+//   username: {
+//     type: String,
+//     optional: true
+//   },
+//   emails: {
+//     type: Array,
+//   },
+//   "emails.$": {
+//     type: Object
+//   },
+//   "emails.$.address": {
+//     type: String,
+//     regEx: SimpleSchema.RegEx.Email
+//   },
+//   "emails.$.verified": {
+//     type: Boolean
+//   },
+//   createdAt: {
+//     type: Date,
+//     optional: true
+//   },
+//   profile: {
+//     type: Schema.Profile
+//   }
+// });
+//
+// Meteor.users.attachSchema(Schema.User);
