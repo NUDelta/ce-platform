@@ -39,7 +39,7 @@ describe('Detector Tests', function() {
         "(((((((((((((((((pick_your_own_farms || fruits___veggies) || market_stalls) || public_markets) || farms) || farmers_market) || attraction_farms) || grocery) || organic_stores) || international_grocery) || health_markets) || acai_bowls) || csa) || ethnic_grocery) || flea_markets) || community_gardens) || specialty_food) || wholesalers) || juice_bars___smoothies;"
       ]
     });
-  })
+  });
 
   it('should match "grocery" for "places one can buy fruit"', function() {
     let affordances = {
@@ -49,17 +49,17 @@ describe('Detector Tests', function() {
     if (!matchAffordancesWithDetector(affordances, detectorId)) {
       chai.assert(false);
     }
-  })
+  });
 
   it('should not match "parks" for "places one can buy fruit"', function() {
     let affordances = {
       'parks': true
-    }
+    };
 
     if (matchAffordancesWithDetector(affordances, detectorId)) {
       chai.assert(false);
     }
-  })
+  });
 
   it('should match "whole foods in evanston" for "places one can buy fruit"', function() {
     //grocery, whole foods in evanston
@@ -71,7 +71,7 @@ describe('Detector Tests', function() {
         chai.assert(false);
       }
     });
-  })
+  });
 
   it('should not match "shakespeare garden on northwestern" for "places one can buy fruit"', function() {
     // parks, shakespeare garden on northwestern
@@ -84,5 +84,5 @@ describe('Detector Tests', function() {
       }
     });
 
-  })
+  });
 });

@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import {Locations} from '../locations/locations'
 import {Detectors} from './detectors'
 
 
@@ -16,7 +15,7 @@ export const getAffordancesMatchWithDetector = function(lat, lng, detectorId, ca
     doesLocationMatchSituation = matchAffordancesWithDetector(affordances, detectorId);
     callback(doesLocationMatchSituation);
   })
-}
+};
 
 /**
  * Gets affordances based on location, then calls a callback
@@ -28,7 +27,7 @@ export const getAffordancesFromLocation = function(lat, lng, callback) {
   let request = require('request');
   let url = 'http://affordanceaware.herokuapp.com/location_keyvalues/' + lat.toString() + '/' + lng.toString();
   request(url, Meteor.bindEnvironment(function (error, response, body) {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
       let affordances = JSON.parse(body);
       if (affordances !== Object(affordances)) {
         log.warning("Locations/methods expected type Object but did not receive an Object, doing nothing");
@@ -36,7 +35,7 @@ export const getAffordancesFromLocation = function(lat, lng, callback) {
       callback(affordances);
     }
   }));
-}
+};
 
 export const matchAffordancesWithDetector = function(affordances, detectorId) {
   const detector = Detectors.findOne({ _id: detectorId });
@@ -45,7 +44,7 @@ export const matchAffordancesWithDetector = function(affordances, detectorId) {
                                   detector.variables,
                                   detector.rules);
   return doesUserMatchSituation;
-}
+};
 
 /**
  * Evaluates given the affordances of a user, if they match the definition given
@@ -56,13 +55,13 @@ export const matchAffordancesWithDetector = function(affordances, detectorId) {
  * @return {Boolean} doesUserMatchSituation
  */
 applyDetector = function(userAffordances, varDecl, rules) {
-  var affordancesAsJavascriptVars = keyvalues2vardecl(userAffordances);
+  let affordancesAsJavascriptVars = keyvalues2vardecl(userAffordances);
   mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
                                       .concat(rules)
                                       .join('\n');
   doesUserMatchSituation = eval(mergedAffordancesWithRules);
   return doesUserMatchSituation;
-}
+};
 
 /**
  * @param {Object} obj - key values that come from /location_keyvalues/{lat}/{lng}
@@ -70,10 +69,10 @@ applyDetector = function(userAffordances, varDecl, rules) {
  */
 keyvalues2vardecl = function(obj) {
   vardecl = [];
-  for (var key in obj) {
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       vardecl.push("var " + key + " = " + obj[key] + ";")      
     }
   }
   return vardecl;
-}
+};
