@@ -10,8 +10,6 @@ CerebroServer = class CerebroServer extends CerebroCore {
   constructor() {
     super();
   }
-
-
   /**
    * _sendPush - sends a notification to the given user
    *
@@ -23,8 +21,17 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {_id}    experienceId _id for the experience so it can be added to
    *                                  the end of the route so the notification links to the correct page
    */
+  /**
+   * // TODO: fill out notify documentation
+   * @param uids
+   * @param iid
+   * @param subject
+   * @param text
+   * @param route
+   */
   notify(uids, iid, subject, text, route) {
-    //i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need" so the notification links directly to the experience
+    //i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
+    // so the notification links directly to the experience
     switch (CONFIG.NOTIFY_METHOD) {
       case CerebroCore.PUSH:
         this._sendPush(uids, subject, text, route, iid);
@@ -45,6 +52,15 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {type} route        description
    * @param  {type} experienceId description
    * @return {type}              description
+   */
+  /**
+   * // TODO: fill out _sendPush documentation
+   * @param uids
+   * @param subject
+   * @param text
+   * @param route
+   * @param iid
+   * @private
    */
   _sendPush(uids, subject, text, route, iid) {
     const payload = {
@@ -87,8 +103,13 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {array} userIds      array of _ids for users
    * @param  {_id}   experienceId _id for an experience
    */
+  /**
+   * // TODO: fill out removeAllOldActiveExperiences documentation
+   * @param userIds
+   * @param experienceId
+   */
   removeAllOldActiveExperiences(userIds, experienceId) {
-    console.log("removeAllOldActiveExperiences", userIds)
+    console.log("removeAllOldActiveExperiences", userIds);
     Meteor.users.update({
       _id: {$in: userIds}
     }, {
@@ -109,33 +130,42 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {array} userIds      array of _ids for users
    * @param  {_id}   experienceId _id for an experience
    */
+  /**
+   * // TODO: fill out removeActiveExperiences documentation
+   * @param userIds
+   * @param experienceId
+   */
   removeActiveExperiences(userIds, experienceId) {
-    console.log("in remove active inc, ", userIds, experienceId)
-    var incidentId = Experiences.findOne({_id: experienceId}).activeIncident;
-    console.log("in inc id, ", incidentId)
+    console.log("in remove active inc, ", userIds, experienceId);
+    const incidentId = Experiences.findOne({ _id: experienceId }).activeIncident;
+    console.log("in inc id, ", incidentId);
 
-    var situationNeeds = Incidents.findOne({_id: incidentId}).situationNeeds;
-    console.log("in inc usermappings, ", situationNeeds)
+    const situationNeeds = Incidents.findOne({ _id: incidentId }).situationNeeds;
+    console.log("in inc usermappings, ", situationNeeds);
 
+    // TODO: refactor using _.forEach
     userIds.forEach((id) => {
-      for (index in situationNeeds) {
+      for (let index in situationNeeds) {
         if (situationNeeds[index].notifiedUsers.indexOf(id) > -1) {
-          console.log("found the user Id", id)
-          var i = situationNeeds[index].notifiedUsers.indexOf(id);
-          console.log(i)
-          situationNeeds[index].avalibleUsers.splice(i, 1)
+          console.log("found the user Id", id);
+
+          const i = situationNeeds[index].notifiedUsers.indexOf(id);
+          console.log(i);
+
+          situationNeeds[index].avalibleUsers.splice(i, 1);
           console.log("we hve updadate an index", userMappings[index])
         }
       }
-    })
-    console.log("userMappings is now", userMappings)
+    });
+
+    console.log("userMappings is now", userMappings);
     Incidents.update({
       _id: incidentId
     }, {
       $set: {
         'situationNeeds': situationNeeds
       }
-    }, (err, docs) => {
+    }, (err) => {
       if (err) {
         console.log(err);
       } else {
@@ -161,6 +191,11 @@ CerebroServer = class CerebroServer extends CerebroCore {
    * @param  {_id} userId     _id for a user
    * @param  {_id} incidentId _id for an incident
    */
+  /**
+   * // TODO: fill out addIncidents documentation
+   * @param userId
+   * @param incidentId
+   */
   addIncidents(userId, incidentId) {
     Meteor.users.update({
       _id: userId
@@ -170,9 +205,8 @@ CerebroServer = class CerebroServer extends CerebroCore {
       }
     });
   }
+};
 
-
-}
 export const Cerebro = new CerebroServer();
 
 Cerebro.PUSH = CerebroCore.PUSH;

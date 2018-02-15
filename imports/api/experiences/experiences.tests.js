@@ -1,31 +1,28 @@
-import {Experiences, SituationDescription} from "./experiences";
+import { Experiences, SituationDescription } from './experiences';
 
-
-describe('Experience Tests', function () {
-  it('insert experiences into database', function () {
+describe('Experience Tests', () => {
+  it('insert experiences into database', () => {
     let experienceTest = {
-      name: "You're at a location",
-      participateTemplate: [{templateName: "atLocation", submissionData: {proof: "photo"}}],
-      resultsTemplate: "photoCollage",
+      name: 'You\'re at a location',
+      participateTemplate: [{ templateName: 'atLocation', submissionData: { proof: 'photo' } }],
+      resultsTemplate: 'photoCollage',
       contributionTypes: [{
-        templateName: "atLocation", needs: [
+        templateName: 'atLocation', needs: [
           {
-            needName: "atRestaurant", situation: {detector: "restaurant", number: "1"},
-            toPass: {item: "restaurant"}, numberNeeded: 10
+            needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
+            toPass: { item: 'restaurant' }, numberNeeded: 10
           }]
       }],
-      description: "This is a simple experience for testing",
-      notificationText: "Please participate in this test experience!",
+      description: 'This is a simple experience for testing',
+      notificationText: 'Please participate in this test experience!',
     };
 
-    let experienceInsertResult = Experiences.insert(experienceTest, (err, docs) => {
+    Experiences.insert(experienceTest, (err) => {
       if (err) {
-
         chai.assert(false);
       } else {
         chai.assert(true);
       }
     });
-
   })
-})
+});
