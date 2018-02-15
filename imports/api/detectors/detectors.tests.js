@@ -6,7 +6,6 @@ import {Detectors} from './detectors';
 
 
 describe('Detector Tests', function() {
-  let userId = "GozT7ZtXuu3diPPWc";
   let detectorId = "cG4RJxsodeYfG7ATT";
 
   beforeEach(function() {
@@ -52,15 +51,38 @@ describe('Detector Tests', function() {
     }
   })
 
+  it('should not match "parks" for "places one can buy fruit"', function() {
+    let affordances = {
+      'parks': true
+    }
+
+    if (matchAffordancesWithDetector(affordances, detectorId)) {
+      chai.assert(false);
+    }
+  })
+
   it('should match "whole foods in evanston" for "places one can buy fruit"', function() {
     //grocery, whole foods in evanston
     let lat = 42.047621;
     let lng = -87.679488;
 
-    getAffordancesMatchWithDetector(lat, lng, detectorId, function(result) {
-      if (!result) {
+    getAffordancesMatchWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+      if (!doesUserMatchSituation) {
         chai.assert(false);
       }
-    })
+    });
+  })
+
+  it('should not match "shakespeare garden on northwestern" for "places one can buy fruit"', function() {
+    // parks, shakespeare garden on northwestern
+    let lat = 42.056838;
+    let lng = -87.675940;
+
+    getAffordancesMatchWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+      if (doesUserMatchSituation) {
+        chai.assert(false);
+      }
+    });
+
   })
 });
