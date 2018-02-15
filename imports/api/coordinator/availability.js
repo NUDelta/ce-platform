@@ -1,6 +1,6 @@
-import {Mongo} from "meteor/mongo";
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Schema} from '../schema.js';
+import { Mongo } from "meteor/mongo";
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Schema } from '../schema.js';
 
 Schema.UserNeedMapping = new SimpleSchema({
   needName: {
@@ -11,12 +11,9 @@ Schema.UserNeedMapping = new SimpleSchema({
     defaultValue: []
   },
 });
-
 export const UserNeedMapping = new Mongo.Collection('userneedmapping');
 UserNeedMapping.attachSchema(Schema.UserNeedMapping);
 
-// TODO: refactor this to use _id for iid rather than specific iid
-// TODO: rename needs in Availability DB to needUserMap
 Schema.Availability = new SimpleSchema({
   _id: {
     type: String,
@@ -28,6 +25,5 @@ Schema.Availability = new SimpleSchema({
   },
 
 });
-
 export const Availability = new Mongo.Collection('availability');
 Availability.attachSchema(Schema.Availability);

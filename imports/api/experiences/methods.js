@@ -1,12 +1,12 @@
-import {Meteor} from 'meteor/meteor';
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {_} from 'meteor/underscore';
-import {Experiences} from './experiences.js';
-import {Schema} from '../schema.js';
-import {getUnfinishedNeedNames} from "../submissions/methods";
-import {Incidents} from "../incidents/incidents";
-import {getNeedFromIncidentId} from "../incidents/methods";
+import { Meteor } from 'meteor/meteor';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
+import { Experiences } from './experiences.js';
+import { Schema } from '../schema.js';
+import { getUnfinishedNeedNames} from '../submissions/methods';
+import { Incidents } from '../incidents/incidents';
+import { getNeedFromIncidentId } from '../incidents/methods';
 
 
 /**
@@ -17,10 +17,11 @@ import {getNeedFromIncidentId} from "../incidents/methods";
  * @param lng {float} longitude of user's new location
  * @returns {{}}
  */
-export const findMatchesForUser = function (uid, lat, lng) {
+export const findMatchesForUser = (uid, lat, lng) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
-  console.log("unfinishedneeds", unfinishedNeeds);
+  console.log('unfinishedNeeds', unfinishedNeeds);
+
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
@@ -51,12 +52,12 @@ export const findMatchesForUser = function (uid, lat, lng) {
  * @param needName {string} name of need to determine match for
  * @returns {boolean} whether user matches need queried for
  */
-export const doesUserMatchNeed = function(uid, lat, lng, iid, needName) {
+export const doesUserMatchNeed = (uid, lat, lng, iid, needName) => {
   //@ryan, here is the detector for you to match with
   //let detector = getNeedFromIncidentId(iid, needName).situation.detector;
 
   return true;
-}
+};
 
 
 
@@ -69,24 +70,29 @@ export const updateUserExperiences = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id
     }
   }).validator(),
-  run({userId}) {
+  run({ userId }) {
     let user = Meteor.users.findOne(userId);
     let exps = Experiences.find().fetch().filter((doc) => {
       let match = true;
+
       doc.requirements.forEach((req) => {
         if (!user.profile.qualifications[req]) {
           match = false;
         }
       });
+
       return match;
     }).map((doc) => {
       return doc._id;
     });
-    Meteor.users.update(userId, {$set: {'profile.experiences': exps}});
+
+    Meteor.users.update(userId, { $set: { 'profile.experiences': exps } });
+
     let subs = user.profile.subscriptions;
     subs = subs.filter((sub) => {
       return _.contains(exps, sub);
     });
+
     Meteor.users.update(userId, {$set: {'profile.subscriptions': subs}});
   }
 });
@@ -99,7 +105,7 @@ export const removeExperience = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id
     }
   }).validator(),
-  run({experienceId}) {
+  run({ experienceId }) {
     Experiences.remove(experienceId);
   }
 });
@@ -140,7 +146,8 @@ export const createExperience = new ValidatedMethod({
         name, description, image, participateTemplate, resultsTemplate, contributionGroups,
         notificationStrategy, notificationText, callbackPair
       }) {
-    console.log("validated")
+    console.log('validated');
+
     const experience = {
       name: name,
       description: description,
@@ -151,15 +158,17 @@ export const createExperience = new ValidatedMethod({
       notificationStrategy: notificationStrategy,
       notificationText: notificationText,
       callbackPair: callbackPair
-    }
-    var id = Experiences.insert(experience, (err, docs) => {
+    };
+
+    let id = Experiences.insert(experience, (err, docs) => {
       if (err) {
         console.log(err);
       } else {
         console.log(docs);
       }
     });
-    console.log("Experience created" + id);
+
+    console.log('Experience created' + id);
     return id;
   }
 });

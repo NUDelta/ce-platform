@@ -1,6 +1,6 @@
-import {Mongo} from "meteor/mongo";
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Schema} from '../schema.js';
+import { Mongo } from "meteor/mongo";
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Schema } from '../schema.js';
 
 Schema.Assignment = new SimpleSchema({
   _id: {

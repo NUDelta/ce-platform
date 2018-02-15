@@ -1,24 +1,21 @@
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import {_} from 'meteor/underscore';
+import { _ } from 'meteor/underscore';
 
-import {Cerebro} from '../cerebro/server/cerebro-server.js';
-import {Experiences} from '../experiences/experiences.js';
-import {Incidents} from '../incidents/incidents.js';
-import {Locations} from '../locations/locations.js';
-import {Submissions} from '../submissions/submissions.js';
-import {NotificationLog} from '../cerebro/cerebro-core.js'
+import { Cerebro } from '../cerebro/server/cerebro-server.js';
+import { Experiences } from '../experiences/experiences.js';
+import { Incidents } from '../incidents/incidents.js';
+import { Locations } from '../locations/locations.js';
+import { Submissions } from '../submissions/submissions.js';
+import { NotificationLog } from '../cerebro/cerebro-core.js';
 
-import {Users} from '../users/users.js';
-import {
-  _addActiveIncidentToUsers, _removeActiveIncidentFromUsers,
-  removeActiveIncidentFromUsers
-} from "../users/methods";
-import {Assignments} from "./assignments";
-import {Availability} from "./availability";
-import {doesUserMatchNeed} from "../experiences/methods";
-import {getNeedFromIncidentId} from "../incidents/methods";
+import { Users } from '../users/users.js';
+import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers } from '../users/methods';
+import { Assignments } from './assignments';
+import { Availability } from './availability';
+import { doesUserMatchNeed } from '../experiences/methods';
+import { getNeedFromIncidentId } from '../incidents/methods';
 
 
 /**
@@ -27,59 +24,61 @@ import {getNeedFromIncidentId} from "../incidents/methods";
  * @param uid {string} user whose location just updated
  * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
  */
-export const runCoordinatorAfterUserLocationChange = function (uid, availabilityDictionary) {
+export const runCoordinatorAfterUserLocationChange = (uid, availabilityDictionary) => {
   // update availabilities of users and check if any experience incidents can be run
   let updatedAvailability = updateAvailability(uid, availabilityDictionary);
-  console.log("updatedAvailability", updatedAvailability[0].needUserMaps)
-
+  console.log('updatedAvailability', updatedAvailability[0].needUserMaps);
 
   let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
+  console.log('incidentsWithUsersToRun', incidentsWithUsersToRun);
 
-  console.log("incidentsWithUsersToRun", incidentsWithUsersToRun)
   // add users to incidents to be run
   runNeedsWithThresholdMet(incidentsWithUsersToRun);
 };
 
 /**
- * Sends notifications to the users, adds to the user's active experience list, marks in assignment DB 2b
- * @param incidentsWithUsersToRun {object} needs to run in format of { iid: { need: [uid, uid], need:[uid] }
+ * Sends notifications to the users, adds to the user's active experience list,
+ *  marks in assignment DB 2b
+ * @param incidentsWithUsersToRun {object} needs to run in format of
+ *  { iid: { need: [uid, uid], need:[uid] }
  */
-function runNeedsWithThresholdMet(incidentsWithUsersToRun) { //{iid: {need: [uid, uid], need:[uid]}
-
+const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
-    console.log("needUserMapping", needUserMapping)
-    console.log("iid", iid)
-
+    console.log('needUserMapping', needUserMapping);
+    console.log('iid', iid);
 
     let incident = Incidents.findOne(iid);
-    console.log("incidents", incident)
-    let experience = Experiences.findOne(incident.eid)
+    let experience = Experiences.findOne(incident.eid);
+    console.log('incidents', incident);
 
     _.forEach(needUserMapping, (uids, needName) => {
       //administrative updates
       adminUpdatesForAddingUsersToIncident(uids, iid, needName);
 
-      let route = "apiCustom/" + iid + "/" + needName;
-      Cerebro.notify(uids, iid, "Event " + experience.name + " is starting!", experience.notificationText, route)
+      let route = 'apiCustom/' + iid + '/' + needName;
+      Cerebro.notify(uids, iid, 'Event ' + experience.name + ' is starting!',
+                      experience.notificationText, route);
     });
   });
-}
+};
 
 /**
- * Given a set of users, it chooses a subset of the given number based on how many other experiences users are available for
+ * Given a set of users, it chooses a subset of the given number
+ *  based on how many other experiences users are available for.
  *
  * @param uids {[string]} uids available for the incident
  * @param numberPeopleNeeded {int} number of users we need to choose for the incident
  * @returns {[string]} uids chosen for the incident
  */
-function chooseUsers(uids, numberPeopleNeeded) {
-
+const chooseUsers = (uids, numberPeopleNeeded) => {
   let userPopularityMap = {};
-
   _.forEach(uids, (uid) => {
-
     userPopularityMap[uid] = Availability.find({
-      "needUserMaps": {"$elemMatch": {"uids": uid}}
+      'needUserMaps': {
+        '$elemMatch': {
+          'uids': uid
+        }
+      }
     }).count();
 
   });
@@ -89,47 +88,44 @@ function chooseUsers(uids, numberPeopleNeeded) {
   });
 
   return uids.slice(0, numberPeopleNeeded);
-
-}
+};
 
 /**
  * Check if an experience need can run e.g. it has the required number of people.
  * This may call other functions that, for example, check for relationship, co-located, etc.
  *
- * @param updatedExperiencesAndNeeds {[object]} array of object from Availability DB
- *  [{iid: string, needs: [{needName: string, users: [uid]}]]
- * @returns {{}}
+ * @param updatedIncidentsAndNeeds {[object]} array of object from Availability DB
+ *  [{iid: string, needs: [{needName: string, users: [uid]}]] TODO: update this description
+ * @returns {{ iid: {need: [uid, uid], need: [uid] } } }
  */
-function checkIfThreshold(updatedIncidentsAndNeeds) {
-
+const checkIfThreshold = (updatedIncidentsAndNeeds) => {
   //these are not needUsermaps
-  console.log("updatedIncidentsAndNeeds", updatedIncidentsAndNeeds[0])
+  console.log('updatedIncidentsAndNeeds', updatedIncidentsAndNeeds[0]);
 
   let incidentsWithUsersToRun = {};
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
-
     incidentsWithUsersToRun[incidentMapping.iid] = {};
 
     _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
       // get need object for current iid/current need and number of people
-      console.log("needUserMap", incidentMapping.needUserMaps)
+      console.log('needUserMap', incidentMapping.needUserMaps);
+
       let needObject = getNeedFromIncidentId(incidentMapping.iid, needUserMap.needName);
-      console.log("needObject", needObject)
       let numberPeopleNeeded = needObject.situation.number;
+      console.log('needObject', needObject);
 
-      console.log("numbers", needUserMap.uids.length, numberPeopleNeeded)
+      console.log('numbers', needUserMap.uids.length, numberPeopleNeeded);
       if (needUserMap.uids.length >= numberPeopleNeeded) {
-        let chosenUsers = chooseUsers(needUserMap.uids, numberPeopleNeeded);
-        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chosenUsers;
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] =
+          chooseUsers(needUserMap.uids, numberPeopleNeeded);
       }
-
     });
   });
 
-  console.log("incidentsWithUsersToRun", incidentsWithUsersToRun)
+  console.log('incidentsWithUsersToRun', incidentsWithUsersToRun);
 
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
-}
+};
 
 /**
  * AVAILABILITY DB FUNCTIONS
@@ -140,17 +136,17 @@ function checkIfThreshold(updatedIncidentsAndNeeds) {
  *
  * @param uid {string}
  * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
- * @return {[object]} array of object from Availability DB [{iid: string, needs: [{needName: string, users: [uid]}]]
+ * @return {[object]} array of object from Availability DB
+ *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
 export const updateAvailability = (uid, availabilityDictionary) => {
-  console.log("updateAvailability", uid, availabilityDictionary)
+  console.log('updateAvailability', uid, availabilityDictionary);
   let updatedEntries = [];
 
   //remove user from all entries
   let availability = Availability.find().fetch();
-
+  // TODO: refactor with _.forEach
   for (let i in availability) {
-
     let av = availability[i];
     console.log(av._id);
 
@@ -159,25 +155,24 @@ export const updateAvailability = (uid, availabilityDictionary) => {
       continue;
     }
 
-    let updatedNeeds = {iid: iid, "needUserMaps": []};
+    let updatedNeeds = { iid: iid, 'needUserMaps': [] };
 
+    // TODO: refactor with _.forEach
     for (let j in av.needUserMaps) {
-
-      console.log(av.needUserMaps[j])
+      console.log(av.needUserMaps[j]);
       let needName = av.needUserMaps[j].needName;
 
       if (availabilityDictionary[iid].indexOf(needName) !== -1) {
-
         Availability.update({
           _id: iid,
-          "needUserMaps.needName": needName
+          'needUserMaps.needName': needName
         }, {
-          $addToSet: {"needUserMaps.$.uids": uid}
+          $addToSet: {'needUserMaps.$.uids': uid}
         }, (err, docs) => {
           if (err) {
-            console.log("error,", err);
+            console.log('error,', err);
           } else {
-            console.log("add worked", docs, needName)
+            console.log('add worked', docs, needName);
 
           }
         });
@@ -190,28 +185,25 @@ export const updateAvailability = (uid, availabilityDictionary) => {
       } else {
         Availability.update({
           _id: iid,
-          "needUserMaps.needName": needName
+          'needUserMaps.needName': needName
         }, {
-          $pull: {"needUserMaps.$.uids": uid}
-        }, (err, docs) => {
+          $pull: {'needUserMaps.$.uids': uid}
+        }, (err) => {
           if (err) {
-            console.log("error,", err);
+            console.log('error,', err);
           } else {
           }
         });
       }
 
     }
-    console.log("updatedNeeds", updatedNeeds)
+    console.log('updatedNeeds', updatedNeeds);
     updatedEntries.push(updatedNeeds);
 
   }
-  console.log("updatedEntries", updatedEntries)
+  console.log('updatedEntries', updatedEntries);
   return updatedEntries;
-}
-
-
-
+};
 
 /**
  * ASSIGNMENT DB FUNCTIONS
@@ -227,7 +219,11 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  */
 export const updateAssignmentDbdAfterUserLocationChange = (uid, lat, lng) => {
   let currentAssignments = Assignments.find({
-    "needUserMaps": {"$elemMatch": {"uids": uid}}
+    'needUserMaps': {
+      '$elemMatch': {
+        'uids': uid
+      }
+    }
   }).fetch();
 
   _.forEach(currentAssignments, (assignment) => {
@@ -247,10 +243,10 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, lat, lng) => {
  * @param iid {string} incident to add users to
  * @param needName {string} name of need to add users to
  */
-function adminUpdatesForAddingUsersToIncident(uids, iid, needName) {
+const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
-}
+};
 
 /**
  *
@@ -258,10 +254,10 @@ function adminUpdatesForAddingUsersToIncident(uids, iid, needName) {
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
-function adminUpdatesForRemovingUsersToIncident(uids, iid, needName) {
-  _removeUsersFromAssignmentDb(uid, iid, needName);
+const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
+  _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeActiveIncidentFromUsers(uids, iid);
-}
+};
 
 /**
  * Adds all users in the array to the assignmentDB for the specified need.
@@ -270,14 +266,14 @@ function adminUpdatesForRemovingUsersToIncident(uids, iid, needName) {
  * @param iid {string} incident to add to
  * @param needName {string} need to add user to
  */
-function _addUsersToAssignmentDb(uids, iid, needName) {
+const _addUsersToAssignmentDb = (uids, iid, needName) => {
   Assignments.update({
     _id: iid,
-    "needUserMaps.needName": needName
+    'needUserMaps.needName': needName
   }, {
-    $push: {"needUserMaps.$.uids": {$each: uids}}
+    $push: { 'needUserMaps.$.uids': { $each: uids } }
   });
-}
+};
 
 /**
  * Removes user from assignmentDB for the specified need.
@@ -286,14 +282,14 @@ function _addUsersToAssignmentDb(uids, iid, needName) {
  * @param iid {string} incident to remove from
  * @param needName {string} need that user is assigned to
  */
-function _removeUsersFromAssignmentDb(uids, iid, needName) {
+const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
   Assignments.update({
     _id: iid,
-    "needUserMaps.needName": needName
+    'needUserMaps.needName': needName
   }, {
-    $pull: {"needUserMaps.$.uids": {$each: uids}}
+    $pull: { 'needUserMaps.$.uids': { $each: uids } }
   });
-}
+};
 
 const locationCursor = Locations.find();
 
@@ -303,26 +299,26 @@ const locationCursor = Locations.find();
  */
 const locationHandle = locationCursor.observeChanges({
   changed(id, fields) {
-    console.log("the location field changed", fields)
+    console.log('the location field changed', fields);
 
-    if ("lastNotification" in fields) {
+    if ('lastNotification' in fields) {
       return;
     }
 
     //check if now that they've moved they...
-    var location = Locations.findOne({_id: id});
-    var uid = location.uid;
+    const location = Locations.findOne({ _id: id });
+    const uid = location.uid;
 
     //need to be removed from an experience they're currently in
-    var user = Meteor.users.findOne({_id: uid})
-    var usersExperiences = user.profile.activeExperiences
+    const user = Meteor.users.findOne({ _id: uid });
+    const usersExperiences = user.profile.activeExperiences;
     if (usersExperiences) {
       usersExperiences.forEach((experienceId) => {
         removeUserFromExperienceAfterTheyMoved(uid, experienceId)
       })
     }
 
-    if ("affordances" in fields) {
+    if ('affordances' in fields) {
       AvailabilityLog.insert({
         uid: uid,
         lastParticipated: user.profile.lastParticipated,
@@ -330,28 +326,29 @@ const locationHandle = locationCursor.observeChanges({
         affordances: location.affordances,
         lat: location.lat,
         lng: location.lng,
-        now: Date.parse(new Date()),
+        now: Date.now()
       });
     }
 
     //check if user to available to participate right now
     if (!userIsAvailableToParticipate(user, location)) {
-      console.log("user participated too recently")
+      console.log('user participated too recently');
       return;
     }
 
     //can be added to a new experience
-    var allExperiences = Experiences.find({activeIncident: {$exists: true}}).fetch()
+    const allExperiences = Experiences.find({ activeIncident: { $exists: true } }).fetch();
 
     //could randomize the order of experiences
-    console.log("at the top of the for loops")
-    var shuffledExperiences = _.shuffle(allExperiences)
-    for (var i in shuffledExperiences) {
-      var experience = shuffledExperiences[i];
-      var result = attemptToAddUserToIncident(uid, experience.activeIncident);
-      console.log("result", result)
+    console.log('at the top of the for loops');
+    const shuffledExperiences = _.shuffle(allExperiences);
+
+    for (let i in shuffledExperiences) {
+      const experience = shuffledExperiences[i];
+      const result = attemptToAddUserToIncident(uid, experience.activeIncident);
+      console.log('result', result);
       if (result) {
-        console.log("We found an experience for the user and now are stopping")
+        console.log('We found an experience for the user and now are stopping');
         break;
       }
     }
@@ -363,66 +360,72 @@ const locationHandle = locationCursor.observeChanges({
  * userIsAvailableToParticipate - checks if a user can participate or if they not
  *    available to participate because they were notified too recently
  *
- * @param  {user document} user     user document
- * @param  {location document} location location document for that user
- * @return {bool}          true if a user can participate
+ * @param  user {User} user document
+ * @param  location {Location} location location document for that user
+ * @return {boolean} true if a user can participate
  */
-function userIsAvailableToParticipate(user, location) {
-  var waitTimeAfterNotification = 30 * 60000; //first number is the number of minutes
-  var waitTimeAfterParticipating = 60 * 60000;//first number is the number of minutes
+const userIsAvailableToParticipate = (user, location) => {
+  const waitTimeAfterNotification = 30 * 60000; //first number is the number of minutes
+  const waitTimeAfterParticipating = 60 * 60000;//first number is the number of minutes
 
-  var lastParticipated = user.profile.lastParticipated;
-  var lastNotified = location.lastNotification;
+  const lastParticipated = user.profile.lastParticipated;
+  const lastNotified = location.lastNotification;
 
-  var now = Date.parse(new Date());
+  const now = Date.now();
 
-  var userNotYetNotified = lastParticipated === null
-  var userNotifiedTooRecently = (now - lastNotified) < waitTimeAfterNotification
-  var userNotYetParticipated = lastNotified === null
-  var userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating
+  let userNotYetNotified = lastParticipated === null;
+  const userNotifiedTooRecently = (now - lastNotified) < waitTimeAfterNotification;
 
-  if ((!userNotYetNotified && userNotifiedTooRecently) || (!userNotYetParticipated && userParticipatedTooRecently)) {
-    return false;
-  }
-  else {
-    return true;
-  }
-}
+  let userNotYetParticipated = lastNotified === null;
+  const userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating;
 
-function attemptToAddUserToIncident(uid, incidentId) {
-  var incident = Incidents.findOne({_id: incidentId});
-  var userAffordances = Locations.findOne({uid: uid}).affordances
-  var minParticipation = Math.min(); //this is infinity
-  var minSituationNeed = null;
+  return !((!userNotYetNotified && userNotifiedTooRecently) ||
+            (!userNotYetParticipated && userParticipatedTooRecently));
+};
+
+const attemptToAddUserToIncident = (uid, incidentId) => {
+  const incident = Incidents.findOne({ _id: incidentId });
+  const userAffordances = Locations.findOne({ uid: uid }).affordances;
+  const minParticipation = Math.min(); //this is infinity
+  let minSituationNeed = null;
 
   incident.situationNeeds.forEach((sn) => {
     if (sn.done === false && containsAffordance(userAffordances, sn.affordance)) {
       //need has a user, but lets see if time to kick them out
       if (sn.notifiedUsers.length > 0) {
-        var timeSinceUserLastNotified = Date.parse(new Date()) - Locations.findOne({uid: sn.notifiedUsers[0]}).lastNotified
-        if (timeSinceUserLastNotified > 30 * 60000) { //time in minutes since they were asked to participate in any experience
+        const lastNotified = Locations.findOne({ uid: sn.notifiedUsers[0] }).lastNotifiedl;
+        const timeSinceUserLastNotified = Date.now() - lastNotified;
+
+        // time in minutes since they were asked to participate in any experience
+        if (timeSinceUserLastNotified > 30 * 60000) {
           removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
         } else {
           //we have a user already for this need, skip and see if the next one is open
           return false;
         }
       }
-      var numberDone = Submissions.find({incidentId: incident._id, situationNeed: sn.name}).count()
+      const numberDone = Submissions.find({
+        incidentId: incident._id,
+        situationNeed: sn.name
+      }).count();
+
       if (numberDone < minParticipation) {
         minSituationNeed = sn.name;
       }
     }
   });
+
   if (minSituationNeed != null) {
-    addUserToSituationNeed(uid, incidentId, minSituationNeed)
+    addUserToSituationNeed(uid, incidentId, minSituationNeed);
     return true;
   }
-  return false;
-}
 
-function addUserToSituationNeed(uid, incidentId, situationNeedName) {
-  var experience = Experiences.findOne({activeIncident: incidentId});
-  var experienceId = experience._id;
+  return false;
+};
+
+const addUserToSituationNeed = (uid, incidentId, situationNeedName) => {
+  const experience = Experiences.findOne({ activeIncident: incidentId });
+  const experienceId = experience._id;
 
   //add active experience to the user
   Cerebro.setActiveExperiences(uid, experienceId);
@@ -435,11 +438,12 @@ function addUserToSituationNeed(uid, incidentId, situationNeedName) {
         {'situationNeeds.$.notifiedUsers': uid}
     }
   );
+
   //notify the user & mark as notified
-  Locations.update({uid: uid}, {$set: {"lastNotification": Date.parse(new Date())}});
+  Locations.update({uid: uid}, {$set: {'lastNotification': Date.parse(new Date())}});
 
   //add notification to notification log
-  var userLocation = Locations.findOne({uid: uid})
+  const userLocation = Locations.findOne({ uid: uid });
   NotificationLog.insert({
     userId: uid,
     task: situationNeedName,
@@ -453,15 +457,16 @@ function addUserToSituationNeed(uid, incidentId, situationNeedName) {
   Cerebro.notify({
     userId: uid,
     experienceId: experienceId,
-    subject: "Event " + experience.name + " is starting!",
+    subject: 'Event ' + experience.name + ' is starting!',
     text: experience.notificationText,
-    route: "apiCustom"
+    route: 'apiCustom'
   });
-}
+};
 
-function removeUserFromExperience(uid, experienceId, incidentId, situationNeedName) {
+const removeUserFromExperience = (uid, experienceId, incidentId, situationNeedName) => {
   //remove the user from the incident
-  console.log("removeing the user")
+  console.log('removeing the user');
+
   Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeedName},
     {
       $pull:
@@ -475,80 +480,82 @@ function removeUserFromExperience(uid, experienceId, incidentId, situationNeedNa
         {'profile.activeExperiences': experienceId}
     }
   );
-}
+};
 
-export const removeUserAfterTheyParticipated = function (uid, experienceId) {
-  var userAffordances = Locations.findOne({uid: uid}).affordances
-  var incident = Incidents.findOne({experienceId: experienceId});
+export const removeUserAfterTheyParticipated = (uid, experienceId) => {
+  const incident = Incidents.findOne({ experienceId: experienceId });
 
-  for (var i in incident.situationNeeds) {
-    var sn = incident.situationNeeds[i]
-    console.log(sn.name)
+  for (let i in incident.situationNeeds) {
+    const sn = incident.situationNeeds[i];
+    console.log(sn.name);
     if (_.contains(sn.notifiedUsers, uid)) {
-      removeUserFromExperience(uid, experienceId, incident._id, sn.name)
+      removeUserFromExperience(uid, experienceId, incident._id, sn.name);
       break;
     }
   }
-  ;
-}
+};
 
-function removeUserFromExperienceAfterTheyMoved(uid, experienceId) {
-  var userAffordances = Locations.findOne({uid: uid}).affordances
-  var incident = Incidents.findOne({experienceId: experienceId});
-  var wait = 5 * 60 * 1000; //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
+const removeUserFromExperienceAfterTheyMoved = (uid, experienceId) => {
+  const userAffordances = Locations.findOne({ uid: uid }).affordances;
+  const incident = Incidents.findOne({ experienceId: experienceId });
+  const wait = 5 * 60 * 1000; //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
 
-  Meteor.setTimeout(function () {
-    console.log("we're removing the userrzz")
-    for (var i in incident.situationNeeds) {
-      var sn = incident.situationNeeds[i]
+  Meteor.setTimeout(() => {
+    console.log('removing users');
+
+    // TODO: refactor with _.forEach
+    for (let i in incident.situationNeeds) {
+      const sn = incident.situationNeeds[i];
+
       if (_.contains(sn.notifiedUsers, uid)) {
         if (!containsAffordance(userAffordances, sn.affordance)) {
-          console.log("found the one to remove from!")
-          removeUserFromExperience(uid, experienceId, incident._id, sn.name)
+          console.log('found the one to remove from!');
+          removeUserFromExperience(uid, experienceId, incident._id, sn.name);
+
           //a user will only be in one situation need, so we can break
           break;
         }
       }
     }
-    ;
   }, wait)
-}
+};
 
 
 // METHODS FOR AFFORDANCE SEARCH
-function containsAffordance(user_affordances, search_affordance) {
+const containsAffordance = (userAffordances, searchAffordances) => {
   // && affordances
-  if (search_affordance.search(" and ") > 0) {
-    return andAffordances(user_affordances, search_affordance);
+  if (searchAffordances.search(' and ') > 0) {
+    return andAffordances(userAffordances, searchAffordances);
   }
   // || affordances
-  else if (search_affordance.search(" or ") > 0) {
-    return orAffordances(user_affordances, search_affordance);
+  else if (searchAffordances.search(' or ') > 0) {
+    return orAffordances(userAffordances, searchAffordances);
   }
   // single affordance
   else {
-    return (_.contains(user_affordances, search_affordance));
+    return (_.contains(userAffordances, searchAffordances));
   }
-}
+};
 
-function andAffordances(user_affordances, search_affordance) {
-  let affordances = [];
-  let str = search_affordance;
-  affordances = search_affordance.split(" and ");
-  differences = _.difference(affordances, user_affordances)
-  return differences.length == 0
-}
+const andAffordances = (userAffordances, searchAffordances) => {
+  let affordances = searchAffordances.split(' and ');
+  let differences = _.difference(affordances, userAffordances);
 
-function orAffordances(user_affordances, search_affordance) {
-  let affordances = [];
+  return differences.length === 0;
+};
+
+const orAffordances = (userAffordances, searchAffordances) => {
+  let affordances = searchAffordances.split(' or ');
   let contains = false;
-  affordances = search_affordance.split(" or ");
+
   for (i = 0; i < affordances.length; i++) {
-    anAffordance = affordances[i];
-    if (_.contains(user_affordances, anAffordance)) {
+    let currAffordance = affordances[i];
+
+    if (_.contains(userAffordances, currAffordance)) {
       contains = true;
       break;
     }
   }
+
   return contains;
-}
+};

@@ -1,11 +1,11 @@
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {log} from '../logs.js';
-import {Locations} from './locations.js';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { log } from '../logs.js';
+import { Locations } from './locations.js';
 
-import {findMatchesForUser} from '../experiences/methods'
-import {runCoordinatorAfterUserLocationChange} from '../coordinator/methods'
-import {updateAssignmentDbdAfterUserLocationChange} from "../coordinator/methods";
+import { findMatchesForUser } from '../experiences/methods'
+import { runCoordinatorAfterUserLocationChange } from '../coordinator/methods'
+import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -15,12 +15,12 @@ import {updateAssignmentDbdAfterUserLocationChange} from "../coordinator/methods
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-export const onLocationUpdate = function(uid, lat, lng) {
-  console.log("recieved location update", lat, lng)
+export const onLocationUpdate = (uid, lat, lng) => {
+  console.log("received location update", lat, lng);
   updateLocationInDb(uid, lat, lng);
   updateAssignmentDbdAfterUserLocationChange(uid, lat, lng);
   sendToMatcher(uid, lat, lng);
-}
+};
 
 /**
  * Finds the matches (findMatchesFunction in User::Experience Matcher) for the user for a user's location update and
@@ -30,16 +30,17 @@ export const onLocationUpdate = function(uid, lat, lng) {
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-function sendToMatcher(uid, lat, lng) {
+const sendToMatcher = (uid, lat, lng) => {
   // should check whether a user is available before sending to coordinator
-  let userCanParticipate = userIsAvailableToParticipate(uid, false); // TODO: replace false with config.debug global setting
+  // TODO: replace false with config.debug global setting
+  let userCanParticipate = userIsAvailableToParticipate(uid, false);
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, lat, lng);
-    console.log("found matches", availabilityDictionary)
+    console.log("found matches", availabilityDictionary);
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
-}
+};
 
 // TODO: implement this
 /**
@@ -50,7 +51,7 @@ function sendToMatcher(uid, lat, lng) {
  * @param debug {boolean} choose to run in debug mode or not
  * @returns {boolean} whether a user can participate in an experience
  */
-function userIsAvailableToParticipate(uid, debug) {
+const userIsAvailableToParticipate = (uid, debug) => {
   if (typeof debug === 'undefined') {
 
   } else {
@@ -58,7 +59,7 @@ function userIsAvailableToParticipate(uid, debug) {
   }
 
   return true;
-}
+};
 
 /**
  * Updates the location for a user in the database.
@@ -67,14 +68,14 @@ function userIsAvailableToParticipate(uid, debug) {
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-function updateLocationInDb(uid, lat, lng) {
+const updateLocationInDb = (uid, lat, lng) => {
   const entry = Locations.findOne({uid: uid});
   if (entry) {
     Locations.update(entry._id, {
       $set: {
         lat: lat,
         lng: lng,
-        timestamp: Date.parse(new Date()),
+        timestamp: Date.now()
       }
     }, (err) => {
       if (err) {
@@ -86,11 +87,11 @@ function updateLocationInDb(uid, lat, lng) {
       uid: uid,
       lat: lat,
       lng: lng,
-      timestamp: Date.parse(new Date()),
+      timestamp: Date.now(),
     }, (err) => {
       if (err) {
         log.error("Locations/methods, can't add a new location", err);
       }
     });
   }
-}
+};

@@ -13,38 +13,30 @@ import { insertPhoto } from '../../api/images/methods.js';
 import { log } from '../../api/logs.js';
 
 import { LOCATIONS } from './data.js';
-import {findUserByEmail} from "../../api/users/methods";
+import { findUserByEmail } from '../../api/users/methods';
 
 
 
 Meteor.startup(() => {
-
-
   SyncedCron.start();
-  if(true){
-    Meteor.users.remove({});
-    // Experiences.remove({});
-    // Locations.remove({});
-    // Images.remove({});
-    // TextEntries.remove({});
-    // Incidents.remove({});
-  }
+  Meteor.users.remove({});
+
   if (Meteor.users.find().count() === 0) {
   //if(true){
     const users = [
-      {email: 'gotjennie@gmail.com', password: 'password'},
-      {email: 'allisun.96@gmail.com', password: 'password'},
-      {email: 'a@gmail.com', password: 'password'},
-      {email: 'b@gmail.com', password: 'password'},
-      {email: 'c@gmail.com', password: 'password'},
-      {email: 'd@gmail.com', password: 'password'},
-      {email: 'e@gmail.com', password: 'password'},
-      {email: 'f@gmail.com', password: 'password'},
-      {email: 'g@gmail.com', password: 'password'},
-      {email: 'h@gmail.com', password: 'password'},
-      {email: 'i@gmail.com', password: 'password'},
-      {email: 'j@gmail.com', password: 'password'},
-      {email: 'k@gmail.com', password: 'password'}
+      { email: 'gotjennie@gmail.com', password: 'password' },
+      { email: 'allisun.96@gmail.com', password: 'password' },
+      { email: 'a@gmail.com', password: 'password' },
+      { email: 'b@gmail.com', password: 'password' },
+      { email: 'c@gmail.com', password: 'password' },
+      { email: 'd@gmail.com', password: 'password' },
+      { email: 'e@gmail.com', password: 'password' },
+      { email: 'f@gmail.com', password: 'password' },
+      { email: 'g@gmail.com', password: 'password' },
+      { email: 'h@gmail.com', password: 'password' },
+      { email: 'i@gmail.com', password: 'password' },
+      { email: 'j@gmail.com', password: 'password' },
+      { email: 'k@gmail.com', password: 'password' }
     ];
 
     users.forEach(user => Accounts.createUser(user));
@@ -55,22 +47,29 @@ Meteor.startup(() => {
       {
         name: 'flag',
         author: jennie._id,
-        description: "Let's build an American Flag!",
-        startText: "Take a picture to help us build an American Flag",
+        description: 'Let's build an American Flag!',
+        startText: 'Take a picture to help us build an American Flag',
         modules: ['camera'],
         requirements: [],
         optIn: false,
-        parts: [{"name": "red", "description": "stripes", "affordance": "grocery", "max": 1}, {"name": "white", "description": "stripes", "affordance": "rain", "max": 1}, {"name": "blue", "description": "stars", "affordance": "beaches", "max": 1}]
+        parts: [
+          { 'name': 'red', 'description': 'stripes', 'affordance': 'grocery', 'max': 1 },
+          { 'name': 'white', 'description': 'stripes', 'affordance': 'rain', 'max': 1 },
+          { 'name': 'blue', 'description': 'stars', 'affordance': 'beaches', 'max': 1 }
+          ]
       },
       {
         name: 'cheers1',
         author: jennie._id,
-        description: "Raise your glass!",
-        startText: "Raise your glass and cheers with someone else!",
+        description: 'Raise your glass!',
+        startText: 'Raise your glass and cheers with someone else!',
         modules: ['camera'],
         requirements: [],
         optIn: false,
-        parts: [{"name": "left","description": "", "affordance": "pubs", "max": 2}, {"name": "right", "description": "", "affordance": "pubs", "max": 2}]
+        parts: [
+          {'name': 'left','description': '', 'affordance': 'pubs', 'max': 2 },
+          {'name': 'right', 'description': '', 'affordance': 'pubs', 'max': 2 }
+          ]
       }
     ];
 

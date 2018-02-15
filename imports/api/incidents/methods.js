@@ -1,32 +1,29 @@
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {_} from 'meteor/underscore';
-import {Incidents} from "./incidents";
-import {Availability} from "../coordinator/availability";
-import {Assignments} from "../coordinator/assignments";
-import {Submissions} from "../submissions/submissions";
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
+import { Incidents } from './incidents';
+import { Availability } from '../coordinator/availability';
+import { Assignments } from '../coordinator/assignments';
+import { Submissions } from '../submissions/submissions';
 
 
-export const startRunningIncident = function (incident) {
-
-  console.log("incident in start", incident)
+export const startRunningIncident = (incident) => {
+  console.log('incident in start', incident);
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (contribution) => {
-
     let templateName = contribution.templateName;
 
     _.forEach(contribution.needs, (need) => {
-
-      needUserMaps.push({needName: need.needName})
+      needUserMaps.push({needName: need.needName});
       Submissions.insert({
         eid: incident.eid,
         iid: incident._id,
         needName: need.needName,
         templateName: templateName,
-      }, (err, docs) => {
+      }, (err) => {
         if (err) {
-          console.log("error,", err);
+          console.log('error,', err);
         } else {
         }
       });
@@ -36,40 +33,36 @@ export const startRunningIncident = function (incident) {
   Availability.insert({
     _id: incident._id,
     needUserMaps: needUserMaps
-  })
+  });
 
   Assignments.insert({
     _id: incident._id,
     needUserMaps: needUserMaps
-  })
-
-}
+  });
+};
 
 /**
  * Given an experience object, creates an incident
- * @param {string} iid of the created incident
+ * @param experience {string} of the created incident
  */
-export const createIncidentFromExperience = function (experience) {
-
+export const createIncidentFromExperience = (experience) => {
   let incident = {
     _id: Random.id(),
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
-  }
+  };
 
-  Incidents.insert(incident, (err, docs) => {
+  Incidents.insert(incident, (err) => {
     if (err) {
-      console.log("error,", err);
+      console.log('error,', err);
     } else {
-      console.log("iid created")
+      console.log('iid created')
     }
   });
 
   return incident;
-
-
-}
+};
 
 /**
  * Finds the need dictionary in an incident given the need's name
@@ -79,23 +72,21 @@ export const createIncidentFromExperience = function (experience) {
  */
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
-  console.log("getNeedFromIncidentId", iid, needName )
+  console.log('getNeedFromIncidentId', iid, needName );
 
+  // TODO: refactor using _.forEach
   for (let i in incident.contributionTypes) {
-
     for (let j in incident.contributionTypes[i].needs) {
-      console.log("neeeds", incident.contributionTypes[i].needs)
+      console.log('needs', incident.contributionTypes[i].needs);
       let need = incident.contributionTypes[i].needs[j];
 
       if (need.needName === needName) {
-        console.log("found need", need)
+        console.log('found need', need);
         return need;
       }
     }
   }
-
-  //throw error();
-}
+};
 
 //
 // export const createIncident = new ValidatedMethod({
