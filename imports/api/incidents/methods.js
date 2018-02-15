@@ -7,8 +7,9 @@ import {Assignments} from "../coordinator/assignments";
 import {Submissions} from "../submissions/submissions";
 
 
-export const startRunningIncident = function (iid) {
-  let incident = Incidents.findOne(iid);
+export const startRunningIncident = function (incident) {
+
+  console.log("incident in start", incident)
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (contribution) => {
@@ -20,26 +21,25 @@ export const startRunningIncident = function (iid) {
       needUserMaps.push({needName: need.needName})
       Submissions.insert({
         eid: incident.eid,
-        iid: iid,
+        iid: incident._id,
         needName: need.needName,
         templateName: templateName,
       }, (err, docs) => {
         if (err) {
-          console.log(err);
+          console.log("error,", err);
         } else {
-          console.log("worked", docs)
         }
       });
     });
   });
 
   Availability.insert({
-    _id: iid,
+    _id: incident._id,
     needUserMaps: needUserMaps
   })
 
   Assignments.insert({
-    _id: iid,
+    _id: incident._id,
     needUserMaps: needUserMaps
   })
 
@@ -50,11 +50,25 @@ export const startRunningIncident = function (iid) {
  * @param {string} iid of the created incident
  */
 export const createIncidentFromExperience = function (experience) {
-  return Incidents.insert({
+
+  let incident = {
+    _id: Random.id(),
     eid: experience._id,
-    contributionTypes: experience.contributionTypes,
     callbacks: experience.callbacks,
+    contributionTypes: experience.contributionTypes,
+  }
+
+  Incidents.insert(incident, (err, docs) => {
+    if (err) {
+      console.log("error,", err);
+    } else {
+      console.log("iid created")
+    }
   });
+
+  return incident;
+
+
 }
 
 /**
@@ -65,14 +79,22 @@ export const createIncidentFromExperience = function (experience) {
  */
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
+  console.log("getNeedFromIncidentId", iid, needName )
 
-  _.forEach(incident.contributionTypes, (contribution) => {
-    _.forEach(contribution.needs, (need) => {
+  for (let i in incident.contributionTypes) {
+
+    for (let j in incident.contributionTypes[i].needs) {
+      console.log("neeeds", incident.contributionTypes[i].needs)
+      let need = incident.contributionTypes[i].needs[j];
+
       if (need.needName === needName) {
+        console.log("found need", need)
         return need;
       }
-    });
-  });
+    }
+  }
+
+  //throw error();
 }
 
 //

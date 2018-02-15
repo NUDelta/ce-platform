@@ -15,6 +15,7 @@ Schema.Incident = new SimpleSchema({
   },
   contributionTypes: {
     type: [Schema.ContributionTypes],
+    blackbox: true
   },
   callbacks: {
     type: [Schema.Callback],

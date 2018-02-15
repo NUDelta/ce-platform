@@ -40,12 +40,12 @@ describe('Simple End To End', function () {
     }
 
     Experiences.insert(experienceOne);
-    let iid = createIncidentFromExperience(experienceOne);
-    startRunningIncident(iid);
+    let incident = createIncidentFromExperience(experienceOne);
+    startRunningIncident(incident);
+
     let count = Submissions.find({
-      iid: iid
+      iid: incident._id
     }).count()
-    console.log("incidentId", iid, count)
 
   });
 
@@ -57,7 +57,6 @@ describe('Simple End To End', function () {
     let incident = Incidents.findOne({eid: EID});
     let iid = incident._id;
     let user = findUserByEmail("a@gmail.com");
-
     //user has incident as an active incident
     let addedToUser = (user.profile.activeIncidents.indexOf(iid) !== -1);
     chai.assert(addedToUser, "active incident not added to user profile");
@@ -68,7 +67,8 @@ describe('Simple End To End', function () {
     let needUserMap = assignmentEntry.needUserMaps.find(function(x) {
       return x.needName === "atRestaurant";
     })
-    chai.assert.typeOf(needUserMap, 'array', "no needUserMap in Assignment DB")
+    console.log("needUserMap", needUserMap)
+    chai.assert.typeOf(needUserMap.uids, 'array', "no needUserMap in Assignment DB")
     chai.assert(needUserMap.uids.indexOf(uid) !== -1, "uid not in needUserMap in Assignment DB");
 
   })
