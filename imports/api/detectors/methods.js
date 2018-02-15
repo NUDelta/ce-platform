@@ -2,10 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
+import {Locations} from '../locations/locations'
+import {Detectors} from './detectors'
 
 
-export const matchAffordancesWithDetector = new ValidatedMethod({
-  name: 'detectors.matchAffordancesWithDetector',
+export const matchAffordancesWithDetectorClient = new ValidatedMethod({
+  name: 'detectors.matchAffordancesWithDetectorClient',
 
   validate: new SimpleSchema({
     userId: { type: String },
@@ -13,25 +15,14 @@ export const matchAffordancesWithDetector = new ValidatedMethod({
   }).validator(),
 
   run({ userId, detectorId }) {
-    const userloc = Locations.findOne({ uid: userId });
-    const detector = Detectors.findOne({ _id: detectorId });
-
-    if (_.isEmpty(userloc.affordances)) {
-      throw new Meteor.Error('detectors.matchAffordancesWithDetector',
-        'Cannot match when a user affordances have not been sensed')
-    }
-
-    detector_output = applyDetector(userloc.affordances,
-                                    detector.variables,
-                                    detector.rules);
+    detector_output = matchAffordancesWithDetector(userId, detectorId);
     console.log('detector_output')
     console.log(detector_output)
-
     return detector_output;
   }
 });
 // Test Method in Client Like So:
-// Meteor.call('detectors.matchAffordancesWithDetector', {
+// Meteor.call('detectors.matchAffordancesWithDetectorClient', {
 //   userId: 'GozT7ZtXuu3diPPWc',
 //   detectorId: 'cG4RJxsodeYfG7ATT'
 // }, (err, res) => {
@@ -41,6 +32,60 @@ export const matchAffordancesWithDetector = new ValidatedMethod({
 //     console.log(res);
 //   }
 // });
+
+export const matchUserWithDetector = function(userId, detectorId, ) {
+  const userloc = Locations.findOne({ uid: userId });
+  // const userloc = Locations.findOne({ uid: userId });
+
+  if (_.isEmpty(userloc.affordances)) {
+    throw new Meteor.Error('detectors.matchAffordancesWithDetectorClient',
+      'Cannot match when a user affordances have not been sensed')
+  }
+}
+
+/**
+ * Gets affordances based on location, checks if affordances of location
+ * match the detector rules, and then calls a callback
+ * @param {Number} lat
+ * @param {Number} lng
+ * @param {String} detectorId
+ * @param {function} callback - with argument doesLocationMatchSituation
+ */
+export const getAffordancesMatchWithDetector = function(lat, lng, detectorId, callback) {
+  getAffordancesFromLocation(lat, lng, function(affordances) {
+    doesLocationMatchSituation = matchAffordancesWithDetector(affordances, detectorId);
+    callback(doesLocationMatchSituation);
+  })
+}
+
+/**
+ * Gets affordances based on location, then calls a callback
+ * @param {Number} lat
+ * @param {Number} lng
+ * @param {function} callback which with single argument affordances
+ */
+export const getAffordancesFromLocation = function(lat, lng, callback) {
+  let request = require('request');
+  let url = 'http://affordanceaware.herokuapp.com/location_keyvalues/' + lat.toString() + '/' + lng.toString();
+  request(url, Meteor.bindEnvironment(function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      let affordances = JSON.parse(body);
+      if (affordances !== Object(affordances)) {
+        log.warning("Locations/methods expected type Object but did not receive an Object, doing nothing");
+      }
+      callback(affordances);
+    }
+  }));
+}
+
+export const matchAffordancesWithDetector = function(affordances, detectorId) {
+  const detector = Detectors.findOne({ _id: detectorId });
+
+  doesUserMatchSituation = applyDetector(affordances,
+                                  detector.variables,
+                                  detector.rules);
+  return doesUserMatchSituation;
+}
 
 /**
  * Evaluates given the affordances of a user, if they match the definition given
