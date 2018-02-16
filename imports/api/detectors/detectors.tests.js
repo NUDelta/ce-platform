@@ -1,6 +1,6 @@
 import {resetDatabase} from 'meteor/xolvio:cleaner';
 import {matchAffordancesWithDetector,
-        getAffordancesMatchWithDetector}
+        matchLocationWithDetector}
   from './methods';
 import {Detectors} from './detectors';
 
@@ -66,7 +66,7 @@ describe('Detector Tests', function() {
     let lat = 42.047621;
     let lng = -87.679488;
 
-    getAffordancesMatchWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+    matchLocationWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
       if (!doesUserMatchSituation) {
         chai.assert(false);
       }
@@ -78,7 +78,7 @@ describe('Detector Tests', function() {
     let lat = 42.056838;
     let lng = -87.675940;
 
-    getAffordancesMatchWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+    matchLocationWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
       if (doesUserMatchSituation) {
         chai.assert(false);
       }

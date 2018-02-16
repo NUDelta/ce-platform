@@ -10,7 +10,7 @@ import {Detectors} from './detectors'
  * @param {String} detectorId
  * @param {function} callback - which calls with argument doesLocationMatchSituation
  */
-export const getAffordancesMatchWithDetector = function(lat, lng, detectorId, callback) {
+export const matchLocationWithDetector = function(lat, lng, detectorId, callback) {
   getAffordancesFromLocation(lat, lng, function(affordances) {
     doesLocationMatchSituation = matchAffordancesWithDetector(affordances, detectorId);
     callback(doesLocationMatchSituation);
