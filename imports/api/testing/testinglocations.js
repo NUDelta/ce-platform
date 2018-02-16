@@ -1,8 +1,7 @@
-
 export const LOCATIONS = {
-  "beach": {lat: 42.048513, lng: -87.672043},
-  "lakefill": {lat: 42.054902, lng: -87.670197},
-  "burgers": {lat: 42.046131, lng: -87.681559},
+  "beach": { lat: 42.048513, lng: -87.672043 },
+  "lakefill": { lat: 42.054902, lng: -87.670197 },
+  "burgers": { lat: 42.046131, lng: -87.681559 },
 
 };
 

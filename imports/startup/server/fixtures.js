@@ -14,7 +14,7 @@ import { log } from '../../api/logs.js';
 
 import { LOCATIONS } from "../../api/testing/testinglocations";
 import { onLocationUpdate } from "../../api/locations/methods";
-import { createIncidentFromExperience, startRunningIncident} from "../../api/incidents/methods";
+import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
 import { findUserByEmail } from '../../api/users/methods';
 
 

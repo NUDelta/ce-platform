@@ -7,7 +7,7 @@ import { registerCallback } from '../coordinator/methods.js';
 export const americanFlag = new ValidatedMethod({
   name: 'api.americanFlag',
   validate: null,
-  run(){
+  run() {
     const redTemplate = {
       'name': 'red',
       'contributions': { 'red': 'Image' },
@@ -48,7 +48,7 @@ export const americanFlag = new ValidatedMethod({
         { contributionTemplates: [greenTemplate] },
         { contributionTemplates: [blackTemplate] },
         { contributionTemplates: [yellowTemplate] }
-        ],
+      ],
       callbackPair: []
     });
 
@@ -59,17 +59,17 @@ export const americanFlag = new ValidatedMethod({
     Meteor.call('api.addSituationNeeds', {
       incidentId: incidentId,
       need: {
-          'name': 'redNeed',
-          'contributionTemplate' : 'red',
-          'affordance': 'womenscloth or menscloth or firedepartments',
-          'softStoppingCriteria': 4
-        }
+        'name': 'redNeed',
+        'contributionTemplate': 'red',
+        'affordance': 'womenscloth or menscloth or firedepartments',
+        'softStoppingCriteria': 4
+      }
     });
     Meteor.call('api.addSituationNeeds', {
       incidentId: incidentId,
       need: {
         'name': 'yellowNeed',
-        'contributionTemplate' : 'yellow',
+        'contributionTemplate': 'yellow',
         'affordance': 'grocery or hackerspace',
         'softStoppingCriteria': 4
       }
@@ -78,7 +78,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'greenNeed',
-        'contributionTemplate' : 'green',
+        'contributionTemplate': 'green',
         'affordance': 'parks or grocery or skiresorts or womenscloth or menscloth',
         'softStoppingCriteria': 4
       }
@@ -87,7 +87,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'blueNeed',
-        'contributionTemplate' : 'blue',
+        'contributionTemplate': 'blue',
         'affordance': 'clear and daytime',
         'softStoppingCriteria': 2
       }
@@ -96,7 +96,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'blueNeed',
-        'contributionTemplate' : 'blue',
+        'contributionTemplate': 'blue',
         'affordance': 'womenscloth or menscloth or airports or lakes',
         'softStoppingCriteria': 2
       }
@@ -105,7 +105,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'blackNightNeed',
-        'contributionTemplate' : 'black',
+        'contributionTemplate': 'black',
         'affordance': 'coffee or casinos skiresorts',
         'softStoppingCriteria': 4
       }
@@ -114,7 +114,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'whiteClouds',
-        'contributionTemplate' : 'white',
+        'contributionTemplate': 'white',
         'affordance': 'clouds and daytime',
         'softStoppingCriteria': 2
       }
@@ -123,7 +123,7 @@ export const americanFlag = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'whiteClouds',
-        'contributionTemplate' : 'white',
+        'contributionTemplate': 'white',
         'affordance': 'newamerican or italian',
         'softStoppingCriteria': 2
       }

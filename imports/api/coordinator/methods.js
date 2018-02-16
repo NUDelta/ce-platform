@@ -54,7 +54,7 @@ const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 
       let route = 'apiCustom/' + iid + '/' + needName;
       Cerebro.notify(uids, iid, 'Event ' + experience.name + ' is starting!',
-                      experience.notificationText, route);
+        experience.notificationText, route);
     });
   });
 };
@@ -158,7 +158,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           _id: iid,
           'needUserMaps.needName': needName
         }, {
-          $addToSet: {'needUserMaps.$.uids': uid}
+          $addToSet: { 'needUserMaps.$.uids': uid }
         }, (err, docs) => {
           if (err) {
             console.log('error,', err);
@@ -171,14 +171,14 @@ export const updateAvailability = (uid, availabilityDictionary) => {
         let newusers = needUserMap.uids;
         newusers.push(uid);
 
-        updatedNeeds.needUserMaps.push({needName: needName, uids:newusers});
+        updatedNeeds.needUserMaps.push({ needName: needName, uids: newusers });
 
       } else {
         Availability.update({
           _id: iid,
           'needUserMaps.needName': needName
         }, {
-          $pull: {'needUserMaps.$.uids': uid}
+          $pull: { 'needUserMaps.$.uids': uid }
         }, (err) => {
           if (err) {
             console.log('error,', err);
@@ -371,7 +371,7 @@ const userIsAvailableToParticipate = (user, location) => {
   const userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating;
 
   return !((!userNotYetNotified && userNotifiedTooRecently) ||
-            (!userNotYetParticipated && userParticipatedTooRecently));
+    (!userNotYetParticipated && userParticipatedTooRecently));
 };
 
 const attemptToAddUserToIncident = (uid, incidentId) => {
@@ -423,15 +423,15 @@ const addUserToSituationNeed = (uid, incidentId, situationNeedName) => {
 
   //add user to the incident
   Incidents.update(
-    {_id: incidentId, 'situationNeeds.name': situationNeedName},
+    { _id: incidentId, 'situationNeeds.name': situationNeedName },
     {
       $push:
-        {'situationNeeds.$.notifiedUsers': uid}
+        { 'situationNeeds.$.notifiedUsers': uid }
     }
   );
 
   //notify the user & mark as notified
-  Locations.update({uid: uid}, {$set: {'lastNotification': Date.now()}});
+  Locations.update({ uid: uid }, { $set: { 'lastNotification': Date.now() } });
 
   //add notification to notification log
   const userLocation = Locations.findOne({ uid: uid });
@@ -458,17 +458,17 @@ const removeUserFromExperience = (uid, experienceId, incidentId, situationNeedNa
   //remove the user from the incident
   console.log('removeing the user');
 
-  Incidents.update({_id: incidentId, 'situationNeeds.name': situationNeedName},
+  Incidents.update({ _id: incidentId, 'situationNeeds.name': situationNeedName },
     {
       $pull:
-        {'situationNeeds.$.notifiedUsers': uid}
+        { 'situationNeeds.$.notifiedUsers': uid }
     });
 
   //remove the experience from the user
-  Meteor.users.update({_id: uid},
+  Meteor.users.update({ _id: uid },
     {
       $pull:
-        {'profile.activeExperiences': experienceId}
+        { 'profile.activeExperiences': experienceId }
     }
   );
 };

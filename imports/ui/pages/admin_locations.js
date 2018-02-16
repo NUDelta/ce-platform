@@ -6,7 +6,7 @@ import { GoogleMaps } from 'meteor/dburles:google-maps';
 import { Locations } from '../../api/locations/locations.js';
 import { Users } from '../../api/users/users.js';
 
-Template.admin_locations.onCreated(function() {
+Template.admin_locations.onCreated(function () {
   const handle = this.subscribe('locations');
   this.subscribe('detectors');
   this.markers = [];
@@ -25,10 +25,10 @@ Template.admin_locations.onCreated(function() {
       const marker = new google.maps.Marker({
         position: new google.maps.LatLng(location.lat, location.lng),
         label: {
-            text: location.uid.slice(0,3),
-            color: '#fff',
-            fontSize: '12px',
-          },
+          text: location.uid.slice(0, 3),
+          color: '#fff',
+          fontSize: '12px',
+        },
         map: this.map,
         //icon: icon
       });
@@ -60,7 +60,7 @@ Template.admin_locations.helpers({
     if (GoogleMaps.loaded()) {
       let latLng = LocationManager.currentLocation();
       return {
-        center: {lat: 42.059311, lng: -87.676318},
+        center: { lat: 42.059311, lng: -87.676318 },
         zoom: 15
       };
     }

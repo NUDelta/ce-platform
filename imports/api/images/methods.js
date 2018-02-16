@@ -10,7 +10,7 @@ const _getBase64Data = (doc, callback) => {
   let buffer = new Buffer(0),
     readStream = doc.createReadStream();
   readStream.on('data', (chunk) => {
-    buffer = Buffer.concat([ buffer, chunk ]);
+    buffer = Buffer.concat([buffer, chunk]);
   });
   readStream.on('error', (err) => {
     callback(err, null);
@@ -40,7 +40,7 @@ export const insertPhoto = new ValidatedMethod({
       type: String,
       optional: true
     },
-    tag : {
+    tag: {
       type: String,
       optional: true
     }

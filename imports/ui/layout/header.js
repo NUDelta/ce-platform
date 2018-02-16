@@ -2,6 +2,6 @@ import './header.html';
 
 import { Template } from 'meteor/templating';
 
-Template.header.onRendered(function() {
+Template.header.onRendered(function () {
 
 });

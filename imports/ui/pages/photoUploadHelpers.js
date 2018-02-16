@@ -1,4 +1,4 @@
-export const photoInput = function(event){
+export const photoInput = function (event) {
   // NOTE: oddly, touchstart seems to happily trigger events, but
   // click won't.
   event.stopImmediatePropagation();
@@ -6,7 +6,7 @@ export const photoInput = function(event){
   $('input[name=photo]').trigger('click');
 }
 
-export const photoUpload = function(event){
+export const photoUpload = function (event) {
   const files = event.target.files;
   if (files && files[0]) {
     const reader = new FileReader();

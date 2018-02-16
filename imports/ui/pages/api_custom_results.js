@@ -18,15 +18,15 @@ import { Submissions } from '../../api/submissions/submissions.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
 Template.api_custom_results.helpers({
-  data2pass(){
+  data2pass() {
     const instance = Template.instance();
-    var imgs =  Images.find({incidentId: instance.state.get("incidentId")}).fetch();
-    var text =  TextEntries.find({incidentId: instance.state.get("incidentId")}).fetch();
-    var subs = Submissions.find({incidentId: instance.state.get("incidentId")}).fetch();
+    var imgs = Images.find({ incidentId: instance.state.get("incidentId") }).fetch();
+    var text = TextEntries.find({ incidentId: instance.state.get("incidentId") }).fetch();
+    var subs = Submissions.find({ incidentId: instance.state.get("incidentId") }).fetch();
     console.log(subs)
     console.log(subs[0].contributionTemplate)
 
-    return {"images": imgs, "text": text, "submissions": subs}
+    return { "images": imgs, "text": text, "submissions": subs }
   },
   template_name() {
     const instance = Template.instance();
@@ -36,18 +36,18 @@ Template.api_custom_results.helpers({
 
 //these helpers shouldn't be db calls
 
-Template.registerHelper( 'getImage', (id) => {
-  return {img: Images.findOne({_id: id})};
+Template.registerHelper('getImage', (id) => {
+  return { img: Images.findOne({ _id: id }) };
 });
-Template.registerHelper( 'getText', (id) => {
-  var text = TextEntries.findOne({_id: id});
+Template.registerHelper('getText', (id) => {
+  var text = TextEntries.findOne({ _id: id });
   return text.text;
 });
-Template .registerHelper('var',function(name, value){
+Template.registerHelper('var', function (name, value) {
   this[name] = value;
 });
 
-Template.api_custom_results.onCreated(function() {
+Template.api_custom_results.onCreated(function () {
   const incidentId = Router.current().params._id;
 
   this.subscribe('images', incidentId);
@@ -58,7 +58,7 @@ Template.api_custom_results.onCreated(function() {
 
   this.state = new ReactiveDict();
   this.state.set('incidentId', incidentId);
-  this.filter = new ReactiveVar({ incidentId: incidentId});
+  this.filter = new ReactiveVar({ incidentId: incidentId });
 
   this.autorun(() => {
     if (expHandle.ready() && incHandle.ready()) {
@@ -93,15 +93,19 @@ function currentSlide(n) {
 function showSlides(n) {
   var i;
   var slides = document.getElementsByClassName("mySlides");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
+  if (n > slides.length) {
+    slideIndex = 1
   }
-  slides[slideIndex-1].style.display = "block";
+  if (n < 1) {
+    slideIndex = slides.length
+  }
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  slides[slideIndex - 1].style.display = "block";
 }
 
-Template.storyPageResults.onCreated(function() {
+Template.storyPageResults.onCreated(function () {
   this.autorun(() => {
     window.onload = function () {
       showSlides(slideIndex);
@@ -110,18 +114,18 @@ Template.storyPageResults.onCreated(function() {
 });
 
 Template.storyPageResults.helpers({
-  getNextSentenceId(photoIndex){
+  getNextSentenceId(photoIndex) {
     const instance = Template.instance()
-    var submission = instance.data.submissions[photoIndex-1];
+    var submission = instance.data.submissions[photoIndex - 1];
     return submission.content.nextSentence
   },
-  isFirst(index){
+  isFirst(index) {
     return index > 0;
   },
-  notLast(index){
+  notLast(index) {
     const instance = Template.instance()
     var length = instance.data.submissions.length
-    return index < length-1;
+    return index < length - 1;
   }
 });
 
@@ -137,58 +141,58 @@ Template.storyPageResults.events({
 });
 
 Template.star.helpers({
-  getId(){
+  getId() {
     const instance = Template.instance()
     var starId = instance.data.starId;
     return starId;
   }
 });
 
-function getColor(submissions, color){
-  var filtered = submissions.filter(function(s){
+function getColor(submissions, color) {
+  var filtered = submissions.filter(function (s) {
     return s.contributionTemplate == color;
   });
-  var mapped = filtered.map(function(s){
+  var mapped = filtered.map(function (s) {
     var content = s.content;
     return Object.values(content)[0]
   });
   return mapped;
 }
 
-Template.star.onCreated(function(){
+Template.star.onCreated(function () {
   console.log(this)
   console.log(Template.instance())
 })
 
 Template.americanFlagResults.helpers({
-  getStarBuildInfo(index){
+  getStarBuildInfo(index) {
     var submissions = Template.instance().data.submissions;
     var redImages = getColor(submissions, "red");
-    if(redImages.length > index){
-      return {starId: index, imageId: redImages[index], hasImage: true, color: "red"}
+    if (redImages.length > index) {
+      return { starId: index, imageId: redImages[index], hasImage: true, color: "red" }
     }
-    return {starId: index, imageId: null, hasImage: false, color: "red"};
+    return { starId: index, imageId: null, hasImage: false, color: "red" };
   },
-  getColorInfo(index, color){
+  getColorInfo(index, color) {
     var submissions = Template.instance().data.submissions;
     var colorImages = getColor(submissions, color);
-    if(colorImages.length > index){
-      return {colorId: index, imageId: colorImages[index], hasImage: true, color: color}
+    if (colorImages.length > index) {
+      return { colorId: index, imageId: colorImages[index], hasImage: true, color: color }
     }
-    return {colorId: index, imageId: null, hasImage: false, color: color};
+    return { colorId: index, imageId: null, hasImage: false, color: color };
   },
-  noImage(color){
+  noImage(color) {
     var submissions = Template.instance().data.submissions;
     var colorImages = getColor(submissions, color);
-    if(colorImages.length > 0){
+    if (colorImages.length > 0) {
       return false;
     }
     return true;
   },
-  hasImageIndex(index, color){
+  hasImageIndex(index, color) {
     var submissions = Template.instance().data.submissions;
     var colorImages = getColor(submissions, color);
-    if(colorImages.length > index){
+    if (colorImages.length > index) {
       return true;
     }
     return false;
@@ -196,11 +200,11 @@ Template.americanFlagResults.helpers({
 });
 
 // FUNCTIONS FOR THANKSGIVING
-function getAffordance(submissions, affordance){
-  var filtered = submissions.filter(function(s){
+function getAffordance(submissions, affordance) {
+  var filtered = submissions.filter(function (s) {
     return s.contributionTemplate == affordance;
   });
-  var mapped = filtered.map(function(s){
+  var mapped = filtered.map(function (s) {
     var content = s.content;
     return Object.values(content)[0]
   });
@@ -208,33 +212,38 @@ function getAffordance(submissions, affordance){
 }
 
 Template.thanksgivingResults.helpers({
-  getAffordanceInfo(index, affordance){
+  getAffordanceInfo(index, affordance) {
     var submissions = Template.instance().data.submissions;
     var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > index){
-      return {affordanceId: index, imageId: affordanceImages[index], hasImage: true, affordance: affordance}
+    if (affordanceImages.length > index) {
+      return {
+        affordanceId: index,
+        imageId: affordanceImages[index],
+        hasImage: true,
+        affordance: affordance
+      }
     }
-    return {affordanceId: index, imageId: null, hasImage: false, affordance: affordance};
+    return { affordanceId: index, imageId: null, hasImage: false, affordance: affordance };
   },
-  noImage(affordance){
+  noImage(affordance) {
     var submissions = Template.instance().data.submissions;
     var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > 0){
+    if (affordanceImages.length > 0) {
       return false;
     }
     return true;
   },
-  hasImageIndex(index, affordance){
+  hasImageIndex(index, affordance) {
     var submissions = Template.instance().data.submissions;
     var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > index){
+    if (affordanceImages.length > index) {
       return true;
     }
     return false;
   },
-  getMessage(photoIndex){
+  getMessage(photoIndex) {
     const instance = Template.instance()
-    var submission = instance.data.submissions[photoIndex-1];
+    var submission = instance.data.submissions[photoIndex - 1];
     return submission.content.sentence
   }
 });

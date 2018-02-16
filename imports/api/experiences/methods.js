@@ -57,7 +57,6 @@ export const doesUserMatchNeed = (uid, lat, lng, iid, needName) => {
 };
 
 
-
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({
   name: 'experiences.updateUser',
@@ -90,7 +89,7 @@ export const updateUserExperiences = new ValidatedMethod({
       return _.contains(exps, sub);
     });
 
-    Meteor.users.update(userId, {$set: {'profile.subscriptions': subs}});
+    Meteor.users.update(userId, { $set: { 'profile.subscriptions': subs } });
   }
 });
 
