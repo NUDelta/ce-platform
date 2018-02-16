@@ -71,6 +71,7 @@ export const createIncidentFromExperience = (experience) => {
  */
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
+  let output = undefined;
   console.log('getNeedFromIncidentId', iid, needName );
 
   _.forEach(incident.contributionTypes, (contributionType) => {
@@ -78,10 +79,18 @@ export const getNeedFromIncidentId = (iid, needName) => {
     _.forEach(contributionType.needs, (contributionNeed) => {
       if (contributionNeed.needName === needName) {
         console.log('found need', contributionNeed);
-        return contributionNeed;
+        output = contributionNeed;
+        return false;
       }
     });
+
+    // check if found
+    if (typeof output === 'undefined') {
+      return false;
+    }
   });
+
+  return output;
 };
 
 //
