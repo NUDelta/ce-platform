@@ -21,7 +21,8 @@ Schema.AvailabilityLog = new SimpleSchema({
     optional: true,
   },
   affordances: {
-     type: [String],
+     type: Object,
+     blackbox: true
   },
   lat:{
     type: Number,

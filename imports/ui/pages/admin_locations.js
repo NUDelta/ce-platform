@@ -6,13 +6,15 @@ import { GoogleMaps } from 'meteor/dburles:google-maps';
 import { _ } from 'meteor/underscore';
 
 import { Locations } from '../../api/locations/locations.js';
-//import { LocationManager } from '../../api/locations/client/location-manager-client.js';
+// import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { Users } from '../../api/users/users.js';
+
+
 
 
 Template.admin_locations.onCreated(function() {
   const handle = this.subscribe('locations');
-
+  this.subscribe('detectors');
   this.markers = [];
 
   this.plotLocations = () => {

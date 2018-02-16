@@ -1,6 +1,7 @@
 import { Experiences } from '../imports/api/experiences/experiences.js';
 import { Incidents } from '../imports/api/incidents/incidents.js';
 import { Locations } from '../imports/api/locations/locations.js';
+import { Detectors } from '../imports/api/detectors/detectors.js';
 import { Images } from '../imports/api/images/images.js';
 import { TextEntries } from '../imports/api/text-entries/text-entries.js';
 import { NotificationLog } from '../imports/api/cerebro/cerebro-core.js';
@@ -93,6 +94,16 @@ export const addLocations = Meteor.methods({
         uid: Accounts.findUserByEmail('j@gmail.com')._id,
         lat: 42.042617, //beach
         lng: -87.671474
+      });
+      Meteor.call("locations.updateUserLocationAndAffordances", {
+        uid: Accounts.findUserByEmail('k@gmail.com')._id,
+        lat: 33.7465889,  // trader joes, tustin, CA
+        lng: -117.8094046
+      });
+      Meteor.call("locations.updateUserLocationAndAffordances", {
+        uid: Accounts.findUserByEmail('l@gmail.com')._id,
+        lat: 42.03983,  // trader joes, evanston, IL
+        lng: -87.6808372
       });
   }
 });

@@ -15,19 +15,18 @@ export const updateUserLocationAndAffordances = new ValidatedMethod({
 
     console.log("Info passed is", lat, lng)
     let request = require('request');
-    let url = 'https://affordanceaware.herokuapp.com/location_tags/' + lat.toString() + '/' + lng.toString();
+    let url = 'http://affordanceaware.herokuapp.com/location_keyvalues/' + lat.toString() + '/' + lng.toString();
     request(url, Meteor.bindEnvironment(function (error, response, body) {
       if (!error && response.statusCode == 200) {
         let res = JSON.parse(body);
-        if(!Array.isArray(res)){
-          log.warning("Locations/methods expected type array but did not receive an array, instead we are returning an empty array")
-          return updateLocation(uid, lat, lng, []);
+        if (res !== Object(res)) {
+          log.warning("Locations/methods expected type Object but did not receive an Object, instead we are returning an empty Object")
+          return updateLocation(uid, lat, lng, {});
         }
-
         return updateLocation(uid, lat, lng, res);
       }else{
-        log.warning("Locations/methods, can't retrieve affordances, instead we are returning an empty array")
-        updateLocation(uid, lat, lng, []);
+        log.warning("Locations/methods, can't retrieve affordances, instead we are returning an empty Object")
+        updateLocation(uid, lat, lng, {});
       }
     }));
   }
