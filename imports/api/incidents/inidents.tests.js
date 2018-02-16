@@ -6,13 +6,11 @@ describe('Incidents create', function () {
   it('insert incident into database', function () {
     var incidentTest = {
       eid: "vC8b8hawwkKS3Hpfd",
-      contributionTypes: [{
-        templateName: "atLocation", needs: [
-          {
-            needName: "atResturant", situation: { description: "resturant", number: "1" },
-            submissionData: { proof: "photo" }, numberNeeded: 10
-          }]
-      }],
+      contributionTypes: [
+        {
+          needName: 'atRestaurant', situation: {detector: 'restaurant', number: '1'},
+          toPass: {item: 'restaurant'}, numberNeeded: 10
+        }],
     }
 
     var incidentInsertResult = Incidents.insert(incidentTest, (err, docs) => {
@@ -26,3 +24,4 @@ describe('Incidents create', function () {
 
   })
 })
+

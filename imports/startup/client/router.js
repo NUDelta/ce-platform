@@ -16,6 +16,8 @@ import '../../ui/pages/api_custom_results.html';
 import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 
+import {Experiences} from "../../api/experiences/experiences";
+
 Router.configure({
   layoutTemplate: 'layout'
 });
@@ -25,11 +27,21 @@ Router.route('/affordances', {
   template: 'affordances'
 });
 
-Router.route('/apicustom/:_id', {
-  name: 'api.custom',
+// Router.route('/apicustom/:iid/:eid/:needName', {
+//   name: 'api.custom',
+//   template: 'api_custom',
+// })
+Router.route('api.custom', {
+  path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
-  onStop: function () {
-    console.log("someone left the page");
+  before: function () {
+    this.subscribe('experiences.activeUser').wait();
+    this.next();
+  },
+  data: function () {
+    console.log("router func", Experiences.findOne(this.params.eid))
+
+    return Experiences.findOne(this.params.eid);
   }
 });
 

@@ -16,9 +16,6 @@ Schema.Submission = new SimpleSchema({
   needName: {
     type: String,
   },
-  templateName: {
-    type: String,
-  },
   uid: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,

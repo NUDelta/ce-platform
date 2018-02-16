@@ -21,9 +21,6 @@ class ExperiencesCollection extends Mongo.Collection {
 }
 
 Schema.Callback = new SimpleSchema({
-  templateName: {
-    type: String
-  },
   trigger: {
     type: String
   },
@@ -64,29 +61,6 @@ Schema.NeedType = new SimpleSchema({
 export const NeedType = new Mongo.Collection('needtype');
 NeedType.attachSchema(Schema.NeedType);
 
-Schema.ContributionTypes = new SimpleSchema({
-  templateName: {
-    type: String
-  },
-  needs: {
-    type: [Schema.NeedType]
-  }
-});
-export const ContributionTypes = new Mongo.Collection('contributiontypes');
-ContributionTypes.attachSchema(Schema.ContributionTypes);
-
-
-Schema.ParticipateTemplate = new SimpleSchema({
-  templateName: {
-    type: String
-  },
-  submissionData: {
-    type: Object
-  }
-});
-export const ParticipateTemplate = new Mongo.Collection('participatetemplate');
-ParticipateTemplate.attachSchema(Schema.ParticipateTemplate);
-
 
 export const Experiences = new ExperiencesCollection('experiences');
 Schema.Experience = new SimpleSchema({
@@ -100,13 +74,13 @@ Schema.Experience = new SimpleSchema({
     label: 'Experience name',
   },
   participateTemplate: {
-    type: [Schema.ParticipateTemplate],
+    type: String,
   },
   resultsTemplate: {
     type: String,
   },
   contributionTypes: {
-    type: [Schema.ContributionTypes],
+    type: [Schema.NeedType],
   },
   callbacks: {
     type: [Schema.Callback],

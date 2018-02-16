@@ -53,16 +53,13 @@ Meteor.startup(() => {
       let experienceOne = {
         _id: Random.id(),
         name: 'You\'re at a restaurant',
-        participateTemplate: [{
-          templateName: 'atLocation', submissionData: { proof: 'photo' }
-        }],
+        participateTemplate: 'atLocation',
         resultsTemplate: 'photoCollage',
-        contributionTypes: [{
-          templateName: 'atLocation', needs: [{
-            needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
-            toPass: { item: 'restaurant' }, numberNeeded: 10
-          }]
-        }],
+        contributionTypes: [
+          {
+            needName: 'atRestaurant', situation: {detector: 'restaurant', number: '1'},
+            toPass: {item: 'restaurant'}, numberNeeded: 10
+          }],
         description: 'This is a simple experience for testing',
         notificationText: 'Please participate in this test experience!',
       };

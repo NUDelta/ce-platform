@@ -14,7 +14,7 @@ Schema.Incident = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
   },
   contributionTypes: {
-    type: [Schema.ContributionTypes],
+    type: [Schema.NeedType],
     blackbox: true
   },
   callbacks: {

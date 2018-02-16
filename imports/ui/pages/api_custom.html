@@ -1,9 +1,11 @@
 <template name="api_custom">
-    {{#if Template.subscriptionsReady}}
-        {{ > Template.dynamic template=template_name data=data2pass}}
-    {{else}}
-        {{loadingOverlay}}
-    {{/if}}
+
+    {{> Template.dynamic template=test}}
+
+</template>
+
+<template name="atLocation">
+  You at a location!
 </template>
 
 <!--  TEMPLATE FOR RAINBOW COLLAGE -->

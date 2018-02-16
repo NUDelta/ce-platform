@@ -20,156 +20,87 @@ import { TextEntries } from '../../api/text-entries/text-entries.js';
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 
-// HELPER FUNCTIONS FOR THANKSGIVING
-Template.thanksgiving.helpers({
-  isGroceryContrib(affordance) {
-    return affordance === 'grocery_shop'
-  },
-  isShoppingContrib(affordance) {
-    return affordance === 'shopping'
-  },
-  isBarsContrib(affordance) {
-    return affordance === 'bars'
-  },
-  isFeastContrib(affordance) {
-    return affordance === 'feast'
-  },
-  isAirportContrib(affordance) {
-    return affordance === 'airport'
-  },
-  isDrinksContrib(affordance) {
-    return affordance === 'drinks'
-  }
-});
-
-// HELPER FUNCTIONS FOR STORYTIME
-Template.registerHelper('getPrevSentence', (subs) => {
-  if (subs.length === 0) {
-    return 'Jimmy looked up at the sky.'
-  }
-  const submission = subs[subs.length - 1];
-  const id = submission.content.nextSentence;
-  return TextEntries.findOne({ _id: id }).text;
-  ;
-});
-
-Template.registerHelper('getPrevAffordance', (subs) => {
-  if (subs.length === 0) {
-    return 'cloud watch';
-  }
-  const submission = subs[subs.length - 1];
-  const id = submission.content.nextAffordance;
-  return TextEntries.findOne({ _id: id }).text;
-});
-
-Template.registerHelper('passContributionName', (name) => {
-  const instance = Template.instance();
-  const contributions = instance.data.contributionTemplate.contributions;
-
-  if (typeof contributions[name] === 'object') {
-    return { key: name, options: contributions[name][1] }
-  }
-
-  return { key: name }
-});
-
-Template.storyPage.helpers({
-  getPrevSentenceId(photoIndex) {
-    const instance = Template.instance();
-    const incident = instance.state.get('incident');
-    const subs = Submissions.find({ incidentId: incident._id }).fetch();
-
-    // var submission = instance.data.submissions[photoIndex-1];
-    // console.log(submission)
-    // console.log(submission.content.nextSentence)
-
-    const id = submission.content.nextSentence;
-    const text = TextEntries.findOne({ _id: id });
-
-    return text.text;
-  },
-  getPageNum() {
-    return this.submissions.length + 2;
-  },
-  notLastPage() {
-    //TODO: pass in stopping critera
-    return this.submissions.length + 2 < 8;
-  }
-});
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
-  data2pass() {
-    //TODO: clean up this hot mess of a function
-    const instance = Template.instance();
-    const incident = instance.state.get('incident');
-    const subs = Submissions.find({ incidentId: incident._id }).fetch();
-    const hasSubs = subs.length > 0;
 
-    // TODO: fix, dont want to get by experience
-    const exp = instance.state.get('experience');
-    incident.situationNeeds.forEach((sitNeed) => {
-      if (sitNeed.notifiedUsers.includes(Meteor.userId())) {
-        situationNeedName = sitNeed.name;
-        contributionTemplateName = sitNeed.contributionTemplate;
-        affordance = sitNeed.affordance
-      }
-    });
-    let contributionTemplate;
-    exp.contributionGroups.forEach((group) => {
-      group.contributionTemplates.forEach((template) => {
-        if (template.name === contributionTemplateName) {
-          contributionTemplate = template
-        }
-      });
-    });
-
-    instance.state.set('situationNeedName', situationNeedName);
-    instance.state.set('contributionTemplate', contributionTemplate);
-
-    return {
-      'incident': incident,
-      'situationNeedName': situationNeedName,
-      'contributionTemplate': contributionTemplate,
-      'submissions': subs
-    }
-  },
-  template_name() {
-    const instance = Template.instance();
-    return instance.state.get('experience').participateTemplate;
+  test(){
+    console.log(this.participateTemplate)
+    return this.participateTemplate
   }
+  // data2pass() {
+  //   //TODO: clean up this hot mess of a function
+  //   const instance = Template.instance();
+  //   const incident = instance.state.get('incident');
+  //   const subs = Submissions.find({ incidentId: incident._id }).fetch();
+  //   const hasSubs = subs.length > 0;
+  //
+  //   // TODO: fix, dont want to get by experience
+  //   const exp = instance.state.get('experience');
+  //   incident.situationNeeds.forEach((sitNeed) => {
+  //     if (sitNeed.notifiedUsers.includes(Meteor.userId())) {
+  //       situationNeedName = sitNeed.name;
+  //       contributionTemplateName = sitNeed.contributionTemplate;
+  //       affordance = sitNeed.affordance
+  //     }
+  //   });
+  //   let contributionTemplate;
+  //   exp.contributionGroups.forEach((group) => {
+  //     group.contributionTemplates.forEach((template) => {
+  //       if (template.name === contributionTemplateName) {
+  //         contributionTemplate = template
+  //       }
+  //     });
+  //   });
+  //
+  //   instance.state.set('situationNeedName', situationNeedName);
+  //   instance.state.set('contributionTemplate', contributionTemplate);
+  //
+  //   return {
+  //     'incident': incident,
+  //     'situationNeedName': situationNeedName,
+  //     'contributionTemplate': contributionTemplate,
+  //     'submissions': subs
+  //   }
+  // },
+  // template_name() {
+  //   const instance = Template.instance();
+  //   return instance.state.get('experience').participateTemplate;
+  // }
 });
 
 Template.api_custom.onCreated(() => {
+
+
   // do we really need all of these?
-  const incidentId = Router.current().params._id;
-  const imgHangle = this.subscribe('images', incidentId);
-  const incHandle = this.subscribe('incidents.byId', incidentId);
-  const expHandle = this.subscribe('experiences.byIncident', incidentId);
-  const locHandle = this.subscribe('locations.byUser', Meteor.userId());
-
-
-  // const subHangle = this.subscribe('submissions', incidentId);
-  // const textHangle = this.subscribe('textEntries.byIncident', incidentId);
-  this.state = new ReactiveDict();
-  this.autorun(() => {
-    if (this.subscriptionsReady()) {
-      console.log('subscriptions are now ready');
-      const incident = Incidents.findOne(incidentId);
-      this.state.set('incident', incident);
-
-      const location = Locations.findOne({ uid: Meteor.userId() });
-      this.state.set('location', location);
-
-      //not sure if we need these last two?
-      const experience = Experiences.findOne(incident.experienceId);
-      this.state.set('experience', experience);
-
-      // if (experience.activeIncident) {
-      //   this.subscribe('images', experience.activeIncident);
-      // }
-    }
-  });
+  // const incidentId = Router.current().params._id;
+  // const imgHangle = this.subscribe('images', incidentId);
+  // const incHandle = this.subscribe('incidents.byId', incidentId);
+  // const expHandle = this.subscribe('experiences.byIncident', incidentId);
+  // const locHandle = this.subscribe('locations.byUser', Meteor.userId());
+  //
+  //
+  // // const subHangle = this.subscribe('submissions', incidentId);
+  // // const textHangle = this.subscribe('textEntries.byIncident', incidentId);
+  // this.state = new ReactiveDict();
+  // this.autorun(() => {
+  //   if (this.subscriptionsReady()) {
+  //     console.log('subscriptions are now ready');
+  //     const incident = Incidents.findOne(incidentId);
+  //     this.state.set('incident', incident);
+  //
+  //     const location = Locations.findOne({ uid: Meteor.userId() });
+  //     this.state.set('location', location);
+  //
+  //     //not sure if we need these last two?
+  //     const experience = Experiences.findOne(incident.experienceId);
+  //     this.state.set('experience', experience);
+  //
+  //     // if (experience.activeIncident) {
+  //     //   this.subscribe('images', experience.activeIncident);
+  //     // }
+  //   }
+  // });
 });
 
 Template.api_custom.events({
