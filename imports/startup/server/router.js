@@ -5,14 +5,14 @@ import { log } from '../../api/logs.js';
 import { Location_log } from '../../api/locations/location_log.js'
 
 
-Router.onBeforeAction(Iron.Router.bodyParser.urlencoded( {extended : false} ));
+Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({ extended: false }));
 
 Router.route('/api/geolocation', { where: 'server' })
-  .get(function() {
+  .get(function () {
     this.response.end('ok');
   })
 
-  .post(function() {
+  .post(function () {
     const userId = this.request.body.userId;
     const location = this.request.body.location;
     const activity = this.request.body.activity;
@@ -36,10 +36,10 @@ Router.route('/api/geolocation', { where: 'server' })
     });
 
 
-    this.response.writeHead(200, {'Content-Type': 'application/json'});
+    this.response.writeHead(200, { 'Content-Type': 'application/json' });
     this.response.end('ok');
   })
-  .put(function() {
-    this.response.writeHead(200, {'Content-Type': 'application/json'});
+  .put(function () {
+    this.response.writeHead(200, { 'Content-Type': 'application/json' });
     this.response.end('ok');
   });

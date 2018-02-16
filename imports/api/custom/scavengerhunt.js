@@ -19,10 +19,10 @@ experience.addName('Scavenger Hunt');
 experience.addDescription('Help us find all the objects on this scavenger hunt!');
 experience.addNotificationText('Help us complete the scavenger hunt!');
 
-templateItemFound = {templateName: 'itemFound', submissionData: {proof: 'photo'}};
+templateItemFound = { templateName: 'itemFound', submissionData: { proof: 'photo' } };
 experience.addTemplate(templateItemFound);
 
-experience. addResultsTemplate('scavengerHuntResults');
+experience.addResultsTemplate('scavengerHuntResults');
 
 const need = {
   needName: 'apple',

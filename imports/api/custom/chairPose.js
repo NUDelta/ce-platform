@@ -7,7 +7,7 @@ import { registerCallback } from '../coordinator/methods.js';
 export const chairPose = new ValidatedMethod({
   name: 'api.chairPose',
   validate: null,
-  run(){
+  run() {
     const chairCollageTemplate = {
       'name': 'chairCollage',
       'contributions': { 'chairCollage': 'Image' },
@@ -35,11 +35,11 @@ export const chairPose = new ValidatedMethod({
     Meteor.call('api.addSituationNeeds', {
       incidentId: incidentId,
       need: {
-          'name': 'chairNeed',
-          'contributionTemplate': 'chairCollage',
-          'affordance': 'chair',
-          'softStoppingCriteria': { 'total': 20 } //if finished but experience isn't then ignore
-        }
+        'name': 'chairNeed',
+        'contributionTemplate': 'chairCollage',
+        'affordance': 'chair',
+        'softStoppingCriteria': { 'total': 20 } //if finished but experience isn't then ignore
+      }
     });
   }
 });

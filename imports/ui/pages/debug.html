@@ -1,39 +1,36 @@
 <template name="debug">
-  <head>
-      <style>
-          button{
-              margin: 10px;
-          },
-          input{
-            margin: 10px;
-          }
-      </style>
-  </head>
+    <head>
+        <style>
+            button {
+                margin: 10px;
+            }
 
-  <h3>Debugging and Testing Panel! </h3>
-  <button id="clear_db"> Clear DB </button>
-  <br>
-  <button id="add_users"> Add Users </button>
-  <br>
-  <button id="add_locations"> Add Locations (press twice) </button>
-  <button id="clear_participation"> Clear Participation </button>
+            input {
+                margin: 10px;
+            }
+        </style>
+    </head>
 
-  <br>
+    <h3>Debugging and Testing Panel! </h3>
+    <button id="clear_db"> Clear DB</button>
+    <br>
+    <button id="add_users"> Add Users</button>
+    <br>
+    <button id="add_locations"> Add Locations (press twice)</button>
+    <button id="clear_participation"> Clear Participation</button>
 
-  {{#each u in locations}}
-   {{ u.uid }},
-  {{/each}}
-  <br><br>
-  Change user locations:
-  <form >
-    User id: <input name="id"><br>
-    User lat: <input name="lat"><br>
-    User long: <input name="long"><br>
-    <input type="submit" value="Submit">
-  </form>
+    <br>
 
-
-{{> admin_locations }}
-
-
+    {{#each u in locations}}
+        {{ u.uid }},
+    {{/each}}
+    <br><br>
+    Change user locations:
+    <form>
+        User id: <input name="id"><br>
+        User lat: <input name="lat"><br>
+        User long: <input name="long"><br>
+        <input type="submit" value="Submit">
+    </form>
+    {{> admin_locations }}
 </template>

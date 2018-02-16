@@ -10,7 +10,7 @@ import { registerCallback } from '../coordinator/methods.js';
 export const storyBook = new ValidatedMethod({
   name: 'api.storyBook',
   validate: null,
-  run(){
+  run() {
     const createNewPageNeed = function (mostRecentSubmission) {
       const textId = mostRecentSubmission.content.nextAffordance;
       const nextAffordance = TextEntries.findOne({ _id: textId }).text;
@@ -49,8 +49,11 @@ export const storyBook = new ValidatedMethod({
       participateTemplate: 'storyPage',
       resultsTemplate: 'storyPageResults',
       notificationText: 'We found an experience for you! Help us illustrate and write a collaborative story 📖',
-      contributionGroups: [{contributionTemplates: [storyPageTemplate], stoppingCriteria: {'total': 7}}],
-      callbackPair:[{templateName: 'scene', callback: createNewPageNeed.toString()}]
+      contributionGroups: [{
+        contributionTemplates: [storyPageTemplate],
+        stoppingCriteria: { 'total': 7 }
+      }],
+      callbackPair: [{ templateName: 'scene', callback: createNewPageNeed.toString() }]
     });
 
     const incidentId = Meteor.call('api.createIncident', {
@@ -60,9 +63,9 @@ export const storyBook = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'page0',
-        'contributionTemplate' : 'scene',
+        'contributionTemplate': 'scene',
         'affordance': 'clear and daytime',
-        'softStoppingCriteria': {'total': 1}
+        'softStoppingCriteria': { 'total': 1 }
       }
     });
   }

@@ -22,38 +22,39 @@ import { photoUpload } from './photoUploadHelpers.js'
 
 // HELPER FUNCTIONS FOR THANKSGIVING
 Template.thanksgiving.helpers({
-  isGroceryContrib(affordance){
+  isGroceryContrib(affordance) {
     return affordance === 'grocery_shop'
   },
-  isShoppingContrib(affordance){
+  isShoppingContrib(affordance) {
     return affordance === 'shopping'
   },
-  isBarsContrib(affordance){
+  isBarsContrib(affordance) {
     return affordance === 'bars'
   },
-  isFeastContrib(affordance){
+  isFeastContrib(affordance) {
     return affordance === 'feast'
   },
-  isAirportContrib(affordance){
+  isAirportContrib(affordance) {
     return affordance === 'airport'
   },
-  isDrinksContrib(affordance){
+  isDrinksContrib(affordance) {
     return affordance === 'drinks'
   }
 });
 
 // HELPER FUNCTIONS FOR STORYTIME
 Template.registerHelper('getPrevSentence', (subs) => {
-  if(subs.length === 0){
+  if (subs.length === 0) {
     return 'Jimmy looked up at the sky.'
   }
   const submission = subs[subs.length - 1];
   const id = submission.content.nextSentence;
-  return TextEntries.findOne({ _id: id }).text;;
+  return TextEntries.findOne({ _id: id }).text;
+  ;
 });
 
 Template.registerHelper('getPrevAffordance', (subs) => {
-  if(subs.length === 0){
+  if (subs.length === 0) {
     return 'cloud watch';
   }
   const submission = subs[subs.length - 1];
@@ -65,15 +66,15 @@ Template.registerHelper('passContributionName', (name) => {
   const instance = Template.instance();
   const contributions = instance.data.contributionTemplate.contributions;
 
-  if(typeof contributions[name] === 'object'){
-    return { key:name, options: contributions[name][1] }
+  if (typeof contributions[name] === 'object') {
+    return { key: name, options: contributions[name][1] }
   }
 
-  return {key: name}
+  return { key: name }
 });
 
 Template.storyPage.helpers({
-  getPrevSentenceId(photoIndex){
+  getPrevSentenceId(photoIndex) {
     const instance = Template.instance();
     const incident = instance.state.get('incident');
     const subs = Submissions.find({ incidentId: incident._id }).fetch();
@@ -87,18 +88,18 @@ Template.storyPage.helpers({
 
     return text.text;
   },
-  getPageNum(){
-    return this.submissions.length+2;
+  getPageNum() {
+    return this.submissions.length + 2;
   },
-  notLastPage(){
+  notLastPage() {
     //TODO: pass in stopping critera
-    return this.submissions.length+2 < 8;
+    return this.submissions.length + 2 < 8;
   }
 });
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
-  data2pass(){
+  data2pass() {
     //TODO: clean up this hot mess of a function
     const instance = Template.instance();
     const incident = instance.state.get('incident');
@@ -107,17 +108,17 @@ Template.api_custom.helpers({
 
     // TODO: fix, dont want to get by experience
     const exp = instance.state.get('experience');
-    incident.situationNeeds.forEach((sitNeed)=>{
-      if(sitNeed.notifiedUsers.includes(Meteor.userId())){
+    incident.situationNeeds.forEach((sitNeed) => {
+      if (sitNeed.notifiedUsers.includes(Meteor.userId())) {
         situationNeedName = sitNeed.name;
         contributionTemplateName = sitNeed.contributionTemplate;
         affordance = sitNeed.affordance
       }
     });
     let contributionTemplate;
-    exp.contributionGroups.forEach((group)=>{
-      group.contributionTemplates.forEach((template)=>{
-        if(template.name === contributionTemplateName){
+    exp.contributionGroups.forEach((group) => {
+      group.contributionTemplates.forEach((template) => {
+        if (template.name === contributionTemplateName) {
           contributionTemplate = template
         }
       });
@@ -157,7 +158,7 @@ Template.api_custom.onCreated(() => {
       const incident = Incidents.findOne(incidentId);
       this.state.set('incident', incident);
 
-      const location = Locations.findOne({uid: Meteor.userId()});
+      const location = Locations.findOne({ uid: Meteor.userId() });
       this.state.set('location', location);
 
       //not sure if we need these last two?
@@ -211,7 +212,7 @@ Template.api_custom.events({
 
     const images = event.target.getElementsByClassName('fileinput');
     //no images being uploaded so we can just go right to the results page
-    if(images.length === 0) {
+    if (images.length === 0) {
       Router.go('/apicustomresults/' + incidentId);
     }
 
@@ -270,29 +271,30 @@ Template.api_custom.events({
       if (err) {
         console.log('Error with submission, did not succeed', err);
       } else {
-      }});
-    },
-    'click #participate-btn'(event, instance) {
-      event.preventDefault();
-      //makes it disappear so you don't see it while image is submitting
-      document.getElementById('participate-btn').style.display = 'none';
-    },
-    'click .fileinput, touchstart .glyphicon-camera'(event, target) {
-      photoInput(event);
-    },
-    'click .glyphicon-remove'(event, target) {
-      // NOTE: 5/22/16: simpler methods don't seem to work here
-      // e.g. $fileInput.val('');
-      event.stopImmediatePropagation();
-      event.stopPropagation();
-      const $fileInput = $('input[name=photo]');
-      $fileInput.replaceWith($fileInput.val('').clone(true));
+      }
+    });
+  },
+  'click #participate-btn'(event, instance) {
+    event.preventDefault();
+    //makes it disappear so you don't see it while image is submitting
+    document.getElementById('participate-btn').style.display = 'none';
+  },
+  'click .fileinput, touchstart .glyphicon-camera'(event, target) {
+    photoInput(event);
+  },
+  'click .glyphicon-remove'(event, target) {
+    // NOTE: 5/22/16: simpler methods don't seem to work here
+    // e.g. $fileInput.val('');
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    const $fileInput = $('input[name=photo]');
+    $fileInput.replaceWith($fileInput.val('').clone(true));
 
-      $('.fileinput-preview').attr('src', '#');
-      $('.fileinput-exists').hide();
-      $('.fileinput-new').show();
-    },
-    'change input[name=photo]'(event, target) {
-      photoUpload(event);
-    }
-  });
+    $('.fileinput-preview').attr('src', '#');
+    $('.fileinput-exists').hide();
+    $('.fileinput-new').show();
+  },
+  'change input[name=photo]'(event, target) {
+    photoUpload(event);
+  }
+});

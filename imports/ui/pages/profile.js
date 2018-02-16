@@ -7,8 +7,8 @@ import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 
 import '../components/result_link.js';
- 
-Template.profile.onCreated(function() {
+
+Template.profile.onCreated(function () {
   this.subscribe('experiences');
   this.subscribe('incidents.byUser');
 });
@@ -25,7 +25,7 @@ Template.profile.helpers({
       experience: Experiences.findOne(incident.experienceId)
     }
   },
-  experiences: function() {
-    return Experiences.find({author: Meteor.userId()}).fetch();
+  experiences: function () {
+    return Experiences.find({ author: Meteor.userId() }).fetch();
   }
 });

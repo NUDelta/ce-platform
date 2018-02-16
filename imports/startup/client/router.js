@@ -28,17 +28,17 @@ Router.route('/affordances', {
 Router.route('/apicustom/:_id', {
   name: 'api.custom',
   template: 'api_custom',
-  onStop: function() {
-        console.log("someone left the page");
-    }
+  onStop: function () {
+    console.log("someone left the page");
+  }
 });
 
 Router.route('/apicustomresults/:_id', {
   name: 'api.custom.results',
   template: 'api_custom_results',
-  onStop: function() {
-        console.log("someone left the page");
-    }
+  onStop: function () {
+    console.log("someone left the page");
+  }
 });
 
 Router.route('/', {

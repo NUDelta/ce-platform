@@ -11,20 +11,20 @@ import { Assignments } from '../../api/coordinator/assignments';
 
 import '../components/active_experience.js';
 
-Template.home.onCreated(function() {
-    this.state = new ReactiveDict();
-    this.state.set('render', true);
-    this.autorun(() => {
-      console.log('rerunning');
-      Template.instance().state.set('render', true);
-      this.subscribe('experiences.activeUser');
-      this.subscribe('incidents.activeUser');
-      this.subscribe('assignments.activeUser');
-    });
+Template.home.onCreated(function () {
+  this.state = new ReactiveDict();
+  this.state.set('render', true);
+  this.autorun(() => {
+    console.log('rerunning');
+    Template.instance().state.set('render', true);
+    this.subscribe('experiences.activeUser');
+    this.subscribe('incidents.activeUser');
+    this.subscribe('assignments.activeUser');
+  });
 });
 
 Template.home.events({
-  'click .refresh'(){
+  'click .refresh'() {
     ///Template.instance().state.set('render', false);
     Template.instance().state.get('render');
     Template.instance().state.set('render', false);

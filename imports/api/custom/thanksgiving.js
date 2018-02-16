@@ -8,7 +8,7 @@ import { registerCallback } from '../coordinator/methods.js';
 export const thanksgiving = new ValidatedMethod({
   name: 'api.thanksgiving',
   validate: null,
-  run(){
+  run() {
     const groceryShopTemplate = {
       'name': 'grocery_shop',
       'contributions': { 'photo': 'Image', 'sentence': 'String' },
@@ -43,13 +43,13 @@ export const thanksgiving = new ValidatedMethod({
       resultsTemplate: 'thanksgivingResults',
       notificationText: 'We found an experience for you! Help us create a Thanksgiving break collage 🦃',
       contributionGroups: [
-        {contributionTemplates: [groceryShopTemplate]},
-        {contributionTemplates: [shoppingTemplate]},
-        {contributionTemplates: [barsTemplate]},
-        {contributionTemplates: [feastTemplate]},
-        {contributionTemplates: [airportTemplate]},
-        {contributionTemplates: [drinksTemplate]}
-        ],
+        { contributionTemplates: [groceryShopTemplate] },
+        { contributionTemplates: [shoppingTemplate] },
+        { contributionTemplates: [barsTemplate] },
+        { contributionTemplates: [feastTemplate] },
+        { contributionTemplates: [airportTemplate] },
+        { contributionTemplates: [drinksTemplate] }
+      ],
       callbackPair: []
     });
 
@@ -69,11 +69,11 @@ export const thanksgiving = new ValidatedMethod({
     Meteor.call('api.addSituationNeeds', {
       incidentId: incidentId,
       need: {
-          'name': 'shoppingNeed',
-          'contributionTemplate': 'shopping',
-          'affordance': 'womenscloth or menscloth or deptstores or shoes',
-          'softStoppingCriteria': 4
-        }
+        'name': 'shoppingNeed',
+        'contributionTemplate': 'shopping',
+        'affordance': 'womenscloth or menscloth or deptstores or shoes',
+        'softStoppingCriteria': 4
+      }
     });
     Meteor.call('api.addSituationNeeds', {
       incidentId: incidentId,

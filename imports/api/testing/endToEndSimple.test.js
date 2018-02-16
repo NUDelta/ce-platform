@@ -1,4 +1,4 @@
-import { _  } from 'meteor/underscore';
+import { _ } from 'meteor/underscore';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Accounts } from 'meteor/accounts-base';
 import { Experiences } from '../experiences/experiences';
@@ -34,9 +34,9 @@ describe('Simple End To End', function () {
       resultsTemplate: 'photoCollage',
       contributionTypes: [{
         templateName: 'atLocation', needs: [{
-            needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
-            toPass: { item: 'restaurant' }, numberNeeded: 10
-          }]
+          needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
+          toPass: { item: 'restaurant' }, numberNeeded: 10
+        }]
       }],
       description: 'This is a simple experience for testing',
       notificationText: 'Please participate in this test experience!',

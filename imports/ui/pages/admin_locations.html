@@ -1,14 +1,14 @@
 <template name="admin_locations">
-  <div style="height: 600px; width: 600px">
-    {{> googleMap name="map" options=mapOptions}}
-  </div>
-  <form>
-    <label for="locationType">Location Type</label>
-    <input name="locationType" type="text" id="locationType" value="restaurants">
+    <div style="height: 600px; width: 600px">
+        {{> googleMap name="map" options=mapOptions}}
+    </div>
+    <form>
+        <label for="locationType">Location Type</label>
+        <input name="locationType" type="text" id="locationType" value="restaurants">
 
-    <label for="radius">Radius</label>
-    <input name="radius" type="number" id="radius" value="200">
+        <label for="radius">Radius</label>
+        <input name="radius" type="number" id="radius" value="200">
 
-    <button type="submit">Submit</button>
-  </form>
+        <button type="submit">Submit</button>
+    </form>
 </template>

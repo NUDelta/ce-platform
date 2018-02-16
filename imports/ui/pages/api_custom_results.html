@@ -1,516 +1,539 @@
 <template name="api_custom_results">
-  {{#if Template.subscriptionsReady}}
-    {{ > Template.dynamic template=template_name data=data2pass}}
-  {{/if}}
+    {{#if Template.subscriptionsReady}}
+        {{ > Template.dynamic template=template_name data=data2pass}}
+    {{/if}}
 </template>
 
 <!-- TEMPLATE FOR THANKGIVING RESULTS -->
 <template name="thanksgivingResults">
-  <head>
-    <style>
-      .column-multiple {
-        width: 100%;
-        overflow: hidden;
-        padding: 5px 10px 5px 10px;
-      }
-      #photos img {
-        width: 100%;
-        height: auto;
-      }
-      .square {
-        float:left;
-        position: relative;
-        width: 100%;
-        margin:1% 2% 1%;
-      }
-      #photos {
-        line-height: 0;
-        -webkit-column-count: 5;
-        -webkit-column-gap: 0px;
-        -moz-column-count: 5;
-        -moz-column-gap: 0px;
-        column-count: 5;
-        column-gap:0px;
-      }
-      @media (max-width: 1000px) {
-        #photos {
-        -moz-column-count: 6;
-        -webkit-column-count: 6;
-        column-count: 6;
-        }
-      }
-      @media (max-width: 800px) {
-        #photos {
-        -moz-column-count: 3;
-        -webkit-column-count: 3;
-        column-count: 3;
-        }
-      }
-      @media (max-width: 500px) {
-        #photos {
-        -moz-column-count: 2;
-        -webkit-column-count: 2;
-        column-count: 2;
-        }
-      }
-    </style>
-  </head>
-  <h4>This Thanksgiving break you and others are...</h4>
-  <div class="row" style="padding:5px">
-    <div class="column-multiple">
-      {{#if (noImage "feast")}}
-      {{else}}
-        <p><b>Feasting</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "feast")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "feast")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "feast")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "feast")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 4 "feast")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 5 "feast")}}
-          </div>
-        </section>
-      {{/if}}
-    </div>
+    <head>
+        <style>
+            .column-multiple {
+                width: 100%;
+                overflow: hidden;
+                padding: 5px 10px 5px 10px;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "grocery_shop")}}
-        <!-- <div class="waiting" style="padding-left:15px;">
-          <p>No one has gone grocery shopping yet</p>
-        </div> -->
-      {{else}}
-        <p><b>Grocery shopping</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery_shop")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "grocery_shop")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "grocery_shop")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "grocery_shop")}}
-          </div>
-        </section>
-      {{/if}}
-    </div>
+            #photos img {
+                width: 100%;
+                height: auto;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "shopping")}}
-      {{else}}
-        <p><b>Shopping</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "shopping")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "shopping")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "shopping")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "shopping")}}
-          </div>
-        </section>
-      {{/if}}
-    </div>
+            .square {
+                float: left;
+                position: relative;
+                width: 100%;
+                margin: 1% 2% 1%;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "airport")}}
-      {{else}}
-        <p><b>Chilling at the airport</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "airport")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "airport")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "airport")}}
-          </div>
-        </section>
-      {{/if}}
-    </div>
+            #photos {
+                line-height: 0;
+                -webkit-column-count: 5;
+                -webkit-column-gap: 0px;
+                -moz-column-count: 5;
+                -moz-column-gap: 0px;
+                column-count: 5;
+                column-gap: 0px;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "bars")}}
-      {{else}}
-        <p><b>Hanging out at bars</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "bars")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "bars")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "bars")}}
-          </div>
-        </section>
-      {{/if}}
-    </div>
+            @media (max-width: 1000px) {
+                #photos {
+                    -moz-column-count: 6;
+                    -webkit-column-count: 6;
+                    column-count: 6;
+                }
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "drinks")}}
-      {{else}}
-        <p><b>Getting coffee or boba</b></p>
-        <section id="photos">
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "drinks")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "drinks")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "drinks")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "drinks")}}
-          </div>
-        </section>
-      {{/if}}
+            @media (max-width: 800px) {
+                #photos {
+                    -moz-column-count: 3;
+                    -webkit-column-count: 3;
+                    column-count: 3;
+                }
+            }
+
+            @media (max-width: 500px) {
+                #photos {
+                    -moz-column-count: 2;
+                    -webkit-column-count: 2;
+                    column-count: 2;
+                }
+            }
+        </style>
+    </head>
+    <h4>This Thanksgiving break you and others are...</h4>
+    <div class="row" style="padding:5px">
+        <div class="column-multiple">
+            {{#if (noImage "feast")}}
+            {{else}}
+                <p><b>Feasting</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "feast")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "feast")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "feast")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "feast")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 4 "feast")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 5 "feast")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
+
+        <div class="column-multiple">
+            {{#if (noImage "grocery_shop")}}
+                <!-- <div class="waiting" style="padding-left:15px;">
+                  <p>No one has gone grocery shopping yet</p>
+                </div> -->
+            {{else}}
+                <p><b>Grocery shopping</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "grocery_shop")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "grocery_shop")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "grocery_shop")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "grocery_shop")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
+
+        <div class="column-multiple">
+            {{#if (noImage "shopping")}}
+            {{else}}
+                <p><b>Shopping</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "shopping")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "shopping")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "shopping")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "shopping")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
+
+        <div class="column-multiple">
+            {{#if (noImage "airport")}}
+            {{else}}
+                <p><b>Chilling at the airport</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "airport")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "airport")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "airport")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
+
+        <div class="column-multiple">
+            {{#if (noImage "bars")}}
+            {{else}}
+                <p><b>Hanging out at bars</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "bars")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "bars")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "bars")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
+
+        <div class="column-multiple">
+            {{#if (noImage "drinks")}}
+            {{else}}
+                <p><b>Getting coffee or boba</b></p>
+                <section id="photos">
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 0 "drinks")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 1 "drinks")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 2 "drinks")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="affordance" data=(getAffordanceInfo 3 "drinks")}}
+                    </div>
+                </section>
+            {{/if}}
+        </div>
     </div>
-  </div>
 </template>
 
 <template name="affordance">
-  <div class="affordanceBlock" id="{{this.AffordanceId}}">
-    {{ > Template.dynamic template="displayThanksgivingImage" data=(getImage this.imageId)}}
-  </div>
+    <div class="affordanceBlock" id="{{this.AffordanceId}}">
+        {{ > Template.dynamic template="displayThanksgivingImage" data=(getImage this.imageId)}}
+    </div>
 </template>
 
 <!-- TEMPLATE FOR RAINBOW COLLAGE -->
 <template name="americanFlagResults">
-  <head>
-    <style>
-      .column-multiple {
-        width: 100%;
-        overflow: hidden;
-        max-height: 800px;
-        padding: 5px 10px 5px 10px;
-      }
-      .column-multiple img {
-        width: 100%;
-      }
-      .box {
-        width:100%;
-        height:100px;
-        text-align:center;
-        vertical-align: middle;
-        line-height: 100px;
-      }
-      #container {
-        width:100%;
-        text-align:center;
-      }
-      .square {
-        float:left;
-        position: relative;
-        width: 46%;
-        padding-bottom: 1%;
-        margin:1.1% 1.66% 1.1% 1.66%;
-      }
-    </style>
-  </head>
-  <h4>Check out this rainbow collage being created by you and others</h4>
-  <div class="row" style="padding:5px">
-    <div class="column-multiple">
-      {{#if (noImage "red")}}
-        <div class="box red" style="border:1.5px solid #ed284c;">
-          We're still waiting for red photos...
-        </div>
-      {{else}}
-        <div id="container">
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 0 "red")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 1 "red")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 2 "red")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 3 "red")}}
-          </div>
-        </div>
-      {{/if}}
-    </div>
+    <head>
+        <style>
+            .column-multiple {
+                width: 100%;
+                overflow: hidden;
+                max-height: 800px;
+                padding: 5px 10px 5px 10px;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "yellow")}}
-        <div class="box yellow" style="border:1.5px solid #f4c542;">
-          We're still waiting for yellow photos...
-        </div>
-      {{else}}
-        <div id="container">
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 0 "yellow")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 1 "yellow")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 2 "yellow")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 3 "yellow")}}
-          </div>
-        </div>
-      {{/if}}
-    </div>
+            .column-multiple img {
+                width: 100%;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "green")}}
-        <div class="box green" style="border:1.5px solid #35a354;">
-          We're still waiting for green photos...
-        </div>
-      {{else}}
-        <div id="container">
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 0 "green")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 1 "green")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 2 "green")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 3 "green")}}
-          </div>
-        </div>
-      {{/if}}
-    </div>
+            .box {
+                width: 100%;
+                height: 100px;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 100px;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "blue")}}
-        <div class="box blue" style="border:1.5px solid #53a5e8;">
-          We're still waiting for blue photos...
-        </div>
-      {{else}}
-        <div id="container">
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 0 "blue")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 1 "blue")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 2 "blue")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 3 "blue")}}
-          </div>
-        </div>
-      {{/if}}
-    </div>
+            #container {
+                width: 100%;
+                text-align: center;
+            }
 
-    <div class="column-multiple">
-      {{#if (noImage "black")}}
-      <div class="box black" style="border:1.5px solid #301f22;">
-        We're still waiting for black photos...
-      </div>
-      {{else}}
-        <div id="container">
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 1 "black")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 2 "black")}}
-          </div>
-          <div class="square">
-            {{ > Template.dynamic template="color" data=(getColorInfo 3 "black")}}
-          </div>
+            .square {
+                float: left;
+                position: relative;
+                width: 46%;
+                padding-bottom: 1%;
+                margin: 1.1% 1.66% 1.1% 1.66%;
+            }
+        </style>
+    </head>
+    <h4>Check out this rainbow collage being created by you and others</h4>
+    <div class="row" style="padding:5px">
+        <div class="column-multiple">
+            {{#if (noImage "red")}}
+                <div class="box red" style="border:1.5px solid #ed284c;">
+                    We're still waiting for red photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "red")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "red")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "red")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "red")}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
-      {{/if}}
-    </div>
 
-    <div class="column-multiple">
-      {{#if (noImage "white")}}
-      <div class="box white" style="border:1.5px solid white;">
-        We're still waiting for white photos...
-      </div>
-      {{else}}
-      <div id="container">
-        <div class="square">
-          {{ > Template.dynamic template="color" data=(getColorInfo 0 "white")}}
+        <div class="column-multiple">
+            {{#if (noImage "yellow")}}
+                <div class="box yellow" style="border:1.5px solid #f4c542;">
+                    We're still waiting for yellow photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "yellow")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "yellow")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "yellow")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "yellow")}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
-        <div class="square">
-          {{ > Template.dynamic template="color" data=(getColorInfo 1 "white")}}
+
+        <div class="column-multiple">
+            {{#if (noImage "green")}}
+                <div class="box green" style="border:1.5px solid #35a354;">
+                    We're still waiting for green photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "green")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "green")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "green")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "green")}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
-        <div class="square">
-          {{ > Template.dynamic template="color" data=(getColorInfo 2 "white")}}
+
+        <div class="column-multiple">
+            {{#if (noImage "blue")}}
+                <div class="box blue" style="border:1.5px solid #53a5e8;">
+                    We're still waiting for blue photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "blue")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "blue")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "blue")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "blue")}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
-        <div class="square">
-          {{ > Template.dynamic template="color" data=(getColorInfo 3 "white")}}
+
+        <div class="column-multiple">
+            {{#if (noImage "black")}}
+                <div class="box black" style="border:1.5px solid #301f22;">
+                    We're still waiting for black photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "black")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "black")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "black")}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
-      </div>
-      {{/if}}
+
+        <div class="column-multiple">
+            {{#if (noImage "white")}}
+                <div class="box white" style="border:1.5px solid white;">
+                    We're still waiting for white photos...
+                </div>
+            {{else}}
+                <div id="container">
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 0 "white")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 1 "white")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 2 "white")}}
+                    </div>
+                    <div class="square">
+                        {{ > Template.dynamic template="color" data=(getColorInfo 3 "white")}}
+                    </div>
+                </div>
+            {{/if}}
+        </div>
     </div>
-  </div>
 </template>
 
 <template name="color">
-  <div class="colorBlock" id="{{this.colorId}}">
-    {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
-  </div>
+    <div class="colorBlock" id="{{this.colorId}}">
+        {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
+    </div>
 </template>
 
 <!-- TEMPLATE FOR AMERICAN FLAG -->
 <template name="americanFlagResults2">
-  <head>
-    <style>
-      svg {
-        /*width: 2em;
-        height: 2em;*/
-        /*position: absolute;
-        padding-top: 100px;
-        padding-left: 20px;*/
-      }
-    </style>
-  </head>
-  <div class="row">
-    <div class = "col-xs-12" style="padding-top:5em">
-      <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
+    <head>
+        <style>
+            svg {
+                /*width: 2em;
+                height: 2em;*/
+                /*position: absolute;
+                padding-top: 100px;
+                padding-left: 20px;*/
+            }
+        </style>
+    </head>
+    <div class="row">
+        <div class="col-xs-12" style="padding-top:5em">
+            <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg"
+                 width="100%" height="50em">
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-2">
-      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    <div class="row">
+        <div class="col-xs-2">
+            {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+        </div>
+        <div class="col-xs-2">
+            {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+        </div>
+        <div class="col-xs-2">
+            {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+        </div>
+        <div class="col-xs-2">
+            {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+        </div>
     </div>
-    <div class="col-xs-2">
-      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
+    <div class="row">
+        <div class="col-xs-12">
+            <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg"
+                 width="100%" height="50em">
+        </div>
     </div>
-    <div class="col-xs-2">
-      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-    </div>
-    <div class="col-xs-2">
-      {{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}
-    </div>
-  </div>
-  <div class="row">
-    <div class = "col-xs-12">
-      <img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg" width="100%" height="50em">
-    </div>
-  </div>
 </template>
 
 <template name="star">
-  <svg class="star" id="{{this.starId}}" width="100" height="100">
-    <defs>
-      <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
-        {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
-      </pattern>
-    </defs>
-    <polygon id="starShape" points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
-      fill="url(#img1)" />
-  </svg>
+    <svg class="star" id="{{this.starId}}" width="100" height="100">
+        <defs>
+            <pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">
+                {{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}
+            </pattern>
+        </defs>
+        <polygon id="starShape"
+                 points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"
+                 fill="url(#img1)"/>
+    </svg>
 </template>
 
 <!-- TEMPLATE FOR CHEERS -->
 <template name="cheers1_results">
-  {{#each image in this.images}}
-    <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
-      {{#if image.isUploaded}}
-        <!--small amount of lag before url is ready-->
-        <!--probably should add a loading animation here-->
-        <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
-        {{image.details}}
-      {{/if}}
-    </div>
-  {{/each}}
+    {{#each image in this.images}}
+        <div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">
+            {{#if image.isUploaded}}
+                <!--small amount of lag before url is ready-->
+                <!--probably should add a loading animation here-->
+                <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+                {{image.details}}
+            {{/if}}
+        </div>
+    {{/each}}
 </template>
 
 <!--TEMPLATE FOR STORYTIME-->
 <template name="storyPageResults">
-  <head>
-    <style>
-      .mySlides {display:none}
-      /* Slideshow container */
-      .slideshow-container {
-        max-width: 1000px;
-        position: relative;
-        margin: auto;
-      }
-      /* Next & previous buttons */
-      #prev, #next {
-        cursor: pointer;
-        bottom: 0px;
-        color: black;
-        font-weight: bold;
-        font-size: 50px !important;
-        border-radius: 0 3px 3px 0;
-      }
-      /* Position the "next button" to the right */
-      #next {
-        border-radius: 3px 0 0 3px;
-      }
-      .caption {
-        margin-top:15px;
-      }
-      .caption-text {
-        word-wrap: break-word;
-        margin: 0 auto;
-      }
-      .illustration {
-        height: 350px;
-        overflow: hidden;
-        margin-top:10px;
-      }
-      .img {
-        height: 350px;
-      }
-      #img0 {
-        display: inline;
-      }
-    </style>
-  </head>
+    <head>
+        <style>
+            .mySlides {
+                display: none
+            }
 
-  <div class="slideshow-container">
-    {{#each submission in this.submissions}}
-      <div class="mySlides" id="img{{@index}}">
-        <div class="illustration row">
-          {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
-        </div>
-        <div class="row caption">
-          <div class="col-xs-2">
-            {{#if (isFirst @index) }}
-              <a class="prev" style="font-size: 50px !important">&#10094;</a>
-            {{/if}}
-          </div>
-          <div class="caption-text col-xs-8">
-            {{#if (isFirst @index) }}
-              {{getText (getNextSentenceId @index) }}
-            {{else}}
-              Jimmy looked up at the night sky.
-            {{/if}}
-          </div>
-          <div class="col-xs-2">
-            {{#if (notLast @index)}}
-              <a class="next" style="font-size: 50px !important">&#10095;</a>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    {{/each}}
-  </div>
+            /* Slideshow container */
+            .slideshow-container {
+                max-width: 1000px;
+                position: relative;
+                margin: auto;
+            }
+
+            /* Next & previous buttons */
+            #prev, #next {
+                cursor: pointer;
+                bottom: 0px;
+                color: black;
+                font-weight: bold;
+                font-size: 50px !important;
+                border-radius: 0 3px 3px 0;
+            }
+
+            /* Position the "next button" to the right */
+            #next {
+                border-radius: 3px 0 0 3px;
+            }
+
+            .caption {
+                margin-top: 15px;
+            }
+
+            .caption-text {
+                word-wrap: break-word;
+                margin: 0 auto;
+            }
+
+            .illustration {
+                height: 350px;
+                overflow: hidden;
+                margin-top: 10px;
+            }
+
+            .img {
+                height: 350px;
+            }
+
+            #img0 {
+                display: inline;
+            }
+        </style>
+    </head>
+
+    <div class="slideshow-container">
+        {{#each submission in this.submissions}}
+            <div class="mySlides" id="img{{@index}}">
+                <div class="illustration row">
+                    {{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}
+                </div>
+                <div class="row caption">
+                    <div class="col-xs-2">
+                        {{#if (isFirst @index) }}
+                            <a class="prev" style="font-size: 50px !important">&#10094;</a>
+                        {{/if}}
+                    </div>
+                    <div class="caption-text col-xs-8">
+                        {{#if (isFirst @index) }}
+                            {{getText (getNextSentenceId @index) }}
+                        {{else}}
+                            Jimmy looked up at the night sky.
+                        {{/if}}
+                    </div>
+                    <div class="col-xs-2">
+                        {{#if (notLast @index)}}
+                            <a class="next" style="font-size: 50px !important">&#10095;</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </template>

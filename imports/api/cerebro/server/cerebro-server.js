@@ -10,6 +10,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
   constructor() {
     super();
   }
+
   /**
    * _sendPush - sends a notification to the given user
    *
@@ -89,7 +90,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
       sound: 'airhorn.caf',
       payload: payload,
       query: {
-        userId: {$in: pushUsers}
+        userId: { $in: pushUsers }
       }
     });
   }
@@ -111,7 +112,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
   removeAllOldActiveExperiences(userIds, experienceId) {
     console.log("removeAllOldActiveExperiences", userIds);
     Meteor.users.update({
-      _id: {$in: userIds}
+      _id: { $in: userIds }
     }, {
       $pull: {
         'profile.activeExperiences': experienceId
@@ -172,7 +173,7 @@ CerebroServer = class CerebroServer extends CerebroCore {
     });
 
     Meteor.users.update({
-      _id: {$in: userIds}
+      _id: { $in: userIds }
     }, {
       $pull: {
         'profile.activeExperiences': experienceId

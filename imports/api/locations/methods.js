@@ -69,7 +69,7 @@ const userIsAvailableToParticipate = (uid, debug) => {
  * @param lng {float} longitude of new location
  */
 const updateLocationInDb = (uid, lat, lng) => {
-  const entry = Locations.findOne({uid: uid});
+  const entry = Locations.findOne({ uid: uid });
   if (entry) {
     Locations.update(entry._id, {
       $set: {

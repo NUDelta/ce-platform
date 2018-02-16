@@ -2,7 +2,7 @@ import './nav.html';
 
 import { Router } from 'meteor/iron:router';
 
-Template.nav.onRendered(function() {
+Template.nav.onRendered(function () {
   // adjustActive();
 });
 
@@ -12,7 +12,7 @@ Template.nav.helpers({
   }
 });
 
-const adjustActive = function() {
+const adjustActive = function () {
   $('.nav-item').removeClass('active');
   const route = Router.current().route.getName();
 };

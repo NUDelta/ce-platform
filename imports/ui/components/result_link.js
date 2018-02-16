@@ -13,7 +13,7 @@ Template.resultLink.onCreated(function () {
         type: String,
         regEx: SimpleSchema.RegEx.Id
       },
-      date:{
+      date: {
         type: String
       },
       experience: {
@@ -25,10 +25,10 @@ Template.resultLink.onCreated(function () {
 
 
 Template.resultLink.helpers({
-  formatDate(date){
+  formatDate(date) {
     var d = new Date(parseInt(date));
     var string = ""
-    string += d.getMonth()+1 + "/" + d.getDate() + ", " + d.getHours() + ":" + d.getMinutes();
+    string += d.getMonth() + 1 + "/" + d.getDate() + ", " + d.getHours() + ":" + d.getMinutes();
     return string;
   }
 

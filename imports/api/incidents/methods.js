@@ -14,7 +14,7 @@ export const startRunningIncident = (incident) => {
     let templateName = contribution.templateName;
 
     _.forEach(contribution.needs, (need) => {
-      needUserMaps.push({needName: need.needName});
+      needUserMaps.push({ needName: need.needName });
       Submissions.insert({
         eid: incident.eid,
         iid: incident._id,
@@ -72,7 +72,7 @@ export const createIncidentFromExperience = (experience) => {
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   let output = undefined;
-  console.log('getNeedFromIncidentId', iid, needName );
+  console.log('getNeedFromIncidentId', iid, needName);
 
   _.forEach(incident.contributionTypes, (contributionType) => {
     console.log('needs', contributionType.needs);

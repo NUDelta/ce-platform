@@ -1,19 +1,19 @@
 import { Meteor } from 'meteor/meteor';
 import { Incidents } from '../incidents.js';
 
-Meteor.publish('incidents', function() {
+Meteor.publish('incidents', function () {
   return Incidents.find();
 });
 
-Meteor.publish('incidents.single', function(incidentId) {
+Meteor.publish('incidents.single', function (incidentId) {
   return Incidents.find(incidentId);
 });
 
-Meteor.publish('incidents.byId', function(incidentId) {
+Meteor.publish('incidents.byId', function (incidentId) {
   return Incidents.find(incidentId);
 });
 
-Meteor.publish('incidents.activeUser', function() {
+Meteor.publish('incidents.activeUser', function () {
   console.log('subscribing to incidents.activeUser');
 
   if (!this.userId) {

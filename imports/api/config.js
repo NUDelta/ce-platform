@@ -18,7 +18,7 @@ export const CONFIG = {
   NOTIFY_ALL: 1,
   NOTIFY_METHOD: Notification.PUSH,
   DEBUG_PUSH: 0,
-  DEBUG_USERS: [ 'pTeAq958AvmvMvF7e', 'mr9qe4nRHQn8KufLX', 'BvYfcgvJ7yDETLjME' ]
+  DEBUG_USERS: ['pTeAq958AvmvMvF7e', 'mr9qe4nRHQn8KufLX', 'BvYfcgvJ7yDETLjME']
 };
 
 export const AUTH = {

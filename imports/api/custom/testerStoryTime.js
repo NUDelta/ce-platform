@@ -10,7 +10,7 @@ import { registerCallback } from '../coordinator/methods.js';
 export const testerStoryBook = new ValidatedMethod({
   name: 'api.testerStoryBook',
   validate: null,
-  run(){
+  run() {
     console.log('RUNNING tester STORYBOOK');
 
     const createNewPageNeed = function (mostRecentSubmission) {
@@ -56,8 +56,8 @@ export const testerStoryBook = new ValidatedMethod({
       participateTemplate: 'storyPage',
       resultsTemplate: 'storyPageResults',
       notificationText: 'Help us illustrate and write a story!',
-      contributionGroups: [{contributionTemplates: [storyPageTemplate]}],
-      callbackPair:[{templateName: 'scene', callback: createNewPageNeed.toString()}]
+      contributionGroups: [{ contributionTemplates: [storyPageTemplate] }],
+      callbackPair: [{ templateName: 'scene', callback: createNewPageNeed.toString() }]
     });
 
     const incidentId = Meteor.call('api.createIncident', {
@@ -70,7 +70,7 @@ export const testerStoryBook = new ValidatedMethod({
       incidentId: incidentId,
       need: {
         'name': 'page0',
-        'contributionTemplate' : 'scene',
+        'contributionTemplate': 'scene',
         'affordance': 'nighttime',
         'softStoppingCriteria': 1
       }
