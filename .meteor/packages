@@ -50,7 +50,7 @@ msavin:mongol
 shell-server@0.2.2
 force-ssl@1.0.13
 remcoder:chronos
-meteortesting:mocha
+practicalmeteor:mocha
 xolvio:cleaner
 accounts-base
 practicalmeteor:chai

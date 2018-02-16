@@ -4,30 +4,44 @@ import '../components/loading_overlay.html';
 import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
-import { ReactiveDict } from 'meteor/reactive-dict';
+import {ReactiveDict} from 'meteor/reactive-dict';
 
-import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
+import {Template} from 'meteor/templating';
+import {Router} from 'meteor/iron:router';
 
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Users } from '../../api/users/users.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Submissions } from '../../api/submissions/submissions.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
+import {Experiences} from '../../api/experiences/experiences.js';
+import {Incidents} from '../../api/incidents/incidents.js';
+import {Users} from '../../api/users/users.js';
+import {Locations} from '../../api/locations/locations.js';
+import {Submissions} from '../../api/submissions/submissions.js';
+import {Images} from '../../api/images/images.js';
+import {TextEntries} from '../../api/text-entries/text-entries.js';
 
-import { photoInput } from './photoUploadHelpers.js'
-import { photoUpload } from './photoUploadHelpers.js'
+import {photoInput} from './photoUploadHelpers.js'
+import {photoUpload} from './photoUploadHelpers.js'
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
 
-  test(){
-    console.log(this.participateTemplate)
-    return this.participateTemplate
+  experience() {
+    return this;
+  },
+  needName(){
+    return Router.current().params.needName;
+  },
+  iid(){
+    return Router.current().params.iid;
+  },
+  data(){
+    return {
+      experience: this,
+      iid: Router.current().params.iid,
+      needName: Router.current().params.needName
+    }
   }
+
+
   // data2pass() {
   //   //TODO: clean up this hot mess of a function
   //   const instance = Template.instance();
@@ -160,7 +174,7 @@ Template.api_custom.events({
           //success branch of callback
 
           //add more info about the photo
-          Images.update({ _id: imageFile._id }, {
+          Images.update({_id: imageFile._id}, {
             $set: {
               experienceId: experienceId,
               incidentId: incidentId,

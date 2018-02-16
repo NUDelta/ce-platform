@@ -8,7 +8,7 @@ import { Users } from '../../api/users/users.js';
 
 Template.admin_locations.onCreated(function () {
   const handle = this.subscribe('locations');
-
+  this.subscribe('detectors');
   this.markers = [];
 
   this.plotLocations = () => {
