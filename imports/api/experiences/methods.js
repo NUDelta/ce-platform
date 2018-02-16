@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
+
 import { Experiences } from './experiences.js';
 import { Schema } from '../schema.js';
-import { getUnfinishedNeedNames} from '../submissions/methods';
-import { Incidents } from '../incidents/incidents';
-import { getNeedFromIncidentId } from '../incidents/methods';
-
+import { getUnfinishedNeedNames } from '../submissions/methods';
 
 /**
  * Loops through all unmet needs and returns all needs a user matches with.

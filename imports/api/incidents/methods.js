@@ -1,11 +1,10 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
+
 import { Incidents } from './incidents';
 import { Availability } from '../coordinator/availability';
 import { Assignments } from '../coordinator/assignments';
 import { Submissions } from '../submissions/submissions';
-
 
 export const startRunningIncident = (incident) => {
   console.log('incident in start', incident);
@@ -74,18 +73,15 @@ export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   console.log('getNeedFromIncidentId', iid, needName );
 
-  // TODO: refactor using _.forEach
-  for (let i in incident.contributionTypes) {
-    for (let j in incident.contributionTypes[i].needs) {
-      console.log('needs', incident.contributionTypes[i].needs);
-      let need = incident.contributionTypes[i].needs[j];
-
-      if (need.needName === needName) {
-        console.log('found need', need);
-        return need;
+  _.forEach(incident.contributionTypes, (contributionType) => {
+    console.log('needs', contributionType.needs);
+    _.forEach(contributionType.needs, (contributionNeed) => {
+      if (contributionNeed.needName === needName) {
+        console.log('found need', contributionNeed);
+        return contributionNeed;
       }
-    }
-  }
+    });
+  });
 };
 
 //

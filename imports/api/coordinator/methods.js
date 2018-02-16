@@ -1,22 +1,19 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { _ } from 'meteor/underscore';
-
 import { Cerebro } from '../cerebro/server/cerebro-server.js';
+import { Assignments } from './assignments';
+import { Availability } from './availability';
 import { Experiences } from '../experiences/experiences.js';
 import { Incidents } from '../incidents/incidents.js';
 import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
 import { NotificationLog } from '../cerebro/cerebro-core.js';
-
 import { Users } from '../users/users.js';
+
 import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers } from '../users/methods';
-import { Assignments } from './assignments';
-import { Availability } from './availability';
 import { doesUserMatchNeed } from '../experiences/methods';
 import { getNeedFromIncidentId } from '../incidents/methods';
-
 
 /**
  * Runs the coordinator after a location update has occured.
@@ -145,22 +142,17 @@ export const updateAvailability = (uid, availabilityDictionary) => {
 
   //remove user from all entries
   let availability = Availability.find().fetch();
-  // TODO: refactor with _.forEach
-  for (let i in availability) {
-    let av = availability[i];
+  _.forEach(availability, (av) => {
     console.log(av._id);
-
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
-      continue;
+      return;
     }
 
     let updatedNeeds = { iid: iid, 'needUserMaps': [] };
-
-    // TODO: refactor with _.forEach
-    for (let j in av.needUserMaps) {
-      console.log(av.needUserMaps[j]);
-      let needName = av.needUserMaps[j].needName;
+    _.forEach(av.needUserMaps, (needUserMap) => {
+      console.log(av.needUserMaps[needUserMap]);
+      let needName = needUserMap.needName;
 
       if (availabilityDictionary[iid].indexOf(needName) !== -1) {
         Availability.update({
@@ -177,7 +169,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           }
         });
 
-        let newusers = av.needUserMaps[j].uids;
+        let newusers = needUserMap.uids;
         newusers.push(uid);
 
         updatedNeeds.needUserMaps.push({needName: needName, uids:newusers});
@@ -195,12 +187,12 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           }
         });
       }
+    });
 
-    }
     console.log('updatedNeeds', updatedNeeds);
     updatedEntries.push(updatedNeeds);
+  });
 
-  }
   console.log('updatedEntries', updatedEntries);
   return updatedEntries;
 };
@@ -440,7 +432,7 @@ const addUserToSituationNeed = (uid, incidentId, situationNeedName) => {
   );
 
   //notify the user & mark as notified
-  Locations.update({uid: uid}, {$set: {'lastNotification': Date.parse(new Date())}});
+  Locations.update({uid: uid}, {$set: {'lastNotification': Date.now()}});
 
   //add notification to notification log
   const userLocation = Locations.findOne({ uid: uid });
@@ -485,14 +477,13 @@ const removeUserFromExperience = (uid, experienceId, incidentId, situationNeedNa
 export const removeUserAfterTheyParticipated = (uid, experienceId) => {
   const incident = Incidents.findOne({ experienceId: experienceId });
 
-  for (let i in incident.situationNeeds) {
-    const sn = incident.situationNeeds[i];
+  _.forEach(incident.situationNeeds, (sn) => {
     console.log(sn.name);
     if (_.contains(sn.notifiedUsers, uid)) {
       removeUserFromExperience(uid, experienceId, incident._id, sn.name);
-      break;
+      return false;
     }
-  }
+  });
 };
 
 const removeUserFromExperienceAfterTheyMoved = (uid, experienceId) => {
@@ -503,20 +494,17 @@ const removeUserFromExperienceAfterTheyMoved = (uid, experienceId) => {
   Meteor.setTimeout(() => {
     console.log('removing users');
 
-    // TODO: refactor with _.forEach
-    for (let i in incident.situationNeeds) {
-      const sn = incident.situationNeeds[i];
-
+    _.forEach(incident.situationNeeds, (sn) => {
       if (_.contains(sn.notifiedUsers, uid)) {
         if (!containsAffordance(userAffordances, sn.affordance)) {
           console.log('found the one to remove from!');
           removeUserFromExperience(uid, experienceId, incident._id, sn.name);
 
-          //a user will only be in one situation need, so we can break
-          break;
+          // a user will only be in one situation need, so we can break from the loop
+          return false;
         }
       }
-    }
+    });
   }, wait)
 };
 
@@ -548,14 +536,12 @@ const orAffordances = (userAffordances, searchAffordances) => {
   let affordances = searchAffordances.split(' or ');
   let contains = false;
 
-  for (i = 0; i < affordances.length; i++) {
-    let currAffordance = affordances[i];
-
+  _.forEach(affordances, (currAffordance) => {
     if (_.contains(userAffordances, currAffordance)) {
       contains = true;
-      break;
+      return false;
     }
-  }
+  });
 
   return contains;
 };

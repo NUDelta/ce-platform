@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { _ } from 'meteor/underscore';
+
 
 import PhotoSwipe from 'photoswipe/dist/photoswipe.min';
 import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default.min';

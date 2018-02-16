@@ -3,8 +3,8 @@ import { Push } from 'meteor/raix:push';
 import { CerebroCore } from '../cerebro-core.js';
 import { log } from '../../logs.js';
 import { CONFIG, AUTH } from '../../config.js';
-
 import { Incidents } from '../../incidents/incidents.js';
+import { Experiences } from "../../experiences/experiences";
 
 CerebroServer = class CerebroServer extends CerebroCore {
   constructor() {
@@ -143,19 +143,18 @@ CerebroServer = class CerebroServer extends CerebroCore {
     const situationNeeds = Incidents.findOne({ _id: incidentId }).situationNeeds;
     console.log("in inc usermappings, ", situationNeeds);
 
-    // TODO: refactor using _.forEach
-    userIds.forEach((id) => {
-      for (let index in situationNeeds) {
-        if (situationNeeds[index].notifiedUsers.indexOf(id) > -1) {
-          console.log("found the user Id", id);
+    _.forEach(userIds, (id) => {
+      _.forEach(situationNeeds, (situationNeed, index) => {
+        if (situationNeed.notifiedUsers.indexOf(id) > -1) {
+          console.log('found the user Id', id);
 
-          const i = situationNeeds[index].notifiedUsers.indexOf(id);
-          console.log(i);
+          const i = situationNeed.notifiedUsers.indexOf(id);
+          console.log('userId index', i);
 
-          situationNeeds[index].avalibleUsers.splice(i, 1);
+          situationNeed.availableUsers.splice(i, 1);
           console.log("we hve updadate an index", userMappings[index])
         }
-      }
+      });
     });
 
     console.log("userMappings is now", userMappings);
