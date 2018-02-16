@@ -11,6 +11,7 @@ import '../../api/locations/methods.js';
 import '../../api/detectors/server/publications.js';
 import '../../api/detectors/methods.js';
 import '../../api/coordinator/methods.js';
+import '../../api/coordinator/server/publications.js';
 import '../../api/submissions/methods.js';
 import '../../api/submissions/server/publications.js';
 import '../../api/custom/storyTime.js';

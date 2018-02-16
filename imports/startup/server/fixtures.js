@@ -1,25 +1,32 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { Random } from 'meteor/random'
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
-import { insertPhoto } from '../../api/images/methods.js';
+import { Submissions } from "../../api/submissions/submissions";
+import { Availability } from "../../api/coordinator/availability";
+import { Assignments } from "../../api/coordinator/assignments";
 import { log } from '../../api/logs.js';
 
-import { LOCATIONS } from './data.js';
+import { LOCATIONS } from "../../api/testing/testinglocations";
+import { onLocationUpdate } from "../../api/locations/methods";
+import { createIncidentFromExperience, startRunningIncident} from "../../api/incidents/methods";
 import { findUserByEmail } from '../../api/users/methods';
-
 
 
 Meteor.startup(() => {
   SyncedCron.start();
   Meteor.users.remove({});
+  Experiences.remove({});
+  Submissions.remove({});
+  Availability.remove({});
+  Assignments.remove({});
+  Locations.remove({});
+  Incidents.remove({});
 
   if (Meteor.users.find().count() === 0) {
     if (true) {
@@ -42,39 +49,30 @@ Meteor.startup(() => {
       users.forEach(user => Accounts.createUser(user));
       log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
-      const jennie = findUserByEmail('j@gmail.com');
-      const experiences = [
-        {
-          name: 'flag',
-          author: jennie._id,
-          description: 'Let\'s build an American Flag!',
-          startText: 'Take a picture to help us build an American Flag',
-          modules: ['camera'],
-          requirements: [],
-          optIn: false,
-          parts: [
-            { 'name': 'red', 'description': 'stripes', 'affordance': 'grocery', 'max': 1 },
-            { 'name': 'white', 'description': 'stripes', 'affordance': 'rain', 'max': 1 },
-            { 'name': 'blue', 'description': 'stars', 'affordance': 'beaches', 'max': 1 }
-          ]
-        },
-        {
-          name: 'cheers1',
-          author: jennie._id,
-          description: 'Raise your glass!',
-          startText: 'Raise your glass and cheers with someone else!',
-          modules: ['camera'],
-          requirements: [],
-          optIn: false,
-          parts: [
-            { 'name': 'left', 'description': '', 'affordance': 'pubs', 'max': 2 },
-            { 'name': 'right', 'description': '', 'affordance': 'pubs', 'max': 2 }
-          ]
-        }
-      ];
+      // create a test experience
+      let experienceOne = {
+        _id: Random.id(),
+        name: 'You\'re at a restaurant',
+        participateTemplate: [{
+          templateName: 'atLocation', submissionData: { proof: 'photo' }
+        }],
+        resultsTemplate: 'photoCollage',
+        contributionTypes: [{
+          templateName: 'atLocation', needs: [{
+            needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
+            toPass: { item: 'restaurant' }, numberNeeded: 10
+          }]
+        }],
+        description: 'This is a simple experience for testing',
+        notificationText: 'Please participate in this test experience!',
+      };
 
-      //experiences.forEach(experience => Experiences.insert(experience));
-      //log.info(`Populated ${ Experiences.find().count() } experiences`);
+      Experiences.insert(experienceOne);
+      let incident = createIncidentFromExperience(experienceOne);
+      startRunningIncident(incident);
+
+      let uid = findUserByEmail('a@gmail.com')._id;
+      onLocationUpdate(uid, LOCATIONS.burgers.lat, LOCATIONS.burgers.lng);
     }
   }
 });
