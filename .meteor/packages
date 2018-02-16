@@ -54,3 +54,4 @@ practicalmeteor:mocha
 xolvio:cleaner
 accounts-base
 practicalmeteor:chai
+erasaur:meteor-lodash

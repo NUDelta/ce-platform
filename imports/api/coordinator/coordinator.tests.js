@@ -1,4 +1,3 @@
-import { _ } from 'meteor/underscore';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Availability } from './availability';
 import { updateAvailability } from './methods';

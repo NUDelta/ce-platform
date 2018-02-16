@@ -1,11 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
 
 export const findUserByEmail = function(email) {
   return Meteor.users.findOne({ 'emails.0.address': email });
-}
+};
 
 export const _addActiveIncidentToUsers = function (uids, iid) {
   Meteor.users.update({
@@ -17,8 +16,7 @@ export const _addActiveIncidentToUsers = function (uids, iid) {
   },{
     multi: true
   });
-}
-
+};
 
 export const _removeActiveIncidentFromUsers = function (uids, iid) {
   Meteor.users.update({
@@ -30,7 +28,7 @@ export const _removeActiveIncidentFromUsers = function (uids, iid) {
   }, {
     multi: true
   });
-}
+};
 
 
 export const getEmails = new ValidatedMethod({
@@ -58,7 +56,7 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
 
   }).validator(),
   run({experienceId}) {
-    console.log("experience ended so removing frmo user profiles")
+    console.log('experience ended so removing from user profiles');
     return Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
   }
 });
@@ -75,7 +73,13 @@ export const subscribeAllUsersToExperience = new ValidatedMethod({
     }
   }).validator(),
   run({experienceId}) {
-    return Meteor.users.update({'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}}, {multi: true});
+    return Meteor.users.update({
+      'profile.subscriptions': { $nin: [experienceId] }
+      }, {
+      $push: { 'profile.subscriptions': experienceId }
+      }, {
+      multi: true
+    });
   }
 });
 

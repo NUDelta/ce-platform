@@ -1,6 +1,6 @@
 export const Schema = {};
 
-// TODO: refacotr into enums?
+// TODO: refactor into enums?
 Schema.CEModules = [
   'camera',
   'text',
