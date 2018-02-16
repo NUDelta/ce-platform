@@ -24,11 +24,11 @@ export const getUnfinishedNeedNames = function () {
   _.forEach(submissions, (sub)=>{
     let iid = sub.iid;
     let needName = sub.needName;
-    if(iid in unfinishedNeeds){
+    if (iid in unfinishedNeeds) {
       if(unfinishedNeeds[iid].indexOf(needName) === -1){
         unfinishedNeeds[iid].push(needName)
       }
-    }else{
+    } else {
       unfinishedNeeds[iid] = [needName]
     }
   });

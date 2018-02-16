@@ -77,7 +77,6 @@ const chooseUsers = (uids, numberPeopleNeeded) => {
         }
       }
     }).count();
-
   });
 
   uids.sort(function (a, b) {
