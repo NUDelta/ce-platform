@@ -37,11 +37,10 @@ export const startRunningIncident = (incident) => {
 
 /**
  * Given an experience object, creates an incident
- * @param experience {string} of the created incident
+ * @param experience {object} of the created incident
  */
 export const createIncidentFromExperience = (experience) => {
   let incident = {
-    _id: Random.id(),
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
@@ -55,6 +54,8 @@ export const createIncidentFromExperience = (experience) => {
     }
   });
 
+
+  console.log("incident after created", incident)
   return incident;
 };
 
@@ -66,6 +67,9 @@ export const createIncidentFromExperience = (experience) => {
  */
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
+
+  console.log("incident", incident);
+
   let output = undefined;
   console.log('getNeedFromIncidentId', iid, needName);
 

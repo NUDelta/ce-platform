@@ -12,7 +12,7 @@ import { Availability } from "../../api/coordinator/availability";
 import { Assignments } from "../../api/coordinator/assignments";
 import { log } from '../../api/logs.js';
 
-import { LOCATIONS } from "../../api/testing/testinglocations";
+import { LOCATIONS } from "../../api/testing/testingconstants";
 import { onLocationUpdate } from "../../api/locations/methods";
 import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
 import { findUserByEmail } from '../../api/users/methods';

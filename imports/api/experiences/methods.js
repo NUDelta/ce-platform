@@ -5,16 +5,17 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Experiences } from './experiences.js';
 import { Schema } from '../schema.js';
 import { getUnfinishedNeedNames } from '../submissions/methods';
+import {getNeedFromIncidentId} from "../incidents/methods";
+import {matchAffordancesWithDetector} from "../detectors/methods";
 
 /**
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
- * @param lat {float} latitude of user's new location
- * @param lng {float} longitude of user's new location
+ * @param affordances {object} dictionary of user's affordacnes
  * @returns {{}}
  */
-export const findMatchesForUser = (uid, lat, lng) => {
+export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
   console.log('unfinishedNeeds', unfinishedNeeds);
@@ -22,7 +23,8 @@ export const findMatchesForUser = (uid, lat, lng) => {
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
-      let doesMatchPredicate = doesUserMatchNeed(uid, lat, lng, iid, needName);
+      console.log("needname affordances", needName, affordances);
+      let doesMatchPredicate = doesUserMatchNeed(uid, affordances, iid, needName);
 
       if (doesMatchPredicate) {
         if (matches[iid]) {
@@ -43,17 +45,16 @@ export const findMatchesForUser = (uid, lat, lng) => {
  * Match determined using AA/Affinder to check what affordances a user has and determine if it matches the need.
  *
  * @param uid {string} uid of user
- * @param lat {float} latitude of user's new location
- * @param lng {float} longitude of user's new location
+ * @param affordances {object} dictionary of user's affordances
  * @param iid {string} iid of incident to determine matching
  * @param needName {string} name of need to determine match for
  * @returns {boolean} whether user matches need queried for
  */
-export const doesUserMatchNeed = (uid, lat, lng, iid, needName) => {
-  //@ryan, here is the detector for you to match with
-  //let detector = getNeedFromIncidentId(iid, needName).situation.detector;
-
-  return true;
+export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
+  console.log("iid in doesuser match need", iid)
+  let detectorId = getNeedFromIncidentId(iid, needName).situation.detector;
+  let matchP = matchAffordancesWithDetector(affordances, detectorId);
+  return matchP;
 };
 
 

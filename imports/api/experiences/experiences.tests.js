@@ -1,21 +1,11 @@
 import {Experiences, SituationDescription} from './experiences';
+import {CONSTANTS} from "../testing/testingconstants";
 
 describe('Experience Tests', () => {
   it('insert experiences into database', () => {
-    let experienceTest = {
-      name: 'You\'re at a location',
-      participateTemplate: 'atLocation',
-      resultsTemplate: 'photoCollage',
-      contributionTypes: [
-        {
-          needName: 'atRestaurant', situation: {detector: 'restaurant', number: '1'},
-          toPass: {item: 'restaurant'}, numberNeeded: 10
-        }],
-      description: 'This is a simple experience for testing',
-      notificationText: 'Please participate in this test experience!',
-    };
 
-    Experiences.insert(experienceTest, (err) => {
+
+    Experiences.insert(CONSTANTS.experiences.atLocation, (err) => {
       if (err) {
         chai.assert(false);
       } else {

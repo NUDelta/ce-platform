@@ -7,6 +7,7 @@ export const findUserByEmail = function (email) {
 };
 
 export const _addActiveIncidentToUsers = function (uids, iid) {
+  console.log("adding incident to users", uids, iid)
   Meteor.users.update({
     _id: { $in: uids }
   }, {
@@ -16,6 +17,8 @@ export const _addActiveIncidentToUsers = function (uids, iid) {
   }, {
     multi: true
   });
+
+  console.log("user", findUserByEmail("a@gmail.com"))
 };
 
 export const _removeActiveIncidentFromUsers = function (uids, iid) {

@@ -6,7 +6,7 @@ import { Locations } from './locations.js';
 import { findMatchesForUser } from '../experiences/methods'
 import { runCoordinatorAfterUserLocationChange } from '../coordinator/methods'
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
-
+import { getAffordancesFromLocation } from '../detectors/methods';
 /**
  * Saves location in DB and sends data to sendToMatcher function.
  * Run on updates from LocationTracking package.
@@ -15,11 +15,17 @@ import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/metho
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-export const onLocationUpdate = (uid, lat, lng) => {
+export const onLocationUpdate = (uid, lat, lng, callback) => {
   console.log("received location update", lat, lng);
-  updateLocationInDb(uid, lat, lng);
-  updateAssignmentDbdAfterUserLocationChange(uid, lat, lng);
-  sendToMatcher(uid, lat, lng);
+
+  getAffordancesFromLocation(lat, lng, function(affordances){
+    updateLocationInDb(uid, lat, lng);
+    updateAssignmentDbdAfterUserLocationChange(uid, affordances);
+    sendToMatcher(uid, affordances);
+
+    callback();
+  });
+  
 };
 
 /**
@@ -30,13 +36,13 @@ export const onLocationUpdate = (uid, lat, lng) => {
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
  */
-const sendToMatcher = (uid, lat, lng) => {
+const sendToMatcher = (uid, affordances) => {
   // should check whether a user is available before sending to coordinator
   // TODO: replace false with config.debug global setting
   let userCanParticipate = userIsAvailableToParticipate(uid, false);
 
   if (userCanParticipate) {
-    let availabilityDictionary = findMatchesForUser(uid, lat, lng);
+    let availabilityDictionary = findMatchesForUser(uid, affordances);
     console.log("found matches", availabilityDictionary);
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }

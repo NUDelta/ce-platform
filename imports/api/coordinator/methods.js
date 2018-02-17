@@ -142,7 +142,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   //remove user from all entries
   let availability = Availability.find().fetch();
   _.forEach(availability, (av) => {
-    console.log(av._id);
+    console.log("availability entery", av._id);
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
       return;
@@ -208,7 +208,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  * @param lat {float} latitude of user's new location
  * @param lng {float} longitude of user's new location
  */
-export const updateAssignmentDbdAfterUserLocationChange = (uid, lat, lng) => {
+export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => {
   let currentAssignments = Assignments.find({
     'needUserMaps': {
       '$elemMatch': {
@@ -219,7 +219,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, lat, lng) => {
 
   _.forEach(currentAssignments, (assignment) => {
     _.forEach(assignment.needUserMaps, (needUserMap) => {
-      let matchPredicate = doesUserMatchNeed(uid, lat, lng, assignment._id, needUserMap.needName);
+      let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
 
       if (!matchPredicate) {
         adminUpdatesForRemovingUsersToIncident([uid], assignment._id, needUserMap.needName);
