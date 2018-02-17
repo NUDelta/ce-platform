@@ -24,18 +24,10 @@ import {photoUpload} from './photoUploadHelpers.js'
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
 
-  experience() {
-    return this;
-  },
-  needName(){
-    return Router.current().params.needName;
-  },
-  iid(){
-    return Router.current().params.iid;
-  },
-  data(){
+  data() {
     return {
-      experience: this,
+      location: this.location,
+      experience: this.experience,
       iid: Router.current().params.iid,
       needName: Router.current().params.needName
     }
@@ -124,47 +116,47 @@ Template.api_custom.events({
     //this makes the loading circle show up
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
-    // TODO: Probably can generalize this logic
-    const location = instance.state.get('location');
-    const incidentId = Router.current().params._id;
-    const incident = instance.state.get('incident'); // Incidents.findOne({_id: incidentId}) // TODO: might need to handle error cases?
-    const experienceId = incident.experienceId;
-    const userId = Meteor.userId();
+    const experience = this.experience;
+    const location = this.location;
+    const iid = Router.current().params.iid;
+    const needName = Router.current().params.needName;
+    const uid = Meteor.userId();
+    const timestamp = Date.now()
     const submissions = {};
 
-    const dropDowns = event.target.getElementsByClassName('dropdown');
-    _.forEach(dropDowns, (dropDown) => {
-      const index = dropDown.selectedIndex;
-      submissions[dropDown.id] = TextEntries.insert({
-        submitter: userId,
-        text: dropDown[index].value,
-        contribution: dropDowns[i].id,
-        experienceId: experienceId,
-        incidentId: incidentId,
-      });
-    });
+    // const dropDowns = event.target.getElementsByClassName('dropdown');
+    // _.forEach(dropDowns, (dropDown) => {
+    //   const index = dropDown.selectedIndex;
+    //   submissions[dropDown.id] = TextEntries.insert({
+    //     submitter: userId,
+    //     text: dropDown[index].value,
+    //     contribution: dropDowns[i].id,
+    //     experienceId: experienceId,
+    //     incidentId: incidentId,
+    //   });
+    // });
 
-    const forms = event.target.getElementsByClassName('form-control');
-    _.forEach((forms), (form) => {
-      submissions[form.id] = TextEntries.insert({
-        submitter: userId,
-        text: form.value,
-        contribution: form.id,
-        experienceId: experienceId,
-        incidentId: incidentId,
-      });
-    });
+    // const textBoxes = event.target.getElementsByClassName('textEntry');
+    // _.forEach((textBoxes), (textBox) => {
+    //   submissions[form.id] = TextEntries.insert({
+    //     submitter: userId,
+    //     text: form.value,
+    //     contribution: form.id,
+    //     experienceId: experienceId,
+    //     incidentId: incidentId,
+    //   });
+    // });
 
     const images = event.target.getElementsByClassName('fileinput');
     //no images being uploaded so we can just go right to the results page
     if (images.length === 0) {
-      Router.go('/apicustomresults/' + incidentId);
+      Router.go('/apicustomresults/' + iid);
     }
 
     //otherwise, we do have images to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       const picture = event.target.photo && event.target.photo.files[index];
-
+      console.log("pic", picture)
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
@@ -172,24 +164,32 @@ Template.api_custom.events({
           alert(err);
         } else {
           //success branch of callback
-
+          console.log("image uploaded now we need to update it", imageFile._id);
           //add more info about the photo
           Images.update({_id: imageFile._id}, {
             $set: {
-              experienceId: experienceId,
-              incidentId: incidentId,
+              iid: iid,
+              lat: location.lat,
+              lng: location.lng,
+              needName: needName,
             }
+          }, (err, docs) => {
+            if (err) {
+              console.log('upload error,', err);
+            } else {
+              console.log('upload worked', docs, needName);
+
+            }
+
           });
           // TODO: setTimeout for automatically moving on if upload takes too long
-          // This is a bit unfortunate...(waiting for a completed callback)
-          // https://github.com/CollectionFS/Meteor-CollectionFS/issues/323
 
           //watch to see when the image db has been updated, then go to results
           const cursor = Images.find(imageFile._id).observe({
             changed(newImage) {
               if (newImage.isUploaded()) {
                 cursor.stop();
-                Router.go('/apicustomresults/' + incidentId);
+                Router.go('/apicustomresults/' + iid);
               }
             }
           });
@@ -201,13 +201,12 @@ Template.api_custom.events({
     });
 
     const submissionObject = {
-      submitter: userId,
-      experienceId: experienceId,
-      incidentId: incidentId,
-      situationNeed: instance.state.get('situationNeedName'),
-      contributionTemplate: instance.state.get('contributionTemplate').name,
+      uid: uid,
+      eid: experience._id,
+      iid: iid,
+      needName: needName,
       content: submissions,
-      timestamp: Date.now(),
+      timestamp: timestamp,
       lat: location.lat,
       lng: location.lng
     };

@@ -1,8 +1,6 @@
 import { FS } from 'meteor/cfs:base-package';
 import { gm } from 'meteor/cfs:graphicsmagick';
 
-import { log } from '../logs.js';
-
 const createSquareThumb = (fileObj, readStream, writeStream) => {
   const size = '400';
   gm(readStream).autoOrient().resize(size, size + '^').gravity('Center').extent(size, size).stream('png').pipe(writeStream);

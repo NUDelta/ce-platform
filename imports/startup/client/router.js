@@ -17,6 +17,8 @@ import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 
 import {Experiences} from "../../api/experiences/experiences";
+import {Locations} from "../../api/locations/locations";
+import {Images} from "../../api/images/images";
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -27,31 +29,37 @@ Router.route('/affordances', {
   template: 'affordances'
 });
 
-// Router.route('/apicustom/:iid/:eid/:needName', {
-//   name: 'api.custom',
-//   template: 'api_custom',
-// })
 Router.route('api.custom', {
   path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
   before: function () {
     this.subscribe('experiences.activeUser').wait();
+    this.subscribe('locations.activeUser').wait();
+    this.subscribe('images', this.params.iid).wait();
     this.next();
   },
   data: function () {
-    console.log("router func", Experiences.findOne(this.params.eid))
-
-    return Experiences.findOne(this.params.eid);
+    return {
+      experience: Experiences.findOne(this.params.eid),
+      location: Locations.find({}).fetch()[0]
+    };
   }
 });
 
-Router.route('/apicustomresults/:_id', {
-  name: 'api.custom.results',
+Router.route('api.customresults', {
+  path: '/apicustomresults/:iid/',
   template: 'api_custom_results',
-  onStop: function () {
-    console.log("someone left the page");
+  before: function () {
+    this.subscribe('images', this.params.iid).wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      images: Images.find({iid: this.params.iid}).fetch()
+    };
   }
 });
+
 
 Router.route('/', {
   name: 'home',

@@ -1,24 +1,23 @@
 <template name="api_custom">
 
-    {{experience.participateTemplate}}
-    {{needName}}
-    {{iid}}
-    {{experience}}
-    {{> Template.dynamic template=experience.participateTemplate data=data}}
+    Help us out with
+    {{data.needName}}
+
+    {{> Template.dynamic template=data.experience.participateTemplate data=data}}
 
 </template>
 
-<template name="atLocation">
+<template name="uploadPhoto">
   You at a location!
 
-    <!--<div id="participate">-->
-        <!--<form class="col col-xs-12">-->
-            <!--&lt;!&ndash;{{ > Template.dynamic template="camera" data=data.needName)}}&ndash;&gt;-->
-            <!--<button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">-->
-                <!--Submit-->
-            <!--</button>-->
-        <!--</form>-->
-    <!--</div>-->
+    <div id="participate">
+        <form class="col col-xs-12">
+            {{> Template.dynamic template="camera" data="proof"}}
+            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 40px; height: 38px; width: 50%; margin-top: 10px;">
+                Submit
+            </button>
+        </form>
+    </div>
 
 </template>
 

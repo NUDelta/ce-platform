@@ -5,7 +5,8 @@ Meteor.publish('locations', function () {
   return Locations.find();
 });
 
-Meteor.publish('locations.byUser', function (userId) {
-  return Locations.find({ uid: userId });
+Meteor.publish('locations.activeUser', function () {
+  console.log('subscribing to locations.activeUser');
+  return Locations.find({ uid: this.userId });
 
 });

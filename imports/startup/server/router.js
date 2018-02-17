@@ -3,6 +3,7 @@ import { Router } from 'meteor/iron:router';
 import { updateUserLocationAndAffordances } from '../../api/locations/methods.js';
 import { log } from '../../api/logs.js';
 import { Location_log } from '../../api/locations/location_log.js'
+import {onLocationUpdate} from "../../api/locations/methods";
 
 
 Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({ extended: false }));
@@ -13,31 +14,16 @@ Router.route('/api/geolocation', { where: 'server' })
   })
 
   .post(function () {
-    const userId = this.request.body.userId;
+    const uid = this.request.body.userId;
     const location = this.request.body.location;
     const activity = this.request.body.activity;
 
-    updateUserLocationAndAffordances.call({
-      uid: userId,
-      lat: location.coords.latitude,
-      lng: location.coords.longitude
-    });
-
-    Location_log.insert({
-      uid: userId,
-      lat: location.coords.latitude,
-      lng: location.coords.longitude,
-      time: Date.parse(new Date()),
-    }, (err, docs) => {
-      if (err) {
-        console.log(err)
-        log.error("Not adding to location log correctly", err);
-      }
+    onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function(){
+      this.response.writeHead(200, { 'Content-Type': 'application/json' });
+      this.response.end('ok');
     });
 
 
-    this.response.writeHead(200, { 'Content-Type': 'application/json' });
-    this.response.end('ok');
   })
   .put(function () {
     this.response.writeHead(200, { 'Content-Type': 'application/json' });

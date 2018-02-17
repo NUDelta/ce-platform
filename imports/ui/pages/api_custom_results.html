@@ -1,7 +1,24 @@
 <template name="api_custom_results">
-    {{#if Template.subscriptionsReady}}
-        {{ > Template.dynamic template=template_name data=data2pass}}
-    {{/if}}
+    HELLO
+
+    {{#each image in this.images}}
+    <div class="row" style="padding:5px">
+        <div class="column-multiple">
+            <section id="photos">
+                {{#if image.isUploaded}}
+                <div class="square">
+                    <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+                </div>
+            {{/if}}
+            </section>
+        </div>
+    </div>
+    {{/each}}
+
+
+    <!--{{#if Template.subscriptionsReady}}-->
+        <!--{{ > Template.dynamic template=template_name data=data2pass}}-->
+    <!--{{/if}}-->
 </template>
 
 <!-- TEMPLATE FOR THANKGIVING RESULTS -->
@@ -54,9 +71,9 @@
 
             @media (max-width: 500px) {
                 #photos {
-                    -moz-column-count: 2;
-                    -webkit-column-count: 2;
-                    column-count: 2;
+                    -moz-column-count:1;
+                    -webkit-column-count: 1;
+                    column-count: 1;
                 }
             }
         </style>

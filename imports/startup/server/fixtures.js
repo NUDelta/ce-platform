@@ -1,21 +1,22 @@
-import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
-import { Random } from 'meteor/random'
-import { SyncedCron } from 'meteor/percolate:synced-cron';
+import {Meteor} from 'meteor/meteor';
+import {Accounts} from 'meteor/accounts-base';
+import {Random} from 'meteor/random'
+import {SyncedCron} from 'meteor/percolate:synced-cron';
 
-import { CONFIG } from '../../api/config.js';
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Submissions } from "../../api/submissions/submissions";
-import { Availability } from "../../api/coordinator/availability";
-import { Assignments } from "../../api/coordinator/assignments";
-import { log } from '../../api/logs.js';
+import {CONFIG} from '../../api/config.js';
+import {Experiences} from '../../api/experiences/experiences.js';
+import {Incidents} from '../../api/incidents/incidents.js';
+import {Locations} from '../../api/locations/locations.js';
+import {Submissions} from "../../api/submissions/submissions";
+import {Availability} from "../../api/coordinator/availability";
+import {Assignments} from "../../api/coordinator/assignments";
+import {log} from '../../api/logs.js';
 
-import { LOCATIONS } from "../../api/testing/testingconstants";
-import { onLocationUpdate } from "../../api/locations/methods";
-import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
-import { findUserByEmail } from '../../api/users/methods';
+import {CONSTANTS} from "../../api/testing/testingconstants";
+import {onLocationUpdate} from "../../api/locations/methods";
+import {createIncidentFromExperience, startRunningIncident} from "../../api/incidents/methods";
+import {findUserByEmail} from '../../api/users/methods';
+import {Detectors} from "../../api/detectors/detectors";
 
 
 Meteor.startup(() => {
@@ -27,50 +28,33 @@ Meteor.startup(() => {
   Assignments.remove({});
   Locations.remove({});
   Incidents.remove({});
+  Detectors.remove({});
+
 
   if (Meteor.users.find().count() === 0) {
-    if (true) {
-      const users = [
-        { email: 'gotjennie@gmail.com', password: 'password' },
-        { email: 'allisun.96@gmail.com', password: 'password' },
-        { email: 'a@gmail.com', password: 'password' },
-        { email: 'b@gmail.com', password: 'password' },
-        { email: 'c@gmail.com', password: 'password' },
-        { email: 'd@gmail.com', password: 'password' },
-        { email: 'e@gmail.com', password: 'password' },
-        { email: 'f@gmail.com', password: 'password' },
-        { email: 'g@gmail.com', password: 'password' },
-        { email: 'h@gmail.com', password: 'password' },
-        { email: 'i@gmail.com', password: 'password' },
-        { email: 'j@gmail.com', password: 'password' },
-        { email: 'k@gmail.com', password: 'password' }
-      ];
+    Object.values(CONSTANTS.users).forEach(function (value) {
+      Accounts.createUser(value)
+    });
+    log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
-      users.forEach(user => Accounts.createUser(user));
-      log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+    Object.values(CONSTANTS.detectors).forEach(function (value) {
+      Detectors.insert(value);
+    });
+    log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-      // create a test experience
-      let experienceOne = {
-        _id: Random.id(),
-        name: 'You\'re at a restaurant',
-        participateTemplate: 'atLocation',
-        resultsTemplate: 'photoCollage',
-        contributionTypes: [
-          {
-            needName: 'atRestaurant', situation: {detector: 'restaurant', number: '1'},
-            toPass: {item: 'restaurant'}, numberNeeded: 10
-          }],
-        description: 'This is a simple experience for testing',
-        notificationText: 'Please participate in this test experience!',
-      };
-
-      Experiences.insert(experienceOne);
-      let incident = createIncidentFromExperience(experienceOne);
+    Object.values(CONSTANTS.experiences).forEach(function (value) {
+      Experiences.insert(value);
+      let incident = createIncidentFromExperience(value);
       startRunningIncident(incident);
+    });
+    log.info(`Started ${ Experiences.find().count() } experiences`);
 
-      let uid = findUserByEmail('a@gmail.com')._id;
-      onLocationUpdate(uid, LOCATIONS.burgers.lat, LOCATIONS.burgers.lng);
-    }
+    let uid = findUserByEmail('a@gmail.com')._id;
+    onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
+      return;
+    });
+
   }
+
 });
 
