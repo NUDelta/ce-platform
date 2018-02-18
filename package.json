@@ -17,7 +17,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
-    "test": "meteor test --driver-package meteortesting:mocha"
+    "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "repository": {
     "type": "git",
