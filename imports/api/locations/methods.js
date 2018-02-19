@@ -20,7 +20,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
   console.log("received location update", lat, lng);
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
-    updateLocationInDb(uid, lat, lng);
+    updateLocationInDb(uid, lat, lng, affordances);
     updateAssignmentDbdAfterUserLocationChange(uid, affordances);
     sendToMatcher(uid, affordances);
 
@@ -74,15 +74,17 @@ const userIsAvailableToParticipate = (uid, debug) => {
  * @param uid {string} uid of user who's location just changed
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
+ * @param affordances {object} affordances key/value dictionary
  */
-const updateLocationInDb = (uid, lat, lng) => {
+const updateLocationInDb = (uid, lat, lng, affordances) => {
   const entry = Locations.findOne({ uid: uid });
   if (entry) {
     Locations.update(entry._id, {
       $set: {
         lat: lat,
         lng: lng,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        affordances: affordances
       }
     }, (err) => {
       if (err) {
@@ -95,6 +97,7 @@ const updateLocationInDb = (uid, lat, lng) => {
       lat: lat,
       lng: lng,
       timestamp: Date.now(),
+      affordances: affordances
     }, (err) => {
       if (err) {
         log.error("Locations/methods, can't add a new location", err);

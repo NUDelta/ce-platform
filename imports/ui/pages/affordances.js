@@ -8,12 +8,6 @@ import { GoogleMaps } from 'meteor/dburles:google-maps';
 
 Template.affordances.onCreated(function () {
 
-  this.autorun(() => {
-    this.subscribe('locations');
-
-    // TODO: make more specific
-  });
-
   GoogleMaps.ready('yourLocation', function (map) {
     // Add a marker to the map once it's ready
     var marker = new google.maps.Marker({
@@ -43,5 +37,13 @@ Template.affordances.helpers({
         zoom: 18
       };
     }
+  },
+  affordanceKeys() {
+    dict = this.location.affordances
+    var keys = Object.keys(dict)
+    return keys
+  },
+  affordanceValues(key){
+    return this.location.affordances[key]
   }
 });

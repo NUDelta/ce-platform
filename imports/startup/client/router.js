@@ -27,9 +27,18 @@ Router.configure({
   layoutTemplate: 'layout'
 });
 
-Router.route('/affordances', {
-  name: 'affordances',
-  template: 'affordances'
+Router.route('affordances', {
+  path: '/affordances',
+  template: 'affordances',
+  before: function () {
+    this.subscribe('locations.activeUser').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      location: Locations.findOne()
+    };
+  }
 });
 
 Router.route('api.custom', {

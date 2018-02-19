@@ -87,6 +87,7 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 };
 
+//TODO: THIS IS DUMB, remove, oops...
 /**
  * Given a set of users, it chooses a subset of the given number
  *  based on how many other experiences users are available for.

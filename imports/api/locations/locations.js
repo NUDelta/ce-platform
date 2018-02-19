@@ -25,6 +25,10 @@ Schema.Locations = new SimpleSchema({
   timestamp: {
     type: Date,
   },
+  affordances: {
+    type: Object,
+    blackbox: true
+  }
 });
 
 Locations.attachSchema(Schema.Locations);
