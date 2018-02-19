@@ -4,21 +4,21 @@ import '../components/loading_overlay.html';
 import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
-import {ReactiveDict} from 'meteor/reactive-dict';
+import { ReactiveDict } from 'meteor/reactive-dict';
 
-import {Template} from 'meteor/templating';
-import {Router} from 'meteor/iron:router';
+import { Template } from 'meteor/templating';
+import { Router } from 'meteor/iron:router';
 
-import {Experiences} from '../../api/experiences/experiences.js';
-import {Incidents} from '../../api/incidents/incidents.js';
-import {Users} from '../../api/users/users.js';
-import {Locations} from '../../api/locations/locations.js';
-import {Submissions} from '../../api/submissions/submissions.js';
-import {Images} from '../../api/images/images.js';
-import {TextEntries} from '../../api/text-entries/text-entries.js';
+import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
+import { Users } from '../../api/users/users.js';
+import { Locations } from '../../api/locations/locations.js';
+import { Submissions } from '../../api/submissions/submissions.js';
+import { Images } from '../../api/images/images.js';
+import { TextEntries } from '../../api/text-entries/text-entries.js';
 
-import {photoInput} from './photoUploadHelpers.js'
-import {photoUpload} from './photoUploadHelpers.js'
+import { photoInput } from './photoUploadHelpers.js'
+import { photoUpload } from './photoUploadHelpers.js'
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -33,7 +33,7 @@ Template.api_custom.helpers({
       needName: Router.current().params.needName
     }
   },
-  intoText(){
+  intoText() {
     //TODO: get intro text from experience -> contributiontype -> find correct need
     return Router.current().params.needName;
   }
@@ -145,7 +145,7 @@ Template.api_custom.events({
           //success branch of callback
           console.log("image uploaded now we need to update it", imageFile._id);
           //add more info about the photo
-          Images.update({_id: imageFile._id}, {
+          Images.update({ _id: imageFile._id }, {
             $set: {
               iid: iid,
               lat: location.lat,

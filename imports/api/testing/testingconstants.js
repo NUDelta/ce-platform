@@ -1,8 +1,8 @@
 let LOCATIONS = {
-  'park': {lat: 42.056838, lng: -87.675940},
-  'lakefill': {lat: 42.054902, lng: -87.670197},
-  'burgers': {lat: 42.046131, lng: -87.681559},
-  'grocery': {lat: 42.047621, lng: -87.679488},
+  'park': { lat: 42.056838, lng: -87.675940 },
+  'lakefill': { lat: 42.054902, lng: -87.670197 },
+  'burgers': { lat: 42.046131, lng: -87.681559 },
+  'grocery': { lat: 42.047621, lng: -87.679488 },
 };
 
 let USERS = {
@@ -22,9 +22,9 @@ let USERS = {
 
 let DETECTORS = {
   'fruit': {
-    '_id' : Random.id(),
-    'description' : 'places one can buy fruit',
-    'variables' : [
+    '_id': Random.id(),
+    'description': 'places one can buy fruit',
+    'variables': [
       'var juice_bars___smoothies;',
       'var parks;',
       'var wholesalers;',
@@ -46,37 +46,37 @@ let DETECTORS = {
       'var pick_your_own_farms;',
       'var fruits___veggies;'
     ],
-    'rules' : [
+    'rules': [
       '(((((((((((((((((parks || fruits___veggies) || market_stalls) || public_markets) || farms) || farmers_market) || attraction_farms) || grocery) || organic_stores) || international_grocery) || health_markets) || acai_bowls) || csa) || ethnic_grocery) || flea_markets) || community_gardens) || specialty_food) || wholesalers) || juice_bars___smoothies;'
     ]
   },
-  'night' : {
-    '_id' : Random.id(),
-    'description' : 'places where it\'s nighttime,',
-    'variables' : [
+  'night': {
+    '_id': Random.id(),
+    'description': 'places where it\'s nighttime,',
+    'variables': [
       'var nighttime = true;'
     ],
-    'rules' : [
+    'rules': [
       'nighttime'
     ]
   },
-  'sunset' : {
-    '_id' : Random.id(),
-    'description' : 'places where it\'s sunset,',
-    'variables' : [
+  'sunset': {
+    '_id': Random.id(),
+    'description': 'places where it\'s sunset,',
+    'variables': [
       'var sunset = true;'
     ],
-    'rules' : [
+    'rules': [
       'sunset'
     ]
   },
-  'daytime' : {
-    '_id' : Random.id(),
-    'description' : 'places where it\'s daytime,',
-    'variables' : [
+  'daytime': {
+    '_id': Random.id(),
+    'description': 'places where it\'s daytime,',
+    'variables': [
       'var daytime = true;'
     ],
-    'rules' : [
+    'rules': [
       'daytime'
     ]
   }
@@ -89,8 +89,8 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
-      needName: 'atFruit', situation: {detector: DETECTORS.fruit._id, number: '1'},
-      toPass: {item: 'fruit'}, numberNeeded: 10
+      needName: 'atFruit', situation: { detector: DETECTORS.fruit._id, number: '1' },
+      toPass: { item: 'fruit' }, numberNeeded: 10
     }],
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',
@@ -101,14 +101,14 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
-      needName: 'night', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the night'}, numberNeeded: 10
+      needName: 'night', situation: { detector: DETECTORS.night._id, number: '1' },
+      toPass: { instruction: 'Take a photo of the night' }, numberNeeded: 10
     }, {
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 10
+      needName: 'sunset', situation: { detector: DETECTORS.sunset._id, number: '1' },
+      toPass: { instruction: 'Take a photo of the sunset' }, numberNeeded: 10
     }, {
-      needName: 'daytime', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the daytime'}, numberNeeded: 10
+      needName: 'daytime', situation: { detector: DETECTORS.daytime._id, number: '1' },
+      toPass: { instruction: 'Take a photo of the daytime' }, numberNeeded: 10
     }],
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',

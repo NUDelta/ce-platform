@@ -1,8 +1,8 @@
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import {Submissions} from './submissions.js';
-import {adminUpdatesForRemovingUsersToIncident} from "../coordinator/methods";
+import { Submissions } from './submissions.js';
+import { adminUpdatesForRemovingUsersToIncident } from "../coordinator/methods";
 
 
 /**
@@ -44,8 +44,8 @@ export const getUnfinishedNeedNames = function () {
  */
 function adminUpdates(mostRecentSub) {
 
-  Meteor.users.update({_id: mostRecentSub.uid}, {
-    $set: {"profile.lastParticipated": new Date()}
+  Meteor.users.update({ _id: mostRecentSub.uid }, {
+    $set: { "profile.lastParticipated": new Date() }
   });
   console.log("going for that remove");
   adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid,
@@ -65,7 +65,7 @@ const submissionsHandle = submissionsCursor.observe({
 
 
 Meteor.methods({
-  updateSubmission(submission){
+  updateSubmission(submission) {
     console.log("update submission client", submission);
     updateSubmission(submission);
   }

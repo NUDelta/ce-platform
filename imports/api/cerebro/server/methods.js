@@ -1,7 +1,7 @@
-import {Meteor} from 'meteor/meteor';
-import {Push} from 'meteor/raix:push';
-import {log} from '../../logs.js';
-import {CONFIG} from '../../config.js';
+import { Meteor } from 'meteor/meteor';
+import { Push } from 'meteor/raix:push';
+import { log } from '../../logs.js';
+import { CONFIG } from '../../config.js';
 
 /**
  * _sendPush - sends a notification to the given user
@@ -77,7 +77,7 @@ function _sendPush(uids, subject, text, route, iid) {
     sound: 'airhorn.caf',
     payload: payload,
     query: {
-      userId: {$in: pushUsers}
+      userId: { $in: pushUsers }
     }
   });
 }

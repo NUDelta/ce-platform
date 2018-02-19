@@ -1,22 +1,22 @@
-import {Meteor} from 'meteor/meteor';
-import {Accounts} from 'meteor/accounts-base';
-import {Random} from 'meteor/random'
-import {SyncedCron} from 'meteor/percolate:synced-cron';
+import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
+import { Random } from 'meteor/random'
+import { SyncedCron } from 'meteor/percolate:synced-cron';
 
-import {CONFIG} from '../../api/config.js';
-import {Experiences} from '../../api/experiences/experiences.js';
-import {Incidents} from '../../api/incidents/incidents.js';
-import {Locations} from '../../api/locations/locations.js';
-import {Submissions} from "../../api/submissions/submissions";
-import {Availability} from "../../api/coordinator/availability";
-import {Assignments} from "../../api/coordinator/assignments";
-import {log} from '../../api/logs.js';
+import { CONFIG } from '../../api/config.js';
+import { Experiences } from '../../api/experiences/experiences.js';
+import { Incidents } from '../../api/incidents/incidents.js';
+import { Locations } from '../../api/locations/locations.js';
+import { Submissions } from "../../api/submissions/submissions";
+import { Availability } from "../../api/coordinator/availability";
+import { Assignments } from "../../api/coordinator/assignments";
+import { log } from '../../api/logs.js';
 
-import {CONSTANTS} from "../../api/testing/testingconstants";
-import {onLocationUpdate} from "../../api/locations/methods";
-import {createIncidentFromExperience, startRunningIncident} from "../../api/incidents/methods";
-import {findUserByEmail} from '../../api/users/methods';
-import {Detectors} from "../../api/detectors/detectors";
+import { CONSTANTS } from "../../api/testing/testingconstants";
+import { onLocationUpdate } from "../../api/locations/methods";
+import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
+import { findUserByEmail } from '../../api/users/methods';
+import { Detectors } from "../../api/detectors/detectors";
 
 
 Meteor.startup(() => {

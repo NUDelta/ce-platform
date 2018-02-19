@@ -1,22 +1,24 @@
-import {resetDatabase} from 'meteor/xolvio:cleaner';
-import {matchAffordancesWithDetector,
-        matchLocationWithDetector}
+import { resetDatabase } from 'meteor/xolvio:cleaner';
+import {
+  matchAffordancesWithDetector,
+  matchLocationWithDetector
+}
   from './methods';
-import {Detectors} from './detectors';
-import {CONSTANTS} from "../testing/testingconstants";
+import { Detectors } from './detectors';
+import { CONSTANTS } from "../testing/testingconstants";
 
 
-describe('Detector Tests', function() {
+describe('Detector Tests', function () {
   let detectorId = CONSTANTS.detectors.fruit._id;
 
-  beforeEach(function() {
+  beforeEach(function () {
     resetDatabase();
 
     Detectors.insert(CONSTANTS.detectors.fruit);
   });
 
-  it('should match "grocery" for "places one can buy fruit"', function() {
-    console .log("detectorId", CONSTANTS.detectors.fruit._id)
+  it('should match "grocery" for "places one can buy fruit"', function () {
+    console.log("detectorId", CONSTANTS.detectors.fruit._id)
 
     let affordances = {
       'grocery': true
@@ -27,7 +29,7 @@ describe('Detector Tests', function() {
     }
   });
 
-  it('should not match "coffee" for "places one can buy fruit"', function() {
+  it('should not match "coffee" for "places one can buy fruit"', function () {
     let affordances = {
       'coffee': true
     };

@@ -1,5 +1,5 @@
-import {Experiences, SituationDescription} from './experiences';
-import {CONSTANTS} from "../testing/testingconstants";
+import { Experiences, SituationDescription } from './experiences';
+import { CONSTANTS } from "../testing/testingconstants";
 
 describe('Experience Tests', () => {
   it('insert experiences into database', () => {

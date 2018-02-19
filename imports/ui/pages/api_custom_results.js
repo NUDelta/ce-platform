@@ -1,4 +1,4 @@
-import {Template} from "meteor/templating";
+import { Template } from "meteor/templating";
 
 Template.api_custom_results.onCreated(() => {
   console.log("results data", this)

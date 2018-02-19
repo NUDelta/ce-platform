@@ -1,16 +1,16 @@
-import {_} from 'meteor/underscore';
-import {resetDatabase} from 'meteor/xolvio:cleaner';
-import {Accounts} from 'meteor/accounts-base';
-import {Experiences} from '../experiences/experiences';
-import {Users} from '../users/users';
-import {Incidents} from '../incidents/incidents';
-import {CONSTANTS} from './testingconstants';
-import {onLocationUpdate} from '../locations/methods';
-import {createIncidentFromExperience, startRunningIncident} from '../incidents/methods';
-import {findUserByEmail} from '../users/methods';
-import {Assignments} from '../coordinator/assignments';
-import {Random} from 'meteor/random'
-import {Detectors} from "../detectors/detectors";
+import { _ } from 'meteor/underscore';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { Accounts } from 'meteor/accounts-base';
+import { Experiences } from '../experiences/experiences';
+import { Users } from '../users/users';
+import { Incidents } from '../incidents/incidents';
+import { CONSTANTS } from './testingconstants';
+import { onLocationUpdate } from '../locations/methods';
+import { createIncidentFromExperience, startRunningIncident } from '../incidents/methods';
+import { findUserByEmail } from '../users/methods';
+import { Assignments } from '../coordinator/assignments';
+import { Random } from 'meteor/random'
+import { Detectors } from "../detectors/detectors";
 // import {updateSubmission} from "../submissions/client/methods";
 
 import "../submissions/methods";
@@ -56,7 +56,7 @@ describe('Simple End To End', function () {
   })
 
   it('user gets added to experience', () => {
-    let incident = Incidents.findOne({eid: CONSTANTS.experiences.atLocation._id});
+    let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
     let iid = incident._id;
     let user = findUserByEmail('a@gmail.com');
     console.log("user here", user);
@@ -66,7 +66,7 @@ describe('Simple End To End', function () {
     chai.assert(addedToUser, 'active incident not added to user profile');
 
     //assignments has user assigned
-    let assignmentEntry = Assignments.findOne({_id: iid});
+    let assignmentEntry = Assignments.findOne({ _id: iid });
 
     let needUserMap = assignmentEntry.needUserMaps.find((x) => {
       return x.needName === NEEDNAME;
@@ -78,7 +78,7 @@ describe('Simple End To End', function () {
   });
 
   it('user participates in experience', (done) => {
-    let incident = Incidents.findOne({eid: CONSTANTS.experiences.atLocation._id});
+    let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
     let iid = incident._id;
     let user = findUserByEmail('a@gmail.com');
 

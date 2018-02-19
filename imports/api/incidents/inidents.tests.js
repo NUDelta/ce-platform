@@ -8,8 +8,8 @@ describe('Incidents create', function () {
       eid: "vC8b8hawwkKS3Hpfd",
       contributionTypes: [
         {
-          needName: 'atRestaurant', situation: {detector: 'restaurant', number: '1'},
-          toPass: {item: 'restaurant'}, numberNeeded: 10
+          needName: 'atRestaurant', situation: { detector: 'restaurant', number: '1' },
+          toPass: { item: 'restaurant' }, numberNeeded: 10
         }],
     }
 

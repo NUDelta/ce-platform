@@ -3,7 +3,7 @@ import { Router } from 'meteor/iron:router';
 import { updateUserLocationAndAffordances } from '../../api/locations/methods.js';
 import { log } from '../../api/logs.js';
 import { Location_log } from '../../api/locations/location_log.js'
-import {onLocationUpdate} from "../../api/locations/methods";
+import { onLocationUpdate } from "../../api/locations/methods";
 
 
 Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({ extended: false }));
@@ -18,7 +18,7 @@ Router.route('/api/geolocation', { where: 'server' })
     const location = this.request.body.location;
     // const activity = this.request.body.activity;
 
-    let onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function(){
+    let onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function () {
       this.response.writeHead(200, { 'Content-Type': 'application/json' });
       this.response.end('ok');
     });

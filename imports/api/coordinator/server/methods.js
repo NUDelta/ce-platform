@@ -1,9 +1,9 @@
-import {Experiences} from "../../experiences/experiences";
-import {notify} from "../../cerebro/server/methods";
-import {Incidents} from "../../incidents/incidents";
-import {adminUpdatesForAddingUsersToIncident, updateAvailability} from "../methods";
-import {Availability} from "../availability";
-import {getNeedFromIncidentId} from "../../incidents/methods";
+import { Experiences } from "../../experiences/experiences";
+import { notify } from "../../cerebro/server/methods";
+import { Incidents } from "../../incidents/incidents";
+import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../methods";
+import { Availability } from "../availability";
+import { getNeedFromIncidentId } from "../../incidents/methods";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,

@@ -5,8 +5,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Experiences } from './experiences.js';
 import { Schema } from '../schema.js';
 import { getUnfinishedNeedNames } from '../submissions/methods';
-import {getNeedFromIncidentId} from "../incidents/methods";
-import {matchAffordancesWithDetector} from "../detectors/methods";
+import { getNeedFromIncidentId } from "../incidents/methods";
+import { matchAffordancesWithDetector } from "../detectors/methods";
 
 /**
  * Loops through all unmet needs and returns all needs a user matches with.

@@ -1,10 +1,10 @@
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import {Incidents} from './incidents';
-import {Availability} from '../coordinator/availability';
-import {Assignments} from '../coordinator/assignments';
-import {Submissions} from '../submissions/submissions';
+import { Incidents } from './incidents';
+import { Availability } from '../coordinator/availability';
+import { Assignments } from '../coordinator/assignments';
+import { Submissions } from '../submissions/submissions';
 
 export const startRunningIncident = (incident) => {
   console.log('incident in start', incident);
@@ -12,7 +12,7 @@ export const startRunningIncident = (incident) => {
 
   _.forEach(incident.contributionTypes, (need) => {
     console.log(need.needName);
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({ needName: need.needName, uids: [] });
     Submissions.insert({
       eid: incident.eid,
       iid: incident._id,
@@ -76,10 +76,10 @@ export const getNeedFromIncidentId = (iid, needName) => {
   console.log('getNeedFromIncidentId', iid, needName);
 
   _.forEach(incident.contributionTypes, (need) => {
-      if (need.needName === needName) {
-        output = need;
-        return false;
-      }
+    if (need.needName === needName) {
+      output = need;
+      return false;
+    }
 
     // check if found
     if (typeof output === 'undefined') {

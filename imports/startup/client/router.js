@@ -16,12 +16,12 @@ import '../../ui/pages/api_custom_results.html';
 import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 
-import {Experiences} from "../../api/experiences/experiences";
-import {Locations} from "../../api/locations/locations";
-import {Images} from "../../api/images/images";
-import {Submissions} from "../../api/submissions/submissions";
-import {Incidents} from "../../api/incidents/incidents";
-import {Meteor} from "meteor/meteor";
+import { Experiences } from "../../api/experiences/experiences";
+import { Locations } from "../../api/locations/locations";
+import { Images } from "../../api/images/images";
+import { Submissions } from "../../api/submissions/submissions";
+import { Incidents } from "../../api/incidents/incidents";
+import { Meteor } from "meteor/meteor";
 
 Router.configure({
   layoutTemplate: 'layout'

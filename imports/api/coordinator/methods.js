@@ -161,7 +161,7 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
       _id: iid,
       'needUserMaps.needName': needName
     }, {
-      $push: { 'needUserMaps.$.uids':  uid }
+      $push: { 'needUserMaps.$.uids': uid }
     });
 
   });

@@ -7,6 +7,7 @@ import { findMatchesForUser } from '../experiences/methods'
 import { runCoordinatorAfterUserLocationChange } from '../coordinator/server/methods'
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
 import { getAffordancesFromLocation } from '../detectors/methods';
+
 /**
  * Saves location in DB and sends data to sendToMatcher function.
  * Run on updates from LocationTracking package.
@@ -18,14 +19,14 @@ import { getAffordancesFromLocation } from '../detectors/methods';
 export const onLocationUpdate = (uid, lat, lng, callback) => {
   console.log("received location update", lat, lng);
 
-  getAffordancesFromLocation(lat, lng, function(affordances){
+  getAffordancesFromLocation(lat, lng, function (affordances) {
     updateLocationInDb(uid, lat, lng);
     updateAssignmentDbdAfterUserLocationChange(uid, affordances);
     sendToMatcher(uid, affordances);
 
     callback();
   });
-  
+
 };
 
 /**
