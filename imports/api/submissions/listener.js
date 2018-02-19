@@ -1,9 +1,8 @@
-import { Submissions } from "./submissions";
-import { removeUserAfterTheyParticipated } from "../coordinator/methods";
-import { log } from "../logs";
-import { Cerebro } from "../cerebro/server/cerebro-server";
+import {Submissions} from "./submissions";
+import {adminUpdatesForRemovingUsersToIncident, removeUserAfterTheyParticipated} from "../coordinator/methods";
+import {log} from "../logs";
+import {Cerebro} from "../cerebro/server/cerebro-server";
 
-var totalNumber = Submissions.find().count();
 
 //checks the triggers for the experience of the new submission and runs the approiate callbacks 5
 function runCallbacks(eid, need, mostRecentSub) {
@@ -38,88 +37,116 @@ function timeSinceFirstSubmission(need) {
 }
 
 //adds the experience to the user's previous participation list, removes it from the user's active experiences list and removes the user from the Assigned DB 5, 2c,d,e
+/**
+ * Updates the time a user participated, remove them from the assignment db for that incident
+ * Move the incident from activeIncidents to pastIncidents for the user
+ *
+ * @param mostRecentSub {object} submission db object that was just submitted
+ */
 function adminUpdates(mostRecentSub) {
+
+  Meteor.users.update({_id: mostRecentSub.uid}, {
+    $set: {"profile.lastParticipated": new Date()}
+  });
+  adminUpdatesForRemovingUsersToIncident(mostRecentSub.uid, mostRecentSub.iid, mostRecentSub.needName);
 
 }
 
-
+var totalNumber = Submissions.find().count();
 const submissionsCursor = Submissions.find();
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
+
   added(submission) {
-    if (totalNumber == Submissions.find().count()) {
-      console.log("not running received submission")
+    if (totalNumber === Submissions.find().count()) {
       return;
     }
 
-    console.log("received a submission")
-    console.log(submission)
-    //when a user participates add it to their past experiences
-    Cerebro.addIncidents(submission.submitter, submission.incidentId);
+    adminUpdates(submission);
 
-    //mark that they submitted
-    Meteor.users.update({ _id: submission.submitter }, {
-      $set: { "profile.lastParticipated": Date.parse(new Date()) }
-    })
-
-    //remove user/experience from each other
-    removeUserAfterTheyParticipated(submission.submitter, submission.experienceId)
-
-    //see if there is a callback
-    var callbackPairs = Experiences.findOne({ _id: submission.experienceId }).callbackPair;
-    console.log(callbackPairs)
-    var callback = callbackPairs.filter(function (cp) {
-      return cp.templateName == submission.contributionTemplate;
-    });
-
-    if (callback.length > 1) {
-      log.error("submissions/methods found more than one callback for the templateName " + submission.templateName + " but there should only be one. Not calling any callbacks");
-    } else if (callback.length === 1) {
-      console.log("we found a callback!")
-      var callbackFunction = callback[0]["callback"];
-      eval("(" + callbackFunction + "(" + JSON.stringify(submission) + "))")
-    }
-
-    //check if the situationNeed is FINISHED
-    var incident = Incidents.findOne({ _id: submission.incidentId });
-    console.log("in submissions for incidnet ", incident._id)
-    var situationNeed = incident.situationNeeds.filter(
-      function (sn) {
-        return sn.name == submission.situationNeed
-      })[0];
-    console.log("found the sit need", situationNeed)
-    var numberSubmissionsFound = Submissions.find({
-      incidentId: submission.incidentId,
-      situationNeed: submission.situationNeed
-    }).count();
-    console.log("looked for all of them ", numberSubmissionsFound)
-    var numberSubmissionsRequired = situationNeed.softStoppingCriteria;
-    console.log("num we need is ", numberSubmissionsRequired)
-
-    if (numberSubmissionsRequired <= numberSubmissionsFound) {
-      Incidents.update({
-          _id: submission.incidentId,
-          'situationNeeds.name': submission.situationNeed
-        },
-        {
-          $set:
-            { 'situationNeeds.$.done': true }
-        });
-    }
-
-    //check if the experience is done
-    var isIncidentFinished = Incidents.find({
-      _id: submission.incidentId,
-      "situationNeeds.done": false
-    }).count();
-    console.log(isIncidentFinished)
-    if (isIncidentFinished == 0) {
-      log.cerebro("Experience " + submission.experienceId + " is finished!")
-      Experiences.update({ _id: submission.experienceId },
-        {
-          $unset: { 'activeIncident': 0 }
-        });
-    }
   }
+
 });
+
+//
+// const submissionsCursor = Submissions.find();
+// const submissionsHandle = submissionsCursor.observe({
+//   //TODO: make it so we can check the submission when through completely first?
+//   //e.g. if a photo upload fails this will still run not matter what
+//   added(submission) {
+//     if (totalNumber == Submissions.find().count()) {
+//       console.log("not running received submission")
+//       return;
+//     }
+//
+//     console.log("received a submission")
+//     console.log(submission)
+//     //when a user participates add it to their past experiences
+//     Cerebro.addIncidents(submission.submitter, submission.incidentId);
+//
+//     //mark that they submitted
+//     Meteor.users.update({ _id: submission.submitter }, {
+//       $set: { "profile.lastParticipated": Date.parse(new Date()) }
+//     })
+//
+//     //remove user/experience from each other
+//     removeUserAfterTheyParticipated(submission.submitter, submission.experienceId)
+//
+//     //see if there is a callback
+//     var callbackPairs = Experiences.findOne({ _id: submission.experienceId }).callbackPair;
+//     console.log(callbackPairs)
+//     var callback = callbackPairs.filter(function (cp) {
+//       return cp.templateName == submission.contributionTemplate;
+//     });
+//
+//     if (callback.length > 1) {
+//       log.error("submissions/methods found more than one callback for the templateName " + submission.templateName + " but there should only be one. Not calling any callbacks");
+//     } else if (callback.length === 1) {
+//       console.log("we found a callback!")
+//       var callbackFunction = callback[0]["callback"];
+//       eval("(" + callbackFunction + "(" + JSON.stringify(submission) + "))")
+//     }
+//
+//     //check if the situationNeed is FINISHED
+//     var incident = Incidents.findOne({ _id: submission.incidentId });
+//     console.log("in submissions for incidnet ", incident._id)
+//     var situationNeed = incident.situationNeeds.filter(
+//       function (sn) {
+//         return sn.name == submission.situationNeed
+//       })[0];
+//     console.log("found the sit need", situationNeed)
+//     var numberSubmissionsFound = Submissions.find({
+//       incidentId: submission.incidentId,
+//       situationNeed: submission.situationNeed
+//     }).count();
+//     console.log("looked for all of them ", numberSubmissionsFound)
+//     var numberSubmissionsRequired = situationNeed.softStoppingCriteria;
+//     console.log("num we need is ", numberSubmissionsRequired)
+//
+//     if (numberSubmissionsRequired <= numberSubmissionsFound) {
+//       Incidents.update({
+//           _id: submission.incidentId,
+//           'situationNeeds.name': submission.situationNeed
+//         },
+//         {
+//           $set:
+//             { 'situationNeeds.$.done': true }
+//         });
+//     }
+//
+//     //check if the experience is done
+//     var isIncidentFinished = Incidents.find({
+//       _id: submission.incidentId,
+//       "situationNeeds.done": false
+//     }).count();
+//     console.log(isIncidentFinished)
+//     if (isIncidentFinished == 0) {
+//       log.cerebro("Experience " + submission.experienceId + " is finished!")
+//       Experiences.update({ _id: submission.experienceId },
+//         {
+//           $unset: { 'activeIncident': 0 }
+//         });
+//     }
+//   }
+// });

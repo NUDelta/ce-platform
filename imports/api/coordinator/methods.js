@@ -245,7 +245,7 @@ const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
-const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
+export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeActiveIncidentFromUsers(uids, iid);
 };
@@ -282,265 +282,265 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
   });
 };
 
-const locationCursor = Locations.find();
-
-/**
- * a DB listener that responds when a user's location field changes, this includes
- *    lat/long and the affordance array
- */
-const locationHandle = locationCursor.observeChanges({
-  changed(id, fields) {
-    console.log('the location field changed', fields);
-
-    if ('lastNotification' in fields) {
-      return;
-    }
-
-    //check if now that they've moved they...
-    const location = Locations.findOne({ _id: id });
-    const uid = location.uid;
-
-    //need to be removed from an experience they're currently in
-    const user = Meteor.users.findOne({ _id: uid });
-    const usersExperiences = user.profile.activeExperiences;
-    if (usersExperiences) {
-      usersExperiences.forEach((experienceId) => {
-        removeUserFromExperienceAfterTheyMoved(uid, experienceId)
-      })
-    }
-
-    if ('affordances' in fields) {
-      AvailabilityLog.insert({
-        uid: uid,
-        lastParticipated: user.profile.lastParticipated,
-        lastNotified: location.lastNotification,
-        affordances: location.affordances,
-        lat: location.lat,
-        lng: location.lng,
-        now: Date.now()
-      });
-    }
-
-    //check if user to available to participate right now
-    if (!userIsAvailableToParticipate(user, location)) {
-      console.log('user participated too recently');
-      return;
-    }
-
-    //can be added to a new experience
-    const allExperiences = Experiences.find({ activeIncident: { $exists: true } }).fetch();
-
-    //could randomize the order of experiences
-    console.log('at the top of the for loops');
-    const shuffledExperiences = _.shuffle(allExperiences);
-
-    for (let i in shuffledExperiences) {
-      const experience = shuffledExperiences[i];
-      const result = attemptToAddUserToIncident(uid, experience.activeIncident);
-      console.log('result', result);
-      if (result) {
-        console.log('We found an experience for the user and now are stopping');
-        break;
-      }
-    }
-  }
-});
-
-
-/**
- * userIsAvailableToParticipate - checks if a user can participate or if they not
- *    available to participate because they were notified too recently
- *
- * @param  user {User} user document
- * @param  location {Location} location location document for that user
- * @return {boolean} true if a user can participate
- */
-const userIsAvailableToParticipate = (user, location) => {
-  const waitTimeAfterNotification = 30 * 60000; //first number is the number of minutes
-  const waitTimeAfterParticipating = 60 * 60000;//first number is the number of minutes
-
-  const lastParticipated = user.profile.lastParticipated;
-  const lastNotified = location.lastNotification;
-
-  const now = Date.now();
-
-  let userNotYetNotified = lastParticipated === null;
-  const userNotifiedTooRecently = (now - lastNotified) < waitTimeAfterNotification;
-
-  let userNotYetParticipated = lastNotified === null;
-  const userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating;
-
-  return !((!userNotYetNotified && userNotifiedTooRecently) ||
-    (!userNotYetParticipated && userParticipatedTooRecently));
-};
-
-const attemptToAddUserToIncident = (uid, incidentId) => {
-  const incident = Incidents.findOne({ _id: incidentId });
-  const userAffordances = Locations.findOne({ uid: uid }).affordances;
-  const minParticipation = Math.min(); //this is infinity
-  let minSituationNeed = null;
-
-  incident.situationNeeds.forEach((sn) => {
-    if (sn.done === false && containsAffordance(userAffordances, sn.affordance)) {
-      //need has a user, but lets see if time to kick them out
-      if (sn.notifiedUsers.length > 0) {
-        const lastNotified = Locations.findOne({ uid: sn.notifiedUsers[0] }).lastNotifiedl;
-        const timeSinceUserLastNotified = Date.now() - lastNotified;
-
-        // time in minutes since they were asked to participate in any experience
-        if (timeSinceUserLastNotified > 30 * 60000) {
-          removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
-        } else {
-          //we have a user already for this need, skip and see if the next one is open
-          return false;
-        }
-      }
-      const numberDone = Submissions.find({
-        incidentId: incident._id,
-        situationNeed: sn.name
-      }).count();
-
-      if (numberDone < minParticipation) {
-        minSituationNeed = sn.name;
-      }
-    }
-  });
-
-  if (minSituationNeed != null) {
-    addUserToSituationNeed(uid, incidentId, minSituationNeed);
-    return true;
-  }
-
-  return false;
-};
-
-const addUserToSituationNeed = (uid, incidentId, situationNeedName) => {
-  const experience = Experiences.findOne({ activeIncident: incidentId });
-  const experienceId = experience._id;
-
-  //add active experience to the user
-  Cerebro.setActiveExperiences(uid, experienceId);
-
-  //add user to the incident
-  Incidents.update(
-    { _id: incidentId, 'situationNeeds.name': situationNeedName },
-    {
-      $push:
-        { 'situationNeeds.$.notifiedUsers': uid }
-    }
-  );
-
-  //notify the user & mark as notified
-  Locations.update({ uid: uid }, { $set: { 'lastNotification': Date.now() } });
-
-  //add notification to notification log
-  const userLocation = Locations.findOne({ uid: uid });
-  NotificationLog.insert({
-    userId: uid,
-    task: situationNeedName,
-    lat: userLocation.lat,
-    lng: userLocation.lng,
-    experienceId: experienceId,
-    incidentId: incidentId
-  });
-
-  //send notification
-  Cerebro.notify({
-    userId: uid,
-    experienceId: experienceId,
-    subject: 'Event ' + experience.name + ' is starting!',
-    text: experience.notificationText,
-    route: 'apiCustom'
-  });
-};
-
-const removeUserFromExperience = (uid, experienceId, incidentId, situationNeedName) => {
-  //remove the user from the incident
-  console.log('removeing the user');
-
-  Incidents.update({ _id: incidentId, 'situationNeeds.name': situationNeedName },
-    {
-      $pull:
-        { 'situationNeeds.$.notifiedUsers': uid }
-    });
-
-  //remove the experience from the user
-  Meteor.users.update({ _id: uid },
-    {
-      $pull:
-        { 'profile.activeExperiences': experienceId }
-    }
-  );
-};
-
-export const removeUserAfterTheyParticipated = (uid, experienceId) => {
-  const incident = Incidents.findOne({ experienceId: experienceId });
-
-  _.forEach(incident.situationNeeds, (sn) => {
-    console.log(sn.name);
-    if (_.contains(sn.notifiedUsers, uid)) {
-      removeUserFromExperience(uid, experienceId, incident._id, sn.name);
-      return false;
-    }
-  });
-};
-
-const removeUserFromExperienceAfterTheyMoved = (uid, experienceId) => {
-  const userAffordances = Locations.findOne({ uid: uid }).affordances;
-  const incident = Incidents.findOne({ experienceId: experienceId });
-  const wait = 5 * 60 * 1000; //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
-
-  Meteor.setTimeout(() => {
-    console.log('removing users');
-
-    _.forEach(incident.situationNeeds, (sn) => {
-      if (_.contains(sn.notifiedUsers, uid)) {
-        if (!containsAffordance(userAffordances, sn.affordance)) {
-          console.log('found the one to remove from!');
-          removeUserFromExperience(uid, experienceId, incident._id, sn.name);
-
-          // a user will only be in one situation need, so we can break from the loop
-          return false;
-        }
-      }
-    });
-  }, wait)
-};
-
-
-// METHODS FOR AFFORDANCE SEARCH
-const containsAffordance = (userAffordances, searchAffordances) => {
-  // && affordances
-  if (searchAffordances.search(' and ') > 0) {
-    return andAffordances(userAffordances, searchAffordances);
-  }
-  // || affordances
-  else if (searchAffordances.search(' or ') > 0) {
-    return orAffordances(userAffordances, searchAffordances);
-  }
-  // single affordance
-  else {
-    return (_.contains(userAffordances, searchAffordances));
-  }
-};
-
-const andAffordances = (userAffordances, searchAffordances) => {
-  let affordances = searchAffordances.split(' and ');
-  let differences = _.difference(affordances, userAffordances);
-
-  return differences.length === 0;
-};
-
-const orAffordances = (userAffordances, searchAffordances) => {
-  let affordances = searchAffordances.split(' or ');
-  let contains = false;
-
-  _.forEach(affordances, (currAffordance) => {
-    if (_.contains(userAffordances, currAffordance)) {
-      contains = true;
-      return false;
-    }
-  });
-
-  return contains;
-};
+// const locationCursor = Locations.find();
+//
+// /**
+//  * a DB listener that responds when a user's location field changes, this includes
+//  *    lat/long and the affordance array
+//  */
+// const locationHandle = locationCursor.observeChanges({
+//   changed(id, fields) {
+//     console.log('the location field changed', fields);
+//
+//     if ('lastNotification' in fields) {
+//       return;
+//     }
+//
+//     //check if now that they've moved they...
+//     const location = Locations.findOne({ _id: id });
+//     const uid = location.uid;
+//
+//     //need to be removed from an experience they're currently in
+//     const user = Meteor.users.findOne({ _id: uid });
+//     const usersExperiences = user.profile.activeExperiences;
+//     if (usersExperiences) {
+//       usersExperiences.forEach((experienceId) => {
+//         removeUserFromExperienceAfterTheyMoved(uid, experienceId)
+//       })
+//     }
+//
+//     if ('affordances' in fields) {
+//       AvailabilityLog.insert({
+//         uid: uid,
+//         lastParticipated: user.profile.lastParticipated,
+//         lastNotified: location.lastNotification,
+//         affordances: location.affordances,
+//         lat: location.lat,
+//         lng: location.lng,
+//         now: Date.now()
+//       });
+//     }
+//
+//     //check if user to available to participate right now
+//     if (!userIsAvailableToParticipate(user, location)) {
+//       console.log('user participated too recently');
+//       return;
+//     }
+//
+//     //can be added to a new experience
+//     const allExperiences = Experiences.find({ activeIncident: { $exists: true } }).fetch();
+//
+//     //could randomize the order of experiences
+//     console.log('at the top of the for loops');
+//     const shuffledExperiences = _.shuffle(allExperiences);
+//
+//     for (let i in shuffledExperiences) {
+//       const experience = shuffledExperiences[i];
+//       const result = attemptToAddUserToIncident(uid, experience.activeIncident);
+//       console.log('result', result);
+//       if (result) {
+//         console.log('We found an experience for the user and now are stopping');
+//         break;
+//       }
+//     }
+//   }
+// });
+//
+//
+// /**
+//  * userIsAvailableToParticipate - checks if a user can participate or if they not
+//  *    available to participate because they were notified too recently
+//  *
+//  * @param  user {User} user document
+//  * @param  location {Location} location location document for that user
+//  * @return {boolean} true if a user can participate
+//  */
+// const userIsAvailableToParticipate = (user, location) => {
+//   const waitTimeAfterNotification = 30 * 60000; //first number is the number of minutes
+//   const waitTimeAfterParticipating = 60 * 60000;//first number is the number of minutes
+//
+//   const lastParticipated = user.profile.lastParticipated;
+//   const lastNotified = location.lastNotification;
+//
+//   const now = Date.now();
+//
+//   let userNotYetNotified = lastParticipated === null;
+//   const userNotifiedTooRecently = (now - lastNotified) < waitTimeAfterNotification;
+//
+//   let userNotYetParticipated = lastNotified === null;
+//   const userParticipatedTooRecently = (now - lastParticipated) < waitTimeAfterParticipating;
+//
+//   return !((!userNotYetNotified && userNotifiedTooRecently) ||
+//     (!userNotYetParticipated && userParticipatedTooRecently));
+// };
+//
+// const attemptToAddUserToIncident = (uid, incidentId) => {
+//   const incident = Incidents.findOne({ _id: incidentId });
+//   const userAffordances = Locations.findOne({ uid: uid }).affordances;
+//   const minParticipation = Math.min(); //this is infinity
+//   let minSituationNeed = null;
+//
+//   incident.situationNeeds.forEach((sn) => {
+//     if (sn.done === false && containsAffordance(userAffordances, sn.affordance)) {
+//       //need has a user, but lets see if time to kick them out
+//       if (sn.notifiedUsers.length > 0) {
+//         const lastNotified = Locations.findOne({ uid: sn.notifiedUsers[0] }).lastNotifiedl;
+//         const timeSinceUserLastNotified = Date.now() - lastNotified;
+//
+//         // time in minutes since they were asked to participate in any experience
+//         if (timeSinceUserLastNotified > 30 * 60000) {
+//           removeUserFromExperience(sn.notifiedUsers[0], incident.experienceId, 2)
+//         } else {
+//           //we have a user already for this need, skip and see if the next one is open
+//           return false;
+//         }
+//       }
+//       const numberDone = Submissions.find({
+//         incidentId: incident._id,
+//         situationNeed: sn.name
+//       }).count();
+//
+//       if (numberDone < minParticipation) {
+//         minSituationNeed = sn.name;
+//       }
+//     }
+//   });
+//
+//   if (minSituationNeed != null) {
+//     addUserToSituationNeed(uid, incidentId, minSituationNeed);
+//     return true;
+//   }
+//
+//   return false;
+// };
+//
+// const addUserToSituationNeed = (uid, incidentId, situationNeedName) => {
+//   const experience = Experiences.findOne({ activeIncident: incidentId });
+//   const experienceId = experience._id;
+//
+//   //add active experience to the user
+//   Cerebro.setActiveExperiences(uid, experienceId);
+//
+//   //add user to the incident
+//   Incidents.update(
+//     { _id: incidentId, 'situationNeeds.name': situationNeedName },
+//     {
+//       $push:
+//         { 'situationNeeds.$.notifiedUsers': uid }
+//     }
+//   );
+//
+//   //notify the user & mark as notified
+//   Locations.update({ uid: uid }, { $set: { 'lastNotification': Date.now() } });
+//
+//   //add notification to notification log
+//   const userLocation = Locations.findOne({ uid: uid });
+//   NotificationLog.insert({
+//     userId: uid,
+//     task: situationNeedName,
+//     lat: userLocation.lat,
+//     lng: userLocation.lng,
+//     experienceId: experienceId,
+//     incidentId: incidentId
+//   });
+//
+//   //send notification
+//   Cerebro.notify({
+//     userId: uid,
+//     experienceId: experienceId,
+//     subject: 'Event ' + experience.name + ' is starting!',
+//     text: experience.notificationText,
+//     route: 'apiCustom'
+//   });
+// };
+//
+// const removeUserFromExperience = (uid, experienceId, incidentId, situationNeedName) => {
+//   //remove the user from the incident
+//   console.log('removeing the user');
+//
+//   Incidents.update({ _id: incidentId, 'situationNeeds.name': situationNeedName },
+//     {
+//       $pull:
+//         { 'situationNeeds.$.notifiedUsers': uid }
+//     });
+//
+//   //remove the experience from the user
+//   Meteor.users.update({ _id: uid },
+//     {
+//       $pull:
+//         { 'profile.activeExperiences': experienceId }
+//     }
+//   );
+// };
+//
+// export const removeUserAfterTheyParticipated = (uid, experienceId) => {
+//   const incident = Incidents.findOne({ experienceId: experienceId });
+//
+//   _.forEach(incident.situationNeeds, (sn) => {
+//     console.log(sn.name);
+//     if (_.contains(sn.notifiedUsers, uid)) {
+//       removeUserFromExperience(uid, experienceId, incident._id, sn.name);
+//       return false;
+//     }
+//   });
+// };
+//
+// const removeUserFromExperienceAfterTheyMoved = (uid, experienceId) => {
+//   const userAffordances = Locations.findOne({ uid: uid }).affordances;
+//   const incident = Incidents.findOne({ experienceId: experienceId });
+//   const wait = 5 * 60 * 1000; //WAIT LAG (in minutes) FOR AFTER A USER LEAVES A SITUATION
+//
+//   Meteor.setTimeout(() => {
+//     console.log('removing users');
+//
+//     _.forEach(incident.situationNeeds, (sn) => {
+//       if (_.contains(sn.notifiedUsers, uid)) {
+//         if (!containsAffordance(userAffordances, sn.affordance)) {
+//           console.log('found the one to remove from!');
+//           removeUserFromExperience(uid, experienceId, incident._id, sn.name);
+//
+//           // a user will only be in one situation need, so we can break from the loop
+//           return false;
+//         }
+//       }
+//     });
+//   }, wait)
+// };
+//
+//
+// // METHODS FOR AFFORDANCE SEARCH
+// const containsAffordance = (userAffordances, searchAffordances) => {
+//   // && affordances
+//   if (searchAffordances.search(' and ') > 0) {
+//     return andAffordances(userAffordances, searchAffordances);
+//   }
+//   // || affordances
+//   else if (searchAffordances.search(' or ') > 0) {
+//     return orAffordances(userAffordances, searchAffordances);
+//   }
+//   // single affordance
+//   else {
+//     return (_.contains(userAffordances, searchAffordances));
+//   }
+// };
+//
+// const andAffordances = (userAffordances, searchAffordances) => {
+//   let affordances = searchAffordances.split(' and ');
+//   let differences = _.difference(affordances, userAffordances);
+//
+//   return differences.length === 0;
+// };
+//
+// const orAffordances = (userAffordances, searchAffordances) => {
+//   let affordances = searchAffordances.split(' or ');
+//   let contains = false;
+//
+//   _.forEach(affordances, (currAffordance) => {
+//     if (_.contains(userAffordances, currAffordance)) {
+//       contains = true;
+//       return false;
+//     }
+//   });
+//
+//   return contains;
+// };

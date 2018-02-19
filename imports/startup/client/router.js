@@ -19,6 +19,9 @@ import '../../ui/pages/affordances.js';
 import {Experiences} from "../../api/experiences/experiences";
 import {Locations} from "../../api/locations/locations";
 import {Images} from "../../api/images/images";
+import {Submissions} from "../../api/submissions/submissions";
+import {Incidents} from "../../api/incidents/incidents";
+import {Meteor} from "meteor/meteor";
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -35,27 +38,32 @@ Router.route('api.custom', {
   before: function () {
     this.subscribe('experiences.activeUser').wait();
     this.subscribe('locations.activeUser').wait();
-    this.subscribe('images', this.params.iid).wait();
+    this.subscribe('images.activeIncident', this.params.iid).wait();
     this.next();
   },
   data: function () {
     return {
-      experience: Experiences.findOne(this.params.eid),
-      location: Locations.find({}).fetch()[0]
+      experience: Experiences.findOne(),
+      location: Locations.findOne()
     };
   }
 });
 
 Router.route('api.customresults', {
-  path: '/apicustomresults/:iid/',
+  path: '/apicustomresults/:iid/:eid',
   template: 'api_custom_results',
   before: function () {
-    this.subscribe('images', this.params.iid).wait();
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     this.next();
   },
   data: function () {
     return {
-      images: Images.find({iid: this.params.iid}).fetch()
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+
     };
   }
 });
@@ -71,7 +79,23 @@ Router.route('/admin/debug', {
   // waitOn: function() { return Meteor.subscribe('experiences'); }
 });
 
+Router.route('profile', {
+  path: '/profile',
+  template: 'profile',
+  before: function () {
+    this.subscribe('incidents.pastUser').wait();
+    this.subscribe('submissions.activeUser').wait();
+    this.subscribe('experiences.pastUser').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      incidents: Incidents.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      experiences: Experiences.find({}).fetch(),
 
-Router.route('/profile', {
-  name: 'profile'
+    };
+  }
 });
+
+
