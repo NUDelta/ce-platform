@@ -1,28 +1,30 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
-import { Incidents } from './incidents';
-import { Availability } from '../coordinator/availability';
-import { Assignments } from '../coordinator/assignments';
-import { Submissions } from '../submissions/submissions';
+import {Incidents} from './incidents';
+import {Availability} from '../coordinator/availability';
+import {Assignments} from '../coordinator/assignments';
+import {Submissions} from '../submissions/submissions';
 
 export const startRunningIncident = (incident) => {
   console.log('incident in start', incident);
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    console.log(need.needName);
-    needUserMaps.push({ needName: need.needName, uids: [] });
-    Submissions.insert({
-      eid: incident.eid,
-      iid: incident._id,
-      needName: need.needName,
-    }, (err) => {
-      if (err) {
-        console.log('error,', err);
-      } else {
-      }
-    });
+    console.log("when starting incident a need is:", need);
+    needUserMaps.push({needName: need.needName, uids: []});
+
+    let i = 0;
+    while (i < need.numberNeeded) {
+      i++;
+
+      Submissions.insert({
+        eid: incident.eid,
+        iid: incident._id,
+        needName: need.needName,
+      });
+    }
+
   });
 
   console.log("needUserMaps", needUserMaps);
@@ -36,6 +38,7 @@ export const startRunningIncident = (incident) => {
     needUserMaps: needUserMaps
   });
 };
+
 
 /**
  * Given an experience object, creates an incident

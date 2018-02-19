@@ -21,15 +21,16 @@ import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
   SyncedCron.start();
-  Meteor.users.remove({});
-  Experiences.remove({});
-  Submissions.remove({});
-  Availability.remove({});
-  Assignments.remove({});
-  Locations.remove({});
-  Incidents.remove({});
-  Detectors.remove({});
-
+  if(true){
+    Meteor.users.remove({});
+    Experiences.remove({});
+    Submissions.remove({});
+    Availability.remove({});
+    Assignments.remove({});
+    Locations.remove({});
+    Incidents.remove({});
+    Detectors.remove({});
+  }
 
   if (Meteor.users.find().count() === 0) {
     Object.values(CONSTANTS.users).forEach(function (value) {

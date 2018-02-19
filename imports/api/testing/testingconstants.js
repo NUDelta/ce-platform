@@ -90,7 +90,7 @@ let EXPERIENCES = {
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
       needName: 'atFruit', situation: { detector: DETECTORS.fruit._id, number: '1' },
-      toPass: { item: 'fruit' }, numberNeeded: 10
+      toPass: { item: 'fruit' }, numberNeeded: 2
     }],
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',
@@ -102,13 +102,13 @@ let EXPERIENCES = {
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
       needName: 'night', situation: { detector: DETECTORS.night._id, number: '1' },
-      toPass: { instruction: 'Take a photo of the night' }, numberNeeded: 10
+      toPass: { instruction: 'Take a photo of the night' }, numberNeeded: 3
     }, {
       needName: 'sunset', situation: { detector: DETECTORS.sunset._id, number: '1' },
-      toPass: { instruction: 'Take a photo of the sunset' }, numberNeeded: 10
+      toPass: { instruction: 'Take a photo of the sunset' }, numberNeeded: 3
     }, {
       needName: 'daytime', situation: { detector: DETECTORS.daytime._id, number: '1' },
-      toPass: { instruction: 'Take a photo of the daytime' }, numberNeeded: 10
+      toPass: { instruction: 'Take a photo of the daytime' }, numberNeeded: 3
     }],
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',
