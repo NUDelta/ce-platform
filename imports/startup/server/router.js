@@ -15,7 +15,12 @@ Router.route('/api/geolocation', { where: 'server' })
     this.response.end('ok');
   })
 
-  //curl -i -X POST -H 'Content-Type: app '{"userId": "sb8Feb8jEe5Lao9S3", "location": {"coords": {"latitude": 43, "longitude": -87}}}' http://localhost:3000/api/geolocation
+  /**
+   * curl -i -X POST \
+   -H 'Content-Type: application/json' \
+   -d '{"userId": "Z7YCZaZimL5qkRwKi", "location": {"coords": {"latitude": 42.056838, "longitude": -87.675940}}}' \
+   http://localhost:3000/api/geolocation
+   */
   .post(function () {
     console.log("request body:", this.request.body);
     const uid = this.request.body.userId;

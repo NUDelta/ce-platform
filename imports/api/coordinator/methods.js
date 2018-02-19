@@ -60,9 +60,9 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           }
         });
 
-        let newusers = needUserMap.uids;
-        newusers.push(uid);
-        updatedNeeds.needUserMaps.push({ needName: needName, uids: newusers });
+        let newusers = new Set(needUserMap.uids);
+        newusers.add(uid);
+        updatedNeeds.needUserMaps.push({ needName: needName, uids: [...newusers] });
 
         userAlreadyAddedToNeed = true;
       } else {
@@ -161,7 +161,7 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
       _id: iid,
       'needUserMaps.needName': needName
     }, {
-      $push: { 'needUserMaps.$.uids': uid }
+      $addToSet: { 'needUserMaps.$.uids': uid }
     });
 
   });

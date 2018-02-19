@@ -71,13 +71,12 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
       console.log('needUserMap', incidentMapping.needUserMaps);
 
       let needObject = getNeedFromIncidentId(incidentMapping.iid, needUserMap.needName);
-      let numberPeopleNeeded = needObject.situation.number;
+      let numberPeopleNeeded = needObject.numberNeeded;
       console.log('needObject', needObject);
 
       console.log('numbers', needUserMap.uids.length, numberPeopleNeeded);
       if (needUserMap.uids.length >= numberPeopleNeeded) {
-        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] =
-          chooseUsers(needUserMap.uids, numberPeopleNeeded);
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = needUserMap.uids.slice(numberPeopleNeeded);
       }
     });
   });
@@ -87,30 +86,30 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 };
 
-//TODO: THIS IS DUMB, remove, oops...
-/**
- * Given a set of users, it chooses a subset of the given number
- *  based on how many other experiences users are available for.
- *
- * @param uids {[string]} uids available for the incident
- * @param numberPeopleNeeded {int} number of users we need to choose for the incident
- * @returns {[string]} uids chosen for the incident
- */
-const chooseUsers = (uids, numberPeopleNeeded) => {
-  let userPopularityMap = {};
-  _.forEach(uids, (uid) => {
-    userPopularityMap[uid] = Availability.find({
-      'needUserMaps': {
-        '$elemMatch': {
-          'uids': uid
-        }
-      }
-    }).count();
-  });
-
-  uids.sort(function (a, b) {
-    return userPopularityMap[a] > userPopularityMap[b];
-  });
-
-  return uids.slice(0, numberPeopleNeeded);
-};
+// //TODO: THIS IS DUMB, remove, oops...
+// /**
+//  * Given a set of users, it chooses a subset of the given number
+//  *  based on how many other experiences users are available for.
+//  *
+//  * @param uids {[string]} uids available for the incident
+//  * @param numberPeopleNeeded {int} number of users we need to choose for the incident
+//  * @returns {[string]} uids chosen for the incident
+//  */
+// const chooseUsers = (uids, numberPeopleNeeded) => {
+//   let userPopularityMap = {};
+//   _.forEach(uids, (uid) => {
+//     userPopularityMap[uid] = Availability.find({
+//       'needUserMaps': {
+//         '$elemMatch': {
+//           'uids': uid
+//         }
+//       }
+//     }).count();
+//   });
+//
+//   uids.sort(function (a, b) {
+//     return userPopularityMap[a] > userPopularityMap[b];
+//   });
+//
+//   return uids.slice(0, numberPeopleNeeded);
+// };

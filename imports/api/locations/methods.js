@@ -17,7 +17,7 @@ import { getAffordancesFromLocation } from '../detectors/methods';
  * @param lng {float} longitude of new location
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-  console.log("received location update", lat, lng);
+  console.log("received location update", lat, lng, uid);
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
     updateLocationInDb(uid, lat, lng, affordances);
