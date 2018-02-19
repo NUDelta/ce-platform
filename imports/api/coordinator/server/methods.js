@@ -75,8 +75,10 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
       console.log('needObject', needObject);
 
       console.log('numbers', needUserMap.uids.length, numberPeopleNeeded);
-      if (needUserMap.uids.length >= numberPeopleNeeded) {
+      if (needUserMap.uids.length > numberPeopleNeeded) {
         incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = needUserMap.uids.slice(numberPeopleNeeded);
+      } else {
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = needUserMap.uids;
       }
     });
   });
