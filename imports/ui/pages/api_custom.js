@@ -101,6 +101,8 @@ Template.api_custom.events({
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
 
+    console.log('api_custom: ', this);
+
     // const dropDowns = event.target.getElementsByClassName('dropdown');
     // _.forEach(dropDowns, (dropDown) => {
     //   const index = dropDown.selectedIndex;

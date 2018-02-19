@@ -26,6 +26,7 @@ Schema.Submission = new SimpleSchema({
     type: Object,
     blackbox: true,
     optional: true,
+    defaultValue: {}
   },
   timestamp: {
     type: Date,

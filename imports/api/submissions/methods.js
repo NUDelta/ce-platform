@@ -53,19 +53,12 @@ function adminUpdates(mostRecentSub) {
 
 }
 
-const numberOfSubmissions = Submissions.find({uid: {$ne: null}}).count();
-
-const submissionsCursor = Submissions.find({uid: {$ne: null}});
+const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
-  added(submission) {
-    console.log('new submission added');
-
-    if (Submissions.find({uid: {$ne: null}}).count() <= numberOfSubmissions) {
-      return;
-    }
-    console.log("submissions triggered", submission);
+  changed(submission, old) {
+    console.log('new submission added', submission);
     adminUpdates(submission);
   }
 });
@@ -80,6 +73,7 @@ Meteor.methods({
 
 export const updateSubmission = function (submission) {
   console.log("IN THE UPDATE SUBMISSION FUNCTION");
+
   Submissions.update({
     eid: submission.eid,
     iid: submission.iid,
@@ -87,7 +81,7 @@ export const updateSubmission = function (submission) {
   }, {
     $set: {
       uid: submission.uid,
-      content: submission.submissions,
+      content: submission.content,
       timestamp: submission.timestamp,
       lat: submission.lat,
       lng: submission.lng

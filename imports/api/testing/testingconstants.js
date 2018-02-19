@@ -69,6 +69,16 @@ let DETECTORS = {
     'rules' : [
       'sunset'
     ]
+  },
+  'daytime' : {
+    '_id' : Random.id(),
+    'description' : 'places where it\'s daytime,',
+    'variables' : [
+      'var daytime = true;'
+    ],
+    'rules' : [
+      'daytime'
+    ]
   }
 };
 
@@ -96,6 +106,9 @@ let EXPERIENCES = {
     }, {
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 10
+    }, {
+      needName: 'daytime', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the daytime'}, numberNeeded: 10
     }],
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',

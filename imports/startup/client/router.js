@@ -36,7 +36,7 @@ Router.route('api.custom', {
   path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
   before: function () {
-    this.subscribe('experiences.activeUser').wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.next();
