@@ -25,12 +25,16 @@ export const _removeActiveIncidentFromUsers = function (uids, iid) {
   Meteor.users.update({
     _id: { $in: uids }
   }, {
-    pull: {
+    $pull: {
       'profile.activeIncidents': iid
+    },
+    $push: {
+      'profile.pastIncidents': iid
     }
   }, {
     multi: true
   });
+
 };
 
 

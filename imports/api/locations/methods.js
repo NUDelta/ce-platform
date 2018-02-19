@@ -4,7 +4,7 @@ import { log } from '../logs.js';
 import { Locations } from './locations.js';
 
 import { findMatchesForUser } from '../experiences/methods'
-import { runCoordinatorAfterUserLocationChange } from '../coordinator/methods'
+import { runCoordinatorAfterUserLocationChange } from '../coordinator/server/methods'
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
 import { getAffordancesFromLocation } from '../detectors/methods';
 /**

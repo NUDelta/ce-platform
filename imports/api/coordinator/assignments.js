@@ -10,6 +10,8 @@ Schema.Assignment = new SimpleSchema({
   },
   needUserMaps: {
     type: [Schema.UserNeedMapping],
+    blackbox: true
+    //TODO: this shouldn't be blackbox true, figure out why it's not doing its thang
   },
 });
 

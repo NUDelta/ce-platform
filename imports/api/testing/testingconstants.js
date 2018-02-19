@@ -9,12 +9,14 @@ let USERS = {
   'a': {
     email: 'a@gmail.com',
     password: 'password',
-    profile: {
-      lastParticipated: null,
-      lastNotified: null,
-      activeIncidents: [],
-      pastIncidents: [],
-    }
+  },
+  'b': {
+    email: 'b@gmail.com',
+    password: 'password',
+  },
+  'c': {
+    email: 'c@gmail.com',
+    password: 'password',
   }
 };
 
@@ -75,7 +77,7 @@ let EXPERIENCES = {
     _id: Random.id(),
     name: 'You\'re at a restaurant',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photoCollage',
+    resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
       needName: 'atFruit', situation: {detector: DETECTORS.fruit._id, number: '1'},
       toPass: {item: 'fruit'}, numberNeeded: 10
@@ -87,7 +89,7 @@ let EXPERIENCES = {
     _id: Random.id(),
     name: 'Scavenger Hunt',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photoCollage',
+    resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
       needName: 'night', situation: {detector: DETECTORS.night._id, number: '1'},
       toPass: {instruction: 'Take a photo of the night'}, numberNeeded: 10

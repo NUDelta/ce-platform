@@ -3,38 +3,28 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 import { Schema } from '../schema.js';
 
-let qualifications = {};
-Schema.CEQualifications.forEach((allowed) => {
-  qualifications[allowed] = {
-    type: Boolean,
-    label: allowed
-  }
-});
-
-Schema.Qualification = new SimpleSchema(qualifications);
-
-Schema.Profile = new SimpleSchema({
-  activeIncidents: {
-    type: [String],
-    label: 'Active incidents',
-    defaultValue: [],
-  },
-  pastIncidents: {
-    type: [String],
-    label: 'Previous incidents the user was notified of',
-    defaultValue: [],
-  },
-  lastParticipated: {
-    type: Date,
-    defaultValue: null,
-    optional: true
-  },
-  lastNotified: {
-    type: Date,
-    defaultValue: null,
-    optional: true
-  },
-});
+// Schema.Profile = new SimpleSchema({
+//   activeIncidents: {
+//     type: [String],
+//     label: 'Active incidents',
+//     defaultValue: [],
+//   },
+//   pastIncidents: {
+//     type: [String],
+//     label: 'Previous incidents the user was notified of',
+//     defaultValue: [],
+//   },
+//   lastParticipated: {
+//     type: Date,
+//     defaultValue: null,
+//     optional: true
+//   },
+//   lastNotified: {
+//     type: Date,
+//     defaultValue: null,
+//     optional: true
+//   },
+// });
 
 // Schema.User = new SimpleSchema({
 //   username: {

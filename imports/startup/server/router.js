@@ -16,9 +16,9 @@ Router.route('/api/geolocation', { where: 'server' })
   .post(function () {
     const uid = this.request.body.userId;
     const location = this.request.body.location;
-    const activity = this.request.body.activity;
+    // const activity = this.request.body.activity;
 
-    onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function(){
+    let onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function(){
       this.response.writeHead(200, { 'Content-Type': 'application/json' });
       this.response.end('ok');
     });

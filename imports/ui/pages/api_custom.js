@@ -25,12 +25,17 @@ import {photoUpload} from './photoUploadHelpers.js'
 Template.api_custom.helpers({
 
   data() {
+    console.log("api custom this", this);
     return {
       location: this.location,
       experience: this.experience,
       iid: Router.current().params.iid,
       needName: Router.current().params.needName
     }
+  },
+  intoText(){
+    //TODO: get intro text from experience -> contributiontype -> find correct need
+    return Router.current().params.needName;
   }
 
 
@@ -77,36 +82,6 @@ Template.api_custom.helpers({
 
 Template.api_custom.onCreated(() => {
 
-
-  // do we really need all of these?
-  // const incidentId = Router.current().params._id;
-  // const imgHangle = this.subscribe('images', incidentId);
-  // const incHandle = this.subscribe('incidents.byId', incidentId);
-  // const expHandle = this.subscribe('experiences.byIncident', incidentId);
-  // const locHandle = this.subscribe('locations.byUser', Meteor.userId());
-  //
-  //
-  // // const subHangle = this.subscribe('submissions', incidentId);
-  // // const textHangle = this.subscribe('textEntries.byIncident', incidentId);
-  // this.state = new ReactiveDict();
-  // this.autorun(() => {
-  //   if (this.subscriptionsReady()) {
-  //     console.log('subscriptions are now ready');
-  //     const incident = Incidents.findOne(incidentId);
-  //     this.state.set('incident', incident);
-  //
-  //     const location = Locations.findOne({ uid: Meteor.userId() });
-  //     this.state.set('location', location);
-  //
-  //     //not sure if we need these last two?
-  //     const experience = Experiences.findOne(incident.experienceId);
-  //     this.state.set('experience', experience);
-  //
-  //     // if (experience.activeIncident) {
-  //     //   this.subscribe('images', experience.activeIncident);
-  //     // }
-  //   }
-  // });
 });
 
 Template.api_custom.events({
@@ -116,6 +91,7 @@ Template.api_custom.events({
     //this makes the loading circle show up
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
+
     const experience = this.experience;
     const location = this.location;
     const iid = Router.current().params.iid;
@@ -123,6 +99,7 @@ Template.api_custom.events({
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
+    const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
 
     // const dropDowns = event.target.getElementsByClassName('dropdown');
     // _.forEach(dropDowns, (dropDown) => {
@@ -150,13 +127,13 @@ Template.api_custom.events({
     const images = event.target.getElementsByClassName('fileinput');
     //no images being uploaded so we can just go right to the results page
     if (images.length === 0) {
-      Router.go('/apicustomresults/' + iid);
+      Router.go(resultsUrl);
     }
 
     //otherwise, we do have images to upload so need to hang around for that
     _.forEach(images, (image, index) => {
+      console.log("the image is ", image, image._id);
       const picture = event.target.photo && event.target.photo.files[index];
-      console.log("pic", picture)
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
@@ -189,7 +166,7 @@ Template.api_custom.events({
             changed(newImage) {
               if (newImage.isUploaded()) {
                 cursor.stop();
-                Router.go('/apicustomresults/' + iid);
+                Router.go(resultsUrl);
               }
             }
           });
@@ -200,6 +177,7 @@ Template.api_custom.events({
       submissions[image.id] = imageFile._id;
     });
 
+    console.log("content is ", submissions)
     const submissionObject = {
       uid: uid,
       eid: experience._id,
@@ -211,12 +189,9 @@ Template.api_custom.events({
       lng: location.lng
     };
 
-    Submissions.insert(submissionObject, (err) => {
-      if (err) {
-        console.log('Error with submission, did not succeed', err);
-      } else {
-      }
-    });
+    //TODO: this should be updating an old submission object
+    Meteor.call('updateSubmission', submissionObject);
+
   },
   'click #participate-btn'(event, instance) {
     event.preventDefault();

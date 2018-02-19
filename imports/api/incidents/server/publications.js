@@ -25,3 +25,17 @@ Meteor.publish('incidents.activeUser', function () {
     });
   }
 });
+
+Meteor.publish('incidents.pastUser', function () {
+  console.log('subscribing to incidents.pastUser');
+
+  if (!this.userId) {
+    this.ready();
+  } else {
+    const user = Meteor.users.findOne(this.userId);
+    return Incidents.find({
+      _id: { $in: user.profile.pastIncidents }
+    });
+  }
+});
+

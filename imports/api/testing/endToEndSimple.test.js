@@ -11,31 +11,49 @@ import {findUserByEmail} from '../users/methods';
 import {Assignments} from '../coordinator/assignments';
 import {Random} from 'meteor/random'
 import {Detectors} from "../detectors/detectors";
+// import {updateSubmission} from "../submissions/client/methods";
+
+import "../submissions/methods";
+
+
+let second = false;
 
 describe('Simple End To End', function () {
+  this.timeout(30000);
+
+  let NEEDNAME = 'atFruit';
   beforeEach((done) => {
-    resetDatabase();
-    Accounts.createUser(CONSTANTS.users.a);
 
-    Detectors.insert(CONSTANTS.detectors.fruit);
-    Experiences.insert(CONSTANTS.experiences.atLocation, (err) => {
-      if (err) {
-        console.log("ERROR INSERTING EXPERIENECE", err)
-      } else {
-        console.log("experiecen intset works!")
-
-      }
-    });
-
-    let incident = createIncidentFromExperience(CONSTANTS.experiences.atLocation);
-    startRunningIncident(incident);
-
-    let uid = findUserByEmail('a@gmail.com')._id;
-    onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function(){
+    if (second) {
       done();
-    });
 
-  });
+    } else {
+      console.log("running simple end to end setup");
+      second = true;
+      resetDatabase();
+      Accounts.createUser(CONSTANTS.users.a);
+      Accounts.createUser(CONSTANTS.users.b);
+      Accounts.createUser(CONSTANTS.users.c);
+
+      Detectors.insert(CONSTANTS.detectors.fruit);
+      Experiences.insert(CONSTANTS.experiences.atLocation, (err) => {
+        if (err) {
+          console.log("ERROR INSERTING EXPERIENCE", err)
+        }
+      });
+
+      let incident = createIncidentFromExperience(CONSTANTS.experiences.atLocation);
+      startRunningIncident(incident);
+
+      let uid = findUserByEmail('a@gmail.com')._id;
+      onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
+        console.log("incident", incident)
+        done();
+      });
+
+    }
+
+  })
 
   it('user gets added to experience', () => {
     let incident = Incidents.findOne({eid: CONSTANTS.experiences.atLocation._id});
@@ -51,11 +69,40 @@ describe('Simple End To End', function () {
     let assignmentEntry = Assignments.findOne({_id: iid});
 
     let needUserMap = assignmentEntry.needUserMaps.find((x) => {
-      return x.needName === 'atFruit';
+      return x.needName === NEEDNAME;
     });
 
     console.log('needUserMap', needUserMap);
     chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
     chai.assert(needUserMap.uids.indexOf(user._id) !== -1, 'uid not in needUserMap in Assignment DB');
-  })
+  });
+
+  it('user participates in experience', (done) => {
+    let incident = Incidents.findOne({eid: CONSTANTS.experiences.atLocation._id});
+    let iid = incident._id;
+    let user = findUserByEmail('a@gmail.com');
+
+    let submission = {
+      uid: user._id,
+      eid: CONSTANTS.experiences.atLocation._id,
+      iid: iid,
+      needName: NEEDNAME,
+      content: {},
+      timestamp: Date.now(),
+      lat: 43,
+      lng: -87,
+    };
+
+    updateSubmission(submission);
+
+    console.log("waiting after this");
+    Meteor.setTimeout(function () {
+      console.log("user's active Incidents", user.profile.activeIncidents, iid);
+      chai.assert((user.profile.activeIncidents.indexOf(iid) === -1), 'active incident not removed from user profile');
+      chai.assert((user.profile.pastIncidents.indexOf(iid) !== -1), 'past incident not added to user profile');
+      done()
+    }, 20 * 1000);
+
+  });
+
 });

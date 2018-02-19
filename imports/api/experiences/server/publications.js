@@ -30,6 +30,26 @@ Meteor.publish('experiences.activeUser', function () {
   }
 });
 
+Meteor.publish('experiences.pastUser', function () {
+  console.log('subscribing to experiences.pastUser');
+
+  if (!this.userId) {
+    this.ready();
+  } else {
+    const user = Meteor.users.findOne(this.userId);
+
+    let experienceIds = Incidents.find({
+      _id: { $in: user.profile.pastIncidents }
+    }).fetch().map((x) => {
+      return x.eid
+    });
+
+    return Experiences.find({
+      _id: { $in: experienceIds }
+    });
+  }
+});
+
 Meteor.publish('experiences.byIncident', function (incidentId) {
   const incident = Incidents.findOne(incidentId);
   if (incident) {

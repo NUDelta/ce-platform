@@ -11,7 +11,8 @@ export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName});
+    console.log(need.needName);
+    needUserMaps.push({needName: need.needName, uids: []});
     Submissions.insert({
       eid: incident.eid,
       iid: incident._id,
@@ -24,6 +25,7 @@ export const startRunningIncident = (incident) => {
     });
   });
 
+  console.log("needUserMaps", needUserMaps);
   Availability.insert({
     _id: incident._id,
     needUserMaps: needUserMaps
