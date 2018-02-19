@@ -19,19 +19,9 @@ Template.affordances.onCreated(function () {
 });
 
 Template.affordances.helpers({
-  affordances() {
-    var location = Locations.findOne({ uid: Meteor.userId() })
-    return location.affordances
-  },
-  location() {
-    var location = Locations.findOne({ uid: Meteor.userId() })
-    return location.lat + " / " + location.lng
-  },
   mapOptions() {
-    var location = Locations.findOne({ uid: Meteor.userId() })
-
+    let location = this.location
     if (GoogleMaps.loaded()) {
-      // Map initialization options
       return {
         center: new google.maps.LatLng(location.lat, location.lng),
         zoom: 18
@@ -39,8 +29,8 @@ Template.affordances.helpers({
     }
   },
   affordanceKeys() {
-    dict = this.location.affordances
-    var keys = Object.keys(dict)
+    let dict = this.location.affordances;
+    let keys = Object.keys(dict);
     return keys
   },
   affordanceValues(key){

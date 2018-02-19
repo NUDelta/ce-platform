@@ -9,9 +9,8 @@
         </div>
 
         <h4> Your location </h4>
-        {{location}}
+        {{this.location.lat}} / {{this.location.lng}}
         <br><br>
-
         <div class="row">
             <div style="width:100%; max-width: 100%; height: 300px">
                 {{> googleMap name="yourLocation" options=mapOptions}}

@@ -36,8 +36,7 @@ if (Meteor.isCordova) {
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function (location) {
       console.log('- Location: ', JSON.stringify(location));
-      serverLog.call({ message: "updating location" });
-      serverLog.call({ message: Meteor.userId() });
+      serverLog.call({ message: "location package received update for: " + Meteor.userId() });
 
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {

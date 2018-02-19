@@ -4,6 +4,8 @@ import { updateUserLocationAndAffordances } from '../../api/locations/methods.js
 import { log } from '../../api/logs.js';
 import { Location_log } from '../../api/locations/location_log.js'
 import { onLocationUpdate } from "../../api/locations/methods";
+import {serverLog} from "../../api/logs";
+import {Meteor} from "meteor/meteor";
 
 
 Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({ extended: false }));
@@ -18,7 +20,10 @@ Router.route('/api/geolocation', { where: 'server' })
     const location = this.request.body.location;
     // const activity = this.request.body.activity;
 
-    let onLocationUpdate = (uid, location.coords.latitude, location.coords.longitude, function () {
+    onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function () {
+
+      serverLog.call({ message: "triggering internal location update for: " + uid });
+
       this.response.writeHead(200, { 'Content-Type': 'application/json' });
       this.response.end('ok');
     });
