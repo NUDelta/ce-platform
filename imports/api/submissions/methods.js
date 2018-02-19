@@ -48,7 +48,8 @@ function adminUpdates(mostRecentSub) {
     $set: {"profile.lastParticipated": new Date()}
   });
   console.log("going for that remove");
-  adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid, mostRecentSub.needName);
+  adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid,
+    mostRecentSub.needName);
 
 }
 
@@ -58,21 +59,15 @@ const submissionsCursor = Submissions.find({uid: {$ne: null}});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
-  added(doc){
-    console.log("new submission recognzied", doc)
-
-  },
-  changed(submission, old) {
-    console.log("at start of sub triggered");
+  added(submission) {
+    console.log('new submission added');
 
     if (Submissions.find({uid: {$ne: null}}).count() <= numberOfSubmissions) {
       return;
     }
     console.log("submissions triggered", submission);
     adminUpdates(submission);
-
   }
-
 });
 
 

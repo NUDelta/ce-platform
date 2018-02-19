@@ -38,11 +38,14 @@ export const updateAvailability = (uid, availabilityDictionary) => {
     }
 
     let updatedNeeds = { iid: iid, 'needUserMaps': [] };
+    let userAlreadyAddedToNeed = false;
+
     _.forEach(av.needUserMaps, (needUserMap) => {
       console.log(av.needUserMaps[needUserMap]);
       let needName = needUserMap.needName;
 
-      if (availabilityDictionary[iid].indexOf(needName) !== -1) {
+      // TODO: hacky way to prevent users from being added to multiple needs. Better ways would be (1) randomize need selection, (1.5) add to need with fewest match, (2) coordinate among users to fulfill all needs
+      if ((availabilityDictionary[iid].indexOf(needName) !== -1) && !userAlreadyAddedToNeed) {
         Availability.update({
           _id: iid,
           'needUserMaps.needName': needName
@@ -59,9 +62,9 @@ export const updateAvailability = (uid, availabilityDictionary) => {
 
         let newusers = needUserMap.uids;
         newusers.push(uid);
-
         updatedNeeds.needUserMaps.push({ needName: needName, uids: newusers });
 
+        userAlreadyAddedToNeed = true;
       } else {
         Availability.update({
           _id: iid,
