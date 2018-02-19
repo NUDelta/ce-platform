@@ -36,38 +36,7 @@ function timeSinceFirstSubmission(need) {
   return number; //minutes
 }
 
-//adds the experience to the user's previous participation list, removes it from the user's active experiences list and removes the user from the Assigned DB 5, 2c,d,e
-/**
- * Updates the time a user participated, remove them from the assignment db for that incident
- * Move the incident from activeIncidents to pastIncidents for the user
- *
- * @param mostRecentSub {object} submission db object that was just submitted
- */
-function adminUpdates(mostRecentSub) {
 
-  Meteor.users.update({_id: mostRecentSub.uid}, {
-    $set: {"profile.lastParticipated": new Date()}
-  });
-  adminUpdatesForRemovingUsersToIncident(mostRecentSub.uid, mostRecentSub.iid, mostRecentSub.needName);
-
-}
-
-var totalNumber = Submissions.find().count();
-const submissionsCursor = Submissions.find();
-const submissionsHandle = submissionsCursor.observe({
-  //TODO: make it so we can check the submission when through completely first?
-  //e.g. if a photo upload fails this will still run not matter what
-
-  added(submission) {
-    if (totalNumber === Submissions.find().count()) {
-      return;
-    }
-
-    adminUpdates(submission);
-
-  }
-
-});
 
 //
 // const submissionsCursor = Submissions.find();

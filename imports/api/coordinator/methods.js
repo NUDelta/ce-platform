@@ -235,6 +235,9 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
  * @param needName {string} name of need to add users to
  */
 const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
+  //TODO: make this function take a single user not an array
+
+  console.log("adminUpdatesForAddingUsersToIncident", uids, iid, needName);
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
 };
@@ -246,6 +249,9 @@ const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
  * @param needName {string} name of need to remove users from
  */
 export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
+  //TODO: make this function take a single user not an array
+
+  console.log("removing the user right now");
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeActiveIncidentFromUsers(uids, iid);
 };
@@ -258,12 +264,17 @@ export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
  * @param needName {string} need to add user to
  */
 const _addUsersToAssignmentDb = (uids, iid, needName) => {
-  Assignments.update({
-    _id: iid,
-    'needUserMaps.needName': needName
-  }, {
-    $push: { 'needUserMaps.$.uids': { $each: uids } }
+  //TODO: mongo so old can't use each, but maybe better way
+  _.forEach(uids, (uid) => {
+    Assignments.update({
+      _id: iid,
+      'needUserMaps.needName': needName
+    }, {
+      $push: { 'needUserMaps.$.uids':  uid }
+    });
+
   });
+
 };
 
 /**
@@ -274,12 +285,16 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
  * @param needName {string} need that user is assigned to
  */
 const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
-  Assignments.update({
-    _id: iid,
-    'needUserMaps.needName': needName
-  }, {
-    $pull: { 'needUserMaps.$.uids': { $each: uids } }
+  _.forEach(uids, (uid) => {
+    Assignments.update({
+      _id: iid,
+      'needUserMaps.needName': needName
+    }, {
+      $pull: { 'needUserMaps.$.uids': uid }
+    });
+
   });
+
 };
 
 // const locationCursor = Locations.find();

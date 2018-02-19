@@ -19,6 +19,7 @@ import {TextEntries} from '../../api/text-entries/text-entries.js';
 
 import {photoInput} from './photoUploadHelpers.js'
 import {photoUpload} from './photoUploadHelpers.js'
+import {updateSubmission} from "../../api/submissions/methods";
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -188,12 +189,10 @@ Template.api_custom.events({
       lng: location.lng
     };
 
-    Submissions.insert(submissionObject, (err) => {
-      if (err) {
-        console.log('Error with submission, did not succeed', err);
-      } else {
-      }
-    });
+    //TODO: this should be updating an old submission object
+
+    updateSubmission(submissionObject);
+
   },
   'click #participate-btn'(event, instance) {
     event.preventDefault();

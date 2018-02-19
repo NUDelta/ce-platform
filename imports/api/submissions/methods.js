@@ -1,8 +1,9 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
-import { _ } from 'meteor/underscore';
-import { Submissions } from './submissions.js';
+import {_} from 'meteor/underscore';
+import {Submissions} from './submissions.js';
+import {adminUpdatesForRemovingUsersToIncident} from "../coordinator/methods";
 
 
 /**
@@ -34,5 +35,68 @@ export const getUnfinishedNeedNames = function () {
   });
 
   return unfinishedNeeds; //{iid:[need], iid:[need]}
+};
+
+/**
+ * Updates the time a user participated, remove them from the assignment db for that incident
+ * Move the incident from activeIncidents to pastIncidents for the user
+ *
+ * @param mostRecentSub {object} submission db object that was just submitted
+ */
+function adminUpdates(mostRecentSub) {
+
+  Meteor.users.update({_id: mostRecentSub.uid}, {
+    $set: {"profile.lastParticipated": new Date()}
+  });
+  console.log("going for that remove");
+  adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid, mostRecentSub.needName);
+
 }
+
+const numberOfSubmissions = Submissions.find({uid: {$ne: null}}).count();
+
+const submissionsCursor = Submissions.find({uid: {$ne: null}});
+const submissionsHandle = submissionsCursor.observe({
+  //TODO: make it so we can check the submission when through completely first?
+  //e.g. if a photo upload fails this will still run not matter what
+
+  changed(submission, old) {
+    console.log("at start of sub triggered");
+
+    if (Submissions.find({uid: {$ne: null}}).count() <= numberOfSubmissions) {
+      return;
+    }
+    console.log("submissions triggered", submission);
+    adminUpdates(submission);
+
+  }
+
+});
+
+export const updateSubmission = function (submission) {
+
+  Submissions.update({
+      eid: submission.eid,
+      iid: submission.iid,
+      needName: submission.needName
+    }, {
+      $set: {
+        uid: submission.uid,
+        content: submission.submissions,
+        timestamp: submission.timestamp,
+        lat: submission.lat,
+        lng: submission.lng
+      }
+    }, (docs, err) => {
+      if (err) {
+        console.log("submission inserted", err);
+      } else {
+        console.log("submission not inserted", err);
+
+      }
+    });
+};
+
+
+
 
