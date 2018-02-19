@@ -27,10 +27,5 @@
     "collective",
     "experiences"
   ],
-  "author": "Kevin J. Chen <kevinchen2016@u.northwestern.edu> (http://kevinchen.ninja/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/NUDelta/ce-platform/issues"
-  },
   "homepage": "https://github.com/NUDelta/ce-platform#readme"
 }

@@ -1,7 +1,6 @@
 import {ValidatedMethod} from 'meteor/mdg:validated-method';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
-import {_} from 'meteor/underscore';
 import {Submissions} from './submissions.js';
 import {adminUpdatesForRemovingUsersToIncident} from "../coordinator/methods";
 
