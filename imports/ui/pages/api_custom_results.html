@@ -5,7 +5,7 @@
 </template>
 
 <template name="basicPhotoList">
-    Thanks for participating in the experience <i>{{this.experience.name}}</i>! See results from other users below.
+    Thanks for participating in the experience {{this.experience.name}}! See results from other users below.<br>
     {{#each image in this.images}}
             {{#if image.isUploaded}}
                 <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">

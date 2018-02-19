@@ -58,7 +58,10 @@ const submissionsCursor = Submissions.find({uid: {$ne: null}});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
+  added(doc){
+    console.log("new submission recognzied", doc)
 
+  },
   changed(submission, old) {
     console.log("at start of sub triggered");
 
@@ -72,28 +75,36 @@ const submissionsHandle = submissionsCursor.observe({
 
 });
 
+
+Meteor.methods({
+  updateSubmission(submission){
+    console.log("update submission client", submission);
+    updateSubmission(submission);
+  }
+});
+
 export const updateSubmission = function (submission) {
-
+  console.log("IN THE UPDATE SUBMISSION FUNCTION");
   Submissions.update({
-      eid: submission.eid,
-      iid: submission.iid,
-      needName: submission.needName
-    }, {
-      $set: {
-        uid: submission.uid,
-        content: submission.submissions,
-        timestamp: submission.timestamp,
-        lat: submission.lat,
-        lng: submission.lng
-      }
-    }, (docs, err) => {
-      if (err) {
-        console.log("submission inserted", err);
-      } else {
-        console.log("submission not inserted", err);
+    eid: submission.eid,
+    iid: submission.iid,
+    needName: submission.needName
+  }, {
+    $set: {
+      uid: submission.uid,
+      content: submission.submissions,
+      timestamp: submission.timestamp,
+      lat: submission.lat,
+      lng: submission.lng
+    }
+  }, (err, docs) => {
+    if (err) {
+      console.log("submission not inserted", err);
+    } else {
+      console.log("submission inserted", docs, submission);
 
-      }
-    });
+    }
+  });
 };
 
 

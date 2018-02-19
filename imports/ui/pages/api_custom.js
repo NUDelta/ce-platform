@@ -19,7 +19,6 @@ import {TextEntries} from '../../api/text-entries/text-entries.js';
 
 import {photoInput} from './photoUploadHelpers.js'
 import {photoUpload} from './photoUploadHelpers.js'
-import {updateSubmission} from "../../api/submissions/methods";
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -133,8 +132,8 @@ Template.api_custom.events({
 
     //otherwise, we do have images to upload so need to hang around for that
     _.forEach(images, (image, index) => {
+      console.log("the image is ", image, image._id);
       const picture = event.target.photo && event.target.photo.files[index];
-      console.log("pic", picture)
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
@@ -178,6 +177,7 @@ Template.api_custom.events({
       submissions[image.id] = imageFile._id;
     });
 
+    console.log("content is ", submissions)
     const submissionObject = {
       uid: uid,
       eid: experience._id,
@@ -190,8 +190,7 @@ Template.api_custom.events({
     };
 
     //TODO: this should be updating an old submission object
-
-    updateSubmission(submissionObject);
+    Meteor.call('updateSubmission', submissionObject);
 
   },
   'click #participate-btn'(event, instance) {

@@ -28,7 +28,7 @@ Schema.Submission = new SimpleSchema({
     optional: true,
   },
   timestamp: {
-    type: Number,
+    type: Date,
     optional: true,
   },
   lat: {

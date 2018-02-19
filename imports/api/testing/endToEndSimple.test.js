@@ -11,7 +11,7 @@ import {findUserByEmail} from '../users/methods';
 import {Assignments} from '../coordinator/assignments';
 import {Random} from 'meteor/random'
 import {Detectors} from "../detectors/detectors";
-import {updateSubmission} from "../submissions/methods";
+// import {updateSubmission} from "../submissions/client/methods";
 
 import "../submissions/methods";
 
