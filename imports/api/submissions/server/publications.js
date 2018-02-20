@@ -11,3 +11,7 @@ Meteor.publish('submissions.activeUser', function () {
   return Submissions.find({ uid: this.userId });
 });
 
+Meteor.publish('submissions.all', function () {
+  console.log('subscribing to submissions.all');
+  return Submissions.find();
+});

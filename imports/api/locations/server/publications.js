@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Locations } from '../locations.js';
 
-Meteor.publish('locations', function () {
+Meteor.publish('locations.all', function () {
   return Locations.find();
 });
 

@@ -22,6 +22,8 @@ import { Images } from "../../api/images/images";
 import { Submissions } from "../../api/submissions/submissions";
 import { Incidents } from "../../api/incidents/incidents";
 import { Meteor } from "meteor/meteor";
+import {Assignments} from "../../api/coordinator/assignments";
+import {Availability} from "../../api/coordinator/availability";
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -82,10 +84,34 @@ Router.route('/', {
   name: 'home',
 });
 
-Router.route('/admin/debug', {
-  name: 'admin.debug',
+
+Router.route('admin.debug', {
+  path: '/admin/debug',
   template: 'debug',
-  // waitOn: function() { return Meteor.subscribe('experiences'); }
+  before: function () {
+    this.subscribe('locations.all').wait();
+    this.subscribe('assignments.all').wait();
+    this.subscribe('experiences.all').wait();
+    this.subscribe('images.all').wait();
+    this.subscribe('incidents.all').wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('submissions.all').wait();
+    this.subscribe('availability.all').wait();
+    this.next();
+
+  },
+  data: function () {
+    return {
+      location: Locations.find().fetch(),
+      assignments: Assignments.find().fetch(),
+      experience: Experiences.find().fetch(),
+      images: Images.find().fetch(),
+      incidents: Incidents.find({}).fetch(),
+      users: Meteor.users.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      availability: Availability.find({}).fetch(),
+    };
+  }
 });
 
 Router.route('profile', {

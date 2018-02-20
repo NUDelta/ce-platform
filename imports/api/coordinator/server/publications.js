@@ -1,8 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Assignments } from "../assignments";
+import {Availability} from "../availability";
 
-Meteor.publish('assignments', function () {
+Meteor.publish('assignments.all', function () {
   return Assignments.find();
+});
+
+Meteor.publish('availability.all', function () {
+  return Availability.find();
 });
 
 Meteor.publish('assignments.single', function (assignmentId) {

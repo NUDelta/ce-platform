@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Incidents } from '../incidents.js';
 
-Meteor.publish('incidents', function () {
+Meteor.publish('incidents.all', function () {
   return Incidents.find();
 });
 

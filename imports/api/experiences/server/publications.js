@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Experiences } from '../experiences.js';
 import { Incidents } from '../../incidents/incidents.js';
 
-Meteor.publish('experiences', function () {
+Meteor.publish('experiences.all', function () {
   return Experiences.find();
 });
 

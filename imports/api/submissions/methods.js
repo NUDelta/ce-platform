@@ -3,6 +3,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Submissions } from './submissions.js';
 import { adminUpdatesForRemovingUsersToIncident } from "../coordinator/methods";
+import {Availability} from "../coordinator/availability";
+import {Assignments} from "../coordinator/assignments";
 
 
 /**
@@ -47,7 +49,14 @@ function adminUpdates(mostRecentSub) {
   Meteor.users.update({ _id: mostRecentSub.uid }, {
     $set: { "profile.lastParticipated": new Date() }
   });
-  console.log("going for that remove");
+
+  Availability.update({
+    _id: mostRecentSub.iid,
+    'needUserMaps.needName': mostRecentSub.needName
+  }, {
+    $pull: { 'needUserMaps.$.uids': mostRecentSub.uid }
+  });
+
   adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid,
     mostRecentSub.needName);
 
@@ -58,7 +67,6 @@ const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
   changed(submission, old) {
-    console.log('new submission added', submission);
     adminUpdates(submission);
   }
 });
@@ -66,18 +74,16 @@ const submissionsHandle = submissionsCursor.observe({
 
 Meteor.methods({
   updateSubmission(submission) {
-    console.log("update submission client", submission);
     updateSubmission(submission);
   }
 });
 
 export const updateSubmission = function (submission) {
-  console.log("IN THE UPDATE SUBMISSION FUNCTION");
-
   Submissions.update({
     eid: submission.eid,
     iid: submission.iid,
-    needName: submission.needName
+    needName: submission.needName,
+    uid: null
   }, {
     $set: {
       uid: submission.uid,
@@ -90,7 +96,6 @@ export const updateSubmission = function (submission) {
     if (err) {
       console.log("submission not inserted", err);
     } else {
-      console.log("submission inserted", docs, submission);
 
     }
   });

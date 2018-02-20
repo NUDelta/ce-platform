@@ -18,7 +18,7 @@ Router.route('/api/geolocation', { where: 'server' })
   /**
    * curl -i -X POST \
    -H 'Content-Type: application/json' \
-   -d '{"userId": "Z7YCZaZimL5qkRwKi", "location": {"coords": {"latitude": 42.056838, "longitude": -87.675940}}}' \
+   -d '{"userId": "K2uFvRb5iMfTD92wN", "location": {"coords": {"latitude": 42.056838, "longitude": -87.675940}}}' \
    http://localhost:3000/api/geolocation
    */
   .post(function () {

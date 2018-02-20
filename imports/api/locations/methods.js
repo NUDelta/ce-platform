@@ -7,6 +7,7 @@ import { findMatchesForUser } from '../experiences/methods'
 import { runCoordinatorAfterUserLocationChange } from '../coordinator/server/methods'
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
 import { getAffordancesFromLocation } from '../detectors/methods';
+import {CONFIG} from "../config";
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -40,7 +41,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
 const sendToMatcher = (uid, affordances) => {
   // should check whether a user is available before sending to coordinator
   // TODO: replace false with config.debug global setting
-  let userCanParticipate = userIsAvailableToParticipate(uid, false);
+  let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
@@ -58,14 +59,16 @@ const sendToMatcher = (uid, affordances) => {
  * @param debug {boolean} choose to run in debug mode or not
  * @returns {boolean} whether a user can participate in an experience
  */
-const userIsAvailableToParticipate = (uid, debug) => {
-  if (typeof debug === 'undefined') {
+const userIsAvailableToParticipate = (uid) => {
+  let time = 60 * 100;
 
+  if (CONFIG.debug) {
+    time = time * 1;
   } else {
-
+    time = time * 60;
   }
 
-  return true;
+  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time;
 };
 
 /**

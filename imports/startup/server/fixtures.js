@@ -18,10 +18,9 @@ import { createIncidentFromExperience, startRunningIncident } from "../../api/in
 import { findUserByEmail } from '../../api/users/methods';
 import { Detectors } from "../../api/detectors/detectors";
 
-
 Meteor.startup(() => {
   SyncedCron.start();
-  if(false){
+  if(true){
     Meteor.users.remove({});
     Experiences.remove({});
     Submissions.remove({});
@@ -32,7 +31,7 @@ Meteor.startup(() => {
     Detectors.remove({});
   }
 
-  if (Meteor.users.find().count() === 0) {
+  if (Meteor.users.find().count() === 0){
     Object.values(CONSTANTS.users).forEach(function (value) {
       Accounts.createUser(value)
     });
@@ -51,11 +50,13 @@ Meteor.startup(() => {
     log.info(`Started ${ Experiences.find().count() } experiences`);
 
     let uid = findUserByEmail('a@gmail.com')._id;
-    onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
-      return;
-    });
+    let uid2 = findUserByEmail('b@gmail.com')._id;
+    let uid3 = findUserByEmail('c@gmail.com')._id;
+
+    log.info('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid + " " + uid2 + " " +  uid3);
 
   }
+
 
 });
 
