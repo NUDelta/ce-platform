@@ -26,7 +26,20 @@ export const notify = function (uids, iid, subject, text, route) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
 
-  _sendPush(uids, subject, text, route, iid);
+  if(uids.length !== 0){
+    Meteor.users.update({
+      _id: { $in: uids }
+    }, {
+      $set: {
+        'profile.lastNotified': Date.now()
+      }
+    }, {
+      multi: true
+    });
+
+    _sendPush(uids, subject, text, route, iid);
+
+  }
 
 };
 

@@ -33,6 +33,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
     console.log("availability entery", av._id);
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
+      console.log("should be skipping iid", iid);
       return;
       //TODO: does this return actuall prevent it from going into this loop?
     }
@@ -46,6 +47,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
 
       // TODO: hacky way to prevent users from being added to multiple needs. Better ways would be (1) randomize need selection, (1.5) add to need with fewest match, (2) coordinate among users to fulfill all needs
       if ((availabilityDictionary[iid].indexOf(needName) !== -1) && !userAlreadyAddedToNeed) {
+
         Availability.update({
           _id: iid,
           'needUserMaps.needName': needName
@@ -54,11 +56,10 @@ export const updateAvailability = (uid, availabilityDictionary) => {
         }, (err, docs) => {
           if (err) {
             console.log('error,', err);
-          } else {
-            console.log('add worked', docs, needName);
-
           }
         });
+
+        console.log("added need", needName, "to user", uid);
 
         let newusers = new Set(needUserMap.uids);
         newusers.add(uid);

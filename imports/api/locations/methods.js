@@ -22,21 +22,23 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
   console.log("received location update", lat, lng, uid);
 
   console.log("I think after they move we should wipe their availability");
-
-
+  //TODO: this could def be a clearner call or its own function
   let availabilityObjects = Availability.find().fetch();
   _.forEach(availabilityObjects, (av) => {
     _.forEach(av.needUserMaps, (needEntry) => {
-
+      console.log("removing user ", uid, "from need ", needEntry.needName);
       Availability.update({
         _id: av._id,
-        'needUserMaps.$.needName': needEntry.needName,
+        'needUserMaps.needName': needEntry.needName,
       }, {
-        $pull: { 'needUserMaps.$.uids': uid }
+        $pull: {'needUserMaps.$.uids': uid}
       });
-
     });
+
+    console.log(Availability.findOne(av._id));
+    console.log(Availability.findOne(av._id).needUserMaps[0].uids);
   });
+
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
     updateLocationInDb(uid, lat, lng, affordances);
@@ -78,15 +80,20 @@ const sendToMatcher = (uid, affordances) => {
  * @returns {boolean} whether a user can participate in an experience
  */
 const userIsAvailableToParticipate = (uid) => {
-  let time = 60 * 100;
+  let time = 60 * 1000;
 
-  if (CONFIG.debug) {
+  if (CONFIG.DEBUG) {
     time = time * 1;
   } else {
     time = time * 60;
   }
+  console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);
+  console.log("now: ", Date.now(), "time: ", time);
+  console.log("dif:",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified) );
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time;
+  console.log("IS USER AVAIABLE TO PARTICPATE",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time)
+
+  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time ;
 };
 
 /**
