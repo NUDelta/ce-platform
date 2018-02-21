@@ -25,29 +25,18 @@ def setLocation(location, uid):
 
 def allUsersMoving():
     print "Log in as all users"
-    time.sleep(10)
+    #time.sleep(10)
     setLocation(park, sys.argv[1])
     print "User A should now have two experiences, participate in scavenger hunt"
     print "after participating, user A should only have restaurant!"
 
-    time.sleep(10)
+    time.sleep(20)
     setLocation(park, sys.argv[2])
     print "user B should now have two experiences"
 
-    time.sleep(10)
+    time.sleep(20)
     setLocation(burgers, sys.argv[2])
     print "user B should now have one experience"
-
-    time.sleep(10)
-    setLocation(park, sys.argv[3])
-    print "user C should now have two experiences"
-
-    time.sleep(20)
-    setLocation(park, sys.argv[2])
-    print "user B should still have one experience"
-
-    setLocation(burgers, sys.argv[3])
-    print "C should loose restaurant"
 
 
 

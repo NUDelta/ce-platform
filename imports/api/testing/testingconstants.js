@@ -54,7 +54,7 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'places where it\'s nighttime,',
     'variables': [
-      'var nighttime = true;'
+      'var nighttime;'
     ],
     'rules': [
       'nighttime'
@@ -64,7 +64,7 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'places where it\'s sunset,',
     'variables': [
-      'var sunset = true;'
+      'var sunset;'
     ],
     'rules': [
       'sunset'
@@ -74,7 +74,7 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'places where it\'s daytime,',
     'variables': [
-      'var daytime = true;'
+      'var daytime;'
     ],
     'rules': [
       'daytime'

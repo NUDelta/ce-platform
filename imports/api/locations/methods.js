@@ -8,6 +8,7 @@ import { runCoordinatorAfterUserLocationChange } from '../coordinator/server/met
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import {CONFIG} from "../config";
+import {Availability} from "../coordinator/availability";
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -19,6 +20,23 @@ import {CONFIG} from "../config";
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
   console.log("received location update", lat, lng, uid);
+
+  console.log("I think after they move we should wipe their availability");
+
+
+  let availabilityObjects = Availability.find().fetch();
+  _.forEach(availabilityObjects, (av) => {
+    _.forEach(av.needUserMaps, (needEntry) => {
+
+      Availability.update({
+        _id: av._id,
+        'needUserMaps.$.needName': needEntry.needName,
+      }, {
+        $pull: { 'needUserMaps.$.uids': uid }
+      });
+
+    });
+  });
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
     updateLocationInDb(uid, lat, lng, affordances);
@@ -45,7 +63,7 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    console.log("found matches", availabilityDictionary);
+
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 };

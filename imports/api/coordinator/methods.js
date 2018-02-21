@@ -28,13 +28,13 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   console.log('updateAvailability', uid, availabilityDictionary);
   let updatedEntries = [];
 
-  //remove user from all entries
   let availability = Availability.find().fetch();
   _.forEach(availability, (av) => {
     console.log("availability entery", av._id);
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
       return;
+      //TODO: does this return actuall prevent it from going into this loop?
     }
 
     let updatedNeeds = { iid: iid, 'needUserMaps': [] };
@@ -65,18 +65,6 @@ export const updateAvailability = (uid, availabilityDictionary) => {
         updatedNeeds.needUserMaps.push({ needName: needName, uids: [...newusers] });
 
         userAlreadyAddedToNeed = true;
-      } else {
-        Availability.update({
-          _id: iid,
-          'needUserMaps.needName': needName
-        }, {
-          $pull: { 'needUserMaps.$.uids': uid }
-        }, (err) => {
-          if (err) {
-            console.log('error,', err);
-          } else {
-          }
-        });
       }
     });
 
@@ -110,9 +98,10 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
 
   _.forEach(currentAssignments, (assignment) => {
     _.forEach(assignment.needUserMaps, (needUserMap) => {
+
       let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
 
-      if (!matchPredicate) {
+      if (!matchPredicate && needUserMap.uids.includes(uid)) {
         adminUpdatesForRemovingUsersToIncident([uid], assignment._id, needUserMap.needName);
       }
     });
