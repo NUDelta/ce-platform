@@ -25,18 +25,26 @@ import { photoUpload } from './photoUploadHelpers.js'
 Template.api_custom.helpers({
 
   data() {
-    console.log("api custom this", this);
+
+    console.log(this.experience.contributionTypes)
+    let currentNeed = this.experience.contributionTypes.find(function (x) {
+      return x.needName === Router.current().params.needName;
+    });
+    console.log(currentNeed)
+
     return {
       location: this.location,
       experience: this.experience,
       iid: Router.current().params.iid,
-      needName: Router.current().params.needName
+      needName: Router.current().params.needName,
+      toPass: currentNeed.toPass,
     }
   },
-  intoText() {
+  introText(key) {
     //TODO: get intro text from experience -> contributiontype -> find correct need
-    return Router.current().params.needName;
+
   }
+});
 
 
   // data2pass() {
@@ -78,7 +86,6 @@ Template.api_custom.helpers({
   //   const instance = Template.instance();
   //   return instance.state.get('experience').participateTemplate;
   // }
-});
 
 Template.api_custom.onCreated(() => {
 

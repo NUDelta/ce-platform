@@ -14,6 +14,18 @@
     {{/each}}
 </template>
 
+<template name="photosByCategories">
+    {{#each cat in categories}}
+        <b>Images for {{cat}} </b><br>
+        {{#each image in (imagesByCategory cat)}}
+            {{#if image.isUploaded}}
+                <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
+            {{/if}}
+        {{/each}}
+        <br><br>
+    {{/each}}
+</template>
+
 <!--&lt;!&ndash; TEMPLATE FOR THANKGIVING RESULTS &ndash;&gt;-->
 <!--<template name="thanksgivingResults">-->
 <!--<head>-->
