@@ -5,6 +5,17 @@ import {Incidents} from './incidents';
 import {Availability} from '../coordinator/availability';
 import {Assignments} from '../coordinator/assignments';
 import {Submissions} from '../submissions/submissions';
+import {Experiences} from "../experiences/experiences";
+
+
+
+
+Meteor.methods({
+  createAndstartIncident(eid) {
+    let experience = Experiences.findOne(eid);
+    startRunningIncident(createIncidentFromExperience(experience));
+  }
+});
 
 export const startRunningIncident = (incident) => {
   console.log('incident in start', incident);

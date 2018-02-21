@@ -1,3 +1,5 @@
+
+
 <template name="camera">
     {{> loadingOverlay}}
     <label id={{this}} class="fileinput">
@@ -8,12 +10,10 @@
     <input type="file" name="photo" required>
 </template>
 
-<!--<template name="text">-->
-<!--<div class="form-group">-->
-<!--<textarea id={{this.key}} cols="40" rows="3" name="write" type="text" class="form-control"-->
-<!--placeholder="Write your thing here" required></textarea>-->
-<!--</div>-->
-<!--</template>-->
+<template name="text">
+    <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinpu form-control"
+          placeholder="Write here" required></textarea>
+</template>
 
 <!--<template name="dropdown">-->
 <!--<head>-->

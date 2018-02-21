@@ -8,9 +8,7 @@
     Thanks for participating in the experience {{this.experience.name}}! See results from other
     users below.<br>
     {{#each image in this.images}}
-        {{#if image.isUploaded}}
-            <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
-        {{/if}}
+        {{> Template.dynamic template="displayImage" data=image}}
     {{/each}}
 </template>
 
@@ -18,12 +16,95 @@
     {{#each cat in categories}}
         <b>Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
-            {{#if image.isUploaded}}
-                <img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">
-            {{/if}}
+            {{> Template.dynamic template="displayImage" data=image}}
         {{/each}}
         <br><br>
     {{/each}}
+</template>
+
+<!--TEMPLATE FOR STORYTIME-->
+<template name="storybook">
+    <head>
+        <style>
+            .mySlides {
+                display: none
+            }
+
+            /* Slideshow container */
+            .slideshow-container {
+                max-width: 1000px;
+                position: relative;
+                margin: auto;
+            }
+
+            /* Next & previous buttons */
+            #prev, #next {
+                cursor: pointer;
+                bottom: 0px;
+                color: black;
+                font-weight: bold;
+                font-size: 50px !important;
+                border-radius: 0 3px 3px 0;
+            }
+
+            /* Position the "next button" to the right */
+            #next {
+                border-radius: 3px 0 0 3px;
+            }
+
+            .caption {
+                margin-top: 15px;
+            }
+
+            .caption-text {
+                word-wrap: break-word;
+                margin: 0 auto;
+            }
+
+            .illustration {
+                height: 350px;
+                overflow: hidden;
+                margin-top: 10px;
+            }
+
+            .img {
+                height: 350px;
+            }
+
+            #img0 {
+                display: inline;
+            }
+        </style>
+    </head>
+
+    <div class="slideshow-container">
+        {{#each submission in this.submissions}}
+            <div class="mySlides" id="img{{@index}}">
+                <div class="illustration row">
+                    {{> Template.dynamic template="displayImage" data=(getImageById submission.content.illustration)}}
+                </div>
+                <div class="row caption">
+                    <div class="col-xs-2">
+                        {{#if (isFirst @index) }}
+                            <a class="prev" style="font-size: 50px !important">&#10094;</a>
+                        {{/if}}
+                    </div>
+                    <div class="caption-text col-xs-8">
+                        {{#if (isFirst @index) }}
+                            {{getText (getNextSentenceId @index) }}
+                        {{else}}
+                            Jimmy looked up at the night sky.
+                        {{/if}}
+                    </div>
+                    <div class="col-xs-2">
+                        {{#if (notLast @index)}}
+                            <a class="next" style="font-size: 50px !important">&#10095;</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </template>
 
 <!--&lt;!&ndash; TEMPLATE FOR THANKGIVING RESULTS &ndash;&gt;-->

@@ -114,6 +114,23 @@ let EXPERIENCES = {
     description: 'Help us find all the items on our list!',
     notificationText: 'Help us out with our scavenger hunt!',
   },
+  'storyTime': {
+    _id: Random.id(),
+    name: 'Storytime',
+    participateTemplate: 'storyPage',
+    resultsTemplate: 'storybook',
+    contributionTypes: [{
+      needName: 'daytime', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo for the story!'}, numberNeeded: 1
+    },
+    ],
+    description: 'We\'re writing a collective story!',
+    notificationText: 'Help us write a story!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function:'function(submission) { console.log("OMG THE CALLBACK IS RUNNINIGINGNG", submission) }'
+    }]
+  },
 
 };
 

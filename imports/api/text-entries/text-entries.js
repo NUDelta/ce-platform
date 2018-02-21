@@ -5,7 +5,7 @@ import { Schema } from '../schema.js';
 export const TextEntries = new Mongo.Collection('text_entries');
 
 Schema.TextEntry = new SimpleSchema({
-  submitter: {
+  uid: {
     type: String,
     label: 'Comment submitter',
     regEx: SimpleSchema.RegEx.Id
@@ -14,15 +14,18 @@ Schema.TextEntry = new SimpleSchema({
     type: String,
     label: 'Comment content'
   },
-  experienceId: {
+  eid: {
     type: String,
     label: 'Comment experience',
     regEx: SimpleSchema.RegEx.Id
   },
-  incidentId: {
+  iid: {
     type: String,
     label: 'Incident',
     regEx: SimpleSchema.RegEx.Id
+  },
+  needName: {
+    type: String
   }
 });
 

@@ -40,10 +40,6 @@ Template.api_custom.helpers({
       toPass: currentNeed.toPass,
     }
   },
-  introText(key) {
-    //TODO: get intro text from experience -> contributiontype -> find correct need
-
-  }
 });
 
 
@@ -122,16 +118,11 @@ Template.api_custom.events({
     //   });
     // });
 
-    // const textBoxes = event.target.getElementsByClassName('textEntry');
-    // _.forEach((textBoxes), (textBox) => {
-    //   submissions[form.id] = TextEntries.insert({
-    //     submitter: userId,
-    //     text: form.value,
-    //     contribution: form.id,
-    //     experienceId: experienceId,
-    //     incidentId: incidentId,
-    //   });
-    // });
+    const textBoxes = event.target.getElementsByClassName('textinput');
+    _.forEach(textBoxes, (textBox) => {
+      submissions[textBox.id] = textBox.value;
+      console.log("attemped to submit text", textBox.value);
+    });
 
     const images = event.target.getElementsByClassName('fileinput');
     //no images being uploaded so we can just go right to the results page
@@ -141,7 +132,6 @@ Template.api_custom.events({
 
     //otherwise, we do have images to upload so need to hang around for that
     _.forEach(images, (image, index) => {
-      console.log("the image is ", image, image._id);
       const picture = event.target.photo && event.target.photo.files[index];
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
@@ -164,9 +154,7 @@ Template.api_custom.events({
               console.log('upload error,', err);
             } else {
               console.log('upload worked', docs, needName);
-
             }
-
           });
           // TODO: setTimeout for automatically moving on if upload takes too long
 
@@ -198,7 +186,6 @@ Template.api_custom.events({
       lng: location.lng
     };
 
-    //TODO: this should be updating an old submission object
     Meteor.call('updateSubmission', submissionObject);
 
   },

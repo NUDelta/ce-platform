@@ -20,6 +20,9 @@ import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
   SyncedCron.start();
+
+  console.log("Our environment is: ", process.env.MODE);
+
   if(false){
     Meteor.users.remove({});
     Experiences.remove({});

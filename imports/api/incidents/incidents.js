@@ -19,7 +19,9 @@ Schema.Incident = new SimpleSchema({
   },
   callbacks: {
     type: [Schema.Callback],
-    optional: true
+    optional: true,
+    blackbox: true
+    //TODO: i think somehow its not finding the schema bc in experiences where its define no problem, but here need blackbox true
   },
 });
 Incidents.attachSchema(Schema.Incident);

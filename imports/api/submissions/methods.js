@@ -5,6 +5,7 @@ import { Submissions } from './submissions.js';
 import { adminUpdatesForRemovingUsersToIncident } from "../coordinator/methods";
 import {Availability} from "../coordinator/availability";
 import {Assignments} from "../coordinator/assignments";
+import {Incidents} from "../incidents/incidents";
 
 
 /**
@@ -68,6 +69,7 @@ const submissionsHandle = submissionsCursor.observe({
   //e.g. if a photo upload fails this will still run not matter what
   changed(submission, old) {
     adminUpdates(submission);
+    runCallbacks(submission);
   }
 });
 
@@ -102,5 +104,76 @@ export const updateSubmission = function (submission) {
 };
 
 
+//checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
+function runCallbacks(mostRecentSub) {
 
+  let cb = new CallbackManager(mostRecentSub)
+
+  let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
+  console.log("running callbacks", callbackArray)
+
+  _.forEach(callbackArray, (callbackPair) =>{
+    let trigger = callbackPair.trigger;
+    let fun = callbackPair.function;
+    if(eval(trigger)){
+      eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
+    }
+  });
+}
+
+
+
+
+
+class CallbackManager {
+
+  constructor(mostRecentSubmission) {
+    this.submission = mostRecentSubmission;
+  }
+
+  //trigger used in callbacks: checks if the new sub was for the specified need
+  newSubmission(needName) {
+    if(needName === undefined){
+      return true;
+    }else{
+      return this.submission.needName === needName;
+    }
+  }
+
+//trigger used in callbacks: checks if the need is finished
+  needFinished(needName) {
+    let count = Submissions.find({
+      iid: this.submission.iid,
+      needName: needName,
+      uid: null,
+    }).count();
+    return count === 0;
+  }
+
+//trigger used in callbacks: checks if the experience is finished
+  experienceFinished() {
+    let count = Submissions.find({
+      iid: this.submission.iid,
+      uid: null,
+    }).count();
+    return count === 0;
+  }
+
+
+//trigger used in callbacks: returns number of submission for the need
+  numberOfSubmissions(needName) {
+    return Submissions.find({
+      iid: this.submission.iid,
+      needName: needName,
+      uid: {$ne: null},
+    }).count();
+  }
+
+//trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future
+  timeSinceFirstSubmission(need) {
+    return number; //minutes
+  }
+
+
+}
 
