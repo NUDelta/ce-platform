@@ -17,11 +17,11 @@ Template.profile.helpers({
     //TODO: get the timestamp of when the user participated so we can show that in the UI
   },
   infoForLink(incident) {
-    let experience = Experiences.find(function (experience) {
+    let experience = this.experiences.find(function (experience) {
       return experience._id === incident.eid;
     });
     return {
-      iid: incident.iid,
+      iid: incident._id,
       eid: experience._id,
       experienceName: experience.name,
     }

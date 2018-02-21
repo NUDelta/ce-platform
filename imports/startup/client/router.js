@@ -119,14 +119,12 @@ Router.route('profile', {
   template: 'profile',
   before: function () {
     this.subscribe('incidents.pastUser').wait();
-    this.subscribe('submissions.activeUser').wait();
     this.subscribe('experiences.pastUser').wait();
     this.next();
   },
   data: function () {
     return {
       incidents: Incidents.find({}).fetch(),
-      submissions: Submissions.find({}).fetch(),
       experiences: Experiences.find({}).fetch(),
 
     };

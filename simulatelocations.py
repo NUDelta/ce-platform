@@ -77,5 +77,37 @@ def userWaitsBetweenNotifications():
 	setLocation(park, sys.argv[1])
 	print "User should regain experience!"
 
+def threeUsersParticipateInExperiences():
+	print "Log in as all users"
+	time.sleep(5)
+	setLocation(park, sys.argv[1])
+	print "User A should now have two experiences"
+	print "Participate in scavenger hunt"
+	time.sleep(10)
+
+	setLocation(park, sys.argv[2])
+	print "User B should now have two experiences"
+	print "Participate in scavenger hunt and restaurant"
+	time.sleep(30)
+
+	setLocation(park, sys.argv[3])
+	print "User C should now have one experiences"
+	time.sleep(10)
+
+	setLocation(park, sys.argv[1])
+	print "User A should have one experiences"
+	print "Participate in restaurant"
+	time.sleep(10)
+
+	setLocation(burgers, sys.argv[2])
+	print "User B should have no experiences"
+	time.sleep(5)
+
+	setLocation(burgers, sys.argv[3])
+	print "User C should only have scavenger hunt"
+	time.sleep(10)
+
+	print "yay it all worked!!"
 
 if __name__ == "__main__":
+	threeUsersParticipateInExperiences()
