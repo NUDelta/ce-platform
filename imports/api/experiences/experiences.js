@@ -52,7 +52,7 @@ Schema.NeedType = new SimpleSchema({
   toPass: {
     type: Object,
     optional: true,
-    //blackbox: true?
+    blackbox: true
   },
   numberNeeded: {
     type: Number,
