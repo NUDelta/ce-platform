@@ -20,7 +20,7 @@ import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
   SyncedCron.start();
-  if(false){
+  if(true){
     Meteor.users.remove({});
     Experiences.remove({});
     Submissions.remove({});
