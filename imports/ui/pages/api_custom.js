@@ -26,11 +26,11 @@ Template.api_custom.helpers({
 
   data() {
 
-    console.log(this.experience.contributionTypes)
-    let currentNeed = this.experience.contributionTypes.find(function (x) {
+    console.log(this.incident.contributionTypes);
+    let currentNeed = this.incident.contributionTypes.find(function (x) {
       return x.needName === Router.current().params.needName;
     });
-    console.log(currentNeed)
+    console.log(currentNeed);
 
     return {
       location: this.location,
@@ -41,6 +41,15 @@ Template.api_custom.helpers({
     }
   },
 });
+Template.storyPage.helpers({
+
+  dropdownData() {
+
+   return this.toPass.dropdownChoices;
+
+   },
+});
+
 
 
   // data2pass() {
@@ -106,22 +115,15 @@ Template.api_custom.events({
 
     console.log('api_custom: ', this);
 
-    // const dropDowns = event.target.getElementsByClassName('dropdown');
-    // _.forEach(dropDowns, (dropDown) => {
-    //   const index = dropDown.selectedIndex;
-    //   submissions[dropDown.id] = TextEntries.insert({
-    //     submitter: userId,
-    //     text: dropDown[index].value,
-    //     contribution: dropDowns[i].id,
-    //     experienceId: experienceId,
-    //     incidentId: incidentId,
-    //   });
-    // });
+    const dropDowns = event.target.getElementsByClassName('dropdown');
+    _.forEach(dropDowns, (dropDown) => {
+      const index = dropDown.selectedIndex;
+      submissions[dropDown.id] = dropDown[index].value
+    });
 
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
-      console.log("attemped to submit text", textBox.value);
     });
 
     const images = event.target.getElementsByClassName('fileinput');

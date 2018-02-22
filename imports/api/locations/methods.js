@@ -82,10 +82,12 @@ const sendToMatcher = (uid, affordances) => {
 const userIsAvailableToParticipate = (uid) => {
   let time = 60 * 1000;
 
-  if (CONFIG.DEBUG) {
+  if (CONFIG.MODE === "DEV") {
+    time = time * 30;
+  } else if (CONFIG.MODE === "PROD") {
+    time = time * 80;
+  }else {
     time = time * 1;
-  } else {
-    time = time * 60;
   }
   console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);
   console.log("now: ", Date.now(), "time: ", time);

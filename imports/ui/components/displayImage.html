@@ -1,6 +1,6 @@
 <template name="displayImage">
-    {{#if this.img.isUploaded}}
-        <img src="{{this.img.url store="thumbs"}}" alt="image loading...">
+    {{#if this.isUploaded}}
+        <img src="{{this.url store="thumbs"}}" alt="image loading...">
     {{/if}}
 </template>
 

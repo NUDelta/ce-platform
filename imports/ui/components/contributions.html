@@ -11,25 +11,25 @@
 </template>
 
 <template name="text">
-    <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinpu form-control"
+    <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
           placeholder="Write here" required></textarea>
 </template>
 
-<!--<template name="dropdown">-->
-<!--<head>-->
-<!--<style>-->
-<!--.dropdown-storytime {-->
-<!--height: 32px;-->
-<!--border: 1px solid rgba(34, 36, 38, 0.15);-->
-<!--color: rgba(0, 0, 0, 0.87);-->
-<!--background: #ffffff;-->
-<!--width: 80%;-->
-<!--}-->
-<!--</style>-->
-<!--</head>-->
-<!--<select class="dropdown" id={{this.key}}>-->
-        <!--{{#each option in this.options}}-->
-<!--<option value="{{option.[1]}}">{{option.[0]}} </option>-->
-        <!--{{/each}}-->
-<!--</select>-->
-<!--</template>-->
+<template name="dropdown">
+    <head>
+        <style>
+            .dropdown {
+                height: 32px;
+                border: 1px solid rgba(34, 36, 38, 0.15);
+                color: rgba(0, 0, 0, 0.87);
+                background: #ffffff;
+                width: 80%;
+            }
+        </style>
+    </head>
+    <select class="dropdown" id={{this.name}}>
+        {{#each option in this.options}}
+            <option value="{{option.[1]}}">{{option.[0]}} </option>
+        {{/each}}
+    </select>
+</template>

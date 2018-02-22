@@ -8,14 +8,47 @@ import {Submissions} from '../submissions/submissions';
 import {Experiences} from "../experiences/experiences";
 
 
-
-
 Meteor.methods({
   createAndstartIncident(eid) {
     let experience = Experiences.findOne(eid);
     startRunningIncident(createIncidentFromExperience(experience));
   }
 });
+
+export const addContribution = (iid, contribution) =>{
+  console.log("adding contribution", iid, contribution);
+  Incidents.update({
+    _id: iid,
+  }, {
+    $push: {contributionTypes: contribution}
+  });
+  addEmptySubmissionsForNeed(iid, Incidents.findOne(iid).eid, contribution);
+
+  Availability.update({
+    _id: iid
+  },{
+    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+  });
+
+  Assignments.update({
+    _id: iid
+  },{
+    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+  });
+};
+
+const addEmptySubmissionsForNeed = (iid, eid, need) => {
+  let i = 0;
+  while (i < need.numberNeeded) {
+    i++;
+
+    Submissions.insert({
+      eid: eid,
+      iid: iid,
+      needName: need.needName,
+    });
+  }
+};
 
 export const startRunningIncident = (incident) => {
   console.log('incident in start', incident);
@@ -25,16 +58,7 @@ export const startRunningIncident = (incident) => {
     console.log("when starting incident a need is:", need);
     needUserMaps.push({needName: need.needName, uids: []});
 
-    let i = 0;
-    while (i < need.numberNeeded) {
-      i++;
-
-      Submissions.insert({
-        eid: incident.eid,
-        iid: incident._id,
-        needName: need.needName,
-      });
-    }
+    addEmptySubmissionsForNeed(incident._id, incident.eid, need);
 
   });
 

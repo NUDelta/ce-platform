@@ -7,6 +7,9 @@ import {Availability} from "../coordinator/availability";
 import {Assignments} from "../coordinator/assignments";
 import {Incidents} from "../incidents/incidents";
 
+//for the callbacks
+import {addContribution} from "../incidents/methods";
+import { CONSTANTS } from '../testing/testingconstants';
 
 /**
  * Gets the needNames/iid for all unique unfilled entries in the submission DB
@@ -116,6 +119,7 @@ function runCallbacks(mostRecentSub) {
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if(eval(trigger)){
+      console.log("yes we are calling that callback")
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });
@@ -162,11 +166,19 @@ class CallbackManager {
 
 //trigger used in callbacks: returns number of submission for the need
   numberOfSubmissions(needName) {
-    return Submissions.find({
-      iid: this.submission.iid,
-      needName: needName,
-      uid: {$ne: null},
-    }).count();
+    if(needName === undefined){
+      return Submissions.find({
+        iid: this.submission.iid,
+        uid: {$ne: null},
+      }).count();
+    }else{
+      return Submissions.find({
+        iid: this.submission.iid,
+        needName: needName,
+        uid: {$ne: null},
+      }).count();
+    }
+
   }
 
 //trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future

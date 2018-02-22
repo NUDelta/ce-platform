@@ -1,14 +1,14 @@
 <template name="api_custom_results">
-    {{#if Template.subscriptionsReady}}
-        {{> Template.dynamic template=this.experience.resultsTemplate data=this}}
-    {{/if}}
+    {{> Template.dynamic template=this.experience.resultsTemplate data=data}}
 </template>
 
 <template name="basicPhotoList">
     Thanks for participating in the experience {{this.experience.name}}! See results from other
     users below.<br>
     {{#each image in this.images}}
-        {{> Template.dynamic template="displayImage" data=image}}
+        {{#if this.img.isUploaded}}
+            <img src="{{this.img.url store="thumbs"}}" alt="image loading...">
+        {{/if}}
     {{/each}}
 </template>
 
@@ -77,23 +77,24 @@
         </style>
     </head>
 
+    Storytime!
     <div class="slideshow-container">
         {{#each submission in this.submissions}}
             <div class="mySlides" id="img{{@index}}">
                 <div class="illustration row">
-                    {{> Template.dynamic template="displayImage" data=(getImageById submission.content.illustration)}}
+                    {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
                 </div>
                 <div class="row caption">
                     <div class="col-xs-2">
-                        {{#if (isFirst @index) }}
+                        {{#if (notFirst @index) }}
                             <a class="prev" style="font-size: 50px !important">&#10094;</a>
                         {{/if}}
                     </div>
                     <div class="caption-text col-xs-8">
-                        {{#if (isFirst @index) }}
-                            {{getText (getNextSentenceId @index) }}
+                        {{#if (notFirst @index) }}
+                            {{submission.content.sentence}}
                         {{else}}
-                            Jimmy looked up at the night sky.
+                            {{firstSentence}}
                         {{/if}}
                     </div>
                     <div class="col-xs-2">

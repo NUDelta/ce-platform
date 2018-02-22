@@ -1,3 +1,5 @@
+import {addContribution} from "../incidents/methods";
+
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
   'lakefill': {lat: 42.054902, lng: -87.670197},
@@ -76,6 +78,30 @@ let DETECTORS = {
 
 };
 
+let storytimeCallback = function(sub){
+
+  var affordance = sub.content.affordance;
+
+  let options = [
+    ["coffee", CONSTANTS.detectors.coffee._id],["sunset", CONSTANTS.detectors.sunset._id],
+    ["nighttime", CONSTANTS.detectors.night._id], ["daytime", CONSTANTS.detectors.daytime._id], ["park", CONSTANTS.detectors.rollTheGrass._id]
+  ];
+
+  options = options.filter(function(x){
+    return x[1] !== affordance;
+  });
+
+  let contribution = {
+    needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
+    toPass: {instruction: 'Take a photo to illustrate this sentence: '+ sub.content.sentence,
+      dropdownChoices: {name: "affordance", options: options}
+    }, numberNeeded: 1
+  };
+
+  addContribution(sub.iid, contribution);
+
+};
+
 let EXPERIENCES = {
   'atThePark': {
     _id: Random.id(),
@@ -120,15 +146,22 @@ let EXPERIENCES = {
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
-      needName: 'daytime', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo for the story!'}, numberNeeded: 1
+      needName: 'pageOne', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+      toPass: {
+        instruction: 'Take a photo to illustrate the sentence: Jimmy looked up at the sky!',
+        firstSentence: "Jimmy looked up at the sky",
+        dropdownChoices: {name: "affordance", options: [
+          ["coffee", DETECTORS.coffee._id],["sunset", DETECTORS.sunset._id], ["nighttime", DETECTORS.night._id], ["daytime", DETECTORS.daytime._id], ["park", DETECTORS.rollTheGrass._id]
+          ]}
+      },
+      numberNeeded: 1
     },
     ],
     description: 'We\'re writing a collective story!',
     notificationText: 'Help us write a story!',
     callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function:'function(submission) { console.log("OMG THE CALLBACK IS RUNNINIGINGNG", submission) }'
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() < 5)',
+      function: storytimeCallback.toString(),
     }]
   },
 

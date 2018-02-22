@@ -3,7 +3,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 
 export const CONFIG = {
-  DEBUG: false,
+  MODE: (process.env.MODE || "local"),
+  DEBUG: true
 };
 
 export const AUTH = {

@@ -48,6 +48,7 @@ Router.route('api.custom', {
   template: 'api_custom',
   before: function () {
     this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.next();
@@ -55,6 +56,7 @@ Router.route('api.custom', {
   data: function () {
     return {
       experience: Experiences.findOne(),
+      incident: Incidents.findOne(),
       location: Locations.findOne()
     };
   }
