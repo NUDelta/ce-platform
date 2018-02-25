@@ -92,7 +92,7 @@
                     </div>
                     <div class="caption-text col-xs-8">
                         {{#if (notFirst @index) }}
-                            {{submission.content.sentence}}
+                            {{previousSentence @index}}
                         {{else}}
                             {{firstSentence}}
                         {{/if}}

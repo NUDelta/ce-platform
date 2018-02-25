@@ -7,6 +7,7 @@ path1 = [(43, -87), (32, -120)]
 park =  (42.056838, -87.675940)
 burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
+coffee = (42.046881, -87.679555)
 
 def followPath(path, uid):
 	for stop in path:

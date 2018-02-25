@@ -57,6 +57,11 @@ Template.storybook.helpers({
       return x.needName === "pageOne";
     });
     return pageOne.toPass.firstSentence;
+  },
+  previousSentence(index){
+    const instance = Template.instance()
+    let previousSubmission = instance.data.submissions[index-1];
+    return previousSubmission.content.sentence
   }
 });
 
