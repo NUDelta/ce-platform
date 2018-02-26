@@ -115,26 +115,47 @@ let EXPERIENCES = {
     description: 'This is a simple experience for testing',
     notificationText: 'Please participate in this test experience!',
   },
+  'bumped': {
+    _id: Random.id(),
+    name: 'You just bumped into someone',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'basicPhotoList',
+    contributionTypes: [{
+      needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '2'},
+      toPass: {instruction: 'Say something to the person you bumped into'}, numberNeeded: 1
+    }],
+    description: 'This is a simple experience for testing',
+    notificationText: 'Please participate in this test experience!',
+  },
   'scavengerHunt': {
     _id: Random.id(),
     name: 'Scavenger Hunt',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
+    resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'night', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Take a photo of yourself at night!'}, numberNeeded: 3
+      needName: 'nighttime_selfie', situation: {detector: DETECTORS.night._id, number: '1'},
+      toPass: {instruction: 'Take a photo of yourself at night!'}, numberNeeded: 1
     }, {
+      needName: 'the_moon', situation: {detector: DETECTORS.night._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the moon'}, numberNeeded: 1
+    },{
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 3
+      toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 1
     }, {
-      needName: 'daytime', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo of yourself in the daytime!'}, numberNeeded: 3
+      needName: 'daytime_selfie', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo of yourself in the daytime!'}, numberNeeded: 1
     }, {
-      needName: 'park', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a tree!'}, numberNeeded: 3
+      needName: 'the_sun', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sun!'}, numberNeeded: 1
     }, {
-      needName: 'coffee', situation: {detector: DETECTORS.coffee._id, number: '1'},
-      toPass: {instruction: 'Take a photo of coffee'}, numberNeeded: 3
+      needName: 'tree', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a tree!'}, numberNeeded: 1
+    }, {
+      needName: 'leaf', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a leaf!'}, numberNeeded: 1
+    }, {
+      needName: 'coffee_maker', situation: {detector: DETECTORS.coffee._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a coffee maker'}, numberNeeded: 1
     },
     ],
     description: 'Help us find all the items on our list!',

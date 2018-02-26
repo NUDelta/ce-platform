@@ -45,6 +45,44 @@ Template.photosByCategories.helpers({
   }
 });
 
+Template.scavengerHunt.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    let categoriesSet = new Set(needNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+    console.log(this.images)
+    console.log(this.images.length);
+    let specific = this.images.filter(function(x){
+      console.log("image for", x.needName, category);
+      return x.needName === category;
+    });
+
+    console.log("specific", specific);
+    return specific;
+  },
+  getNeed(image){
+    return image.needName
+  },
+  uncompletedNeeds(){
+    let needs = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    completedNeeds = [];
+    for (i=0; i<this.images.length; i++){
+      completedNeeds.push(this.images[i].needName);
+    }
+    let unfinished = needs.filter(x => !completedNeeds.includes(x))
+    return unfinished
+  },
+  numTasksRemaining(){
+    return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
+  }
+});
+
 Template.storybook.helpers({
   notFirst(index){
     return index !==0;

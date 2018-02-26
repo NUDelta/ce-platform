@@ -22,6 +22,45 @@
     {{/each}}
 </template>
 
+<template name="scavengerHunt">
+  <head>
+    <style>
+      img {
+        height: 150px;
+      }
+      .img-text {
+        padding-bottom: 10px;
+      }
+      .item {
+        display: inline-block;
+      }
+      .item-text{
+        width: 45%;
+        padding-left: 5%;
+      }
+    </style>
+  </head>
+  <h4>Scavenger Hunt: {{numTasksRemaining}}</h4>
+  <b>Items found</b>
+  {{#each cat in categories}}
+      {{#each image in (imagesByCategory cat)}}
+        <div class="img-text">
+          <div class="item item-text">{{getNeed image}}</div>
+          <div class="item item-img">{{> Template.dynamic template="displayImage" data=image}}</div>
+        </div>
+      {{/each}}
+  {{/each}}
+  <br>
+<b>Items remaining</b>
+  <ul>
+    {{#each need in uncompletedNeeds}}
+      <li>
+        {{need}}
+      </li>
+    {{/each}}
+  </ul>
+</template>
+
 <!--TEMPLATE FOR STORYTIME-->
 <template name="storybook">
     <head>
@@ -29,14 +68,12 @@
             .mySlides {
                 display: none
             }
-
             /* Slideshow container */
             .slideshow-container {
                 max-width: 1000px;
                 position: relative;
                 margin: auto;
             }
-
             /* Next & previous buttons */
             #prev, #next {
                 cursor: pointer;
@@ -46,31 +83,25 @@
                 font-size: 50px !important;
                 border-radius: 0 3px 3px 0;
             }
-
             /* Position the "next button" to the right */
             #next {
                 border-radius: 3px 0 0 3px;
             }
-
             .caption {
                 margin-top: 15px;
             }
-
             .caption-text {
                 word-wrap: break-word;
                 margin: 0 auto;
             }
-
             .illustration {
                 height: 350px;
                 overflow: hidden;
                 margin-top: 10px;
             }
-
             .img {
                 height: 350px;
             }
-
             #img0 {
                 display: inline;
             }
