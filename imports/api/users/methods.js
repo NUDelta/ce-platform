@@ -36,6 +36,34 @@ export const _removeActiveIncidentFromUsers = function (uids, iid) {
 
 };
 
+export const _addToPastIncidentToUsers = function (uids, iid) {
+  console.log("removing incident ", iid, " from users ", uids);
+  Meteor.users.update({
+    _id: { $in: uids }
+  }, {
+    $addToSet: {
+      'profile.pastIncidents': iid
+    }
+  }, {
+    multi: true
+  });
+
+};
+
+export const _removeIncidentFromUsersEntirely = function (uids, iid) {
+  console.log("removing incident  ", iid, " from users ", uids);
+  Meteor.users.update({
+    _id: { $in: uids }
+  }, {
+    $pull: {
+      'profile.activeIncidents': iid
+    }
+  }, {
+    multi: true
+  });
+
+};
+
 
 export const getEmails = new ValidatedMethod({
   name: 'users.getEmails',

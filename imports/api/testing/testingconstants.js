@@ -103,29 +103,29 @@ let storytimeCallback = function(sub){
 };
 
 let EXPERIENCES = {
-  'atThePark': {
-    _id: Random.id(),
-    name: 'You\'re at a park',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'basicPhotoList',
-    contributionTypes: [{
-      needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
-      toPass: {instruction: 'Take a selfie at the park!'}, numberNeeded: 2
-    }],
-    description: 'This is a simple experience for testing',
-    notificationText: 'Please participate in this test experience!',
-  },
+  // 'atThePark': {
+  //   _id: Random.id(),
+  //   name: 'You\'re at a park',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'basicPhotoList',
+  //   contributionTypes: [{
+  //     needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+  //     toPass: {instruction: 'Take a selfie at the park!'}, numberNeeded: 2
+  //   }],
+  //   description: 'This is a simple experience for testing',
+  //   notificationText: 'Please participate in this test experience!',
+  // },
   'bumped': {
     _id: Random.id(),
-    name: 'You just bumped into someone',
+    name: 'Bumped',
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
       needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '2'},
-      toPass: {instruction: 'Say something to the person you bumped into'}, numberNeeded: 1
+      toPass: {instruction: 'Say something to the person you bumped into'}, numberNeeded: 2
     }],
-    description: 'This is a simple experience for testing',
-    notificationText: 'Please participate in this test experience!',
+    description: 'You just bumped into someone!',
+    notificationText: 'You just bumped into someone! Find out who it is',
   },
   'scavengerHunt': {
     _id: Random.id(),
@@ -138,6 +138,9 @@ let EXPERIENCES = {
     }, {
       needName: 'the_moon', situation: {detector: DETECTORS.night._id, number: '1'},
       toPass: {instruction: 'Take a photo of the moon'}, numberNeeded: 1
+    },{
+      needName: 'night_sky', situation: {detector: DETECTORS.night._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the night sky'}, numberNeeded: 1
     },{
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 1

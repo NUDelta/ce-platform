@@ -9,7 +9,7 @@ import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
 import { Users } from '../users/users.js';
 
-import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers } from '../users/methods';
+import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _addToPastIncidentToUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
 import { doesUserMatchNeed } from '../experiences/methods';
 
 /**
@@ -103,7 +103,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
       let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
-        adminUpdatesForRemovingUsersToIncident([uid], assignment._id, needUserMap.needName);
+        adminUpdatesForRemovingUsersToIncidentEntirely([uid], assignment._id, needUserMap.needName);
       }
     });
   });
@@ -129,12 +129,26 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
+ // user participated so need to remove from active incidents and add to past incidents
 export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
 
   console.log("removing the user right now");
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeActiveIncidentFromUsers(uids, iid);
+};
+
+/**
+ *
+ * @param uids {[string]} users to remove
+ * @param iid {string} incident to remove users from
+ * @param needName {string} name of need to remove users from
+ */
+ // user location moved but did not participate. remove incident entirely from user
+export const adminUpdatesForRemovingUsersToIncidentEntirely = (uids, iid, needName) => {
+  //TODO: make this function take a single user not an array
+  _removeUsersFromAssignmentDb(uids, iid, needName);
+  _removeIncidentFromUsersEntirely(uids, iid);
 };
 
 /**
