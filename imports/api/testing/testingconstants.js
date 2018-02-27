@@ -170,7 +170,7 @@ let EXPERIENCES = {
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
-      needName: 'pageOne', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      needName: 'pageOne', situation: {detector: DETECTORS.night._id, number: '1'},
       toPass: {
         instruction: 'Take a photo to illustrate the sentence: Jimmy looked up at the sky!',
         firstSentence: "Jimmy looked up at the sky",

@@ -9,7 +9,7 @@ import { Locations } from '../locations/locations.js';
 import { Submissions } from '../submissions/submissions.js';
 import { Users } from '../users/users.js';
 
-import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _addToPastIncidentToUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
+import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
 import { doesUserMatchNeed } from '../experiences/methods';
 
 /**
@@ -167,9 +167,7 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
     }, {
       $addToSet: { 'needUserMaps.$.uids': uid }
     });
-
   });
-
 };
 
 /**
@@ -187,9 +185,7 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
     }, {
       $pull: { 'needUserMaps.$.uids': uid }
     });
-
   });
-
 };
 
 // const locationCursor = Locations.find();

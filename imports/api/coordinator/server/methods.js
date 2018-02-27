@@ -35,7 +35,6 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   });
 };
 
-
 /**
  * Runs the coordinator after a location update has occured.
  *
@@ -81,12 +80,9 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
       let chosenUsers = chooseUsers(needUserMap.uids, iid, needName);
       incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chosenUsers;
       console.log("the choosen users are", chosenUsers)
-
     });
   });
-
   console.log('incidentsWithUsersToRun', incidentsWithUsersToRun);
-
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 };
 
@@ -101,13 +97,13 @@ const chooseUsers = (availableUids, iid, needName) => {
 
   let usersWeAlreadyHave = needMap.uids;
 
-  if(usersWeAlreadyHave.length === numberPeopleNeeded){
+  if (usersWeAlreadyHave.length === numberPeopleNeeded){
     console.log("we have all the users we need which is ",usersWeAlreadyHave.length,numberPeopleNeeded);
     return [];
-  }else if(usersWeAlreadyHave.length > numberPeopleNeeded){
+  } else if (usersWeAlreadyHave.length > numberPeopleNeeded){
     console.log("WHY IS THIS HAPPENING ERRORRORO");
     return [];
-  }else{
+  } else{
     let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
 
     let newUsers = availableUids.filter(function(x){
@@ -120,35 +116,5 @@ const chooseUsers = (availableUids, iid, needName) => {
     console.log("therefore we pick", chosen);
 
     return chosen;
-
   }
-
 };
-
-// //TODO: THIS IS DUMB, remove, oops...
-// /**
-//  * Given a set of users, it chooses a subset of the given number
-//  *  based on how many other experiences users are available for.
-//  *
-//  * @param uids {[string]} uids available for the incident
-//  * @param numberPeopleNeeded {int} number of users we need to choose for the incident
-//  * @returns {[string]} uids chosen for the incident
-//  */
-// const chooseUsers = (uids, numberPeopleNeeded) => {
-//   let userPopularityMap = {};
-//   _.forEach(uids, (uid) => {
-//     userPopularityMap[uid] = Availability.find({
-//       'needUserMaps': {
-//         '$elemMatch': {
-//           'uids': uid
-//         }
-//       }
-//     }).count();
-//   });
-//
-//   uids.sort(function (a, b) {
-//     return userPopularityMap[a] > userPopularityMap[b];
-//   });
-//
-//   return uids.slice(0, numberPeopleNeeded);
-// };

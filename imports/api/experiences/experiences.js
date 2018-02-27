@@ -100,9 +100,5 @@ Schema.Experience = new SimpleSchema({
     label: 'Experience image url',
     optional: true
   },
-
 });
 Experiences.attachSchema(Schema.Experience);
-
-
-
