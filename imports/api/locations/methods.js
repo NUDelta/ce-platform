@@ -39,12 +39,10 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     console.log(Availability.findOne(av._id).needUserMaps[0].uids);
   });
 
-
   getAffordancesFromLocation(lat, lng, function (affordances) {
     updateLocationInDb(uid, lat, lng, affordances);
     updateAssignmentDbdAfterUserLocationChange(uid, affordances);
     sendToMatcher(uid, affordances);
-
     callback();
   });
 
@@ -65,7 +63,6 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 };
@@ -86,7 +83,7 @@ const userIsAvailableToParticipate = (uid) => {
     time = time * 30;
   } else if (CONFIG.MODE === "PROD") {
     time = time * 80;
-  }else {
+  } else {
     time = time * 1;
   }
   console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);

@@ -35,7 +35,6 @@ export const findMatchesForUser = (uid, affordances) => {
       }
     });
   });
-
   return matches;
 };
 
@@ -56,7 +55,6 @@ export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
   let matchP = matchAffordancesWithDetector(affordances, detectorId);
   return matchP;
 };
-
 
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({

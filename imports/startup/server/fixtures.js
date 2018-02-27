@@ -28,7 +28,6 @@ Meteor.startup(() => {
       createTestData();
     }
   }
-
 });
 
 Meteor.methods({
@@ -73,4 +72,3 @@ function createTestData(){
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid + " " + uid2 + " " +  uid3);
 }
-

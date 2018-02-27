@@ -17,7 +17,6 @@ import { CONSTANTS } from '../testing/testingconstants';
  * @returns {object} dictionary of iids and needs in form {iid:[need], iid:[need]}
  */
 export const getUnfinishedNeedNames = function () {
-
   let submissions = Submissions.find({
       uid: null
     }, {
@@ -38,7 +37,6 @@ export const getUnfinishedNeedNames = function () {
       unfinishedNeeds[iid] = [needName]
     }
   });
-
   return unfinishedNeeds; //{iid:[need], iid:[need]}
 };
 
@@ -63,7 +61,6 @@ function adminUpdates(mostRecentSub) {
 
   adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid,
     mostRecentSub.needName);
-
 }
 
 const submissionsCursor = Submissions.find({});
@@ -75,7 +72,6 @@ const submissionsHandle = submissionsCursor.observe({
     runCallbacks(submission);
   }
 });
-
 
 Meteor.methods({
   updateSubmission(submission) {
@@ -130,7 +126,6 @@ function runCallbacks(mostRecentSub) {
 
 
 class CallbackManager {
-
   constructor(mostRecentSubmission) {
     this.submission = mostRecentSubmission;
   }
@@ -178,14 +173,10 @@ class CallbackManager {
         uid: {$ne: null},
       }).count();
     }
-
   }
 
 //trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future
   timeSinceFirstSubmission(need) {
     return number; //minutes
   }
-
-
 }
-
