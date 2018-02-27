@@ -110,5 +110,35 @@ def threeUsersParticipateInExperiences():
 
 	print "yay it all worked!!"
 
+def oneUserMoving():
+    print "Log in as user a"
+    time.sleep(2)
+    setLocation(park, sys.argv[1])
+    print "location set to park"
+
+    time.sleep(2)
+    setLocation((42.056836, -87.675941), sys.argv[1])
+    print "slight movement 1"
+
+    time.sleep(2)
+    setLocation((42.056830, -87.67595), sys.argv[1])
+    print "slight movement 2"
+
+    time.sleep(2)
+    setLocation((42.056835, -87.675942), sys.argv[1])
+    print "slight movement 3"
+
+    time.sleep(2)
+    setLocation((42.05684, -87.67593), sys.argv[1])
+    print "slight movement 4"
+
+    time.sleep(2)
+    setLocation((42.05685, -87.67592), sys.argv[1])
+    print "slight movement"
+
+
+
+
+
 if __name__ == "__main__":
-	threeUsersParticipateInExperiences()
+	oneUserMoving()

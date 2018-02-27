@@ -35,6 +35,9 @@ Meteor.methods({
   freshDatabase() {
     clearDatabase();
     createTestData();
+  },
+  startTestExperiences(){
+    createTestExperiences();
   }
 });
 
@@ -49,6 +52,15 @@ function clearDatabase () {
   Detectors.remove({});
 }
 
+function createTestExperiences(){
+  Object.values(CONSTANTS.experiences).forEach(function (value) {
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  });
+  log.info(`Started ${ Experiences.find().count() } experiences`);
+}
+
 function createTestData(){
   Object.values(CONSTANTS.users).forEach(function (value) {
     Accounts.createUser(value)
@@ -60,12 +72,7 @@ function createTestData(){
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-  Object.values(CONSTANTS.experiences).forEach(function (value) {
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  });
-  log.info(`Started ${ Experiences.find().count() } experiences`);
+  createTestExperiences();
 
   let uid = findUserByEmail('a@gmail.com')._id;
   let uid2 = findUserByEmail('b@gmail.com')._id;
