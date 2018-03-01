@@ -26,11 +26,9 @@ Template.api_custom.helpers({
 
   data() {
 
-    console.log(this.incident.contributionTypes);
     let currentNeed = this.incident.contributionTypes.find(function (x) {
       return x.needName === Router.current().params.needName;
     });
-    console.log(currentNeed);
 
     return {
       location: this.location,
@@ -142,7 +140,6 @@ Template.api_custom.events({
           alert(err);
         } else {
           //success branch of callback
-          console.log("image uploaded now we need to update it", imageFile._id);
           //add more info about the photo
           Images.update({ _id: imageFile._id }, {
             $set: {
@@ -155,7 +152,6 @@ Template.api_custom.events({
             if (err) {
               console.log('upload error,', err);
             } else {
-              console.log('upload worked', docs, needName);
             }
           });
           // TODO: setTimeout for automatically moving on if upload takes too long
@@ -176,7 +172,6 @@ Template.api_custom.events({
       submissions[image.id] = imageFile._id;
     });
 
-    console.log("content is ", submissions)
     const submissionObject = {
       uid: uid,
       eid: experience._id,

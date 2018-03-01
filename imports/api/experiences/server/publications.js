@@ -11,7 +11,7 @@ Meteor.publish('experiences.single', function (experienceId) {
 });
 
 Meteor.publish('experiences.activeUser', function () {
-  console.log('subscribing to experiences.activeUser');
+  //console.log('subscribing to experiences.activeUser');
 
   if (!this.userId) {
     this.ready();
@@ -31,7 +31,7 @@ Meteor.publish('experiences.activeUser', function () {
 });
 
 Meteor.publish('experiences.pastUser', function () {
-  console.log('subscribing to experiences.pastUser');
+  //console.log('subscribing to experiences.pastUser');
 
   if (!this.userId) {
     this.ready();

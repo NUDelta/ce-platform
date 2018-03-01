@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
-import { log, serverLog } from '../../api/logs.js';
+import { log, serverLog } from '../api/logs.js';
+import {Experiences} from "../api/experiences/experiences";
+import {createIncidentFromExperience, startRunningIncident} from "../api/incidents/methods";
 ////import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 ///Example location object returned
@@ -27,13 +29,22 @@ import { log, serverLog } from '../../api/logs.js';
 //     }
 // }
 
+
+
+
 if (Meteor.isCordova) {
+  var bgGeo = window.BackgroundGeolocation;
+
+  export const toggleLocationTracking = function (){
+    serverLog.call({ message: "toggling location tracking" + Meteor.userId() });
+    bgGeo.stop();
+    bgGeo.start();
+  };
+
   Meteor.startup(() => {
     //Configure Plugin
 
     serverLog.call({ message: "setting up location tracking for: " + Meteor.userId()});
-
-    var bgGeo = window.BackgroundGeolocation;
 
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function (location) {

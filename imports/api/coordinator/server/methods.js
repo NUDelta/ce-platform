@@ -44,10 +44,8 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 export const runCoordinatorAfterUserLocationChange = (uid, availabilityDictionary) => {
   // update availabilities of users and check if any experience incidents can be run
   let updatedAvailability = updateAvailability(uid, availabilityDictionary);
-  console.log('updatedAvailability', updatedAvailability[0].needUserMaps);
 
   let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
-  console.log('incidentsWithUsersToRun', incidentsWithUsersToRun);
 
   // add users to incidents to be run
   runNeedsWithThresholdMet(incidentsWithUsersToRun);
@@ -71,18 +69,14 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
 
     _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
       // get need object for current iid/current need and number of people
-      console.log('needUserMap', incidentMapping.needUserMaps);
 
       let iid = incidentMapping.iid;
       let needName =  needUserMap.needName;
 
-      console.log("about to choose our users!!!");
       let chosenUsers = chooseUsers(needUserMap.uids, iid, needName);
       incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chosenUsers;
-      console.log("the choosen users are", chosenUsers)
     });
   });
-  console.log('incidentsWithUsersToRun', incidentsWithUsersToRun);
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 };
 
@@ -98,7 +92,6 @@ const chooseUsers = (availableUids, iid, needName) => {
   let usersWeAlreadyHave = needMap.uids;
 
   if (usersWeAlreadyHave.length === numberPeopleNeeded){
-    console.log("we have all the users we need which is ",usersWeAlreadyHave.length,numberPeopleNeeded);
     return [];
   } else if (usersWeAlreadyHave.length > numberPeopleNeeded){
     console.log("WHY IS THIS HAPPENING ERRORRORO");
@@ -110,10 +103,7 @@ const chooseUsers = (availableUids, iid, needName) => {
       return !usersWeAlreadyHave.includes(x);
     });
 
-    console.log("we need ", dif, "more people");
-    console.log("new users are", newUsers);
     let chosen = newUsers.splice(0, dif);
-    console.log("therefore we pick", chosen);
 
     return chosen;
   }

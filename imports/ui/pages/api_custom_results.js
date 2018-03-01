@@ -8,23 +8,19 @@ Template.api_custom_results.onCreated(() => {
 
 Template.api_custom_results.helpers({
   data() {
-    console.log("results data is", this);
     return this;
   },
 });
 
 Template.registerHelper( 'getImageById', (data, id) => {
-  console.log("data: ", data);
   let image = data.images.find(function(x){
     return x._id === id;
   });
-  console.log(image);
   return image;
 });
 
 Template.photosByCategories.helpers({
   categories() {
-    console.log("results data is", this);
     let needNames = this.experience.contributionTypes.map(function(x){
       return x.needName;
     });
@@ -33,14 +29,10 @@ Template.photosByCategories.helpers({
     return [...categoriesSet];
   },
   imagesByCategory(category){
-    console.log(this.images)
-    console.log(this.images.length);
     let specific = this.images.filter(function(x){
-      console.log("image for", x.needName, category);
       return x.needName === category;
     });
 
-    console.log("specific", specific);
     return specific;
   }
 });
@@ -54,10 +46,8 @@ Template.scavengerHunt.helpers({
     return [...categoriesSet];
   },
   imagesByCategory(category){
-    console.log(this.images)
-    console.log(this.images.length);
+
     let specific = this.images.filter(function(x){
-      console.log("image for", x.needName, category);
       return x.needName === category;
     });
 

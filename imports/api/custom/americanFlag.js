@@ -32,7 +32,7 @@ export const americanFlag = new ValidatedMethod({
       'name': 'white',
       'contributions': { 'white': 'Image' },
     };
-    console.log('gonna call to create a rainbow experience');
+    //console.log('gonna call to create a rainbow experience');
 
     const experienceId = Meteor.call('api.createExperience', {
       name: 'Create a rainbow',

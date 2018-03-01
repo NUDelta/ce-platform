@@ -18,7 +18,7 @@ describe('Detector Tests', function () {
   });
 
   it('should match "grocery" for "places one can buy fruit"', function () {
-    console.log("detectorId", CONSTANTS.detectors.fruit._id)
+    //console.log("detectorId", CONSTANTS.detectors.fruit._id)
 
     let affordances = {
       'grocery': true

@@ -9,6 +9,8 @@ import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/metho
 import { getAffordancesFromLocation } from '../detectors/methods';
 import {CONFIG} from "../config";
 import {Availability} from "../coordinator/availability";
+import {Meteor} from "meteor/meteor";
+
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -19,14 +21,11 @@ import {Availability} from "../coordinator/availability";
  * @param lng {float} longitude of new location
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-  console.log("received location update", lat, lng, uid);
 
-  console.log("I think after they move we should wipe their availability");
   //TODO: this could def be a clearner call or its own function
   let availabilityObjects = Availability.find().fetch();
   _.forEach(availabilityObjects, (av) => {
     _.forEach(av.needUserMaps, (needEntry) => {
-      console.log("removing user ", uid, "from need ", needEntry.needName);
       Availability.update({
         _id: av._id,
         'needUserMaps.needName': needEntry.needName,
@@ -35,8 +34,6 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       });
     });
 
-    console.log(Availability.findOne(av._id));
-    console.log(Availability.findOne(av._id).needUserMaps[0].uids);
   });
 
   getAffordancesFromLocation(lat, lng, function (affordances) {

@@ -7,7 +7,6 @@ export const findUserByUsername = function (username) {
 };
 
 export const _addActiveIncidentToUsers = function (uids, iid) {
-  console.log("adding incident", iid, "to users", uids);
   Meteor.users.update({
     _id: { $in: uids }
   }, {
@@ -20,7 +19,6 @@ export const _addActiveIncidentToUsers = function (uids, iid) {
 };
 
 export const _removeActiveIncidentFromUsers = function (uids, iid) {
-  console.log("removing incident ", iid, " from users ", uids);
   Meteor.users.update({
     _id: { $in: uids }
   }, {
@@ -37,7 +35,6 @@ export const _removeActiveIncidentFromUsers = function (uids, iid) {
 };
 
 export const _removeIncidentFromUsersEntirely = function (uids, iid) {
-  console.log("removing incident  ", iid, " from users ", uids);
   Meteor.users.update({
     _id: { $in: uids }
   }, {

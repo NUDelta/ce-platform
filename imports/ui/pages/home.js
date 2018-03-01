@@ -15,7 +15,6 @@ Template.home.onCreated(function () {
   this.state = new ReactiveDict();
   this.state.set('render', true);
   this.autorun(() => {
-    console.log('rerunning');
     Template.instance().state.set('render', true);
     this.subscribe('experiences.activeUser');
     this.subscribe('incidents.activeUser');
@@ -64,9 +63,6 @@ Template.home.helpers({
   },
   getCurrentExperience(iid) {
     Template.instance().state.get('render');
-    console.log('all the experiences returned by subscription', Experiences.find().fetch());
-    console.log('all the incidents returned by subscription', Incidents.find().fetch());
-    console.log('all the assignments returned by subscription', Assignments.find().fetch());
 
     return {
       experience: Experiences.findOne(Incidents.findOne(iid).eid)

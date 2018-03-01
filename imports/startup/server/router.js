@@ -22,7 +22,6 @@ Router.route('/api/geolocation', { where: 'server' })
    https://ce-platform.herokuapp.com/api/geolocation
    */
   .post(function () {
-    console.log("request body:", this.request.body);
     const uid = this.request.body.userId;
     const location = this.request.body.location;
     // const activity = this.request.body.activity;

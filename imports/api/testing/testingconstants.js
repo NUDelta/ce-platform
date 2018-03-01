@@ -233,7 +233,6 @@ let EXPERIENCES = {
 };
 
 
-console.log('setting up constants');
 export const CONSTANTS = {
   'locations': LOCATIONS,
   'users': USERS,

@@ -12,7 +12,6 @@ Template.admin_locations.onCreated(function () {
   this.markers = [];
 
   this.plotLocations = () => {
-    console.log('Plotting locations...');
     this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
     Locations.find().forEach((location) => {

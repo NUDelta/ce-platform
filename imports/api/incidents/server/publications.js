@@ -14,7 +14,7 @@ Meteor.publish('incidents.byId', function (incidentId) {
 });
 
 Meteor.publish('incidents.activeUser', function () {
-  console.log('subscribing to incidents.activeUser');
+  //console.log('subscribing to incidents.activeUser');
 
   if (!this.userId) {
     this.ready();
@@ -27,7 +27,7 @@ Meteor.publish('incidents.activeUser', function () {
 });
 
 Meteor.publish('incidents.pastUser', function () {
-  console.log('subscribing to incidents.pastUser');
+  //console.log('subscribing to incidents.pastUser');
 
   if (!this.userId) {
     this.ready();

@@ -15,7 +15,7 @@ Meteor.publish('assignments.single', function (assignmentId) {
 });
 
 Meteor.publish('assignments.activeUser', function () {
-  console.log('subscribing to assignments.activeUser');
+  //console.log('subscribing to assignments.activeUser');
 
   if (!this.userId) {
     this.ready();

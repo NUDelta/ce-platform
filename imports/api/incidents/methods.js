@@ -16,7 +16,6 @@ Meteor.methods({
 });
 
 export const addContribution = (iid, contribution) =>{
-  console.log("adding contribution", iid, contribution);
   Incidents.update({
     _id: iid,
   }, {
@@ -55,14 +54,12 @@ export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    console.log("when starting incident a need is:", need);
     needUserMaps.push({needName: need.needName, uids: []});
 
     addEmptySubmissionsForNeed(incident._id, incident.eid, need);
 
   });
 
-  console.log("needUserMaps", needUserMaps);
   Availability.insert({
     _id: incident._id,
     needUserMaps: needUserMaps
@@ -90,12 +87,10 @@ export const createIncidentFromExperience = (experience) => {
     if (err) {
       console.log('error,', err);
     } else {
-      console.log('iid created')
     }
   });
 
 
-  console.log("incident after created", incident)
   return incident;
 };
 
@@ -108,10 +103,8 @@ export const createIncidentFromExperience = (experience) => {
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
 
-  console.log("incident", incident);
 
   let output = undefined;
-  console.log('getNeedFromIncidentId', iid, needName);
 
   _.forEach(incident.contributionTypes, (need) => {
     if (need.needName === needName) {

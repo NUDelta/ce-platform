@@ -25,15 +25,12 @@ import { doesUserMatchNeed } from '../experiences/methods';
  *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
 export const updateAvailability = (uid, availabilityDictionary) => {
-  console.log('updateAvailability', uid, availabilityDictionary);
   let updatedEntries = [];
 
   let availability = Availability.find().fetch();
   _.forEach(availability, (av) => {
-    console.log("availability entery", av._id);
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
-      console.log("should be skipping iid", iid);
       return;
       //TODO: does this return actuall prevent it from going into this loop?
     }
@@ -59,7 +56,6 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           }
         });
 
-        console.log("added need", needName, "to user", uid);
 
         let newusers = new Set(needUserMap.uids);
         newusers.add(uid);
@@ -69,11 +65,11 @@ export const updateAvailability = (uid, availabilityDictionary) => {
       }
     });
 
-    console.log('updatedNeeds', updatedNeeds);
+    //console.log('updatedNeeds', updatedNeeds);
     updatedEntries.push(updatedNeeds);
   });
 
-  console.log('updatedEntries', updatedEntries);
+  //console.log('updatedEntries', updatedEntries);
   return updatedEntries;
 };
 
@@ -118,7 +114,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
 export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
 
-  console.log("adminUpdatesForAddingUsersToIncident", uids, iid, needName);
+  //console.log("adminUpdatesForAddingUsersToIncident", uids, iid, needName);
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
 };
@@ -133,7 +129,6 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
 export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
 
-  console.log("removing the user right now");
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeActiveIncidentFromUsers(uids, iid);
 };

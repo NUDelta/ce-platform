@@ -18,12 +18,11 @@ import { matchAffordancesWithDetector } from "../detectors/methods";
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
-  console.log('unfinishedNeeds', unfinishedNeeds);
+  //console.log('unfinishedNeeds', unfinishedNeeds);
 
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
-      console.log("needname affordances", needName, affordances);
       let doesMatchPredicate = doesUserMatchNeed(uid, affordances, iid, needName);
 
       if (doesMatchPredicate) {
@@ -50,7 +49,7 @@ export const findMatchesForUser = (uid, affordances) => {
  * @returns {boolean} whether user matches need queried for
  */
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
-  console.log("iid in doesuser match need", iid)
+  //console.log("iid in doesuser match need", iid)
   let detectorId = getNeedFromIncidentId(iid, needName).situation.detector;
   let matchP = matchAffordancesWithDetector(affordances, detectorId);
   return matchP;
@@ -141,7 +140,7 @@ export const createExperience = new ValidatedMethod({
         name, description, image, participateTemplate, resultsTemplate, contributionGroups,
         notificationStrategy, notificationText, callbackPair
       }) {
-    console.log('validated');
+    //console.log('validated');
 
     const experience = {
       name: name,

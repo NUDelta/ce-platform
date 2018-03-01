@@ -28,7 +28,6 @@ describe('Simple End To End', function () {
       done();
 
     } else {
-      console.log("running simple end to end setup");
       second = true;
       resetDatabase();
       Accounts.createUser(CONSTANTS.users.a);
@@ -47,7 +46,6 @@ describe('Simple End To End', function () {
 
       let uid = findUserByUsername('a@gmail.com')._id;
       onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
-        console.log("incident", incident)
         done();
       });
 
@@ -59,8 +57,7 @@ describe('Simple End To End', function () {
     let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
     let iid = incident._id;
     let user = findUserByUsername('a@gmail.com');
-    console.log("user here", user);
-    console.log("iid", iid)
+
     //user has incident as an active incident
     let addedToUser = (user.profile.activeIncidents.indexOf(iid) !== -1);
     chai.assert(addedToUser, 'active incident not added to user profile');
@@ -72,7 +69,6 @@ describe('Simple End To End', function () {
       return x.needName === NEEDNAME;
     });
 
-    console.log('needUserMap', needUserMap);
     chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
     chai.assert(needUserMap.uids.indexOf(user._id) !== -1, 'uid not in needUserMap in Assignment DB');
   });
@@ -95,9 +91,7 @@ describe('Simple End To End', function () {
 
     updateSubmission(submission);
 
-    console.log("waiting after this");
     Meteor.setTimeout(function () {
-      console.log("user's active Incidents", user.profile.activeIncidents, iid);
       chai.assert((user.profile.activeIncidents.indexOf(iid) === -1), 'active incident not removed from user profile');
       chai.assert((user.profile.pastIncidents.indexOf(iid) !== -1), 'past incident not added to user profile');
       done()

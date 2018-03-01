@@ -109,13 +109,11 @@ function runCallbacks(mostRecentSub) {
   let cb = new CallbackManager(mostRecentSub)
 
   let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
-  console.log("running callbacks", callbackArray)
 
   _.forEach(callbackArray, (callbackPair) =>{
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if(eval(trigger)){
-      console.log("yes we are calling that callback")
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });
