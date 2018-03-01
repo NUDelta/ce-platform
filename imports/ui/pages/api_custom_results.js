@@ -51,7 +51,6 @@ Template.scavengerHunt.helpers({
       return x.needName === category;
     });
 
-    console.log("specific", specific);
     return specific;
   },
   getNeed(image){

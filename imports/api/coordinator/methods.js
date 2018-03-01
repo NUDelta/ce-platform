@@ -39,7 +39,6 @@ export const updateAvailability = (uid, availabilityDictionary) => {
     let userAlreadyAddedToNeed = false;
 
     _.forEach(av.needUserMaps, (needUserMap) => {
-      console.log(av.needUserMaps[needUserMap]);
       let needName = needUserMap.needName;
 
       // TODO: hacky way to prevent users from being added to multiple needs. Better ways would be (1) randomize need selection, (1.5) add to need with fewest match, (2) coordinate among users to fulfill all needs

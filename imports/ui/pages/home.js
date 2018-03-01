@@ -54,7 +54,6 @@ Template.home.helpers({
       });
     });
 
-    console.log(output);
     return output;
   },
   noActiveIncidents() {

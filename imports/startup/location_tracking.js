@@ -127,13 +127,13 @@ if (Meteor.isCordova) {
       stopOnTerminate: false,
       startOnBoot: true,
       // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
+      // url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
       method: "POST",
       autoSync: true,
       maxDaysToPersist: 1,
       logLevel: 5, //verbose
       preventSuspend: true,
-      heartbeatInterval: 60,
+      heartbeatInterval: 3600,
       pausesLocationUpdatesAutomatically: false,
       // headers: {  // <-- Optional HTTP headers
       //     "X-FOO": "bar"
