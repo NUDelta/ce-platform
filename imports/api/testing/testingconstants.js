@@ -8,16 +8,16 @@ let LOCATIONS = {
 };
 
 let USERS = {
-  'a': {
-    email: 'a@gmail.com',
+  'aaa': {
+    username: 'aaa',
     password: 'password',
   },
-  'b': {
-    email: 'b@gmail.com',
+  'bbb': {
+    username: 'bbb',
     password: 'password',
   },
-  'c': {
-    email: 'c@gmail.com',
+  'ccc': {
+    username: 'ccc',
     password: 'password',
   }
 };
@@ -52,6 +52,28 @@ let DETECTORS = {
     ],
     'rules': [
       'sunset'
+    ]
+  },'earlySunset': {
+    '_id': Random.id(),
+    'description': 'places where it\'s early sunset,',
+    'variables': [
+      'var sunset;',
+      'var sunset_time_minutes;',
+      'var minute;'
+    ],
+    'rules': [
+      '(sunset && (sunset_time_minutes > minute))'
+    ]
+  },'lateSunset': {
+    '_id': Random.id(),
+    'description': 'places where it\'s early sunset,',
+    'variables': [
+      'var sunset;',
+      'var sunset_time_minutes;',
+      'var minute;'
+    ],
+    'rules': [
+      '(sunset && (sunset_time_minutes < minute))'
     ]
   },
   'daytime': {
@@ -127,6 +149,25 @@ let EXPERIENCES = {
     description: 'You just bumped into someone!',
     notificationText: 'You just bumped into someone! Find out who it is',
   },
+  'sunset': {
+    _id: Random.id(),
+    name: 'Sunset',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'basicPhotoList',
+    contributionTypes: [{
+      needName: 'beforeSunset', situation: {detector: DETECTORS.earlySunset._id, number: '4'},
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
+    }, {
+      needName: 'duringSunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 10
+    }, {
+      needName: 'endOfSunset', situation: {detector: DETECTORS.lateSunset._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
+    },
+    ],
+    description: 'Help us create a time lapse of the sunsetting',
+    notificationText: 'Take a photo of the sunset!',
+  },
   'scavengerHunt': {
     _id: Random.id(),
     name: 'Scavenger Hunt',
@@ -170,7 +211,7 @@ let EXPERIENCES = {
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
-      needName: 'pageOne', situation: {detector: DETECTORS.night._id, number: '1'},
+      needName: 'pageOne', situation: {detector: DETECTORS.daytime._id, number: '1'},
       toPass: {
         instruction: 'Take a photo to illustrate the sentence: Jimmy looked up at the sky!',
         firstSentence: "Jimmy looked up at the sky",
@@ -202,42 +243,42 @@ export const CONSTANTS = {
 };
 
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('b@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('b@gmail.com')._id,
 //   lat: 42.054902,  //lakefill
 //   lng: -87.670197
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('c@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('c@gmail.com')._id,
 //   lat: 42.056975, //ford
 //   lng:  -87.676575
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('d@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('d@gmail.com')._id,
 //   lat: 42.059273, //garage
 //   lng: -87.673794
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('e@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('e@gmail.com')._id,
 //   lat: 42.044314,  //nevins
 //   lng: -87.682157
 // });
 //
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('g@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('g@gmail.com')._id,
 //   lat: 42.044314,  //nevins
 //   lng: -87.682157
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('h@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('h@gmail.com')._id,
 //   lat: 42.045398,  //pubs
 //   lng: -87.682431
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('i@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('i@gmail.com')._id,
 //   lat: 42.047621, //grocery, whole foods
 //   lng: -87.679488
 // });
 // Meteor.call('locations.updateUserLocationAndAffordances', {
-//   uid: Accounts.findUserByEmail('j@gmail.com')._id,
+//   uid: Accounts.findUserByUsername('j@gmail.com')._id,
 //   lat: 42.042617, //beach
 //   lng: -87.671474

@@ -31,6 +31,8 @@ if (Meteor.isCordova) {
   Meteor.startup(() => {
     //Configure Plugin
 
+    serverLog.call({ message: "setting up location tracking for: " + Meteor.userId()});
+
     var bgGeo = window.BackgroundGeolocation;
 
     //This callback will be executed every time a geolocation is recorded in the background.
@@ -45,6 +47,7 @@ if (Meteor.isCordova) {
             userId: Meteor.userId()
           }
         }, (err, res) => {
+          serverLog.call({ message: "Error with client/location-tracking sending location update to server" + Meteor.userId() });
           console.log("Error with client/location-tracking sending location update to server")
         });
       }
@@ -72,6 +75,8 @@ if (Meteor.isCordova) {
     // Fired whenever an HTTP response is received from your server.
     bgGeo.on('http', function (response) {
       console.log('http success: ', response.responseText);
+      serverLog.call({ message: "http success!!!" });
+
     }, function (response) {
       console.log('http failure: ', response.status);
     });
@@ -80,7 +85,8 @@ if (Meteor.isCordova) {
       serverLog.call({ message: "heartbeat being called!" });
       serverLog.call({ message: Meteor.userId() });
 
-      bgGeo.getCurrentPosition(callbackFn, failureFn);
+      bgGeo.stop();
+      bgGeo.start();
     });
 
     bgGeo.configure({
@@ -95,13 +101,13 @@ if (Meteor.isCordova) {
       stopOnTerminate: false,
       startOnBoot: true,
       // HTTP / SQLite config
-      //url: "http://your.server.com/locations",
+      // url: `${ Meteor.absoluteUrl() }api/geolocation`,
       method: "POST",
       autoSync: true,
       maxDaysToPersist: 1,
       logLevel: 5, //verbose
-      // preventSuspend: true,
-      // heartbeatInterval: 180,
+      preventSuspend: true,
+      heartbeatInterval: 60,
       pausesLocationUpdatesAutomatically: false,
       // headers: {  // <-- Optional HTTP headers
       //     "X-FOO": "bar"

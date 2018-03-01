@@ -7,7 +7,7 @@ import { Incidents } from '../incidents/incidents';
 import { CONSTANTS } from './testingconstants';
 import { onLocationUpdate } from '../locations/methods';
 import { createIncidentFromExperience, startRunningIncident } from '../incidents/methods';
-import { findUserByEmail } from '../users/methods';
+import { findUserByUsername } from '../users/methods';
 import { Assignments } from '../coordinator/assignments';
 import { Random } from 'meteor/random'
 import { Detectors } from "../detectors/detectors";
@@ -45,7 +45,7 @@ describe('Simple End To End', function () {
       let incident = createIncidentFromExperience(CONSTANTS.experiences.atLocation);
       startRunningIncident(incident);
 
-      let uid = findUserByEmail('a@gmail.com')._id;
+      let uid = findUserByUsername('a@gmail.com')._id;
       onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
         console.log("incident", incident)
         done();
@@ -58,7 +58,7 @@ describe('Simple End To End', function () {
   it('user gets added to experience', () => {
     let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
     let iid = incident._id;
-    let user = findUserByEmail('a@gmail.com');
+    let user = findUserByUsername('a@gmail.com');
     console.log("user here", user);
     console.log("iid", iid)
     //user has incident as an active incident
@@ -80,7 +80,7 @@ describe('Simple End To End', function () {
   it('user participates in experience', (done) => {
     let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
     let iid = incident._id;
-    let user = findUserByEmail('a@gmail.com');
+    let user = findUserByUsername('a@gmail.com');
 
     let submission = {
       uid: user._id,

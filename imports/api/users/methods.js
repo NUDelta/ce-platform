@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-export const findUserByEmail = function (email) {
-  return Meteor.users.findOne({ 'emails.0.address': email });
+export const findUserByUsername = function (username) {
+  return Meteor.users.findOne({ 'username': username });
 };
 
 export const _addActiveIncidentToUsers = function (uids, iid) {

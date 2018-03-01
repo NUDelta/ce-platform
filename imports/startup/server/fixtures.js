@@ -15,7 +15,7 @@ import { log } from '../../api/logs.js';
 import { CONSTANTS } from "../../api/testing/testingconstants";
 import { onLocationUpdate } from "../../api/locations/methods";
 import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
-import { findUserByEmail } from '../../api/users/methods';
+import { findUserByUsername } from '../../api/users/methods';
 import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
@@ -37,6 +37,9 @@ Meteor.methods({
   },
   startTestExperiences(){
     createTestExperiences();
+  },
+  startStorytime(){
+
   }
 });
 
@@ -73,9 +76,9 @@ function createTestData(){
 
   createTestExperiences();
 
-  let uid = findUserByEmail('a@gmail.com')._id;
-  let uid2 = findUserByEmail('b@gmail.com')._id;
-  let uid3 = findUserByEmail('c@gmail.com')._id;
+  let uid = findUserByUsername('aaa')._id;
+  let uid2 = findUserByUsername('bbb')._id;
+  let uid3 = findUserByUsername('ccc')._id;
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid + " " + uid2 + " " +  uid3);
 }

@@ -46,62 +46,62 @@
 //   'addLocations' ({}){
 //       console.log("adding locatins to the users");
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('a@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('a@gmail.com')._id,
 //         lat: 42.048513, //beach
 //         lng:  -87.672043
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('b@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('b@gmail.com')._id,
 //         lat: 42.054902,  //lakefill
 //         lng: -87.670197
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('c@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('c@gmail.com')._id,
 //         lat: 42.056975, //ford
 //         lng:  -87.676575
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('d@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('d@gmail.com')._id,
 //         lat: 42.059273, //garage
 //         lng: -87.673794
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('e@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('e@gmail.com')._id,
 //         lat: 42.044314,  //nevins
 //         lng: -87.682157
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('f@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('f@gmail.com')._id,
 //         lat: 42.046131,  //edzos
 //         lng: -87.681559
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('g@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('g@gmail.com')._id,
 //         lat: 42.044314,  //nevins
 //         lng: -87.682157
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('h@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('h@gmail.com')._id,
 //         lat: 42.045398,  //pubs
 //         lng: -87.682431
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('i@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('i@gmail.com')._id,
 //         lat: 42.047621, //grocery, whole foods
 //         lng: -87.679488
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('j@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('j@gmail.com')._id,
 //         lat: 42.042617, //beach
 //         lng: -87.671474
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('k@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('k@gmail.com')._id,
 //         lat: 33.7465889,  // trader joes, tustin, CA
 //         lng: -117.8094046
 //       });
 //       Meteor.call("locations.updateUserLocationAndAffordances", {
-//         uid: Accounts.findUserByEmail('l@gmail.com')._id,
+//         uid: Accounts.findUserByUsername('l@gmail.com')._id,
 //         lat: 42.03983,  // trader joes, evanston, IL
 //         lng: -87.6808372
 //       });
