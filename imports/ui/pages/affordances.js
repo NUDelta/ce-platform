@@ -42,5 +42,9 @@ Template.affordances.events({
   'click #location_toggle'(event, instance) {
     console.log("you clicked location toggle");
     Meteor.call("toggleTracking");
+  },
+  'click #try_toggle'(event, instance) {
+    console.log("you clicked try toggle");
+    Meteor.call("tryToggle");
   }
 });
