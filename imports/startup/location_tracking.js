@@ -47,8 +47,8 @@ if (Meteor.isCordova) {
   };
 
   Meteor.methods({
-    tryToggle() {
-      serverLog.call({message: "calling method tryToggle"});
+    clientLocationToggle() {
+      serverLog.call({message: "calling method clientLocationToggle"});
       toggleLocationTracking();
     }
   });
@@ -133,7 +133,7 @@ if (Meteor.isCordova) {
       maxDaysToPersist: 1,
       logLevel: 5, //verbose
       preventSuspend: true,
-      heartbeatInterval: 3600,
+      heartbeatInterval: 300,
       pausesLocationUpdatesAutomatically: false,
       // headers: {  // <-- Optional HTTP headers
       //     "X-FOO": "bar"
