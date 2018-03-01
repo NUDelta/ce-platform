@@ -34,7 +34,7 @@ let bgGeo;
 
 export const toggleLocationTracking = function () {
 
-  serverLog.call({message: "toggling location tracking " + Meteor.userId()});
+  serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
   if(bgGeo){
     serverLog.call({message: "on cordova so toggle time" });
     bgGeo.stop();
@@ -51,6 +51,7 @@ if (Meteor.isCordova) {
 
 
     serverLog.call({ message: "setting up location tracking for: " + Meteor.userId()});
+    serverLog.call({ message: "bgGeo: " + bgGeo});
 
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function (location) {
