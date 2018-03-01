@@ -1,6 +1,8 @@
 <template name="affordances">
     {{#if currentUser}}
         <div class="p-4">
+
+            <button id="location_toggle">CLICK HERE</button>
             <h4> Your current affordances </h4>
             {{#each key in affordanceKeys}}
                 {{key}} -
