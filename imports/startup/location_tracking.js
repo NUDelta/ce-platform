@@ -29,17 +29,28 @@ import {createIncidentFromExperience, startRunningIncident} from "../api/inciden
 //     }
 // }
 
-
-
+let bgGeo;
 
 if (Meteor.isCordova) {
-  var bgGeo = window.BackgroundGeolocation;
+  bgGeo = window.BackgroundGeolocation;
+} else {
+  bgGeo = null;
+}
 
-  export const toggleLocationTracking = function (){
-    serverLog.call({ message: "toggling location tracking" + Meteor.userId() });
+
+export const toggleLocationTracking = function () {
+
+  serverLog.call({message: "toggling location tracking" + Meteor.userId()});
+  if(bgGeo){
+    serverLog.call({message: "on cordova so toggle time" });
+
     bgGeo.stop();
     bgGeo.start();
-  };
+  }
+
+};
+
+if (Meteor.isCordova) {
 
   Meteor.startup(() => {
     //Configure Plugin
