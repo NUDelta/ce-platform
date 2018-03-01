@@ -26,7 +26,8 @@ Schema.Location_log = new SimpleSchema({
     type: Date,
   },
   affordances: {
-    type: [String]
+    type: Object,
+    blackbox: true
   }
 });
 

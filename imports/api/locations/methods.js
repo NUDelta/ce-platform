@@ -10,6 +10,7 @@ import { getAffordancesFromLocation } from '../detectors/methods';
 import {CONFIG} from "../config";
 import {Availability} from "../coordinator/availability";
 import {Meteor} from "meteor/meteor";
+import {Location_log} from "./location_log";
 
 
 /**
@@ -128,4 +129,11 @@ const updateLocationInDb = (uid, lat, lng, affordances) => {
       }
     });
   }
+  Location_log({
+    uid: uid,
+    lat: lat,
+    lng: lng,
+    timestamp: Date.now(),
+    affordances: affordances,
+  });
 };
