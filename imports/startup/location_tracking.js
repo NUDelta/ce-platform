@@ -29,21 +29,23 @@ import {createIncidentFromExperience, startRunningIncident} from "../api/inciden
 //     }
 // }
 
-let bgGeo;
 
-
-export const toggleLocationTracking = function () {
-
-  serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
-  if(bgGeo){
-    serverLog.call({message: "on cordova so toggle time" });
-    bgGeo.stop();
-    bgGeo.start();
-  }
-
-};
 
 if (Meteor.isCordova) {
+
+  let bgGeo = window.BackgroundGeolocation;
+
+
+  export const toggleLocationTracking = function () {
+
+    serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
+    if(bgGeo){
+      serverLog.call({message: "on cordova so toggle time" });
+      bgGeo.stop();
+      bgGeo.start();
+    }
+
+  };
 
   Meteor.startup(() => {
     //Configure Plugin
