@@ -103,6 +103,7 @@ const userIsAvailableToParticipate = (uid) => {
  */
 const updateLocationInDb = (uid, lat, lng, affordances) => {
   const entry = Locations.findOne({ uid: uid });
+  console.log("we are updating the location in the db");
   if (entry) {
     Locations.update(entry._id, {
       $set: {
@@ -129,7 +130,7 @@ const updateLocationInDb = (uid, lat, lng, affordances) => {
       }
     });
   }
-  Location_log({
+  Location_log.insert({
     uid: uid,
     lat: lat,
     lng: lng,
