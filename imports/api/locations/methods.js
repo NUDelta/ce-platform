@@ -86,11 +86,11 @@ const userIsAvailableToParticipate = (uid) => {
   } else {
     time = time * 1;
   }
-  console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);
-  console.log("now: ", Date.now(), "time: ", time);
-  console.log("dif:",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified) );
-
-  console.log("IS USER AVAIABLE TO PARTICPATE",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time)
+  // console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);
+  // console.log("now: ", Date.now(), "time: ", time);
+  // console.log("dif:",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified) );
+  //
+  // console.log("IS USER AVAIABLE TO PARTICPATE",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time)
 
   return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time ;
 };
