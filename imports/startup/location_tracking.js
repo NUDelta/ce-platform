@@ -35,7 +35,6 @@ if (Meteor.isCordova) {
 
   let bgGeo = window.BackgroundGeolocation;
 
-
   export const toggleLocationTracking = function () {
 
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
@@ -46,6 +45,13 @@ if (Meteor.isCordova) {
     }
 
   };
+
+  Meteor.methods({
+    tryToggle() {
+      serverLog.call({message: "calling method tryToggle"});
+      toggleLocationTracking();
+    }
+  });
 
   Meteor.startup(() => {
     //Configure Plugin
@@ -121,7 +127,7 @@ if (Meteor.isCordova) {
       stopOnTerminate: false,
       startOnBoot: true,
       // HTTP / SQLite config
-      // url: `${ Meteor.absoluteUrl() }api/geolocation`,
+      url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
       method: "POST",
       autoSync: true,
       maxDaysToPersist: 1,
