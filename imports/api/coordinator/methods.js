@@ -12,6 +12,21 @@ import { Users } from '../users/users.js';
 import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
 import { doesUserMatchNeed } from '../experiences/methods';
 
+
+
+export const getNeedObject = (iid, needName) =>{
+  let incident = Incidents.findOne(iid);
+  if(incident){
+    let currentNeed = incident.contributionTypes.find(function (x) {
+      return x.needName === needName;
+    });
+    return currentNeed;
+
+  }else{
+    return null;
+  }
+};
+
 /**
  * AVAILABILITY DB FUNCTIONS
  */

@@ -23,7 +23,7 @@ let USERS = {
 };
 
 let DETECTORS = {
-  'rollTheGrass': {
+  'parks': {
     '_id': Random.id(),
     'description': 'places to roll in the grass',
     'variables': [
@@ -53,29 +53,52 @@ let DETECTORS = {
     'rules': [
       'sunset'
     ]
-  },'earlySunset': {
+  }, 'sunsetIL': {
     '_id': Random.id(),
-    'description': 'places where it\'s early sunset,',
+    'description': 'places where it\'s sunset in IL,',
     'variables': [
       'var sunset;',
-      'var sunset_time_minutes;',
-      'var minute;'
+      'var america_chicago;',
+      'var clear;'
     ],
     'rules': [
-      '(sunset && (sunset_time_minutes > minute))'
-    ]
-  },'lateSunset': {
-    '_id': Random.id(),
-    'description': 'places where it\'s early sunset,',
-    'variables': [
-      'var sunset;',
-      'var sunset_time_minutes;',
-      'var minute;'
-    ],
-    'rules': [
-      '(sunset && (sunset_time_minutes < minute))'
+      '(sunset && america_chicago && clear)'
     ]
   },
+  'sunsetNY': {
+    '_id': Random.id(),
+    'description': 'places where it\'s sunset in NY,',
+    'variables': [
+      'var sunset;',
+      'var america_new_york;',
+      'var clear;'
+    ],
+    'rules': [
+      '(sunset && america_new_york && clear)'
+    ]
+  },
+  'sunsetCA': {
+    '_id': Random.id(),
+    'description': 'places where it\'s sunset in CA,',
+    'variables': [
+      'var sunset;',
+      'var america_los_angeles;',
+      'var clear;'
+    ],
+    'rules': [
+      '(sunset && america_los_angeles && clear)'
+    ]
+  },
+  // 'predictedGoodSunset': {
+  //   '_id': Random.id(),
+  //   'description': 'places where it\'s clear weather is predicted at sunset,',
+  //   'variables': [
+  //     'var sunset_predicted_weather;',
+  //   ],
+  //   'rules': [
+  //     '(sunset_predicted_weather === "clear")'
+  //   ]
+  // },
   'daytime': {
     '_id': Random.id(),
     'description': 'places where it\'s daytime,',
@@ -96,31 +119,102 @@ let DETECTORS = {
       'coffee___tea\n'
     ]
   },
+  'burgers': {
+    '_id': Random.id(),
+    'description': ' burgers,',
+    'variables': [
+      'var  burgers;'
+    ],
+    'rules': [
+      ' burgers'
+    ]
+  },
 
 
 };
 
-let storytimeCallback = function(sub){
+let storytimeCallback = function (sub) {
 
   var affordance = sub.content.affordance;
 
   let options = [
-    ["coffee", CONSTANTS.detectors.coffee._id],["sunset", CONSTANTS.detectors.sunset._id],
+    ["coffee", CONSTANTS.detectors.coffee._id], ["sunset", CONSTANTS.detectors.sunset._id],
     ["nighttime", CONSTANTS.detectors.night._id], ["daytime", CONSTANTS.detectors.daytime._id], ["park", CONSTANTS.detectors.rollTheGrass._id]
   ];
 
-  options = options.filter(function(x){
+  options = options.filter(function (x) {
     return x[1] !== affordance;
   });
 
   let contribution = {
     needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
-    toPass: {instruction: 'Take a photo to illustrate this sentence: '+ sub.content.sentence,
+    toPass: {
+      instruction: 'Take a photo to illustrate this sentence: ' + sub.content.sentence,
       dropdownChoices: {name: "affordance", options: options}
     }, numberNeeded: 1
   };
 
   addContribution(sub.iid, contribution);
+
+};
+
+
+
+
+function createBumped(){
+  let experience = {
+    name: 'Bumped',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'basicPhotoList',
+    contributionTypes: [ ],
+    description: 'You just bumped into someone!',
+    notificationText: 'You just bumped into someone!',
+    callbacks: []
+  };
+
+  let bumpedCallback = function (sub) {
+    let otherSub = Submissions.findOne({
+      uid: { $ne: sub.uid },
+      iid: sub.iid,
+      needName: sub.needName
+    });
+
+    notify([sub.uid, otherSub.uid], sub.iid, 'Find out who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+
+  let relationships = ['lovesJennie'];
+  let places = ['burgers', 'parks'];
+  _.forEach(relationships, (relationship) =>{
+    _.forEach(places, (place)=>{
+      let newVars = DETECTORS[place]['variables'];
+      newVars.push('var ' + relationship + ';');
+
+      let detector = {
+        '_id': Random.id(),
+        'description': DETECTORS[place].description,
+        'variables': newVars,
+        'rules': ['(' + DETECTORS[place].rules[0] + ') && ' + relationship ]
+      };
+
+      DETECTORS[place+relationship] = detector;
+
+      let need = {
+        needName: place,
+        situation: {detector: detector._id, number: '2'},
+        toPass: {instruction: 'You are at a' + place + ' at the same time as someone else! Take a selfie and we\'ll let you know when they send one back!'},
+        numberNeeded: 2
+      };
+      let callback = {
+        trigger: 'cb.numberOfSubmissions(\'' + place + '\') === 2',
+        function: bumpedCallback.toString(),
+      };
+
+      experience.contributionTypes.push(need);
+      experience.callbacks.push(callback)
+    })
+  });
+
+  return experience;
 
 };
 
@@ -137,34 +231,22 @@ let EXPERIENCES = {
   //   description: 'This is a simple experience for testing',
   //   notificationText: 'Please participate in this test experience!',
   // },
-  'bumped': {
-    _id: Random.id(),
-    name: 'Bumped',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'basicPhotoList',
-    contributionTypes: [{
-      needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '2'},
-      toPass: {instruction: 'Say something to the person you bumped into'}, numberNeeded: 2
-    }],
-    description: 'You just bumped into someone!',
-    notificationText: 'You just bumped into someone! Find out who it is',
-  },
+  'bumped': createBumped(),
   'sunset': {
     _id: Random.id(),
     name: 'Sunset',
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
-      needName: 'beforeSunset', situation: {detector: DETECTORS.earlySunset._id, number: '4'},
+      needName: 'sunsetIL', situation: {detector: DETECTORS.sunsetIL._id, number: '4'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }, {
-      needName: 'duringSunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
+      needName: 'sunsetCA', situation: {detector: DETECTORS.sunsetCA._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 10
     }, {
-      needName: 'endOfSunset', situation: {detector: DETECTORS.lateSunset._id, number: '1'},
+      needName: 'sunsetNY', situation: {detector: DETECTORS.sunsetNY._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
-    },
-    ],
+    },],
     description: 'Help us create a time lapse of the sunsetting',
     notificationText: 'Take a photo of the sunset!',
   },
@@ -179,10 +261,10 @@ let EXPERIENCES = {
     }, {
       needName: 'the_moon', situation: {detector: DETECTORS.night._id, number: '1'},
       toPass: {instruction: 'Take a photo of the moon'}, numberNeeded: 1
-    },{
+    }, {
       needName: 'night_sky', situation: {detector: DETECTORS.night._id, number: '1'},
       toPass: {instruction: 'Take a photo of the night sky'}, numberNeeded: 1
-    },{
+    }, {
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 1
     }, {
@@ -192,10 +274,10 @@ let EXPERIENCES = {
       needName: 'the_sun', situation: {detector: DETECTORS.daytime._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sun!'}, numberNeeded: 1
     }, {
-      needName: 'tree', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+      needName: 'tree', situation: {detector: DETECTORS.parks._id, number: '1'},
       toPass: {instruction: 'Take a photo of a tree!'}, numberNeeded: 1
     }, {
-      needName: 'leaf', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
+      needName: 'leaf', situation: {detector: DETECTORS.parks._id, number: '1'},
       toPass: {instruction: 'Take a photo of a leaf!'}, numberNeeded: 1
     }, {
       needName: 'coffee_maker', situation: {detector: DETECTORS.coffee._id, number: '1'},
@@ -215,9 +297,11 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Take a photo to illustrate the sentence: Jimmy looked up at the sky!',
         firstSentence: "Jimmy looked up at the sky",
-        dropdownChoices: {name: "affordance", options: [
-          ["coffee", DETECTORS.coffee._id],["sunset", DETECTORS.sunset._id], ["nighttime", DETECTORS.night._id], ["daytime", DETECTORS.daytime._id], ["park", DETECTORS.rollTheGrass._id]
-          ]}
+        dropdownChoices: {
+          name: "affordance", options: [
+            ["coffee", DETECTORS.coffee._id], ["sunset", DETECTORS.sunset._id], ["nighttime", DETECTORS.night._id], ["daytime", DETECTORS.daytime._id], ["park", DETECTORS.parks._id]
+          ]
+        }
       },
       numberNeeded: 1
     },

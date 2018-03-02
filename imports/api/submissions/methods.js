@@ -9,7 +9,8 @@ import {Incidents} from "../incidents/incidents";
 
 //for the callbacks
 import {addContribution} from "../incidents/methods";
-import { CONSTANTS } from '../testing/testingconstants';
+import { CONSTANTS } from '../testing/testingconstants'
+import { notify} from "../cerebro/server/methods";
 
 /**
  * Gets the needNames/iid for all unique unfilled entries in the submission DB

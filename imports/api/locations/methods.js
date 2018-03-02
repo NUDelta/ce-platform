@@ -38,6 +38,10 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
   });
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
+    console.log("user id is ", uid);
+    let userAffordances = Meteor.users.findOne(uid).profile.staticAffordances;
+
+    affordances = Object.assign({}, affordances, userAffordances);
     updateLocationInDb(uid, lat, lng, affordances);
     updateAssignmentDbdAfterUserLocationChange(uid, affordances);
     sendToMatcher(uid, affordances);

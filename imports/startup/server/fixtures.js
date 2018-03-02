@@ -76,9 +76,21 @@ function createTestData(){
 
   createTestExperiences();
 
-  let uid = findUserByUsername('aaa')._id;
+  let uid1 = findUserByUsername('aaa')._id;
   let uid2 = findUserByUsername('bbb')._id;
   let uid3 = findUserByUsername('ccc')._id;
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid + " " + uid2 + " " +  uid3);
+  Meteor.users.update({
+    _id: uid1
+  }, {
+    $set: { 'profile.staticAffordances': {"lovesJennie": true} }
+  });
+
+  Meteor.users.update({
+    _id: uid2
+  }, {
+    $set: { 'profile.staticAffordances': {"lovesJennie": true} }
+  });
+
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3);
 }

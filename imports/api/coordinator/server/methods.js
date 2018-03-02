@@ -2,7 +2,7 @@ import { Meteor } from  'meteor/meteor'
 import { Experiences } from "../../experiences/experiences";
 import { notify } from "../../cerebro/server/methods";
 import { Incidents } from "../../incidents/incidents";
-import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../methods";
+import {adminUpdatesForAddingUsersToIncident, getNeedObject, updateAvailability} from "../methods";
 import { Availability } from "../availability";
 import { getNeedFromIncidentId } from "../../incidents/methods";
 import {Submissions} from "../../submissions/submissions";
@@ -61,7 +61,6 @@ export const runCoordinatorAfterUserLocationChange = (uid, availabilityDictionar
  */
 const checkIfThreshold = (updatedIncidentsAndNeeds) => {
   //these are not needUsermaps
-  console.log('updatedIncidentsAndNeeds', updatedIncidentsAndNeeds[0]);
 
   let incidentsWithUsersToRun = {};
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
@@ -70,11 +69,16 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
     _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
       // get need object for current iid/current need and number of people
 
+
       let iid = incidentMapping.iid;
       let needName =  needUserMap.needName;
+      //get need object
 
-      let chosenUsers = chooseUsers(needUserMap.uids, iid, needName);
-      incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chosenUsers;
+      let need = getNeedObject(iid, needName);
+
+      if(needUserMap.uids.length === need.situation.number){
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = chooseUsers(needUserMap.uids, iid, needName);;
+      }
     });
   });
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}

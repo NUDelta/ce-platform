@@ -151,7 +151,17 @@ def allUsersAtPark():
     setLocation(park, sys.argv[3])
     print "location set to park for user c"
 
+def allUsersAtRestaurant():
+    setLocation(burgers, sys.argv[1])
+    setLocation(burgers, sys.argv[2])
+    setLocation(burgers, sys.argv[3])
+    print "all users at burgers"
+    setLocation(burgers, sys.argv[1])
+    setLocation(burgers, sys.argv[2])
+    setLocation(burgers, sys.argv[3])
+    print "all users at burgers"
+
 
 
 if __name__ == "__main__":
-	allUsersAtPark()
+	allUsersAtRestaurant()
