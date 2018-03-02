@@ -102,6 +102,8 @@ if (Meteor.isCordova) {
     bgGeo.on('http', function (response) {
       console.log('http success: ', response.responseText);
       serverLog.call({ message: "http success!!!" });
+      serverLog.call({ message: response });
+
 
     }, function (response) {
       console.log('http failure: ', response.status);
