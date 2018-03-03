@@ -47,10 +47,10 @@ export const notify = function (uids, iid, subject, text, route) {
 
 
 Meteor.methods({
-  sendNotification(uids, route) {
+  sendNotification(uids, subject, text, route) {
     log.cerebro('Sending manual push notifications to ' + uids);
 
-    notify(uids, null, "test subject", "test text", route);
+    notify(uids, null, subject, text, route);
   }
 });
 

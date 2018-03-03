@@ -113,8 +113,8 @@ if (Meteor.isCordova) {
       serverLog.call({ message: "heartbeat being called!" });
       serverLog.call({ message: Meteor.userId() });
 
-      bgGeo.stop();
-      bgGeo.start();
+      // bgGeo.stop();
+      // bgGeo.start();
     });
 
     bgGeo.configure({

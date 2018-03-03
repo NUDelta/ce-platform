@@ -9,6 +9,8 @@ Push.addListener('startup', (notification) => {
     serverLog.call({ message: `Cold start with ${ JSON.stringify(notification.payload) }` });
     if(Meteor.isCordova){
       let bgGeo = window.BackgroundGeolocation;
+      serverLog.call({message: "we r cordova! ", bgGeo});
+
       bgGeo.stop();
       bgGeo.start();
     }
@@ -21,6 +23,8 @@ Push.addListener('message', (notification) => {
     serverLog.call({ message: `Hot start with ${ JSON.stringify(notification.payload) }` });
     if(Meteor.isCordova){
       let bgGeo = window.BackgroundGeolocation;
+      serverLog.call({message: "we r cordova! ", bgGeo});
+
       bgGeo.stop();
       bgGeo.start();
     }
