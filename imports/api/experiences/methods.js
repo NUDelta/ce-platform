@@ -18,6 +18,7 @@ import { matchAffordancesWithDetector } from "../detectors/methods";
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
+  console.log("unfinishedNeeds", unfinishedNeeds)
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
   // unfinishedNeeds = {iid : [needName] }

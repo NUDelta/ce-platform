@@ -72,6 +72,7 @@ Template.scavengerHunt.helpers({
   }
 });
 
+
 Template.storybook.helpers({
   notFirst(index){
     return index !==0;
@@ -127,4 +128,28 @@ Template.storybook.events({
     event.preventDefault();
     plusSlides(1)
   }
+});
+
+let sunsetSlideIndex = 0;
+
+function showSlidesAuto() {
+  let i;
+  let slides = document.getElementsByClassName("sunsetSlides");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  sunsetSlideIndex++;
+  console.log("sunsetSlideIndex", sunsetSlideIndex)
+  if (sunsetSlideIndex > slides.length) {sunsetSlideIndex = 1}
+  if (sunsetSlideIndex < 1) {sunsetSlideIndex = slides.length}
+  slides[sunsetSlideIndex-1].style.display = "block";
+  setTimeout(showSlidesAuto, 2000);
+}
+
+Template.sunset.onCreated(function() {
+  this.autorun(() => {
+    window.onload = function () {
+      showSlidesAuto();
+    }
+  });
 });

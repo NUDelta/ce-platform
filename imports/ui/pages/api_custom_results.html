@@ -139,6 +139,28 @@
     </div>
 </template>
 
+<template name="sunset">
+  <head>
+    <style>
+      .title {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <div class="title">Sunsets around the US</div>
+  <div class="slideshow">
+    {{#each image in this.images}}
+      <div class="sunsetSlides">
+        {{> Template.dynamic template="displayImage" data=image}}
+        <br>
+        Sunset from ({{image.lat}}, {{image.lng}})
+      </div>
+    {{/each}}
+  </div>
+</template>
+
 <!--&lt;!&ndash; TEMPLATE FOR THANKGIVING RESULTS &ndash;&gt;-->
 <!--<template name="thanksgivingResults">-->
 <!--<head>-->
@@ -517,158 +539,5 @@
 <!--<template name="color">-->
 <!--<div class="colorBlock" id="{{this.colorId}}">-->
 <!--{{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}-->
-<!--</div>-->
-<!--</template>-->
-
-<!--&lt;!&ndash; TEMPLATE FOR AMERICAN FLAG &ndash;&gt;-->
-<!--<template name="americanFlagResults2">-->
-<!--<head>-->
-<!--<style>-->
-<!--svg {-->
-<!--/*width: 2em;-->
-<!--height: 2em;*/-->
-<!--/*position: absolute;-->
-<!--padding-top: 100px;-->
-<!--padding-left: 20px;*/-->
-<!--}-->
-<!--</style>-->
-<!--</head>-->
-<!--<div class="row">-->
-<!--<div class="col-xs-12" style="padding-top:5em">-->
-<!--<img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg"-->
-<!--width="100%" height="50em">-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-xs-2">-->
-<!--{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}-->
-<!--</div>-->
-<!--<div class="col-xs-2">-->
-<!--{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}-->
-<!--</div>-->
-<!--<div class="col-xs-2">-->
-<!--{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}-->
-<!--</div>-->
-<!--<div class="col-xs-2">-->
-<!--{{ > Template.dynamic template="star" data=(getStarBuildInfo 0)}}-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-xs-12">-->
-<!--<img class="stripe" src="http://snjtoday.images.worldnow.com/images/12835128_G.jpg"-->
-<!--width="100%" height="50em">-->
-<!--</div>-->
-<!--</div>-->
-<!--</template>-->
-
-<!--<template name="star">-->
-<!--<svg class="star" id="{{this.starId}}" width="100" height="100">-->
-<!--<defs>-->
-<!--<pattern id="img1" patternUnits="userSpaceOnUse" width="600" height="450">-->
-<!--{{ > Template.dynamic template="displaySVGImage" data=(getImage this.imageId)}}-->
-<!--</pattern>-->
-<!--</defs>-->
-<!--<polygon id="starShape"-->
-<!--points="50.902,12.632 59.339,31.768 80.13,29.507 67.777,46.382 80.13,63.257 59.339,60.996 50.902,80.132 42.464,60.996   21.673,63.257 34.027,46.382 21.673,29.507 42.464,31.768"-->
-<!--fill="url(#img1)"/>-->
-<!--</svg>-->
-<!--</template>-->
-
-<!--&lt;!&ndash; TEMPLATE FOR CHEERS &ndash;&gt;-->
-<!--<template name="cheers1_results">-->
-        <!--{{#each image in this.images}}-->
-<!--<div class="image-row image-grid col-xs-6 col-sm-4 col-md-2 col">-->
-        <!--{{#if image.isUploaded}}-->
-<!--&lt;!&ndash;small amount of lag before url is ready&ndash;&gt;-->
-<!--&lt;!&ndash;probably should add a loading animation here&ndash;&gt;-->
-<!--<img src="{{image.url store="thumbs"}}" alt="" data-index="{{@index}}">-->
-<!--{{image.details}}-->
-        <!--{{/if}}-->
-<!--</div>-->
-        <!--{{/each}}-->
-<!--</template>-->
-
-<!--&lt;!&ndash;TEMPLATE FOR STORYTIME&ndash;&gt;-->
-<!--<template name="storyPageResults">-->
-<!--<head>-->
-<!--<style>-->
-<!--.mySlides {-->
-<!--display: none-->
-<!--}-->
-
-<!--/* Slideshow container */-->
-<!--.slideshow-container {-->
-<!--max-width: 1000px;-->
-<!--position: relative;-->
-<!--margin: auto;-->
-<!--}-->
-
-<!--/* Next & previous buttons */-->
-<!--#prev, #next {-->
-<!--cursor: pointer;-->
-<!--bottom: 0px;-->
-<!--color: black;-->
-<!--font-weight: bold;-->
-<!--font-size: 50px !important;-->
-<!--border-radius: 0 3px 3px 0;-->
-<!--}-->
-
-<!--/* Position the "next button" to the right */-->
-<!--#next {-->
-<!--border-radius: 3px 0 0 3px;-->
-<!--}-->
-
-<!--.caption {-->
-<!--margin-top: 15px;-->
-<!--}-->
-
-<!--.caption-text {-->
-<!--word-wrap: break-word;-->
-<!--margin: 0 auto;-->
-<!--}-->
-
-<!--.illustration {-->
-<!--height: 350px;-->
-<!--overflow: hidden;-->
-<!--margin-top: 10px;-->
-<!--}-->
-
-<!--.img {-->
-<!--height: 350px;-->
-<!--}-->
-
-<!--#img0 {-->
-<!--display: inline;-->
-<!--}-->
-<!--</style>-->
-<!--</head>-->
-
-<!--<div class="slideshow-container">-->
-        <!--{{#each submission in this.submissions}}-->
-<!--<div class="mySlides" id="img{{@index}}">-->
-<!--<div class="illustration row">-->
-<!--{{ > Template.dynamic template="displayImage" data=(getImage submission.content.illustration)}}-->
-<!--</div>-->
-<!--<div class="row caption">-->
-<!--<div class="col-xs-2">-->
-        <!--{{#if (isFirst @index) }}-->
-<!--<a class="prev" style="font-size: 50px !important">&#10094;</a>-->
-        <!--{{/if}}-->
-<!--</div>-->
-<!--<div class="caption-text col-xs-8">-->
-        <!--{{#if (isFirst @index) }}-->
-<!--{{getText (getNextSentenceId @index) }}-->
-        <!--{{else}}-->
-<!--Jimmy looked up at the night sky.-->
-        <!--{{/if}}-->
-<!--</div>-->
-<!--<div class="col-xs-2">-->
-        <!--{{#if (notLast @index)}}-->
-<!--<a class="next" style="font-size: 50px !important">&#10095;</a>-->
-        <!--{{/if}}-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/each}}-->
 <!--</div>-->
 <!--</template>-->

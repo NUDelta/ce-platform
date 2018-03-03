@@ -541,10 +541,10 @@ let EXPERIENCES = {
     _id: Random.id(),
     name: 'Sunset',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'basicPhotoList',
+    resultsTemplate: 'sunset',
     contributionTypes: [{
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 5
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 30
     }],
     description: 'Help us create a time lapse of the sun setting',
     notificationText: 'Take a photo of the sunset!',
