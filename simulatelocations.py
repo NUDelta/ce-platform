@@ -24,6 +24,11 @@ def setLocation(location, uid):
 	        })
     #print uid + "at location " + str(location[0]) + " " + str(location[1])
 
+
+# db.locations.update(
+#    { uid: "kTwXH8rAHeutLDD83" },
+#    { "$set": {"affordances.sunset": true}}
+# )
 #This test checks that users receive experiences when they get an affordance
 #   and then loose the correct experiences when they loose the affordance
 def basicUserMovement():
@@ -82,14 +87,10 @@ def threeUsersParticipateInExperiences():
 	print "Log in as all users"
 	time.sleep(5)
 	setLocation(park, sys.argv[1])
-	print "User A should now have two experiences"
-	print "Participate in scavenger hunt"
-	time.sleep(10)
+	# time.sleep(10)
 
 	setLocation(park, sys.argv[2])
-	print "User B should now have two experiences"
-	print "Participate in scavenger hunt and restaurant"
-	time.sleep(20)
+	# time.sleep(20)
 
 	# setLocation(park, sys.argv[3])
 	# print "User C should now have one experiences"
@@ -105,10 +106,7 @@ def threeUsersParticipateInExperiences():
 	# time.sleep(5)
 
 	setLocation(burgers, sys.argv[3])
-	print "User C should only have scavenger hunt"
-	time.sleep(10)
-
-	print "yay it all worked!!"
+	# time.sleep(10)
 
 def oneUserMoving():
     print "Log in as user a"
@@ -164,4 +162,4 @@ def allUsersAtRestaurant():
 
 
 if __name__ == "__main__":
-	allUsersAtRestaurant()
+	threeUsersParticipateInExperiences()

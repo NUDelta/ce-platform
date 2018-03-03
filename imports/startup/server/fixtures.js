@@ -24,8 +24,8 @@ Meteor.startup(() => {
 
   if(!(CONFIG.MODE === "DEV" || CONFIG.MODE === "PROD")){
     if(CONFIG.DEBUG){
-      clearDatabase();
-      createTestData();
+      // clearDatabase();
+      // createTestData();
     }
   }
 });

@@ -295,12 +295,12 @@ let EXPERIENCES = {
     _id: Random.id(),
     name: 'Sunset',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'basicPhotoList',
+    resultsTemplate: 'sunset',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 5
-    }],
-    description: 'Help us create a time lapse of the sunsetting',
+        needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
+        toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 35
+      }],
+    description: 'Help us create a time lapse of the sun setting',
     notificationText: 'Take a photo of the sunset!',
   },
   'scavengerHunt': {

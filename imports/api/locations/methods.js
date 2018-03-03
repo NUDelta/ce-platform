@@ -71,6 +71,7 @@ const sendToMatcher = (uid, affordances) => {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
     console.log("availabilityDictionary", availabilityDictionary);
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+    console.log("availabilityDictionary", availabilityDictionary)
   }
 };
 
