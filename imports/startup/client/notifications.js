@@ -7,6 +7,11 @@ Push.addListener('startup', (notification) => {
 
   if (notification.payload.route) {
     serverLog.call({ message: `Cold start with ${ JSON.stringify(notification.payload) }` });
+    if(Meteor.isCordova){
+      let bgGeo = window.BackgroundGeolocation;
+      bgGeo.stop();
+      bgGeo.start();
+    }
     Router.go(notification.payload.route, { _id: notification.payload.experienceId });
   }
 });
@@ -14,6 +19,12 @@ Push.addListener('startup', (notification) => {
 Push.addListener('message', (notification) => {
   if (notification.payload.route) {
     serverLog.call({ message: `Hot start with ${ JSON.stringify(notification.payload) }` });
+    if(Meteor.isCordova){
+      let bgGeo = window.BackgroundGeolocation;
+      bgGeo.stop();
+      bgGeo.start();
+    }
     Router.go(notification.payload.route, { _id: notification.payload.experienceId });
   }
 });
+
