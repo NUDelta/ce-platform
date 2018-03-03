@@ -48,57 +48,13 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'places where it\'s sunset,',
     'variables': [
-      'var sunset;'
-    ],
-    'rules': [
-      'sunset'
-    ]
-  }, 'sunsetIL': {
-    '_id': Random.id(),
-    'description': 'places where it\'s sunset in IL,',
-    'variables': [
       'var sunset;',
-      'var america_chicago;',
-      'var clear;'
+      'var clear;',
     ],
     'rules': [
-      '(sunset && america_chicago && clear)'
+      'sunset && clear'
     ]
   },
-  'sunsetNY': {
-    '_id': Random.id(),
-    'description': 'places where it\'s sunset in NY,',
-    'variables': [
-      'var sunset;',
-      'var america_new_york;',
-      'var clear;'
-    ],
-    'rules': [
-      '(sunset && america_new_york && clear)'
-    ]
-  },
-  'sunsetCA': {
-    '_id': Random.id(),
-    'description': 'places where it\'s sunset in CA,',
-    'variables': [
-      'var sunset;',
-      'var america_los_angeles;',
-      'var clear;'
-    ],
-    'rules': [
-      '(sunset && america_los_angeles && clear)'
-    ]
-  },
-  // 'predictedGoodSunset': {
-  //   '_id': Random.id(),
-  //   'description': 'places where it\'s clear weather is predicted at sunset,',
-  //   'variables': [
-  //     'var sunset_predicted_weather;',
-  //   ],
-  //   'rules': [
-  //     '(sunset_predicted_weather === "clear")'
-  //   ]
-  // },
   'daytime': {
     '_id': Random.id(),
     'description': 'places where it\'s daytime,',
@@ -129,6 +85,109 @@ let DETECTORS = {
       ' burgers'
     ]
   },
+  'produce': {
+    '_id': Random.id(),
+    'description': ' places where you can find fuits and veggies',
+    'variables': [
+      'var grocery;',
+      'var organic_stores;',
+      'var fruits___veggies;',
+      'var farmers_market;'
+    ],
+    'rules': [
+      '(grocery || organic_stores || fruits___veggies || farmers_market)'
+    ]
+  },
+  'rainbow': {
+    '_id': Random.id(),
+    'description': 'rainbow flag',
+    'variables': [
+      'var gay_bars;'
+    ],
+    'rules': [
+      'gay_bars'
+    ]
+  },
+  'drugstore': {
+    '_id': Random.id(),
+    'description': 'drugstores',
+    'variables': [
+      'var drugstores;',
+      'var pharmacy;'
+    ],
+    'rules': [
+      '(drugstores || pharmacy)'
+    ]
+  },
+ 'costume_store': {
+    '_id': Random.id(),
+    'description': 'costume_store',
+    'variables': [
+      'var costumes;',
+      'var party_supplies;'
+    ],
+    'rules': [
+      '(party_supplies || costumes)'
+    ]
+  },
+  'irish': {
+    '_id': Random.id(),
+    'description': 'irish',
+    'variables': [
+      'var irish_pub;',
+      'var irish;'
+    ],
+    'rules': [
+      '(irish_pub || irish)'
+    ]
+  },
+  'gas_stations': {
+    '_id': Random.id(),
+    'description': 'hairsalon',
+    'variables': [
+      'var men_s_hair_salons;',
+      'var hair_salons;',
+      'var hair_stylists;',
+      'var blow_dry_out_services;',
+      'var barbers;'
+    ],
+    'rules': [
+      '(men_s_hair_salons || hair_salons || hair_stylists || blow_dry_out_services || barbers)'
+    ]
+  },
+  'gas_station': {
+    '_id': Random.id(),
+    'description': 'gas_stations',
+    'variables': [
+      'var gas_stations;'
+    ],
+    'rules': [
+      'gas_stations'
+    ]
+  },
+  'coffee': {
+    '_id': Random.id(),
+    'description': 'coffee',
+    'variables': [
+      'var coffee___tea;',
+      'var cafes;',
+      'var coffeeshops;'
+    ],
+    'rules': [
+      '(coffee___tea || cafes || coffeeshops)'
+    ]
+  },
+  'bank': {
+    '_id': Random.id(),
+    'description': 'banks',
+    'variables': [
+      'var banks___credit_unions;'
+    ],
+    'rules': [
+      'banks___credit_unions'
+    ]
+  },
+
 
 
 };
@@ -238,15 +297,9 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
-      needName: 'sunsetIL', situation: {detector: DETECTORS.sunsetIL._id, number: '4'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
-    }, {
-      needName: 'sunsetCA', situation: {detector: DETECTORS.sunsetCA._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
-    }, {
-      needName: 'sunsetNY', situation: {detector: DETECTORS.sunsetNY._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
-    },],
+      needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 5
+    }],
     description: 'Help us create a time lapse of the sunsetting',
     notificationText: 'Take a photo of the sunset!',
   },

@@ -60,7 +60,7 @@ function createTestExperiences(){
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   });
-  log.info(`Started ${ Experiences.find().count() } experiences`);
+  log.info(`Created ${ Experiences.find().count() } experiences`);
 }
 
 function createTestData(){
