@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Push } from 'meteor/raix:push';
 import { log } from '../../logs.js';
 import { CONFIG } from '../../config.js';
+import {toggleLocationTracking} from "../../../startup/location_tracking";
 
 /**
  * _sendPush - sends a notification to the given user
@@ -43,6 +44,15 @@ export const notify = function (uids, iid, subject, text, route) {
 
 };
 
+
+
+Meteor.methods({
+  sendNotification(uids, route) {
+    log.cerebro('Sending manual push notifications to ' + uids);
+
+    notify(uids, null, "test subject", "test text", route);
+  }
+});
 
 /**
  * _sendPush - see above!
