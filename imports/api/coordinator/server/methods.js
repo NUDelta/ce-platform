@@ -69,7 +69,7 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
 
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
     let allChosenUsers = [];
-    
+
     incidentsWithUsersToRun[incidentMapping.iid] = {};
     console.log("for each incident mapping, using this one: ", incidentMapping);
     _.forEach(incidentMapping.needUserMaps, (needUserMap) => {

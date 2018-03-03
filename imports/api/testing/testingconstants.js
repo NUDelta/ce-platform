@@ -1,4 +1,4 @@
-import {addContribution} from "../incidents/methods";
+import {addContribution} from '../incidents/methods';
 
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
@@ -8,30 +8,56 @@ let LOCATIONS = {
 };
 
 let USERS = {
-  'aaa': {
-    username: 'aaa',
+  'garrett': {
+    username: 'garrett',
     password: 'password',
   },
-  'bbb': {
-    username: 'bbb',
+  'garretts_brother': {
+    username: 'garretts_brother',
     password: 'password',
   },
-  'ccc': {
-    username: 'ccc',
+  'meg': {
+    username: 'meg',
+    password: 'password',
+  },
+  'megs_sister': {
+    username: 'megs_sister',
+    password: 'password',
+  },
+  'andrew': {
+    username: 'andrew',
+    password: 'password',
+  },
+  'josh': {
+    username: 'josh',
     password: 'password',
   }
 };
 
 let DETECTORS = {
-  'parks': {
+  'field': {
     '_id': Random.id(),
-    'description': 'places to roll in the grass',
+    'description': 'fields',
     'variables': [
-      'var parks;',
-      'var gardens;',
+        'var baseball_fields;',
+        'var stadiums___arenas;',
+        'var soccer;',
+        'var parks;'
     ],
     'rules': [
-      '(parks || gardens)'
+      '(parks || soccer || baseball_fields || stadiums___arenas)'
+    ]
+  },
+  'niceish_day': {
+    '_id': Random.id(),
+    'description': 'niceish_day',
+    'variables': [
+        'var clouds;',
+        'var clear;',
+        'var daytime;'
+    ],
+    'rules': [
+      'daytime && (clouds || clear)'
     ]
   },
   'night': {
@@ -75,14 +101,24 @@ let DETECTORS = {
       'coffee___tea\n'
     ]
   },
-  'burgers': {
+  'library': {
     '_id': Random.id(),
-    'description': ' burgers,',
+    'description': ' libaries,',
     'variables': [
-      'var  burgers;'
+      'var  libraries;'
     ],
     'rules': [
-      ' burgers'
+      ' libraries'
+    ]
+  },
+  'gym': {
+    '_id': Random.id(),
+    'description': ' gym,',
+    'variables': [
+      'var  gyms;'
+    ],
+    'rules': [
+      ' gyms'
     ]
   },
   'produce': {
@@ -141,7 +177,7 @@ let DETECTORS = {
       '(irish_pub || irish)'
     ]
   },
-  'gas_stations': {
+  'hair_salon': {
     '_id': Random.id(),
     'description': 'hairsalon',
     'variables': [
@@ -187,36 +223,258 @@ let DETECTORS = {
       'banks___credit_unions'
     ]
   },
-
-
+  'beer': {
+    '_id': Random.id(),
+    'description': 'beer',
+    'variables': [
+      'var beer_bar;',
+      'var bars;',
+      'var sports_bars;',
+      'var dive_bars;',
+      'var irish_pub;',
+      'var pubs;',
+      'var beer_tours;',
+      'var beer_garden;',
+      'var beer;',
+      'var breweries;'
+    ],
+    'rules': [
+      '(bars || sports_bars || beer_bar || beer || dive_bars || irish_pub || pubs || beer_tours || beer_garden || breweries)'
+    ]
+  },
+  'train': {
+    '_id': Random.id(),
+    'description': 'trains',
+    'variables': [
+      'var public_transportation;',
+      'var trains;',
+      'var train_stations;'
+    ],
+    'rules': [
+      '(trains || train_stations || public_transportation)'
+    ]
+  },
+  'forest': {
+    '_id': Random.id(),
+    'description': 'forests',
+    'variables': [
+      'var campgrounds;',
+      'var zoos;',
+      'var parks;',
+      'var botanical_gardens;',
+      'var hiking;'
+    ],
+    'rules': [
+      '(campgrounds || botanical_gardens || hiking || zoos || parks)'
+    ]
+  },
+  'dinning_hall': {
+    '_id': Random.id(),
+    'description': 'dinninghalls',
+    'variables': [
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;'
+    ],
+    'rules': [
+      '(diners || restaurants || cafeteria || food_court)'
+    ]
+  },
+  'castle': {
+    '_id': Random.id(),
+    'description': 'dinninghalls',
+    'variables': [
+      'var religious_schools;',
+      'var churches;',
+      'var landmarks___historical_buildings;',
+      'var buddhist_temples;',
+      'var hindu_temples;',
+      'var synagogues;',
+      'var mosques;'
+    ],
+    'rules': [
+      '(mosques || hindu_temples || buddhist_temples || synagogues || churches || religious_schools || landmarks___historical_buildings)'
+    ]
+  },
+  'bar': {
+    '_id': Random.id(),
+    'description': 'bars',
+    'variables': [
+        'var dive_bars;',
+        'var gay_bars;',
+        'var country_dance_halls;',
+        'var tapas_bars;',
+        'var pool_halls;',
+        'var champagne_bars;',
+        'var club_crawl;',
+        'var tiki_bars;',
+        'var sports_bars;',
+        'var island_pub;',
+        'var karaoke;',
+        'var piano_bars;',
+        'var pop_up_restaurants;',
+        'var irish_pub;',
+        'var speakeasies;',
+        'var lounges;',
+        'var pubs;',
+        'var whiskey_bars;',
+        'var music_venues;',
+        'var bar_crawl;',
+        'var brazilian;',
+        'var irish;',
+        'var cocktail_bars;',
+        'var bars;',
+        'var nightlife;'
+    ],
+    'rules': [
+    '(dive_bars || gay_bars) || ((tapas_bars || country_dance_halls) || ((pool_halls || champagne_bars) || ((club_crawl || tiki_bars) || ((sports_bars || island_pub) || ((karaoke || piano_bars) || ((pop_up_restaurants || irish_pub) || ((speakeasies || lounges) || ((pubs || whiskey_bars) || ((music_venues || bar_crawl) || ((brazilian || irish) || ((bars || nightlife) || cocktail_bars)))))))))))'
+    ]
+  },
+  'grocery': {
+    '_id': Random.id(),
+    'description': 'grocery',
+    'variables': [
+      'var ethnic_grocery;',
+      'var international_grocery;',
+      'var grocery;',
+      'var fruits___veggies;',
+      'var farmers_market;'
+    ],
+    'rules': [
+      '(farmers_market || international_grocery || ethnic_grocery || grocery || fruits___veggies)'
+    ]
+  },
+  'restaurant': {
+    '_id': Random.id(),
+      'description': 'grocery',
+      'variables': [
+      'var american__traditional_;',
+      'var american__new_;',
+      'var latin_american;',
+      'var pizza;',
+      'var pasta_shops;',
+      'var burgers;',
+      'var italian;',
+      'var dominican;',
+      'var trinidadian;',
+      'var halal;',
+      'var food_court;',
+      'var arabian;',
+      'var pakistani;',
+      'var indian;',
+      'var himalayan_nepalese;',
+      'var afghan;',
+      'var persian_iranian;',
+      'var lebanese;',
+      'var vegetarian;',
+      'var middle_eastern;',
+      'var kosher;',
+      'var chinese;',
+      'var mediterranean;',
+      'var filipino;',
+      'var puerto_rican;',
+      'var ethnic_food;',
+      'var african;',
+      'var soul_food;',
+      'var pub_food;',
+      'var buffets;',
+      'var mongolian;',
+      'var brazilian;',
+      'var hot_pot;',
+      'var fast_food;',
+      'var vegan;',
+      'var sushi_bars;',
+      'var salad;',
+      'var japanese;',
+      'var korean;',
+      'var cafeteria;',
+      'var sandwiches;',
+      'var imported_food;',
+      'var restaurants;',
+      'var diners;',
+      'var barbeque;',
+      'var soup;'
+    ],
+    'rules': [
+      '( dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || cafeteria || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
+    ]
+  },
 
 };
 
-let storytimeCallback = function (sub) {
 
-  var affordance = sub.content.affordance;
+function createStorytime(){
+  let storytimeCallback = function (sub) {
 
-  let options = [
-    ["coffee", CONSTANTS.detectors.coffee._id], ["sunset", CONSTANTS.detectors.sunset._id],
-    ["nighttime", CONSTANTS.detectors.night._id], ["daytime", CONSTANTS.detectors.daytime._id], ["park", CONSTANTS.detectors.rollTheGrass._id]
-  ];
+    var affordance = sub.content.affordance;
 
-  options = options.filter(function (x) {
-    return x[1] !== affordance;
-  });
+    let options = [
+            ['Drinking butterbeer', DETECTORS.beer._id], 
+            ['Hogwarts Express at Platform 9 3/4', DETECTORS.train._id], 
+            ['Forbidden Forest', DETECTORS.forest._id], 
+            ['Dinner at the Great Hall', DETECTORS.dinning_hall._id], 
+            ['Castle', DETECTORS.castle._id], 
+            ['Quidditch Pitch', DETECTORS.field._id], 
+            ['Training in the Room of Requirement ', DETECTORS.gym._id]
+          ];
 
-  let contribution = {
-    needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
-    toPass: {
-      instruction: 'Take a photo to illustrate this sentence: ' + sub.content.sentence,
-      dropdownChoices: {name: "affordance", options: options}
-    }, numberNeeded: 1
+    options = options.filter(function (x) {
+      return x[1] !== affordance;
+    });
+
+    let contribution = {
+      needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
+      toPass: {
+        instruction: 'Take a photo to illustrate this sentence: ' + sub.content.sentence,
+        dropdownChoices: {name: 'affordance', options: options}
+      }, numberNeeded: 1
+    };
+
+    addContribution(sub.iid, contribution);
+
   };
 
-  addContribution(sub.iid, contribution);
+  let dropdownOptions = [
+            ['Drinking butterbeer', DETECTORS.beer._id], 
+            ['Hogwarts Express at Platform 9 3/4', DETECTORS.train._id], 
+            ['Forbidden Forest', DETECTORS.forest._id], 
+            ['Dinner at the Great Hall', DETECTORS.dinning_hall._id], 
+            ['Castle', DETECTORS.castle._id], 
+            ['Quidditch Pitch', DETECTORS.field._id], 
+            ['Training in the Room of Requirement ', DETECTORS.gym._id]
+          ];
 
-};
+  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.'
 
+  let experience = {
+    _id: Random.id(),
+    name: 'Storytime',
+    participateTemplate: 'storyPage',
+    resultsTemplate: 'storybook',
+    contributionTypes: [{
+      needName: 'pageOne', situation: {detector: DETECTORS.niceish_day._id, number: '1'},
+      toPass: {
+        instruction: 'Take a photo to illustrate the sentence: ' + firstSentence,
+        firstSentence: firstSentence,
+        dropdownChoices: {
+          name: 'affordance', options: dropdownOptions
+        }
+      },
+      numberNeeded: 1
+    },
+    ],
+    description: 'We\'re writing a collective story!',
+    notificationText: 'Help us write a story!',
+    callbacks: [{
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() < 5)',
+      function: storytimeCallback.toString(),
+    }]
+  };
+
+  return experience;
+
+}
 
 
 
@@ -241,30 +499,30 @@ function createBumped(){
     notify([sub.uid, otherSub.uid], sub.iid, 'Find out who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
-  let relationships = ['lovesJennie'];
-  let places = ['burgers', 'parks'];
+  let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg'];
+  let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
   _.forEach(relationships, (relationship) =>{
     _.forEach(places, (place)=>{
-      let newVars = DETECTORS[place]['variables'];
+      let newVars = DETECTORS[place[0]]['variables'];
       newVars.push('var ' + relationship + ';');
 
       let detector = {
         '_id': Random.id(),
-        'description': DETECTORS[place].description,
+        'description': DETECTORS[place[0]].description,
         'variables': newVars,
-        'rules': ['(' + DETECTORS[place].rules[0] + ') && ' + relationship ]
+        'rules': ['(' + DETECTORS[place[0]].rules[0] + ') && ' + relationship ]
       };
 
       DETECTORS[place+relationship] = detector;
 
       let need = {
-        needName: place,
+        needName: place[0],
         situation: {detector: detector._id, number: '2'},
-        toPass: {instruction: 'You are at a' + place + ' at the same time as someone else! Take a selfie and we\'ll let you know when they send one back!'},
+        toPass: {instruction: 'You are at a' + place[1] + ' at the same time as someone else! Take a selfie and we\'ll let you know when they send one back!'},
         numberNeeded: 2
       };
       let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place + '\') === 2',
+        trigger: 'cb.numberOfSubmissions(\'' + place[0] + '\') === 2',
         function: bumpedCallback.toString(),
       };
 
@@ -278,18 +536,6 @@ function createBumped(){
 };
 
 let EXPERIENCES = {
-  // 'atThePark': {
-  //   _id: Random.id(),
-  //   name: 'You\'re at a park',
-  //   participateTemplate: 'uploadPhoto',
-  //   resultsTemplate: 'basicPhotoList',
-  //   contributionTypes: [{
-  //     needName: 'atPark', situation: {detector: DETECTORS.rollTheGrass._id, number: '1'},
-  //     toPass: {instruction: 'Take a selfie at the park!'}, numberNeeded: 2
-  //   }],
-  //   description: 'This is a simple experience for testing',
-  //   notificationText: 'Please participate in this test experience!',
-  // },
   'bumped': createBumped(),
   'sunset': {
     _id: Random.id(),
@@ -297,10 +543,10 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'basicPhotoList',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 5
     }],
-    description: 'Help us create a time lapse of the sunsetting',
+    description: 'Help us create a time lapse of the sun setting',
     notificationText: 'Take a photo of the sunset!',
   },
   'scavengerHunt': {
@@ -309,63 +555,38 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'nighttime_selfie', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Take a photo of yourself at night!'}, numberNeeded: 1
+      needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a pint of beer'}, numberNeeded: 2
     }, {
-      needName: 'the_moon', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the moon'}, numberNeeded: 1
+      needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
+      toPass: {instruction: 'Take a photo of green produce #LeprechaunFood'}, numberNeeded: 2
     }, {
-      needName: 'night_sky', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the night sky'}, numberNeeded: 1
+      needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
+      toPass: {instruction: 'Take a photo of chocolate gold coins on display'}, numberNeeded: 2
     }, {
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset'}, numberNeeded: 1
+      needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a Leprechaun costume'}, numberNeeded: 2
     }, {
-      needName: 'daytime_selfie', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo of yourself in the daytime!'}, numberNeeded: 1
+      needName: 'leprechaun', situation: {detector: DETECTORS.irish._id, number: '1'},
+      toPass: {instruction: 'Take a photo of an Irish sign'}, numberNeeded: 2
     }, {
-      needName: 'the_sun', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sun!'}, numberNeeded: 1
+      needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
+      toPass: {instruction: 'Take a photo of some Leprechaun beard trimmings'}, numberNeeded: 2
     }, {
-      needName: 'tree', situation: {detector: DETECTORS.parks._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a tree!'}, numberNeeded: 1
+      needName: 'liquidGold', situation: {detector: DETECTORS.gas_station._id, number: '1'},
+      toPass: {instruction: 'Take a photo of liquid gold that Leprechauns use to power their vehicles'}, numberNeeded: 2
     }, {
-      needName: 'leaf', situation: {detector: DETECTORS.parks._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a leaf!'}, numberNeeded: 1
+      needName: 'potOfGold', situation: {detector: DETECTORS.bank._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 2
     }, {
-      needName: 'coffee_maker', situation: {detector: DETECTORS.coffee._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a coffee maker'}, numberNeeded: 1
-    },
+      needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
+      toPass: {instruction: 'Take a photo of a rainbow flag! Is there a pot of gold at the end of it?'}, numberNeeded: 2
+    }
     ],
     description: 'Help us find all the items on our list!',
     notificationText: 'Help us out with our scavenger hunt!',
   },
-  'storyTime': {
-    _id: Random.id(),
-    name: 'Storytime',
-    participateTemplate: 'storyPage',
-    resultsTemplate: 'storybook',
-    contributionTypes: [{
-      needName: 'pageOne', situation: {detector: DETECTORS.daytime._id, number: '1'},
-      toPass: {
-        instruction: 'Take a photo to illustrate the sentence: Jimmy looked up at the sky!',
-        firstSentence: "Jimmy looked up at the sky",
-        dropdownChoices: {
-          name: "affordance", options: [
-            ["coffee", DETECTORS.coffee._id], ["sunset", DETECTORS.sunset._id], ["nighttime", DETECTORS.night._id], ["daytime", DETECTORS.daytime._id], ["park", DETECTORS.parks._id]
-          ]
-        }
-      },
-      numberNeeded: 1
-    },
-    ],
-    description: 'We\'re writing a collective story!',
-    notificationText: 'Help us write a story!',
-    callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() < 5)',
-      function: storytimeCallback.toString(),
-    }]
-  },
+  'storyTime': createStorytime(),
 
 };
 

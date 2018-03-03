@@ -76,20 +76,28 @@ function createTestData(){
 
   createTestExperiences();
 
-  let uid1 = findUserByUsername('aaa')._id;
-  let uid2 = findUserByUsername('bbb')._id;
-  let uid3 = findUserByUsername('ccc')._id;
+  let uid1 = findUserByUsername('garrett')._id;
+  let uid2 = findUserByUsername('garretts_brother')._id;
+  let uid3 = findUserByUsername('meg')._id;
+  let uid4 = findUserByUsername('megs_sister')._id;
+  let uid5 = findUserByUsername('josh')._id;
 
   Meteor.users.update({
-    _id: uid1
+    _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesJennie": true} }
+    $set: { 'profile.staticAffordances': {"lovesGarret": true} }
   });
 
   Meteor.users.update({
-    _id: uid2
+    _id: {$in: [uid3, uid4]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesJennie": true} }
+    $set: { 'profile.staticAffordances': {"lovesMeg": true} }
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid3, uid5]}
+  }, {
+    $set: { 'profile.staticAffordances': {"lovesDTR": true} }
   });
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3);
