@@ -7,8 +7,9 @@ Push.addListener('startup', (notification) => {
 
   if (notification.payload.route) {
     serverLog.call({message: `Cold start with ${ JSON.stringify(notification.payload) }`});
+
     let bgGeo = window.BackgroundGeolocation;
-    serverLog.call({message: "we r cordova! ", bgGeo});
+    serverLog.call({message: 'we r cordova! ', bgGeo});
 
     bgGeo.stop();
     bgGeo.start();

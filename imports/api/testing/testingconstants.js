@@ -242,7 +242,7 @@ let EXPERIENCES = {
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }, {
       needName: 'sunsetCA', situation: {detector: DETECTORS.sunsetCA._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 10
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }, {
       needName: 'sunsetNY', situation: {detector: DETECTORS.sunsetNY._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2

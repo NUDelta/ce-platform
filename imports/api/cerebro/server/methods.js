@@ -38,7 +38,7 @@ export const notify = function (uids, iid, subject, text, route) {
       multi: true
     });
 
-    _sendPush(uids, subject, text, route, iid);
+    _sendPush(uids, subject, text, route, iid, true);
 
   }
 
@@ -47,10 +47,10 @@ export const notify = function (uids, iid, subject, text, route) {
 
 
 Meteor.methods({
-  sendNotification(uids, subject, text, route) {
+  sendNotification(uids, text, route) {
     log.cerebro('Sending manual push notifications to ' + uids);
 
-    notify(uids, null, subject, text, route);
+    _sendPush(uids, "", text, route, null, false);
   }
 });
 
@@ -73,7 +73,7 @@ Meteor.methods({
  * @param iid
  * @private
  */
-function _sendPush(uids, subject, text, route, iid) {
+function _sendPush(uids, subject, text, route, iid, soundP) {
   const payload = {
     title: subject,
     text: text,
@@ -92,17 +92,24 @@ function _sendPush(uids, subject, text, route, iid) {
     pushUsers = uids
   }
 
-  Push.send({
+  let notification = {
     from: 'push',
     title: subject,
     text: text,
-    badge: 1,
-    sound: 'airhorn.caf',
+    badge: 0,
     payload: payload,
     query: {
       userId: { $in: pushUsers }
     }
-  });
+  };
+
+  if(soundP){
+    notification["sound"] = 'airhorn.caf';
+    notification["badge"] = 1;
+
+  }
+
+  Push.send(notification);
 }
 
 //

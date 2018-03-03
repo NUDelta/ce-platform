@@ -27,7 +27,9 @@ export const findMatchesForUser = (uid, affordances) => {
 
       if (doesMatchPredicate) {
         if (matches[iid]) {
-          matches[iid] = matches[iid] + needName;
+          let currNeeds = matches[iid];
+          currNeeds.push(needName);
+          matches[iid] = currNeeds;
         } else {
           matches[iid] = [needName];
         }

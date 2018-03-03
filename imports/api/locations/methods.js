@@ -38,7 +38,6 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
   });
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
-    console.log("user id is ", uid);
     let user = Meteor.users.findOne(uid)
     if(user){
       let userAffordances = user.profile.staticAffordances;
@@ -46,6 +45,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       affordances = Object.assign({}, affordances, userAffordances);
       updateLocationInDb(uid, lat, lng, affordances);
       updateAssignmentDbdAfterUserLocationChange(uid, affordances);
+      console.log("sending to matcher ", uid, affordances);
       sendToMatcher(uid, affordances);
       callback();
     }
@@ -69,6 +69,7 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
+    console.log("availabilityDictionary", availabilityDictionary);
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 };
@@ -92,7 +93,7 @@ const userIsAvailableToParticipate = (uid) => {
   } else {
     time = time * 1;
   }
-  // console.log("last notif:", Meteor.users.findOne(uid).profile.lastNotified);
+  // console.log("last notif:", uid, Meteor.users.findOne(uid).profile.lastNotified);
   // console.log("now: ", Date.now(), "time: ", time);
   // console.log("dif:",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified) );
   //
