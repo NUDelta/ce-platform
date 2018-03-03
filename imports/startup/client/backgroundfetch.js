@@ -3,8 +3,12 @@ import {serverLog} from "../../api/logs";
 
 if (Meteor.isCordova) {
 
+  serverLog.call({ message: 'meteor is cordova'});
+
   Meteor.startup(() => {
     var BackgroundFetch = window.BackgroundFetch;
+    serverLog.call({ message: 'tryna do bg fetch ', BackgroundFetch});
+
 
     // Your background-fetch handler.
     var fetchCallback = function() {

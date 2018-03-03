@@ -1,5 +1,6 @@
 cordova-background-geolocation-lt@1.5.1
 cordova-custom-config@2.0.3
+cordova-plugin-background-fetch@4.0.0
 cordova-plugin-device@1.1.4
 cordova-plugin-flashlight@3.0.0
 cordova-plugin-meteor-webapp@1.4.1
