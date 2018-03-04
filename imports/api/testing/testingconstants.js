@@ -1,4 +1,5 @@
 import {addContribution} from '../incidents/methods';
+import {Submissions} from "../submissions/submissions";
 
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
@@ -458,6 +459,15 @@ function createStorytime(){
 
   let firstSentence = 'Harry Potter looked up at the clouds swirling above him.'
 
+  let sendNotification = function(sub){
+    let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
+      return x.uid;
+    });
+    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+  };
+
+
   let experience = {
     _id: Random.id(),
     name: 'Storytime',
@@ -478,8 +488,11 @@ function createStorytime(){
     description: 'We\'re writing a collective story!',
     notificationText: 'Help us write a story!',
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() < 5)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 2)',
       function: storytimeCallback.toString(),
+    }, {
+      trigger:'cb.incidentFinished()',
+      function: sendNotification.toString()
     }]
   };
 
@@ -537,6 +550,7 @@ function createBumped(){
         function: bumpedCallback.toString(),
       };
 
+
       experience.contributionTypes.push(need);
       experience.callbacks.push(callback)
     })
@@ -546,6 +560,22 @@ function createBumped(){
 
 };
 
+let sendNotificationScavenger = function(sub){
+  let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+};
+let sendNotificationSunset = function(sub){
+  let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'Our collective sunset is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+};
+
+
 let EXPERIENCES = {
   'bumped': createBumped(),
   'sunset': {
@@ -554,11 +584,15 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'sunset',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 30
+      needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }],
     description: 'Help us create a time lapse of the sun setting',
     notificationText: 'Take a photo of the sunset!',
+    callbacks: [{
+      trigger:'cb.incidentFinished()',
+      function: sendNotificationSunset.toString()
+    }]
   },
   'scavengerHunt': {
     _id: Random.id(),
@@ -567,35 +601,40 @@ let EXPERIENCES = {
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
       needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a pint of beer'}, numberNeeded: 2
+      toPass: {instruction: 'Take a photo of a pint of beer'}, numberNeeded: 1
     }, {
       needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Take a photo of green produce #LeprechaunFood'}, numberNeeded: 2
-    }, {
-      needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Take a photo of chocolate gold coins on display'}, numberNeeded: 2
-    }, {
-      needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a Leprechaun costume'}, numberNeeded: 2
-    }, {
-      needName: 'leprechaun', situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Take a photo of an Irish sign'}, numberNeeded: 2
-    }, {
-      needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Take a photo of some Leprechaun beard trimmings'}, numberNeeded: 2
-    }, {
-      needName: 'liquidGold', situation: {detector: DETECTORS.gas_station._id, number: '1'},
-      toPass: {instruction: 'Take a photo of liquid gold that Leprechauns use to power their vehicles'}, numberNeeded: 2
-    }, {
-      needName: 'potOfGold', situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 2
-    }, {
-      needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Take a photo of a rainbow flag! Is there a pot of gold at the end of it?'}, numberNeeded: 2
-    }
+      toPass: {instruction: 'Take a photo of green produce #LeprechaunFood'}, numberNeeded: 1
+    },
+    //   {
+    //   needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of chocolate gold coins on display'}, numberNeeded: 2
+    // }, {
+    //   needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of a Leprechaun costume'}, numberNeeded: 2
+    // }, {
+    //   needName: 'leprechaun', situation: {detector: DETECTORS.irish._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of an Irish sign'}, numberNeeded: 2
+    // }, {
+    //   needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of some Leprechaun beard trimmings'}, numberNeeded: 2
+    // }, {
+    //   needName: 'liquidGold', situation: {detector: DETECTORS.gas_station._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of liquid gold that Leprechauns use to power their vehicles'}, numberNeeded: 2
+    // }, {
+    //   needName: 'potOfGold', situation: {detector: DETECTORS.bank._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 2
+    // }, {
+    //   needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
+    //   toPass: {instruction: 'Take a photo of a rainbow flag! Is there a pot of gold at the end of it?'}, numberNeeded: 2
+    // }
     ],
     description: 'Help us find all the items on our list!',
     notificationText: 'Help us out with our scavenger hunt!',
+    callbacks: [{
+      trigger:'cb.incidentFinished()',
+      function: sendNotificationScavenger.toString()
+    }]
   },
   'storyTime': createStorytime(),
 

@@ -149,7 +149,7 @@ class CallbackManager {
   }
 
 //trigger used in callbacks: checks if the experience is finished
-  experienceFinished() {
+  incidentFinished() {
     let count = Submissions.find({
       iid: this.submission.iid,
       uid: null,

@@ -5,6 +5,8 @@ import {serverLog} from "../../api/logs";
 
 
 Meteor.startup(() => {
+
+  console.log("this is loading");
   GoogleMaps.load({ key: 'AIzaSyA4LczQjd7IBHE0VV-WDRo0qkkGPQJBn6I' });
 
   Accounts.ui.config({

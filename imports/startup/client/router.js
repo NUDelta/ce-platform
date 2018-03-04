@@ -90,11 +90,6 @@ Router.route('/', {
 
 
 Router.route('cron', {
-  path: 'http://localhost:12256/cron',
-  template: 'cron'
-});
-
-Router.route('cron', {
   path: '/cron',
   template: 'cron'
 });
