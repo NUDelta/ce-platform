@@ -54,7 +54,7 @@ function clearDatabase () {
 }
 
 function createTestExperiences(){
-  Object.values(CONSTANTS.experiences).forEach(function (value) {
+  Object.values(CONSTANTS.EXPERIENCES).forEach(function (value) {
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
@@ -63,12 +63,12 @@ function createTestExperiences(){
 }
 
 function createTestData(){
-  Object.values(CONSTANTS.users).forEach(function (value) {
+  Object.values(CONSTANTS.USERS).forEach(function (value) {
     Accounts.createUser(value)
   });
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
-  Object.values(CONSTANTS.detectors).forEach(function (value) {
+  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
     Detectors.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);

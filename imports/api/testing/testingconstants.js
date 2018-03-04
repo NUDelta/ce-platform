@@ -396,16 +396,22 @@ let DETECTORS = {
 function createStorytime(){
   let storytimeCallback = function (sub) {
 
+    Meteor.users.update({
+      _id: sub.uid
+    },{
+      $set: {'profile.staticAffordances.participatedInStorytime': true }
+    });
+
     var affordance = sub.content.affordance;
 
     let options = [
-            ['Drinking butterbeer', CONSTANTS.DETECTORS.beer._id],
-            ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train._id],
-            ['Forbidden Forest', CONSTANTS.DETECTORS.forest._id],
-            ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall._id],
-            ['Castle', CONSTANTS.DETECTORS.castle._id],
-            ['Quidditch Pitch', CONSTANTS.DETECTORS.field._id],
-            ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym._id]
+            ['Drinking butterbeer', CONSTANTS.DETECTORS.beer_storytime._id],
+            ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
+            ['Forbidden Forest', CONSTANTS.DETECTORS.forest_storytime._id],
+            ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall_storytime._id],
+            ['Castle', CONSTANTS.DETECTORS.castle_storytime._id],
+            ['Quidditch Pitch', CONSTANTS.DETECTORS.field_storytime._id],
+            ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym_storytime._id]
           ];
 
     options = options.filter(function (x) {
@@ -424,14 +430,30 @@ function createStorytime(){
 
   };
 
+  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
+  _.forEach(places, (place)=>{
+    let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
+    newVars.push('var participatedInStorytime;');
+
+    let detector = {
+      '_id': Random.id(),
+      'description': DETECTORS[place].description + "_storytime",
+      'variables': newVars,
+      'rules': [ '(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;' ]
+    };
+
+    DETECTORS[place+"_storytime"] = detector;
+
+  });
+
   let dropdownOptions = [
-            ['Drinking butterbeer', DETECTORS.beer._id], 
-            ['Hogwarts Express at Platform 9 3/4', DETECTORS.train._id], 
-            ['Forbidden Forest', DETECTORS.forest._id], 
-            ['Dinner at the Great Hall', DETECTORS.dinning_hall._id], 
-            ['Castle', DETECTORS.castle._id], 
-            ['Quidditch Pitch', DETECTORS.field._id], 
-            ['Training in the Room of Requirement ', DETECTORS.gym._id]
+            ['Drinking butterbeer', DETECTORS.beer_storytime._id],
+            ['Hogwarts Express at Platform 9 3/4', DETECTORS.train_storytime._id],
+            ['Forbidden Forest', DETECTORS.forest_storytime._id],
+            ['Dinner at the Great Hall', DETECTORS.dinning_hall_storytime._id],
+            ['Castle', DETECTORS.castle_storytime._id],
+            ['Quidditch Pitch', DETECTORS.field_storytime._id],
+            ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
           ];
 
   let firstSentence = 'Harry Potter looked up at the clouds swirling above him.'
@@ -500,7 +522,7 @@ function createBumped(){
         '_id': Random.id(),
         'description': DETECTORS[place[0]].description + relationship,
         'variables': newVars,
-        'rules': ['(' + DETECTORS[place[0]].rules[0] + ') && ' + relationship ]
+        'rules': [ '(' + DETECTORS[place[0]].rules[0] + ' && ' + relationship + ');' ]
       };
       DETECTORS[place[0]+relationship] = detector;
 
@@ -581,10 +603,10 @@ let EXPERIENCES = {
 
 
 export const CONSTANTS = {
-  'locations': LOCATIONS,
-  'users': USERS,
-  'experiences': EXPERIENCES,
-  'detectors': DETECTORS
+  'LOCATIONS': LOCATIONS,
+  'USERS': USERS,
+  'EXPERIENCES': EXPERIENCES,
+  'DETECTORS': DETECTORS
 
 };
 

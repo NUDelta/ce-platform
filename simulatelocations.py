@@ -137,16 +137,10 @@ def oneUserMoving():
 
 
 def allUsersAtPark():
-    print "Log in as all users"
-    time.sleep(5)
     setLocation(park, sys.argv[1])
     print "location set to park for user a"
-
-    time.sleep(5)
     setLocation(park, sys.argv[2])
     print "location set to park for user b"
-
-    time.sleep(5)
     setLocation(park, sys.argv[3])
     print "location set to park for user c"
 
