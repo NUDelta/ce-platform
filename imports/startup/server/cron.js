@@ -25,7 +25,7 @@ function sendNotificationByTimeZone(offset){
 
   });
 
-  Meteor.call('sendNotification', timezoneUids, "Please open this notification to continue receiving experiences :)", `${ Meteor.absoluteUrl() }cron`)
+  Meteor.call('sendNotification', timezoneUids, "Open this notification to be eligible to get experiences today!", `${ Meteor.absoluteUrl() }cron`)
 
 }
 
@@ -69,16 +69,16 @@ SyncedCron.add({
     sendNotificationByTimeZone(-8)
   }
 });
-// SyncedCron.add({
-//   name: 'test!!',
-//   schedule: function(parser) {
-//     // parser is a later.parse object
-//     return parser.text('at 7:00pm');
-//   },
-//   job: function() {
-//     sendNotificationByTimeZone(-6)
-//   }
-// });
+SyncedCron.add({
+  name: 'test!!',
+  schedule: function(parser) {
+    // parser is a later.parse object
+    return parser.text('at 9:20pm');
+  },
+  job: function() {
+    sendNotificationByTimeZone(-6)
+  }
+});
 
 Meteor.startup(() => {
   SyncedCron.start();
