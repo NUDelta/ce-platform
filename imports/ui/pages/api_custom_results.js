@@ -184,7 +184,7 @@ function showSlidesAuto() {
     console.log(slides.item(sunsetSlideIndex-1));
     console.log('------');
   }
-  timeout = Meteor.setTimeout(showSlidesAuto, 2000);
+  timeout = Meteor.setTimeout(showSlidesAuto, 1500);
 };
 
 Template.sunset.onRendered(function() {
