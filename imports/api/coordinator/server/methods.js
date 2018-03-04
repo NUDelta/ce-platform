@@ -1,10 +1,10 @@
-import { Meteor } from  'meteor/meteor'
-import { Experiences } from "../../experiences/experiences";
-import { notify } from "../../cerebro/server/methods";
-import { Incidents } from "../../incidents/incidents";
+import {Meteor} from 'meteor/meteor'
+import {Experiences} from "../../experiences/experiences";
+import {notify} from "../../cerebro/server/methods";
+import {Incidents} from "../../incidents/incidents";
 import {adminUpdatesForAddingUsersToIncident, getNeedObject, updateAvailability} from "../methods";
-import { Availability } from "../availability";
-import { getNeedFromIncidentId } from "../../incidents/methods";
+import {Availability} from "../availability";
+import {getNeedFromIncidentId} from "../../incidents/methods";
 import {Submissions} from "../../submissions/submissions";
 import {Assignments} from "../assignments";
 
@@ -21,8 +21,8 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 
     _.forEach(needUserMapping, (uids, needName) => {
 
-      let newUsersUids = uids.filter(function(uid){
-        return ! Meteor.users.findOne(uid).profile.activeIncidents.includes(iid);
+      let newUsersUids = uids.filter(function (uid) {
+        return !Meteor.users.findOne(uid).profile.activeIncidents.includes(iid);
       });
 
       //administrative updates
@@ -68,34 +68,39 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
 
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
     let assignment = Assignments.findOne(incidentMapping.iid);
-       let usersInIncident = [].concat.apply([], assignment.needUserMaps.map(function(needMap){
+    let usersInIncident = [].concat.apply([], assignment.needUserMaps.map(function (needMap) {
       return needMap.uids;
     }));
 
+
+
     incidentsWithUsersToRun[incidentMapping.iid] = {};
-       _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
+    _.forEach(incidentMapping.needUserMaps, (needUserMap) => {
       // get need object for current iid/current need and number of people
 
 
       let iid = incidentMapping.iid;
-      let needName =  needUserMap.needName;
+      let needName = needUserMap.needName;
       //get need object
 
       let need = getNeedObject(iid, needName);
 
-      let usersNotInIncident = needUserMap.uids.filter(function(x){
-        return !usersInIncident.includes(x);
+      let previousUsers = Submissions.find({iid: incidentMapping.iid, needName: needName}).fetch().map(function(x){
+        return x.uid;
       });
 
-      let assignmentNeed =  assignment.needUserMaps.find(function(x){
+      let usersNotInIncident = needUserMap.uids.filter(function (x) {
+        return !usersInIncident.includes(x) && !previousUsers.includes(x);
+      });
+
+      let assignmentNeed = assignment.needUserMaps.find(function (x) {
         return x.needName === needName;
       });
 
-
-      if(assignmentNeed.uids.length + usersNotInIncident.length >= need.situation.number){
+      if (assignmentNeed.uids.length + usersNotInIncident.length >= need.situation.number) {
         let newChosenUsers = chooseUsers(usersNotInIncident, iid, assignmentNeed);
         usersInIncident = usersInIncident.concat(newChosenUsers);
-               incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = newChosenUsers;
+        incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = newChosenUsers;
       }
     });
   });
@@ -109,16 +114,16 @@ const chooseUsers = (availableUids, iid, needUserMap) => {
   let usersWeAlreadyHave = needUserMap.uids;
 
 
-  if (usersWeAlreadyHave.length === numberPeopleNeeded){
-       return [];
-  } else if (usersWeAlreadyHave.length > numberPeopleNeeded){
+  if (usersWeAlreadyHave.length === numberPeopleNeeded) {
+    return [];
+  } else if (usersWeAlreadyHave.length > numberPeopleNeeded) {
     console.log("WHY IS THIS HAPPENING ERRORRORO");
     return [];
-  } else{
+  } else {
     let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
 
 
     let chosen = availableUids.splice(0, dif);
-       return chosen;
+    return chosen;
   }
 };
