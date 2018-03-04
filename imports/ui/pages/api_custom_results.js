@@ -1,13 +1,15 @@
 import { Template } from "meteor/templating";
+import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
 
 
 Template.api_custom_results.onCreated(() => {
-
+  console.log("loaded");
 });
 
 Template.api_custom_results.helpers({
   data() {
+    console.log(this);
     console.log(this.images);
     return this;
   },
@@ -144,6 +146,7 @@ Template.storybook.onCreated(function() {
   });
 });
 
+
 Template.storybook.events({
   'click .prev'(event, instance) {
     event.preventDefault();
@@ -155,10 +158,17 @@ Template.storybook.events({
   }
 });
 
-let sunsetSlideIndex = 0;
+Template.sunset.onCreated(() => {
+  window.onload = function(){
+    // showSlidesAuto();
+  }
+});
 
+let timeout = null;
+
+let sunsetSlideIndex = 1;
 function showSlidesAuto() {
-  let i;
+  // let i
   let slides = document.getElementsByClassName("sunsetSlides");
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
@@ -167,14 +177,31 @@ function showSlidesAuto() {
 
   if (sunsetSlideIndex > slides.length) {sunsetSlideIndex = 1}
   if (sunsetSlideIndex < 1) {sunsetSlideIndex = slides.length}
-  slides[sunsetSlideIndex-1].style.display = "block";
-  setTimeout(showSlidesAuto, 2000);
-}
+  if (slides[sunsetSlideIndex-1]) {
+    slides[sunsetSlideIndex-1].style.display = "block";
+  } else {
+    console.error(`slides[${sunsetSlideIndex-1}] undefined`);
+    console.log(slides.item(sunsetSlideIndex-1));
+    console.log('------');
+  }
+  timeout = Meteor.setTimeout(showSlidesAuto, 2000);
+};
 
-Template.sunset.onCreated(function() {
+Template.sunset.onRendered(function() {
   this.autorun(() => {
-    window.onload = function () {
-      showSlidesAuto();
-    }
+    showSlidesAuto();
+    // window.onload = function () {
+    //   console.log("run slideshow before");
+    //   // showSlidesAuto();
+    //   console.log("run slideshow after");
+    // }
   });
-});
+})
+
+Template.sunset.onDestroyed(function() {
+  this.autorun(() => {
+    console.log("destroyed")
+    Meteor.clearTimeout(timeout)
+    timeout = null;
+  });
+})

@@ -8,6 +8,7 @@ park =  (42.056838, -87.675940)
 burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 coffee = (42.046881, -87.679555)
+beer = (42.047105, -87.682006)
 
 def followPath(path, uid):
 	for stop in path:
@@ -167,7 +168,6 @@ def allUsersAtBars():
     setLocation((42.046251, -87.680547), sys.argv[2])
     setLocation((42.046251, -87.680547), sys.argv[3])
     print "all users at bar"
-
 
 
 if __name__ == "__main__":
