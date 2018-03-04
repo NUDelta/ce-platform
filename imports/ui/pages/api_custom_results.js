@@ -96,6 +96,11 @@ Template.scavengerHunt.helpers({
   },
   numTasksRemaining(){
     return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
+  },
+  onlySubmission(){
+    if (this.images.length<=1){
+      return true;
+    }
   }
 });
 
