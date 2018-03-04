@@ -57,10 +57,24 @@
         width: 45%;
         padding-left: 5%;
       }
+      .items-remaining {
+        padding-top: 2%;
+      }
+      #text {
+        padding-bottom: 5%;
+      }
     </style>
   </head>
   <h4>Scavenger Hunt: {{numTasksRemaining}}</h4>
-  <b>Items found</b>
+  <div id="text">
+    Thanks for participating! We'll notify you again when we think you can help us find another item.
+    {{#if onlySubmission}}
+      Check back later to see if more items have been found.
+    {{else}}
+      In the meantime, check out the items others have found.
+    {{/if}}
+  </div>
+  <b style="background-color:#273147;padding:6px;color:white;">Items found</b>
   {{#each cat in categories}}
       {{#each image in (imagesByCategory cat)}}
         <div class="img-text">
@@ -69,9 +83,9 @@
         </div>
       {{/each}}
   {{/each}}
-  <br>
-<b>Items remaining</b>
-  <ul>
+<br>
+<b style="background-color:#273147;padding:6px;color:white;margin-bottom:10px;">Items remaining</b>
+  <ul class="items-remaining">
     {{#each need in uncompletedNeeds}}
       <li>
         {{need}}
