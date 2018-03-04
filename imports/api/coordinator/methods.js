@@ -109,7 +109,14 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
       let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
-        adminUpdatesForRemovingUsersToIncidentEntirely([uid], assignment._id, needUserMap.needName);
+        Meteor.setTimeout(
+          function(){
+            adminUpdatesForRemovingUsersToIncidentEntirely([uid], assignment._id, needUserMap.needName);
+
+          },
+          15*60000);
+
+
       }
     });
   });
