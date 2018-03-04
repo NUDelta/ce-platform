@@ -482,7 +482,7 @@ function createBumped(){
   let experience = {
     name: 'Bumped',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'basicPhotoList',
+    resultsTemplate: 'bumped',
     contributionTypes: [ ],
     description: 'You just bumped into someone!',
     notificationText: 'You just bumped into someone!',

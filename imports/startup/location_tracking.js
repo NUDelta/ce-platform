@@ -63,8 +63,7 @@ if (Meteor.isCordova) {
 
     //This callback will be executed every time a geolocation is recorded in the background.
     var callbackFn = function (location) {
-      console.log('- Location: ', JSON.stringify(location));
-      serverLog.call({ message: "location package received update for: " + Meteor.userId() });
+           serverLog.call({ message: "location package received update for: " + Meteor.userId() });
 
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
@@ -89,8 +88,7 @@ if (Meteor.isCordova) {
     bgGeo.on('motionchange', function (isMoving, location) {
       if (isMoving) {
         serverLog.call({ message: "device just started moving!" });
-        console.log('Device has just started MOVING', location);
-        bgGeo.start()
+               bgGeo.start()
       } else {
         serverLog.call({ message: "device has stopped!" });
 

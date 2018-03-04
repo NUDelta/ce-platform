@@ -8,6 +8,7 @@ Template.api_custom_results.onCreated(() => {
 
 Template.api_custom_results.helpers({
   data() {
+    console.log(this.images);
     return this;
   },
 });
@@ -34,6 +35,30 @@ Template.photosByCategories.helpers({
     });
 
     return specific;
+  }
+});
+
+Template.bumped.helpers({
+  ourImages() {
+    let mySub = this.submissions.find(function(x){
+      return x.uid === Meteor.userId();
+    });
+    let otherSub = this.submissions.find(function(x){
+      return (x.needName === mySub.needName) && (x.uid !== mySub.uid);
+    });
+
+    console.log(mySub);
+
+    console.log(otherSub);
+
+    let foundImages = this.images.filter(function(x){
+      return (x._id === mySub.content.proof) || x._id === otherSub.content.proof;
+    });
+
+    console.log("Images we found ", foundImages);
+
+    return foundImages;
+
   }
 });
 
@@ -139,7 +164,7 @@ function showSlidesAuto() {
     slides[i].style.display = "none";
   }
   sunsetSlideIndex++;
-  console.log("sunsetSlideIndex", sunsetSlideIndex)
+
   if (sunsetSlideIndex > slides.length) {sunsetSlideIndex = 1}
   if (sunsetSlideIndex < 1) {sunsetSlideIndex = slides.length}
   slides[sunsetSlideIndex-1].style.display = "block";

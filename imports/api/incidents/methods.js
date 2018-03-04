@@ -40,7 +40,7 @@ const addEmptySubmissionsForNeed = (iid, eid, need) => {
   let i = 0;
   while (i < need.numberNeeded) {
     i++;
-    console.log("adding ", need.needName)
+
 
     Submissions.insert({
       eid: eid,
@@ -50,8 +50,7 @@ const addEmptySubmissionsForNeed = (iid, eid, need) => {
       if (err) {
         console.log('upload error,', err);
       } else {
-        console.log('upload complete ', docs);
-        console.log(Submissions.find().count())
+
       }
     });
 
@@ -60,8 +59,7 @@ const addEmptySubmissionsForNeed = (iid, eid, need) => {
 };
 
 export const startRunningIncident = (incident) => {
-  console.log('incident in start', incident);
-  let needUserMaps = [];
+   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
     needUserMaps.push({needName: need.needName, uids: []});

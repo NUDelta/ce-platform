@@ -6,19 +6,28 @@
     Thanks for participating in the experience {{this.experience.name}}! See results from other
     users below.<br>
     {{#each image in this.images}}
-        {{#if this.img.isUploaded}}
-            <img src="{{this.img.url store="thumbs"}}" alt="image loading...">
-        {{/if}}
+        {{> Template.dynamic template="displayImage" data=image}}
     {{/each}}
 </template>
 
 <template name="photosByCategories">
+    Thanks for participating in the experience {{this.experience.name}}! See results from other
+    users below.<br>
     {{#each cat in categories}}
         <b>Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
             {{> Template.dynamic template="displayImage" data=image}}
         {{/each}}
         <br><br>
+    {{/each}}
+</template>
+
+<template name="bumped">
+    Thanks for participating in the experience {{this.experience.name}}! See results from other
+    users below.<br>
+
+    {{#each image in ourImages}}
+        {{> Template.dynamic template="displayImage" data=image}}
     {{/each}}
 </template>
 

@@ -41,13 +41,11 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     let user = Meteor.users.findOne(uid)
     if(user){
       let userAffordances = user.profile.staticAffordances;
-      console.log("user has static affordances", user.profile.staticAffordances);
 
       affordances = Object.assign({}, affordances, userAffordances);
       updateLocationInDb(uid, lat, lng, affordances);
       updateAssignmentDbdAfterUserLocationChange(uid, affordances);
-      console.log("sending to matcher ", uid, affordances);
-      sendToMatcher(uid, affordances);
+           sendToMatcher(uid, affordances);
       callback();
     }
 
@@ -70,9 +68,8 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    console.log("availabilityDictionary", availabilityDictionary);
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
-    console.log("availabilityDictionary", availabilityDictionary)
+       runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+
   }
 };
 
@@ -101,8 +98,7 @@ const userIsAvailableToParticipate = (uid) => {
   //
   // console.log("IS USER AVAIABLE TO PARTICPATE",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time)
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time ;
-};
+  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time};
 
 /**
  * Updates the location for a user in the database.
@@ -114,8 +110,7 @@ const userIsAvailableToParticipate = (uid) => {
  */
 const updateLocationInDb = (uid, lat, lng, affordances) => {
   const entry = Locations.findOne({ uid: uid });
-  console.log("we are updating the location in the db");
-  if (entry) {
+   if (entry) {
     Locations.update(entry._id, {
       $set: {
         lat: lat,

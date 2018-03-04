@@ -2,8 +2,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { Schema } from '../../api/schema.js'
 
 Accounts.onCreateUser(function (options, user) {
-  console.log("creating user", user);
-  user.profile = user.profile || {};
+   user.profile = user.profile || {};
   user.profile.experiences = [];
   user.profile.subscriptions = [];
   user.profile.lastParticipated = null;

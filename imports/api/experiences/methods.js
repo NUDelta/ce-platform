@@ -18,7 +18,7 @@ import { matchAffordancesWithDetector } from "../detectors/methods";
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
-  console.log("unfinishedNeeds", unfinishedNeeds)
+
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
   // unfinishedNeeds = {iid : [needName] }
@@ -161,11 +161,9 @@ export const createExperience = new ValidatedMethod({
       if (err) {
         console.log(err);
       } else {
-        console.log(docs);
-      }
+             }
     });
 
-    console.log('Experience created' + id);
-    return id;
+       return id;
   }
 });

@@ -9,7 +9,7 @@ describe('data available when routed', () => {
 
   describe('when logged out', () => {
     it('has all public lists at homepage', () => {
-      console.log("TESTSSTS")
+
     });
 
   });

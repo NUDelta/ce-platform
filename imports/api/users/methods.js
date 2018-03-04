@@ -72,8 +72,7 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
 
   }).validator(),
   run({ experienceId }) {
-    console.log('experience ended so removing from user profiles');
-    return Meteor.users.update({}, { $pull: { 'profile.activeExperiences': experienceId } }, { multi: true });
+       return Meteor.users.update({}, { $pull: { 'profile.activeExperiences': experienceId } }, { multi: true });
   }
 });
 

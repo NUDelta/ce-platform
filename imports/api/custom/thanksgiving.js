@@ -34,8 +34,7 @@ export const thanksgiving = new ValidatedMethod({
       'contributions': { 'photo': 'Image', 'sentence': 'String' },
     };
 
-    console.log('gonna call to create a thanksgiving experience');
-    const experienceId = Meteor.call('api.createExperience', {
+       const experienceId = Meteor.call('api.createExperience', {
       name: 'Thanksgiving Break',
       description: 'Take a photo to share what you\'re doing this Thanksgiving break',
       image: 'https://publicholidays-us.akamaized.net/wp-content/uploads/2012/10/USA_Thanksgiving_1920_800.jpg',
