@@ -48,16 +48,16 @@ SyncedCron.add({
     sendNotificationByTimeZone(-6)
   }
 });
-// SyncedCron.add({
-//   name: 'MST TIME: Send notifications to keep location tracking alive',
-//   schedule: function(parser) {
-//     // parser is a later.parse object
-//     return parser.text('at 4:00pm also at 0:00am');
-//   },
-//   job: function() {
-//     sendNotificationByTimeZone(-7)
-//   }
-// });
+SyncedCron.add({
+  name: 'MST TIME: Send notifications to keep location tracking alive',
+  schedule: function(parser) {
+    // parser is a later.parse object
+    return parser.text('at 4:00pm also at 11:59pm');
+  },
+  job: function() {
+    sendNotificationByTimeZone(-6)
+  }
+});
 SyncedCron.add({
   name: 'PST TIME: Send notifications to keep location tracking alive',
   schedule: function(parser) {
@@ -72,7 +72,7 @@ SyncedCron.add({
   name: 'test!!',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('at 5:35pm also at 5:40pm');
+    return parser.text('at 6:00pm also at 6:10pm');
   },
   job: function() {
     sendNotificationByTimeZone(-6)
