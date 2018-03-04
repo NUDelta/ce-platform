@@ -73,7 +73,7 @@ SyncedCron.add({
   name: 'test!!',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('at 7pm');
+    return parser.text('at 7:00pm');
   },
   job: function() {
     sendNotificationByTimeZone(-6)
