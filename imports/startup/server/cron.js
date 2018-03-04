@@ -14,7 +14,7 @@ SyncedCron.add({
     });
     console.log("uids for cron", uids);
 
-    Meteor.call('sendNotification', ['XEXvPa6kZ5obTkTnJ', 'Txf2fSHu5tXDLxvyD'], "Please open this notification to continue receiving experiences :)", "/")
+    Meteor.call('sendNotification', ['XEXvPa6kZ5obTkTnJ', 'Txf2fSHu5tXDLxvyD'], "Please open this notification to continue receiving experiences :)", "/cron")
   }
 
 });

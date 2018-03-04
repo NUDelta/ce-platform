@@ -87,6 +87,12 @@ Router.route('/', {
 });
 
 
+Router.route('cron', {
+  path: '/cron',
+  template: 'cron'
+});
+
+
 Router.route('admin.debug', {
   path: '/admin/debug',
   template: 'debug',
