@@ -25,5 +25,10 @@ Template.profile.helpers({
       eid: experience._id,
       experienceName: experience.name,
     }
+  },
+  noIncidents() {
+    if (this.incidents.length < 1){
+      return true;
+    }
   }
 });
