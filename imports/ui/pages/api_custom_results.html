@@ -23,12 +23,22 @@
 </template>
 
 <template name="bumped">
-    Thanks for participating in the experience {{this.experience.name}}! See results from other
-    users below.<br>
-
-    {{#each image in ourImages}}
-        {{> Template.dynamic template="displayImage" data=image}}
-    {{/each}}
+  <head>
+    <style>
+      img {
+        padding-top: 10px;
+      }
+      .text {
+        padding-top: 5px;
+      }
+    </style>
+  </head>
+  <div class="text">
+  Thanks for participating in {{this.experience.name}}! See who you bumped into in the photos below.
+  </div>
+  {{#each image in ourImages}}
+      {{> Template.dynamic template="displayImage" data=image}}
+  {{/each}}
 </template>
 
 <template name="scavengerHunt">
