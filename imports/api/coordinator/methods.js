@@ -11,6 +11,7 @@ import { Users } from '../users/users.js';
 
 import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
 import { doesUserMatchNeed } from '../experiences/methods';
+import {CONFIG} from "../config";
 
 
 
@@ -109,12 +110,18 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
       let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
+
+        let delay = 1;
+        if(CONFIG.MODE === "PROD" || CONFIG.MODE === "DEV"){
+          delay = 15;
+        }
+
         Meteor.setTimeout(
           function(){
             adminUpdatesForRemovingUsersToIncidentEntirely([uid], assignment._id, needUserMap.needName);
 
           },
-          15*60000);
+          delay*60000);
 
 
       }
