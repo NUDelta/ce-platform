@@ -25,7 +25,7 @@ function sendNotificationByTimeZone(offset){
 
   });
 
-  Meteor.call('sendNotification', timezoneUids, "Open this notification to be eligible to get experiences today!", `${ Meteor.absoluteUrl() }cron`)
+  Meteor.call('sendNotification', timezoneUids, "Open this notification to be eligible to get experiences today!", 'https://ce-platform.herokuapp.com/cron')
 
 }
 
@@ -73,7 +73,7 @@ SyncedCron.add({
   name: 'test!!',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('at 9:20pm');
+    return parser.text('at 9:30pm');
   },
   job: function() {
     sendNotificationByTimeZone(-6)
