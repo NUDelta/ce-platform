@@ -15,7 +15,8 @@ function sendNotificationByTimeZone(offset){
 
   let timezoneUids = uids.filter(function(uid){
     let location = Locations.findOne({uid: uid});
-    if(location.affordances){
+    console.log("location", location);
+    if(location && location.affordances){
       if(location.affordances["utc_offset"] === offset){
         return true;
       }
@@ -72,7 +73,7 @@ SyncedCron.add({
   name: 'test!!',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('at 6:15pm also at 6:20pm');
+    return parser.text('at 7pm');
   },
   job: function() {
     sendNotificationByTimeZone(-6)

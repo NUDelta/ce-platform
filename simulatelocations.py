@@ -154,12 +154,21 @@ def allUsersAtRestaurant():
     setLocation(burgers, sys.argv[2])
     setLocation(burgers, sys.argv[3])
     print "all users at burgers"
-    setLocation(burgers, sys.argv[1])
-    setLocation(burgers, sys.argv[2])
-    setLocation(burgers, sys.argv[3])
-    print "all users at burgers"
+
+
+def allUsersAtGrocery():
+    setLocation(grocery, sys.argv[1])
+    setLocation(grocery, sys.argv[2])
+    setLocation(grocery, sys.argv[3])
+    print "all users at grocery"
+
+def allUsersAtBars():
+    setLocation((42.046251, -87.680547), sys.argv[1])
+    setLocation((42.046251, -87.680547), sys.argv[2])
+    setLocation((42.046251, -87.680547), sys.argv[3])
+    print "all users at bar"
 
 
 
 if __name__ == "__main__":
-	allUsersAtRestaurant()
+	allUsersAtBars()

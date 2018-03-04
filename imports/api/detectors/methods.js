@@ -45,6 +45,7 @@ applyDetector = function (userAffordances, varDecl, rules) {
   let mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
     .concat(rules)
     .join('\n');
+  console.log("applying detector", userAffordances, varDecl, rules);
   let doesUserMatchSituation = eval(mergedAffordancesWithRules);
   return doesUserMatchSituation;
 };

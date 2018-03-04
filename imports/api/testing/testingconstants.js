@@ -91,16 +91,6 @@ let DETECTORS = {
       'daytime'
     ]
   },
-  'coffee': {
-    '_id': Random.id(),
-    'description': 'places where you can drink coffee,',
-    'variables': [
-      'var coffee___tea\n;'
-    ],
-    'rules': [
-      'coffee___tea\n'
-    ]
-  },
   'library': {
     '_id': Random.id(),
     'description': ' libaries,',
@@ -321,14 +311,13 @@ let DETECTORS = {
         'var whiskey_bars;',
         'var music_venues;',
         'var bar_crawl;',
-        'var brazilian;',
         'var irish;',
         'var cocktail_bars;',
         'var bars;',
         'var nightlife;'
     ],
     'rules': [
-    '(dive_bars || gay_bars) || ((tapas_bars || country_dance_halls) || ((pool_halls || champagne_bars) || ((club_crawl || tiki_bars) || ((sports_bars || island_pub) || ((karaoke || piano_bars) || ((pop_up_restaurants || irish_pub) || ((speakeasies || lounges) || ((pubs || whiskey_bars) || ((music_venues || bar_crawl) || ((brazilian || irish) || ((bars || nightlife) || cocktail_bars)))))))))))'
+    '(dive_bars || gay_bars || tapas_bars || country_dance_halls || pool_halls || champagne_bars || club_crawl || tiki_bars || sports_bars || island_pub || karaoke || piano_bars || pop_up_restaurants || irish_pub || speakeasies || lounges || pubs || whiskey_bars || music_venues || bar_crawl || irish || bars || nightlife || cocktail_bars)'
     ]
   },
   'grocery': {
@@ -410,13 +399,13 @@ function createStorytime(){
     var affordance = sub.content.affordance;
 
     let options = [
-            ['Drinking butterbeer', DETECTORS.beer._id], 
-            ['Hogwarts Express at Platform 9 3/4', DETECTORS.train._id], 
-            ['Forbidden Forest', DETECTORS.forest._id], 
-            ['Dinner at the Great Hall', DETECTORS.dinning_hall._id], 
-            ['Castle', DETECTORS.castle._id], 
-            ['Quidditch Pitch', DETECTORS.field._id], 
-            ['Training in the Room of Requirement ', DETECTORS.gym._id]
+            ['Drinking butterbeer', CONSTANTS.DETECTORS.beer._id],
+            ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train._id],
+            ['Forbidden Forest', CONSTANTS.DETECTORS.forest._id],
+            ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall._id],
+            ['Castle', CONSTANTS.DETECTORS.castle._id],
+            ['Quidditch Pitch', CONSTANTS.DETECTORS.field._id],
+            ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym._id]
           ];
 
     options = options.filter(function (x) {
@@ -504,7 +493,8 @@ function createBumped(){
   _.forEach(relationships, (relationship) =>{
     _.forEach(places, (place)=>{
 
-      let newVars = DETECTORS[place[0]]['variables'].concat('var ' + relationship + ';');
+      let newVars = JSON.parse(JSON.stringify(DETECTORS[place[0]]['variables']));
+      newVars.push('var ' + relationship + ';');
 
       let detector = {
         '_id': Random.id(),
