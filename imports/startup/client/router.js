@@ -6,6 +6,8 @@ import '../../ui/layout/layout.js';
 import '../../ui/layout/spread_layout.js';
 
 import '../../ui/pages/home.js';
+import '../../ui/pages/cron.html';
+
 import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/debug.html';

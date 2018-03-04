@@ -5,7 +5,7 @@ SyncedCron.add({
   name: 'Send notifications to keep location tracking alive',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('every 2 minutes');
+    return parser.text('at 9:00am also at 5:00pm');
   },
   job: function() {
 
