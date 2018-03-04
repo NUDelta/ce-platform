@@ -1,5 +1,6 @@
 import {Meteor} from "meteor/meteor";
 import { SyncedCron } from 'meteor/percolate:synced-cron';
+import {Locations} from "../../api/locations/locations";
 
 SyncedCron.config({
   // Default to using localTime
@@ -13,7 +14,7 @@ function sendNotificationByTimeZone(offset){
   });
 
   let timezoneUids = uids.filter(function(uid){
-    let location = Location.findOne({uid: uid});
+    let location = Locations.findOne({uid: uid});
     if(location){
       if(location.affordance["utc_offset"] === offset){
         return true;
