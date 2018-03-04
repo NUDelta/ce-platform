@@ -19,7 +19,6 @@ import { findUserByUsername } from '../../api/users/methods';
 import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
-  SyncedCron.start();
   log.debug("Running in mode: ", CONFIG.MODE );
 
   if(!(CONFIG.MODE === "DEV" || CONFIG.MODE === "PROD")){

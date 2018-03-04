@@ -4,4 +4,4 @@ import './register-api.js';
 import './push.js';
 import './fixtures.js';
 import './router.js';
-import '../methods.js';
+import './cron.js';

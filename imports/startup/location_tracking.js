@@ -46,12 +46,6 @@ if (Meteor.isCordova) {
 
   };
 
-  Meteor.methods({
-    clientLocationToggle() {
-      serverLog.call({message: "calling method clientLocationToggle"});
-      toggleLocationTracking();
-    }
-  });
 
   Meteor.startup(() => {
     //Configure Plugin
