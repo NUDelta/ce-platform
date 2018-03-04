@@ -37,14 +37,3 @@ Template.affordances.helpers({
     return this.location.affordances[key]
   }
 });
-
-Template.affordances.events({
-  'click #location_toggle'(event, instance) {
-    console.log("you clicked location toggle");
-    Meteor.call("toggleTracking");
-  },
-  'click #clientLocationToggle'(event, instance) {
-    console.log("you clicked clientLocationToggle");
-    Meteor.call("clientLocationToggle");
-  }
-});

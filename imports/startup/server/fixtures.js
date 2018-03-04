@@ -24,8 +24,8 @@ Meteor.startup(() => {
 
   if(!(CONFIG.MODE === "DEV" || CONFIG.MODE === "PROD")){
     if(CONFIG.DEBUG){
-      // clearDatabase();
-      // createTestData();
+      clearDatabase();
+      createTestData();
     }
   }
 });
@@ -85,19 +85,25 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesGarret": true} }
+    $set: { 'profile.staticAffordances': {"lovesGarrett": true} }
+  }, {
+    multi: true
   });
 
   Meteor.users.update({
     _id: {$in: [uid3, uid4]}
   }, {
     $set: { 'profile.staticAffordances': {"lovesMeg": true} }
+  }, {
+    multi: true
   });
 
   Meteor.users.update({
     _id: {$in: [uid1, uid3, uid5]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesDTR": true} }
+    $set: { 'profile.staticAffordances.lovesDTR':  true}
+  }, {
+    multi: true
   });
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3);

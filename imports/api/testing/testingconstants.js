@@ -397,7 +397,7 @@ let DETECTORS = {
       'var soup;'
     ],
     'rules': [
-      '( dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || cafeteria || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
+      '( american__traditional_ || american__new_ || latin_american || pizza || pasta_shops || burgers || italian || dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || cafeteria || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
     ]
   },
 
@@ -503,26 +503,25 @@ function createBumped(){
   let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
   _.forEach(relationships, (relationship) =>{
     _.forEach(places, (place)=>{
-      let newVars = DETECTORS[place[0]]['variables'];
-      newVars.push('var ' + relationship + ';');
+
+      let newVars = DETECTORS[place[0]]['variables'].concat('var ' + relationship + ';');
 
       let detector = {
         '_id': Random.id(),
-        'description': DETECTORS[place[0]].description,
+        'description': DETECTORS[place[0]].description + relationship,
         'variables': newVars,
         'rules': ['(' + DETECTORS[place[0]].rules[0] + ') && ' + relationship ]
       };
-
-      DETECTORS[place+relationship] = detector;
+      DETECTORS[place[0]+relationship] = detector;
 
       let need = {
-        needName: place[0],
+        needName: place[0]+relationship,
         situation: {detector: detector._id, number: '2'},
         toPass: {instruction: 'You are at a' + place[1] + ' at the same time as someone else! Take a selfie and we\'ll let you know when they send one back!'},
         numberNeeded: 2
       };
       let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place[0] + '\') === 2',
+        trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + '\') === 2',
         function: bumpedCallback.toString(),
       };
 

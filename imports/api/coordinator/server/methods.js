@@ -68,7 +68,11 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
 
 
   _.forEach(updatedIncidentsAndNeeds, (incidentMapping) => {
-    let allChosenUsers = [];
+    let assignment = Assignments.findOne(incidentMapping.iid);
+    console.log("assignment at the top", assignment);
+    let usersInIncident = [].concat.apply([], assignment.needUserMaps.map(function(needMap){
+      return needMap.uids;
+    }));
 
     incidentsWithUsersToRun[incidentMapping.iid] = {};
     console.log("for each incident mapping, using this one: ", incidentMapping);
@@ -82,12 +86,25 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
       //get need object
 
       let need = getNeedObject(iid, needName);
-      console.log("needUserMap.uids.length", needUserMap.uids.length);
-      console.log("need.situation.number", need.situation.number);
 
-      if(needUserMap.uids.length >= need.situation.number){
-        let newChosenUsers = chooseUsers(needUserMap.uids, iid, needName, allChosenUsers);
-        allChosenUsers = allChosenUsers.concat(newChosenUsers);
+      let usersNotInIncident = needUserMap.uids.filter(function(x){
+        return !usersInIncident.includes(x);
+      });
+
+      let assignmentNeed =  assignment.needUserMaps.find(function(x){
+        return x.needName === needName;
+      });
+
+      console.log("users chosen so far are: ", usersInIncident);
+      console.log("usersNotInIncident are: ", usersNotInIncident);
+      console.log("users already asigned are are: ", assignmentNeed);
+
+
+
+      if(assignmentNeed.uids.length + usersNotInIncident.length >= need.situation.number){
+        let newChosenUsers = chooseUsers(usersNotInIncident, iid, assignmentNeed);
+        usersInIncident = usersInIncident.concat(newChosenUsers);
+        console.log("users for this need are: ", newChosenUsers);
         incidentsWithUsersToRun[incidentMapping.iid][needUserMap.needName] = newChosenUsers;
       }
     });
@@ -95,23 +112,11 @@ const checkIfThreshold = (updatedIncidentsAndNeeds) => {
   return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
 };
 
-const chooseUsers = (availableUids, iid, needName, allChosenUsers) => {
+const chooseUsers = (availableUids, iid, needUserMap) => {
 
-  let numberPeopleNeeded = Submissions.find({iid: iid, needName: needName, uid: null}).count();
-  let assignment = Assignments.findOne(iid);
+  let numberPeopleNeeded = Submissions.find({iid: iid, needName: needUserMap.needName, uid: null}).count();
 
-  let allUsersInIncident = [].concat.apply([], assignment.needUserMaps.map(function(needMap){
-    return needMap.uids;
-  }));
-  allUsersInIncident = allUsersInIncident.concat(allChosenUsers);
-  console.log("allUsersInIncident", allUsersInIncident);
-
-
-  let needMap = assignment.needUserMaps.find(function(needMap){
-    return needMap.needName === needName;
-  });
-
-  let usersWeAlreadyHave = needMap.uids;
+  let usersWeAlreadyHave = needUserMap.uids;
   console.log("usersWeAlreadyHave", usersWeAlreadyHave);
 
 
@@ -124,13 +129,8 @@ const chooseUsers = (availableUids, iid, needName, allChosenUsers) => {
   } else{
     let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
 
-    let newUsers = availableUids.filter(function(x){
-      return !allUsersInIncident.includes(x);
-    });
 
-    console.log("newUsers", newUsers);
-
-    let chosen = newUsers.splice(0, dif);
+    let chosen = availableUids.splice(0, dif);
     console.log("we have chosen to add ", chosen);
     return chosen;
   }

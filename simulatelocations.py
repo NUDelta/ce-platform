@@ -162,4 +162,4 @@ def allUsersAtRestaurant():
 
 
 if __name__ == "__main__":
-	threeUsersParticipateInExperiences()
+	allUsersAtRestaurant()
