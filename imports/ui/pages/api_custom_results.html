@@ -156,12 +156,18 @@
         padding-bottom: 10px;
         font-weight: 700;
       }
+      .sunsetSlides {
+          display: none
+      }
+      #img0 {
+          display: block;
+      }
     </style>
   </head>
   <div class="title">Sunsets around the US</div>
   <div class="slideshow">
     {{#each image in this.images}}
-      <div class="sunsetSlides">
+      <div class="sunsetSlides" id="img{{@index}}">
         {{> Template.dynamic template="displayImage" data=image}}
         <br>
         Sunset from ({{image.lat}}, {{image.lng}})
