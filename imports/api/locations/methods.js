@@ -88,7 +88,7 @@ const userIsAvailableToParticipate = (uid) => {
   if (CONFIG.MODE === "DEV") {
     time = time * 10;
   } else if (CONFIG.MODE === "PROD") {
-    time = time * 30;
+    time = time * 65;
   } else {
     time = time * 1;
   }

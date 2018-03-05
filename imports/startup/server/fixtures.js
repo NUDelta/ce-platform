@@ -32,9 +32,13 @@ Meteor.startup(() => {
 Meteor.methods({
   freshDatabase() {
     clearDatabase();
-    createTestData();
   },
   startTestExperiences(){
+    Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+      Detectors.insert(value);
+    });
+    log.info(`Populated ${ Detectors.find().count() } detectors`);
+
     createTestExperiences();
   },
   startStorytime(){
@@ -72,7 +76,7 @@ Meteor.methods({
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
-  }
+  },
 });
 
 function clearDatabase () {
