@@ -411,7 +411,7 @@ function createStorytime(){
             ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
             ['Forbidden Forest', CONSTANTS.DETECTORS.forest_storytime._id],
             ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall_storytime._id],
-            ['Castle', CONSTANTS.DETECTORS.castle_storytime._id],
+            ['Hogwards Castle', CONSTANTS.DETECTORS.castle_storytime._id],
             ['Quidditch Pitch', CONSTANTS.DETECTORS.field_storytime._id],
             ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym_storytime._id]
           ];
