@@ -125,7 +125,16 @@ Template.storybook.helpers({
   previousSentence(index){
     const instance = Template.instance()
     let previousSubmission = instance.data.submissions[index-1];
-    return previousSubmission.content.sentence
+    return previousSubmission.content.sentence;
+  },
+  submittedSentence(){
+    console.log("this.submissions", this.submissions)
+    console.log("meteor user id", Meteor.userId())
+    let submission = this.submissions.find(function(x){
+      return x.uid === Meteor.userId();
+    });
+    console.log(submission)
+    return submission.content.sentence;
   }
 });
 

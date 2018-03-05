@@ -99,7 +99,7 @@
     <head>
         <style>
             .mySlides {
-                display: none
+                display: none;
             }
             /* Slideshow container */
             .slideshow-container {
@@ -131,6 +131,8 @@
                 height: 350px;
                 overflow: hidden;
                 margin-top: 10px;
+                padding-left: 4%;
+                padding-right: 4%;
             }
             .img {
                 height: 350px;
@@ -140,8 +142,10 @@
             }
         </style>
     </head>
-
-    Storytime!
+    <div>
+      <h2 style="padding-top">Harry Potter Spin-off</h2>
+      Thanks for participating! Read what's been written so far, and we'll notify you when the story is complete.
+    </div>
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
         <div class="mySlides" id="img{{@index}}">
@@ -156,9 +160,9 @@
             </div>
             <div class="caption-text col-xs-8">
               {{#if (notFirst @index) }}
-                  {{previousSentence @index}}
+                  <b>{{previousSentence @index}}</b>
               {{else}}
-                  {{firstSentence}}
+                  <b>{{firstSentence}}</b>
               {{/if}}
             </div>
             <div class="col-xs-2">
@@ -169,6 +173,9 @@
           </div>
         </div>
       {{/each}}
+      <br><hr style="border-width:3px;border-color:#273147;"><br>
+      We're looking for someone to illustrate your sentence and continue the story.
+      Your sentence was: {{submittedSentence}}
     </div>
 </template>
 
