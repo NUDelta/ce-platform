@@ -48,6 +48,9 @@ Template.storyPage.helpers({
    return this.toPass.dropdownChoices;
 
    },
+  notLast(){
+    return this.needName !== 'pageFinal';
+  }
 });
 
 

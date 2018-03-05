@@ -395,6 +395,7 @@ let DETECTORS = {
 
 
 function createStorytime(){
+
   let storytimeCallback = function (sub) {
 
     Meteor.users.update({
@@ -418,8 +419,12 @@ function createStorytime(){
       return x[1] !== affordance;
     });
 
+    let needName = 'page' + Random.id(3);
+    if(cb.numberOfSubmissions() == 7){
+      needName = 'pageFinal'
+    }
     let contribution = {
-      needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
+      needName: needName, situation: {detector: affordance, number: '1'},
       toPass: {
         instruction: 'Illustrate the sentence: ' + sub.content.sentence + "by taking a photo of " + affordance,
         dropdownChoices: {name: 'affordance', options: options}
@@ -516,7 +521,7 @@ function createBumped(){
     notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
-  let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg'];
+  let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg', 'lovesMaxine'];
   let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
   _.forEach(relationships, (relationship) =>{
     _.forEach(places, (place)=>{
@@ -539,7 +544,7 @@ function createBumped(){
         numberNeeded: 2
       };
       let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + '\') === 2',
+        trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + '\') === 7',
         function: bumpedCallback.toString(),
       };
 
@@ -551,7 +556,7 @@ function createBumped(){
 
   return experience;
 
-};
+}
 
 let sendNotificationScavenger = function(sub){
   let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
@@ -577,7 +582,7 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'sunset',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
+      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }],
     description: 'Create a timelapse of the sunset with others around the country',
@@ -594,31 +599,31 @@ let EXPERIENCES = {
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
       needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 1
     }, {
       needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 1
     }, {
       needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 1
     }, {
       needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 1
     }, {
       needName: 'irishSign', situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 1
     }, {
       needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 1
     }, {
       needName: 'liquidGold', situation: {detector: DETECTORS.gas_station._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'}, numberNeeded: 1
     }, {
       needName: 'potOfGold', situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 1
     }, {
       needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 2
+      toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
     }
     ],
     description: 'Help us complete a scavenger hunt',

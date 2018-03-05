@@ -38,7 +38,28 @@ Meteor.methods({
     createTestExperiences();
   },
   startStorytime(){
-
+    let value = CONSTANTS.EXPERIENCES.storyTime;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startBumped(){
+    let value = CONSTANTS.EXPERIENCES.bumped;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startScavengerHunt(){
+    let value = CONSTANTS.EXPERIENCES.scavengerHunt;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startSunset(){
+    let value = CONSTANTS.EXPERIENCES.sunset;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
   }
 });
 
@@ -105,5 +126,5 @@ function createTestData(){
     multi: true
   });
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3);
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
 }

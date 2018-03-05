@@ -9,6 +9,10 @@ burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 coffee = (42.046881, -87.679555)
 beer = (42.047105, -87.682006)
+sydney = (-33, 151)
+train = (42.053872,-87.683748)
+brisbane = (-37.822464, 144.966146)
+
 
 def followPath(path, uid):
 	for stop in path:
@@ -163,6 +167,50 @@ def allUsersAtBars():
     setLocation((42.046251, -87.680547), sys.argv[3])
     print "all users at bar"
 
+def userAatCoffee():
+    setLocation(coffee, sys.argv[1])
+
+def userAatBar():
+    setLocation(beer, sys.argv[1])
+
+def userAatGrocery():
+    setLocation(grocery, sys.argv[1])
+
+def test5():
+	while(True):
+		print "garrett gets to the grocery store"
+		setLocation(grocery, sys.argv[1])
+		print "meg gets to the bar"
+		setLocation(beer, sys.argv[3])
+		time.sleep(15)
+
+		print "garretts brother gets to the grocery store"
+		setLocation(grocery, sys.argv[2])
+		time.sleep(15)
+
+		print "garrett gets to daytime"
+		setLocation(brisbane, sys.argv[1])
+
+		print "megs sister gets to the bar"
+		setLocation(beer, sys.argv[4])
+		time.sleep(15)
+
+		print "megs sister goes to daytime"
+		setLocation(brisbane, sys.argv[4])
+		time.sleep(15)
+
+		print "josh gets to the park"
+		setLocation(park, sys.argv[5])
+		time.sleep(15)
+
+		print "meg and her sister goes to the train"
+		setLocation(train, sys.argv[3])
+		setLocation(train, sys.argv[4])
+		time.sleep(15)
+
+		print "garrett goes to a park"
+		setLocation(park, sys.argv[1])
+		time.sleep(15)
 
 if __name__ == "__main__":
-	allUsersAtBars()
+	test5()
