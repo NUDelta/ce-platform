@@ -583,7 +583,7 @@ let EXPERIENCES = {
     resultsTemplate: 'sunset',
     contributionTypes: [{
       needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
+      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 20
     }],
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
