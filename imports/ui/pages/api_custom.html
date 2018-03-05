@@ -86,24 +86,37 @@
 </template>
 
 <template name="storyPage">
-    {{this.toPass.instruction}}
+  <head>
+    <style>
+      #prevSentence {
+        padding-right: 8%;
+        padding-left:8%;
+        padding-top: 3%;
+        text-align:center;
+        font-weight:900;
+      }
+      #participate {
+        margin-left: -3%;
+        padding-top: 1%;
+      }
+    </style>
+  </head>
+  <h2>Help us write a Harry Potter spinoff story</h2>
+  We need you to continue the story by picking up where the previous user left off.
+  <form class="col col-xs-12" id="participate">
+      <h3>Step 1</h3>
+      The previous user wrote:<br>
+      <p id="prevSentence">"{{this.toPass.instruction}}"</p>
+      Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
+    {{> Template.dynamic template="camera" data="illustration"}}
 
-    <form class="col col-xs-12" id="participate">
-        {{> Template.dynamic template="camera" data="illustration"}}
+    <h3>Step 2</h3>
+    Choose one of the following phrases and use it to write the next sentence: <br>
+    {{> Template.dynamic template="dropdown" data=(dropdownData)}}<br><br>
+    {{> Template.dynamic template="text" data="sentence"}}
 
-        Now, you're going to build off the above sentence and continue the story! <br><br>
-
-        Choose one of the following to be a key part of how the story continues: <br>
-        {{> Template.dynamic template="dropdown" data=(dropdownData)}}<br><br>
-
-        Finally, write a sentence to continue the story making sure to involve the item you chose above!<br>
-        {{> Template.dynamic template="text" data="sentence"}}
-
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 20px; height: 38px; width: 50%; margin-top: 10px;">
-            Submit
-        </button>
-    </form>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 20px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
+  </form>
 </template>
 
 <!--  TEMPLATE FOR RAINBOW COLLAGE -->
@@ -152,92 +165,6 @@
             <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
-            </button>
-        </form>
-    </div>
-</template>
-
-<!-- TEMPLATE FOR STORYTIME -->
-<template name="storyPage1">
-    <head>
-      <style>
-        h3 {
-          font-size: 20px;
-        }
-        #title-storybook {
-          background-color: #3e50b4;
-          border-radius: 2px;
-          color: white;
-          padding-top: 0px;
-          padding: 10px;
-          margin-top: 5px;
-          margin-bottom: 5px;
-        }
-        a {
-          padding-bottom: 0px;
-          margin-bottom: 0px;
-        }
-        p {
-          font-size: 0.9em;
-          line-height: 1.7em;
-          color: #616161;
-        }
-        .step-content {
-          padding-left: 20px;
-          padding-right: 20px;
-        }
-        .step, h4 {
-          font-size: 18px;
-          margin-left: -15px;
-          margin-bottom: 20px;
-        }
-        #prevSentence {
-          padding: 5px;
-          font-weight: 700;
-        }
-        #dropdown {
-          padding-bottom: 10px;
-        }
-      </style>
-    </head>
-
-    <div id="participate">
-        <form class="col col-xs-12">
-            <div class="row">
-                <h3 class="col-xs-12 text-center" id="title-storybook">Help us write and illustrate
-                    a story</h3>
-                <p>We're creating a collaborative story and we need you to submit photos and
-                    sentences.</p>
-            </div>
-
-            <h4 class="step">Step 1: Illustrate a sentence</h4>
-            <div class="row step-content">
-                <p>
-                    Take a photo that describes the sentence below and pretend you're Jimmy 😜
-                </p>
-                <div id="prevSentence" class="text-center">
-                    <em>"{{getPrevSentence this.submissions}}"</em>
-                </div>
-                {{ > Template.dynamic template="camera" data=(passContributionName "illustration")}}
-            </div>
-
-            {{#if notLastPage}}
-                <h4 class="step">Step 2: Write the next sentence</h4>
-                <div class="row step-content">
-                    <p>
-                        Select a phrase and write the next sentence using that phrase. This will be
-                        on page {{getPageNum}} of 7.<br>
-                    </p>
-                    <div id="dropdown">
-                        Phrase: {{ > Template.dynamic template="dropdown" data=(passContributionName "nextAffordance")}}</div>
-                </div>
-                <div class="row step-content">
-                    {{ > Template.dynamic template="text" data=(passContributionName "nextSentence")}}
-                </div>
-            {{/if}}
-
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
             </button>
         </form>
     </div>

@@ -414,7 +414,6 @@ function createStorytime(){
             ['Quidditch Pitch', CONSTANTS.DETECTORS.field_storytime._id],
             ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym_storytime._id]
           ];
-
     options = options.filter(function (x) {
       return x[1] !== affordance;
     });
@@ -422,13 +421,11 @@ function createStorytime(){
     let contribution = {
       needName: 'page' + Random.id(3), situation: {detector: affordance, number: '1'},
       toPass: {
-        instruction: 'Take a photo to illustrate this sentence: ' + sub.content.sentence,
+        instruction: 'Illustrate the sentence: ' + sub.content.sentence + "by taking a photo of " + affordance,
         dropdownChoices: {name: 'affordance', options: options}
       }, numberNeeded: 1
     };
-
     addContribution(sub.iid, contribution);
-
   };
 
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
@@ -442,9 +439,7 @@ function createStorytime(){
       'variables': newVars,
       'rules': [ '(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;' ]
     };
-
     DETECTORS[place+"_storytime"] = detector;
-
   });
 
   let dropdownOptions = [
@@ -476,7 +471,7 @@ function createStorytime(){
     contributionTypes: [{
       needName: 'pageOne', situation: {detector: DETECTORS.niceish_day._id, number: '1'},
       toPass: {
-        instruction: 'Take a photo to illustrate the sentence: ' + firstSentence,
+        instruction: firstSentence,
         firstSentence: firstSentence,
         dropdownChoices: {
           name: 'affordance', options: dropdownOptions
@@ -485,7 +480,7 @@ function createStorytime(){
       numberNeeded: 1
     },
     ],
-    description: 'We\'re writing a collective story!',
+    description: 'We\'re writing a Harry Potter spinoff story!',
     notificationText: 'Help us write a story!',
     callbacks: [{
       trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 2)',
@@ -495,9 +490,7 @@ function createStorytime(){
       function: sendNotification.toString()
     }]
   };
-
   return experience;
-
 }
 
 
@@ -587,7 +580,7 @@ let EXPERIENCES = {
       needName: 'sunset', situation: {detector: DETECTORS.daytime._id, number: '1'},
       toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 2
     }],
-    description: 'Help us create a time lapse of the sun setting',
+    description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
     callbacks: [{
       trigger:'cb.incidentFinished()',
