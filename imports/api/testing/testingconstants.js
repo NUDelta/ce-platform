@@ -342,10 +342,10 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'lake',
     'variables': [
-      'var lake;'
+      'var lakes;'
     ],
     'rules': [
-      '(lake)'
+      '(lakes)'
     ]
   },
   'rainy': {
