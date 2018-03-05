@@ -15,10 +15,10 @@
           placeholder="Write here" required></textarea>
 </template>
 
-<template name="dropdown-story">
+<template name="dropdown">
     <head>
         <style>
-            .dropdown-story {
+            ${{this.name}} {
                 height: 35px;
                 border: 1px solid rgba(34, 36, 38, 0.15);
                 color: rgba(0, 0, 0, 0.87);
@@ -27,7 +27,7 @@
             }
         </style>
     </head>
-    <select class="dropdown-story" id={{this.name}}>
+    <select class="dropdown" id={{this.name}}>
         {{#each option in this.options}}
             <option value="{{option.[1]}}">{{option.[0]}} </option>
         {{/each}}
