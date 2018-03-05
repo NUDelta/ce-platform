@@ -1,13 +1,5 @@
 <template name="affordances">
     {{#if currentUser}}
-        <!--<div class="p-4">-->
-            <!--<h4> Your current affordances </h4>-->
-            <!--{{#each key in affordanceKeys}}-->
-                <!--{{key}} --->
-                <!--{{affordanceValues key}}<br>-->
-            <!--{{/each}}-->
-        <!--</div>-->
-
         <h4> Your location </h4>
         {{this.location.lat}} / {{this.location.lng}}
         <br><br>
@@ -20,3 +12,12 @@
         <h4>Sign in to see your affordances</h4>
     {{/if}}
 </template>
+
+<!--<div class="p-4">-->
+<!--<h4> Your current affordances </h4>-->
+        <!--{{#each key in affordanceKeys}}-->
+<!--{{key}} --->
+<!--{{affordanceValues key}}<br>-->
+        <!--{{/each}}-->
+<!--</div>-->
+

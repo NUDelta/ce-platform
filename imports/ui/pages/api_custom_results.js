@@ -114,7 +114,7 @@ Template.storybook.helpers({
     return index !==0;
   },
   notLast(index){
-    return (index+1) < this.images.length;
+    return (index) < this.images.length;
   },
   firstSentence(){
     let pageOne = this.experience.contributionTypes.find(function(x) {
@@ -131,26 +131,32 @@ Template.storybook.helpers({
 
 let slideIndex = 1;
 function plusSlides(n) {
+  console.log("increasing by", n);
+  console.log("currently on", slideIndex);
   showSlides(slideIndex += n);
 }
 function currentSlide(n) {
   showSlides(slideIndex = n);
 }
+
 function showSlides(n) {
   let i;
   let slides = document.getElementsByClassName("mySlides");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
+
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
+
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  
   slides[slideIndex-1].style.display = "block";
 }
 
 Template.storybook.onCreated(function() {
   this.autorun(() => {
     window.onload = function () {
-      showSlides(slideIndex);
+      showSlides(1);
     }
   });
 });

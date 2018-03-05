@@ -34,7 +34,7 @@
     </style>
   </head>
   <div class="text">
-  Thanks for participating in {{this.experience.name}}! See who you bumped into below once they upload a selfie back:
+  Thanks for participating in {{this.experience.name}}! See all the people you've bumped into below once they upload a selfie back:
   </div>
   {{#each image in ourImages}}
       {{> Template.dynamic template="displayImage" data=image}}
@@ -145,9 +145,17 @@
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
         <div class="mySlides" id="img{{@index}}">
-          <div class="illustration row">
-            {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
-          </div>
+              {{#if (notLast @index)}}
+              <div class="illustration row">
+                  {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+              </div>
+
+              {{else}}
+              <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
+                  <i>Waiting for an image...</i>
+              </div>
+
+              {{/if}}
           <div class="row caption">
             <div class="col-xs-2">
               {{#if (notFirst @index) }}

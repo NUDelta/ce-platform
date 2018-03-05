@@ -25,7 +25,6 @@ export const getAffordancesFromLocation = function (lat, lng, callback) {
 export const matchAffordancesWithDetector = function (affordances, detectorId) {
   const detector = Detectors.findOne({ _id: detectorId });
 
-  //console.log("detector, affordances", detector, affordances)
   let doesUserMatchSituation = applyDetector(affordances,
     detector.variables,
     detector.rules);

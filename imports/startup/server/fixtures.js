@@ -38,24 +38,29 @@ Meteor.methods({
     createTestExperiences();
   },
   startStorytime(){
+    console.log("starting storytime");
     let value = CONSTANTS.EXPERIENCES.storyTime;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
   startBumped(){
+    console.log("starting bumped");
     let value = CONSTANTS.EXPERIENCES.bumped;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
   startScavengerHunt(){
+    console.log("starting scavenger");
+
     let value = CONSTANTS.EXPERIENCES.scavengerHunt;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
   startSunset(){
+    console.log("starting sunset");
     let value = CONSTANTS.EXPERIENCES.sunset;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);

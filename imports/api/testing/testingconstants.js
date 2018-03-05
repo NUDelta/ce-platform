@@ -1,5 +1,7 @@
 import {addContribution} from '../incidents/methods';
 import {Submissions} from "../submissions/submissions";
+import {serverLog} from "../logs";
+import {Meteor} from "meteor/meteor";
 
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
@@ -104,7 +106,7 @@ let DETECTORS = {
   },
   'gym': {
     '_id': Random.id(),
-    'description': ' gym,',
+    'description': ' gym',
     'variables': [
       'var  gyms;'
     ],
@@ -274,7 +276,7 @@ let DETECTORS = {
   },
   'castle': {
     '_id': Random.id(),
-    'description': 'dinninghalls',
+    'description': 'castle',
     'variables': [
       'var religious_schools;',
       'var churches;',
@@ -395,6 +397,7 @@ let DETECTORS = {
 
 
 function createStorytime(){
+  serverLog.call({message: "creating storytime"});
 
   let storytimeCallback = function (sub) {
 
@@ -411,7 +414,7 @@ function createStorytime(){
             ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
             ['Forbidden Forest', CONSTANTS.DETECTORS.forest_storytime._id],
             ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall_storytime._id],
-            ['Hogwards Castle', CONSTANTS.DETECTORS.castle_storytime._id],
+            ['Hogwarts Castle', CONSTANTS.DETECTORS.castle_storytime._id],
             ['Quidditch Pitch', CONSTANTS.DETECTORS.field_storytime._id],
             ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym_storytime._id]
           ];
@@ -426,7 +429,7 @@ function createStorytime(){
     let contribution = {
       needName: needName, situation: {detector: affordance, number: '1'},
       toPass: {
-        instruction: 'Illustrate the sentence: ' + sub.content.sentence + "by taking a photo of " + affordance,
+        instruction: sub.content.sentence,
         dropdownChoices: {name: 'affordance', options: options}
       }, numberNeeded: 1
     };
@@ -435,6 +438,9 @@ function createStorytime(){
 
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
   _.forEach(places, (place)=>{
+
+    serverLog.call({message: place});
+
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push('var participatedInStorytime;');
 
@@ -444,6 +450,9 @@ function createStorytime(){
       'variables': newVars,
       'rules': [ '(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;' ]
     };
+
+    serverLog.call({message: place});
+
     DETECTORS[place+"_storytime"] = detector;
   });
 
@@ -452,7 +461,7 @@ function createStorytime(){
             ['Hogwarts Express at Platform 9 3/4', DETECTORS.train_storytime._id],
             ['Forbidden Forest', DETECTORS.forest_storytime._id],
             ['Dinner at the Great Hall', DETECTORS.dinning_hall_storytime._id],
-            ['Castle', DETECTORS.castle_storytime._id],
+            ['Hogwarts Castle', DETECTORS.castle_storytime._id],
             ['Quidditch Pitch', DETECTORS.field_storytime._id],
             ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
           ];
@@ -469,7 +478,7 @@ function createStorytime(){
 
 
   let experience = {
-    _id: Random.id(),
+    _id: "wGWTtQjmgEYSuRtrk", //Random.id(),
     name: 'Storytime',
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
@@ -488,7 +497,7 @@ function createStorytime(){
     description: 'We\'re writing a Harry Potter spinoff story!',
     notificationText: 'Help us write a story!',
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 2)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
       function: storytimeCallback.toString(),
     }, {
       trigger:'cb.incidentFinished()',

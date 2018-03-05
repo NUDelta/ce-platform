@@ -44,10 +44,11 @@ Template.api_custom.helpers({
 Template.storyPage.helpers({
 
   dropdownData() {
-
+    console.log(this.toPass.dropdownChoices);
    return this.toPass.dropdownChoices;
 
    },
+
   notLast(){
     return this.needName !== 'pageFinal';
   }
