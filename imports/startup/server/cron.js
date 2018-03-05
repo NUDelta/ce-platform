@@ -43,7 +43,7 @@ SyncedCron.add({
   name: 'CST TIME: Send notifications to keep location tracking alive',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('at 3:00pm also at 11:00pm');
+    return parser.text('at 5:00pm also at 1:00am');
   },
   job: function() {
     sendNotificationByTimeZone(-6)
