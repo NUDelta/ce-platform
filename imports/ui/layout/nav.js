@@ -8,7 +8,15 @@ Template.nav.onRendered(function () {
 
 Template.nav.helpers({
   isCurrentPage(pageName) {
-    return Router.current().route.getName() === pageName;
+    if(pageName === 'home'){
+      return ['home', 'api.custom'].includes(Router.current().route.getName());
+    }else if (pageName === 'profile'){
+      return ['profile', 'api.customresults'].includes(Router.current().route.getName());
+    }else if(pageName === 'affordances'){
+      return Router.current().route.getName() === pageName;
+    }else{
+      return false;
+    }
   }
 });
 

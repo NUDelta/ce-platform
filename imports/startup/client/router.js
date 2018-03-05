@@ -26,6 +26,7 @@ import { Incidents } from "../../api/incidents/incidents";
 import { Meteor } from "meteor/meteor";
 import {Assignments} from "../../api/coordinator/assignments";
 import {Availability} from "../../api/coordinator/availability";
+import {Notification_log} from "../../api/coordinator/notification_log";
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -53,13 +54,18 @@ Router.route('api.custom', {
     this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('notification_log.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+
     this.next();
   },
   data: function () {
     return {
       experience: Experiences.findOne(),
       incident: Incidents.findOne(),
-      location: Locations.findOne()
+      location: Locations.findOne(),
+      notification_log: Notification_log.find().fetch(),
+      users: Meteor.users.find().fetch()
     };
   }
 });

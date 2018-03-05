@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Assignments } from "../assignments";
 import {Availability} from "../availability";
+import {Notification_log} from "../notification_log";
 
 Meteor.publish('assignments.all', function () {
   return Assignments.find();
@@ -28,4 +29,9 @@ Meteor.publish('assignments.activeUser', function () {
       }
     });
   }
+});
+
+
+Meteor.publish('notification_log.activeIncident', function (iid) {
+  return Notification_log.find({iid: iid});
 });

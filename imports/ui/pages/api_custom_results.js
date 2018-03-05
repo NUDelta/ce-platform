@@ -40,25 +40,29 @@ Template.photosByCategories.helpers({
   }
 });
 
-Template.bumped.helpers({
+Template.bumpedResults.helpers({
   ourImages() {
-    let mySub = this.submissions.find(function(x){
+
+    let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
-    let otherSub = this.submissions.find(function(x){
-      return (x.needName === mySub.needName) && (x.uid !== mySub.uid);
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
     });
 
-    console.log(mySub);
+    let otherSubs = this.submissions.filter(function(x){
+      return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
+    });
 
-    console.log(otherSub);
+    let imagesIds = otherSubs.map(function(x){
+      return x.content.proof;
+    });
 
     let foundImages = this.images.filter(function(x){
-      return (x._id === mySub.content.proof) || x._id === otherSub.content.proof;
+      return imagesIds.includes(x._id);
     });
-
-    console.log("Images we found ", foundImages);
-
+    
     return foundImages;
 
   }

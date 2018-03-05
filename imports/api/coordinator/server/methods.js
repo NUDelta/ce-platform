@@ -1,12 +1,13 @@
 import {Meteor} from 'meteor/meteor'
 import {Experiences} from "../../experiences/experiences";
-import {notify} from "../../cerebro/server/methods";
+import {notify, notifyForParticipating} from "../../cerebro/server/methods";
 import {Incidents} from "../../incidents/incidents";
 import {adminUpdatesForAddingUsersToIncident, getNeedObject, updateAvailability} from "../methods";
 import {Availability} from "../availability";
 import {getNeedFromIncidentId} from "../../incidents/methods";
 import {Submissions} from "../../submissions/submissions";
 import {Assignments} from "../assignments";
+import {Notification_log} from "../notification_log";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
@@ -29,8 +30,20 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       adminUpdatesForAddingUsersToIncident(newUsersUids, iid, needName);
 
       let route = 'apiCustom/' + iid + '/' + needName;
-      notify(newUsersUids, iid, 'Event ' + experience.name + ' is starting!',
+      notifyForParticipating(newUsersUids, iid, 'Event ' + experience.name + ' is starting!',
         experience.notificationText, route);
+      _.forEach(newUsersUids, (uid) => {
+
+        Notification_log.insert({
+          uid: uid,
+          iid: iid,
+          needName: needName,
+          timestamp: Date.now()
+        })
+
+      });
+
+
     });
   });
 };

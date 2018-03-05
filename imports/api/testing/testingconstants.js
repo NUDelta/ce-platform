@@ -505,8 +505,8 @@ function createStorytime(){
 function createBumped(){
   let experience = {
     name: 'Bumped',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'bumped',
+    participateTemplate: 'bumped',
+    resultsTemplate: 'bumpedResults',
     contributionTypes: [ ],
     description: 'You just bumped into someone!',
     notificationText: 'You just bumped into someone!',
@@ -542,7 +542,7 @@ function createBumped(){
       let need = {
         needName: place[0]+relationship,
         situation: {detector: detector._id, number: '2'},
-        toPass: {instruction: 'You are at a ' + place[1] + ' at the same time as someone else! Take a selfie and we\'ll let you know when they send one back!'},
+        toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
         numberNeeded: 2
       };
       let callback = {
