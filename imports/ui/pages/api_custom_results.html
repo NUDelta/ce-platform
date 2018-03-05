@@ -143,32 +143,32 @@
 
     Storytime!
     <div class="slideshow-container">
-        {{#each submission in this.submissions}}
-            <div class="mySlides" id="img{{@index}}">
-                <div class="illustration row">
-                    {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
-                </div>
-                <div class="row caption">
-                    <div class="col-xs-2">
-                        {{#if (notFirst @index) }}
-                            <a class="prev" style="font-size: 50px !important">&#10094;</a>
-                        {{/if}}
-                    </div>
-                    <div class="caption-text col-xs-8">
-                        {{#if (notFirst @index) }}
-                            {{previousSentence @index}}
-                        {{else}}
-                            {{firstSentence}}
-                        {{/if}}
-                    </div>
-                    <div class="col-xs-2">
-                        {{#if (notLast @index)}}
-                            <a class="next" style="font-size: 50px !important">&#10095;</a>
-                        {{/if}}
-                    </div>
-                </div>
+      {{#each submission in this.submissions}}
+        <div class="mySlides" id="img{{@index}}">
+          <div class="illustration row">
+            {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+          </div>
+          <div class="row caption">
+            <div class="col-xs-2">
+              {{#if (notFirst @index) }}
+                  <a class="prev" style="font-size: 50px !important">&#10094;</a>
+              {{/if}}
             </div>
-        {{/each}}
+            <div class="caption-text col-xs-8">
+              {{#if (notFirst @index) }}
+                  {{previousSentence @index}}
+              {{else}}
+                  {{firstSentence}}
+              {{/if}}
+            </div>
+            <div class="col-xs-2">
+              {{#if (notLast @index)}}
+                  <a class="next" style="font-size: 50px !important">&#10095;</a>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
     </div>
 </template>
 

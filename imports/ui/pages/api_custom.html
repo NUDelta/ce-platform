@@ -95,7 +95,7 @@
         text-align:center;
         font-weight:900;
       }
-      #participate {
+      #participate{
         margin-left: -3%;
         padding-top: 1%;
       }
@@ -104,18 +104,18 @@
   <h2>Help us write a Harry Potter spinoff story</h2>
   We need you to continue the story by picking up where the previous user left off.
   <form class="col col-xs-12" id="participate">
-      <h3>Step 1</h3>
-      The previous user wrote:<br>
-      <p id="prevSentence">"{{this.toPass.instruction}}"</p>
-      Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
+    <h3>Step 1</h3>
+    The previous user wrote:<br>
+    <p id="prevSentence">"{{this.toPass.instruction}}"</p>
+    Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
     {{> Template.dynamic template="camera" data="illustration"}}
 
     <h3>Step 2</h3>
-    Choose one of the following phrases and use it to write the next sentence: <br>
-    {{> Template.dynamic template="dropdown" data=(dropdownData)}}<br><br>
+    Choose one of the following phrases <br>
+    {{> Template.dynamic template="dropdown-story" data=(dropdownData)}}<br>
+    <p style="padding-top:3%;">Use your chosen phrase to write the next sentence</p>
     {{> Template.dynamic template="text" data="sentence"}}
-
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 20px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block" style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
   </form>
 </template>
 
