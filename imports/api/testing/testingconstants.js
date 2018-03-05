@@ -520,7 +520,7 @@ function createBumped(){
       needName: sub.needName
     });
 
-    notify([sub.uid, otherSub.uid], sub.iid, 'Find out who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
   let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg'];

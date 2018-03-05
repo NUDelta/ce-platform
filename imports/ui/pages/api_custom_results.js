@@ -62,7 +62,7 @@ Template.bumpedResults.helpers({
     let foundImages = this.images.filter(function(x){
       return imagesIds.includes(x._id);
     });
-    
+
     return foundImages;
 
   }
