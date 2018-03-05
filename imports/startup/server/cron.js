@@ -56,7 +56,7 @@ SyncedCron.add({
     return parser.text('at 4:00pm also at 11:59pm');
   },
   job: function() {
-    sendNotificationByTimeZone(-6)
+    sendNotificationByTimeZone(-7)
   }
 });
 SyncedCron.add({
