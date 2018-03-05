@@ -22,7 +22,7 @@
     {{/each}}
 </template>
 
-<template name="bumped">
+<template name="bumpedResults">
   <head>
     <style>
       img {
@@ -34,7 +34,7 @@
     </style>
   </head>
   <div class="text">
-  Thanks for participating in {{this.experience.name}}! See who you bumped into in the photos below.
+  Thanks for participating in {{this.experience.name}}! See who you bumped into below once they upload a selfie back:
   </div>
   {{#each image in ourImages}}
       {{> Template.dynamic template="displayImage" data=image}}

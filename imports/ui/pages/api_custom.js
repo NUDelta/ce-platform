@@ -36,6 +36,8 @@ Template.api_custom.helpers({
       iid: Router.current().params.iid,
       needName: Router.current().params.needName,
       toPass: currentNeed.toPass,
+      notification_log: this.notification_log,
+      users: this.users,
     }
   },
 });
@@ -46,6 +48,25 @@ Template.storyPage.helpers({
    return this.toPass.dropdownChoices;
 
    },
+});
+
+
+
+Template.bumped.helpers({
+
+  nameOfFriend() {
+    let needName = this.needName;
+
+    let notification =  this.notification_log.find(function (x) {
+      return (x.needName === needName) && (x.uid !== Meteor.userId()) ;
+    });
+
+    let user = this.users.find(function(x){
+      return x._id === notification.uid;
+    });
+    return user.username;
+
+  },
 });
 
 
