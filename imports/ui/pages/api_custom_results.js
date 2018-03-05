@@ -149,7 +149,7 @@ function showSlides(n) {
 
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
-  
+
   slides[slideIndex-1].style.display = "block";
 }
 

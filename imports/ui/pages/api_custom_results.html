@@ -76,12 +76,14 @@
   </div>
   <b style="background-color:#273147;padding:6px;color:white;">Items found</b>
   {{#each cat in categories}}
+
       {{#each image in (imagesByCategory cat)}}
-        <div class="img-text">
+      <div class="img-text">
           <div class="item item-text">{{getNeed image}}</div>
           <div class="item item-img">{{> Template.dynamic template="displayImage" data=image}}</div>
-        </div>
+      </div>
       {{/each}}
+
   {{/each}}
 <br>
 <b style="background-color:#273147;padding:6px;color:white;margin-bottom:10px;">Items remaining</b>

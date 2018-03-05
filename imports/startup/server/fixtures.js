@@ -65,6 +65,13 @@ Meteor.methods({
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
+  },
+  startNature(){
+    console.log("starting nature");
+    let value = CONSTANTS.EXPERIENCES.natureHunt;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
   }
 });
 
@@ -99,7 +106,7 @@ function createTestData(){
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-  createTestExperiences();
+  // createTestExperiences();
 
   let uid1 = findUserByUsername('garrett')._id;
   let uid2 = findUserByUsername('garretts_brother')._id;

@@ -67,10 +67,11 @@ let DETECTORS = {
     '_id': Random.id(),
     'description': 'places where it\'s nighttime,',
     'variables': [
-      'var nighttime;'
+      'var nighttime;',
+      'var clear;'
     ],
     'rules': [
-      'nighttime'
+      '(nighttime && clear)'
     ]
   },
   'sunset': {
@@ -337,6 +338,49 @@ let DETECTORS = {
       '(farmers_market || international_grocery || ethnic_grocery || grocery || fruits___veggies)'
     ]
   },
+  'lake': {
+    '_id': Random.id(),
+    'description': 'lake',
+    'variables': [
+      'var lake;'
+    ],
+    'rules': [
+      '(lake)'
+    ]
+  },
+  'rainy': {
+    '_id': Random.id(),
+    'description': 'rainy',
+    'variables': [
+      'var rain;'
+    ],
+    'rules': [
+      '(rain)'
+    ]
+  },
+  'sunny': {
+    '_id': Random.id(),
+    'description': 'clear',
+    'variables': [
+      'var clear;',
+      'var daytime;',
+    ],
+    'rules': [
+      '(clear && daytime)'
+    ]
+  },
+  'cloudy': {
+    '_id': Random.id(),
+    'description': 'clouds',
+    'variables': [
+      'var clouds;',
+      'var daytime;',
+    ],
+    'rules': [
+      '(clouds && daytime)'
+    ]
+  },
+
   'restaurant': {
     '_id': Random.id(),
       'description': 'grocery',
@@ -603,7 +647,7 @@ let EXPERIENCES = {
   },
   'scavengerHunt': {
     _id: Random.id(),
-    name: 'Scavenger Hunt',
+    name: 'St. Patrick\'s Day Scavenger Hunt',
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
@@ -635,13 +679,53 @@ let EXPERIENCES = {
       toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
     }
     ],
-    description: 'Help us complete a scavenger hunt',
-    notificationText: 'Help us out with our scavenger hunt',
+    description: 'Help us complete a St. Patrick\'s day scavenger hunt',
+    notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
     callbacks: [{
       trigger:'cb.incidentFinished()',
       function: sendNotificationScavenger.toString()
     }]
   },
+  'natureHunt': {
+  _id: Random.id(),
+    name: 'Nature Scavenger Hunt',
+    participateTemplate: 'scavengerHuntParticipate',
+    resultsTemplate: 'scavengerHunt',
+    contributionTypes: [{
+      needName: 'tree', situation: {detector: DETECTORS.forest._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a tree?'}, numberNeeded: 1
+  },{
+      needName: 'leaf', situation: {detector: DETECTORS.forest._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a leaf?'}, numberNeeded: 1
+  },{
+      needName: 'grass', situation: {detector: DETECTORS.field._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the grass?'}, numberNeeded: 1
+  }, {
+    needName: 'lake', situation: {detector: DETECTORS.lake._id, number: '1'},
+    toPass: {instruction: 'Can you take a photo of the lake?'}, numberNeeded: 1
+  }, {
+    needName: 'moon', situation: {detector: DETECTORS.night._id, number: '1'},
+    toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
+  }, {
+    needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
+    toPass: {instruction: 'Can you take a photo of a the sun?'}, numberNeeded: 1
+  }, {
+      needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
+  }, {
+    needName: 'clouds', situation: {detector: DETECTORS.cloudy._id, number: '1'},
+    toPass: {instruction: 'Can you take a photo of the clouds?'}, numberNeeded: 1
+  }, {
+    needName: 'puddle', situation: {detector: DETECTORS.rainy._id, number: '1'},
+    toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
+  },
+  ],
+    description: 'Help us complete a nature scavenger hunt',
+    notificationText: 'Help us out with our nature scavenger hunt',
+    callbacks: [{
+    trigger:'cb.incidentFinished()',
+    function: sendNotificationScavenger.toString()
+  }]},
   'storyTime': createStorytime(),
 
 };

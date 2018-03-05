@@ -141,12 +141,20 @@ def oneUserMoving():
 
 
 def allUsersAtPark():
-    setLocation(park, sys.argv[1])
-    print "location set to park for user a"
-    setLocation(park, sys.argv[2])
-    print "location set to park for user b"
-    setLocation(park, sys.argv[3])
-    print "location set to park for user c"
+	setLocation(park, sys.argv[1])
+	setLocation(park, sys.argv[2])
+	setLocation(park, sys.argv[3])
+	setLocation(park, sys.argv[4])
+	setLocation(park, sys.argv[5])
+	print "all usrs at parks"
+
+def allUsersAtCastle():
+	setLocation((42.050538,-87.677355), sys.argv[1])
+	setLocation((42.050538,-87.677355), sys.argv[2])
+	setLocation((42.050538,-87.677355), sys.argv[3])
+	setLocation((42.050538,-87.677355), sys.argv[4])
+	setLocation((42.050538,-87.677355), sys.argv[5])
+	print "all usrs at castle"
 
 def allUsersAtRestaurant():
     setLocation(burgers, sys.argv[1])
@@ -156,16 +164,31 @@ def allUsersAtRestaurant():
 
 
 def allUsersAtGrocery():
-    setLocation(grocery, sys.argv[1])
-    setLocation(grocery, sys.argv[2])
-    setLocation(grocery, sys.argv[3])
-    print "all users at grocery"
+	setLocation(grocery, sys.argv[1])
+	setLocation(grocery, sys.argv[2])
+	setLocation(grocery, sys.argv[3])
+	setLocation(grocery, sys.argv[3])
+	setLocation(grocery, sys.argv[3])
+
+	print "all users at grocery"
 
 def allUsersAtBars():
-    setLocation((42.046251, -87.680547), sys.argv[1])
-    setLocation((42.046251, -87.680547), sys.argv[2])
-    setLocation((42.046251, -87.680547), sys.argv[3])
-    print "all users at bar"
+	setLocation((42.046251, -87.680547), sys.argv[1])
+	setLocation((42.046251, -87.680547), sys.argv[2])
+	setLocation((42.046251, -87.680547), sys.argv[3])
+	setLocation((42.046251, -87.680547), sys.argv[4])
+	setLocation((42.046251, -87.680547), sys.argv[5])
+
+	print "all users at bar"
+
+def allUsersAtTrain():
+	setLocation(train, sys.argv[1])
+	setLocation(train, sys.argv[2])
+	setLocation(train, sys.argv[3])
+	setLocation(train, sys.argv[4])
+	setLocation(train, sys.argv[5])
+
+	print "all users at train"
 
 def userAatCoffee():
     setLocation(coffee, sys.argv[1])
@@ -176,8 +199,22 @@ def userAatBar():
 def userAatGrocery():
     setLocation(grocery, sys.argv[1])
 
+def allUsersCalifornia():
+	setLocation((34, -120), sys.argv[1])
+	setLocation((34, -120), sys.argv[2])
+	setLocation((34, -120), sys.argv[3])
+	setLocation((34, -120), sys.argv[4])
+	setLocation((34, -120), sys.argv[5])
+
+	print "all users in CA"
+
+
 def test5():
 	while(True):
+		print "josh goes to the train"
+		setLocation(train, sys.argv[5])
+		time.sleep(15)
+
 		print "garrett gets to the grocery store"
 		setLocation(grocery, sys.argv[1])
 		print "meg gets to the bar"
@@ -188,17 +225,10 @@ def test5():
 		setLocation(grocery, sys.argv[2])
 		time.sleep(15)
 
-		print "garrett gets to daytime"
-		setLocation(brisbane, sys.argv[1])
-
 		print "megs sister gets to the bar"
 		setLocation(beer, sys.argv[4])
 		time.sleep(15)
-
-		print "megs sister goes to daytime"
-		setLocation(brisbane, sys.argv[4])
-		time.sleep(15)
-
+	
 		print "josh gets to the park"
 		setLocation(park, sys.argv[5])
 		time.sleep(15)
@@ -212,5 +242,9 @@ def test5():
 		setLocation(park, sys.argv[1])
 		time.sleep(15)
 
+		print "garrett goes to the train"
+		setLocation(train, sys.argv[1])
+		time.sleep(15)
+
 if __name__ == "__main__":
-	test5()
+	allUsersCalifornia()
