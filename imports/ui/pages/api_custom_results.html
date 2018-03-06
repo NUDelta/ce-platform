@@ -40,13 +40,16 @@
 
         <div>{{getName object}} </div><br>
 
-        <div>
             {{#if (getImage object)}}
-            {{> Template.dynamic template="displayImage" data=(getImage object)}}
+            <div style="height:150px;">
+                {{> Template.dynamic template="displayImage" data=(getImage object)}}
+            </div>
+
             {{else}}
-                Waiting for image...
+                <div style="height:150px; outline-style:solid; outline-color:black; outline-width:1px;">
+                    Waiting for {{getName object}} to upload a selife...
+                </div>
             {{/if}}
-        </div>
 
     {{/each}}
 
@@ -144,6 +147,8 @@
                 height: 350px;
                 overflow: hidden;
                 margin-top: 10px;
+                padding-left: 3%;
+                padding-right: 3%;
             }
             .img {
                 height: 350px;
@@ -154,7 +159,8 @@
         </style>
     </head>
 
-    Our story so far:
+    <h1>Harry Potter Spin-off</h1><br>
+    Thanks for participating! Read what you and others have written so far.
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
         <div class="mySlides" id="img{{@index}}">

@@ -507,7 +507,7 @@ function createStorytime(){
             ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
           ];
 
-  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.'
+  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
 
   let sendNotification = function(sub){
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
@@ -535,8 +535,8 @@ function createStorytime(){
       numberNeeded: 1
     },
     ],
-    description: 'We\'re writing a Harry Potter spinoff story!',
-    notificationText: 'Help us write a story!',
+    description: 'We\'re writing a Harry Potter spin-off story',
+    notificationText: 'Help write a Harry Potter spin-off story!',
     callbacks: [{
       trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
       function: storytimeCallback.toString(),
