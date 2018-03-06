@@ -41,7 +41,14 @@ Template.photosByCategories.helpers({
 });
 
 Template.bumpedResults.helpers({
-  ourImages() {
+  getName(x ){
+    console.log(x);
+    return x.friendName;
+  },
+  getImage(x){
+    return x.image;
+  },
+  bumpees() {
 
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
@@ -55,16 +62,27 @@ Template.bumpedResults.helpers({
       return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
     });
 
-    let imagesIds = otherSubs.map(function(x){
-      return x.content.proof;
+    let contents = otherSubs.map(function(x){
+      let friendName = mySubs.find(function(y){
+        return y.needName === x.needName;
+      }).content.nameOfFriend;
+      return {image: x.content.proof, friendName: friendName};
     });
 
-    let foundImages = this.images.filter(function(x){
-      return imagesIds.includes(x._id);
+    console.log("contents", contents);
+
+    let images = this.images;
+
+    contents = contents.map(function(x){
+      let img = images.find(function(y){
+        return y._id === x.image;
+      });
+
+      return {friendName: x.friendName,image: img}
     });
 
-    return foundImages;
-
+    console.log("contents2", contents);
+    return contents;
   }
 });
 

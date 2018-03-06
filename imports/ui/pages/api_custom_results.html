@@ -34,11 +34,22 @@
     </style>
   </head>
   <div class="text">
-  Thanks for participating in {{this.experience.name}}! See all the people you've bumped into below once they upload a selfie back:
+  Thanks for participating in {{this.experience.name}}! See selfies from the people you bumped into:
   </div>
-  {{#each image in ourImages}}
-      {{> Template.dynamic template="displayImage" data=image}}
-  {{/each}}
+    {{#each object in bumpees}}
+
+        <div>{{getName object}} </div><br>
+
+        <div>
+            {{#if (getImage object)}}
+            {{> Template.dynamic template="displayImage" data=(getImage object)}}
+            {{else}}
+                Waiting for image...
+            {{/if}}
+        </div>
+
+    {{/each}}
+
 </template>
 
 <template name="scavengerHunt">

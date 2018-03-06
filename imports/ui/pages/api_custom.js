@@ -69,8 +69,21 @@ Template.bumped.helpers({
       return x._id === notification.uid;
     });
     return user.username;
-
   },
+  friendInfo(){
+    let needName = this.needName;
+
+    let notification =  this.notification_log.find(function (x) {
+      return (x.needName === needName) && (x.uid !== Meteor.userId()) ;
+    });
+
+    let user = this.users.find(function(x){
+      return x._id === notification.uid;
+    });
+    let friendName =  user.username;
+
+    return {key: 'nameOfFriend', value: friendName};
+  }
 });
 
 

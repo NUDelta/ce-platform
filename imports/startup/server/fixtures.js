@@ -23,8 +23,8 @@ Meteor.startup(() => {
 
   if(!(CONFIG.MODE === "DEV" || CONFIG.MODE === "PROD")){
     if(CONFIG.DEBUG){
-      // clearDatabase();
-      // createTestData();
+      clearDatabase();
+      createTestData();
     }
   }
 });
@@ -108,12 +108,12 @@ function createTestData(){
   });
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
-  // Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
-  //   Detectors.insert(value);
-  // });
-  // log.info(`Populated ${ Detectors.find().count() } detectors`);
+  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+    Detectors.insert(value);
+  });
+  log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-  // createTestExperiences();
+  createTestExperiences();
 
   let uid1 = findUserByUsername('garrett')._id;
   let uid2 = findUserByUsername('garretts_brother')._id;
