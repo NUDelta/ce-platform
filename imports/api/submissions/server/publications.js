@@ -4,9 +4,9 @@ import { Submissions } from '../submissions.js';
 Meteor.publish('submissions.activeIncident', function (incidentId) {
   //console.log('subscribing to submissions.activeIncident', incidentId);
   return Submissions.find(
-    { iid: incidentId },
+    { iid: incidentId},
     {
-      sort: { timestamp: -1 }
+      sort: { timestamp: 1 }
     });
 });
 
@@ -15,7 +15,7 @@ Meteor.publish('submissions.activeUser', function () {
   return Submissions.find(
     { uid: this.userId },
     {
-      sort: { timestamp: -1 }
+      sort: { timestamp: 1 }
     });
 });
 
@@ -24,6 +24,6 @@ Meteor.publish('submissions.all', function () {
   return Submissions.find(
     {},
     {
-      sort: { timestamp: -1 }
+      sort: { timestamp: 1 }
     });
 });

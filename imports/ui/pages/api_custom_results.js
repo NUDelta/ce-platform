@@ -9,6 +9,18 @@ Template.api_custom_results.onCreated(() => {
 
 Template.api_custom_results.helpers({
   data() {
+    this.submissions.sort(function compare(a, b) {
+      if (a.timestamp === undefined) {
+        return 1;
+      } else if (b.timestamp === undefined) {
+        return -1;
+      }
+
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateA - dateB;
+    });
+
     console.log(this);
     console.log(this.images);
     return this;
@@ -19,6 +31,7 @@ Template.registerHelper( 'getImageById', (data, id) => {
   let image = data.images.find(function(x){
     return x._id === id;
   });
+
   return image;
 });
 
