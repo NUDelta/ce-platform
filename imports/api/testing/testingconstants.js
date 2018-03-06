@@ -619,7 +619,7 @@ let sendNotificationSunset = function(sub){
   let uids = Submissions.find({iid: sub.iid}).fetch().map(function(x){
     return x.uid;
   });
-  notify(uids, sub.iid, 'Our collective sunset is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
 };
 
@@ -670,13 +670,13 @@ let EXPERIENCES = {
       toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'}, numberNeeded: 1
     }, {
       needName: 'potOfGold', situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold'}, numberNeeded: 1
+      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'}, numberNeeded: 1
     }, {
       needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
       toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
     }
     ],
-    description: 'Help us complete a St. Patrick\'s day scavenger hunt',
+    description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
     callbacks: [{
       trigger:'cb.incidentFinished()',
@@ -705,7 +705,7 @@ let EXPERIENCES = {
     toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
   }, {
     needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
-    toPass: {instruction: 'Can you take a photo of a the sun?'}, numberNeeded: 1
+    toPass: {instruction: 'Can you take a photo of the sun?'}, numberNeeded: 1
   }, {
       needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
       toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
@@ -717,7 +717,7 @@ let EXPERIENCES = {
     toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
   },
   ],
-    description: 'Help us complete a nature scavenger hunt',
+    description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us out with our nature scavenger hunt',
     callbacks: [{
     trigger:'cb.incidentFinished()',
