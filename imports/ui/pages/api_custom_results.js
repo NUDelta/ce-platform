@@ -61,6 +61,9 @@ Template.bumpedResults.helpers({
   getImage(x){
     return x.image;
   },
+  getMyImage(x){
+    return x.myImage;
+  },
   bumpees() {
 
     let mySubs = this.submissions.filter(function(x){
@@ -76,10 +79,10 @@ Template.bumpedResults.helpers({
     });
 
     let contents = otherSubs.map(function(x){
-      let friendName = mySubs.find(function(y){
+      let myInfoDic = mySubs.find(function(y){
         return y.needName === x.needName;
-      }).content.nameOfFriend;
-      return {image: x.content.proof, friendName: friendName};
+      });
+      return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
     });
 
     console.log("contents", contents);
@@ -90,8 +93,11 @@ Template.bumpedResults.helpers({
       let img = images.find(function(y){
         return y._id === x.image;
       });
+      let myImg = images.find(function(y){
+        return y._id === x.myImage;
+      });
 
-      return {friendName: x.friendName,image: img}
+      return {friendName: x.friendName,image: img, myImage: myImg};
     });
 
     console.log("contents2", contents);
