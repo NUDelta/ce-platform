@@ -83,7 +83,7 @@ Router.route('api.customresults', {
     return {
       experience: Experiences.findOne(),
       images: Images.find({}).fetch(),
-      submissions: Submissions.find({}).sort({timestamp: 1}).fetch(),
+      submissions: Submissions.find({}).fetch(),
     };
   }
 });
