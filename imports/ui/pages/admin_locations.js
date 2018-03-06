@@ -1,43 +1,37 @@
 import './admin_locations.html';
-import { Meteor } from 'meteor/meteor';
 
 import { Template } from 'meteor/templating';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
-import { _ } from 'meteor/underscore';
 
 import { Locations } from '../../api/locations/locations.js';
-// import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 import { Users } from '../../api/users/users.js';
 
-
-
-
-Template.admin_locations.onCreated(function() {
+Template.admin_locations.onCreated(function () {
   const handle = this.subscribe('locations');
   this.subscribe('detectors');
   this.markers = [];
 
   this.plotLocations = () => {
-    console.log("Plotting locations...");
     this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
     Locations.find().forEach((location) => {
-      let icon;
-      icon = {
+      const icon = {
         url: 'https://maps.google.com/mapfiles/ms/icons/red.png',
         scaledSize: new google.maps.Size(50, 50),
         labelOrigin: new google.maps.Size(50, 50)
-      }
+      };
+
       const marker = new google.maps.Marker({
         position: new google.maps.LatLng(location.lat, location.lng),
         label: {
-            text: location.uid.slice(0,3),
-            color: "#fff",
-            fontSize: "12px",
-          },
+          text: location.uid.slice(0, 3),
+          color: '#fff',
+          fontSize: '12px',
+        },
         map: this.map,
         //icon: icon
       });
+
       this.markers.push(marker);
     });
   };
@@ -57,7 +51,6 @@ Template.admin_locations.events({
     event.preventDefault();
     const locationType = event.target.locationType.value;
     const radius = parseInt(event.target.radius.value);
-
   }
 });
 
@@ -66,7 +59,7 @@ Template.admin_locations.helpers({
     if (GoogleMaps.loaded()) {
       let latLng = LocationManager.currentLocation();
       return {
-        center: {lat: 42.059311, lng: -87.676318},
+        center: { lat: 42.059311, lng: -87.676318 },
         zoom: 15
       };
     }

@@ -4,7 +4,6 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Incidents } from '../incidents/incidents.js';
 import { Schema } from '../schema.js';
-import { Locations } from '../locations/locations.js';
 
 // TODO: cascade delete incidents and remove from active, etc.
 class ExperiencesCollection extends Mongo.Collection {
@@ -21,57 +20,49 @@ class ExperiencesCollection extends Mongo.Collection {
   }
 }
 
-Schema.StoppingCriteria = new SimpleSchema({
-  total:{
+Schema.Callback = new SimpleSchema({
+  trigger: {
+    type: String
+  },
+  function: {
+    type: String
+  }
+});
+export const Callback = new Mongo.Collection('callback');
+Callback.attachSchema(Schema.Callback);
+
+Schema.SituationDescription = new SimpleSchema({
+  detector: {
+    type: String
+  },
+  number: {
     type: Number,
-    optional: true
-  },
-  time: {
-    type: String,
-    optional: true
   }
 });
+export const SituationDescription = new Mongo.Collection('situationdescription');
+SituationDescription.attachSchema(Schema.SituationDescription);
 
-export const StoppingCriteria = new ExperiencesCollection('stoppingCriteria');
-StoppingCriteria.attachSchema(Schema.StoppingCriteria);
-
-
-Schema.SituationalNeedTemplate = new SimpleSchema({
-  name:{
+Schema.NeedType = new SimpleSchema({
+  needName: {
     type: String
   },
-  contributions:{
-    type: Object, //{String: String}
+  situation: {
+    type: Schema.SituationDescription
+  },
+  toPass: {
+    type: Object,
+    optional: true,
     blackbox: true
-  }
-});
-
-export const SituationalNeedTemplate = new ExperiencesCollection('situationalneedtemplate');
-SituationalNeedTemplate.attachSchema(Schema.SituationalNeedTemplate);
-
-Schema.ContributionGroup = new SimpleSchema({
-  contributionTemplates:{
-    type: [Schema.SituationalNeedTemplate],
-  }
-});
-
-export const ContributionGroup = new ExperiencesCollection('contributiongroup');
-ContributionGroup.attachSchema(Schema.ContributionGroup);
-
-Schema.CallbackPair = new SimpleSchema({
-  templateName:{
-    type: String
   },
-  callback: {
-    type: String
-  }
+  numberNeeded: {
+    type: Number,
+  },
 });
+export const NeedType = new Mongo.Collection('needtype');
+NeedType.attachSchema(Schema.NeedType);
 
-export const CallbackPair = new ExperiencesCollection('callbackpair');
-CallbackPair.attachSchema(Schema.CallbackPair);
 
 export const Experiences = new ExperiencesCollection('experiences');
-
 Schema.Experience = new SimpleSchema({
   _id: {
     type: String,
@@ -82,9 +73,26 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Experience name',
   },
+  participateTemplate: {
+    type: String,
+  },
+  resultsTemplate: {
+    type: String,
+  },
+  contributionTypes: {
+    type: [Schema.NeedType],
+  },
+  callbacks: {
+    type: [Schema.Callback],
+    optional: true
+  },
   description: {
     type: String,
     label: 'Experience description',
+    optional: true
+  },
+  notificationText: {
+    type: String,
     optional: true
   },
   image: {
@@ -92,32 +100,5 @@ Schema.Experience = new SimpleSchema({
     label: 'Experience image url',
     optional: true
   },
-  activeIncident: {
-    type: String,
-    label: 'The current incident for this experience',
-    optional: true
-  },
-  participateTemplate: {
-    type: String,
-  },
-  resultsTemplate: {
-    type: String,
-  },
-  contributionGroups: {
-    type: [Schema.ContributionGroup], //Array, //[[Schema.SituationalNeed]],
-  },
-  notificationText : {
-    type: String,
-    optional: true
-  },
-  notificationStrategy: {
-    type: String,
-    optional: true
-  },
-  callbackPair:  {
-    type:[Schema.CallbackPair],
-    optional: true
-  },
 });
-
 Experiences.attachSchema(Schema.Experience);

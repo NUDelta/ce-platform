@@ -8,13 +8,16 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "bcrypt": "^0.8.7",
+    "buffer-shims": "^1.0.0",
+    "core-util-is": "^1.0.2",
     "meteor-node-stubs": "^0.2.5",
     "photoswipe": "^4.1.1",
     "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {
-    "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com"
+    "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
+    "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "repository": {
     "type": "git",
@@ -24,10 +27,5 @@
     "collective",
     "experiences"
   ],
-  "author": "Kevin J. Chen <kevinchen2016@u.northwestern.edu> (http://kevinchen.ninja/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/NUDelta/ce-platform/issues"
-  },
   "homepage": "https://github.com/NUDelta/ce-platform#readme"
 }

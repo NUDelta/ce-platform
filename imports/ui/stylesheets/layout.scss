@@ -3,12 +3,12 @@ body {
   margin-top: 55px;
   margin-bottom: 65px;
   background-color: #f8f8f8;
-  font-family: 'Roboto', 'Montserrat', Helvetica;
+  font-family: 'Karla', 'Roboto', Helvetica;
 }
 
 p, input {
-  font-family: 'Roboto', Helvetica;
-  color: #333333;
+  font-family: 'Karla',' Roboto', Helvetica;
+  color: #000;
 }
 
 img.logo {
@@ -21,7 +21,7 @@ img.logo {
 }
 
 .secret {
-	color: #a6a6a6;
+  color: #a6a6a6;
 }
 
 /* Constrain autocomplete dropdown to viewport width */
@@ -42,7 +42,7 @@ img.logo {
 
 .navbar {
   margin-bottom: 0px;
-  background-color: #fff;
+  background-color: #263147;
 }
 
 .navbar-header {
@@ -52,6 +52,32 @@ img.logo {
 .navbar-nav {
   margin-top: 5px;
   margin-bottom: 0px;
+}
+
+.navbar-nav a.dropdown-toggle {
+  color: #fff !important;
+  background-color: rgba(38, 49, 71, 0) !important;
+}
+
+// .navbar-nav a.dropdown-toggle:hover, a.dropdown-toggle:active, a.dropdown-toggle:visited {
+//   background-color: rgba(38, 49, 71, 1) !important;
+// }
+
+#login-buttons-password {
+  background-color: #5dc18d !important;
+  color: #fff;
+  border: #fff;
+}
+
+#login-buttons-logout {
+  background-color: #5dc18d !important;
+  color: #fff;
+  border: #fff;
+}
+
+#signup-link {
+  color: #fff !important;
+  padding-bottom: 10px;
 }
 
 select {
@@ -84,7 +110,7 @@ select {
   white-space: normal;
 
   &.active .fa, &.active .nav-text {
-    color: #3e50b4;
+    color: #263147;
   }
 }
 
@@ -97,17 +123,17 @@ select {
   font-size: 24px;
   display: block;
   transition: all 0.4s ease;
-  color: #333;
+  color: #888;
 }
 
 .nav-item .nav-text {
   transition: all 0.4s ease;
-  color: #333;
+  color: #888;
 }
 
 .btn-subscribe, .btn-unsubscribe {
   margin-top: 10px;
-  background-color: #3e50b4;
+  background-color: #263147;
   color: #fff;
   border: none;
   width: 50%;
@@ -115,20 +141,19 @@ select {
 
 .btn-participate {
   margin: 0 auto;
-  background-color: #3e50b4;
+  background-color: #263147;
   color: #fff;
   // border: 2px solid #3e50b4;
-  border-radius: 20px;
+  border-radius: 2px;
   width: 50%;
 }
 
 .btn-submit {
   margin: 0 auto;
-  background-color: #3e50b4;
-  border-radius: 100px;
+  background-color: #263147;
   color: #fff;
   // border: 2px solid #3e50b4;
-  border-radius: 20px;
+  border-radius: 2px;
   width: 50%;
 }
 
@@ -190,8 +215,9 @@ hr {
 }
 
 .card-action a {
-    text-decoration: none;
-    color: #3e50b4
+  text-decoration: none;
+  color: #5dc18d;
+  font-weight: 700;
 }
 
 .card-contents {

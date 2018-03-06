@@ -22,22 +22,25 @@ Schema.Location_log = new SimpleSchema({
     min: -180,
     max: 180
   },
-  time: {
-    type: Number,
-    optional: true
+  timestamp: {
+    type: Date,
+  },
+  affordances: {
+    type: Object,
+    blackbox: true
   }
 });
 
 Location_log.attachSchema(Schema.Location_log);
 
 Location_log.allow({
-  insert: function() {
+  insert: function () {
     return true;
   },
-  update: function() {
+  update: function () {
     return true;
   },
-  remove: function() {
+  remove: function () {
     return true;
   }
 });

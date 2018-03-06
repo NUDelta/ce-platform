@@ -5,48 +5,46 @@ import { Schema } from '../schema.js';
 export const Submissions = new Mongo.Collection('submissions');
 
 Schema.Submission = new SimpleSchema({
-  submitter: {
+  eid: {
     type: String,
-    label: 'Comment submitter',
     regEx: SimpleSchema.RegEx.Id
   },
-  experienceId: {
+  iid: {
     type: String,
-    label: 'Comment experience',
     regEx: SimpleSchema.RegEx.Id
   },
-  incidentId: {
+  needName: {
     type: String,
-    label: 'Incident',
-    regEx: SimpleSchema.RegEx.Id
   },
-  situationNeed: {
+  uid: {
     type: String,
-    label: 'name of the situationNeed',
-  },
-  contributionTemplate: {
-     type: String,
-    label: 'name of the contributionTemplate',
+    regEx: SimpleSchema.RegEx.Id,
+    defaultValue: null,
+    optional: true,
   },
   content: {
-    type: Object, //Dictionary (ids of contributions)
-    blackbox: true
+    type: Object,
+    blackbox: true,
+    optional: true,
+    defaultValue: {}
   },
   timestamp: {
-    type: Number,
-    optional: true
+    type: Date,
+    optional: true,
   },
-  lat:{
+  lat: {
     type: Number,
     decimal: true,
     min: -90,
-    max: 90
+    max: 90,
+    optional: true,
   },
-  lng:{
+  lng: {
     type: Number,
     decimal: true,
     min: -180,
-    max: 180
+    max: 180,
+    optional: true,
   }
 });
 

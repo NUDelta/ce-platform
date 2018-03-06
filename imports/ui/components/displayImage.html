@@ -1,17 +1,17 @@
 <template name="displayImage">
-  {{#if this.img.isUploaded}}
-    <img src="{{this.img.url store="thumbs"}}" alt="image loading...">
-  {{/if}}
+    {{#if this.isUploaded}}
+        <img src="{{this.url store="thumbs"}}" alt="image loading...">
+    {{/if}}
 </template>
 
 <template name="displayThanksgivingImage">
-  {{#if this.img.isUploaded}}
-    <img src="{{this.img.url store="images"}}" alt="image loading...">
-  {{/if}}
+    {{#if this.img.isUploaded}}
+        <img src="{{this.img.url store="images"}}" alt="image loading...">
+    {{/if}}
 </template>
 
 <template name="displaySVGImage">
-  {{#if this.img.isUploaded}}
-    <image class="img-responsive" xlink:href="{{this.img.url store="thumbs"}}" x="0" y="0"/>
-  {{/if}}
+    {{#if this.img.isUploaded}}
+        <image class="img-responsive" xlink:href="{{this.img.url store="thumbs"}}" x="0" y="0"/>
+    {{/if}}
 </template>

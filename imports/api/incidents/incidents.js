@@ -1,85 +1,27 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
+import { Mongo } from "meteor/mongo";
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-
 import { Schema } from '../schema.js';
 
-class IncidentCollection extends Mongo.Collection {
-  remove(selector, callback) {
-    Incidents.find(selector).forEach((incident) => {
-      Meteor.users.update({}, {
-        $pull: {
-          'profile.pastIncidents': incident._id
-        }
-      });
-    });
-    return super.remove(selector, callback);
-  }
-}
-
-Schema.SituationNeed = new SimpleSchema({
-  name:{
-    type: String,
-  },
-  affordance: {
-    type: String,
-    optional: true
-  },
-  contributionTemplate:{
-    type: String,
-    optional: true
-  },
-  softStoppingCriteria : {
-    type: Number,
-    optional: true
-  },
-  notifiedUsers: {
-    type: [String],
-    defaultValue: [],
-    optional: true
-  },
-  done: {
-    type: Boolean,
-    defaultValue: false,
-    optional: true
-  },
-  callback: {
-    type: String,
-    optional: true
-  }
-});
-export const SituationNeed = new IncidentCollection('situationneed');
-
-SituationNeed.attachSchema(Schema.SituationNeed);
-
-
-export const Incidents = new IncidentCollection('incidents');
-
+export const Incidents = new Mongo.Collection('incidents');
 Schema.Incident = new SimpleSchema({
-  experienceId: {
+  _id: {
     type: String,
-    label: 'Id of referenced experience',
-    regEx: SimpleSchema.RegEx.Id
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true
   },
-  name: {
+  eid: {
     type: String,
-    label: 'Name of referenced experience'
+    regEx: SimpleSchema.RegEx.Id,
   },
-  date: {
-    type: String,
-    label: 'Date of incident launch'
-  },
-  data: {
-    type: Object,
-    label: 'Arbitrary data for custom experiences',
-    optional: true,
+  contributionTypes: {
+    type: [Schema.NeedType],
     blackbox: true
   },
-  situationNeeds:{
-    type: [Schema.SituationNeed],
-    defaultValue: [],
+  callbacks: {
+    type: [Schema.Callback],
     optional: true,
-  }
+    blackbox: true
+    //TODO: i think somehow its not finding the schema bc in experiences where its define no problem, but here need blackbox true
+  },
 });
-
 Incidents.attachSchema(Schema.Incident);

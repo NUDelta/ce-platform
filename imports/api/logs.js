@@ -5,7 +5,7 @@ import 'meteor/nooitaf:colors';
 
 export const log = {
   debug(message) {
-    _log(`[debug]: ${ process(message) }`, 'blue');
+    _log(`[debug]: ${ process(message) }`, 'yellow');
   },
 
   info(message) {
@@ -13,7 +13,7 @@ export const log = {
   },
 
   warning(message) {
-    _log(`[warn]: ${ process(message) }`, 'yellow');
+    _log(`[warn]: ${ process(message) }`, 'grey');
   },
   error(message) {
     _log(`[error]: ${ process(message) }`, 'red');

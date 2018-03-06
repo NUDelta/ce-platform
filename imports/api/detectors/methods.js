@@ -1,29 +1,14 @@
 import { Meteor } from 'meteor/meteor';
-import {Detectors} from './detectors'
+import { Detectors } from './detectors'
 
-
-/**
- * Gets affordances based on location, checks if affordances of location
- * match the detector rules, and then calls a callback
- * @param {Number} lat
- * @param {Number} lng
- * @param {String} detectorId
- * @param {function} callback - which calls with argument doesLocationMatchSituation
- */
-export const matchLocationWithDetector = function(lat, lng, detectorId, callback) {
-  getAffordancesFromLocation(lat, lng, function(affordances) {
-    doesLocationMatchSituation = matchAffordancesWithDetector(affordances, detectorId);
-    callback(doesLocationMatchSituation);
-  })
-};
 
 /**
  * Gets affordances based on location, then calls a callback
- * @param {Number} lat
- * @param {Number} lng
+ * @param {float} lat
+ * @param {float} lng
  * @param {function} callback - which calls with single argument affordances
  */
-export const getAffordancesFromLocation = function(lat, lng, callback) {
+export const getAffordancesFromLocation = function (lat, lng, callback) {
   let request = require('request');
   let url = 'http://affordanceaware.herokuapp.com/location_keyvalues/' + lat.toString() + '/' + lng.toString();
   request(url, Meteor.bindEnvironment(function (error, response, body) {
@@ -37,29 +22,30 @@ export const getAffordancesFromLocation = function(lat, lng, callback) {
   }));
 };
 
-export const matchAffordancesWithDetector = function(affordances, detectorId) {
+export const matchAffordancesWithDetector = function (affordances, detectorId) {
   const detector = Detectors.findOne({ _id: detectorId });
 
-  doesUserMatchSituation = applyDetector(affordances,
-                                  detector.variables,
-                                  detector.rules);
+  //console.log("detector, affordances", detector, affordances)
+  let doesUserMatchSituation = applyDetector(affordances,
+    detector.variables,
+    detector.rules);
   return doesUserMatchSituation;
 };
 
 /**
  * Evaluates given the affordances of a user, if they match the definition given
- * by the detector. 
+ * by the detector.
  * @param {Object} userAffordances: key value pairs of (userAffordances: values)
  * @param {[String]} varDecl - variable declarations of the affordance keys used
  * @param {[String]} rules - context rules as Javascript logical operations
  * @return {Boolean} doesUserMatchSituation
  */
-applyDetector = function(userAffordances, varDecl, rules) {
+applyDetector = function (userAffordances, varDecl, rules) {
   let affordancesAsJavascriptVars = keyvalues2vardecl(userAffordances);
-  mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
-                                      .concat(rules)
-                                      .join('\n');
-  doesUserMatchSituation = eval(mergedAffordancesWithRules);
+  let mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
+    .concat(rules)
+    .join('\n');
+  let doesUserMatchSituation = eval(mergedAffordancesWithRules);
   return doesUserMatchSituation;
 };
 
@@ -67,11 +53,11 @@ applyDetector = function(userAffordances, varDecl, rules) {
  * @param {Object} obj - key values that come from /location_keyvalues/{lat}/{lng}
  * @return {[String]} vardecl - each element has the form "var key = value;"
  */
-keyvalues2vardecl = function(obj) {
-  vardecl = [];
+keyvalues2vardecl = function (obj) {
+  let vardecl = [];
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      vardecl.push("var " + key + " = " + obj[key] + ";")      
+      vardecl.push("var " + key + " = " + obj[key] + ";")
     }
   }
   return vardecl;

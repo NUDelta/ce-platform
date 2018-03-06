@@ -1,20 +1,19 @@
 <template name="activeExperience">
-  <div class="card">
-    <!-- <a href="/apicustomresults/{{experience.activeIncident}}" class="list-group-item participate-chunk" style="border-radius: 1px; padding: 0px;"> -->
-    <div class="list-group-item participate-chunk" style="border-radius: 1px; padding: 0px;">
-      <div class="card-image">
-        <img src="{{experience.image}}" alt="image">
-      </div>
-      <div class="card-contents">
-        <span class="card-title" style="font-weight: 100;">{{experience.name}}</span>
-        <p class="list-group-item-text desc-text">{{experience.description}}</p>
-        <!-- <a class="btn btn-primary btn-participate btn-block" href="/apicustom/{{experience.activeIncident}}">
-        Participate
-        </a> -->
-      </div>
-      <div class="card-action">
-        <a href="/apicustom/{{experience.activeIncident}}">PARTICIPATE</a>
-      </div>
+    <div class="card">
+        <div class="list-group-item participate-chunk" style="border-radius: 1px; padding: 0px;">
+            <div class="card-image">
+                <img src="{{experience.image}}" alt="image">
+            </div>
+            <div class="card-contents">
+                <span class="card-title" style="font-weight: 100;">{{experience.name}}</span>
+                <p class="list-group-item-text desc-text">{{experience.description}}</p>
+                <!-- <a class="btn btn-primary btn-participate btn-block" href="/apicustom/{{iid}}">
+                Participate
+                </a> -->
+            </div>
+            <div class="card-action">
+                <a href="/apicustom/{{iid}}/{{experience._id}}/{{needName}}/">PARTICIPATE</a>
+            </div>
+        </div>
     </div>
-  </div>
 </template>

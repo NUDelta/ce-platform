@@ -4,21 +4,6 @@ import { Schema } from '../schema.js';
 
 export const Locations = new Mongo.Collection('locations');
 
-Schema.Location = new SimpleSchema({
-  lat: {
-    type: Number,
-    decimal: true,
-    min: -90,
-    max: 90
-  },
-  lng: {
-    type: Number,
-    decimal: true,
-    min: -180,
-    max: 180
-  }
-});
-
 Schema.Locations = new SimpleSchema({
   uid: {
     type: String,
@@ -37,26 +22,25 @@ Schema.Locations = new SimpleSchema({
     min: -180,
     max: 180
   },
-  affordances: {
-    type: [String],
-    optional: true
+  timestamp: {
+    type: Date,
   },
-  lastNotification: {
-    type: Number,
-    optional: true
+  affordances: {
+    type: Object,
+    blackbox: true
   }
 });
 
 Locations.attachSchema(Schema.Locations);
 
 Locations.allow({
-  insert: function() {
+  insert: function () {
     return true;
   },
-  update: function() {
+  update: function () {
     return true;
   },
-  remove: function() {
+  remove: function () {
     return true;
   }
 });

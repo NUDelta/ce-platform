@@ -1,5 +1,6 @@
 import '/imports/startup/client';
 
+//TODO: what's all this? Do we need to add availabliity?
 if (Meteor.isDevelopment) {
   Schema = require('../imports/api/schema.js').Schema;
   Experiences = require('../imports/api/experiences/experiences.js').Experiences;

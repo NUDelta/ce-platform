@@ -1,8 +1,21 @@
 <template name="nav">
-  <div class="nav-footer">
-    <!-- These divs are placed horizontally using inline-block so the comments are present to eliminate whitespace. If you want to come back later and float them be my guest -->
-    <div class="nav-item {{#if isCurrentPage 'home' }}active{{/if}}"><a class="deco-none" href="/"><i class="fa fa-home" aria-hidden="true"></i><span class="nav-text">Participate</span></a></div>
-    <div class="nav-item {{#if isCurrentPage 'profile' }}active{{/if}}" ><a class="deco-none" href="/profile"><i class="fa fa-user" aria-hidden="true"></i><span class="nav-text">About Me</span></a></div>
-    <div class="nav-item {{#if isCurrentPage 'affordances' }}active{{/if}}" ><a class="deco-none" href="/affordances"><i class="fa fa-globe"></i><span class="nav-text">Affordances</span></a></div>
-  </div>
+    <div class="nav-footer">
+        <!-- These divs are placed horizontally using inline-block so the comments are present to eliminate whitespace. If you want to come back later and float them be my guest -->
+        <div class="nav-item {{#if isCurrentPage 'home' }}active{{/if}}">
+            <a class="deco-none" href="/">
+                <i class="fa fa-home" aria-hidden="true"></i><span
+                    class="nav-text">Home</span>
+            </a>
+        </div>
+        <div class="nav-item {{#if isCurrentPage 'profile' }}active{{/if}}">
+            <a class="deco-none" href="/profile">
+                <i class="fa fa-list-ul" aria-hidden="true"></i><span class="nav-text">Results</span>
+            </a>
+        </div>
+        <div class="nav-item {{#if isCurrentPage 'affordances' }}active{{/if}}">
+            <a class="deco-none" href="/affordances">
+                <i class="fa fa-user"></i><span class="nav-text">Me</span>
+            </a>
+        </div>
+    </div>
 </template>

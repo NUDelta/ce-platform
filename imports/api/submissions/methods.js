@@ -1,90 +1,181 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { _ } from 'meteor/underscore';
-import { Schema } from '../schema.js';
-import { log } from '../logs.js';
-
-import { Cerebro } from '../cerebro/server/cerebro-server.js';
-import { Experiences } from '../experiences/experiences.js';
-import { Incidents } from '../incidents/incidents.js';
-import { Locations } from '../locations/locations.js';
 import { Submissions } from './submissions.js';
-import { NotificationLog } from '../cerebro/cerebro-core.js'
-import { Users } from '../users/users.js';
+import { adminUpdatesForRemovingUsersToIncident } from "../coordinator/methods";
+import {Availability} from "../coordinator/availability";
+import {Assignments} from "../coordinator/assignments";
+import {Incidents} from "../incidents/incidents";
 
-import { removeUserAfterTheyParticipated } from  '../coordinator/methods.js'
+//for the callbacks
+import {addContribution} from "../incidents/methods";
+import { CONSTANTS } from '../testing/testingconstants'
+import { notify} from "../cerebro/server/methods";
 
-var totalNumber = Submissions.find().count();
-const submissionsCursor = Submissions.find();
+/**
+ * Gets the needNames/iid for all unique unfilled entries in the submission DB
+ *
+ * @returns {object} dictionary of iids and needs in form {iid:[need], iid:[need]}
+ */
+export const getUnfinishedNeedNames = function () {
+  let submissions = Submissions.find({
+      uid: null
+    }, {
+      multi: true
+    }
+  ).fetch();
+
+  let unfinishedNeeds = {};
+
+  _.forEach(submissions, (sub) => {
+    let iid = sub.iid;
+    let needName = sub.needName;
+    if (iid in unfinishedNeeds) {
+      if (unfinishedNeeds[iid].indexOf(needName) === -1) {
+        unfinishedNeeds[iid].push(needName)
+      }
+    } else {
+      unfinishedNeeds[iid] = [needName]
+    }
+  });
+  return unfinishedNeeds; //{iid:[need], iid:[need]}
+};
+
+/**
+ * Updates the time a user participated, remove them from the assignment db for that incident
+ * Move the incident from activeIncidents to pastIncidents for the user
+ *
+ * @param mostRecentSub {object} submission db object that was just submitted
+ */
+function adminUpdates(mostRecentSub) {
+
+  Meteor.users.update({ _id: mostRecentSub.uid }, {
+    $set: { "profile.lastParticipated": new Date() }
+  });
+
+  Availability.update({
+    _id: mostRecentSub.iid,
+    'needUserMaps.needName': mostRecentSub.needName
+  }, {
+    $pull: { 'needUserMaps.$.uids': mostRecentSub.uid }
+  });
+
+  adminUpdatesForRemovingUsersToIncident([mostRecentSub.uid], mostRecentSub.iid,
+    mostRecentSub.needName);
+}
+
+const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
-  added(submission){
-    if(totalNumber == Submissions.find().count()){
-      console.log("not running received submission")
-      return;
-    }
-
-    console.log("received a submission")
-    console.log(submission)
-    //when a user participates add it to their past experiences
-    Cerebro.addIncidents(submission.submitter, submission.incidentId);
-
-    //mark that they submitted
-    Meteor.users.update({_id: submission.submitter}, {
-      $set: {"profile.lastParticipated": Date.parse(new Date()) }
-    })
-
-    //remove user/experience from each other
-    removeUserAfterTheyParticipated(submission.submitter, submission.experienceId)
-
-    //see if there is a callback
-    var callbackPairs = Experiences.findOne({_id: submission.experienceId}).callbackPair;
-    console.log(callbackPairs)
-    var callback = callbackPairs.filter(function(cp){
-        return cp.templateName == submission.contributionTemplate;
-      });
-
-    if(callback.length > 1){
-      log.error("submissions/methods found more than one callback for the templateName " + submission.templateName + " but there should only be one. Not calling any callbacks");
-    }else if(callback.length === 1){
-      console.log("we found a callback!")
-      var callbackFunction = callback[0]["callback"];
-      eval("(" + callbackFunction + "(" + JSON.stringify(submission) + "))")
-    }
-
-    //check if the situationNeed is FINISHED
-    var incident = Incidents.findOne({_id: submission.incidentId});
-    console.log("in submissions for incidnet ", incident._id)
-    var situationNeed = incident.situationNeeds.filter(
-      function(sn){
-        return sn.name == submission.situationNeed
-      })[0];
-    console.log("found the sit need",situationNeed )
-    var numberSubmissionsFound = Submissions.find({
-      incidentId: submission.incidentId,
-      situationNeed: submission.situationNeed
-    }).count();
-    console.log("looked for all of them ", numberSubmissionsFound)
-    var numberSubmissionsRequired =situationNeed.softStoppingCriteria;
-    console.log("num we need is ", numberSubmissionsRequired)
-
-    if(numberSubmissionsRequired <= numberSubmissionsFound){
-      Incidents.update({_id: submission.incidentId, 'situationNeeds.name': submission.situationNeed},
-        {$set :
-          { 'situationNeeds.$.done':  true }
-      });
-    }
-
-    //check if the experience is done
-    var isIncidentFinished = Incidents.find({_id: submission.incidentId, "situationNeeds.done": false }).count();
-    console.log(isIncidentFinished)
-    if(isIncidentFinished == 0){
-      log.cerebro("Experience " + submission.experienceId + " is finished!")
-      Experiences.update({_id: submission.experienceId},
-        { $unset: { 'activeIncident': 0 }
-      });
-    }
+  changed(submission, old) {
+    adminUpdates(submission);
+    runCallbacks(submission);
   }
 });
+
+Meteor.methods({
+  updateSubmission(submission) {
+    updateSubmission(submission);
+  }
+});
+
+export const updateSubmission = function (submission) {
+  Submissions.update({
+    eid: submission.eid,
+    iid: submission.iid,
+    needName: submission.needName,
+    uid: null
+  }, {
+    $set: {
+      uid: submission.uid,
+      content: submission.content,
+      timestamp: submission.timestamp,
+      lat: submission.lat,
+      lng: submission.lng
+    }
+  }, (err, docs) => {
+    if (err) {
+      console.log("submission not inserted", err);
+    } else {
+
+    }
+  });
+};
+
+
+//checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
+function runCallbacks(mostRecentSub) {
+
+  let cb = new CallbackManager(mostRecentSub)
+
+  let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
+
+  _.forEach(callbackArray, (callbackPair) =>{
+    let trigger = callbackPair.trigger;
+    let fun = callbackPair.function;
+    if(eval(trigger)){
+      eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
+    }
+  });
+}
+
+
+
+
+
+class CallbackManager {
+  constructor(mostRecentSubmission) {
+    this.submission = mostRecentSubmission;
+  }
+
+  //trigger used in callbacks: checks if the new sub was for the specified need
+  newSubmission(needName) {
+    if(needName === undefined){
+      return true;
+    }else{
+      return this.submission.needName === needName;
+    }
+  }
+
+//trigger used in callbacks: checks if the need is finished
+  needFinished(needName) {
+    let count = Submissions.find({
+      iid: this.submission.iid,
+      needName: needName,
+      uid: null,
+    }).count();
+    return count === 0;
+  }
+
+//trigger used in callbacks: checks if the experience is finished
+  incidentFinished() {
+    let count = Submissions.find({
+      iid: this.submission.iid,
+      uid: null,
+    }).count();
+    return count === 0;
+  }
+
+
+//trigger used in callbacks: returns number of submission for the need
+  numberOfSubmissions(needName) {
+    if(needName === undefined){
+      return Submissions.find({
+        iid: this.submission.iid,
+        uid: {$ne: null},
+      }).count();
+    }else{
+      return Submissions.find({
+        iid: this.submission.iid,
+        needName: needName,
+        uid: {$ne: null},
+      }).count();
+    }
+  }
+
+//trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future
+  timeSinceFirstSubmission(need) {
+    return number; //minutes
+  }
+}

@@ -1,7 +1,51 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
+
+export const findUserByUsername = function (username) {
+  return Meteor.users.findOne({ 'username': username });
+};
+
+export const _addActiveIncidentToUsers = function (uids, iid) {
+  Meteor.users.update({
+    _id: { $in: uids }
+  }, {
+    $addToSet: {
+      'profile.activeIncidents': iid
+    }
+  }, {
+    multi: true
+  });
+};
+
+export const _removeActiveIncidentFromUsers = function (uids, iid) {
+  Meteor.users.update({
+    _id: { $in: uids }
+  }, {
+    $pull: {
+      'profile.activeIncidents': iid
+    },
+    $addToSet: {
+      'profile.pastIncidents': iid
+    }
+  }, {
+    multi: true
+  });
+
+};
+
+export const _removeIncidentFromUsersEntirely = function (uids, iid) {
+  Meteor.users.update({
+    _id: { $in: uids }
+  }, {
+    $pull: {
+      'profile.activeIncidents': iid
+    }
+  }, {
+    multi: true
+  });
+};
+
 
 export const getEmails = new ValidatedMethod({
   name: 'users.getEmails',
@@ -28,8 +72,7 @@ export const removeFromAllActiveExperiences = new ValidatedMethod({
 
   }).validator(),
   run({ experienceId }) {
-    console.log("experience ended so removing frmo user profiles")
-    return Meteor.users.update({}, {$pull: {'profile.activeExperiences': experienceId}}, {multi: true});
+       return Meteor.users.update({}, { $pull: { 'profile.activeExperiences': experienceId } }, { multi: true });
   }
 });
 
@@ -45,7 +88,13 @@ export const subscribeAllUsersToExperience = new ValidatedMethod({
     }
   }).validator(),
   run({ experienceId }) {
-    return Meteor.users.update({'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}}, {multi: true});
+    return Meteor.users.update({
+      'profile.subscriptions': { $nin: [experienceId] }
+    }, {
+      $push: { 'profile.subscriptions': experienceId }
+    }, {
+      multi: true
+    });
   }
 });
 
@@ -58,7 +107,10 @@ export const subscribeUserToExperience = new ValidatedMethod({
     }
   }).validator(),
   run({ experienceId }) {
-    return Meteor.users.update({_id: this.userId, 'profile.subscriptions': {$nin: [experienceId]}}, {$push: {'profile.subscriptions': experienceId}});
+    return Meteor.users.update({
+      _id: this.userId,
+      'profile.subscriptions': { $nin: [experienceId] }
+    }, { $push: { 'profile.subscriptions': experienceId } });
   }
 });
 
@@ -71,6 +123,9 @@ export const unsubscribeUserFromExperience = new ValidatedMethod({
     }
   }).validator(),
   run({ experienceId }) {
-    return Meteor.users.update({_id: this.userId, 'profile.subscriptions': experienceId}, {$pull: {'profile.subscriptions': experienceId}});
+    return Meteor.users.update({
+      _id: this.userId,
+      'profile.subscriptions': experienceId
+    }, { $pull: { 'profile.subscriptions': experienceId } });
   }
 });
