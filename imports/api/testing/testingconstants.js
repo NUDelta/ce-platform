@@ -39,7 +39,7 @@ let USERS = {
 
 let DETECTORS = {
   'field': {
-    '_id': Random.id(),
+    '_id': 'rEbK6WMQnPPAGAXMX',
     'description': 'fields',
     'variables': [
         'var baseball_fields;',
@@ -52,7 +52,7 @@ let DETECTORS = {
     ]
   },
   'niceish_day': {
-    '_id': Random.id(),
+    '_id': 'x7EgLErQx3qmiemqt',
     'description': 'niceish_day',
     'variables': [
         'var clouds;',
@@ -64,7 +64,7 @@ let DETECTORS = {
     ]
   },
   'night': {
-    '_id': Random.id(),
+    '_id': 'Wth3TB9Lcf6me6vgy',
     'description': 'places where it\'s nighttime,',
     'variables': [
       'var nighttime;',
@@ -75,7 +75,7 @@ let DETECTORS = {
     ]
   },
   'sunset': {
-    '_id': Random.id(),
+    '_id': '44EXNzHS7oD2rbF68',
     'description': 'places where it\'s sunset,',
     'variables': [
       'var sunset;',
@@ -86,7 +86,7 @@ let DETECTORS = {
     ]
   },
   'daytime': {
-    '_id': Random.id(),
+    '_id': 'tyZMZvPKkkSPR4FpG',
     'description': 'places where it\'s daytime,',
     'variables': [
       'var daytime;'
@@ -96,7 +96,7 @@ let DETECTORS = {
     ]
   },
   'library': {
-    '_id': Random.id(),
+    '_id': '5LqfPRajiQRe9BwBT',
     'description': ' libaries,',
     'variables': [
       'var  libraries;'
@@ -106,7 +106,7 @@ let DETECTORS = {
     ]
   },
   'gym': {
-    '_id': Random.id(),
+    '_id': '3XqHN8A4EpCZRpegS',
     'description': ' gym',
     'variables': [
       'var  gyms;'
@@ -116,7 +116,7 @@ let DETECTORS = {
     ]
   },
   'produce': {
-    '_id': Random.id(),
+    '_id': 'oHCMYfBBcaphXqQnT',
     'description': ' places where you can find fuits and veggies',
     'variables': [
       'var grocery;',
@@ -129,7 +129,7 @@ let DETECTORS = {
     ]
   },
   'rainbow': {
-    '_id': Random.id(),
+    '_id': 'ksxGTXMaSpCFdmqqN',
     'description': 'rainbow flag',
     'variables': [
       'var gay_bars;'
@@ -139,7 +139,7 @@ let DETECTORS = {
     ]
   },
   'drugstore': {
-    '_id': Random.id(),
+    '_id': 'k8KFfv3ATtbg2tnFB',
     'description': 'drugstores',
     'variables': [
       'var drugstores;',
@@ -150,7 +150,7 @@ let DETECTORS = {
     ]
   },
  'costume_store': {
-    '_id': Random.id(),
+    '_id': 'ECPk2mjuHJtrMotGg',
     'description': 'costume_store',
     'variables': [
       'var costumes;',
@@ -161,7 +161,7 @@ let DETECTORS = {
     ]
   },
   'irish': {
-    '_id': Random.id(),
+    '_id': '5CJGGtjqyY89n55XP',
     'description': 'irish',
     'variables': [
       'var irish_pub;',
@@ -172,7 +172,7 @@ let DETECTORS = {
     ]
   },
   'hair_salon': {
-    '_id': Random.id(),
+    '_id': 'eG4no7zpSnthwwcv5',
     'description': 'hairsalon',
     'variables': [
       'var men_s_hair_salons;',
@@ -186,7 +186,7 @@ let DETECTORS = {
     ]
   },
   'gas_station': {
-    '_id': Random.id(),
+    '_id': 'xZBgjwdPw8rtg86eo',
     'description': 'gas_stations',
     'variables': [
       'var gas_stations;'
@@ -196,7 +196,7 @@ let DETECTORS = {
     ]
   },
   'coffee': {
-    '_id': Random.id(),
+    '_id': '5DrGWRyMpu7WWFo7m',
     'description': 'coffee',
     'variables': [
       'var coffee___tea;',
@@ -208,7 +208,7 @@ let DETECTORS = {
     ]
   },
   'bank': {
-    '_id': Random.id(),
+    '_id': 'qR9s4EtPngjZeEp9u',
     'description': 'banks',
     'variables': [
       'var banks___credit_unions;'
@@ -218,7 +218,7 @@ let DETECTORS = {
     ]
   },
   'beer': {
-    '_id': Random.id(),
+    '_id': 'i3yMtjdjTyJQRendD',
     'description': 'beer',
     'variables': [
       'var beer_bar;',
@@ -237,7 +237,7 @@ let DETECTORS = {
     ]
   },
   'train': {
-    '_id': Random.id(),
+    '_id': 'mu8JcPRF7mEernyNQ',
     'description': 'trains',
     'variables': [
       'var public_transportation;',
@@ -249,7 +249,7 @@ let DETECTORS = {
     ]
   },
   'forest': {
-    '_id': Random.id(),
+    '_id': 'FfZnzP72ip4SLY4eR',
     'description': 'forests',
     'variables': [
       'var campgrounds;',
@@ -263,7 +263,7 @@ let DETECTORS = {
     ]
   },
   'dinning_hall': {
-    '_id': Random.id(),
+    '_id': 'sSK7rbbC9sHQBN94Y',
     'description': 'dinninghalls',
     'variables': [
       'var diners;',
@@ -276,7 +276,7 @@ let DETECTORS = {
     ]
   },
   'castle': {
-    '_id': Random.id(),
+    '_id':'kMNownPaYRKxBXJfm',
     'description': 'castle',
     'variables': [
       'var religious_schools;',
@@ -292,7 +292,7 @@ let DETECTORS = {
     ]
   },
   'bar': {
-    '_id': Random.id(),
+    '_id': 'JLq2pGg8fizWGdZe2',
     'description': 'bars',
     'variables': [
         'var dive_bars;',
@@ -325,7 +325,7 @@ let DETECTORS = {
     ]
   },
   'grocery': {
-    '_id': Random.id(),
+    '_id': 'jtCXkXBi4k6oJerxP',
     'description': 'grocery',
     'variables': [
       'var ethnic_grocery;',
@@ -339,7 +339,7 @@ let DETECTORS = {
     ]
   },
   'lake': {
-    '_id': Random.id(),
+    '_id': '9iEpW4mb4ysHY5thP',
     'description': 'lake',
     'variables': [
       'var lakes;'
@@ -349,7 +349,7 @@ let DETECTORS = {
     ]
   },
   'rainy': {
-    '_id': Random.id(),
+    '_id': 'puLHKiGkLCJWpKc62',
     'description': 'rainy',
     'variables': [
       'var rain;'
@@ -359,7 +359,7 @@ let DETECTORS = {
     ]
   },
   'sunny': {
-    '_id': Random.id(),
+    '_id': '6vyrBtdDAyRArMasj',
     'description': 'clear',
     'variables': [
       'var clear;',
@@ -370,7 +370,7 @@ let DETECTORS = {
     ]
   },
   'cloudy': {
-    '_id': Random.id(),
+    '_id': 'sorCvK53fyi5orAmj',
     'description': 'clouds',
     'variables': [
       'var clouds;',
@@ -382,7 +382,7 @@ let DETECTORS = {
   },
 
   'restaurant': {
-    '_id': Random.id(),
+    '_id': 'MzyBGuc6fLGR8Kjii',
       'description': 'grocery',
       'variables': [
       'var american__traditional_;',
@@ -441,7 +441,6 @@ let DETECTORS = {
 
 
 function createStorytime(){
-  serverLog.call({message: "creating storytime"});
 
   let storytimeCallback = function (sub) {
 
@@ -481,23 +480,21 @@ function createStorytime(){
   };
 
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
+  let detectorIds = ["N3uajhH3chDssFq3r",  "Ly9vMvepymC4QNJqA","52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie","LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"];
+  let i =0;
   _.forEach(places, (place)=>{
-
-    serverLog.call({message: place});
 
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push('var participatedInStorytime;');
 
-    let detector = {
-      '_id': Random.id(),
+    DETECTORS[place+"_storytime"] = {
+      '_id': detectorIds[i],
       'description': DETECTORS[place].description + "_storytime",
       'variables': newVars,
       'rules': [ '(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;' ]
     };
 
-    serverLog.call({message: place});
-
-    DETECTORS[place+"_storytime"] = detector;
+    i++;
   });
 
   let dropdownOptions = [

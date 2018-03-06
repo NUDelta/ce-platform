@@ -139,6 +139,42 @@ def oneUserMoving():
     setLocation((42.05685, -87.67592), sys.argv[1])
     print "slight movement"
 
+def test5():
+	while(True):
+		print "josh goes to the train"
+		setLocation(train, sys.argv[5])
+		time.sleep(15)
+
+		print "garrett gets to the grocery store"
+		setLocation(grocery, sys.argv[1])
+		print "meg gets to the bar"
+		setLocation(beer, sys.argv[3])
+		time.sleep(15)
+
+		print "garretts brother gets to the grocery store"
+		setLocation(grocery, sys.argv[2])
+		time.sleep(15)
+
+		print "megs sister gets to the bar"
+		setLocation(beer, sys.argv[4])
+		time.sleep(15)
+	
+		print "josh gets to the park"
+		setLocation(park, sys.argv[5])
+		time.sleep(15)
+
+		print "meg and her sister goes to the train"
+		setLocation(train, sys.argv[3])
+		setLocation(train, sys.argv[4])
+		time.sleep(15)
+
+		print "garrett goes to a park"
+		setLocation(park, sys.argv[1])
+		time.sleep(15)
+
+		print "garrett goes to the train"
+		setLocation(train, sys.argv[1])
+		time.sleep(15)
 
 def allUsersAtPark():
 	setLocation(park, sys.argv[1])
@@ -208,43 +244,33 @@ def allUsersCalifornia():
 
 	print "all users in CA"
 
+def allUsersSyd():
+	setLocation(sydney, sys.argv[1])
+	setLocation(sydney, sys.argv[2])
+	setLocation(sydney, sys.argv[3])
+	setLocation(sydney, sys.argv[4])
+	setLocation(sydney, sys.argv[5])
 
-def test5():
-	while(True):
-		print "josh goes to the train"
-		setLocation(train, sys.argv[5])
-		time.sleep(15)
+	print "all users in sydney"
 
-		print "garrett gets to the grocery store"
-		setLocation(grocery, sys.argv[1])
-		print "meg gets to the bar"
-		setLocation(beer, sys.argv[3])
-		time.sleep(15)
+def allUsersLakefill():
+	setLocation((42.052460,-87.669876), sys.argv[1])
+	setLocation((42.052460,-87.669876), sys.argv[2])
+	setLocation((42.052460,-87.669876), sys.argv[3])
+	setLocation((42.052460,-87.669876), sys.argv[4])
+	setLocation((42.052460,-87.669876), sys.argv[5])
 
-		print "garretts brother gets to the grocery store"
-		setLocation(grocery, sys.argv[2])
-		time.sleep(15)
+	print "all users in lakefill"
 
-		print "megs sister gets to the bar"
-		setLocation(beer, sys.argv[4])
-		time.sleep(15)
-	
-		print "josh gets to the park"
-		setLocation(park, sys.argv[5])
-		time.sleep(15)
+def onlyGarretAtLake():
+	setLocation((42.052460,-87.669876), sys.argv[1])
+	setLocation(train, sys.argv[2])
+	setLocation(train, sys.argv[3])
+	setLocation(train, sys.argv[4])
+	setLocation(train, sys.argv[5])
 
-		print "meg and her sister goes to the train"
-		setLocation(train, sys.argv[3])
-		setLocation(train, sys.argv[4])
-		time.sleep(15)
+	print "only garrett at lakefill"
 
-		print "garrett goes to a park"
-		setLocation(park, sys.argv[1])
-		time.sleep(15)
-
-		print "garrett goes to the train"
-		setLocation(train, sys.argv[1])
-		time.sleep(15)
 
 if __name__ == "__main__":
-	allUsersCalifornia()
+	allUsersSyd()
