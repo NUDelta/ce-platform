@@ -90,7 +90,7 @@ const userIsAvailableToParticipate = (uid) => {
   } else if (CONFIG.MODE === "PROD") {
     time = time * 65;
   } else {
-    time = time * 1;
+    time = time * 65;
   }
   // console.log("last notif:", uid, Meteor.users.findOne(uid).profile.lastNotified);
   // console.log("now: ", Date.now(), "time: ", time);

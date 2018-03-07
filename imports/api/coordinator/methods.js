@@ -111,7 +111,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
 
-        let delay = 1;
+        let delay = 15;
         if(CONFIG.MODE === "PROD" || CONFIG.MODE === "DEV"){
           delay = 15;
         }
