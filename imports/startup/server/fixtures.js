@@ -20,6 +20,8 @@ import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
   log.debug("Running in mode: ", process.env.MODE );
+  log.debug("process.env is: ", process.env );
+
 
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
