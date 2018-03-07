@@ -19,9 +19,9 @@ import { findUserByUsername } from '../../api/users/methods';
 import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
-  log.debug("Running in mode: ", process.env.mode );
+  log.debug("Running in mode: ", process.env.MODE );
 
-  if(!(process.env.mode === "DEV" || process.env.mode === "PROD")){
+  if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
       clearDatabase();
       createTestData();
