@@ -27,6 +27,7 @@ import { Meteor } from "meteor/meteor";
 import {Assignments} from "../../api/coordinator/assignments";
 import {Availability} from "../../api/coordinator/availability";
 import {Notification_log} from "../../api/coordinator/notification_log";
+import {Page_log} from "../../api/page_log/page_log";
 
 Router.configure({
   layoutTemplate: 'layout'
@@ -74,6 +75,16 @@ Router.route('api.customresults', {
   path: '/apicustomresults/:iid/:eid',
   template: 'api_custom_results',
   before: function () {
+    let dic = {
+      uid: Meteor.userId(),
+      timestamp: Date.now(),
+      route: "customresults",
+      params: {
+        iid: this.params.iid,
+        eid: this.params.eid
+      }
+    };
+    Meteor.call('insertLog', dic);
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('submissions.activeIncident', this.params.iid).wait();
@@ -96,7 +107,20 @@ Router.route('/', {
 
 Router.route('cron', {
   path: '/cron',
-  template: 'cron'
+  template: 'cron',
+  before: function () {
+    let uid =  Meteor.userId();
+    console.log("tryna insert log",uid);
+    let dic = {
+      uid: uid,
+      timestamp: Date.now(),
+      route: "cron",
+      params: {}
+    };
+    console.log(dic);
+    Meteor.call('insertLog', dic);
+    this.next();
+  }
 });
 
 
