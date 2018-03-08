@@ -555,8 +555,8 @@ function createBumped(){
     participateTemplate: 'bumped',
     resultsTemplate: 'bumpedResults',
     contributionTypes: [ ],
-    description: 'You just bumped into someone!',
-    notificationText: 'You just bumped into someone!',
+    description: 'You just virtually bumped into someone!',
+    notificationText: 'You just virtually bumped into someone!',
     callbacks: []
   };
 
@@ -567,7 +567,7 @@ function createBumped(){
       needName: sub.needName
     });
 
-    notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you virtually bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
   let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg', 'lovesMaxine'];
