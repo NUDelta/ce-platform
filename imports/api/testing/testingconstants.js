@@ -383,7 +383,7 @@ let DETECTORS = {
 
   'restaurant': {
     '_id': 'MzyBGuc6fLGR8Kjii',
-      'description': 'grocery',
+      'description': 'restaurant',
       'variables': [
       'var american__traditional_;',
       'var american__new_;',
@@ -424,7 +424,6 @@ let DETECTORS = {
       'var salad;',
       'var japanese;',
       'var korean;',
-      'var cafeteria;',
       'var sandwiches;',
       'var imported_food;',
       'var restaurants;',
@@ -433,7 +432,7 @@ let DETECTORS = {
       'var soup;'
     ],
     'rules': [
-      '( american__traditional_ || american__new_ || latin_american || pizza || pasta_shops || burgers || italian || dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || cafeteria || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
+      '( american__traditional_ || american__new_ || latin_american || pizza || pasta_shops || burgers || italian || dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
     ]
   },
 
