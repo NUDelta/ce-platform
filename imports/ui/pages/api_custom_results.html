@@ -43,6 +43,8 @@
     {{#each object in bumpees}}
         <br>
         <div class="person">
+            Reach out to {{getName object}}!<br>
+            <button id="slack" class="btn btn-default btn-participate btn-primary">Open Slack</button><br><br>
             <b>{{getName object}}'s selife </b><br>
 
             {{#if (getImage object)}}
