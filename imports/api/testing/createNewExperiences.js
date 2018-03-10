@@ -10,6 +10,9 @@ Meteor.methods({
   },
   startFreshStorytime(){
     createNewStorytime();
+  },
+  startFreshNatureHunt(){
+    createNewNatureHunt();
   }
 });
 
@@ -34,42 +37,44 @@ function createNewBumped(){
     notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
-  let relationships = ['lovesDTRAlumni', 'lovesLeesha', 'lovesDTR'];
   let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
-  _.forEach(relationships, (relationship) =>{
     _.forEach(places, (place)=>{
 
       let newVars = JSON.parse(JSON.stringify(CONSTANTS.DETECTORS[place[0]]['variables']));
-      newVars.push('var ' + relationship + ';');
+      newVars.push('var lovesDTR;');
+      newVars.push('var lovesDTRAlumni;');
 
       let detector = {
         '_id': Random.id(),
-        'description': CONSTANTS.DETECTORS[place[0]].description + relationship,
+        'description': CONSTANTS.DETECTORS[place[0]].description + "lovesDTR_lovesDTRAlumni",
         'variables': newVars,
-        'rules': [ '(' + CONSTANTS.DETECTORS[place[0]].rules[0] + ' && ' + relationship + ');' ]
+        'rules': [ '(' + CONSTANTS.DETECTORS[place[0]].rules[0] + ' && (lovesDTR || lovesDTRAlumni) );' ]
       };
-      CONSTANTS.DETECTORS[place[0]+relationship] = detector;
+      CONSTANTS.DETECTORS[place[0]+"lovesDTR_lovesDTRAlumni"] = detector;
       Detectors.insert(detector);
 
       let need = {
-        needName: place[0]+relationship,
+        needName: place[0]+"lovesDTR_lovesDTRAlumni",
         situation: {detector: detector._id, number: '2'},
         toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
         numberNeeded: 2
       };
       let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + '\') === 7',
+        trigger: 'cb.numberOfSubmissions(\'' + place[0]+"lovesDTR_lovesDTRAlumni" + '\') === 2',
         function: bumpedCallback.toString(),
       };
 
       experience.contributionTypes.push(need);
       experience.callbacks.push(callback)
-    })
-  });
+    });
 
   Experiences.insert(experience);
-  let incident = createIncidentFromExperience(experience);
-  startRunningIncident(incident);
+
+  for(let i = 0; i < 20; i++){
+    let incident = createIncidentFromExperience(experience);
+    startRunningIncident(incident);
+  }
+
 
 }
 
@@ -143,7 +148,7 @@ function createNewStorytime(){
 
 }
 
-function startNewNatureHunt(){
+function createNewNatureHunt(){
   let exp = {
     "_id": Random.id(),
     "name": "Nature Scavenger Hunt",
@@ -263,7 +268,5 @@ function startNewNatureHunt(){
   Experiences.insert(exp);
   let incident = createIncidentFromExperience(exp);
   startRunningIncident(incident);
-
-
 
 }
