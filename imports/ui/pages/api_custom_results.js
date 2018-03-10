@@ -110,6 +110,10 @@ Template.bumpedResults.events({
     event.preventDefault();
     window.open('slack://channel?id=C0E33DFDX&team=T0CEQEN0L');
   },
+  'click #messenger'(event, instance) {
+    event.preventDefault();
+    window.open('imessage://');
+  },
 
 });
 

@@ -45,14 +45,16 @@
         <div class="person">
             Reach out to {{getName object}}!<br>
             <button id="slack" class="btn btn-default btn-participate btn-primary">Open Slack</button><br><br>
+            <button id="messenger" class="btn btn-default btn-participate btn-primary">Open Messenger</button><br><br>
+
             <b>{{getName object}}'s selife </b><br>
 
             {{#if (getImage object)}}
-                <div style="height:150px;display:block;">
+                <div style="min-height:150px;display:inline-block;">
                     {{> Template.dynamic template="displayImage" data=(getImage object)}}
                 </div>
             {{else}}
-                <div style="display:block; height:150px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
+                <div style="display:inline-block; min-height:290px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
                     Waiting for {{getName object}} to upload a selife...
                 </div>
             {{/if}}
@@ -60,12 +62,13 @@
         <br>
         <div class="person">
             <b> your selfie </b>
-            <div style="height:150px; display:block; vertical-align:baseline!important;">
+            <div style="min-height:150px; display:block; vertical-align:baseline!important;">
                 {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
             </div>
         </div>
 
     {{/each}}
+    
 
 </template>
 
