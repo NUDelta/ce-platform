@@ -40,30 +40,29 @@
   <div class="text">
   Thanks for participating in {{this.experience.name}}! See selfies from the people you bumped into:
   </div>
-    {{#each object in bumpees}}
-        <br>
-        <div class="person">
-            <b>{{getName object}}'s selife </b><br>
-
-            {{#if (getImage object)}}
-                <div style="height:150px;display:block;">
-                    {{> Template.dynamic template="displayImage" data=(getImage object)}}
-                </div>
-            {{else}}
-                <div style="display:block; height:150px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
-                    Waiting for {{getName object}} to upload a selife...
-                </div>
-            {{/if}}
+  {{#each object in bumpees}}
+    You bumped with {{getName object}}
+    <br>
+    <div class="person">
+      <b>{{getName object}}'s selife </b><br>
+      {{#if (getImage object)}}
+        <div style="height:150px;display:block;">
+            {{> Template.dynamic template="displayImage" data=(getImage object)}}
         </div>
-        <br>
-        <div class="person">
-            <b> your selfie </b>
-            <div style="height:150px; display:block; vertical-align:baseline!important;">
-                {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
-            </div>
+      {{else}}
+        <div style="display:block; height:150px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
+            Waiting for {{getName object}} to upload a selife...
         </div>
-
-    {{/each}}
+      {{/if}}
+    </div>
+    <br>
+    <div class="person">
+        <b> your selfie </b>
+        <div style="height:150px; display:block; vertical-align:baseline!important;">
+            {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
+        </div>
+    </div>
+  {{/each}}
 
 </template>
 
@@ -183,7 +182,7 @@
 
               {{else}}
               <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
-                  <i>Waiting for an image...</i>
+                  <i>We're looking for another user to illustrate your sentence...</i>
               </div>
 
               {{/if}}
