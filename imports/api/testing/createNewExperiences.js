@@ -39,7 +39,7 @@ function createNewBumped(){
   };
 
 
-  let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
+  let places = [['bar','at a bar'], ['coffee', 'at a coffee shop'], ['grocery', 'at a grocery store'], ['restaurant', 'at a restaurant'], ['train', 'commuting'], ['exercising', 'exercising']];
     _.forEach(places, (place)=>{
 
       let newVars = JSON.parse(JSON.stringify(CONSTANTS.DETECTORS[place[0]]['variables']));
@@ -50,7 +50,7 @@ function createNewBumped(){
         '_id': Random.id(),
         'description': CONSTANTS.DETECTORS[place[0]].description + "lovesDTR_lovesDTRAlumni",
         'variables': newVars,
-        'rules': [ '(' + CONSTANTS.DETECTORS[place[0]].rules[0] + ' && (lovesDTR || lovesDTRAlumni) );' ]
+        'rules': [ '((' + CONSTANTS.DETECTORS[place[0]].rules[0] + ') && (lovesDTR || lovesDTRAlumni) );' ]
       };
       CONSTANTS.DETECTORS[place[0]+"lovesDTR_lovesDTRAlumni"] = detector;
       Detectors.insert(detector);
@@ -60,7 +60,7 @@ function createNewBumped(){
         let need = {
           needName: place[0] + "lovesDTR_lovesDTRAlumni" + i,
           situation: {detector: detector._id, number: '2'},
-          toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
+          toPass: {instruction: 'You are ' + place[1] + ' at the same time as '},
           numberNeeded: 2
         };
         let callback = {
