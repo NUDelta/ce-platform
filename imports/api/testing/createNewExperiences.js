@@ -3,6 +3,7 @@ import { CONSTANTS} from "./testingconstants";
 import {Detectors} from "../detectors/detectors";
 import {createIncidentFromExperience, startRunningIncident} from "../incidents/methods";
 import {Experiences} from "../experiences/experiences";
+import {Incidents} from "../incidents/incidents";
 
 Meteor.methods({
   startFreshBumped(){
@@ -29,13 +30,14 @@ function createNewBumped(){
 
   let bumpedCallback = function (sub) {
     let otherSub = Submissions.findOne({
-      uid: { $ne: sub.uid },
+      uid: {$ne: sub.uid},
       iid: sub.iid,
       needName: sub.needName
     });
 
     notify([sub.uid, otherSub.uid], sub.iid, 'See a photo from who you bumped into!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
+
 
   let places = [['bar','bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
     _.forEach(places, (place)=>{
@@ -53,27 +55,28 @@ function createNewBumped(){
       CONSTANTS.DETECTORS[place[0]+"lovesDTR_lovesDTRAlumni"] = detector;
       Detectors.insert(detector);
 
-      let need = {
-        needName: place[0]+"lovesDTR_lovesDTRAlumni",
-        situation: {detector: detector._id, number: '2'},
-        toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
-        numberNeeded: 2
-      };
-      let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place[0]+"lovesDTR_lovesDTRAlumni" + '\') === 2',
-        function: bumpedCallback.toString(),
-      };
+      for(let i =0; i < 10; i++) {
 
-      experience.contributionTypes.push(need);
-      experience.callbacks.push(callback)
+        let need = {
+          needName: place[0] + "lovesDTR_lovesDTRAlumni" + i,
+          situation: {detector: detector._id, number: '2'},
+          toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
+          numberNeeded: 2
+        };
+        let callback = {
+          trigger: 'cb.numberOfSubmissions(\'' + place[0] + "lovesDTR_lovesDTRAlumni" + i + '\') === 2',
+          function: bumpedCallback.toString(),
+        };
+
+        experience.contributionTypes.push(need);
+        experience.callbacks.push(callback)
+      }
     });
 
   Experiences.insert(experience);
+  let incident = createIncidentFromExperience(experience);
+  startRunningIncident(incident);
 
-  for(let i = 0; i < 20; i++){
-    let incident = createIncidentFromExperience(experience);
-    startRunningIncident(incident);
-  }
 
 
 }

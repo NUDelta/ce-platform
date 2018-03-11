@@ -10,15 +10,7 @@ import {Meteor} from "meteor/meteor";
 
 Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));
 
-Meteor.methods({
-  triggerUpdate(lat, lng, uid){
-    onLocationUpdate(uid, lat, lng, function () {
-      serverLog.call({message: "triggering manual location update for: " + uid});
-    });
 
-  }
-
-});
 
 Router.route('/api/geolocation', {where: 'server'})
   .get(function () {

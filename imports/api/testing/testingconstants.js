@@ -586,20 +586,26 @@ function createBumped(){
       };
       DETECTORS[place[0]+relationship] = detector;
 
-      let need = {
-        needName: place[0]+relationship,
-        situation: {detector: detector._id, number: '2'},
-        toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
-        numberNeeded: 2
-      };
-      let callback = {
-        trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + '\') === 7',
-        function: bumpedCallback.toString(),
-      };
+      for(let i =0; i < 10; i++){
+        let need = {
+          needName: place[0]+relationship + i,
+          situation: {detector: detector._id, number: '2'},
+          toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
+          numberNeeded: 2
+        };
+        let callback = {
+          trigger: 'cb.numberOfSubmissions(\'' + place[0]+relationship + i + '\') === 2',
+          function: bumpedCallback.toString(),
+        };
 
 
-      experience.contributionTypes.push(need);
-      experience.callbacks.push(callback)
+        experience.contributionTypes.push(need);
+        experience.callbacks.push(callback)
+
+      }
+
+
+
     })
   });
 

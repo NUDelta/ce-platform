@@ -88,6 +88,7 @@ Template.bumpedResults.helpers({
     console.log("contents", contents);
 
     let images = this.images;
+    contents.reverse();
 
     contents = contents.map(function(x){
       let img = images.find(function(y){

@@ -11,7 +11,19 @@ import {CONFIG} from "../config";
 import {Availability} from "../coordinator/availability";
 import {Meteor} from "meteor/meteor";
 import {Location_log} from "./location_log";
+import {serverLog} from "../logs";
 
+
+
+Meteor.methods({
+  triggerUpdate(lat, lng, uid){
+    onLocationUpdate(uid, lat, lng, function () {
+      serverLog.call({message: "triggering manual location update for: " + uid});
+    });
+
+  }
+
+});
 
 /**
  * Saves location in DB and sends data to sendToMatcher function.
@@ -36,16 +48,18 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     });
 
   });
+  console.log('calling the function');
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
-    let user = Meteor.users.findOne(uid)
+    let user = Meteor.users.findOne(uid);
     if(user){
       let userAffordances = user.profile.staticAffordances;
 
       affordances = Object.assign({}, affordances, userAffordances);
       updateLocationInDb(uid, lat, lng, affordances);
       updateAssignmentDbdAfterUserLocationChange(uid, affordances);
-           sendToMatcher(uid, affordances);
+      sendToMatcher(uid, affordances);
+
       callback();
     }
 
