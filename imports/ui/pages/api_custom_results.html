@@ -38,31 +38,35 @@
     </style>
   </head>
   <div class="text">
-  Check out the selfies sent from the people you bumped into. Feel free to send them a message on Slack/iMessage/Messenger to catch up and say hi!
+  Check out the selfies sent from the people you bumped into.
   </div>
-  {{#each object in bumpees}}
-    You bumped with {{getName object}}
-    <br>
-    <div class="person">
-      <b>{{getName object}}'s selife </b><br>
-      {{#if (getImage object)}}
-        <div style="min-height:150px;display:block;">
-            {{> Template.dynamic template="displayImage" data=(getImage object)}}
+
+    {{#each object in bumpees}}
+        <br>
+        <div class="person">
+            Reach out to {{getName object}} on Slack/iMessage/Messenger to catch up or say hi!<br>
+
+            <b>{{getName object}}'s selife </b><br>
+
+            {{#if (getImage object)}}
+                <div style="min-height:150px;display:inline-block;">
+                    {{> Template.dynamic template="displayImage" data=(getImage object)}}
+                </div>
+            {{else}}
+                <div style="display:inline-block; min-height:290px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
+                    Waiting for {{getName object}} to upload a selife...
+                </div>
+            {{/if}}
         </div>
-      {{else}}
-        <div style="display:block; min-height:290px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
-            Waiting for {{getName object}} to upload a selife...
+        <br>
+        <div class="person">
+            <b> your selfie </b>
+            <div style="min-height:150px; display:block; vertical-align:baseline!important;">
+                {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
+            </div>
         </div>
-      {{/if}}
-    </div>
-    <br>
-    <div class="person">
-        <b> Your selfie </b>
-        <div style="min-height:150px; display:block; vertical-align:baseline!important;">
-            {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
-        </div>
-    </div>
-  {{/each}}
+
+    {{/each}}
 
 </template>
 

@@ -1,16 +1,18 @@
-import { Router } from 'meteor/iron:router';
+import {Router} from 'meteor/iron:router';
 
-import { updateUserLocationAndAffordances } from '../../api/locations/methods.js';
-import { log } from '../../api/logs.js';
-import { Location_log } from '../../api/locations/location_log.js'
-import { onLocationUpdate } from "../../api/locations/methods";
+import {updateUserLocationAndAffordances} from '../../api/locations/methods.js';
+import {log} from '../../api/logs.js';
+import {Location_log} from '../../api/locations/location_log.js'
+import {onLocationUpdate} from "../../api/locations/methods";
 import {serverLog} from "../../api/logs";
 import {Meteor} from "meteor/meteor";
 
 
-Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({ extended: false }));
+Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));
 
-Router.route('/api/geolocation', { where: 'server' })
+
+
+Router.route('/api/geolocation', {where: 'server'})
   .get(function () {
     this.response.end('ok');
   })
@@ -27,15 +29,15 @@ Router.route('/api/geolocation', { where: 'server' })
     // const activity = this.request.body.activity;
 
     onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function () {
-      serverLog.call({ message: "triggering internal location update for: " + uid });
+      serverLog.call({message: "triggering internal location update for: " + uid});
     });
 
-    this.response.writeHead(200, { 'Content-Type': 'application/json' });
+    this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
 
   })
   .put(function () {
-    this.response.writeHead(200, { 'Content-Type': 'application/json' });
+    this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
   });
 

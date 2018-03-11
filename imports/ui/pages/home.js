@@ -28,7 +28,7 @@ Template.home.events({
     Template.instance().state.get('render');
     Template.instance().state.set('render', false);
     location.reload();
-  }
+  },
 });
 
 Template.home.helpers({

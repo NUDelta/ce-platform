@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Detectors } from './detectors'
+import {serverLog} from "../logs";
 
 
 /**
@@ -15,9 +16,13 @@ export const getAffordancesFromLocation = function (lat, lng, callback) {
     if (!error && response.statusCode === 200) {
       let affordances = JSON.parse(body);
       if (affordances !== Object(affordances)) {
-        log.warning("Locations/methods expected type Object but did not receive an Object, doing nothing");
+        serverLog.call({message: "Locations/methods expected type Object but did not receive an Object, doing nothing"});
+
       }
       callback(affordances);
+    }else{
+      serverLog.call({message: "ERROR WITH ACCORDANCE AWARE "});
+
     }
   }));
 };
