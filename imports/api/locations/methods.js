@@ -48,7 +48,6 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     });
 
   });
-  console.log('calling the function');
 
   getAffordancesFromLocation(lat, lng, function (affordances) {
     let user = Meteor.users.findOne(uid);

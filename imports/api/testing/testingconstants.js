@@ -68,10 +68,9 @@ let DETECTORS = {
     'description': 'places where it\'s nighttime,',
     'variables': [
       'var nighttime;',
-      'var clear;'
     ],
     'rules': [
-      '(nighttime && clear)'
+      '(nighttime)'
     ]
   },
   'sunset': {
