@@ -18,6 +18,9 @@ Meteor.methods({
   },
   startFreshSpookyStorytime(){
     createNewSpookyStorytime();
+  },
+  startFreshSpookyNevilleStorytime(){
+    createNewSpookyNevilleStorytime();
   }
 });
 
@@ -391,3 +394,117 @@ function createNewSpookyStorytime(){
 
 }
 
+
+function createNewSpookyNevilleStorytime(){
+
+  let storytimeCallback = function (sub) {
+
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $set: {'profile.staticAffordances.participatedInSpookyHarryStorytime': true}
+    });
+
+    let affordance = sub.content.affordance;
+
+    let options = [
+      ['Sneaking around in the invisibility cloak after hours', 'F8YqP3AEbyguQMJ9i'],
+      ['Werewolves howling at the moon', 'F8YqP3AEbyguQMJ9i'],
+      ['Getting food in Diagon Alley', 'yxQP8QrCdAWakjMaY'],
+      ['Eating in the Great Hall', 'yxQP8QrCdAWakjMaY'],
+      ['Exploring the Hogwarts grounds', 'ueBZrF5mCRrcFBc8g'],
+      ['Drinking coffee while studying for O.W.L.S.', 'DPxfkTQQFggzNJBXD'],
+      ['Looking for magical beasts flying overhead', 'ueBZrF5mCRrcFBc8g']
+    ];
+
+    options = options.filter(function (x) {
+      return x[1] !== affordance;
+    });
+
+    let needName = 'page' + Random.id(3);
+    if (cb.numberOfSubmissions() === 7) {
+      needName = 'pageFinal'
+    }
+    let contribution = {
+      needName: needName, situation: {detector: affordance, number: '1'},
+      toPass: {
+        instruction: sub.content.sentence,
+        dropdownChoices: {name: 'affordance', options: options}
+      }, numberNeeded: 1
+    };
+    addContribution(sub.iid, contribution);
+  };
+
+  let places = ["night", "niceish_day", "restaurant", "coffee"];
+  let detectorIds = ["F8YqP3AEbyguQMJ9i", "ueBZrF5mCRrcFBc8g", "yxQP8QrCdAWakjMaY", "DPxfkTQQFggzNJBXD"];
+  let i = 0;
+  _.forEach(places, (place) => {
+
+    let newVars = JSON.parse(JSON.stringify(CONSTANTS.DETECTORS[place]['variables']));
+    newVars.push('var participatedInSpookyHarryStorytime;');
+
+    let det = {
+      '_id': detectorIds[i],
+      'description': CONSTANTS.DETECTORS[place].description + "_SpookyHarryStorytime",
+      'variables': newVars,
+      'rules': ['(' + CONSTANTS.DETECTORS[place].rules[0] + ' ) && !participatedInSpookyHarryStorytime;']
+    };
+    Detectors.insert(det);
+
+    i++;
+  });
+
+  let dropdownOptions = [
+    ['Sneaking around in the invisibility cloak after hours', 'F8YqP3AEbyguQMJ9i'],
+    ['Werewolves howling at the moon', 'F8YqP3AEbyguQMJ9i'],
+    ['Getting food in Diagon Alley', 'yxQP8QrCdAWakjMaY'],
+    ['Eating in the Great Hall', 'yxQP8QrCdAWakjMaY'],
+    ['Exploring the Hogwarts grounds', 'ueBZrF5mCRrcFBc8g'],
+    ['Drinking coffee while studying for O.W.L.S.', 'DPxfkTQQFggzNJBXD'],
+    ['Looking for magical beasts flying overhead', 'ueBZrF5mCRrcFBc8g']
+  ];
+
+  let firstSentence = 'Neville Longbottom looked out the castle into the darkness of the night as he snuck out of the common room';
+
+  let sendNotification = function (sub) {
+    let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+      return x.uid;
+    });
+    notify(uids, sub.iid, 'Our spooky Neville Longbottom story is finally complete. Click here to read it!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+  };
+
+  let exp = {
+    _id: 'QC7LGdoDCZqCY8mWb', //Random.id(),
+    name: 'Spooky Storytime',
+    participateTemplate: 'storyPage',
+    resultsTemplate: 'storybook',
+    contributionTypes: [{
+      needName: 'pageOne', situation: {detector:"F8YqP3AEbyguQMJ9i", number: '1'},
+      toPass: {
+        instruction: firstSentence,
+        firstSentence: firstSentence,
+        dropdownChoices: {
+          name: 'affordance', options: dropdownOptions
+        }
+      },
+      numberNeeded: 1
+    },
+    ],
+    description: 'We\'re writing a spooky Neville Longbottom spin-off story',
+    notificationText: 'Help write a spooky Neville Longbottom story!',
+    callbacks: [{
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
+      function: storytimeCallback.toString(),
+    }, {
+      trigger: 'cb.incidentFinished()',
+      function: sendNotification.toString()
+    }]
+  };
+
+
+  Experiences.insert(exp);
+  let incident = createIncidentFromExperience(exp);
+  startRunningIncident(incident);
+
+}
