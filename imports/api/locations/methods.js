@@ -66,8 +66,6 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
           sharedAffs[key] = newAffs[key];
         });
 
-        console.log("shared affs are", sharedAffs);
-
         updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
         sendToMatcher(uid, sharedAffs);
 
