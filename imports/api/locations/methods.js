@@ -53,13 +53,26 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     let user = Meteor.users.findOne(uid);
     if(user){
       let userAffordances = user.profile.staticAffordances;
-
       affordances = Object.assign({}, affordances, userAffordances);
       updateLocationInDb(uid, lat, lng, affordances);
-      updateAssignmentDbdAfterUserLocationChange(uid, affordances);
-      sendToMatcher(uid, affordances);
-
       callback();
+
+      Meteor.setTimeout(function(){
+        let newAffs = Locations.findOne({uid: user._id}).affordances;
+        let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
+
+        let sharedAffs = [];
+        _.forEach(sharedKeys, (key)=>{
+          sharedAffs[key] = newAffs[key];
+        });
+
+        console.log("shared affs are", sharedAffs);
+
+        updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
+        sendToMatcher(uid, sharedAffs);
+
+      }, 5*60000);
+
     }
 
   });
@@ -82,7 +95,6 @@ const sendToMatcher = (uid, affordances) => {
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
        runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
-
   }
 };
 
