@@ -31,6 +31,9 @@ Meteor.methods({
   },
   startFreshSpookyNevilleStorytime() {
     createNewSpookyNevilleStorytime();
+  },
+  startFreshFoodFight() {
+    createNewFoodFight();
   }
 });
 
@@ -710,6 +713,82 @@ function createNewSpookyNevilleStorytime() {
       {
         trigger: "cb.incidentFinished()",
         function: sendNotification.toString()
+      }
+    ]
+  };
+
+  Experiences.insert(exp);
+  let incident = createIncidentFromExperience(exp);
+  startRunningIncident(incident);
+}
+
+function createNewFoodFight() {
+
+  let newVars = JSON.parse(
+    JSON.stringify(CONSTANTS.DETECTORS["eating_alone"]["variables"])
+  );
+  newVars.push("var goodVariety1;");
+
+  let det = {
+    _id: eG4no7zpSnthwwcv9,
+    description:
+      CONSTANTS.DETECTORS["eating_alone"].description + "goodVariety1",
+    variables: newVars,
+    rules: [
+      "(" +
+        CONSTANTS.DETECTORS["eating_alone"].rules[0] +
+        " ) && goodVariety1;"
+    ]
+  };
+
+  Detectors.insert(det);
+
+
+  let startStage2 = function(sub) {
+    let need1 = {
+      needName: "warning1",
+      situation: { detector: "", number: "1" },
+      toPass: {
+        instruction: "your diet sucks"
+      },
+      numberNeeded: 2
+    };
+
+    let need2 = {
+      needName: "good1",
+      situation: { detector: "eG4no7zpSnthwwcv9", number: "1" },
+      toPass: {
+        instruction: "We're having a food fight! Share what you're eating"
+      },
+      numberNeeded: 8
+    }
+
+  addNeed(sub.eid, need1);
+  addNeed(sub.eid, need2);
+}
+
+  let exp = {
+    _id: Random.id(),
+    name: "Food Fight",
+    participateTemplate: "submitText",
+    resultsTemplate: "foodFightResult",
+    contributionTypes: [
+      {
+        needName: "foodFightStage1",
+        situation: { detector: "eG4no7zpSnthwwcv6", number: "1" },
+        toPass: {
+          instruction: "We're having a food fight! Share what you're eating"
+
+        },
+        numberNeeded: 10
+      }
+    ],
+    description: "food",
+    notificationText: "Help write a spooky Neville Longbottom story!",
+    callbacks: [
+      {
+        trigger: "cb.needFinished("foodFightStage1")",
+        function: startStage2.toString()
       }
     ]
   };

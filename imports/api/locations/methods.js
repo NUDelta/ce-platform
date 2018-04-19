@@ -1,28 +1,26 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { log } from '../logs.js';
-import { Locations } from './locations.js';
+import { ValidatedMethod } from "meteor/mdg:validated-method";
+import { SimpleSchema } from "meteor/aldeed:simple-schema";
+import { log } from "../logs.js";
+import { Locations } from "./locations.js";
 
-import { findMatchesForUser } from '../experiences/methods'
-import { runCoordinatorAfterUserLocationChange } from '../coordinator/server/methods'
+import { findMatchesForUser } from "../experiences/methods";
+import { runCoordinatorAfterUserLocationChange } from "../coordinator/server/methods";
 import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/methods";
-import { getAffordancesFromLocation } from '../detectors/methods';
-import {CONFIG} from "../config";
-import {Availability} from "../coordinator/availability";
-import {Meteor} from "meteor/meteor";
-import {Location_log} from "./location_log";
-import {serverLog} from "../logs";
-
-
+import { getAffordancesFromLocation } from "../detectors/methods";
+import { CONFIG } from "../config";
+import { Availability } from "../coordinator/availability";
+import { Meteor } from "meteor/meteor";
+import { Location_log } from "./location_log";
+import { serverLog } from "../logs";
 
 Meteor.methods({
-  triggerUpdate(lat, lng, uid){
-    onLocationUpdate(uid, lat, lng, function () {
-      serverLog.call({message: "triggering manual location update for: " + uid});
+  triggerUpdate(lat, lng, uid) {
+    onLocationUpdate(uid, lat, lng, function() {
+      serverLog.call({
+        message: "triggering manual location update for: " + uid
+      });
     });
-
   }
-
 });
 
 /**
@@ -34,47 +32,47 @@ Meteor.methods({
  * @param lng {float} longitude of new location
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-
   //TODO: this could def be a clearner call or its own function
   let availabilityObjects = Availability.find().fetch();
-  _.forEach(availabilityObjects, (av) => {
-    _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
+  _.forEach(availabilityObjects, av => {
+    _.forEach(av.needUserMaps, needEntry => {
+      Availability.update(
+        {
+          _id: av._id,
+          "needUserMaps.needName": needEntry.needName
+        },
+        {
+          $pull: { "needUserMaps.$.uids": uid }
+        }
+      );
     });
-
   });
 
-  getAffordancesFromLocation(lat, lng, function (affordances) {
+  getAffordancesFromLocation(lat, lng, function(affordances) {
     let user = Meteor.users.findOne(uid);
-    if(user){
+    if (user) {
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
       updateLocationInDb(uid, lat, lng, affordances);
       callback();
 
-      Meteor.setTimeout(function(){
-        let newAffs = Locations.findOne({uid: user._id}).affordances;
-        let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
+      Meteor.setTimeout(function() {
+        let newAffs = Locations.findOne({ uid: user._id }).affordances;
+        let sharedKeys = _.intersection(
+          Object.keys(newAffs),
+          Object.keys(affordances)
+        );
 
         let sharedAffs = [];
-        _.forEach(sharedKeys, (key)=>{
+        _.forEach(sharedKeys, key => {
           sharedAffs[key] = newAffs[key];
         });
 
         updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
         sendToMatcher(uid, sharedAffs);
-
-      }, 5*60000);
-
+      }, 5 * 0);
     }
-
   });
-
 };
 
 /**
@@ -92,7 +90,7 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-       runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 };
 
@@ -105,7 +103,7 @@ const sendToMatcher = (uid, affordances) => {
  * @param debug {boolean} choose to run in debug mode or not
  * @returns {boolean} whether a user can participate in an experience
  */
-const userIsAvailableToParticipate = (uid) => {
+const userIsAvailableToParticipate = uid => {
   let time = 60 * 1000;
 
   if (CONFIG.MODE === "DEV") {
@@ -121,7 +119,8 @@ const userIsAvailableToParticipate = (uid) => {
   //
   // console.log("IS USER AVAIABLE TO PARTICPATE",  (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time)
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time};
+  return Date.now() - Meteor.users.findOne(uid).profile.lastNotified > time;
+};
 
 /**
  * Updates the location for a user in the database.
@@ -133,37 +132,44 @@ const userIsAvailableToParticipate = (uid) => {
  */
 const updateLocationInDb = (uid, lat, lng, affordances) => {
   const entry = Locations.findOne({ uid: uid });
-   if (entry) {
-    Locations.update(entry._id, {
-      $set: {
+  if (entry) {
+    Locations.update(
+      entry._id,
+      {
+        $set: {
+          lat: lat,
+          lng: lng,
+          timestamp: Date.now(),
+          affordances: affordances
+        }
+      },
+      err => {
+        if (err) {
+          log.error("Locations/methods, can't update a location", err);
+        }
+      }
+    );
+  } else {
+    Locations.insert(
+      {
+        uid: uid,
         lat: lat,
         lng: lng,
         timestamp: Date.now(),
         affordances: affordances
+      },
+      err => {
+        if (err) {
+          log.error("Locations/methods, can't add a new location", err);
+        }
       }
-    }, (err) => {
-      if (err) {
-        log.error("Locations/methods, can't update a location", err);
-      }
-    });
-  } else {
-    Locations.insert({
-      uid: uid,
-      lat: lat,
-      lng: lng,
-      timestamp: Date.now(),
-      affordances: affordances
-    }, (err) => {
-      if (err) {
-        log.error("Locations/methods, can't add a new location", err);
-      }
-    });
+    );
   }
   Location_log.insert({
     uid: uid,
     lat: lat,
     lng: lng,
     timestamp: Date.now(),
-    affordances: affordances,
+    affordances: affordances
   });
 };

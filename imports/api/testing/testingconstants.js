@@ -184,6 +184,17 @@ let DETECTORS = {
       '(men_s_hair_salons || hair_salons || hair_stylists || blow_dry_out_services || barbers)'
     ]
   },
+  'eating_alone': {
+    '_id': 'eG4no7zpSnthwwcv6',
+    'description': 'eating_alone',
+    'variables': [
+      'var food_court;',
+      'var dinning_hall;',
+    ],
+    'rules': [
+      '(food_court || dinning_hall)'
+    ]
+  }
   'gas_station': {
     '_id': 'xZBgjwdPw8rtg86eo',
     'description': 'gas_stations',
