@@ -1,10 +1,9 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-
+import { ValidatedMethod } from "meteor/mdg:validated-method";
+import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
 export const CONFIG = {
-  MODE: (process.env.MODE || "local"),
-  DEBUG: false
+  MODE: process.env.MODE || "local",
+  DEBUG: true
 };
 
 export const AUTH = {
@@ -16,7 +15,7 @@ export const AUTH = {
 };
 
 export const getConfig = new ValidatedMethod({
-  name: 'config.get',
+  name: "config.get",
   validate: null,
   run() {
     return CONFIG;

@@ -1,29 +1,32 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { ValidatedMethod } from "meteor/mdg:validated-method";
+import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
-import { Assignments } from './assignments';
-import { Availability } from './availability';
-import { Experiences } from '../experiences/experiences.js';
-import { Incidents } from '../incidents/incidents.js';
-import { Locations } from '../locations/locations.js';
-import { Submissions } from '../submissions/submissions.js';
-import { Users } from '../users/users.js';
+import { Assignments } from "./assignments";
+import { Availability } from "./availability";
+import { Experiences } from "../experiences/experiences.js";
+import { Incidents } from "../incidents/incidents.js";
+import { Locations } from "../locations/locations.js";
+import { Submissions } from "../submissions/submissions.js";
+import { Users } from "../users/users.js";
+import { numUnfinishedNeeds } from "../submissions/methods";
+import { addEmptySubmissionsForNeed } from "../incidents/methods";
 
-import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from '../users/methods';
-import { doesUserMatchNeed } from '../experiences/methods';
-import {CONFIG} from "../config";
+import {
+  _addActiveIncidentToUsers,
+  _removeActiveIncidentFromUsers,
+  _removeIncidentFromUsersEntirely
+} from "../users/methods";
+import { doesUserMatchNeed } from "../experiences/methods";
+import { CONFIG } from "../config";
 
-
-
-export const getNeedObject = (iid, needName) =>{
+export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
-  if(incident){
-    let currentNeed = incident.contributionTypes.find(function (x) {
+  if (incident) {
+    let currentNeed = incident.contributionTypes.find(function(x) {
       return x.needName === needName;
     });
     return currentNeed;
-
-  }else{
+  } else {
     return null;
   }
 };
@@ -44,36 +47,41 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   let updatedEntries = [];
 
   let availability = Availability.find().fetch();
-  _.forEach(availability, (av) => {
+  _.forEach(availability, av => {
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
       return;
       //TODO: does this return actuall prevent it from going into this loop?
     }
 
-    let updatedNeeds = { iid: iid, 'needUserMaps': [] };
+    let updatedNeeds = { iid: iid, needUserMaps: [] };
 
-    _.forEach(av.needUserMaps, (needUserMap) => {
+    _.forEach(av.needUserMaps, needUserMap => {
       let needName = needUserMap.needName;
 
-        if(availabilityDictionary[iid].includes(needName)){
-          Availability.update({
+      if (availabilityDictionary[iid].includes(needName)) {
+        Availability.update(
+          {
             _id: iid,
-            'needUserMaps.needName': needName
-          }, {
-            $addToSet: { 'needUserMaps.$.uids': uid }
-          }, (err, docs) => {
+            "needUserMaps.needName": needName
+          },
+          {
+            $addToSet: { "needUserMaps.$.uids": uid }
+          },
+          (err, docs) => {
             if (err) {
-              console.log('error,', err);
+              console.log("error,", err);
             }
-          });
+          }
+        );
 
-          let newusers = new Set(needUserMap.uids);
-          newusers.add(uid);
-          updatedNeeds.needUserMaps.push({ needName: needName, uids: [...newusers] });
-
-        }
-
+        let newusers = new Set(needUserMap.uids);
+        newusers.add(uid);
+        updatedNeeds.needUserMaps.push({
+          needName: needName,
+          uids: [...newusers]
+        });
+      }
     });
 
     //console.log('updatedNeeds', updatedNeeds);
@@ -95,35 +103,40 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  * @param uid {string} user to update assignment for
  * @param affordances {[string]} list of user's affordances as an array of key/values
  */
-export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => {
+export const updateAssignmentDbdAfterUserLocationChange = (
+  uid,
+  affordances
+) => {
   let currentAssignments = Assignments.find({
-    'needUserMaps': {
-      '$elemMatch': {
-        'uids': uid
+    needUserMaps: {
+      $elemMatch: {
+        uids: uid
       }
     }
   }).fetch();
 
-  _.forEach(currentAssignments, (assignment) => {
-    _.forEach(assignment.needUserMaps, (needUserMap) => {
-
-      let matchPredicate = doesUserMatchNeed(uid, affordances, assignment._id, needUserMap.needName);
+  _.forEach(currentAssignments, assignment => {
+    _.forEach(assignment.needUserMaps, needUserMap => {
+      let matchPredicate = doesUserMatchNeed(
+        uid,
+        affordances,
+        assignment._id,
+        needUserMap.needName
+      );
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
-
         let delay = 15;
-        if(CONFIG.MODE === "PROD" || CONFIG.MODE === "DEV"){
+        if (CONFIG.MODE === "PROD" || CONFIG.MODE === "DEV") {
           delay = 15;
         }
 
-        Meteor.setTimeout(
-          function(){
-            adminUpdatesForRemovingUsersToIncidentEntirely([uid], assignment._id, needUserMap.needName);
-
-          },
-          delay*60000);
-
-
+        Meteor.setTimeout(function() {
+          adminUpdatesForRemovingUsersToIncidentEntirely(
+            [uid],
+            assignment._id,
+            needUserMap.needName
+          );
+        }, delay * 60000);
       }
     });
   });
@@ -149,7 +162,7 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
- // user participated so need to remove from active incidents and add to past incidents
+// user participated so need to remove from active incidents and add to past incidents
 export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
 
@@ -163,8 +176,12 @@ export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
- // user location moved but did not participate. remove incident entirely from user
-export const adminUpdatesForRemovingUsersToIncidentEntirely = (uids, iid, needName) => {
+// user location moved but did not participate. remove incident entirely from user
+export const adminUpdatesForRemovingUsersToIncidentEntirely = (
+  uids,
+  iid,
+  needName
+) => {
   //TODO: make this function take a single user not an array
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeIncidentFromUsersEntirely(uids, iid);
@@ -179,14 +196,44 @@ export const adminUpdatesForRemovingUsersToIncidentEntirely = (uids, iid, needNa
  */
 const _addUsersToAssignmentDb = (uids, iid, needName) => {
   //TODO: mongo so old can't use each, but maybe better way
-  _.forEach(uids, (uid) => {
-    Assignments.update({
-      _id: iid,
-      'needUserMaps.needName': needName
-    }, {
-      $addToSet: { 'needUserMaps.$.uids': uid }
-    });
+  _.forEach(uids, uid => {
+    Assignments.update(
+      {
+        _id: iid,
+        "needUserMaps.needName": needName
+      },
+      {
+        $addToSet: { "needUserMaps.$.uids": uid }
+      }
+    );
   });
+};
+
+/**
+* Checking if a need fails. If so, mark submissions as failures
+* and create fresh submissions to re-try
+*
+* @param iid {string} incident with failed need
+* @param needName {string} need that failed
+*
+**/
+const checkIfNeedFailed = (iid, needName) => {
+  if (numUnfinishedNeeds(iid, needName) > 0) {
+    Submissions.update(
+      { iid: iid, needName: needName },
+      { $set: { failed: true } },
+      { multi: true }
+    );
+
+    Submissions.remove({ iid: iid, uid: null, needName: needName });
+
+    let incident = Incidents.find({ _id: iid });
+    let need = incident.contributionTypes.find(x => {
+      x.needName === needName;
+    });
+
+    addEmptySubmissionsForNeed(iid, incident.eid, need);
+  }
 };
 
 /**
@@ -197,14 +244,34 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
  * @param needName {string} need that user is assigned to
  */
 const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
-  _.forEach(uids, (uid) => {
-    Assignments.update({
-      _id: iid,
-      'needUserMaps.needName': needName
-    }, {
-      $pull: { 'needUserMaps.$.uids': uid }
-    });
+  if (uids.length() === 0) {
+    return;
+  }
+
+  _.forEach(uids, uid => {
+    Assignments.update(
+      {
+        _id: iid,
+        "needUserMaps.needName": needName
+      },
+      {
+        $pull: { "needUserMaps.$.uids": uid }
+      }
+    );
   });
+
+  let assignment = Assignments.find({
+    _id: iid,
+    "needUserMaps.needName": needName
+  });
+
+  let needUserMap = assignment.needUserMaps.find(x => {
+    return x.needName === needName;
+  });
+
+  if (needUserMap.uids.length() === 0) {
+    checkIfNeedFailed(iid, needName);
+  }
 };
 
 // const locationCursor = Locations.find();

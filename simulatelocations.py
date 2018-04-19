@@ -158,7 +158,7 @@ def test5():
 		print "megs sister gets to the bar"
 		setLocation(beer, sys.argv[4])
 		time.sleep(15)
-	
+
 		print "josh gets to the park"
 		setLocation(park, sys.argv[5])
 		time.sleep(15)
@@ -273,4 +273,4 @@ def onlyGarretAtLake():
 
 
 if __name__ == "__main__":
-	allUsersSyd()
+	allUsersAtRestaurant()
