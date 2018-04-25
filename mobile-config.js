@@ -11,3 +11,6 @@ App.appendToConfig(`<platform name="ios">
       <string>YOUR DESCRIPTION (CAMERA PERMISSION) HERE</string>
     </config-file>
   </platform>`);
+App.configurePlugin('phonegap-plugin-push', {
+  SENDER_ID: 12341234
+});
