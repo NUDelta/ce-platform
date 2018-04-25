@@ -41,8 +41,6 @@ oauth@1.2.1
 nooitaf:colors
 percolate:synced-cron
 oauth1@1.2.0
-mirrorcell:background-geolocation-plus
-mdg:geolocation
 mrt:moment-timezone
 cfs:graphicsmagick
 ian:accounts-ui-bootstrap-3

@@ -3,6 +3,16 @@ import { Router } from 'meteor/iron:router';
 import { log, serverLog } from '../../api/logs.js';
 
 Push.Configure({
+  android: {
+    senderID: 12341234,
+    alert: true,
+    badge: true,
+    sound: true,
+    vibrate: true,
+    clearNotifications: true
+    // icon: '',
+    // iconColor: ''
+  },
   ios: {
     alert: true,
     badge: true,

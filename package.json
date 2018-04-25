@@ -9,6 +9,7 @@
     "@babel/runtime": "^7.0.0-beta.46",
     "bcrypt": "^0.8.7",
     "buffer-shims": "^1.0.0",
+    "cordova-custom-config": "^5.0.2",
     "core-util-is": "^1.0.2",
     "meteor-node-stubs": "^0.2.5",
     "photoswipe": "^4.1.1",
