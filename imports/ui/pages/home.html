@@ -1,73 +1,55 @@
 <template name="home">
-  <head>
-    <style>
-      #emoji {
-        text-align: center;
-      }
-      #title {
-        text-align: center;
-        color: #333;
-      }
-      #empty-state-text {
-        padding-left: 15px;
-        padding-right: 15px;
-        text-align: center;
-        color: #888;
-      }
-      #empty-state {
-        padding-top: 42%;
-      }
-    </style>
-  </head>
+    <head>
+        <style>
+            #emoji {
+                text-align: center;
+            }
 
-  {{#if currentUser}}
-    {{#if Template.subscriptionsReady}}
-      {{#if noActiveExperiences}}
-        <div id="empty-state">
-          <h1 id="emoji">🏃‍🤔✌️</h1>
-          <h4 id="title">There are no experiences near you.</h4>
-          <p id="empty-state-text">Walk around to see if any pop up. If you were notified for an experience that's no longer here, that means you took too long to participate. Participate faster next time!</p>
-        </div>
-      {{else}}
-        <div class="title-chunk">
-          <h4 class="title-text hi">Available experiences</h4>
-        </div>
-        <div class="list-group">
-          {{#each experienceId in activeExperiences}}
-            {{> activeExperience (activeExperienceArgs experienceId this.render)}}
-          {{/each}}
-        </div>
-        <button class="refresh btn btn-primary btn-participate btn-block" style="border-radius: 40px; height: 38px;">Load experiences</button>
-      {{/if}}
+            #title {
+                text-align: center;
+                color: #333;
+            }
+
+            #empty-state-text {
+                padding-left: 15px;
+                padding-right: 15px;
+                text-align: center;
+                color: #888;
+            }
+
+            #empty-state {
+                padding-top: 42%;
+            }
+        </style>
+    </head>
+
+    {{#if currentUser}}
+        {{#if Template.subscriptionsReady}}
+            {{#if noActiveIncidents}}
+                <div id="empty-state">
+                    <h1 id="emoji">🏃‍🤔✌️</h1>
+                    <h4 id="title">There are no experiences near you.</h4>
+                    <p id="empty-state-text">Walk around to see if any pop up. If you were notified
+                        for an experience that's no longer here, that means you took too long to
+                        participate. Participate faster next time!</p>
+                </div>
+            {{else}}
+                <div class="title-chunk">
+                    <h4 class="title-text hi">Available experiences</h4>
+                </div>
+                <div class="list-group">
+                    {{#each info in activeUserAssigment}}
+                        {{> activeExperience info}}
+                    {{/each}}
+                </div>
+                <button class="refresh btn btn-primary btn-participate btn-block"
+                        style="border-radius: 4px; height: 38px;">Refresh
+                </button>
+            {{/if}}
+        {{else}}
+            Loading...
+        {{/if}}
     {{else}}
-      Loading... 
+        <h4>Sign in to participate in experiences</h4>
     {{/if}}
-  {{else}}
-    <h4>Sign in to participate in experiences</h4>
-  {{/if}}
 </template>
-
-<!-- <template name="home">
-  {{#if currentUser}}
-    {{#if Template.subscriptionsReady}}
-      <div class="title-chunk">
-        <h4 class="title-text hi">Available experiences</h4>
-      </div>
-      <div class="list-group">
-      {{#each experienceId in activeExperiences}}
-        {{> activeExperience (activeExperienceArgs experienceId this.render)}}
-      {{/each}}
-      {{#if noActiveExperiences}}
-        <h5>There are no experiences near you.</h5>
-        <p style="color:#888;">Walk around to see if any pop up. If you were notified for an experience that's no longer here, that means you took too long to participate. Try to participate faster next time!</p>
-      {{else}}
-        <button class="refresh btn btn-primary btn-participate btn-block" style="border-radius: 40px; height: 38px;">Load experiences</button>
-      {{/if}}
-      </div>
-    {{else}}
-      Loading... please quit and reopen the app
-    {{/if}}
-  {{else}}
-    <h4>Sign in to participate in experiences</h4>
-  {{/if}}
-</template> -->

@@ -1,6 +1,8 @@
+
+
 <template name="camera">
-      {{> loadingOverlay}}
-    <label id={{this.key}} class="fileinput">
+    {{> loadingOverlay}}
+    <label id={{this}} class="fileinput">
         <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
         <div class="glyphicon glyphicon-camera fileinput-new"></div>
         <div class="glyphicon glyphicon-remove fileinput-exists"></div>
@@ -9,26 +11,30 @@
 </template>
 
 <template name="text">
-    <div class="form-group">
-        <textarea id={{this.key}} cols="40" rows="3" name="write" type="text" class="form-control" placeholder="Write your thing here" required></textarea>
-    </div>
+    <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
+          placeholder="Write here" required></textarea>
 </template>
 
+<template name="value">
+    <textarea id={{this.key}} value={{this.value}} cols="40" rows="3" name="write" type="text" class="textinput form-control" style="display:none"></textarea>
+</template>
+
+
 <template name="dropdown">
-  <head>
-    <style>
-      .dropdown-storytime {
-        height: 32px;
-        border: 1px solid rgba(34, 36, 38, 0.15);
-        color: rgba(0, 0, 0, 0.87);
-        background: #ffffff;
-        width: 80%;
-      }
-    </style>
-  </head>
-  <select class="dropdown" id={{this.key}}>
-      {{#each option in this.options}}
-          <option value="{{option.[1]}}">{{option.[0]}} </option>
-      {{/each}}
-  </select>
+    <head>
+        <style>
+            #{{this.name}}{
+                height: 35px;
+                border: 1px solid rgba(34, 36, 38, 0.15);
+                color: rgba(0, 0, 0, 0.87);
+                background: #ffffff;
+                width: 80%;
+            }
+        </style>
+    </head>
+    <select class="dropdown" id={{this.name}}>
+        {{#each option in this.options}}
+            <option value="{{option.[1]}}">{{option.[0]}} </option>
+        {{/each}}
+    </select>
 </template>

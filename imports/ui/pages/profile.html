@@ -1,17 +1,15 @@
 <template name="profile">
-  {{#if currentUser}}
-    {{#if Template.subscriptionsReady}}
-      <h4>Results from past experiences</h4>
-      <div class="list-group">
-        {{#each pastIncident in pastIncidents}}
-            {{> resultLink (resultLinkArgs pastIncident)}}
-        {{/each}}
-      </div>
+    {{#if currentUser}}
+        <h4>Results from experiences</h4>
+        <div class="list-group">
+          {{#if noIncidents}}
+            <div style="color:#888">You haven't participated in any experiences yet. Once you participate, the experiences will appear here.</div>
+          {{/if}}
+            {{#each incident in this.incidents}}
+                {{> resultLink (infoForLink incident)}}
+            {{/each}}
+        </div>
     {{else}}
-      <!-- TODO: get a loading template -->
-      Loading...
+        <h4>Sign in to see available experiences</h4>
     {{/if}}
-  {{else}}
-    <h4>Sign in to see available experiences</h4>
-  {{/if}}
 </template>

@@ -1,0 +1,36 @@
+<template name="cron">
+    <head>
+        <style>
+            #emoji {
+                text-align: center;
+            }
+
+            #title {
+                text-align: center;
+                color: #333;
+            }
+
+            #empty-state-text {
+                padding-left: 15px;
+                padding-right: 15px;
+                text-align: center;
+                color: #888;
+            }
+
+            #empty-state {
+                padding-top: 42%;
+            }
+        </style>
+    </head>
+
+    {{#if currentUser}}
+        <div id="empty-state">
+            <h1 id="emoji">🤗🤗🤗️</h1>
+            <h4 id="title">Thanks so much for clicking on the notification - you should be getting more experiences soon! </h4>
+            <p id="empty-state-text">Clicking on these notifications make sure our system knows you're still active</p>
+        </div>
+
+    {{else}}
+        <h4>Please sign back in!</h4>
+    {{/if}}
+</template>

@@ -6,8 +6,10 @@ Accounts.onCreateUser(function (options, user) {
   user.profile.experiences = [];
   user.profile.subscriptions = [];
   user.profile.lastParticipated = null;
-  user.profile.activeExperiences = [];
+  user.profile.lastNotified = null;
   user.profile.pastIncidents = [];
+  user.profile.activeIncidents = [];
+  user.profile.staticAffordances = user.profile.staticAffordances || {};
 
   return user;
 });

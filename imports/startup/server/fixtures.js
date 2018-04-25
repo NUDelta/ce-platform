@@ -1,83 +1,151 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { Random } from 'meteor/random'
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
 import { Experiences } from '../../api/experiences/experiences.js';
 import { Incidents } from '../../api/incidents/incidents.js';
 import { Locations } from '../../api/locations/locations.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { Cerebro } from '../../api/cerebro/server/cerebro-server.js';
-import { insertPhoto } from '../../api/images/methods.js';
+import { Submissions } from "../../api/submissions/submissions";
+import { Availability } from "../../api/coordinator/availability";
+import { Assignments } from "../../api/coordinator/assignments";
 import { log } from '../../api/logs.js';
 
-import { LOCATIONS } from './data.js';
-
-
+import { CONSTANTS } from "../../api/testing/testingconstants";
+import { onLocationUpdate } from "../../api/locations/methods";
+import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
+import { findUserByUsername } from '../../api/users/methods';
+import { Detectors } from "../../api/detectors/detectors";
 
 Meteor.startup(() => {
+  log.debug("Running in mode: ", process.env.MODE );
+  log.debug("process.env is: ", process.env );
 
 
-  SyncedCron.start();
-  if(false){
-    Meteor.users.remove({});
-    Experiences.remove({});
-    Locations.remove({});
-    Images.remove({});
-    TextEntries.remove({});
-    Incidents.remove({});
-  }
-  if (Meteor.users.find().count() === 0) {
-  //if(true){
-    const users = [
-      {email: 'gotjennie@gmail.com', password: 'password'},
-      {email: 'allisun.96@gmail.com', password: 'password'},
-      {email: 'a@gmail.com', password: 'password'},
-      {email: 'b@gmail.com', password: 'password'},
-      {email: 'c@gmail.com', password: 'password'},
-      {email: 'd@gmail.com', password: 'password'},
-      {email: 'e@gmail.com', password: 'password'},
-      {email: 'f@gmail.com', password: 'password'},
-      {email: 'g@gmail.com', password: 'password'},
-      {email: 'h@gmail.com', password: 'password'},
-      {email: 'i@gmail.com', password: 'password'},
-      {email: 'j@gmail.com', password: 'password'},
-      {email: 'k@gmail.com', password: 'password'}
-    ];
-
-    users.forEach(user => Accounts.createUser(user));
-    log.info(`Populated ${ Meteor.users.find().count() } accounts`);
-
-    const jennie = findUserByEmail('j@gmail.com');
-    const experiences = [
-      {
-        name: 'flag',
-        author: jennie._id,
-        description: "Let's build an American Flag!",
-        startText: "Take a picture to help us build an American Flag",
-        modules: ['camera'],
-        requirements: [],
-        optIn: false,
-        parts: [{"name": "red", "description": "stripes", "affordance": "grocery", "max": 1}, {"name": "white", "description": "stripes", "affordance": "rain", "max": 1}, {"name": "blue", "description": "stars", "affordance": "beaches", "max": 1}]
-      },
-      {
-        name: 'cheers1',
-        author: jennie._id,
-        description: "Raise your glass!",
-        startText: "Raise your glass and cheers with someone else!",
-        modules: ['camera'],
-        requirements: [],
-        optIn: false,
-        parts: [{"name": "left","description": "", "affordance": "pubs", "max": 2}, {"name": "right", "description": "", "affordance": "pubs", "max": 2}]
-      }
-    ];
-
-    //experiences.forEach(experience => Experiences.insert(experience));
-    //log.info(`Populated ${ Experiences.find().count() } experiences`);
+  if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
+    if(CONFIG.DEBUG){
+      clearDatabase();
+      createTestData();
+    }
   }
 });
 
-function findUserByEmail(email) {
-  return Meteor.users.findOne({ 'emails.0.address': email });
+Meteor.methods({
+  createTestUsers(){
+    createTestData();
+  },
+  freshDatabase() {
+    clearDatabase();
+  },
+  startTestExperiences(){
+    createTestExperiences();
+
+    Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+      Detectors.insert(value);
+    });
+    log.info(`Populated ${ Detectors.find().count() } detectors`);
+  },
+  startStorytime(){
+    console.log("starting storytime");
+    let value = CONSTANTS.EXPERIENCES.storyTime;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startBumped(){
+    console.log("starting bumped");
+    let value = CONSTANTS.EXPERIENCES.bumped;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startScavengerHunt(){
+    console.log("starting scavenger");
+
+    let value = CONSTANTS.EXPERIENCES.scavengerHunt;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startSunset(){
+    console.log("starting sunset");
+    let value = CONSTANTS.EXPERIENCES.sunset;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startNature(){
+    console.log("starting nature");
+    let value = CONSTANTS.EXPERIENCES.natureHunt;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+});
+
+function clearDatabase () {
+  Meteor.users.remove({});
+  Experiences.remove({});
+  Submissions.remove({});
+  Availability.remove({});
+  Assignments.remove({});
+  Locations.remove({});
+  Incidents.remove({});
+  Detectors.remove({});
+}
+
+function createTestExperiences(){
+  Object.values(CONSTANTS.EXPERIENCES).forEach(function (value) {
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  });
+  log.info(`Created ${ Experiences.find().count() } experiences`);
+}
+
+function createTestData(){
+  Object.values(CONSTANTS.USERS).forEach(function (value) {
+    Accounts.createUser(value)
+  });
+  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+
+  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+    Detectors.insert(value);
+  });
+  log.info(`Populated ${ Detectors.find().count() } detectors`);
+
+  createTestExperiences();
+
+  let uid1 = findUserByUsername('garrett')._id;
+  let uid2 = findUserByUsername('garretts_brother')._id;
+  let uid3 = findUserByUsername('meg')._id;
+  let uid4 = findUserByUsername('megs_sister')._id;
+  let uid5 = findUserByUsername('josh')._id;
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2]}
+  }, {
+    $set: { 'profile.staticAffordances': {"lovesGarrett": true} }
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid3, uid4]}
+  }, {
+    $set: { 'profile.staticAffordances': {"lovesMeg": true} }
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid3, uid5]}
+  }, {
+    $set: { 'profile.staticAffordances.lovesDTR':  true}
+  }, {
+    multi: true
+  });
+
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
 }

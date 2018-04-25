@@ -1,26 +1,23 @@
 <template name="affordances">
-  {{#if currentUser}}
-    {{#if Template.subscriptionsReady}}
-      <div class="p-4">
-        <h4> Your current affordances </h4>
-          {{#each aff in affordances}}
-            {{aff}}<br>
-          {{/each}}
-      </div>
-
-      <h4> Your location </h4>
-      {{location}}
-      <br><br>
-
-      <div class="row">
-        <div style="width:100%; max-width: 100%; height: 300px">
-          {{> googleMap name="yourLocation" options=mapOptions}}
+    {{#if currentUser}}
+        <h4> Your location </h4>
+        {{this.location.lat}} / {{this.location.lng}}
+        <br><br>
+        <div class="row">
+            <div style="width:95%; max-width: 95%; padding-left:5%; height: 300px">
+                {{> googleMap name="yourLocation" options=mapOptions}}
+            </div>
         </div>
-      </div>
     {{else}}
-    Loading...
+        <h4>Sign in to see your affordances</h4>
     {{/if}}
-  {{else}}
-      <h4>Sign in to see your affordances</h4>
-  {{/if}}
 </template>
+
+<!--<div class="p-4">-->
+<!--<h4> Your current affordances </h4>-->
+        <!--{{#each key in affordanceKeys}}-->
+<!--{{key}} --->
+<!--{{affordanceValues key}}<br>-->
+        <!--{{/each}}-->
+<!--</div>-->
+

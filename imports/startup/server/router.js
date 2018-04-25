@@ -1,45 +1,43 @@
-import { Router } from 'meteor/iron:router';
+import {Router} from 'meteor/iron:router';
 
-import { updateUserLocationAndAffordances } from '../../api/locations/methods.js';
-import { log } from '../../api/logs.js';
-import { Location_log } from '../../api/locations/location_log.js'
+import {updateUserLocationAndAffordances} from '../../api/locations/methods.js';
+import {log} from '../../api/logs.js';
+import {Location_log} from '../../api/locations/location_log.js'
+import {onLocationUpdate} from "../../api/locations/methods";
+import {serverLog} from "../../api/logs";
+import {Meteor} from "meteor/meteor";
 
 
-Router.onBeforeAction(Iron.Router.bodyParser.urlencoded( {extended : false} ));
+Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));
 
-Router.route('/api/geolocation', { where: 'server' })
-  .get(function() {
+
+
+Router.route('/api/geolocation', {where: 'server'})
+  .get(function () {
     this.response.end('ok');
   })
 
-  .post(function() {
-    const userId = this.request.body.userId;
+  /**
+   * curl -i -X POST \
+   -H 'Content-Type: application/json' \
+   -d '{"userId": "dsfasdfas", "location": {"coords": {"latitude": 42.056838, "longitude": -87.675940}}}' \
+   https://ce-platform.herokuapp.com/api/geolocation
+   */
+  .post(function () {
+    const uid = this.request.body.userId;
     const location = this.request.body.location;
-    const activity = this.request.body.activity;
+    // const activity = this.request.body.activity;
 
-    updateUserLocationAndAffordances.call({
-      uid: userId,
-      lat: location.coords.latitude,
-      lng: location.coords.longitude
+    onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function () {
+      serverLog.call({message: "triggering internal location update for: " + uid});
     });
-
-    Location_log.insert({
-      uid: userId,
-      lat: location.coords.latitude,
-      lng: location.coords.longitude,
-      time: Date.parse(new Date()),
-    }, (err, docs) => {
-      if (err) {
-        console.log(err)
-        log.error("Not adding to location log correctly", err);
-      }
-    });
-
 
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
+
   })
-  .put(function() {
+  .put(function () {
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');
   });
+

@@ -1,131 +1,210 @@
-import './api_custom_results.html';
+import { Template } from "meteor/templating";
+import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
 
-import { Meteor } from 'meteor/meteor';
-import { Template } from 'meteor/templating';
-import { ReactiveDict } from 'meteor/reactive-dict';
-import { ReactiveVar } from 'meteor/reactive-var';
-import { _ } from 'meteor/underscore';
 
-import PhotoSwipe from 'photoswipe/dist/photoswipe.min';
-import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default.min';
-
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
-import { Submissions } from '../../api/submissions/submissions.js';
-
-import { Incidents } from '../../api/incidents/incidents.js';
+Template.api_custom_results.onCreated(() => {
+  console.log("loaded");
+});
 
 Template.api_custom_results.helpers({
-  data2pass(){
-    const instance = Template.instance();
-    var imgs =  Images.find({incidentId: instance.state.get("incidentId")}).fetch();
-    var text =  TextEntries.find({incidentId: instance.state.get("incidentId")}).fetch();
-    var subs = Submissions.find({incidentId: instance.state.get("incidentId")}).fetch();
-    console.log(subs)
-    console.log(subs[0].contributionTemplate)
-
-    return {"images": imgs, "text": text, "submissions": subs}
-  },
-  template_name() {
-    const instance = Template.instance();
-    return instance.state.get('experience').resultsTemplate;
-  },
-});
-
-//these helpers shouldn't be db calls
-
-Template.registerHelper( 'getImage', (id) => {
-  return {img: Images.findOne({_id: id})};
-});
-Template.registerHelper( 'getText', (id) => {
-  var text = TextEntries.findOne({_id: id});
-  return text.text;
-});
-Template .registerHelper('var',function(name, value){
-  this[name] = value;
-});
-
-Template.api_custom_results.onCreated(function() {
-  const incidentId = Router.current().params._id;
-
-  this.subscribe('images', incidentId);
-  this.subscribe('submissions', incidentId);
-  this.subscribe('textEntries.byIncident', incidentId);
-  const incHandle = this.subscribe('incidents.byId', incidentId);
-  const expHandle = this.subscribe('experiences.byIncident', incidentId);
-
-  this.state = new ReactiveDict();
-  this.state.set('incidentId', incidentId);
-  this.filter = new ReactiveVar({ incidentId: incidentId});
-
-  this.autorun(() => {
-    if (expHandle.ready() && incHandle.ready()) {
-      const experience = Experiences.findOne();
-      if (experience.route == 'button_game') {
-        Router.go(`/results/button_game/${incidentId}`);
+  data() {
+    this.submissions.sort(function compare(a, b) {
+      if (a.timestamp === undefined) {
+        return 1;
+      } else if (b.timestamp === undefined) {
+        return -1;
       }
-      if (experience.route == 'custom') {
-        Router.go(`/results/custom/${incidentId}`);
-      }
-      const incident = Incidents.findOne();
-      this.state.set({
-        incident: incident,
-        experience: experience,
-        modules: experience.modules
-      });
-    }
+
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateA - dateB;
+    });
+
+    console.log(this);
+    console.log(this.images);
+    return this;
+  },
+});
+
+Template.registerHelper( 'getImageById', (data, id) => {
+  let image = data.images.find(function(x){
+    return x._id === id;
   });
+
+  return image;
 });
 
-///storybook
-var slideIndex = 1;
+Template.photosByCategories.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
 
+    let categoriesSet = new Set(needNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+    let specific = this.images.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  }
+});
+
+Template.bumpedResults.helpers({
+  getName(x ){
+    console.log(x);
+    return x.friendName;
+  },
+  getImage(x){
+    return x.image;
+  },
+  getMyImage(x){
+    return x.myImage;
+  },
+  bumpees() {
+
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    let otherSubs = this.submissions.filter(function(x){
+      return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
+    });
+
+    let contents = otherSubs.map(function(x){
+      let myInfoDic = mySubs.find(function(y){
+        return y.needName === x.needName;
+      });
+      return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
+    });
+
+    console.log("contents", contents);
+
+    let images = this.images;
+    contents.reverse();
+
+    contents = contents.map(function(x){
+      let img = images.find(function(y){
+        return y._id === x.image;
+      });
+      let myImg = images.find(function(y){
+        return y._id === x.myImage;
+      });
+
+      return {friendName: x.friendName,image: img, myImage: myImg};
+    });
+
+    console.log("contents2", contents);
+    return contents;
+  }
+});
+
+Template.bumpedResults.events({
+
+});
+
+Template.scavengerHunt.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    let categoriesSet = new Set(needNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+
+    let specific = this.images.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  },
+  getNeed(image){
+    return image.needName
+  },
+  uncompletedNeeds(){
+    let needs = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    completedNeeds = [];
+    for (i=0; i<this.images.length; i++){
+      completedNeeds.push(this.images[i].needName);
+    }
+    let unfinished = needs.filter(x => !completedNeeds.includes(x))
+    return unfinished
+  },
+  numTasksRemaining(){
+    return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
+  },
+  onlySubmission(){
+    if (this.images.length<=1){
+      return true;
+    }
+  }
+});
+
+
+Template.storybook.helpers({
+  notFirst(index){
+    return index !==0;
+  },
+  notLast(index){
+    return (index) < this.images.length;
+  },
+  firstSentence(){
+    let pageOne = this.experience.contributionTypes.find(function(x) {
+      return x.needName === "pageOne";
+    });
+    return pageOne.toPass.firstSentence;
+  },
+  previousSentence(index){
+    const instance = Template.instance()
+    let previousSubmission = instance.data.submissions[index-1];
+    return previousSubmission.content.sentence
+  }
+});
+
+let slideIndex = 1;
 function plusSlides(n) {
+  console.log("increasing by", n);
+  console.log("currently on", slideIndex);
   showSlides(slideIndex += n);
 }
-
 function currentSlide(n) {
   showSlides(slideIndex = n);
 }
 
 function showSlides(n) {
-  var i;
-  var slides = document.getElementsByClassName("mySlides");
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-  }
+
   slides[slideIndex-1].style.display = "block";
 }
 
-Template.storyPageResults.onCreated(function() {
+Template.storybook.onCreated(function() {
   this.autorun(() => {
     window.onload = function () {
-      showSlides(slideIndex);
+      showSlides(1);
     }
   });
 });
 
-Template.storyPageResults.helpers({
-  getNextSentenceId(photoIndex){
-    const instance = Template.instance()
-    var submission = instance.data.submissions[photoIndex-1];
-    return submission.content.nextSentence
-  },
-  isFirst(index){
-    return index > 0;
-  },
-  notLast(index){
-    const instance = Template.instance()
-    var length = instance.data.submissions.length
-    return index < length-1;
-  }
-});
 
-Template.storyPageResults.events({
+Template.storybook.events({
   'click .prev'(event, instance) {
     event.preventDefault();
     plusSlides(-1)
@@ -136,105 +215,50 @@ Template.storyPageResults.events({
   }
 });
 
-Template.star.helpers({
-  getId(){
-    const instance = Template.instance()
-    var starId = instance.data.starId;
-    return starId;
+Template.sunset.onCreated(() => {
+  window.onload = function(){
+    // showSlidesAuto();
   }
 });
 
-function getColor(submissions, color){
-  var filtered = submissions.filter(function(s){
-    return s.contributionTemplate == color;
-  });
-  var mapped = filtered.map(function(s){
-    var content = s.content;
-    return Object.values(content)[0]
-  });
-  return mapped;
-}
+let timeout = null;
 
-Template.star.onCreated(function(){
-  console.log(this)
-  console.log(Template.instance())
+let sunsetSlideIndex = 1;
+function showSlidesAuto() {
+  // let i
+  let slides = document.getElementsByClassName("sunsetSlides");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  sunsetSlideIndex++;
+
+  if (sunsetSlideIndex > slides.length) {sunsetSlideIndex = 1}
+  if (sunsetSlideIndex < 1) {sunsetSlideIndex = slides.length}
+  if (slides[sunsetSlideIndex-1]) {
+    slides[sunsetSlideIndex-1].style.display = "block";
+  } else {
+    console.error(`slides[${sunsetSlideIndex-1}] undefined`);
+    console.log(slides.item(sunsetSlideIndex-1));
+    console.log('------');
+  }
+  timeout = Meteor.setTimeout(showSlidesAuto, 1500);
+};
+
+Template.sunset.onRendered(function() {
+  this.autorun(() => {
+    showSlidesAuto();
+    // window.onload = function () {
+    //   console.log("run slideshow before");
+    //   // showSlidesAuto();
+    //   console.log("run slideshow after");
+    // }
+  });
 })
 
-Template.americanFlagResults.helpers({
-  getStarBuildInfo(index){
-    var submissions = Template.instance().data.submissions;
-    var redImages = getColor(submissions, "red");
-    if(redImages.length > index){
-      return {starId: index, imageId: redImages[index], hasImage: true, color: "red"}
-    }
-    return {starId: index, imageId: null, hasImage: false, color: "red"};
-  },
-  getColorInfo(index, color){
-    var submissions = Template.instance().data.submissions;
-    var colorImages = getColor(submissions, color);
-    if(colorImages.length > index){
-      return {colorId: index, imageId: colorImages[index], hasImage: true, color: color}
-    }
-    return {colorId: index, imageId: null, hasImage: false, color: color};
-  },
-  noImage(color){
-    var submissions = Template.instance().data.submissions;
-    var colorImages = getColor(submissions, color);
-    if(colorImages.length > 0){
-      return false;
-    }
-    return true;
-  },
-  hasImageIndex(index, color){
-    var submissions = Template.instance().data.submissions;
-    var colorImages = getColor(submissions, color);
-    if(colorImages.length > index){
-      return true;
-    }
-    return false;
-  }
-});
-
-// FUNCTIONS FOR THANKSGIVING
-function getAffordance(submissions, affordance){
-  var filtered = submissions.filter(function(s){
-    return s.contributionTemplate == affordance;
+Template.sunset.onDestroyed(function() {
+  this.autorun(() => {
+    console.log("destroyed")
+    Meteor.clearTimeout(timeout)
+    timeout = null;
   });
-  var mapped = filtered.map(function(s){
-    var content = s.content;
-    return Object.values(content)[0]
-  });
-  return mapped;
-}
-
-Template.thanksgivingResults.helpers({
-  getAffordanceInfo(index, affordance){
-    var submissions = Template.instance().data.submissions;
-    var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > index){
-      return {affordanceId: index, imageId: affordanceImages[index], hasImage: true, affordance: affordance}
-    }
-    return {affordanceId: index, imageId: null, hasImage: false, affordance: affordance};
-  },
-  noImage(affordance){
-    var submissions = Template.instance().data.submissions;
-    var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > 0){
-      return false;
-    }
-    return true;
-  },
-  hasImageIndex(index, affordance){
-    var submissions = Template.instance().data.submissions;
-    var affordanceImages = getAffordance(submissions, affordance);
-    if(affordanceImages.length > index){
-      return true;
-    }
-    return false;
-  },
-  getMessage(photoIndex){
-    const instance = Template.instance()
-    var submission = instance.data.submissions[photoIndex-1];
-    return submission.content.sentence
-  }
-});
+})
