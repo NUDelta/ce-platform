@@ -184,7 +184,7 @@ let DETECTORS = {
       '(men_s_hair_salons || hair_salons || hair_stylists || blow_dry_out_services || barbers)'
     ]
   },
-  'eating_alone': {
+  'eating_alone': { //collective narrative
     '_id': 'eG4no7zpSnthwwcv6',
     'description': 'eating_alone',
     'variables': [

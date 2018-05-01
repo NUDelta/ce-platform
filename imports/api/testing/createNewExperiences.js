@@ -722,73 +722,170 @@ function createNewSpookyNevilleStorytime() {
   startRunningIncident(incident);
 }
 
+function createNewBadNeed(sub){
+  let need = {
+    needName: "bad" + (((int) sub.toString()[10]) - 1).toString(),
+    situation: { detector: "eG4no7zpSnthwwcv8", number: "1" },
+    toPass: {
+      instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
+    },
+    numberNeeded: 2
+  };
+  return need;
+}
+
+function createNewGoodNeed(sub){
+  let need = {
+    needName: "good" + (((int) sub.toString()[10]) - 1).toString(),
+    situation: { detector: "eG4no7zpSnthwwcv8", number: "1" },
+    toPass: {
+      instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
+    },
+    numberNeeded: 2 * (6 - (int) sub.toString()[10])
+  };
+  return need;
+}
+
 function createNewFoodFight() {
 
+  //this section "fakes" history through adding detectors with each step of the narrative
   let newVars = JSON.parse(
     JSON.stringify(CONSTANTS.DETECTORS["eating_alone"]["variables"])
   );
-  newVars.push("var goodVariety1;");
 
-  let det = {
-    _id: eG4no7zpSnthwwcv9,
-    description:
-      CONSTANTS.DETECTORS["eating_alone"].description + "goodVariety1",
-    variables: newVars,
-    rules: [
-      "(" +
-        CONSTANTS.DETECTORS["eating_alone"].rules[0] +
-        " ) && goodVariety1;"
-    ]
+  for (int i = 1; i < 7; i++)
+  {
+    newVars.push("var badVariety" + i.toString());
+    var badVarietyX = "badVariety" + i.toString();
+    eval("detBad" + i) = {
+      _id: eG4no7zpSnthwwcv9,
+      description:
+        CONSTANTS.DETECTORS["eating_alone"].description +badVarietyX,
+      variables: newVars,
+      rules: [
+        "(" +
+          CONSTANTS.DETECTORS["eating_alone"].rules[0] +
+          " ) && " + badVarietyX + " ;"
+      ]
+    }; //Bad detectors
+    Detectors.insert(detBad);
+
+    newVars.push("var goodVariety" + i.toString());
+    var goodVarietyX = "goodVariety" + i.toString();
+    eval("detGood" + i) = {
+      _id: eG4no7zpSnthwwcv9,
+      description:
+        CONSTANTS.DETECTORS["eating_alone"].description +goodVarietyX,
+      variables: newVars,
+      rules: [
+        "(" +
+          CONSTANTS.DETECTORS["eating_alone"].rules[0] +
+          " ) && " + goodVarietyX + " ;"
+      ]
+    }; //Good detectors
+    Detectors.insert(detGood); //dynamically add variable names?
+  }
+
+  //write a createNeed function that takes in the stage number and creates needs automatically
+
+  let startStage2 = function(sub) { //this will add needs to the contributionTypes array
+    let needBad1 = createNewBadNeed(startStage2);
+
+    let needGood1 = createNewGoodNeed(startStage2);
+
+  addNeed(sub.eid, needBad1);
+  addNeed(sub.eid, needGood1);
+}
+
+let startStage3 = function(sub) { //this will add needs to the contributionTypes array
+  let needBad2 = createNewBadNeed(startStage3);
+
+  let needGood2 = createNewGoodNeed(startStage3);
+
+addNeed(sub.eid, needBad2);
+addNeed(sub.eid, needGood2);
+}
+
+let startStage4 = function(sub) { //this will add needs to the contributionTypes array
+  let needBad3 = createNewBadNeed(startStage4);
+
+  let needGood3 = createNewGoodNeed(startStage4);
+
+addNeed(sub.eid, needBad3);
+addNeed(sub.eid, needGood3);
+}
+
+let startStage5 = function(sub) { //this will add needs to the contributionTypes array
+  let needBad4 = createNewBadNeed(startStage5);
+
+  let needGood4 = createNewGoodNeed(startStage5);
+
+addNeed(sub.eid, needBad4);
+addNeed(sub.eid, needGood4);
+}
+
+let startStage6 = function(sub) { //this will add needs to the contributionTypes array
+  let needBad5 = {
+    needName: "bad5",
+    situation: { detector: "eG4no7zpSnthwwcv8", number: "1" },
+    toPass: {
+      instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
+    },
+    numberNeeded: 1)
   };
 
-  Detectors.insert(det);
+  let needGood5 = {
+    needName: "good5",
+    situation: { detector: "eG4no7zpSnthwwcv8", number: "1" },
+    toPass: {
+      instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
+    },
+    numberNeeded: 1)
+  };
 
-
-  let startStage2 = function(sub) {
-    let need1 = {
-      needName: "warning1",
-      situation: { detector: "", number: "1" },
-      toPass: {
-        instruction: "your diet sucks"
-      },
-      numberNeeded: 2
-    };
-
-    let need2 = {
-      needName: "good1",
-      situation: { detector: "eG4no7zpSnthwwcv9", number: "1" },
-      toPass: {
-        instruction: "We're having a food fight! Share what you're eating"
-      },
-      numberNeeded: 8
-    }
-
-  addNeed(sub.eid, need1);
-  addNeed(sub.eid, need2);
+addNeed(sub.eid, needBad5);
+addNeed(sub.eid, needGood5);
 }
+
 
   let exp = {
     _id: Random.id(),
     name: "Food Fight",
     participateTemplate: "submitText",
     resultsTemplate: "foodFightResult",
-    contributionTypes: [
+    contributionTypes: [ //array of different needs, one for each stage of the narrative
       {
         needName: "foodFightStage1",
         situation: { detector: "eG4no7zpSnthwwcv6", number: "1" },
         toPass: {
-          instruction: "We're having a food fight! Share what you're eating"
+          instruction: "We're having a food fight! Share what you're eating."
 
         },
         numberNeeded: 10
       }
     ],
-    description: "food",
-    notificationText: "Help write a spooky Neville Longbottom story!",
+    description: "food fight",
+    notificationText: "A food fight is starting!",
     callbacks: [
       {
-        trigger: "cb.needFinished("foodFightStage1")",
+        trigger: "cb.needFinished("foodFightStage1")", //cb referes to the callback manager, this calls back once stage 1 has begun
         function: startStage2.toString()
+      }
+      {
+        trigger: "cb.needFinished("startStage2")", //cb referes to the callback manager, this calls back once stage 1 has begun
+        function: startStage3.toString()
+      }
+      {
+        trigger: "cb.needFinished("startStage3")", //cb referes to the callback manager, this calls back once stage 1 has begun
+        function: startStage4.toString()
+      }
+      {
+        trigger: "cb.needFinished("startStage4")", //cb referes to the callback manager, this calls back once stage 1 has begun
+        function: startStage5.toString()
+      }
+      {
+        trigger: "cb.needFinished("startStage5")", //cb referes to the callback manager, this calls back once stage 1 has begun
+        function: startStage6.toString()
       }
     ]
   };
