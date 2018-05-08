@@ -194,7 +194,7 @@ let DETECTORS = {
     'rules': [
       '(food_court || dinning_hall)'
     ]
-  }
+  },
   'gas_station': {
     '_id': 'xZBgjwdPw8rtg86eo',
     'description': 'gas_stations',
