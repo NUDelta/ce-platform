@@ -12,7 +12,7 @@ import { Meteor } from "meteor/meteor";
 
 Meteor.methods({
   startFreshBumped() {
-      console.log("GOING IN BUMPED");
+    console.log("GOING IN BUMPED");
 
     createNewBumped();
   },
@@ -36,6 +36,9 @@ Meteor.methods({
   },
   startFreshTurfWar() {
     createNewTurfWar();
+  },
+  startFreshFantasyGym() {
+    createNewFantasyGym();
   }
 });
 
@@ -869,7 +872,7 @@ let exp = {
     description: "food fight",
     notificationText: "A food fight is starting!",
     callbacks: [
-      {
+    {
         trigger: "cb.needFinished('foodFightStage1')", //cb referes to the callback manager, this calls back once stage 1 has begun
         function: startStage2.toString()
       },
@@ -889,105 +892,189 @@ let exp = {
         trigger: "cb.needFinished('startStage5')", //cb referes to the callback manager, this calls back once stage 1 has begun
         function: startStage6.toString()
       }
-    ]
-    };
+      ]
+    };  
 
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
   }
 
-  function createNewTurfWar() {
-    let newVars = JSON.parse(
-      JSON.stringify(CONSTANTS.DETECTORS["on_transit"]["variables"])
+function createNewTurfWar() {
+  let newVars = JSON.parse(
+    JSON.stringify(CONSTANTS.DETECTORS["on_transit"]["variables"])
+    );
+  let exp = {
+    _id: Random.id(),
+    name: "Turf War",
+    participateTemplate: "submitVote",
+    resultsTemplate: "TurfWarResult",
+    contributionTypes: [ //array of different needs, one for each stage of the narrative
+    {
+      needName: "TurfWarStage1",
+      situation: { detector: , number: "1" },
+      toPass: {
+        instruction: "There is a turf war going on! Vote for who you want to win!"
+
+      },
+      numberNeeded: 100
+    }
+    ],
+    description: "Turf War",
+    notificationText: "A turf war is starting!",
+    callbacks: [
+    {
+      trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= 99)",
+      function: TurfWarCallback.toString()
+    },
+    {
+      trigger: "cb.incidentFinished()",
+      function: turfWarEnd.toString()
+    }
+    ]
+  };
+
+  let TurfWarCallback = function(sub) {
+    Meteor.users.update(
+    {
+      _id: sub.uid
+    },
+    {
+      $set: {
+        "profile.staticAffordances.participatedInTurfWar": true
+      }
+    }
+    );
+
+    let affordance = sub.content.affordance;
+
+    let options = [
+    ["Country A", "F8YqP3AEbyguQMJ9i"],
+    ["Country B", "F8YqP3AEbyguQMJ9i"]
+    ];
+
+    options = options.filter(function(x) {
+      return x[1] !== affordance;
+    });
+
+    let needName = "vote" + Random.id(3);
+    if (cb.numberOfSubmissions() === 100) {
+      needName = "voteFinal";
+    }
+    let contribution = {
+      needName: needName,
+      situation: { detector: affordance, number: "1" },
+      toPass: {
+        instruction: sub.content.sentence,
+        dropdownChoices: { name: "affordance", options: options }
+      },
+      numberNeeded: 1
+    };
+    addContribution(sub.iid, contribution);
+  };
+
+  let turfWarEnd = function(sub) {
+    let otherSub = Submissions.findOne({
+      uid: { $ne: sub.uid },
+      iid: sub.iid,
+      needName: sub.needName
+    });
+
+    notify(
+      [sub.uid, otherSub.uid],
+      sub.iid,
+      "Check out which country is winning!",
+      "",
+      "/apicustomresults/" + sub.iid + "/" + sub.eid
       );
-      let exp = {
-        _id: Random.id(),
-        name: "Turf War",
-        participateTemplate: "submitVote",
-        resultsTemplate: "TurfWarResult",
-          contributionTypes: [ //array of different needs, one for each stage of the narrative
-          {
-            needName: "TurfWarStage1",
-            situation: { detector: , number: "1" },
-            toPass: {
-              instruction: "There is a turf war going on! Vote for who you want to win!"
+  };
 
-            },
-            numberNeeded: 100
-          }
-          ],
-          description: "Turf War",
-          notificationText: "A turf war is starting!",
-          callbacks: [
-            {
-              trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= 99)",
-              function: TurfWarCallback.toString()
-            },
-            {
-              trigger: "cb.incidentFinished()",
-              function: turfWarEnd.toString()
-            }
-          ]
-          };
+  Experiences.insert(exp);
+  let incident = createIncidentFromExperience(exp);
+  startRunningIncident(incident);
+}
 
-          let TurfWarCallback = function(sub) {
-            Meteor.users.update(
-            {
-              _id: sub.uid
-            },
-            {
-              $set: {
-                "profile.staticAffordances.participatedInTurfWar": true
-              }
-            }
-            );
+createNewFantasyGym() {
+  let experience = {
+    name: "FanyasyGym",
+    participateTemplate: "gym",
+    resultsTemplate: "gymtemplate",
+    contributionTypes: [],
+    description: "Workout detected! Challenge someone else at this equipment.",
+    notificationText: "Workout detected! Challenge someone else at this equipment.",
+    callbacks: []
+  };
 
-            let affordance = sub.content.affordance;
+  let gymCallBack = function(sub) {
+    let otherSub = Submissions.findOne({
+      uid: { $ne: sub.uid },
+      iid: sub.iid,
+      needName: sub.needName
+    });
 
-            let options = [
-            ["Country A", "F8YqP3AEbyguQMJ9i"],
-            ["Country B", "F8YqP3AEbyguQMJ9i"]
-            ];
+    notify(
+      [sub.uid, otherSub.uid],
+      sub.iid,
+      "Compare your score with someone else's!",
+      "",
+      "/apicustomresults/" + sub.iid + "/" + sub.eid
+      );
+  };
 
-            options = options.filter(function(x) {
-              return x[1] !== affordance;
-            });
+  let equipments = [
+  ["benchpress", "at the bench"],
+  ["shoulderpress", "at the bench"],
+  ["bicepcurl", "at the dumbell area"],
+  ["tricepcurl", "at the dumbell area"],
+  ["cardio", "at the running machine"],
+  ];
 
-            let needName = "vote" + Random.id(3);
-            if (cb.numberOfSubmissions() === 100) {
-              needName = "voteFinal";
-            }
-            let contribution = {
-              needName: needName,
-              situation: { detector: affordance, number: "1" },
-              toPass: {
-                instruction: sub.content.sentence,
-                dropdownChoices: { name: "affordance", options: options }
-              },
-              numberNeeded: 1
-            };
-            addContribution(sub.iid, contribution);
-          };
+  _.forEach(equipments, equipment => {
+    let newVars = JSON.parse(
+      JSON.stringify(CONSTANTS.DETECTORS[equipment[0]]["variables"])
+      );
+    newVars.push("var lovesDTR;");
+    newVars.push("var lovesDTRAlumni;");
 
-          let turfWarEnd = function(sub) {
-            let otherSub = Submissions.findOne({
-              uid: { $ne: sub.uid },
-              iid: sub.iid,
-              needName: sub.needName
-            });
+    let detector = {
+      _id: Random.id(), // need to save detectors for future use 
+      description:
+      CONSTANTS.DETECTORS[equipment[0]].description,
+      variables: newVars,
+      rules: [
+      "((" +
+      CONSTANTS.DETECTORS[equipment[0]].rules[0] +
+      ");"
+      ]
+    };
+    CONSTANTS.DETECTORS[equipment[0]] = detector;
 
-            notify(
-              [sub.uid, otherSub.uid],
-              sub.iid,
-              "Check out which country is winning!",
-              "",
-              "/apicustomresults/" + sub.iid + "/" + sub.eid
-              );
-          };
+    Detectors.insert(detector);
 
-          Experiences.insert(exp);
-          let incident = createIncidentFromExperience(exp);
-          startRunningIncident(incident);
-        }
-  }
+    for (let i = 0; i < 10; i++) {
+      let need = {
+        needName: equipment[0] + i,
+        situation: { detector: detector._id, number: "2" },
+        toPass: {
+          instruction: "You are " + equipment[1] + " at the same time as "
+        },
+        numberNeeded: 2
+      };
+      let callback = {
+        trigger:
+        "cb.numberOfSubmissions('" +
+        equipment[0] +
+        i +
+        "') === 2",
+        function: gymCallBack.toString()
+      };
+
+      experience.contributionTypes.push(need);
+      experience.callbacks.push(callback);
+    }
+  });
+
+  Experiences.insert(experience);
+  let incident = createIncidentFromExperience(experience);
+  startRunningIncident(incident);
+}
