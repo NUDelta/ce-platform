@@ -33,6 +33,9 @@ Meteor.methods({
   },
   startFreshFoodFight() {
     createNewFoodFight();
+  },
+  startFreshTurfWar() {
+    createNewTurfWar();
   }
 });
 
@@ -767,7 +770,7 @@ function createNewFoodFight() {
       CONSTANTS.DETECTORS["eating_alone"].rules[0] +
       " ) && " + badVarietyX + " ;"
       ]
-    }; 
+    };
     //Bad detectors
     foodFightDetectors.push(detBad._id);
     Detectors.insert(detBad);
@@ -784,7 +787,7 @@ function createNewFoodFight() {
       CONSTANTS.DETECTORS["eating_alone"].rules[0] +
       " ) && " + goodVarietyX + " ;"
       ]
-    }; 
+    };
     //Good detectors
     foodFightDetectors.push(detGood._id);
     Detectors.insert(detGood); //dynamically add variable names?
@@ -892,4 +895,99 @@ let exp = {
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
+  }
+
+  function createNewTurfWar() {
+    let newVars = JSON.parse(
+      JSON.stringify(CONSTANTS.DETECTORS["on_transit"]["variables"])
+      );
+      let exp = {
+        _id: Random.id(),
+        name: "Turf War",
+        participateTemplate: "submitVote",
+        resultsTemplate: "TurfWarResult",
+          contributionTypes: [ //array of different needs, one for each stage of the narrative
+          {
+            needName: "TurfWarStage1",
+            situation: { detector: , number: "1" },
+            toPass: {
+              instruction: "There is a turf war going on! Vote for who you want to win!"
+
+            },
+            numberNeeded: 100
+          }
+          ],
+          description: "Turf War",
+          notificationText: "A turf war is starting!",
+          callbacks: [
+            {
+              trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= 99)",
+              function: TurfWarCallback.toString()
+            },
+            {
+              trigger: "cb.incidentFinished()",
+              function: turfWarEnd.toString()
+            }
+          ]
+          };
+
+          let TurfWarCallback = function(sub) {
+            Meteor.users.update(
+            {
+              _id: sub.uid
+            },
+            {
+              $set: {
+                "profile.staticAffordances.participatedInTurfWar": true
+              }
+            }
+            );
+
+            let affordance = sub.content.affordance;
+
+            let options = [
+            ["Country A", "F8YqP3AEbyguQMJ9i"],
+            ["Country B", "F8YqP3AEbyguQMJ9i"]
+            ];
+
+            options = options.filter(function(x) {
+              return x[1] !== affordance;
+            });
+
+            let needName = "vote" + Random.id(3);
+            if (cb.numberOfSubmissions() === 100) {
+              needName = "voteFinal";
+            }
+            let contribution = {
+              needName: needName,
+              situation: { detector: affordance, number: "1" },
+              toPass: {
+                instruction: sub.content.sentence,
+                dropdownChoices: { name: "affordance", options: options }
+              },
+              numberNeeded: 1
+            };
+            addContribution(sub.iid, contribution);
+          };
+
+          let turfWarEnd = function(sub) {
+            let otherSub = Submissions.findOne({
+              uid: { $ne: sub.uid },
+              iid: sub.iid,
+              needName: sub.needName
+            });
+
+            notify(
+              [sub.uid, otherSub.uid],
+              sub.iid,
+              "Check out which country is winning!",
+              "",
+              "/apicustomresults/" + sub.iid + "/" + sub.eid
+              );
+          };
+
+          Experiences.insert(exp);
+          let incident = createIncidentFromExperience(exp);
+          startRunningIncident(incident);
+        }
   }
