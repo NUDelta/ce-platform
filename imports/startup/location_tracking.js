@@ -4,30 +4,31 @@ import { HTTP } from 'meteor/http';
 import { log, serverLog } from '../api/logs.js';
 import { Experiences } from "../api/experiences/experiences";
 import { createIncidentFromExperience, startRunningIncident } from "../api/incidents/methods";
-////import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
-///Example location object returned
-// {
-//     "timestamp":     [Date],     // <-- Javascript Date instance
-//     "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
-//     "uuid":          [String],   // <-- Universally unique identifier
-//     "coords": {
-//         "latitude":  [Float],
-//         "longitude": [Float],
-//         "accuracy":  [Float],
-//         "speed":     [Float],
-//         "heading":   [Float],
-//         "altitude":  [Float]
-//     },
-//     "activity": {
-//         "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
-//         "confidence": [0-100%]
-//     },
-//     "battery": {
-//         "level": [Float],
-//         "is_charging": [Boolean]
-//     }
-// }
+/*
+  Example location object returned
+  {
+      "timestamp":     [Date],     // <-- Javascript Date instance
+      "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
+      "uuid":          [String],   // <-- Universally unique identifier
+      "coords": {
+          "latitude":  [Float],
+          "longitude": [Float],
+          "accuracy":  [Float],
+          "speed":     [Float],
+          "heading":   [Float],
+          "altitude":  [Float]
+      },
+      "activity": {
+          "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
+          "confidence": [0-100%]
+      },
+      "battery": {
+          "level": [Float],
+          "is_charging": [Boolean]
+      }
+  }
+ */
 
 if (Meteor.isCordova) {
   let bgGeo = window.BackgroundGeolocation;
@@ -58,7 +59,7 @@ if (Meteor.isCordova) {
       disableElasticity: true, // disable dynamic filtering and return every distanceFilter amount
 
       // Activity Recognition config
-      activityRecognitionInterval: 1000,
+      activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
 
       // Application config
       stopOnTerminate: false, // continue tracking user even if they terminate the application
@@ -70,10 +71,10 @@ if (Meteor.isCordova) {
       logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
 
       // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
-      method: "POST",
-      autoSync: true,
-      maxDaysToPersist: 1
+      url: `${ Meteor.absoluteUrl() }api/geolocation/url`, // submit location updates to
+      method: "POST", // submission method
+      autoSync: true, // automatically sync database
+      maxDaysToPersist: 1 // days for SQLite database to persist
     }, function (state) {
       // This callback is executed when the plugin  is ready to use.
       console.log("BackgroundGeolocation ready: ", state);
@@ -100,7 +101,7 @@ if (Meteor.isCordova) {
         }, (err, res) => {
           // log only if error happens
           if (err) {
-            let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ err }`;
+            let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ JSON.stringify(err) }`;
             serverLog.call({  message: errorMessage  });
             console.log(errorMessage);
           }
@@ -139,25 +140,23 @@ if (Meteor.isCordova) {
 
     // listen for HTTP requests
     bgGeo.on('http', function (success) {
-      console.log('http success: ', success.responseText);
-      serverLog.call({ message: "http success!" });
-      serverLog.call({ message: success });
+      serverLog.call({ message: `http SUCCESS: ${ JSON.stringify(success) }`});
     },
       function (error) {
-      console.log('http failure: ', error.status);
+        serverLog.call({ message: `http ERROR: ${ JSON.stringify(error) }`});
     });
 
     // listen for heartbeat events
     bgGeo.on('heartbeat', function (params) {
       serverLog.call({
-        message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ params }.`
+        message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ JSON.stringify(params) }.`
       });
     });
 
     // listen for connectivity change
     bgGeo.on('connectivitychange', function(event) {
       serverLog.call({
-        message: `network connectivity change detected for user ${ Meteor.userId() }: ${ event }.`
+        message: `network connectivity change detected for user ${ Meteor.userId() }: ${ JSON.stringify(event) }.`
       });
     });
   });
