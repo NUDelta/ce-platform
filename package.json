@@ -1,7 +1,7 @@
 {
   "name": "ce-platform",
-  "version": "0.0.1",
-  "description": "This is a collective experiences platform.",
+  "version": "1.0.0",
+  "description": "A platform for running Opportunistic Collective Experiences.",
   "directories": {
     "test": "tests"
   },
@@ -13,7 +13,7 @@
     "core-util-is": "^1.0.2",
     "meteor-node-stubs": "^0.2.5",
     "photoswipe": "^4.1.1",
-    "request": "^2.81.0"
+    "request": "^2.85.0"
   },
   "devDependencies": {},
   "scripts": {
