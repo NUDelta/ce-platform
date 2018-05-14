@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
 import { log, serverLog } from '../api/logs.js';
-import {Experiences} from "../api/experiences/experiences";
-import {createIncidentFromExperience, startRunningIncident} from "../api/incidents/methods";
+import { Experiences } from "../api/experiences/experiences";
+import { createIncidentFromExperience, startRunningIncident } from "../api/incidents/methods";
 ////import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 ///Example location object returned
@@ -29,36 +29,68 @@ import {createIncidentFromExperience, startRunningIncident} from "../api/inciden
 //     }
 // }
 
-
-
 if (Meteor.isCordova) {
-
   let bgGeo = window.BackgroundGeolocation;
 
   export const toggleLocationTracking = function () {
-
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
     if(bgGeo){
       serverLog.call({message: "on cordova so toggle time" });
       bgGeo.stop();
       bgGeo.start();
     }
-
   };
 
-
   Meteor.startup(() => {
-    //Configure Plugin
+    // initialize BackgroundGeolocation plugin
     bgGeo = window.BackgroundGeolocation;
-
-
     serverLog.call({ message: "setting up location tracking for: " + Meteor.userId()});
     serverLog.call({ message: "bgGeo: " + bgGeo});
 
-    //This callback will be executed every time a geolocation is recorded in the background.
-    var callbackFn = function (location) {
-           serverLog.call({ message: "location package received update for: " + Meteor.userId() });
+    // configure and start background geolocation when ready
+    bgGeo.ready({
+      reset: true, // always supply this configuration when application restarts
 
+      // Geolocation config
+      desiredAccuracy: 0, // highest accuracy, highest power consumption
+      distanceFilter: 10, // meters device must move before location update is generated
+      stationaryRadius: 25, // distance user must move in order to trigger location tracking
+      disableElasticity: true, // disable dynamic filtering and return every distanceFilter amount
+
+      // Activity Recognition config
+      activityRecognitionInterval: 1000,
+
+      // Application config
+      stopOnTerminate: false, // continue tracking user even if they terminate the application
+      startOnBoot: true, // restart location tracking after device reboots
+      preventSuspend: true, // prevent iOS from suspending application while stationary
+      heartbeatInterval: 60, // firing heartbeat events (needed for preventSuspend)
+      pausesLocationUpdatesAutomatically: true, // used for conserving battery, when able
+      debug: false,  // debug sounds & notifications.
+      logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
+
+      // HTTP / SQLite config
+      url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
+      method: "POST",
+      autoSync: true,
+      maxDaysToPersist: 1
+    }, function (state) {
+      // This callback is executed when the plugin  is ready to use.
+      console.log("BackgroundGeolocation ready: ", state);
+
+      // begin tracking
+      if (!state.enabled) {
+        bgGeo.start(function() {
+          console.log('BackgroundGeolocation has started tracking.')
+        });
+      }
+    });
+
+    // setup callbacks for location updates
+    const locationSuccessCallback = function (location) {
+      serverLog.call({ message: "location package received update for: " + Meteor.userId() });
+
+      // POST data to backend API
       if (Meteor.userId()) {
         HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
           data: {
@@ -66,84 +98,68 @@ if (Meteor.isCordova) {
             userId: Meteor.userId()
           }
         }, (err, res) => {
-          serverLog.call({ message: "Error with client/location-tracking sending location update to server" + Meteor.userId() });
-          console.log("Error with client/location-tracking sending location update to server")
+          // log only if error happens
+          if (err) {
+            let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ err }`;
+            serverLog.call({  message: errorMessage  });
+            console.log(errorMessage);
+          }
         });
       }
     };
 
-    var failureFn = function (errorCode) {
+    const locationFailureCallback = function (errorCode) {
       console.warn('- BackgroundGeoLocation error: ', errorCode);
-    }
+    };
 
-    // Listen to location events & errors.
-    bgGeo.on('location', callbackFn, failureFn);
-    // Fired whenever state changes from moving->stationary or vice-versa.
+    // listen to location updates
+    bgGeo.on('location', locationSuccessCallback, locationFailureCallback);
+
+    // listen to motion change (moving -> stationary, stationary -> moving) events
     bgGeo.on('motionchange', function (isMoving, location) {
       if (isMoving) {
-        serverLog.call({ message: "device just started moving!" });
-               bgGeo.start()
+        serverLog.call({ message: `Device is MOVING at location ${ location }.` });
+        // bgGeo.start(); // shouldnt have to call this
       } else {
-        serverLog.call({ message: "device has stopped!" });
-
-        console.log('Device has just STOPPED', location);
+        serverLog.call({ message: `Device is STOPPED at location ${ location }.` });
+        console.log('Device is STOPPED', location);
       }
     });
 
-    // Fired whenever an HTTP response is received from your server.
-    bgGeo.on('http', function (response) {
-      console.log('http success: ', response.responseText);
-      serverLog.call({ message: "http success!!!" });
-      serverLog.call({ message: response });
+    // listen for changes in power saving mode
+    bgGeo.on('powersavechange', function (isPowerSaveMode) {
+      if (isPowerSaveMode) {
+        serverLog.call({ message: `Power saving mode for ${ Meteor.userId() } ENABLED.` });
+      } else {
+        serverLog.call({ message: `Power saving mode for ${ Meteor.userId() } DISABLED.` });
+      }
 
-
-    }, function (response) {
-      console.log('http failure: ', response.status);
+      console.log(`Power saving mode enabled for ${ Meteor.userId() }? ${ isPowerSaveMode }`);
     });
 
+    // listen for HTTP requests
+    bgGeo.on('http', function (success) {
+      console.log('http success: ', success.responseText);
+      serverLog.call({ message: "http success!" });
+      serverLog.call({ message: success });
+    },
+      function (error) {
+      console.log('http failure: ', error.status);
+    });
+
+    // listen for heartbeat events
     bgGeo.on('heartbeat', function (params) {
-      serverLog.call({ message: "heartbeat being called!" });
-      serverLog.call({ message: Meteor.userId() });
-
-      // bgGeo.stop();
-      // bgGeo.start();
+      serverLog.call({
+        message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ params }.`
+      });
     });
 
-    bgGeo.configure({
-      // Geolocation config
-      desiredAccuracy: 0,
-      distanceFilter: 10,
-      stationaryRadius: 25,
-      // Activity Recognition config
-      activityRecognitionInterval: 1000,
-      // Application config
-      debug: false,  // <-- Debug sounds & notifications.
-      stopOnTerminate: false,
-      startOnBoot: true,
-      // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl() }api/geolocation/url`,
-      method: "POST",
-      autoSync: true,
-      maxDaysToPersist: 1,
-      logLevel: 5, //verbose
-      preventSuspend: true,
-      // heartbeatInterval: 300,
-      pausesLocationUpdatesAutomatically: false,
-      // headers: {  // <-- Optional HTTP headers
-      //     "X-FOO": "bar"
-      // },
-      // params: {   // <-- Optional HTTP params
-      //     "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-      // }
-    }, function (state) {
-      // This callback is executed when the plugin  is ready to use.
-      console.log("BackgroundGeolocation ready: ", state);
-      if (!state.enabled) {
-        bgGeo.start();
-      }
+    // listen for connectivity change
+    bgGeo.on('connectivitychange', function(event) {
+      serverLog.call({
+        message: `network connectivity change detected for user ${ Meteor.userId() }: ${ event }.`
+      });
     });
-
-    bgGeo.start();
   });
 } else {
 }
