@@ -45,6 +45,10 @@ Schema.Submission = new SimpleSchema({
     min: -180,
     max: 180,
     optional: true,
+  },
+  failed: {
+    type: Boolean,
+    optional: true
   }
 });
 

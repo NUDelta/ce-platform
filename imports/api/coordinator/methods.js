@@ -84,11 +84,9 @@ export const updateAvailability = (uid, availabilityDictionary) => {
       }
     });
 
-    //console.log('updatedNeeds', updatedNeeds);
     updatedEntries.push(updatedNeeds);
   });
 
-  //console.log('updatedEntries', updatedEntries);
   return updatedEntries;
 };
 
@@ -115,8 +113,11 @@ export const updateAssignmentDbdAfterUserLocationChange = (
     }
   }).fetch();
 
+
   _.forEach(currentAssignments, assignment => {
+
     _.forEach(assignment.needUserMaps, needUserMap => {
+
       let matchPredicate = doesUserMatchNeed(
         uid,
         affordances,
@@ -125,10 +126,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (
       );
 
       if (!matchPredicate && needUserMap.uids.includes(uid)) {
-        let delay = 15;
-        if (CONFIG.MODE === "PROD" || CONFIG.MODE === "DEV") {
-          delay = 15;
-        }
+        let delay = CONFIG.LEAVING_CONTEXT_DELAY;
 
         Meteor.setTimeout(function() {
           adminUpdatesForRemovingUsersToIncidentEntirely(
@@ -151,7 +149,6 @@ export const updateAssignmentDbdAfterUserLocationChange = (
 export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
 
-  //console.log("adminUpdatesForAddingUsersToIncident", uids, iid, needName);
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
 };
@@ -219,6 +216,7 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
 **/
 const checkIfNeedFailed = (iid, needName) => {
   if (numUnfinishedNeeds(iid, needName) > 0) {
+
     Submissions.update(
       { iid: iid, needName: needName },
       { $set: { failed: true } },
@@ -227,9 +225,10 @@ const checkIfNeedFailed = (iid, needName) => {
 
     Submissions.remove({ iid: iid, uid: null, needName: needName });
 
-    let incident = Incidents.find({ _id: iid });
+    let incident = Incidents.findOne({ _id: iid });
+
     let need = incident.contributionTypes.find(x => {
-      x.needName === needName;
+      return x.needName === needName;
     });
 
     addEmptySubmissionsForNeed(iid, incident.eid, need);
@@ -244,7 +243,7 @@ const checkIfNeedFailed = (iid, needName) => {
  * @param needName {string} need that user is assigned to
  */
 const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
-  if (uids.length() === 0) {
+  if (uids.length === 0) {
     return;
   }
 
@@ -260,16 +259,17 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
     );
   });
 
-  let assignment = Assignments.find({
+  let assignment = Assignments.findOne({
     _id: iid,
     "needUserMaps.needName": needName
   });
+
 
   let needUserMap = assignment.needUserMaps.find(x => {
     return x.needName === needName;
   });
 
-  if (needUserMap.uids.length() === 0) {
+  if (needUserMap.uids.length === 0) {
     checkIfNeedFailed(iid, needName);
   }
 };

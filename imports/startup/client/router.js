@@ -84,7 +84,7 @@ Router.route('api.customresults', {
         eid: this.params.eid
       }
     };
-    Meteor.call('insertLog', dic);
+    Meteor.call('insertLog', dic); //TODO: fix this so if user not logged in doesn't freak out
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('submissions.activeIncident', this.params.iid).wait();

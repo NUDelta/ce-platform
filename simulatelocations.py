@@ -271,6 +271,17 @@ def onlyGarretAtLake():
 
 	print "only garrett at lakefill"
 
+def garrettAndMegBump():
+    setLocation(grocery, sys.argv[1])
+    setLocation(grocery, sys.argv[3])
+    setLocation(train, sys.argv[2])
+    setLocation(train, sys.argv[4])
+    setLocation(train, sys.argv[5])
+
+    print "meg and garret at grocery"
+
 
 if __name__ == "__main__":
-	allUsersAtRestaurant()
+    #garrettAndMegBump()
+    #time.sleep(2)
+    onlyGarretAtLake()

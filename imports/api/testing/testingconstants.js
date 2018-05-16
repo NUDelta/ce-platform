@@ -606,6 +606,8 @@ function createBumped() {
   };
 
   let bumpedCallback = function (sub) {
+    console.log("calling the bumped callback!!!");
+
     let otherSub = Submissions.findOne({
       uid: {$ne: sub.uid},
       iid: sub.iid,
@@ -631,7 +633,7 @@ function createBumped() {
       };
       DETECTORS[place[0] + relationship] = detector;
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 1; i++) {
         let need = {
           needName: place[0] + relationship + i,
           situation: {detector: detector._id, number: '2'},

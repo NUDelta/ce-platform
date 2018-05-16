@@ -36,11 +36,10 @@ export const addContribution = (iid, contribution) =>{
   });
 };
 
-const addEmptySubmissionsForNeed = (iid, eid, need) => {
+export const addEmptySubmissionsForNeed = (iid, eid, need) => {
   let i = 0;
   while (i < need.numberNeeded) {
     i++;
-
 
     Submissions.insert({
       eid: eid,
@@ -50,7 +49,6 @@ const addEmptySubmissionsForNeed = (iid, eid, need) => {
       if (err) {
         console.log('upload error,', err);
       } else {
-
       }
     });
 

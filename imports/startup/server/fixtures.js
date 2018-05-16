@@ -115,7 +115,11 @@ function createTestData(){
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-  createTestExperiences();
+  // createTestExperiences();
+  Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
+  let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
+  startRunningIncident(incident);
+  log.info(`Created ${ Experiences.find().count() } experiences`);
 
   let uid1 = findUserByUsername('garrett')._id;
   let uid2 = findUserByUsername('garretts_brother')._id;

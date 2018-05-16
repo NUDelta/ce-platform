@@ -50,6 +50,8 @@ export const getUnfinishedNeedNames = function() {
  * @param mostRecentSub {object} submission db object that was just submitted
  */
 function adminUpdates(mostRecentSub) {
+
+  console.log("inside adminUpdates");
   Meteor.users.update(
     { _id: mostRecentSub.uid },
     {
@@ -79,8 +81,12 @@ const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
   changed(submission, old) {
-    adminUpdates(submission);
-    runCallbacks(submission);
+    console.log(submission);
+    if(!(submission.uid === null)){
+      adminUpdates(submission);
+      runCallbacks(submission);
+    }
+
   }
 });
 
@@ -131,7 +137,7 @@ function runCallbacks(mostRecentSub) {
   });
 }
 
-const numUnfinishedNeeds = (iid, needName) => {
+export const numUnfinishedNeeds = (iid, needName) => {
   let count = Submissions.find({
     iid: iid,
     needName: needName,
@@ -177,7 +183,11 @@ class CallbackManager {
         uid: { $ne: null }
       }).count();
     } else {
-      return numUnfinishedNeeds(this.submission.iid, needName);
+      return Submissions.find({
+        iid: this.submission.iid,
+        needName: needName,
+        uid: { $ne: null }
+      }).count();
     }
   }
 
