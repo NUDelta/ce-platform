@@ -6,11 +6,12 @@ import request from 'request';
 
 /**
  * Gets affordances based on location, then calls a callback
- * @param {float} lat
- * @param {float} lng
- * @param {function} callback - which calls with single argument affordances
+ * @param {string} uid user id
+ * @param {float} lat current latitude of location
+ * @param {float} lng current longitude of location
+ * @param {function} callback takes two arguments: uid and affordances
  */
-export const getAffordancesFromLocation = function (lat, lng, callback) {
+export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
   let url = `http://affordanceaware.herokuapp.com/location_keyvalues/${ lat }/${ lng }`;
   request(url, Meteor.bindEnvironment(function (error, response, body) {
     let affordances = {};
@@ -28,7 +29,8 @@ export const getAffordancesFromLocation = function (lat, lng, callback) {
     }
 
     // callback with either retrieved affordances or empty object
-    callback(affordances);
+    serverLog.call({  message: `Affordances successfully retrieved for ${ lat }, ${ lng }.` });
+    callback(uid, affordances);
   }));
 };
 

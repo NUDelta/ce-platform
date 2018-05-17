@@ -47,7 +47,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
 
   });
 
-  getAffordancesFromLocation(lat, lng, function (affordances) {
+  getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
     let user = Meteor.users.findOne(uid);
     if(user){
       // get affordances via affordance aware
