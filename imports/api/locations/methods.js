@@ -17,12 +17,10 @@ import {serverLog} from "../logs";
 
 Meteor.methods({
   triggerUpdate(lat, lng, uid){
-    onLocationUpdate(uid, lat, lng, function () {
+    onLocationUpdate(uid, lat, lng, function (uid) {
       serverLog.call({message: "triggering manual location update for: " + uid});
     });
-
   }
-
 });
 
 /**
@@ -32,10 +30,10 @@ Meteor.methods({
  * @param uid {string} uid of user who's location just changed
  * @param lat {float} latitude of new location
  * @param lng {float} longitude of new location
+ * @param callback {function} callback function to run after code completion
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-
-  //TODO: this could def be a clearner call or its own function
+  //TODO: this could def be a cleaner call or its own function
   let availabilityObjects = Availability.find().fetch();
   _.forEach(availabilityObjects, (av) => {
     _.forEach(av.needUserMaps, (needEntry) => {
@@ -52,34 +50,34 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
   getAffordancesFromLocation(lat, lng, function (affordances) {
     let user = Meteor.users.findOne(uid);
     if(user){
+      // get affordances via affordance aware
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
-      updateLocationInDb(uid, lat, lng, affordances);
-      callback();
+      affordances = affordances !== null ? affordances : {};
 
-      Meteor.setTimeout(function(){
+      // update information in database
+      updateLocationInDb(uid, lat, lng, affordances);
+      callback(uid);
+
+      Meteor.setTimeout(function() {
         let newAffs = Locations.findOne({uid: user._id}).affordances;
         let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
 
         let sharedAffs = [];
-        _.forEach(sharedKeys, (key)=>{
+        _.forEach(sharedKeys, (key) => {
           sharedAffs[key] = newAffs[key];
         });
 
         updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
         sendToMatcher(uid, sharedAffs);
-
-      }, 5*60000);
-
+      }, 5 * 60000);
     }
-
   });
-
 };
 
 /**
- * Finds the matches (findMatchesFunction in User::Experience Matcher) for the user for a user's location update and
- * sends found matches to the coordinator.
+ * Finds the matches (findMatchesFunction in User::Experience Matcher) for the user for a user's
+ * location update and sends found matches to the coordinator.
  *
  * @param uid {string} uid of user who's location just changed
  * @param lat {float} latitude of new location
@@ -92,7 +90,7 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-       runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
   }
 };
 
@@ -102,7 +100,6 @@ const sendToMatcher = (uid, affordances) => {
  * Debug mode shortens the time between experiences for easier debugging.
  *
  * @param uid {string} uid of user who's location just changed
- * @param debug {boolean} choose to run in debug mode or not
  * @returns {boolean} whether a user can participate in an experience
  */
 const userIsAvailableToParticipate = (uid) => {
@@ -132,8 +129,9 @@ const userIsAvailableToParticipate = (uid) => {
  * @param affordances {object} affordances key/value dictionary
  */
 const updateLocationInDb = (uid, lat, lng, affordances) => {
+  // get user's current location and update, if exists. otherwise, create a new entry.
   const entry = Locations.findOne({ uid: uid });
-   if (entry) {
+  if (entry) {
     Locations.update(entry._id, {
       $set: {
         lat: lat,
@@ -159,6 +157,8 @@ const updateLocationInDb = (uid, lat, lng, affordances) => {
       }
     });
   }
+
+  // store location update in logs
   Location_log.insert({
     uid: uid,
     lat: lat,
