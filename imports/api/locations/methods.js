@@ -13,8 +13,6 @@ import {Meteor} from "meteor/meteor";
 import {Location_log} from "./location_log";
 import {serverLog} from "../logs";
 
-
-
 Meteor.methods({
   triggerUpdate(lat, lng, uid){
     onLocationUpdate(uid, lat, lng, function (uid) {
@@ -33,6 +31,8 @@ Meteor.methods({
  * @param callback {function} callback function to run after code completion
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
+  serverLog.call({message: `removing ${ uid } from all availabilities.`});
+
   //TODO: this could def be a cleaner call or its own function
   let availabilityObjects = Availability.find().fetch();
   _.forEach(availabilityObjects, (av) => {
@@ -44,12 +44,14 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
         $pull: {'needUserMaps.$.uids': uid}
       });
     });
-
   });
 
+  serverLog.call({message: "attempting to get affordances for " + uid});
   getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
     let user = Meteor.users.findOne(uid);
-    if(user){
+    serverLog.call({message: "affordances found for " + user});
+
+    if (user) {
       // get affordances via affordance aware
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);

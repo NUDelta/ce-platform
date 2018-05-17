@@ -45,8 +45,6 @@ if (Meteor.isCordova) {
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin
     bgGeo = window.BackgroundGeolocation;
-    serverLog.call({ message: "setting up location tracking for: " + Meteor.userId()});
-    serverLog.call({ message: "bgGeo: " + bgGeo});
 
     // configure and start background geolocation when ready
     bgGeo.ready({
@@ -76,13 +74,14 @@ if (Meteor.isCordova) {
       autoSync: true, // automatically sync database
       maxDaysToPersist: 1 // days for SQLite database to persist
     }, function (state) {
-      // This callback is executed when the plugin  is ready to use.
-      console.log("BackgroundGeolocation ready: ", state);
+      // This callback is executed when the plugin is ready to use.
+      serverLog.call({ message: "location tracking setup for: " + Meteor.userId()});
+      serverLog.call({ message: `state: ${ state }, bgGeo: ${ bgGeo }` });
 
       // begin tracking
       if (!state.enabled) {
         bgGeo.start(function() {
-          console.log('BackgroundGeolocation has started tracking.')
+          serverLog.call({ message: "Background location tracking started for " + Meteor.userId()});
         });
       }
     });
