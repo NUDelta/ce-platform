@@ -69,8 +69,11 @@ if (Meteor.isCordova) {
       logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
 
       // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl() }api/geolocation/url`, // submit location updates to
+      url: `${ Meteor.absoluteUrl() }api/geolocation`, // submit location updates to
       method: "POST", // submission method
+      params: {
+        userId: Meteor.userId()
+      },
       autoSync: true, // automatically sync database
       maxDaysToPersist: 1 // days for SQLite database to persist
     }, function (state) {
@@ -91,21 +94,21 @@ if (Meteor.isCordova) {
       serverLog.call({ message: "location package received update for: " + Meteor.userId() });
 
       // POST data to backend API
-      if (Meteor.userId()) {
-        HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
-          data: {
-            location: location,
-            userId: Meteor.userId()
-          }
-        }, (err, res) => {
-          // log only if error happens
-          if (err) {
-            let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ JSON.stringify(err) }`;
-            serverLog.call({  message: errorMessage  });
-            console.log(errorMessage);
-          }
-        });
-      }
+      // if (Meteor.userId()) {
+      //   HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
+      //     data: {
+      //       location: location,
+      //       userId: Meteor.userId()
+      //     }
+      //   }, (err, res) => {
+      //     // log only if error happens
+      //     if (err) {
+      //       let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ JSON.stringify(err) }`;
+      //       serverLog.call({  message: errorMessage  });
+      //       console.log(errorMessage);
+      //     }
+      //   });
+      // }
     };
 
     const locationFailureCallback = function (errorCode) {
@@ -139,7 +142,7 @@ if (Meteor.isCordova) {
 
     // listen for HTTP requests
     bgGeo.on('http', function (success) {
-      serverLog.call({ message: `http SUCCESS: ${ JSON.stringify(success) }`});
+      serverLog.call({ message: `http SUCCESS`});
     },
       function (error) {
         serverLog.call({ message: `http ERROR: ${ JSON.stringify(error) }`});
