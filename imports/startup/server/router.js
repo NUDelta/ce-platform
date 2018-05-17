@@ -1,8 +1,6 @@
 import {Router} from 'meteor/iron:router';
 
 import {updateUserLocationAndAffordances} from '../../api/locations/methods.js';
-import {log} from '../../api/logs.js';
-import {Location_log} from '../../api/locations/location_log.js'
 import { onLocationUpdate } from "../../api/locations/methods";
 import {serverLog} from "../../api/logs";
 import {Meteor} from "meteor/meteor";
@@ -28,9 +26,14 @@ Router.route('/api/geolocation', {where: 'server'})
     const location = this.request.body.location;
     // const activity = this.request.body.activity;
 
-    onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function (uid) {
-      serverLog.call({message: "triggering internal location update for: " + uid});
-    });
+    // only do a location update if valid uid
+    if (uid !== null) {
+      onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function (uid) {
+        serverLog.call({message: "triggering internal location update for: " + uid});
+      });
+    } else {
+      serverLog.call({ message: 'location update not triggered since user was null.' });
+    }
 
     this.response.writeHead(200, {'Content-Type': 'application/json'});
     this.response.end('ok');

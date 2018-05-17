@@ -1,34 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { HTTP } from 'meteor/http';
-
-import { log, serverLog } from '../api/logs.js';
-import { Experiences } from "../api/experiences/experiences";
-import { createIncidentFromExperience, startRunningIncident } from "../api/incidents/methods";
-
-/*
-  Example location object returned
-  {
-      "timestamp":     [Date],     // <-- Javascript Date instance
-      "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
-      "uuid":          [String],   // <-- Universally unique identifier
-      "coords": {
-          "latitude":  [Float],
-          "longitude": [Float],
-          "accuracy":  [Float],
-          "speed":     [Float],
-          "heading":   [Float],
-          "altitude":  [Float]
-      },
-      "activity": {
-          "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
-          "confidence": [0-100%]
-      },
-      "battery": {
-          "level": [Float],
-          "is_charging": [Boolean]
-      }
-  }
- */
+import { serverLog } from '../api/logs.js';
 
 if (Meteor.isCordova) {
   let bgGeo = window.BackgroundGeolocation;
@@ -90,32 +61,46 @@ if (Meteor.isCordova) {
     });
 
     // setup callbacks for location updates
-    const locationSuccessCallback = function (location) {
+    const locationSuccessCallback = function () {
       serverLog.call({ message: "location package received update for: " + Meteor.userId() });
-
-      // POST data to backend API
-      // if (Meteor.userId()) {
-      //   HTTP.post(`${ Meteor.absoluteUrl() }api/geolocation`, {
-      //     data: {
-      //       location: location,
-      //       userId: Meteor.userId()
-      //     }
-      //   }, (err, res) => {
-      //     // log only if error happens
-      //     if (err) {
-      //       let errorMessage = `Could not send location update to server for ${ Meteor.userId() }: ${ JSON.stringify(err) }`;
-      //       serverLog.call({  message: errorMessage  });
-      //       console.log(errorMessage);
-      //     }
-      //   });
-      // }
     };
 
     const locationFailureCallback = function (errorCode) {
       console.warn('- BackgroundGeoLocation error: ', errorCode);
     };
 
-    // listen to location updates
+    // listen to location updates and automatically save to DB
+    /*
+    Example location object returned
+    {
+       "location": {
+          "coords": {
+             "speed": [Float],
+             "longitude": [Float],
+             "floor": [Float],
+             "latitude": [Float],
+             "accuracy": [Float],
+             "altitude_accuracy": [Float],
+             "altitude": [Float],
+             "heading": [Float]
+          },
+          "extras": {},
+          "is_moving": [Boolean],
+          "odometer": [Float],
+          "uuid": [String],
+          "activity":{
+              "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
+              "confidence": [0-100%]
+          },
+          "battery": {
+              "level": [Float],
+              "is_charging": [Boolean]
+          }
+          "timestamp": [String]
+       },
+       "userId": [String]
+    }
+    */
     bgGeo.on('location', locationSuccessCallback, locationFailureCallback);
 
     // listen to motion change (moving -> stationary, stationary -> moving) events
