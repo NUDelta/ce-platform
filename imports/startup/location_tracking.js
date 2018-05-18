@@ -3,9 +3,8 @@ import { Tracker } from 'meteor/tracker';
 import { serverLog } from '../api/logs.js';
 
 if (Meteor.isCordova) {
-  let bgGeo = window.BackgroundGeolocation;
-
   const updateBgGeoConfig = (userId) => {
+    let bgGeo = window.BackgroundGeolocation;
     bgGeo.setConfig({
       params: {
         userId: userId
@@ -17,7 +16,9 @@ if (Meteor.isCordova) {
 
   export const toggleLocationTracking = () => {
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
-    if(bgGeo){
+
+    let bgGeo = window.BackgroundGeolocation;
+    if(bgGeo && Meteor.isCordova) {
       serverLog.call({message: "on cordova so toggle time" });
       bgGeo.stop();
       bgGeo.start();
@@ -26,6 +27,8 @@ if (Meteor.isCordova) {
 
   Tracker.autorun(() => {
     const currUserId = Meteor.userId();
+
+    // TODO: make it so that when a user logs out, location tracking also stops
     if (currUserId) {
       updateBgGeoConfig(currUserId);
     }
@@ -33,7 +36,7 @@ if (Meteor.isCordova) {
 
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin
-    bgGeo = window.BackgroundGeolocation;
+    let bgGeo = window.BackgroundGeolocation;
 
     // configure and start background geolocation when ready
     bgGeo.ready({
@@ -153,16 +156,6 @@ if (Meteor.isCordova) {
 
     // listen for heartbeat events
     bgGeo.on('heartbeat', function (params) {
-      // set userId if not null
-      let bgGeo = window.BackgroundGeolocation;
-      if (Meteor.userId()) {
-        bgGeo.setConfig({
-          params: {
-            userId: Meteor.userId()
-          }
-        });
-      }
-
       serverLog.call({
         message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ JSON.stringify(params) }.`
       });
