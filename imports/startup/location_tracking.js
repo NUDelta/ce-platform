@@ -1,10 +1,21 @@
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { serverLog } from '../api/logs.js';
 
 if (Meteor.isCordova) {
   let bgGeo = window.BackgroundGeolocation;
 
-  export const toggleLocationTracking = function () {
+  const updateBgGeoConfig = (userId) => {
+    bgGeo.setConfig({
+      params: {
+        userId: userId
+      }
+    });
+
+    serverLog.call({ message: `User Id has been updated to ${ currUserId }`});
+  };
+
+  export const toggleLocationTracking = () => {
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
     if(bgGeo){
       serverLog.call({message: "on cordova so toggle time" });
@@ -12,6 +23,13 @@ if (Meteor.isCordova) {
       bgGeo.start();
     }
   };
+
+  Tracker.autorun(() => {
+    const currUserId = Meteor.userId();
+    if (currUserId) {
+      updateBgGeoConfig(currUserId);
+    }
+  });
 
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin
@@ -50,7 +68,7 @@ if (Meteor.isCordova) {
     }, function (state) {
       // This callback is executed when the plugin is ready to use.
       serverLog.call({ message: "location tracking setup for: " + Meteor.userId()});
-      serverLog.call({ message: `state: ${ state }, bgGeo: ${ bgGeo }` });
+      serverLog.call({ message: `state: ${ JSON.stringify(state) }, bgGeo: ${ JSON.stringify(bgGeo) }` });
 
       // begin tracking
       if (!state.enabled) {
@@ -126,7 +144,7 @@ if (Meteor.isCordova) {
     });
 
     // listen for HTTP requests
-    bgGeo.on('http', function (success) {
+    bgGeo.on('http', function () {
       serverLog.call({ message: `http SUCCESS`});
     },
       function (error) {
@@ -135,6 +153,16 @@ if (Meteor.isCordova) {
 
     // listen for heartbeat events
     bgGeo.on('heartbeat', function (params) {
+      // set userId if not null
+      let bgGeo = window.BackgroundGeolocation;
+      if (Meteor.userId()) {
+        bgGeo.setConfig({
+          params: {
+            userId: Meteor.userId()
+          }
+        });
+      }
+
       serverLog.call({
         message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ JSON.stringify(params) }.`
       });
