@@ -1,18 +1,27 @@
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
+// import { Tracker } from 'meteor/tracker';
 import { serverLog } from '../api/logs.js';
 
 if (Meteor.isCordova) {
-  const updateBgGeoConfig = (userId) => {
-    let bgGeo = window.BackgroundGeolocation;
-    bgGeo.setConfig({
-      params: {
-        userId: userId
-      }
-    });
-
-    serverLog.call({ message: `User Id has been updated to ${ currUserId }`});
-  };
+  // Tracker.autorun(() => {
+  //   const currUserId = Meteor.userId();
+  //
+  //   // TODO: make it so that when a user logs out, location tracking also stops
+  //   if (currUserId) {
+  //     updateBgGeoConfig(currUserId);
+  //   }
+  // });
+  //
+  // const updateBgGeoConfig = (userId) => {
+  //   let bgGeo = window.BackgroundGeolocation;
+  //   bgGeo.setConfig({
+  //     params: {
+  //       userId: userId
+  //     }
+  //   });
+  //
+  //   serverLog.call({ message: `User Id has been updated to ${ currUserId }`});
+  // };
 
   export const toggleLocationTracking = () => {
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
@@ -24,15 +33,6 @@ if (Meteor.isCordova) {
       bgGeo.start();
     }
   };
-
-  Tracker.autorun(() => {
-    const currUserId = Meteor.userId();
-
-    // TODO: make it so that when a user logs out, location tracking also stops
-    if (currUserId) {
-      updateBgGeoConfig(currUserId);
-    }
-  });
 
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin
@@ -61,12 +61,12 @@ if (Meteor.isCordova) {
       logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
 
       // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl() }api/geolocation`, // submit location updates to
+      url: `${ Meteor.absoluteUrl() }api/geolocation`, // submit location updates to backend route
       method: "POST", // submission method
       params: {
         userId: Meteor.userId()
       },
-      autoSync: true, // automatically sync database
+      autoSync: true, // upload each location update as it is received
       maxDaysToPersist: 1 // days for SQLite database to persist
     }, function (state) {
       // This callback is executed when the plugin is ready to use.
