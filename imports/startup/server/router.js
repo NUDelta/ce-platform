@@ -1,9 +1,9 @@
 import {Router} from 'meteor/iron:router';
 
-import {updateUserLocationAndAffordances} from '../../api/locations/methods.js';
+import {updateUserLocationAndAffordances} from '../../api/UserMonitor/locations/methods.js';
 import {log} from '../../api/logs.js';
-import {Location_log} from '../../api/locations/location_log.js'
-import {onLocationUpdate} from "../../api/locations/methods";
+import {Location_log} from '../../api/Logging/location_log.js'
+import {onLocationUpdate} from "../../api/UserMonitor/locations/methods";
 import {serverLog} from "../../api/logs";
 import {Meteor} from "meteor/meteor";
 

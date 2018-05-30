@@ -18,16 +18,14 @@ import '../../ui/pages/api_custom_results.html';
 import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 
-import { Experiences } from "../../api/experiences/experiences";
-import { Locations } from "../../api/locations/locations";
-import { Images } from "../../api/images/images";
-import { Submissions } from "../../api/submissions/submissions";
-import { Incidents } from "../../api/incidents/incidents";
+import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
+import { Locations } from "../../api/UserMonitor/locations/locations";
+import { Images } from "../../api/ImageUpload/images";
+import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Meteor } from "meteor/meteor";
-import {Assignments} from "../../api/coordinator/assignments";
-import {Availability} from "../../api/coordinator/availability";
-import {Notification_log} from "../../api/coordinator/notification_log";
-import {Page_log} from "../../api/page_log/page_log";
+import {Assignments, Availability} from "../../api/OpportunisticCoordinator/databaseHelpers";
+import {Notification_log} from "../../api/Logging/notification_log";
+import {Page_log} from "../../api/Logging/page_log/page_log";
 
 Router.configure({
   layoutTemplate: 'layout'

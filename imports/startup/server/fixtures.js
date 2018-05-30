@@ -4,19 +4,17 @@ import { Random } from 'meteor/random'
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Submissions } from "../../api/submissions/submissions";
-import { Availability } from "../../api/coordinator/availability";
-import { Assignments } from "../../api/coordinator/assignments";
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
+import { Locations } from '../../api/UserMonitor/locations/locations.js';
+import { Submissions } from "../../api/OCEManager/currentNeeds";
+import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
 import { log } from '../../api/logs.js';
 
-import { CONSTANTS } from "../../api/testing/testingconstants";
-import { onLocationUpdate } from "../../api/locations/methods";
-import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
-import { findUserByUsername } from '../../api/users/methods';
-import { Detectors } from "../../api/detectors/detectors";
+import { CONSTANTS } from "../../api/Testing/testingconstants";
+import { onLocationUpdate } from "../../api/UserMonitor/locations/methods";
+import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
+import { findUserByUsername } from '../../api/UserMonitor/users/methods';
+import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
 Meteor.startup(() => {
   log.debug("Running in mode: ", process.env.MODE );

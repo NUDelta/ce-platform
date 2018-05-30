@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
 import { log, serverLog } from '../api/logs.js';
-import {Experiences} from "../api/experiences/experiences";
-import {createIncidentFromExperience, startRunningIncident} from "../api/incidents/methods";
+import {Experiences} from "../api/OCEManager/OCEs/experiences";
+import {createIncidentFromExperience, startRunningIncident} from  "../api/OCEManager/OCEs/methods.js";
 ////import { LocationManager } from '../../api/locations/client/location-manager-client.js';
 
 ///Example location object returned

@@ -1,6 +1,6 @@
 import {Meteor} from "meteor/meteor";
 import { SyncedCron } from 'meteor/percolate:synced-cron';
-import {Locations} from "../../api/locations/locations";
+import {Locations} from "../../api/UserMonitor/locations/locations";
 
 SyncedCron.config({
   // Default to using localTime
@@ -25,7 +25,7 @@ function sendNotificationByTimeZone(offset){
 
   });
 
-  Meteor.call('sendNotification', timezoneUids, "Open this notification to be eligible to get experiences today!", 'https://ce-platform.herokuapp.com/cron')
+  Meteor.call('sendNotification', timezoneUids, "Open this notification to be eligible to get OCEs today!", 'https://ce-platform.herokuapp.com/cron')
 
 }
 
