@@ -12,8 +12,6 @@ import { Meteor } from "meteor/meteor";
 
 Meteor.methods({
   startFreshBumped() {
-    console.log("GOING IN BUMPED");
-
     createNewBumped();
   },
   startFreshBumped2() {
@@ -30,16 +28,16 @@ Meteor.methods({
   },
   startFreshSpookyNevilleStorytime() {
     createNewSpookyNevilleStorytime();
-  },
-  startFreshFoodFight() {
-    createNewFoodFight();
-  },
-  startFreshTurfWar() {
-    createNewTurfWar();
-  },
-  startFreshFantasyGym() {
-    createNewFantasyGym();
   }
+  // startFreshFoodFight() {
+  //   createNewFoodFight();
+  // },
+  // startFreshTurfWar() {
+  //   createNewTurfWar();
+  // },
+  // startFreshFantasyGym() {
+  //   createNewFantasyGym();
+  // }
 });
 
 function createNewBumped() {
@@ -728,353 +726,353 @@ function createNewSpookyNevilleStorytime() {
   startRunningIncident(incident);
 }
 
-var foodFightDetectors =[];
+// var foodFightDetectors =[];
 
-function createNewBadNeed(sub){
-  let need = {
-    needName: "bad" + sub[10],
-    situation: { detector: foodFightDetectors[2*(parseInt(sub[10])-2)], number: "1" },
-    toPass: {
-      instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
-    },
-    numberNeeded: 2
-  };
-  return need;
-}
+// function createNewBadNeed(sub){
+//   let need = {
+//     needName: "bad" + sub[10],
+//     situation: { detector: foodFightDetectors[2*(parseInt(sub[10])-2)], number: "1" },
+//     toPass: {
+//       instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
+//     },
+//     numberNeeded: 2
+//   };
+//   return need;
+// }
 
-function createNewGoodNeed(sub){
-  let need = {
-    needName: "good" + sub[10],
-    situation: { detector: foodFightDetectors[2*(parseInt(sub[10])-2)+1], number: "1" },
-    toPass: {
-      instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
-    },
-    numberNeeded: 2 * (6 - parseInt(sub[10]))
-  };
-  return need;
-}
+// function createNewGoodNeed(sub){
+//   let need = {
+//     needName: "good" + sub[10],
+//     situation: { detector: foodFightDetectors[2*(parseInt(sub[10])-2)+1], number: "1" },
+//     toPass: {
+//       instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
+//     },
+//     numberNeeded: 2 * (6 - parseInt(sub[10]))
+//   };
+//   return need;
+// }
 
-function createNewFoodFight() {
-  console.log("HERE");
-  //this section "fakes" history through adding detectors with each step of the narrative
-  let newVars = JSON.parse(
-    JSON.stringify(CONSTANTS.DETECTORS["eating_alone"]["variables"])
-    );
-  for (var i = 1; i < 7; i++) {
-    var badVarietyX = "badVariety" + i.toString();
-    newVars.push(badVarietyX);
-    detBad = {
-      _id: Random.id(),
-      description:
-      CONSTANTS.DETECTORS["eating_alone"].description +badVarietyX,
-      variables: newVars,
-      rules: [
-      "(" +
-      CONSTANTS.DETECTORS["eating_alone"].rules[0] +
-      " ) && " + badVarietyX + " ;"
-      ]
-    };
-    //Bad detectors
-    foodFightDetectors.push(detBad._id);
-    Detectors.insert(detBad);
+// function createNewFoodFight() {
+//   console.log("HERE");
+//   //this section "fakes" history through adding detectors with each step of the narrative
+//   let newVars = JSON.parse(
+//     JSON.stringify(CONSTANTS.DETECTORS["eating_alone"]["variables"])
+//     );
+//   for (var i = 1; i < 7; i++) {
+//     var badVarietyX = "badVariety" + i.toString();
+//     newVars.push(badVarietyX);
+//     detBad = {
+//       _id: Random.id(),
+//       description:
+//       CONSTANTS.DETECTORS["eating_alone"].description +badVarietyX,
+//       variables: newVars,
+//       rules: [
+//       "(" +
+//       CONSTANTS.DETECTORS["eating_alone"].rules[0] +
+//       " ) && " + badVarietyX + " ;"
+//       ]
+//     };
+//     //Bad detectors
+//     foodFightDetectors.push(detBad._id);
+//     Detectors.insert(detBad);
 
-    newVars.push("var goodVariety" + i.toString());
-    var goodVarietyX = "goodVariety" + i.toString();
-    detGood = {
-      _id: Random.id(),
-      description:
-      CONSTANTS.DETECTORS["eating_alone"].description +goodVarietyX,
-      variables: newVars,
-      rules: [
-      "(" +
-      CONSTANTS.DETECTORS["eating_alone"].rules[0] +
-      " ) && " + goodVarietyX + " ;"
-      ]
-    };
-    //Good detectors
-    foodFightDetectors.push(detGood._id);
-    Detectors.insert(detGood); //dynamically add variable names?
-  }
+//     newVars.push("var goodVariety" + i.toString());
+//     var goodVarietyX = "goodVariety" + i.toString();
+//     detGood = {
+//       _id: Random.id(),
+//       description:
+//       CONSTANTS.DETECTORS["eating_alone"].description +goodVarietyX,
+//       variables: newVars,
+//       rules: [
+//       "(" +
+//       CONSTANTS.DETECTORS["eating_alone"].rules[0] +
+//       " ) && " + goodVarietyX + " ;"
+//       ]
+//     };
+//     //Good detectors
+//     foodFightDetectors.push(detGood._id);
+//     Detectors.insert(detGood); //dynamically add variable names?
+//   }
 
-  //write a createNeed function that takes in the stage number and creates needs automatically
-  let startStage2 = function(sub) { //this will add needs to the contributionTypes array
-    let needBad1 = createNewBadNeed("startStage2");
-    let needGood1 = createNewGoodNeed("startStage2");
+//   //write a createNeed function that takes in the stage number and creates needs automatically
+//   let startStage2 = function(sub) { //this will add needs to the contributionTypes array
+//     let needBad1 = createNewBadNeed("startStage2");
+//     let needGood1 = createNewGoodNeed("startStage2");
 
-    addNeed(sub.eid, needBad1);
-    addNeed(sub.eid, needGood1);
-  }
+//     addNeed(sub.eid, needBad1);
+//     addNeed(sub.eid, needGood1);
+//   }
 
-let startStage3 = function(sub) { //this will add needs to the contributionTypes array
-  let needBad2 = createNewBadNeed("startStage3");
-  let needGood2 = createNewGoodNeed("startStage3");
+// let startStage3 = function(sub) { //this will add needs to the contributionTypes array
+//   let needBad2 = createNewBadNeed("startStage3");
+//   let needGood2 = createNewGoodNeed("startStage3");
 
-  addNeed(sub.eid, needBad2);
-  addNeed(sub.eid, needGood2);
-}
+//   addNeed(sub.eid, needBad2);
+//   addNeed(sub.eid, needGood2);
+// }
 
-let startStage4 = function(sub) { //this will add needs to the contributionTypes array
-  let needBad3 = createNewBadNeed("startStage4");
-  let needGood3 = createNewGoodNeed("startStage4");
+// let startStage4 = function(sub) { //this will add needs to the contributionTypes array
+//   let needBad3 = createNewBadNeed("startStage4");
+//   let needGood3 = createNewGoodNeed("startStage4");
 
-  addNeed(sub.eid, needBad3);
-  addNeed(sub.eid, needGood3);
-}
+//   addNeed(sub.eid, needBad3);
+//   addNeed(sub.eid, needGood3);
+// }
 
-let startStage5 = function(sub) { //this will add needs to the contributionTypes array
-  let needBad4 = createNewBadNeed("startStage5");
-  let needGood4 = createNewGoodNeed("startStage5");
+// let startStage5 = function(sub) { //this will add needs to the contributionTypes array
+//   let needBad4 = createNewBadNeed("startStage5");
+//   let needGood4 = createNewGoodNeed("startStage5");
 
-  addNeed(sub.eid, needBad4);
-  addNeed(sub.eid, needGood4);
-}
+//   addNeed(sub.eid, needBad4);
+//   addNeed(sub.eid, needGood4);
+// }
 
-let startStage6 = function(sub) { //this will add needs to the contributionTypes array
-  let needBad6 = {
-    needName: "bad6",
-    situation: { detector: foodFightDetectors[10], number: "1" },
-    toPass: {
-      instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
-    },
-    numberNeeded: 1
-  };
+// let startStage6 = function(sub) { //this will add needs to the contributionTypes array
+//   let needBad6 = {
+//     needName: "bad6",
+//     situation: { detector: foodFightDetectors[10], number: "1" },
+//     toPass: {
+//       instruction: "Your diet sucks! Get some more variety in your food so you don't run out of ammo"
+//     },
+//     numberNeeded: 1
+//   };
 
-  let needGood6 = {
-    needName: "good6",
-    situation: { detector: foodFightDetectors[11], number: "1" },
-    toPass: {
-      instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
-    },
-    numberNeeded: 1
-  };
+//   let needGood6 = {
+//     needName: "good6",
+//     situation: { detector: foodFightDetectors[11], number: "1" },
+//     toPass: {
+//       instruction: "You're doing great! Tell us what you're eating right now so we can restock your ammo"
+//     },
+//     numberNeeded: 1
+//   };
 
-  addNeed(sub.eid, needBad6);
-  addNeed(sub.eid, needGood6);
-}
+//   addNeed(sub.eid, needBad6);
+//   addNeed(sub.eid, needGood6);
+// }
 
 
-let exp = {
-  _id: Random.id(),
-  name: "Food Fight",
-  participateTemplate: "submitText",
-  resultsTemplate: "foodFightResult",
-    contributionTypes: [ //array of different needs, one for each stage of the narrative
-    {
-      needName: "foodFightStage1",
-      situation: { detector: "eG4no7zpSnthwwcv6", number: "1" },
-      toPass: {
-        instruction: "We're having a food fight! Share what you're eating."
+// let exp = {
+//   _id: Random.id(),
+//   name: "Food Fight",
+//   participateTemplate: "submitText",
+//   resultsTemplate: "foodFightResult",
+//     contributionTypes: [ //array of different needs, one for each stage of the narrative
+//     {
+//       needName: "foodFightStage1",
+//       situation: { detector: "eG4no7zpSnthwwcv6", number: "1" },
+//       toPass: {
+//         instruction: "We're having a food fight! Share what you're eating."
 
-      },
-      numberNeeded: 10
-    }
-    ],
-    description: "food fight",
-    notificationText: "A food fight is starting!",
-    callbacks: [
-    {
-        trigger: "cb.needFinished('foodFightStage1')", //cb referes to the callback manager, this calls back once stage 1 has begun
-        function: startStage2.toString()
-      },
-      {
-        trigger: "cb.needFinished('startStage2')", //cb referes to the callback manager, this calls back once stage 1 has begun
-        function: startStage3.toString()
-      },
-      {
-        trigger: "cb.needFinished('startStage3')", //cb referes to the callback manager, this calls back once stage 1 has begun
-        function: startStage4.toString()
-      },
-      {
-        trigger: "cb.needFinished('startStage4')", //cb referes to the callback manager, this calls back once stage 1 has begun
-        function: startStage5.toString()
-      },
-      {
-        trigger: "cb.needFinished('startStage5')", //cb referes to the callback manager, this calls back once stage 1 has begun
-        function: startStage6.toString()
-      }
-      ]
-    };  
+//       },
+//       numberNeeded: 10
+//     }
+//     ],
+//     description: "food fight",
+//     notificationText: "A food fight is starting!",
+//     callbacks: [
+//     {
+//         trigger: "cb.needFinished('foodFightStage1')", //cb referes to the callback manager, this calls back once stage 1 has begun
+//         function: startStage2.toString()
+//       },
+//       {
+//         trigger: "cb.needFinished('startStage2')", //cb referes to the callback manager, this calls back once stage 1 has begun
+//         function: startStage3.toString()
+//       },
+//       {
+//         trigger: "cb.needFinished('startStage3')", //cb referes to the callback manager, this calls back once stage 1 has begun
+//         function: startStage4.toString()
+//       },
+//       {
+//         trigger: "cb.needFinished('startStage4')", //cb referes to the callback manager, this calls back once stage 1 has begun
+//         function: startStage5.toString()
+//       },
+//       {
+//         trigger: "cb.needFinished('startStage5')", //cb referes to the callback manager, this calls back once stage 1 has begun
+//         function: startStage6.toString()
+//       }
+//       ]
+//     };  
 
-    Experiences.insert(exp);
-    let incident = createIncidentFromExperience(exp);
-    startRunningIncident(incident);
-  }
+//     Experiences.insert(exp);
+//     let incident = createIncidentFromExperience(exp);
+//     startRunningIncident(incident);
+//   }
 
-function createNewTurfWar() {
-  let newVars = JSON.parse(
-    JSON.stringify(CONSTANTS.DETECTORS["on_transit"]["variables"])
-    );
-  let exp = {
-    _id: Random.id(),
-    name: "Turf War",
-    participateTemplate: "submitVote",
-    resultsTemplate: "TurfWarResult",
-    contributionTypes: [ //array of different needs, one for each stage of the narrative
-    {
-      needName: "TurfWarStage1",
-      situation: { detector: , number: "1" },
-      toPass: {
-        instruction: "There is a turf war going on! Vote for who you want to win!"
+// function createNewTurfWar() {
+//   let newVars = JSON.parse(
+//     JSON.stringify(CONSTANTS.DETECTORS["on_transit"]["variables"])
+//     );
+//   let exp = {
+//     _id: Random.id(),
+//     name: "Turf War",
+//     participateTemplate: "submitVote",
+//     resultsTemplate: "TurfWarResult",
+//     contributionTypes: [ //array of different needs, one for each stage of the narrative
+//     {
+//       needName: "TurfWarStage1",
+//       situation: { detector: , number: "1" },
+//       toPass: {
+//         instruction: "There is a turf war going on! Vote for who you want to win!"
 
-      },
-      numberNeeded: 100
-    }
-    ],
-    description: "Turf War",
-    notificationText: "A turf war is starting!",
-    callbacks: [
-    {
-      trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= 99)",
-      function: TurfWarCallback.toString()
-    },
-    {
-      trigger: "cb.incidentFinished()",
-      function: turfWarEnd.toString()
-    }
-    ]
-  };
+//       },
+//       numberNeeded: 100
+//     }
+//     ],
+//     description: "Turf War",
+//     notificationText: "A turf war is starting!",
+//     callbacks: [
+//     {
+//       trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= 99)",
+//       function: TurfWarCallback.toString()
+//     },
+//     {
+//       trigger: "cb.incidentFinished()",
+//       function: turfWarEnd.toString()
+//     }
+//     ]
+//   };
 
-  let TurfWarCallback = function(sub) {
-    Meteor.users.update(
-    {
-      _id: sub.uid
-    },
-    {
-      $set: {
-        "profile.staticAffordances.participatedInTurfWar": true
-      }
-    }
-    );
+//   let TurfWarCallback = function(sub) {
+//     Meteor.users.update(
+//     {
+//       _id: sub.uid
+//     },
+//     {
+//       $set: {
+//         "profile.staticAffordances.participatedInTurfWar": true
+//       }
+//     }
+//     );
 
-    let affordance = sub.content.affordance;
+//     let affordance = sub.content.affordance;
 
-    let options = [
-    ["Country A", "F8YqP3AEbyguQMJ9i"],
-    ["Country B", "F8YqP3AEbyguQMJ9i"]
-    ];
+//     let options = [
+//     ["Country A", "F8YqP3AEbyguQMJ9i"],
+//     ["Country B", "F8YqP3AEbyguQMJ9i"]
+//     ];
 
-    options = options.filter(function(x) {
-      return x[1] !== affordance;
-    });
+//     options = options.filter(function(x) {
+//       return x[1] !== affordance;
+//     });
 
-    let needName = "vote" + Random.id(3);
-    if (cb.numberOfSubmissions() === 100) {
-      needName = "voteFinal";
-    }
-    let contribution = {
-      needName: needName,
-      situation: { detector: affordance, number: "1" },
-      toPass: {
-        instruction: sub.content.sentence,
-        dropdownChoices: { name: "affordance", options: options }
-      },
-      numberNeeded: 1
-    };
-    addContribution(sub.iid, contribution);
-  };
+//     let needName = "vote" + Random.id(3);
+//     if (cb.numberOfSubmissions() === 100) {
+//       needName = "voteFinal";
+//     }
+//     let contribution = {
+//       needName: needName,
+//       situation: { detector: affordance, number: "1" },
+//       toPass: {
+//         instruction: sub.content.sentence,
+//         dropdownChoices: { name: "affordance", options: options }
+//       },
+//       numberNeeded: 1
+//     };
+//     addContribution(sub.iid, contribution);
+//   };
 
-  let turfWarEnd = function(sub) {
-    let otherSub = Submissions.findOne({
-      uid: { $ne: sub.uid },
-      iid: sub.iid,
-      needName: sub.needName
-    });
+//   let turfWarEnd = function(sub) {
+//     let otherSub = Submissions.findOne({
+//       uid: { $ne: sub.uid },
+//       iid: sub.iid,
+//       needName: sub.needName
+//     });
 
-    notify(
-      [sub.uid, otherSub.uid],
-      sub.iid,
-      "Check out which country is winning!",
-      "",
-      "/apicustomresults/" + sub.iid + "/" + sub.eid
-      );
-  };
+//     notify(
+//       [sub.uid, otherSub.uid],
+//       sub.iid,
+//       "Check out which country is winning!",
+//       "",
+//       "/apicustomresults/" + sub.iid + "/" + sub.eid
+//       );
+//   };
 
-  Experiences.insert(exp);
-  let incident = createIncidentFromExperience(exp);
-  startRunningIncident(incident);
-}
+//   Experiences.insert(exp);
+//   let incident = createIncidentFromExperience(exp);
+//   startRunningIncident(incident);
+// }
 
-createNewFantasyGym() {
-  let experience = {
-    name: "FanyasyGym",
-    participateTemplate: "gym",
-    resultsTemplate: "gymtemplate",
-    contributionTypes: [],
-    description: "Workout detected! Challenge someone else at this equipment.",
-    notificationText: "Workout detected! Challenge someone else at this equipment.",
-    callbacks: []
-  };
+// createNewFantasyGym() {
+//   let experience = {
+//     name: "FanyasyGym",
+//     participateTemplate: "gym",
+//     resultsTemplate: "gymtemplate",
+//     contributionTypes: [],
+//     description: "Workout detected! Challenge someone else at this equipment.",
+//     notificationText: "Workout detected! Challenge someone else at this equipment.",
+//     callbacks: []
+//   };
 
-  let gymCallBack = function(sub) {
-    let otherSub = Submissions.findOne({
-      uid: { $ne: sub.uid },
-      iid: sub.iid,
-      needName: sub.needName
-    });
+//   let gymCallBack = function(sub) {
+//     let otherSub = Submissions.findOne({
+//       uid: { $ne: sub.uid },
+//       iid: sub.iid,
+//       needName: sub.needName
+//     });
 
-    notify(
-      [sub.uid, otherSub.uid],
-      sub.iid,
-      "Compare your score with someone else's!",
-      "",
-      "/apicustomresults/" + sub.iid + "/" + sub.eid
-      );
-  };
+//     notify(
+//       [sub.uid, otherSub.uid],
+//       sub.iid,
+//       "Compare your score with someone else's!",
+//       "",
+//       "/apicustomresults/" + sub.iid + "/" + sub.eid
+//       );
+//   };
 
-  let equipments = [
-  ["benchpress", "at the bench"],
-  ["shoulderpress", "at the bench"],
-  ["bicepcurl", "at the dumbell area"],
-  ["tricepcurl", "at the dumbell area"],
-  ["cardio", "at the running machine"],
-  ];
+//   let equipments = [
+//   ["benchpress", "at the bench"],
+//   ["shoulderpress", "at the bench"],
+//   ["bicepcurl", "at the dumbell area"],
+//   ["tricepcurl", "at the dumbell area"],
+//   ["cardio", "at the running machine"],
+//   ];
 
-  _.forEach(equipments, equipment => {
-    let newVars = JSON.parse(
-      JSON.stringify(CONSTANTS.DETECTORS[equipment[0]]["variables"])
-      );
-    newVars.push("var lovesDTR;");
-    newVars.push("var lovesDTRAlumni;");
+//   _.forEach(equipments, equipment => {
+//     let newVars = JSON.parse(
+//       JSON.stringify(CONSTANTS.DETECTORS[equipment[0]]["variables"])
+//       );
+//     newVars.push("var lovesDTR;");
+//     newVars.push("var lovesDTRAlumni;");
 
-    let detector = {
-      _id: Random.id(), // need to save detectors for future use 
-      description:
-      CONSTANTS.DETECTORS[equipment[0]].description,
-      variables: newVars,
-      rules: [
-      "((" +
-      CONSTANTS.DETECTORS[equipment[0]].rules[0] +
-      ");"
-      ]
-    };
-    CONSTANTS.DETECTORS[equipment[0]] = detector;
+//     let detector = {
+//       _id: Random.id(), // need to save detectors for future use 
+//       description:
+//       CONSTANTS.DETECTORS[equipment[0]].description,
+//       variables: newVars,
+//       rules: [
+//       "((" +
+//       CONSTANTS.DETECTORS[equipment[0]].rules[0] +
+//       ");"
+//       ]
+//     };
+//     CONSTANTS.DETECTORS[equipment[0]] = detector;
 
-    Detectors.insert(detector);
+//     Detectors.insert(detector);
 
-    for (let i = 0; i < 10; i++) {
-      let need = {
-        needName: equipment[0] + i,
-        situation: { detector: detector._id, number: "2" },
-        toPass: {
-          instruction: "You are " + equipment[1] + " at the same time as "
-        },
-        numberNeeded: 2
-      };
-      let callback = {
-        trigger:
-        "cb.numberOfSubmissions('" +
-        equipment[0] +
-        i +
-        "') === 2",
-        function: gymCallBack.toString()
-      };
+//     for (let i = 0; i < 10; i++) {
+//       let need = {
+//         needName: equipment[0] + i,
+//         situation: { detector: detector._id, number: "2" },
+//         toPass: {
+//           instruction: "You are " + equipment[1] + " at the same time as "
+//         },
+//         numberNeeded: 2
+//       };
+//       let callback = {
+//         trigger:
+//         "cb.numberOfSubmissions('" +
+//         equipment[0] +
+//         i +
+//         "') === 2",
+//         function: gymCallBack.toString()
+//       };
 
-      experience.contributionTypes.push(need);
-      experience.callbacks.push(callback);
-    }
-  });
+//       experience.contributionTypes.push(need);
+//       experience.callbacks.push(callback);
+//     }
+//   });
 
-  Experiences.insert(experience);
-  let incident = createIncidentFromExperience(experience);
-  startRunningIncident(incident);
-}
+//   Experiences.insert(experience);
+//   let incident = createIncidentFromExperience(experience);
+//   startRunningIncident(incident);
+// }
