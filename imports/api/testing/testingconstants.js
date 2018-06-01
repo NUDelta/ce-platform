@@ -2,6 +2,7 @@ import {addContribution} from '../incidents/methods';
 import {Submissions} from "../submissions/submissions";
 import {serverLog} from "../logs";
 import {Meteor} from "meteor/meteor";
+import { Detectors } from "../detectors/detectors";
 
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
@@ -932,7 +933,7 @@ function convertChapterToExperience(chapter) {
 
   console.log("DEBUG [creating experience]");
   let experience = {
-      name: chapter.title,
+      name: "Harry Potter story chapter " + chapter.title,
       participateTemplate: "Harry_Potter_Story",
       resultsTemplate: "Harry_Potter_Story_Result",
       contributionTypes: [],
@@ -959,8 +960,8 @@ function convertChapterToExperience(chapter) {
   // set up detectors 
   console.log("DEBUG [creating detectors]");
   let detectorIds = [
-      Random.id(),
-      Random.id()
+      "oFCWkpZ3MSdXXyKbu",
+      "oFCWkpZ3MSdXXyKbb"
   ];
   let i = 0;
   _.forEach(character_contexts, character_context => {
@@ -975,7 +976,7 @@ function convertChapterToExperience(chapter) {
           'variables': newVars,
           'rules': [
               "(" + DETECTORS[character_context[0]].rules[0] +
-              " ) && !participatedInPotterNarrative" + chapter.title + ";"]
+              " ) && !participatedInPotterNarrative_" + chapter.title + ";"]
       };
       console.log("DEBUG detector [" + i + "]");
       console.log("DEBUG id = " + detector._id);
@@ -983,8 +984,17 @@ function convertChapterToExperience(chapter) {
       console.log("DEBUG variables" + detector.variables);
       console.log("DEBUG rules = " + detector.rules[0]);
 
-      DETECTORS[character_context[0]] = detector;
-     
+      // DETECTORS[character_context[0]] = detector;
+      Detectors.insert(detector, (err, docs) => {
+        if (err) {
+          console.log("ERROR");
+          console.log("error = " + err);
+        } else {
+          console.log("Detector addded -");
+          console.log("docs = " + docs);
+        }
+      });
+
       if (i == 0) {
         // insert first need 
         let need =  {
@@ -1015,109 +1025,109 @@ let chapterOne = writeNarrative();
 let EXPERIENCES = {
   'hpstory': convertChapterToExperience(chapterOne),
   'bumped': createBumped(),
-  'sunset': {
-    _id: Random.id(),
-    name: 'Sunset',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'sunset',
-    contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 20
-    }],
-    description: 'Create a timelapse of the sunset with others around the country',
-    notificationText: 'Take a photo of the sunset!',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationSunset.toString()
-    }]
-  },
-  'scavengerHunt': {
-    _id: Random.id(),
-    name: 'St. Patrick\'s Day Scavenger Hunt',
-    participateTemplate: 'scavengerHuntParticipate',
-    resultsTemplate: 'scavengerHunt',
-    contributionTypes: [{
-      needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 1
-    }, {
-      needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 1
-    }, {
-      needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 1
-    }, {
-      needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 1
-    }, {
-      needName: 'irishSign', situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 1
-    }, {
-      needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 1
-    }, {
-      needName: 'liquidGold',
-      situation: {detector: DETECTORS.gas_station._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'},
-      numberNeeded: 1
-    }, {
-      needName: 'potOfGold',
-      situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'},
-      numberNeeded: 1
-    }, {
-      needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
-    }
-    ],
-    description: 'Find an item for a scavenger hunt',
-    notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationScavenger.toString()
-    }]
-  },
-  'natureHunt': {
-    _id: Random.id(),
-    name: 'Nature Scavenger Hunt',
-    participateTemplate: 'scavengerHuntParticipate',
-    resultsTemplate: 'scavengerHunt',
-    contributionTypes: [{
-      needName: 'tree', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a tree?'}, numberNeeded: 1
-    }, {
-      needName: 'leaf', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a leaf?'}, numberNeeded: 1
-    }, {
-      needName: 'grass', situation: {detector: DETECTORS.field._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the grass?'}, numberNeeded: 1
-    }, {
-      needName: 'lake', situation: {detector: DETECTORS.lake._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the lake?'}, numberNeeded: 1
-    }, {
-      needName: 'moon', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
-    }, {
-      needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the sun?'}, numberNeeded: 1
-    }, {
-      needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
-    }, {
-      needName: 'clouds', situation: {detector: DETECTORS.cloudy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the clouds?'}, numberNeeded: 1
-    }, {
-      needName: 'puddle', situation: {detector: DETECTORS.rainy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
-    },
-    ],
-    description: 'Find an item for a scavenger hunt',
-    notificationText: 'Help us out with our nature scavenger hunt',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationScavenger.toString()
-    }]
-  },
-  'storyTime': createStorytime(),
+  // 'sunset': {
+  //   _id: Random.id(),
+  //   name: 'Sunset',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'sunset',
+  //   contributionTypes: [{
+  //     needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
+  //     toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 20
+  //   }],
+  //   description: 'Create a timelapse of the sunset with others around the country',
+  //   notificationText: 'Take a photo of the sunset!',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationSunset.toString()
+  //   }]
+  // },
+  // 'scavengerHunt': {
+  //   _id: Random.id(),
+  //   name: 'St. Patrick\'s Day Scavenger Hunt',
+  //   participateTemplate: 'scavengerHuntParticipate',
+  //   resultsTemplate: 'scavengerHunt',
+  //   contributionTypes: [{
+  //     needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'irishSign', situation: {detector: DETECTORS.irish._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'liquidGold',
+  //     situation: {detector: DETECTORS.gas_station._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'},
+  //     numberNeeded: 1
+  //   }, {
+  //     needName: 'potOfGold',
+  //     situation: {detector: DETECTORS.bank._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'},
+  //     numberNeeded: 1
+  //   }, {
+  //     needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
+  //   }
+  //   ],
+  //   description: 'Find an item for a scavenger hunt',
+  //   notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationScavenger.toString()
+  //   }]
+  // },
+  // 'natureHunt': {
+  //   _id: Random.id(),
+  //   name: 'Nature Scavenger Hunt',
+  //   participateTemplate: 'scavengerHuntParticipate',
+  //   resultsTemplate: 'scavengerHunt',
+  //   contributionTypes: [{
+  //     needName: 'tree', situation: {detector: DETECTORS.forest._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of a tree?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'leaf', situation: {detector: DETECTORS.forest._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of a leaf?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'grass', situation: {detector: DETECTORS.field._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the grass?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'lake', situation: {detector: DETECTORS.lake._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the lake?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'moon', situation: {detector: DETECTORS.night._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the sun?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'clouds', situation: {detector: DETECTORS.cloudy._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the clouds?'}, numberNeeded: 1
+  //   }, {
+  //     needName: 'puddle', situation: {detector: DETECTORS.rainy._id, number: '1'},
+  //     toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
+  //   },
+  //   ],
+  //   description: 'Find an item for a scavenger hunt',
+  //   notificationText: 'Help us out with our nature scavenger hunt',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationScavenger.toString()
+  //   }]
+  // },
+  // 'storyTime': createStorytime(),
 };
 
 
