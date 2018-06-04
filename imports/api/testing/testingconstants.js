@@ -894,17 +894,17 @@ function convertChapterToExperience(chapter) {
           {$set: {newSet : true}}
           );
       // an action has now been performed
-      number_of_actions_done += 1; 
+      number_of_actions_done += 1;
       //not sure if this is still needed
       let affordance = sub.content.affordance;
       // takes the list of actions within the chapter
-      let options = chapterActions; 
+      let options = chapterActions;
       // filters out all the actions that cannot be done at the moment
-      options = options.filter(function(x) { 
+      options = options.filter(function(x) {
           return x[2] == number_of_actions_done;
       });
       // which action in the chapter is being completed
-      let needName = "Action" + Random.id(3); 
+      let needName = "Action" + Random.id(3);
       if (cb.numberOfSubmissions() === 2) {
           needName = "pageFinal";
       }
@@ -912,7 +912,7 @@ function convertChapterToExperience(chapter) {
           needName: needName,
           situation: { detector: affordance, number: "1" },
           toPass: {
-              instruction: "You received a bottle from Hermione, what's next?",
+              instruction: sub.needName,
               dropdownChoices: { name: "affordance", options: options }
           },
           numberNeeded: 1
@@ -957,7 +957,7 @@ function convertChapterToExperience(chapter) {
   console.log("DEBUG experience notificationText = " + experience.notificationText);
   console.log("DEBUG experience callbacks size = " + experience.callbacks.length);
 
-  // set up detectors 
+  // set up detectors
   console.log("DEBUG [creating detectors]");
   let detectorIds = [
       "oFCWkpZ3MSdXXyKbu",
@@ -996,7 +996,7 @@ function convertChapterToExperience(chapter) {
       });
 
       if (i == 0) {
-        // insert first need 
+        // insert first need
         let need =  {
           needName: first_action.description, //should be the title of the action
           situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
