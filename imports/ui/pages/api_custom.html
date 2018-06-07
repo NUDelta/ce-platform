@@ -252,13 +252,16 @@
              padding-top: 4%;
              padding-bottom: 4%;
          }
-
          .camera-upload {
              padding-bottom: 1%;
          }
      </style>
  </head>
  <div class="instruction">
-     {{this.toPass.instruction}}
+     <h3>Welcome to Harry Potter story. You are <b>{{this.toPass.characterName}}</b>!</h3>
+     <h3>Your current action -</h3>
+     <h3 style="text-align: center"><b>{{this.toPass.instruction}}</b></h3>
+     <p>{{> Template.dynamic template="dropdown" data=(dropdownData)}}</p>
+     <button type="submit" style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit</button>
  </div>
 </template>

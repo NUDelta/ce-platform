@@ -910,10 +910,11 @@ function convertChapterToExperience(chapter) {
       }
       //finding the character of the action
       let next_action = options[0];
+      let next_character;
       for (let character of chapter.characters) {
         for (let action of character.actions[chapter.title]) {
-          if (action == next_action) {
-            let next_character = character;
+          if (action.description == next_action.description) {
+            next_character = character;
           }
         }
       }
@@ -921,7 +922,7 @@ function convertChapterToExperience(chapter) {
           needName: needName,
           situation: { detector: affordance, number: "1" },
           toPass: {
-              characterName: next_character;
+              characterName: next_character.name,
               instruction:  sub.needName,
               dropdownChoices: { name: "affordance", options: options }
           },
@@ -1005,18 +1006,27 @@ function convertChapterToExperience(chapter) {
         }
       });
 
+      let first_character;
+      for (let character of chapter.characters) {
+          for (let action of character.actions[chapter.title]) {
+              if (action.description == first_action.description) {
+                  first_character = character;
+              }
+          }
+      }
+
       if (i == 0) {
         // insert first need
         let need =  {
           needName: first_action.description, //should be the title of the action
           situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
           toPass: {
-              characterName: character_context[1],
+              characterName: first_character.name,
               instruction: "Please choose from the following list of actions",
               firstSentence: chapter.title,
               dropdownChoices: {
                   name: "affordance",
-                  options: chapterActions
+                  options: [["a"], ["b"], ["c"]]
               }
           },
           numberNeeded: 1
