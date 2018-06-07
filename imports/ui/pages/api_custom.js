@@ -55,7 +55,12 @@ Template.storyPage.helpers({
   }
 });
 
-
+Template.Harry_Potter_Story.helpers({
+    dropdownData() {
+        console.log(this.toPass.dropdownChoices);
+        return this.toPass.dropdownChoices;
+    },
+});
 
 Template.bumped.helpers({
 

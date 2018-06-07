@@ -828,7 +828,7 @@ function writeNarrative() {
 
     add_action_to_character(ron, chapter_twoB, new Action("Drinks out of potion bottle", a2B_drink_potion_bottle, 0));
 
-    add_action_to_character(hermione, chapter_one, new Action("Give Harry a portion bottle", a1_give_harry_bottle, 0));
+    add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion bottle", a1_give_harry_bottle, 0));
     add_action_to_character(hermione, chapter_twoB, new Action("Rush Ron outside", a2B_rush_ron_outside, 1));
 
     return chapter_one;
@@ -888,6 +888,7 @@ function convertChapterToExperience(chapter) {
 
   console.log("DEBUG [creating callback]");
   let hpStoryCallback = function(sub) {
+      console.log("DEBUG in callback");
       var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
       Meteor.users.update(
           {_id: sub.uid},
@@ -924,7 +925,10 @@ function convertChapterToExperience(chapter) {
           toPass: {
               characterName: next_character.name,
               instruction:  sub.needName,
-              dropdownChoices: { name: "affordance", options: options }
+              dropdownChoices: {
+                  name: "affordance",
+                  options: [chapterActions[0], DETECTORS.restaurant._id]
+              }
           },
           numberNeeded: 1
       };
@@ -948,11 +952,12 @@ function convertChapterToExperience(chapter) {
       participateTemplate: "Harry_Potter_Story",
       resultsTemplate: "Harry_Potter_Story_Result",
       contributionTypes: [],
-      description: chapter.title,
-      notificationText: "A new chapter ["  + chapter.title + "] has begun!",
+      description: "You are invited to participate in Harry Potter story",
+      notificationText: "You are invited to participate in Harry Potter story",
       callbacks: [
         {
-            trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= " + max_priority_allowed + ")",
+            //trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= " + max_priority_allowed + ")",
+            trigger: "cb.newSubmission()",
             function: hpStoryCallback.toString()
         },
         {
@@ -1001,7 +1006,7 @@ function convertChapterToExperience(chapter) {
           console.log("ERROR");
           console.log("error = " + err);
         } else {
-          console.log("Detector addded -");
+          console.log("Detector added -");
           console.log("docs = " + docs);
         }
       });
@@ -1017,7 +1022,7 @@ function convertChapterToExperience(chapter) {
 
       if (i == 0) {
         // insert first need
-        let need =  {
+        let need = {
           needName: first_action.description, //should be the title of the action
           situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
           toPass: {
@@ -1026,7 +1031,7 @@ function convertChapterToExperience(chapter) {
               firstSentence: chapter.title,
               dropdownChoices: {
                   name: "affordance",
-                  options: [["a"], ["b"], ["c"]]
+                  options:  [[first_action.description, DETECTORS.restaurant._id]]
               }
           },
           numberNeeded: 1
@@ -1148,7 +1153,7 @@ let EXPERIENCES = {
   //     function: sendNotificationScavenger.toString()
   //   }]
   // },
-  // 'storyTime': createStorytime(),
+  'storyTime': createStorytime(),
 };
 
 
