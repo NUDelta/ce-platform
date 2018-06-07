@@ -908,11 +908,21 @@ function convertChapterToExperience(chapter) {
       if (cb.numberOfSubmissions() === 2) {
           needName = "pageFinal";
       }
+      //finding the character of the action
+      let next_action = options[0];
+      for (let character of chapter.characters) {
+        for (let action of character.actions[chapter.title]) {
+          if (action == next_action) {
+            let next_character = character;
+          }
+        }
+      }
       let contribution = {
           needName: needName,
           situation: { detector: affordance, number: "1" },
           toPass: {
-              instruction: sub.needName,
+              characterName: next_character;
+              instruction:  sub.needName,
               dropdownChoices: { name: "affordance", options: options }
           },
           numberNeeded: 1
@@ -1001,7 +1011,8 @@ function convertChapterToExperience(chapter) {
           needName: first_action.description, //should be the title of the action
           situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
           toPass: {
-              instruction: first_action.description,
+              characterName: character_context[1],
+              instruction: "Please choose from the following list of actions",
               firstSentence: chapter.title,
               dropdownChoices: {
                   name: "affordance",
