@@ -1,22 +1,47 @@
 # CE Platform
 The Collective Experience (CE) Platform facilitates the creation and operation of collective experience applications. By building to cordova/iOS and distributing this project as a native app, experiences can be launched with native push notifications and users can be targeted by their location for context-specific experiences. Currently, the platform facilitates image and text submissions for experiences.
 
-## Setup
-- Install Meteor `curl https://install.meteor.com/ | sh`
-- Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`
-- Navigate to the project folder `cd ce-platform`
-- Run `meteor npm install` to install local dependencies.
-- Start the server `meteor`
+## Setup and Local Development
+1. Install Meteor `curl https://install.meteor.com/ | sh`.
+2. Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`.
+3. Navigate to the project folder `cd ce-platform`.
+4. Run `meteor npm install` to install local dependencies.
+5. Start the server using `meteor`.
 
 ## iOS Build
-- Deploy application to Galaxy or Heroku, or start a local server.
-- Run `npm run build` to generate the xcode project.
-  - Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
-- Navigate to `../ce-platform-ios` and open the xcodeproject that the build generates. 
-- Build a `.ipa` file with DTR guides using the DeltaLab or Enterprise certificates
-- Distribute your `.ipa` to testers using [diawi.com](www.diawi.com)
+
+### Building iOS Application from Meteor
+1. Deploy Meteor application to Galaxy or Heroku, or start a local server.
+2. Run `npm run build` to generate the Xcode project.
+    1. Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
+3. Navigate to `../ce-platform-ios/ios/project` and run `pod install` to install needed dependencies. 
+
+### Creating an .ipa File
+#### Setup
+Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.sh` export script and `exportOptions.plist` export options plist. The former runs the Xcode cleaning, building, and archiving stages for enterprise export and uses the latter to sign the application. 
+
+`exportOptions.plist` are used to specify the provisioning profile and team ID to sign the application. Configure the following to change which profile is used to perform the signing:
+```xml
+<key>provisioningProfiles</key>
+<dict>
+    <key>edu.northwestern.delta.A</key>
+    <string>Delta Lab A</string>
+</dict>
+```
+```xml
+<key>teamID</key>
+<string>823S57WQK3</string>
+```
 
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
+
+#### Export
+1. Navigate to `../ce-platform-ios/ios/project` and open the `.xcworkspace`. 
+2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`). 
+3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
+4. The `.ipa` can be found in the `ce-platform-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
+
+
 
 ## Development Guidelines & Styles
 Please read through and follow these guidelines while contributing code to this project.
