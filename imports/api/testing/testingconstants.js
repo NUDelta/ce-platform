@@ -992,7 +992,7 @@ function convertChapterToExperience(chapter) {
           'variables': newVars,
           'rules': [
               "(" + DETECTORS[character_context[0]].rules[0] +
-              " ) && !participatedInPotterNarrative_" + chapter.title + ";"]
+              " ) && participatedInPotterNarrative" + chapter.title + ";"]
       };
       console.log("DEBUG detector [" + i + "]");
       console.log("DEBUG id = " + detector._id);
@@ -1050,7 +1050,7 @@ let chapterOne = writeNarrative();
 
 let EXPERIENCES = {
   'hpstory': convertChapterToExperience(chapterOne),
-  'bumped': createBumped(),
+  //'bumped': createBumped(),
   // 'sunset': {
   //   _id: Random.id(),
   //   name: 'Sunset',

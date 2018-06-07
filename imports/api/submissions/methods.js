@@ -148,6 +148,7 @@ class CallbackManager {
 
   //trigger used in callbacks: checks if the new sub was for the specified need
   newSubmission(needName) {
+    console.log("new submission");
     if (needName === undefined) {
       return true;
     } else {

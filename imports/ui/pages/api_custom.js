@@ -40,6 +40,7 @@ Template.api_custom.helpers({
       users: this.users,
     }
   },
+
 });
 
 Template.storyPage.helpers({
@@ -141,9 +142,10 @@ Template.api_custom.onCreated(() => {
 Template.api_custom.events({
   'submit form'(event, instance) {
     event.preventDefault();
+    console.log("form was submitted");
 
     //this makes the loading circle show up
-    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
+    //event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
     const experience = this.experience;
