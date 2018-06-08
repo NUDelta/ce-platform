@@ -988,7 +988,7 @@ function convertChapterToExperience(chapter) {
 
       let detector = {
           '_id': detectorIds[i],
-          'description': DETECTORS[character_context[0]].description + "_PotterNarrative" + chapter.title,
+          'description': DETECTORS[character_context[0]].description + "_PotterNarrative_" + chapter.title,
           'variables': newVars,
           'rules': [
               "(" + DETECTORS[character_context[0]].rules[0] +
@@ -997,7 +997,7 @@ function convertChapterToExperience(chapter) {
       console.log("DEBUG detector [" + i + "]");
       console.log("DEBUG id = " + detector._id);
       console.log("DEBUG description = " + detector.description);
-      console.log("DEBUG variables" + detector.variables);
+      console.log("DEBUG variables = " + detector.variables);
       console.log("DEBUG rules = " + detector.rules[0]);
 
       // DETECTORS[character_context[0]] = detector;
