@@ -28,5 +28,6 @@
     "collective",
     "experiences"
   ],
-  "homepage": "https://github.com/NUDelta/ce-platform#readme"
+  "homepage": "https://github.com/NUDelta/ce-platform#readme",
+  "license": "MIT"
 }

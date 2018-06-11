@@ -14,6 +14,7 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 1. Deploy Meteor application to Galaxy or Heroku, or start a local server.
 2. Run `npm run build` to generate the Xcode project.
     1. Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
+    2. *Note*: if this fails with an error saying that `dezalgo` module cannot be found, run `meteor npm i -g write-file-atomic path-is-inside async-some dezalgo`.
 3. Navigate to `../ce-platform-ios/ios/project` and run `pod install` to install needed dependencies. 
 
 ### Creating an .ipa File

@@ -198,3 +198,4 @@ deploy.sh
 packages/
 ssl/
 .eslintrc.json
+*.pyc
