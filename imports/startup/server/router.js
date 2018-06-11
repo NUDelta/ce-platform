@@ -1,9 +1,6 @@
-import {Router} from 'meteor/iron:router';
-
-import {updateUserLocationAndAffordances} from '../../api/locations/methods.js';
-import { onLocationUpdate } from "../../api/locations/methods";
-import {serverLog} from "../../api/logs";
-import {Meteor} from "meteor/meteor";
+import { Router } from 'meteor/iron:router';
+import { onLocationUpdate } from "../../api/UserMonitor/locations/methods";
+import { serverLog } from "../../api/logs";
 
 
 Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));

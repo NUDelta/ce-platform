@@ -70,6 +70,57 @@
 
 </template>
 
+
+
+<template name="cheersResults">
+  <head>
+    <style>
+      img {
+        padding-top: 10px;
+          vertical-align: baseline;
+      }
+      .text {
+        padding-top: 5px;
+      }
+      .person {
+        display:block;
+      }
+    </style>
+  </head>
+  <div class="text">
+  Check out the drinks everyone is having!
+  </div>
+
+    {{#each object in bumpees}}
+        <br>
+        <div class="person">
+            Reach out to {{getName object}} on Slack/iMessage/Messenger to catch up or say hi!<br>
+
+            <b>{{getName object}}'s drink </b><br>
+
+            {{#if (getImage object)}}
+                <div style="min-height:150px;display:inline-block;">
+                    {{> Template.dynamic template="displayImage" data=(getImage object)}}
+                </div>
+            {{else}}
+                <div style="display:inline-block; min-height:290px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
+                    Waiting for {{getName object}} to upload a photo of their drink...
+                </div>
+            {{/if}}
+        </div>
+        <br>
+        <div class="person">
+            <b> your selfie </b>
+            <div style="min-height:150px; display:block; vertical-align:baseline!important;">
+                {{> Template.dynamic template="displayImage" data=(getMyImage object)}}
+            </div>
+        </div>
+
+    {{/each}}
+
+</template>
+
+
 <template name="scavengerHunt">
   <head>
     <style>

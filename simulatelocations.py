@@ -158,7 +158,7 @@ def test5():
 		print "megs sister gets to the bar"
 		setLocation(beer, sys.argv[4])
 		time.sleep(15)
-	
+
 		print "josh gets to the park"
 		setLocation(park, sys.argv[5])
 		time.sleep(15)
@@ -271,6 +271,17 @@ def onlyGarretAtLake():
 
 	print "only garrett at lakefill"
 
+def garrettAndMegBump():
+    setLocation(grocery, sys.argv[1])
+    setLocation(grocery, sys.argv[3])
+    setLocation(train, sys.argv[2])
+    setLocation(train, sys.argv[4])
+    setLocation(train, sys.argv[5])
+
+    print "meg and garret at grocery"
+
 
 if __name__ == "__main__":
-	allUsersSyd()
+    #garrettAndMegBump()
+    #time.sleep(2)
+    onlyGarretAtLake()

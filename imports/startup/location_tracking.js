@@ -1,28 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-// import { Tracker } from 'meteor/tracker';
 import { serverLog } from '../api/logs.js';
 
 if (Meteor.isCordova) {
-  // Tracker.autorun(() => {
-  //   const currUserId = Meteor.userId();
-  //
-  //   // TODO: make it so that when a user logs out, location tracking also stops
-  //   if (currUserId) {
-  //     updateBgGeoConfig(currUserId);
-  //   }
-  // });
-  //
-  // const updateBgGeoConfig = (userId) => {
-  //   let bgGeo = window.BackgroundGeolocation;
-  //   bgGeo.setConfig({
-  //     params: {
-  //       userId: userId
-  //     }
-  //   });
-  //
-  //   serverLog.call({ message: `User Id has been updated to ${ currUserId }`});
-  // };
-
   export const toggleLocationTracking = () => {
     serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
 

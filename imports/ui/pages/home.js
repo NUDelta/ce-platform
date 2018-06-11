@@ -5,9 +5,8 @@ import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
-import { Experiences } from '../../api/experiences/experiences';
-import { Incidents } from '../../api/incidents/incidents';
-import { Assignments } from '../../api/coordinator/assignments';
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences';
+import { Assignments } from '../../api/OpportunisticCoordinator/databaseHelpers';
 
 import '../components/active_experience.js';
 

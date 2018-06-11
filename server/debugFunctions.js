@@ -2,7 +2,7 @@
 // import { Incidents } from '../imports/api/incidents/incidents.js';
 // import { Locations } from '../imports/api/locations/locations.js';
 // import { Detectors } from '../imports/api/detectors/detectors.js';
-// import { Images } from '../imports/api/images/images.js';
+// import { Images } from '../imports/api/ImageUpload/ImageUpload.js';
 // import { TextEntries } from '../imports/api/text-entries/text-entries.js';
 // // import { NotificationLog } from '../imports/api/cerebro/cerebro-core.js';
 //

@@ -3,7 +3,7 @@ import './affordances.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-import { Locations } from '../../api/locations/locations.js';
+import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
 
 Template.affordances.onCreated(function () {
