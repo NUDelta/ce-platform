@@ -1,3 +1,4 @@
+import { Meteor } from "meteor/meteor";
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
@@ -7,11 +8,10 @@ import { findMatchesForUser } from '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
-import {CONFIG} from "../../config";
-import {Availability} from "../../OpportunisticCoordinator/databaseHelpers";
-import {Meteor} from "meteor/meteor";
-import {Location_log} from "../../Logging/location_log";
-import {serverLog} from "../../logs";
+import { CONFIG } from "../../config";
+import { Availability } from "../../OpportunisticCoordinator/databaseHelpers";
+import { Location_log } from "../../Logging/location_log";
+import { serverLog } from "../../logs";
 
 Meteor.methods({
   triggerUpdate(lat, lng, uid){

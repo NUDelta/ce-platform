@@ -1,6 +1,6 @@
-import {Submissions} from "../../OCEManager/currentNeeds";
-import {Assignments} from "../databaseHelpers";
-import {getNeedObject} from "../identifier";
+import { Submissions } from "../../OCEManager/currentNeeds";
+import { Assignments } from "../databaseHelpers";
+import { getNeedObject } from "../identifier";
 
 /**
  * Check if an experience need can run e.g. it has the required number of people.

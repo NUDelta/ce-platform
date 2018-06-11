@@ -7,10 +7,9 @@ import { Schema } from '../../schema.js';
 import { getUnfinishedNeedNames } from '../progressorHelper';
 import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/methods";
 
-
-import {Incidents} from './experiences';
-import {Assignments, Availability} from '../../OpportunisticCoordinator/databaseHelpers';
-import {Submissions} from '../../OCEManager/currentNeeds';
+import { Incidents } from './experiences';
+import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
+import { Submissions } from '../../OCEManager/currentNeeds';
 
 
 /**
@@ -59,8 +58,7 @@ export const findMatchesForUser = (uid, affordances) => {
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
   //console.log("iid in doesuser match need", iid)
   let detectorId = getNeedFromIncidentId(iid, needName).situation.detector;
-  let matchP = matchAffordancesWithDetector(affordances, detectorId);
-  return matchP;
+  return matchAffordancesWithDetector(affordances, detectorId);
 };
 
 // TODO: Clean this up if possible
@@ -162,14 +160,11 @@ export const createExperience = new ValidatedMethod({
       callbackPair: callbackPair
     };
 
-    let id = Experiences.insert(experience, (err, docs) => {
+    return Experiences.insert(experience, (err) => {
       if (err) {
         console.log(err);
-      } else {
-             }
+      }
     });
-
-       return id;
   }
 });
 
@@ -213,10 +208,9 @@ export const addEmptySubmissionsForNeed = (iid, eid, need) => {
       eid: eid,
       iid: iid,
       needName: need.needName,
-    }, (err, docs) => {
+    }, (err) => {
       if (err) {
         console.log('upload error,', err);
-      } else {
       }
     });
 
