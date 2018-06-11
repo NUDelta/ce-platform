@@ -3,11 +3,9 @@ import './debug.js'
 import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
+import { Locations } from '../../api/UserMonitor/locations/locations.js';
+import { Images } from '../../api/ImageUpload/images.js';
 
 Template.debug.onCreated(function () {
 
@@ -42,7 +40,7 @@ Template.debug.events({
 //   'click #add_users'(event, instance) {
 //     // console.log("you clicked add users");
 //     users.forEach(user => Meteor.call("addUsers", { user: user }));
-//     // experiences.forEach(experience => Meteor.call("addExperience", {experience: experience}));
+//     // OCEs.forEach(experience => Meteor.call("addExperience", {experience: experience}));
 //
 //
 //     //how to create user with out logging in?

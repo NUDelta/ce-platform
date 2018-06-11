@@ -9,13 +9,11 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Users } from '../../api/users/users.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Submissions } from '../../api/submissions/submissions.js';
-import { Images } from '../../api/images/images.js';
-import { TextEntries } from '../../api/text-entries/text-entries.js';
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
+import { Users } from '../../api/UserMonitor/users/users.js';
+import { Locations } from '../../api/UserMonitor/locations/locations.js';
+import { Submissions } from '../../api/OCEManager/currentNeeds.js';
+import { Images } from '../../api/ImageUpload/images.js';
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
@@ -162,12 +160,12 @@ Template.api_custom.events({
     });
 
     const images = event.target.getElementsByClassName('fileinput');
-    //no images being uploaded so we can just go right to the results page
+    //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
       Router.go(resultsUrl);
     }
 
-    //otherwise, we do have images to upload so need to hang around for that
+    //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       const picture = event.target.photo && event.target.photo.files[index];
       // save image and get id of new document
