@@ -2,8 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { Push } from 'meteor/raix:push';
 import { log } from '../../logs.js';
 import { CONFIG } from '../../config.js';
-import {toggleLocationTracking} from "../../../startup/location_tracking";
-import {Notification_log} from "../../Logging/notification_log";
 
 /**
  * _sendPush - sends a notification to the given user
@@ -39,23 +37,15 @@ export const notifyForParticipating = function (uids, iid, subject, text, route)
       multi: true
     });
 
-
-
     _sendPush(uids, subject, text, route, iid, true);
-
   }
-
 };
 
 export const notify = function (uids, iid, subject, text, route) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
     _sendPush(uids, subject, text, route, iid, true);
-
 };
-
-
-
 
 Meteor.methods({
   sendNotification(uids, text, route) {
@@ -82,6 +72,7 @@ Meteor.methods({
  * @param text
  * @param route
  * @param iid
+ * @param soundP
  * @private
  */
 function _sendPush(uids, subject, text, route, iid, soundP) {

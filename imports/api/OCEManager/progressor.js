@@ -16,7 +16,6 @@ const submissionsHandle = submissionsCursor.observe({
       adminUpdates(submission);
       runCallbacks(submission);
     }
-
   }
 });
 
@@ -43,10 +42,9 @@ export const updateSubmission = function(submission) {
         lng: submission.lng
       }
     },
-    (err, docs) => {
+    (err) => {
       if (err) {
         console.log("submission not inserted", err);
-      } else {
       }
     }
   );
@@ -68,13 +66,11 @@ function runCallbacks(mostRecentSub) {
 }
 
 export const numUnfinishedNeeds = (iid, needName) => {
-  let count = Submissions.find({
+  return Submissions.find({
     iid: iid,
     needName: needName,
     uid: null
   }).count();
-
-  return count;
 };
 
 class CallbackManager {

@@ -1,6 +1,9 @@
-cordova-background-geolocation-lt@1.5.1
-cordova-custom-config@2.0.3
+cordova-background-geolocation-lt@2.11.0
+cordova-custom-config@5.0.2
 cordova-plugin-background-fetch@4.0.0
-cordova-plugin-device@1.1.4
-cordova-plugin-flashlight@3.0.0
-cordova-plugin-meteor-webapp@1.4.1
+cordova-plugin-device@2.0.2
+cordova-plugin-flashlight@3.2.0
+cordova-plugin-meteor-webapp@1.6.0
+phonegap-plugin-push@2.2.2
+cordova-plugin-statusbar@2.3.0
+cordova-plugin-splashscreen@4.1.0

@@ -3,8 +3,7 @@ import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
 import { Assignments } from "./databaseHelpers";
 import { Availability } from "./databaseHelpers";
-import { Experiences, Incidents } from "../OCEManager/OCEs/experiences.js";
-import { Locations } from "../UserMonitor/locations/locations.js";
+import { Incidents } from "../OCEManager/OCEs/experiences.js";
 import { Submissions } from "../OCEManager/currentNeeds.js";
 import { Users } from "../UserMonitor/users/users.js";
 import { numUnfinishedNeeds } from "../OCEManager/progressorHelper";

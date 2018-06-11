@@ -1,18 +1,10 @@
 import { Meteor } from "meteor/meteor";
 import { Experiences } from "../../OCEManager/OCEs/experiences";
-import { notify, notifyForParticipating } from "./noticationMethods";
+import { notifyForParticipating } from "./noticationMethods";
 import { Incidents } from "../../OCEManager/OCEs/experiences";
-import {
-  adminUpdatesForAddingUsersToIncident,
-  getNeedObject,
-  updateAvailability
-} from "../identifier";
+import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../identifier";
 
 import { checkIfThreshold } from "./strategizer";
-import { Availability } from "../databaseHelpers.js";
-import { getNeedFromIncidentId } from "../../OCEManager/OCEs/methods";
-import { Submissions } from "../../OCEManager/currentNeeds";
-import { Assignments } from "../databaseHelpers";
 import { Notification_log } from "../../Logging/notification_log";
 
 /**

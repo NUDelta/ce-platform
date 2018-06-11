@@ -1,6 +1,5 @@
 import {addContribution} from '../OCEManager/OCEs/methods';
 import {Submissions} from "../OCEManager/currentNeeds";
-import {serverLog} from "../logs";
 import {Meteor} from "meteor/meteor";
 
 let LOCATIONS = {
