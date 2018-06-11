@@ -18,8 +18,6 @@ Schema.Assignment = new SimpleSchema({
 export const Assignments = new Mongo.Collection('assignments');
 Assignments.attachSchema(Schema.Assignment);
 
-
-
 Schema.UserNeedMapping = new SimpleSchema({
   needName: {
     type: String
@@ -29,6 +27,7 @@ Schema.UserNeedMapping = new SimpleSchema({
     defaultValue: []
   },
 });
+
 export const UserNeedMapping = new Mongo.Collection('userneedmapping');
 UserNeedMapping.attachSchema(Schema.UserNeedMapping);
 
@@ -43,5 +42,6 @@ Schema.Availability = new SimpleSchema({
   },
 
 });
+
 export const Availability = new Mongo.Collection('availability');
 Availability.attachSchema(Schema.Availability);
