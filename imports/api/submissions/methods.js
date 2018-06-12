@@ -91,12 +91,13 @@ Meteor.methods({
 });
 
 export const updateSubmission = function(submission) {
+  console.log("update submission");
   Submissions.update(
     {
       eid: submission.eid,
       iid: submission.iid,
       needName: submission.needName,
-      uid: null
+      uid: submission.uid
     },
     {
       $set: {
