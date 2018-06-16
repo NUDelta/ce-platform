@@ -97,7 +97,7 @@ export const updateSubmission = function(submission) {
       eid: submission.eid,
       iid: submission.iid,
       needName: submission.needName,
-      uid: submission.uid
+      uid: null
     },
     {
       $set: {
@@ -119,14 +119,17 @@ export const updateSubmission = function(submission) {
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
 function runCallbacks(mostRecentSub) {
+  console.log("running runCallBacks");
   let cb = new CallbackManager(mostRecentSub);
 
   let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
 
   _.forEach(callbackArray, callbackPair => {
+    console.log("new submission, now checking for callbacks");
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if (eval(trigger)) {
+      console.log("callback triggered");
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });

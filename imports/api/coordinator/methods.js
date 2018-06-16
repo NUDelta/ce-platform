@@ -244,7 +244,7 @@ const checkIfNeedFailed = (iid, needName) => {
  * @param needName {string} need that user is assigned to
  */
 const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
-  if (uids.length() === 0) {
+  if (uids.length === 0) {
     return;
   }
 
@@ -265,11 +265,13 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
     "needUserMaps.needName": needName
   });
 
+  console.log("needUserMaps: " + assignment.needUserMaps);
+
   let needUserMap = assignment.needUserMaps.find(x => {
     return x.needName === needName;
   });
 
-  if (needUserMap.uids.length() === 0) {
+  if (needUserMap.uids.length === 0) {
     checkIfNeedFailed(iid, needName);
   }
 };
