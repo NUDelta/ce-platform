@@ -99,10 +99,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  * @param uid {string} user to update assignment for
  * @param affordances {[string]} list of user's affordances as an array of key/values
  */
-export const updateAssignmentDbdAfterUserLocationChange = (
-  uid,
-  affordances
-) => {
+export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => {
   let currentAssignments = Assignments.find({
     needUserMaps: {
       $elemMatch: {
@@ -113,9 +110,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (
 
 
   _.forEach(currentAssignments, assignment => {
-
     _.forEach(assignment.needUserMaps, needUserMap => {
-
       let matchPredicate = doesUserMatchNeed(
         uid,
         affordances,

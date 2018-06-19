@@ -46,10 +46,12 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
     });
   });
 
-  getAffordancesFromLocation(lat, lng, function (affordances) {
+  serverLog.call({message: `attempting to get affordances for ${ uid }`});
+  getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
     let delay = CONFIG.CONTEXT_DELAY;
+
+    // attempt to find a user with the given uid
     let user = Meteor.users.findOne(uid);
-    serverLog.call({message: "affordances found for " + user});
 
     if (user) {
       // get affordances via affordance aware
@@ -57,10 +59,13 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
 
+      serverLog.call({message: `affordances found for ${ uid }: ${ JSON.stringify(affordances) }`});
+
       // update information in database
       updateLocationInDb(uid, lat, lng, affordances);
       callback(uid);
 
+      // set affordances after a delay
       Meteor.setTimeout(function() {
         let newAffs = Locations.findOne({uid: user._id}).affordances;
         let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
@@ -73,7 +78,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
         console.log("on location change");
         updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
         sendToMatcher(uid, sharedAffs);
-      }, delay*60000);
+      }, delay * 60000);
     }
   });
 };
