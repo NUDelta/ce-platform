@@ -38,7 +38,6 @@ export const getNeedObject = (iid, needName) => {
  *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
 export const updateAvailability = (uid, availabilityDictionary) => {
-  serverLog.call({message: `updateAvailability availabilityDictionary: ${JSON.stringify(availabilityDictionary)}`});
   let updatedEntries = [];
 
   let availability = Availability.find().fetch();

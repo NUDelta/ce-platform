@@ -31,16 +31,13 @@ Meteor.methods({
  * @param callback {function} callback function to run after code completion
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-  serverLog.call({message: `removing ${ uid } from all availabilities.`});
+  serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
 
   // clear users current availabilities
   clearAvailabilitiesForUser(uid);
 
   // get affordances and begin coordination process
-  serverLog.call({message: `attempting to get affordances for ${ uid }`});
   getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
-    let delay = CONFIG.CONTEXT_DELAY;
-
     // attempt to find a user with the given uid
     let user = Meteor.users.findOne({_id: uid});
 
@@ -49,8 +46,6 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
-
-      serverLog.call({message: `affordances found for ${ uid }: ${ JSON.stringify(affordances) }`});
 
       // update information in database
       updateLocationInDb(uid, lat, lng, affordances);
@@ -76,8 +71,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
  * location update and sends found matches to the OpportunisticCoordinator.
  *
  * @param uid {string} uid of user who's location just changed
- * @param lat {float} latitude of new location
- * @param lng {float} longitude of new location
+ * @param affordances {object} dictionary of user's affordances
  */
 const sendToMatcher = (uid, affordances) => {
   // should check whether a user is available before sending to OpportunisticCoordinator
@@ -95,7 +89,6 @@ const sendToMatcher = (uid, affordances) => {
     });
 
     // start coordination process
-    serverLog.call({message: `starting coordination process`});
     runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays);
   } else {
     serverLog.call({ message: `user ${ uid } cannot participate yet.`})

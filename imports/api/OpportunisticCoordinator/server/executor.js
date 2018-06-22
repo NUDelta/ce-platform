@@ -52,8 +52,6 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
  * @param incidentDelays {object} delay before attempting to run experiences as {iid: number}
  */
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, incidentDelays) => {
-  serverLog.call({message: `setting up timeout for ${ uid }, ${ JSON.stringify(userAvailability) }`});
-
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(userAvailability, (needs, iid) => {
     // setup availability dict to pass in
@@ -86,8 +84,6 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, inc
  * @returns {Function}
  */
 const coordinatorWrapper = (uid, availabilityDictionary, lastUpdateTimestamp) => () => {
-  serverLog.call({message: `updating for ${ uid }, ${ JSON.stringify(availabilityDictionary) }`});
-
   // get current location update and see if time is valid
   let currUpdateTimestamp = undefined;
   let currLocationUpdate = Locations.findOne({ uid: uid });
@@ -97,14 +93,12 @@ const coordinatorWrapper = (uid, availabilityDictionary, lastUpdateTimestamp) =>
   }
 
   // check if timestamps are valid
-  serverLog.call({ message: `lastUpdateTimestamp: ${ lastUpdateTimestamp }, currUpdateTimestamp: ${ currUpdateTimestamp }`});
   if (lastUpdateTimestamp && currUpdateTimestamp) {
-    serverLog.call({ message: `lastUpdateTimestamp: ${ currUpdateTimestamp.getTime() }, currUpdateTimestamp: ${ lastUpdateTimestamp.getTime() }`});
-
     // only run coordinator update loop if the there hasn't been a location update
     // timestamp passed in should be the same as the timestamp just fetched
     if (currUpdateTimestamp.getTime() === lastUpdateTimestamp.getTime()) {
-      serverLog.call({message: 'beginning update loop'});
+      serverLog.call({message: `running coordinator for ${ uid } with availabilities ${ JSON.stringify(availabilityDictionary) }`});
+
       // update availabilities of users and check if any experience incidents can be run
       let updatedAvailability = updateAvailability(uid, availabilityDictionary);
       let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);

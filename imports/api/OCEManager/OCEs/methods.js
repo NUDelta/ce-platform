@@ -35,7 +35,7 @@ export const clearAvailabilitiesForUser = (uid) => {
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
- * @param affordances {object} dictionary of user's affordacnes
+ * @param affordances {object} dictionary of user's affordances
  * @returns {object} object with keys as iids and values as array of matched needs
  */
 export const findMatchesForUser = (uid, affordances) => {
