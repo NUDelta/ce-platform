@@ -10,8 +10,7 @@ import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
 import { log } from '../../api/logs.js';
 
-import { CONSTANTS } from "../../api/testing/testingconstants";
-import { onLocationUpdate } from "../../api/UserMonitor/locations/methods";
+import { CONSTANTS } from "../../api/Testing/testingconstants";
 import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
 import { findUserByUsername } from '../../api/UserMonitor/users/methods';
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
@@ -19,7 +18,6 @@ import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 Meteor.startup(() => {
   log.debug("Running in mode: ", process.env.MODE );
   log.debug("process.env is: ", process.env );
-
 
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
@@ -99,24 +97,28 @@ function createTestExperiences(){
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   });
-  log.info(`Created ${ Experiences.find().count() } experiences`);
 }
 
 function createTestData(){
+  // add test users
   Object.values(CONSTANTS.USERS).forEach(function (value) {
     Accounts.createUser(value)
   });
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
+  // add detectors
   Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
     Detectors.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-  // createTestExperiences();
-  Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
-  let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
-  startRunningIncident(incident);
+
+  // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
+  // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
+  // startRunningIncident(incident);
+
+  // start experiences
+  createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
   let uid1 = findUserByUsername('garrett')._id;

@@ -1,6 +1,9 @@
-import {addContribution} from '../OCEManager/OCEs/methods';
-import {Submissions} from "../OCEManager/currentNeeds";
-import {Meteor} from "meteor/meteor";
+import { Meteor } from "meteor/meteor";
+
+import { Submissions } from "../OCEManager/currentNeeds";
+
+import { addContribution } from '../OCEManager/OCEs/methods';
+
 
 let LOCATIONS = {
   'park': {lat: 42.056838, lng: -87.675940},
@@ -480,22 +483,21 @@ let DETECTORS = {
         "((((soccer || professional_sports_teams) || ((amateur_sports_teams || tennis) || ((pool_halls || beach_volleyball) || (fencing_clubs || physical_therapy)))) || ((kickboxing || circuit_training_gyms) || ((boxing || boot_camps) || ((cardio_classes || interval_training_gyms) || ((barre_classes || trainers) || ((spin_classes || cycling_classes) || ((gyms || fitness___instruction) || ((pilates || squash) || ((martial_arts || dance_studios) || ((surfing || muay_thai) || ((weight_loss_centers || sports_clubs) || ((aerial_fitness || pole_dancing_classes) || (brazilian_jiu_jitsu || community_centers))))))))))))) || (climbing || rock_climbing)) || (((badminton || parks) || (golf || bowling)) || fitness___instruction)"
       ]
     }
-
 };
 
 
 function createStorytime() {
-
   let storytimeCallback = function (sub) {
-
     Meteor.users.update({
       _id: sub.uid
     }, {
       $set: {'profile.staticAffordances.participatedInStorytime': true}
     });
 
-    var affordance = sub.content.affordance;
+    // set affordances for storytime
+    let affordance = sub.content.affordance;
 
+    // configure specific detectors
     let options = [
       ['Drinking butterbeer', CONSTANTS.DETECTORS.beer_storytime._id],
       ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
@@ -509,10 +511,13 @@ function createStorytime() {
       return x[1] !== affordance;
     });
 
+    // add need if not all pages are done
     let needName = 'page' + Random.id(3);
-    if (cb.numberOfSubmissions() == 7) {
+    if (cb.numberOfSubmissions() === 7) {
       needName = 'pageFinal'
     }
+
+    // create and add contribution
     let contribution = {
       needName: needName, situation: {detector: affordance, number: '1'},
       toPass: {
@@ -523,11 +528,15 @@ function createStorytime() {
     addContribution(sub.iid, contribution);
   };
 
+  // setup places and detectors for storytime
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
-  let detectorIds = ["N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie", "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"];
+  let detectorIds = [
+    "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
+    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"
+  ];
+
   let i = 0;
   _.forEach(places, (place) => {
-
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push('var participatedInStorytime;');
 
@@ -551,18 +560,22 @@ function createStorytime() {
     ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
   ];
 
+  // create story starting point
   let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
 
+  // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
       return x.uid;
     });
-    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
+      '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
   };
 
-
-  let experience = {
+  // create and return storytime experience
+  return {
     _id: "wGWTtQjmgEYSuRtrk", //Random.id(),
     name: 'Storytime',
     participateTemplate: 'storyPage',
@@ -577,19 +590,20 @@ function createStorytime() {
         }
       },
       numberNeeded: 1
-    },
-    ],
+    }],
     description: 'We\'re writing a Harry Potter spin-off story',
     notificationText: 'Help write a Harry Potter spin-off story!',
-    callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
-      function: storytimeCallback.toString(),
-    }, {
-      trigger: 'cb.incidentFinished()',
-      function: sendNotification.toString()
-    }]
+    notificationDelay: 10, // 10 seconds for debugging
+    callbacks: [
+      {
+        trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
+        function: storytimeCallback.toString(),
+      },
+      {
+        trigger: 'cb.incidentFinished()',
+        function: sendNotification.toString()
+      }]
   };
-  return experience;
 }
 
 
@@ -601,6 +615,7 @@ function createBumped() {
     contributionTypes: [],
     description: 'You just virtually bumped into someone!',
     notificationText: 'You just virtually bumped into someone!',
+    notificationDelay: 30, // 30 seconds for debugging
     callbacks: []
   };
 
@@ -644,33 +659,28 @@ function createBumped() {
           function: bumpedCallback.toString(),
         };
 
-
         experience.contributionTypes.push(need);
         experience.callbacks.push(callback)
-
       }
-
-
     })
   });
 
   return experience;
-
 }
 
 let sendNotificationScavenger = function (sub) {
   let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
     return x.uid;
   });
-  notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
+  notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 let sendNotificationSunset = function (sub) {
   let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
     return x.uid;
   });
-  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
+  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 
@@ -682,11 +692,14 @@ let EXPERIENCES = {
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'sunset',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 20
+      needName: 'sunset',
+      situation: {detector: DETECTORS.sunset._id, number: '1'},
+      toPass: {instruction: 'Take a photo of the sunset!'},
+      numberNeeded: 20
     }],
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
+    notificationDelay: 10, // 10 seconds for debugging
     callbacks: [{
       trigger: 'cb.incidentFinished()',
       function: sendNotificationSunset.toString()
@@ -698,23 +711,35 @@ let EXPERIENCES = {
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 1
+      needName: 'beer',
+      situation: {detector: DETECTORS.beer._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of beer?'},
+      numberNeeded: 1
     }, {
-      needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 1
+      needName: 'greenProduce',
+      situation: {detector: DETECTORS.produce._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'},
+      numberNeeded: 1
     }, {
-      needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 1
+      needName: 'coins',
+      situation: {detector: DETECTORS.drugstore._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'},
+      numberNeeded: 1
     }, {
-      needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 1
+      needName: 'leprechaun',
+      situation: {detector: DETECTORS.costume_store._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'},
+      numberNeeded: 1
     }, {
-      needName: 'irishSign', situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 1
+      needName: 'irishSign',
+      situation: {detector: DETECTORS.irish._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of an Irish sign?'},
+      numberNeeded: 1
     }, {
-      needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 1
+      needName: 'trimmings',
+      situation: {detector: DETECTORS.hair_salon._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'},
+      numberNeeded: 1
     }, {
       needName: 'liquidGold',
       situation: {detector: DETECTORS.gas_station._id, number: '1'},
@@ -726,12 +751,14 @@ let EXPERIENCES = {
       toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'},
       numberNeeded: 1
     }, {
-      needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
-    }
-    ],
+      needName: 'rainbow',
+      situation: {detector: DETECTORS.rainbow._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a rainbow flag?'},
+      numberNeeded: 1
+    }],
     description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
+    notificationDelay: 10, // 10 seconds for debugging
     callbacks: [{
       trigger: 'cb.incidentFinished()',
       function: sendNotificationScavenger.toString()
@@ -743,43 +770,60 @@ let EXPERIENCES = {
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'tree', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a tree?'}, numberNeeded: 1
+      needName: 'tree',
+      situation: {detector: DETECTORS.forest._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a tree?'},
+      numberNeeded: 1
     }, {
-      needName: 'leaf', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a leaf?'}, numberNeeded: 1
+      needName: 'leaf',
+      situation: {detector: DETECTORS.forest._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of a leaf?'},
+      numberNeeded: 1
     }, {
-      needName: 'grass', situation: {detector: DETECTORS.field._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the grass?'}, numberNeeded: 1
+      needName: 'grass',
+      situation: {detector: DETECTORS.field._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the grass?'},
+      numberNeeded: 1
     }, {
-      needName: 'lake', situation: {detector: DETECTORS.lake._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the lake?'}, numberNeeded: 1
+      needName: 'lake',
+      situation: {detector: DETECTORS.lake._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the lake?'},
+      numberNeeded: 1
     }, {
-      needName: 'moon', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
+      needName: 'moon',
+      situation: {detector: DETECTORS.night._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the moon?'},
+      numberNeeded: 1
     }, {
-      needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the sun?'}, numberNeeded: 1
+      needName: 'sun',
+      situation: {detector: DETECTORS.sunny._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the sun?'},
+      numberNeeded: 1
     }, {
-      needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
+      needName: 'blueSky',
+      situation: {detector: DETECTORS.sunny._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the blue sky?'},
+      numberNeeded: 1
     }, {
-      needName: 'clouds', situation: {detector: DETECTORS.cloudy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the clouds?'}, numberNeeded: 1
+      needName: 'clouds',
+      situation: {detector: DETECTORS.cloudy._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the clouds?'},
+      numberNeeded: 1
     }, {
-      needName: 'puddle', situation: {detector: DETECTORS.rainy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
-    },
-    ],
+      needName: 'puddle',
+      situation: {detector: DETECTORS.rainy._id, number: '1'},
+      toPass: {instruction: 'Can you take a photo of the puddle?'},
+      numberNeeded: 1
+    }],
     description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us out with our nature scavenger hunt',
+    notificationDelay: 10, // 10 seconds for debugging
     callbacks: [{
       trigger: 'cb.incidentFinished()',
       function: sendNotificationScavenger.toString()
     }]
   },
   'storyTime': createStorytime(),
-
 };
 
 
@@ -788,7 +832,6 @@ export const CONSTANTS = {
   'USERS': USERS,
   'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
-
 };
 
 // Meteor.call('locations.updateUserLocationAndAffordances', {

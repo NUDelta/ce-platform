@@ -94,6 +94,11 @@ Schema.Experience = new SimpleSchema({
     type: String,
     optional: true
   },
+  notificationDelay: {
+    type: Number,
+    optional: true,
+    defaultValue: 0 // experiences trigger immediately if no value is specified
+  },
   image: {
     type: String,
     label: 'Experience image url',

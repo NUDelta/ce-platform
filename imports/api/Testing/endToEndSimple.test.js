@@ -1,9 +1,8 @@
-import { _ } from 'meteor/underscore';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Accounts } from 'meteor/accounts-base';
 import { Experiences } from '../OCEManager/OCEs/experiences';
 import { Users } from '../UserMonitor/users/users';
-import { Incidents } from '../OCEManager/OCEs/incidents';
+import { Incidents} from "../OCEManager/OCEs/experiences";
 import { CONSTANTS } from './testingconstants';
 import { onLocationUpdate } from '../UserMonitor/locations/methods';
 import { createIncidentFromExperience, startRunningIncident } from '../OCEManager/OCEs/methods';
@@ -48,10 +47,8 @@ describe('Simple End To End', function () {
       onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
         done();
       });
-
     }
-
-  })
+  });
 
   it('user gets added to experience', () => {
     let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });

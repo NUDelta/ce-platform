@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Detectors } from './detectors'
 import {serverLog} from "../../logs";
+import request from 'request';
 
 
 /**

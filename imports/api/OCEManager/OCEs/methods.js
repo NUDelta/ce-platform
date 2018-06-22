@@ -13,11 +13,30 @@ import { Submissions } from '../../OCEManager/currentNeeds';
 
 
 /**
+ * Clears current availabilities for a user given a uid.
+ * @param uid {string} user to clear data for
+ */
+export const clearAvailabilitiesForUser = (uid) => {
+  let availabilityObjects = Availability.find().fetch();
+  _.forEach(availabilityObjects, (av) => {
+    // remove user for each need in each
+    _.forEach(av.needUserMaps, (needEntry) => {
+      Availability.update({
+        _id: av._id,
+        'needUserMaps.needName': needEntry.needName,
+      }, {
+        $pull: {'needUserMaps.$.uids': uid}
+      });
+    });
+  });
+};
+
+/**
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
  * @param affordances {object} dictionary of user's affordacnes
- * @returns {{}}
+ * @returns {object} object with keys as iids and values as array of matched needs
  */
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
@@ -41,6 +60,7 @@ export const findMatchesForUser = (uid, affordances) => {
       }
     });
   });
+
   return matches;
 };
 
@@ -168,9 +188,6 @@ export const createExperience = new ValidatedMethod({
   }
 });
 
-
-
-
 Meteor.methods({
   createAndstartIncident(eid) {
     let experience = Experiences.findOne(eid);
@@ -286,4 +303,28 @@ export const getNeedFromIncidentId = (iid, needName) => {
   });
 
   return output;
+};
+
+/**
+ * Fetches the delay time, in seconds, for an experience given an incident iid.
+ * If the incident or experience are undefined, default of 0 delay is returned.
+ *
+ * @param iid {string} incident id we want the delay for
+ * @returns {number} seconds to delay execution for the experience
+ */
+export const getDelayFromIncidentId = (iid) => {
+  // fetch eid from incident
+  let incident = Incidents.findOne(iid);
+  if (incident !== undefined) {
+    let eid = incident.eid;
+
+    // fetch notification delay with valid eid
+    let experience = Experiences.findOne(eid);
+    if (experience !== undefined) {
+      return experience.notificationDelay || 0;
+    }
+  }
+
+  // default to no delay
+  return 0;
 };

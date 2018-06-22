@@ -4,12 +4,12 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser } from '../../OCEManager/OCEs/methods'
+import { findMatchesForUser, getDelayFromIncidentId, clearAvailabilitiesForUser } from
+    '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
-import { Availability } from "../../OpportunisticCoordinator/databaseHelpers";
 import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
 
@@ -33,25 +33,16 @@ Meteor.methods({
 export const onLocationUpdate = (uid, lat, lng, callback) => {
   serverLog.call({message: `removing ${ uid } from all availabilities.`});
 
-  //TODO: this could def be a cleaner call or its own function
-  let availabilityObjects = Availability.find().fetch();
-  _.forEach(availabilityObjects, (av) => {
-    _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
-    });
-  });
+  // clear users current availabilities
+  clearAvailabilitiesForUser(uid);
 
+  // get affordances and begin coordination process
   serverLog.call({message: `attempting to get affordances for ${ uid }`});
   getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
     let delay = CONFIG.CONTEXT_DELAY;
 
     // attempt to find a user with the given uid
-    let user = Meteor.users.findOne(uid);
+    let user = Meteor.users.findOne({_id: uid});
 
     if (user) {
       // get affordances via affordance aware
@@ -65,20 +56,17 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       updateLocationInDb(uid, lat, lng, affordances);
       callback(uid);
 
-      // set affordances after a delay
-      Meteor.setTimeout(function() {
-        let newAffs = Locations.findOne({uid: user._id}).affordances;
-        let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
+      // clear assignments and begin matching
+      let newAffs = Locations.findOne({uid: user._id}).affordances;
+      let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
 
-        let sharedAffs = [];
-        _.forEach(sharedKeys, (key) => {
-          sharedAffs[key] = newAffs[key];
-        });
+      let sharedAffs = [];
+      _.forEach(sharedKeys, (key) => {
+        sharedAffs[key] = newAffs[key];
+      });
 
-        console.log("on location change");
-        updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
-        sendToMatcher(uid, sharedAffs);
-      }, delay * 60000);
+      updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
+      sendToMatcher(uid, sharedAffs);
     }
   });
 };
@@ -97,12 +85,23 @@ const sendToMatcher = (uid, affordances) => {
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
+    // get availabilities
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+
+    // get delays for each incident based on the experience delay
+    let incidentDelays = {};
+    _.forEach(availabilityDictionary, (need, iid) => {
+      incidentDelays[iid] = getDelayFromIncidentId(iid);
+    });
+
+    // start coordination process
+    serverLog.call({message: `starting coordination process`});
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays);
+  } else {
+    serverLog.call({ message: `user ${ uid } cannot participate yet.`})
   }
 };
 
-// TODO: implement this
 /**
  * Returns whether a user can participate based on when they were last notified/last participated.
  * Debug mode shortens the time between experiences for easier debugging.
