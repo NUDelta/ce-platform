@@ -1,8 +1,8 @@
-import { Meteor } from 'meteor/meteor';
-import { Detectors } from './detectors'
-import {serverLog} from "../../logs";
-import request from 'request';
+import { HTTP } from 'meteor/http';
 
+import { Detectors } from './detectors'
+
+import { serverLog } from "../../logs";
 
 /**
  * Gets affordances based on location, then calls a callback
@@ -12,11 +12,16 @@ import request from 'request';
  * @param {function} callback takes two arguments: uid and affordances
  */
 export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
+  // setup url with lat and lng from tracking package
   let url = `http://affordanceaware.herokuapp.com/location_keyvalues/${ lat }/${ lng }`;
-  request(url, Meteor.bindEnvironment(function (error, response, body) {
+
+  // make request to affordance aware
+  HTTP.get(url, {}, (error, response) => {
     let affordances = {};
+
+    // check if valid response from affordance aware
     if (!error && response.statusCode === 200) {
-      affordances = JSON.parse(body);
+      affordances = JSON.parse(response.content);
       if (affordances !== Object(affordances)) {
         serverLog.call({
           message: "Locations/methods expected type Object but did not receive an Object, doing nothing"
@@ -29,9 +34,9 @@ export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
     }
 
     // callback with either retrieved affordances or empty object
-    serverLog.call({  message: `Affordances successfully retrieved for ${ lat }, ${ lng }.` });
+    serverLog.call({  message: `Affordances successfully retrieved for ${ uid } at ${ lat }, ${ lng }.` });
     callback(uid, affordances);
-  }));
+  });
 };
 
 /**
