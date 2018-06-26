@@ -487,11 +487,13 @@ let DETECTORS = {
 
 
 function createStorytime() {
-  let storytimeCallback = function (sub) {
+  let storytimeCallback = function(sub) {
     Meteor.users.update({
       _id: sub.uid
     }, {
-      $set: {'profile.staticAffordances.participatedInStorytime': true}
+      $set: {
+        'profile.staticAffordances.participatedInStorytime': true
+      }
     });
 
     // set affordances for storytime
@@ -519,12 +521,21 @@ function createStorytime() {
 
     // create and add contribution
     let contribution = {
-      needName: needName, situation: {detector: affordance, number: '1'},
+      needName: needName,
+      situation: {
+        detector: affordance,
+        number: '1'
+      },
       toPass: {
         instruction: sub.content.sentence,
-        dropdownChoices: {name: 'affordance', options: options}
-      }, numberNeeded: 1
+        dropdownChoices: {
+          name: 'affordance',
+          options: options
+        }
+      },
+      numberNeeded: 1
     };
+
     addContribution(sub.iid, contribution);
   };
 
@@ -581,12 +592,17 @@ function createStorytime() {
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
-      needName: 'pageOne', situation: {detector: DETECTORS.niceish_day._id, number: '1'},
+      needName: 'pageOne',
+      situation: {
+        detector: DETECTORS.niceish_day._id,
+        number: '1'
+      },
       toPass: {
         instruction: firstSentence,
         firstSentence: firstSentence,
         dropdownChoices: {
-          name: 'affordance', options: dropdownOptions
+          name: 'affordance',
+          options: dropdownOptions
         }
       },
       numberNeeded: 1
@@ -623,7 +639,9 @@ function createBumped() {
     console.log("calling the bumped callback!!!");
 
     let otherSub = Submissions.findOne({
-      uid: {$ne: sub.uid},
+      uid: {
+        $ne: sub.uid
+      },
       iid: sub.iid,
       needName: sub.needName
     });
@@ -650,8 +668,13 @@ function createBumped() {
       for (let i = 0; i < 1; i++) {
         let need = {
           needName: place[0] + relationship + i,
-          situation: {detector: detector._id, number: '2'},
-          toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
+          situation: {
+            detector: detector._id,
+            number: '2'
+          },
+          toPass: {
+            instruction: 'You are at a  ' + place[1] + ' at the same time as '
+          },
           numberNeeded: 2
         };
         let callback = {
@@ -669,14 +692,14 @@ function createBumped() {
 }
 
 let sendNotificationScavenger = function (sub) {
-  let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
 
   notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 let sendNotificationSunset = function (sub) {
-  let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
 
@@ -693,8 +716,13 @@ let EXPERIENCES = {
     resultsTemplate: 'sunset',
     contributionTypes: [{
       needName: 'sunset',
-      situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'},
+      situation: {
+        detector: DETECTORS.sunset._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of the sunset!'
+      },
       numberNeeded: 20
     }],
     description: 'Create a timelapse of the sunset with others around the country',
@@ -712,48 +740,93 @@ let EXPERIENCES = {
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
       needName: 'beer',
-      situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of beer?'},
+      situation: {
+        detector: DETECTORS.beer._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of beer?'
+      },
       numberNeeded: 1
     }, {
       needName: 'greenProduce',
-      situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'},
+      situation: {
+        detector: DETECTORS.produce._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
+      },
       numberNeeded: 1
     }, {
       needName: 'coins',
-      situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'},
+      situation: {
+        detector: DETECTORS.drugstore._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of chocolate gold coins on display?'
+      },
       numberNeeded: 1
     }, {
       needName: 'leprechaun',
-      situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'},
+      situation: {
+        detector: DETECTORS.costume_store._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a Leprechaun costume?'
+      },
       numberNeeded: 1
     }, {
       needName: 'irishSign',
-      situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of an Irish sign?'},
+      situation: {
+        detector: DETECTORS.irish._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of an Irish sign?'
+      },
       numberNeeded: 1
     }, {
       needName: 'trimmings',
-      situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'},
+      situation: {
+        detector: DETECTORS.hair_salon._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of some Leprechaun beard trimmings?'
+      },
       numberNeeded: 1
     }, {
       needName: 'liquidGold',
-      situation: {detector: DETECTORS.gas_station._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'},
+      situation: {
+        detector: DETECTORS.gas_station._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'
+      },
       numberNeeded: 1
     }, {
       needName: 'potOfGold',
-      situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'},
+      situation: {
+        detector: DETECTORS.bank._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'
+      },
       numberNeeded: 1
     }, {
       needName: 'rainbow',
-      situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a rainbow flag?'},
+      situation: {
+        detector: DETECTORS.rainbow._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a rainbow flag?'
+      },
       numberNeeded: 1
     }],
     description: 'Find an item for a scavenger hunt',
@@ -771,48 +844,93 @@ let EXPERIENCES = {
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
       needName: 'tree',
-      situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a tree?'},
+      situation: {
+        detector: DETECTORS.forest._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a tree?'
+      },
       numberNeeded: 1
     }, {
       needName: 'leaf',
-      situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a leaf?'},
+      situation: {
+        detector: DETECTORS.forest._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a leaf?'
+      },
       numberNeeded: 1
     }, {
       needName: 'grass',
-      situation: {detector: DETECTORS.field._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the grass?'},
+      situation: {
+        detector: DETECTORS.field._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the grass?'
+      },
       numberNeeded: 1
     }, {
       needName: 'lake',
-      situation: {detector: DETECTORS.lake._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the lake?'},
+      situation: {
+        detector: DETECTORS.lake._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the lake?'
+      },
       numberNeeded: 1
     }, {
       needName: 'moon',
-      situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the moon?'},
+      situation: {
+        detector: DETECTORS.night._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the moon?'
+      },
       numberNeeded: 1
     }, {
       needName: 'sun',
-      situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the sun?'},
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the sun?'
+      },
       numberNeeded: 1
     }, {
       needName: 'blueSky',
-      situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the blue sky?'},
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the blue sky?'
+      },
       numberNeeded: 1
     }, {
       needName: 'clouds',
-      situation: {detector: DETECTORS.cloudy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the clouds?'},
+      situation: {
+        detector: DETECTORS.cloudy._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the clouds?'
+      },
       numberNeeded: 1
     }, {
       needName: 'puddle',
-      situation: {detector: DETECTORS.rainy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the puddle?'},
+      situation: {
+        detector: DETECTORS.rainy._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the puddle?'
+      },
       numberNeeded: 1
     }],
     description: 'Find an item for a scavenger hunt',
