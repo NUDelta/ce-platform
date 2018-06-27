@@ -61,7 +61,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       });
 
       updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
-      sendToMatcher(uid, sharedAffs);
+      sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
     }
   });
 };
@@ -72,8 +72,9 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
  *
  * @param uid {string} uid of user who's location just changed
  * @param affordances {object} dictionary of user's affordances
+ * @param currLocation {object} current location of user as object with latitude/longitude keys and float values.
  */
-const sendToMatcher = (uid, affordances) => {
+const sendToMatcher = (uid, affordances, currLocation) => {
   // should check whether a user is available before sending to OpportunisticCoordinator
   // TODO: replace false with config.debug global setting
   let userCanParticipate = userIsAvailableToParticipate(uid);
@@ -89,7 +90,7 @@ const sendToMatcher = (uid, affordances) => {
     });
 
     // start coordination process
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays);
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays, currLocation);
   } else {
     serverLog.call({ message: `user ${ uid } cannot participate yet.`})
   }
@@ -102,9 +103,10 @@ const sendToMatcher = (uid, affordances) => {
  * @param uid {string} uid of user who's location just changed
  * @returns {boolean} whether a user can participate in an experience
  */
-const userIsAvailableToParticipate = (uid) => {
+export const userIsAvailableToParticipate = (uid) => {
   let time = 60 * 1000;
 
+  // adjust time for dev vs prod deployment (lower in dev for testing)
   if (CONFIG.MODE === "DEV") {
     time = time * 2;
   } else if (CONFIG.MODE === "PROD") {
@@ -113,7 +115,35 @@ const userIsAvailableToParticipate = (uid) => {
     time = time * 65;
   }
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time};
+  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time;
+};
+
+/**
+ * Computes distance between a start and end location in meters using the haversine forumla.
+ *
+ *  @param start {object} object with starting latitude/longitude keys and float values.
+ *  @param end {object} object with ending latitude/longitude keys and float values.
+ *  @returns {number} absolute distance between start and end in meters.
+ */
+export const distanceBetweenLocations = (start, end) => {
+  const r = 6378137.0; // Earth’s mean radius in meters
+  const degToRad = Math.PI / 180; // Degree to radian conversion.
+
+  // compute differences and latitudes in degrees
+  const dLat = (end.latitude - start.latitude) * degToRad;
+  const dLng = (end.longitude - start.longitude) * degToRad;
+  const lat1 = start.latitude * degToRad;
+  const lat2 = end.latitude * degToRad;
+
+  // compute c
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  // return distance in meters
+  return r * c;
+};
 
 /**
  * Updates the location for a user in the database.
