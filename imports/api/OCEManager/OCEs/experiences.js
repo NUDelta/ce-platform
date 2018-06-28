@@ -4,21 +4,9 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Schema } from '../../schema.js';
 
-// TODO: cascade delete incidents and remove from active, etc.
-class ExperiencesCollection extends Mongo.Collection {
-  remove(selector, callback) {
-    Experiences.find(selector).forEach((experience) => {
-      Incidents.remove({ experience: experience._id });
-      Meteor.users.update({}, {
-        $pull: {
-          'profile.activeExperiences': experience._id
-        }
-      });
-    });
-    return super.remove(selector, callback);
-  }
-}
-
+/**
+ * Callback schema.
+ */
 Schema.Callback = new SimpleSchema({
   trigger: {
     type: String
@@ -27,9 +15,13 @@ Schema.Callback = new SimpleSchema({
     type: String
   }
 });
+
 export const Callback = new Mongo.Collection('callback');
 Callback.attachSchema(Schema.Callback);
 
+/**
+ * SituationDescription schema.
+ */
 Schema.SituationDescription = new SimpleSchema({
   detector: {
     type: String
@@ -38,6 +30,7 @@ Schema.SituationDescription = new SimpleSchema({
     type: Number,
   }
 });
+
 export const SituationDescription = new Mongo.Collection('situationdescription');
 SituationDescription.attachSchema(Schema.SituationDescription);
 
@@ -56,10 +49,33 @@ Schema.NeedType = new SimpleSchema({
   numberNeeded: {
     type: Number,
   },
+  notificationDelay: {
+    type: Number,
+    optional: true,
+    defaultValue: 0 // notify immediately for need if no value is specified
+  }
 });
+
 export const NeedType = new Mongo.Collection('needtype');
 NeedType.attachSchema(Schema.NeedType);
 
+/**
+ * Experience schema.
+ */
+// TODO: cascade delete incidents and remove from active, etc.
+class ExperiencesCollection extends Mongo.Collection {
+  remove(selector, callback) {
+    Experiences.find(selector).forEach((experience) => {
+      Incidents.remove({ experience: experience._id });
+      Meteor.users.update({}, {
+        $pull: {
+          'profile.activeExperiences': experience._id
+        }
+      });
+    });
+    return super.remove(selector, callback);
+  }
+}
 
 export const Experiences = new ExperiencesCollection('experiences');
 Schema.Experience = new SimpleSchema({
@@ -94,21 +110,19 @@ Schema.Experience = new SimpleSchema({
     type: String,
     optional: true
   },
-  notificationDelay: {
-    type: Number,
-    optional: true,
-    defaultValue: 0 // experiences trigger immediately if no value is specified
-  },
   image: {
     type: String,
     label: 'Experience image url',
     optional: true
   },
 });
+
 Experiences.attachSchema(Schema.Experience);
 
 
-
+/**
+ * Incident schema.
+ */
 export const Incidents = new Mongo.Collection('incidents');
 Schema.Incident = new SimpleSchema({
   _id: {
@@ -131,4 +145,5 @@ Schema.Incident = new SimpleSchema({
     //TODO: i think somehow its not finding the schema bc in experiences where its define no problem, but here need blackbox true
   },
 });
+
 Incidents.attachSchema(Schema.Incident);

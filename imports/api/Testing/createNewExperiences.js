@@ -5,11 +5,7 @@ import { Detectors } from "../UserMonitor/detectors/detectors";
 import { Experiences, Incidents } from "../OCEManager/OCEs/experiences";
 
 import { CONSTANTS } from "./testingconstants";
-import {
-  addContribution,
-  createIncidentFromExperience,
-  startRunningIncident
-} from "../OCEManager/OCEs/methods";
+import { addContribution, createIncidentFromExperience, startRunningIncident } from "../OCEManager/OCEs/methods";
 
 
 Meteor.methods({
@@ -227,10 +223,7 @@ function createNewStorytime() {
             options: [
               ["Drinking butterbeer", "N3uajhH3chDssFq3r"],
               ["Hogwarts Express at Platform 9 3/4", "Ly9vMvepymC4QNJqA"],
-              [
-                "Sneaking around at night under the invisibility cloak",
-                "AcstpXRyNFhmgPDfF"
-              ],
+              ["Sneaking around at night under the invisibility cloak", "AcstpXRyNFhmgPDfF"],
               ["Dinner at the Great Hall", "AKxSxuYBFqKP3auie"],
               ["Hogwarts Castle", "LTnK6z94KQTJKTmZ8"],
               ["Training in the Room of Requirement ", "H5P9ga8HHpCbxBza8"]

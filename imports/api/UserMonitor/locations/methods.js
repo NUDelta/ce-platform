@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser, getDelayFromIncidentId, clearAvailabilitiesForUser } from
+import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
@@ -83,10 +83,16 @@ const sendToMatcher = (uid, affordances, currLocation) => {
     // get availabilities
     let availabilityDictionary = findMatchesForUser(uid, affordances);
 
-    // get delays for each incident based on the experience delay
+    // get delays for each incident-need pair
     let incidentDelays = {};
-    _.forEach(availabilityDictionary, (need, iid) => {
-      incidentDelays[iid] = getDelayFromIncidentId(iid);
+    _.forEach(availabilityDictionary, (needs, iid) => {
+      // create empty need object for each iid
+      incidentDelays[iid] = {};
+
+      // find and add delays for each need
+      _.forEach(needs, (individualNeed) => {
+        incidentDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
+      });
     });
 
     // start coordination process

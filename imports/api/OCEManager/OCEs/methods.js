@@ -76,7 +76,6 @@ export const findMatchesForUser = (uid, affordances) => {
  * @returns {boolean} whether user matches need queried for
  */
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
-  //console.log("iid in doesuser match need", iid)
   let detectorId = getNeedFromIncidentId(iid, needName).situation.detector;
   return matchAffordancesWithDetector(affordances, detectorId);
 };
@@ -274,7 +273,6 @@ export const createIncidentFromExperience = (experience) => {
     }
   });
 
-
   return incident;
 };
 
@@ -283,11 +281,10 @@ export const createIncidentFromExperience = (experience) => {
  *
  * @param iid {string} incident id we are looking up a need in
  * @param needName {string} name of the need we are looking up
+ * @returns {object} need object
  */
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
-
-
   let output = undefined;
 
   _.forEach(incident.contributionTypes, (need) => {
@@ -306,25 +303,22 @@ export const getNeedFromIncidentId = (iid, needName) => {
 };
 
 /**
- * Fetches the delay time, in seconds, for an experience given an incident iid.
- * If the incident or experience are undefined, default of 0 delay is returned.
+ * Finds and returns a need's notificationDelay given a iid and needName
  *
- * @param iid {string} incident id we want the delay for
+ * @param iid {string} incident id we are looking up a need in
+ * @param needName {string} name of the need we are looking up
  * @returns {number} seconds to delay execution for the experience
  */
-export const getDelayFromIncidentId = (iid) => {
-  // fetch eid from incident
+export const getNeedDelay = (iid, needName) => {
   let incident = Incidents.findOne(iid);
-  if (incident !== undefined) {
-    let eid = incident.eid;
+  let notificationDelayOutput = 0; // default to no delay if notificationDelay is not found
 
-    // fetch notification delay with valid eid
-    let experience = Experiences.findOne(eid);
-    if (experience !== undefined) {
-      return experience.notificationDelay || 0;
+  _.forEach(incident.contributionTypes, (need) => {
+    if (need.needName === needName) {
+      notificationDelayOutput = need.notificationDelay;
+      return false;
     }
-  }
+  });
 
-  // default to no delay
-  return 0;
+  return notificationDelayOutput;
 };

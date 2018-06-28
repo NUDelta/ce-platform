@@ -56,16 +56,18 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, incidentDelays, currLocation) => {
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(userAvailability, (needs, iid) => {
-    // setup availability dict to pass in
-    let currUserAvailability = {};
-    currUserAvailability[iid] = needs;
+    _.forEach(needs, (individualNeed) => {
+      // setup availability dict to pass in
+      let currUserAvailability = {};
+      currUserAvailability[iid] = individualNeed;
 
-    // get current delay in ms
-    let currDelay = incidentDelays[iid] * 1000;
+      // get current delay in ms
+      let currDelay = incidentDelays[iid][individualNeed] * 1000;
 
-    // setup timeout to run coordinator
-    Meteor.setTimeout(
-      coordinatorWrapper(uid, currUserAvailability, currLocation), currDelay);
+      // setup timeout to run coordinator
+      Meteor.setTimeout(
+        coordinatorWrapper(uid, currUserAvailability, currLocation), currDelay);
+    });
   });
 };
 
@@ -87,6 +89,7 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, inc
  * @returns {Function}
  */
 const coordinatorWrapper = (uid, availabilityDictionary, lastLocation) => () => {
+  serverLog.call({message: `userAvailability: ${ JSON.stringify(availabilityDictionary) }`});
   // get current location update of user
   let currLocation = undefined;
   let updateThreshold = 10.0; // distance between updates must be at most 10 meters
@@ -110,8 +113,6 @@ const coordinatorWrapper = (uid, availabilityDictionary, lastLocation) => () => 
     let userCanParticipate = userIsAvailableToParticipate(uid);
 
     if (distanceBetweenUpdates <= updateThreshold && userCanParticipate) {
-      serverLog.call({message: `running coordinator for ${ uid } with availabilities ${ JSON.stringify(availabilityDictionary) }`});
-
       // update availabilities of users and check if any experience incidents can be run
       let updatedAvailability = updateAvailability(uid, availabilityDictionary);
       let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);

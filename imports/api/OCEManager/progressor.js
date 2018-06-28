@@ -56,6 +56,10 @@ function runCallbacks(mostRecentSub) {
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if (eval(trigger)) {
+      // let callbackFunction = eval('(' + fun + ')');
+      // callbackFunction(JSON.stringify(mostRecentSub));
+
+      // TODO: use uglified clean function here instead of weird anon function
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });
