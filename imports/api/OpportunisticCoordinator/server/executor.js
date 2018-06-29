@@ -54,21 +54,39 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
  * @param currLocation {object} current location of user when timeout as object with latitude/longitude keys and float values.
  */
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, incidentDelays, currLocation) => {
-  // create a timeout for each incident for the current user with the incident delay
+  // bin user need availabilities by time, and send to coordinator together
+  // { '10000': { 'iid1': [need1, need2], 'iid2': [need1] }, '20000': { 'iid1': ['need1'], 'iid3': ['need1'] } }
+  let binnedUserAvailabilities = {};
+
   _.forEach(userAvailability, (needs, iid) => {
     _.forEach(needs, (individualNeed) => {
-      // TODO: bin needs into time buckets and send over in batch
-      // setup availability dict to pass in
-      let currUserAvailability = {};
-      currUserAvailability[iid] = [individualNeed];
-
       // get current delay in ms
-      let currDelay = incidentDelays[iid][individualNeed] * 1000;
+      let currDelay = incidentDelays[iid][individualNeed] * 1000; // delay in ms
+      let currDelayStr = currDelay.toString();
 
-      // setup timeout to run coordinator
-      Meteor.setTimeout(
-        coordinatorWrapper(uid, currUserAvailability, currLocation), currDelay);
+      // check if current delay bin exists
+      if (!(currDelayStr in binnedUserAvailabilities)) {
+        binnedUserAvailabilities[currDelayStr] = {};
+      }
+
+      // check if, for current delay, iid exists
+      if (!(iid in binnedUserAvailabilities[currDelayStr])) {
+        binnedUserAvailabilities[currDelayStr][iid] = [];
+      }
+
+      // add need to current delay for iid
+      binnedUserAvailabilities[currDelayStr][iid].push(individualNeed);
     });
+  });
+
+  serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
+
+  // create a timeout for each incident for the current user with the incident delay
+  _.forEach(binnedUserAvailabilities, (currAvailabilities, delayString) => {
+    let delayNumber = parseInt(delayString);
+
+    // setup timeout to run coordinator
+    Meteor.setTimeout(coordinatorWrapper(uid, currAvailabilities, currLocation), delayNumber);
   });
 };
 
