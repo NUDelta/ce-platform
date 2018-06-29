@@ -57,9 +57,10 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, inc
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(userAvailability, (needs, iid) => {
     _.forEach(needs, (individualNeed) => {
+      // TODO: bin needs into time buckets and send over in batch
       // setup availability dict to pass in
       let currUserAvailability = {};
-      currUserAvailability[iid] = individualNeed;
+      currUserAvailability[iid] = [individualNeed];
 
       // get current delay in ms
       let currDelay = incidentDelays[iid][individualNeed] * 1000;
@@ -89,7 +90,7 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, inc
  * @returns {Function}
  */
 const coordinatorWrapper = (uid, availabilityDictionary, lastLocation) => () => {
-  serverLog.call({message: `userAvailability: ${ JSON.stringify(availabilityDictionary) }`});
+  serverLog.call({message: `user ${ uid } | userAvailability: ${ JSON.stringify(availabilityDictionary) } | can participate? ${ userIsAvailableToParticipate(uid) }` });
   // get current location update of user
   let currLocation = undefined;
   let updateThreshold = 10.0; // distance between updates must be at most 10 meters
