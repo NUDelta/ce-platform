@@ -1,6 +1,6 @@
 {
   "name": "ce-platform",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A platform for running Collective Experiences, build with Meteor and Cordova.",
   "directories": {
     "test": "tests"
