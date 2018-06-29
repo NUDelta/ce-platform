@@ -25,27 +25,27 @@ let LOCATIONS = {
 };
 
 let USERS = {
-  'garrett': {
+  garrett: {
     username: 'garrett',
     password: 'password',
   },
-  'garretts_brother': {
+  garretts_brother: {
     username: 'garretts_brother',
     password: 'password',
   },
-  'meg': {
+  meg: {
     username: 'meg',
     password: 'password',
   },
-  'megs_sister': {
+  megs_sister: {
     username: 'megs_sister',
     password: 'password',
   },
-  'andrew': {
+  andrew: {
     username: 'andrew',
     password: 'password',
   },
-  'josh': {
+  josh: {
     username: 'josh',
     password: 'password',
   }
@@ -53,14 +53,14 @@ let USERS = {
 
 let DETECTORS = {
   field: {
-    _id: 'rEbK6WMQnPPAGAXMX',
+    _id: 'XeepEbMjjW8yPzSAo',
     description: 'fields',
-    variables: ['var baseball_fields;',
-      'var stadiums___arenas;',
-      'var soccer;',
-      'var parks;'
+    variables: ['var stadiumsarenas;',
+      'var baseballfields;',
+      'var parks;',
+      'var playgrounds;'
     ],
-    rules: ['(parks || soccer || baseball_fields || stadiums___arenas)']
+    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields);']
   },
   niceish_day: {
     _id: 'x7EgLErQx3qmiemqt',
@@ -99,20 +99,23 @@ let DETECTORS = {
     rules: [' gyms']
   },
   produce: {
-    _id: 'oHCMYfBBcaphXqQnT',
-    description: ' places where you can find fuits and veggies',
-    variables: ['var grocery;',
-      'var organic_stores;',
-      'var fruits___veggies;',
-      'var farmers_market;'
+    _id: 'xDtnmQW3PBMuqq9pW',
+    description: 'places to find fruits and veggies',
+    variables: ['var communitygardens;',
+      'var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var grocery;',
+      'var farmersmarket;',
+      'var organic_stores;'
     ],
-    rules: ['(grocery || organic_stores || fruits___veggies || farmers_market)']
+    rules: ['communitygardens || ((intlgrocery || ethicgrocery) || ((markets || grocery) || (farmersmarket || organic_stores)));']
   },
   rainbow: {
     _id: 'ksxGTXMaSpCFdmqqN',
     description: 'rainbow flag',
-    variables: ['var gay_bars;'],
-    rules: ['gay_bars']
+    variables: ['var gaybars;'],
+    rules: ['gaybars']
   },
   drugstore: {
     _id: 'k8KFfv3ATtbg2tnFB',
@@ -124,78 +127,82 @@ let DETECTORS = {
     _id: 'ECPk2mjuHJtrMotGg',
     description: 'costume_store',
     variables: ['var costumes;', 'var party_supplies;'],
-    rules: ['(party_supplies || costumes)']
+    rules: ['(partysupplies || costumes)']
   },
   irish: {
     _id: '5CJGGtjqyY89n55XP',
     description: 'irish',
-    variables: ['var irish_pub;', 'var irish;'],
-    rules: ['(irish_pub || irish)']
+    variables: ['var irish_pubs;', 'var irish;'],
+    rules: ['(irish_pubs || irish)']
   },
   hair_salon: {
-    _id: 'eG4no7zpSnthwwcv5',
+    _id: 'S8oZZwAWpFo5qGq87',
     description: 'hairsalon',
-    variables: ['var men_s_hair_salons;',
-      'var hair_salons;',
-      'var hair_stylists;',
-      'var blow_dry_out_services;',
+    variables: ['var menshair;',
+      'var hairstylists;',
+      'var hair_extensions;',
+      'var blowoutservices;',
+      'var hair;',
       'var barbers;'
     ],
-    rules: ['(men_s_hair_salons || hair_salons || hair_stylists || blow_dry_out_services || barbers)']
+    rules: ['menshair || ((hairstylists || hair_extensions) || ((hair || barbers) || blowoutservices));']
   },
   gas_station: {
-    _id: 'xZBgjwdPw8rtg86eo',
-    description: 'gas_stations',
-    variables: ['var gas_stations;'],
-    rules: ['gas_stations']
+    _id: 'CctuBr3GtSXPkzNDQ',
+    description: 'gas station',
+    variables: ['var servicestations;'],
+    rules: ['servicestations;']
   },
   coffee: {
-    _id: '5DrGWRyMpu7WWFo7m',
+    _id: 'saxQsfSaBiHHoSEYK',
     description: 'coffee',
-    variables: ['var coffee___tea;', 'var cafes;', 'var coffeeshops;'],
-    rules: ['(coffee___tea || cafes || coffeeshops)']
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;'
+    ],
+    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
   },
   bank: {
     _id: 'qR9s4EtPngjZeEp9u',
     description: 'banks',
-    variables: ['var banks___credit_unions;'],
-    rules: ['banks___credit_unions']
+    variables: ['var banks;'],
+    rules: ['banks;']
   },
   beer: {
-    _id: 'i3yMtjdjTyJQRendD',
+    _id: 'zrban5i9M6adgwMaK',
     description: 'beer',
-    variables: ['var beer_bar;',
+    variables: ['var beergardens;',
+      'var beertours;',
+      'var sportsbars;',
       'var bars;',
-      'var sports_bars;',
-      'var dive_bars;',
-      'var irish_pub;',
+      'var irish_pubs;',
+      'var breweries;',
+      'var divebars;',
+      'var beerbar;',
+      'var beergarden;',
       'var pubs;',
-      'var beer_tours;',
-      'var beer_garden;',
-      'var beer;',
-      'var breweries;'
+      'var beer_and_wine;'
     ],
-    rules: ['(bars || sports_bars || beer_bar || beer || dive_bars || irish_pub || pubs || beer_tours || beer_garden || breweries)']
+    rules: ['(beergardens || beertours) || ((sportsbars || bars) || ((irish_pubs || breweries) || ((divebars || beerbar) || ((pubs || beer_and_wine) || beergarden))));']
   },
   train: {
-    _id: 'mu8JcPRF7mEernyNQ',
+    _id: '2wH5bFr77ceho5BgF',
     description: 'trains',
-    variables: ['var public_transportation;',
-      'var trains;',
-      'var train_stations;'
-    ],
-    rules: ['(trains || train_stations || public_transportation)']
+    variables: ['var publictransport;', 'var trainstations;', 'var trains;'],
+    rules: ['(trainstations || trains) || publictransport;']
   },
   forest: {
-    _id: 'FfZnzP72ip4SLY4eR',
+    _id: 'dhQf4PLNAGLy8QDJe',
     description: 'forests',
     variables: ['var campgrounds;',
-      'var zoos;',
       'var parks;',
-      'var botanical_gardens;',
-      'var hiking;'
+      'var zoos;',
+      'var hiking;',
+      'var gardens;'
     ],
-    rules: ['(campgrounds || botanical_gardens || hiking || zoos || parks)']
+    rules: ['(campgrounds || parks) || ((hiking || gardens) || zoos);']
   },
   dinning_hall: {
     _id: 'sSK7rbbC9sHQBN94Y',
@@ -208,58 +215,71 @@ let DETECTORS = {
     rules: ['(diners || restaurants || cafeteria || food_court)']
   },
   castle: {
-    _id: 'kMNownPaYRKxBXJfm',
-    description: 'castle',
-    variables: ['var religious_schools;',
-      'var churches;',
-      'var landmarks___historical_buildings;',
+    _id: 'gDcxZQ49QrwxzY7Ye',
+    description: 'castles',
+    variables: ['var mini_golf;',
       'var buddhist_temples;',
-      'var hindu_temples;',
+      'var religiousschools;',
       'var synagogues;',
+      'var hindu_temples;',
+      'var weddingchappels;',
+      'var churches;',
       'var mosques;'
     ],
-    rules: ['(mosques || hindu_temples || buddhist_temples || synagogues || churches || religious_schools || landmarks___historical_buildings)']
+    rules: ['(mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques);']
   },
   bar: {
-    _id: 'JLq2pGg8fizWGdZe2',
+    _id: '6urWtr6Tasohdb43u',
     description: 'bars',
-    variables: ['var dive_bars;',
-      'var gay_bars;',
-      'var country_dance_halls;',
-      'var tapas_bars;',
-      'var pool_halls;',
+    variables: ['var beergardens;',
+      'var beertours;',
       'var champagne_bars;',
-      'var club_crawl;',
-      'var tiki_bars;',
-      'var sports_bars;',
-      'var island_pub;',
-      'var karaoke;',
-      'var piano_bars;',
-      'var pop_up_restaurants;',
-      'var irish_pub;',
-      'var speakeasies;',
-      'var lounges;',
-      'var pubs;',
-      'var whiskey_bars;',
-      'var music_venues;',
-      'var bar_crawl;',
-      'var irish;',
-      'var cocktail_bars;',
+      'var cocktailbars;',
+      'var sportsbars;',
       'var bars;',
-      'var nightlife;'
+      'var barcrawl;',
+      'var pianobars;',
+      'var brasseries;',
+      'var irish_pubs;',
+      'var tikibars;',
+      'var nightlife;',
+      'var breweries;',
+      'var divebars;',
+      'var poolhalls;',
+      'var island_pub;',
+      'var beerbar;',
+      'var speakeasies;',
+      'var irish;',
+      'var pubs;',
+      'var beer_and_wine;',
+      'var distilleries;',
+      'var beergarden;',
+      'var clubcrawl;',
+      'var gaybars;',
+      'var whiskeybars;'
     ],
-    rules: ['(dive_bars || gay_bars || tapas_bars || country_dance_halls || pool_halls || champagne_bars || club_crawl || tiki_bars || sports_bars || island_pub || karaoke || piano_bars || pop_up_restaurants || irish_pub || speakeasies || lounges || pubs || whiskey_bars || music_venues || bar_crawl || irish || bars || nightlife || cocktail_bars)']
+    rules: ['((champagne_bars || cocktailbars) || ((barcrawl || pianobars) || ((tikibars || nightlife) || ((poolhalls || island_pub) || ((speakeasies || irish) || ((clubcrawl || pubs) || (gaybars || whiskeybars))))))) || ((beergardens || beertours) || ((sportsbars || bars) || ((brasseries || irish_pubs) || ((breweries || divebars) || ((poolhalls || beerbar) || ((pubs || beer_and_wine) || (distilleries || beergarden)))))));']
   },
   grocery: {
-    _id: 'jtCXkXBi4k6oJerxP',
-    description: 'grocery',
-    variables: ['var ethnic_grocery;',
-      'var international_grocery;',
+    _id: 'N5H9w632dbyhqHEsi',
+    description: 'grocery shopping',
+    variables: ['var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var wholesalers;',
+      'var pharmacy;',
       'var grocery;',
-      'var fruits___veggies;',
-      'var farmers_market;'
+      'var farmersmarket;',
+      'var convenience;',
+      'var importedfood;',
+      'var herbsandspices;',
+      'var drugstores;',
+      'var seafoodmarkets;',
+      'var marketstalls;',
+      'var organic_stores;',
+      'var publicmarkets;'
     ],
-    rules: ['(farmers_market || international_grocery || ethnic_grocery || grocery || fruits___veggies)']
+    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
   },
   lake: {
     _id: '9iEpW4mb4ysHY5thP',
@@ -286,99 +306,118 @@ let DETECTORS = {
     rules: ['(clouds && daytime)']
   },
   restaurant: {
-    _id: 'MzyBGuc6fLGR8Kjii',
-    description: 'restaurant',
-    variables: ['var american__traditional_;',
-      'var american__new_;',
-      'var latin_american;',
+    _id: 'tR4e2c7PPjWACwX87',
+    description: 'eating restaurant',
+    variables: ['var italian;',
+      'var generic_restaurant;',
+      'var lunch_places;',
+      'var asian_places;',
+      'var pastashops;',
       'var pizza;',
-      'var pasta_shops;',
-      'var burgers;',
-      'var italian;',
-      'var dominican;',
-      'var trinidadian;',
-      'var halal;',
-      'var food_court;',
-      'var arabian;',
-      'var pakistani;',
-      'var indian;',
-      'var himalayan_nepalese;',
-      'var afghan;',
-      'var persian_iranian;',
-      'var lebanese;',
-      'var vegetarian;',
-      'var middle_eastern;',
-      'var kosher;',
-      'var chinese;',
-      'var mediterranean;',
-      'var filipino;',
-      'var puerto_rican;',
-      'var ethnic_food;',
-      'var african;',
-      'var soul_food;',
-      'var pub_food;',
-      'var buffets;',
-      'var mongolian;',
-      'var brazilian;',
-      'var hot_pot;',
-      'var fast_food;',
-      'var vegan;',
-      'var sushi_bars;',
-      'var salad;',
-      'var japanese;',
-      'var korean;',
+      'var spanish;',
+      'var newcanadian;',
+      'var scottish;',
+      'var greek;',
+      'var taiwanese;',
+      'var hkcafe;',
       'var sandwiches;',
-      'var imported_food;',
+      'var delis;',
+      'var dimsum;',
+      'var shanghainese;',
+      'var dominican;',
+      'var burmese;',
+      'var indonesian;',
       'var restaurants;',
-      'var diners;',
-      'var barbeque;',
-      'var soup;'
+      'var uzbek;',
+      'var cambodian;',
+      'var vegan;',
+      'var indpak;',
+      'var food_court;',
+      'var delicatessen;',
+      'var cheesesteaks;',
+      'var himalayan;',
+      'var thai;',
+      'var buffets;',
+      'var cantonese;',
+      'var catering;',
+      'var tuscan;',
+      'var hotdog;',
+      'var salad;',
+      'var hungarian;',
+      'var persian;',
+      'var hotel_bar;',
+      'var mediterranean;',
+      'var asianfusion;',
+      'var malaysian;',
+      'var kosher;',
+      'var modern_european;',
+      'var gluten_free;',
+      'var singaporean;',
+      'var chinese;',
+      'var szechuan;',
+      'var panasian;',
+      'var steak;',
+      'var seafood;',
+      'var pakistani;',
+      'var vegetarian;',
+      'var tapasmallplates;',
+      'var african;',
+      'var soup;',
+      'var halal;',
+      'var basque;',
+      'var french;',
+      'var bangladeshi;',
+      'var wraps;',
+      'var japacurry;',
+      'var cafes;',
+      'var hakka;'
     ],
-    rules: ['( american__traditional_ || american__new_ || latin_american || pizza || pasta_shops || burgers || italian || dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || sandwiches || imported_food || restaurants || diners || barbeque || soup )']
+    rules: ['italian = (pastashops || pizza) || ((sandwiches || delis) || ((italian || restaurants) || ((delicatessen || cheesesteaks) || ((catering || tuscan) || (hotdog || salad)))));',
+      'generic_restaurant = (spanish || newcanadian) || ((dimsum || shanghainese) || ((uzbek || cambodian) || ((himalayan || italian) || ((hungarian || persian) || ((kosher || modern_european) || ((steak || seafood) || ((tapasmallplates || african) || ((basque || chinese) || (french || bangladeshi)))))))));',
+      'lunch_places = (scottish || greek) || ((dominican || sandwiches) || ((vegan || indpak) || ((thai || delis) || ((hotel_bar || mediterranean) || ((gluten_free || buffets) || ((pakistani || vegetarian) || ((soup || halal) || ((delicatessen || wraps) || ((japacurry || catering) || ((cafes || hakka) || salad))))))))));',
+      'asian_places = (taiwanese || hkcafe) || ((burmese || indonesian) || ((dimsum || food_court) || ((buffets || cantonese) || ((asianfusion || malaysian) || ((singaporean || chinese) || (szechuan || panasian))))));',
+      '(italian || generic_restaurant) || (asian_places || lunch_places);'
+    ]
   },
   exercising: {
-    _id: 'cTJmt5D6JGMNiJ3Yq',
+    _id: '6eY5Z5vrfHcNrefM6',
     description: 'exercising',
-    variables: ['var fitness___instruction;',
-      'var climbing;',
-      'var rock_climbing;',
-      'var badminton;',
-      'var parks;',
-      'var golf;',
-      'var bowling;',
+    variables: ['var boxing;',
       'var kickboxing;',
-      'var circuit_training_gyms;',
-      'var soccer;',
-      'var professional_sports_teams;',
-      'var boxing;',
-      'var boot_camps;',
-      'var amateur_sports_teams;',
-      'var tennis;',
-      'var cardio_classes;',
-      'var interval_training_gyms;',
-      'var pool_halls;',
-      'var beach_volleyball;',
-      'var fencing_clubs;',
-      'var physical_therapy;',
-      'var barre_classes;',
-      'var trainers;',
-      'var spin_classes;',
-      'var cycling_classes;',
+      'var amateursportsteams;',
+      'var religiousschools;',
+      'var muaythai;',
       'var gyms;',
+      'var physicaltherapy;',
+      'var fencing;',
+      'var tennis;',
+      'var healthtrainers;',
+      'var poledancingclasses;',
+      'var badminton;',
+      'var beachvolleyball;',
+      'var football;',
+      'var bootcamps;',
       'var pilates;',
-      'var squash;',
-      'var martial_arts;',
-      'var dance_studios;',
-      'var surfing;',
-      'var muay_thai;',
-      'var weight_loss_centers;',
+      'var dancestudio;',
+      'var brazilianjiujitsu;',
+      'var trampoline;',
+      'var cyclingclasses;',
+      'var cardioclasses;',
+      'var barreclasses;',
+      'var intervaltraininggyms;',
       'var sports_clubs;',
-      'var aerial_fitness;',
-      'var pole_dancing_classes;',
-      'var brazilian_jiu_jitsu;',
-      'var community_centers;'
+      'var weightlosscenters;',
+      'var active;',
+      'var aerialfitness;',
+      'var communitycenters;',
+      'var yoga;',
+      'var squash;',
+      'var surfing;',
+      'var circuittraininggyms;',
+      'var fitness;',
+      'var martialarts;'
     ],
-    rules: ['((((soccer || professional_sports_teams) || ((amateur_sports_teams || tennis) || ((pool_halls || beach_volleyball) || (fencing_clubs || physical_therapy)))) || ((kickboxing || circuit_training_gyms) || ((boxing || boot_camps) || ((cardio_classes || interval_training_gyms) || ((barre_classes || trainers) || ((spin_classes || cycling_classes) || ((gyms || fitness___instruction) || ((pilates || squash) || ((martial_arts || dance_studios) || ((surfing || muay_thai) || ((weight_loss_centers || sports_clubs) || ((aerial_fitness || pole_dancing_classes) || (brazilian_jiu_jitsu || community_centers))))))))))))) || (climbing || rock_climbing)) || (((badminton || parks) || (golf || bowling)) || fitness___instruction)']
+    rules: ['(((amateursportsteams || religiousschools) || ((physicaltherapy || fencing) || ((beachvolleyball || football) || tennis))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((badminton || healthtrainers) || ((bootcamps || pilates) || ((trampoline || dancestudio) || ((cyclingclasses || cardioclasses) || ((barreclasses || sports_clubs) || ((active || weightlosscenters) || ((yoga || aerialfitness) || ((surfing || fitness) || (martialarts || circuittraininggyms)))))))))))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((healthtrainers || poledancingclasses) || ((bootcamps || pilates) || ((dancestudio || brazilianjiujitsu) || ((cyclingclasses || cardioclasses) || ((barreclasses || intervaltraininggyms) || ((sports_clubs || weightlosscenters) || ((aerialfitness || communitycenters) || ((squash || surfing) || ((fitness || martialarts) || circuittraininggyms)))))))))));']
   }
 };
 
