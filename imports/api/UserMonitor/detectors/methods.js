@@ -81,7 +81,8 @@ const keyvalues2vardecl = function (obj) {
   let vardecl = [];
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      vardecl.push("var " + key + " = " + obj[key] + ";")
+      let value = (typeof obj[key] === 'string' || obj[key] instanceof String) ? `"${obj[key]}"` : obj[key];
+      vardecl.push(`var ${key} = ${value};`);
     }
   }
   return vardecl;
