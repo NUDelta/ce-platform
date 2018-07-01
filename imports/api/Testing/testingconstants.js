@@ -60,43 +60,43 @@ let DETECTORS = {
       'var parks;',
       'var playgrounds;'
     ],
-    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields)']
+    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields);']
   },
   niceish_day: {
     _id: 'x7EgLErQx3qmiemqt',
     description: 'niceish_day',
     variables: ['var clouds;', 'var clear;', 'var daytime;'],
-    rules: ['daytime && (clouds || clear)']
+    rules: ['daytime && (clouds || clear);']
   },
   night: {
     _id: 'Wth3TB9Lcf6me6vgy',
     description: 'places where it\'s nighttime,',
     variables: ['var nighttime;'],
-    rules: ['(nighttime)']
+    rules: ['(nighttime);']
   },
   sunset: {
     _id: '44EXNzHS7oD2rbF68',
     description: 'places where it\'s sunset,',
     variables: ['var sunset;', 'var clear;'],
-    rules: ['sunset && clear']
+    rules: ['sunset && clear;']
   },
   daytime: {
     _id: 'tyZMZvPKkkSPR4FpG',
     description: 'places where it\'s daytime,',
     variables: ['var daytime;'],
-    rules: ['daytime']
+    rules: ['daytime;']
   },
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: ' libaries,',
     variables: ['var  libraries;'],
-    rules: [' libraries']
+    rules: [' libraries;']
   },
   gym: {
     _id: '3XqHN8A4EpCZRpegS',
     description: ' gym',
     variables: ['var  gyms;'],
-    rules: [' gyms']
+    rules: [' gyms;']
   },
   produce: {
     _id: 'xDtnmQW3PBMuqq9pW',
@@ -109,31 +109,31 @@ let DETECTORS = {
       'var farmersmarket;',
       'var organic_stores;'
     ],
-    rules: ['communitygardens || ((intlgrocery || ethicgrocery) || ((markets || grocery) || (farmersmarket || organic_stores)))']
+    rules: ['communitygardens || ((intlgrocery || ethicgrocery) || ((markets || grocery) || (farmersmarket || organic_stores)));']
   },
   rainbow: {
     _id: 'ksxGTXMaSpCFdmqqN',
     description: 'rainbow flag',
     variables: ['var gaybars;'],
-    rules: ['gaybars']
+    rules: ['gaybars;']
   },
   drugstore: {
     _id: 'k8KFfv3ATtbg2tnFB',
     description: 'drugstores',
     variables: ['var drugstores;', 'var pharmacy;'],
-    rules: ['(drugstores || pharmacy)']
+    rules: ['(drugstores || pharmacy);']
   },
   costume_store: {
     _id: 'ECPk2mjuHJtrMotGg',
     description: 'costume_store',
     variables: ['var costumes;', 'var partysupplies;'],
-    rules: ['(partysupplies || costumes)']
+    rules: ['(partysupplies || costumes);']
   },
   irish: {
     _id: '5CJGGtjqyY89n55XP',
     description: 'irish',
     variables: ['var irish_pubs;', 'var irish;'],
-    rules: ['(irish_pubs || irish)']
+    rules: ['(irish_pubs || irish);']
   },
   hair_salon: {
     _id: 'S8oZZwAWpFo5qGq87',
@@ -145,7 +145,7 @@ let DETECTORS = {
       'var hair;',
       'var barbers;'
     ],
-    rules: ['menshair || ((hairstylists || hair_extensions) || ((hair || barbers) || blowoutservices))']
+    rules: ['menshair || ((hairstylists || hair_extensions) || ((hair || barbers) || blowoutservices));']
   },
   gas_station: {
     _id: 'CctuBr3GtSXPkzNDQ',
@@ -162,7 +162,7 @@ let DETECTORS = {
       'var coffeeshops;',
       'var coffeeteasupplies;'
     ],
-    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes)']
+    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
   },
   bank: {
     _id: 'qR9s4EtPngjZeEp9u',
@@ -185,7 +185,7 @@ let DETECTORS = {
       'var pubs;',
       'var beer_and_wine;'
     ],
-    rules: ['(beergardens || beertours) || ((sportsbars || bars) || ((irish_pubs || breweries) || ((divebars || beerbar) || ((pubs || beer_and_wine) || beergarden))))']
+    rules: ['(beergardens || beertours) || ((sportsbars || bars) || ((irish_pubs || breweries) || ((divebars || beerbar) || ((pubs || beer_and_wine) || beergarden))));']
   },
   train: {
     _id: '2wH5bFr77ceho5BgF',
@@ -202,7 +202,7 @@ let DETECTORS = {
       'var hiking;',
       'var gardens;'
     ],
-    rules: ['(campgrounds || parks) || ((hiking || gardens) || zoos)']
+    rules: ['(campgrounds || parks) || ((hiking || gardens) || zoos);']
   },
   dinning_hall: {
     _id: 'sSK7rbbC9sHQBN94Y',
@@ -212,7 +212,7 @@ let DETECTORS = {
       'var cafeteria;',
       'var food_court;'
     ],
-    rules: ['(diners || restaurants || cafeteria || food_court)']
+    rules: ['(diners || restaurants || cafeteria || food_court);']
   },
   castle: {
     _id: 'gDcxZQ49QrwxzY7Ye',
@@ -226,7 +226,7 @@ let DETECTORS = {
       'var churches;',
       'var mosques;'
     ],
-    rules: ['(mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques)']
+    rules: ['(mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques);']
   },
   bar: {
     _id: '6urWtr6Tasohdb43u',
@@ -258,7 +258,7 @@ let DETECTORS = {
       'var gaybars;',
       'var whiskeybars;'
     ],
-    rules: ['((champagne_bars || cocktailbars) || ((barcrawl || pianobars) || ((tikibars || nightlife) || ((poolhalls || island_pub) || ((speakeasies || irish) || ((clubcrawl || pubs) || (gaybars || whiskeybars))))))) || ((beergardens || beertours) || ((sportsbars || bars) || ((brasseries || irish_pubs) || ((breweries || divebars) || ((poolhalls || beerbar) || ((pubs || beer_and_wine) || (distilleries || beergarden)))))))']
+    rules: ['((champagne_bars || cocktailbars) || ((barcrawl || pianobars) || ((tikibars || nightlife) || ((poolhalls || island_pub) || ((speakeasies || irish) || ((clubcrawl || pubs) || (gaybars || whiskeybars))))))) || ((beergardens || beertours) || ((sportsbars || bars) || ((brasseries || irish_pubs) || ((breweries || divebars) || ((poolhalls || beerbar) || ((pubs || beer_and_wine) || (distilleries || beergarden)))))));']
   },
   grocery: {
     _id: 'N5H9w632dbyhqHEsi',
@@ -279,31 +279,31 @@ let DETECTORS = {
       'var organic_stores;',
       'var publicmarkets;'
     ],
-    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))))']
+    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
   },
   lake: {
     _id: '9iEpW4mb4ysHY5thP',
     description: 'lake',
     variables: ['var lakes;'],
-    rules: ['(lakes)']
+    rules: ['(lakes);']
   },
   rainy: {
     _id: 'puLHKiGkLCJWpKc62',
     description: 'rainy',
     variables: ['var rain;'],
-    rules: ['(rain)']
+    rules: ['(rain);']
   },
   sunny: {
     _id: '6vyrBtdDAyRArMasj',
     description: 'clear',
     variables: ['var clear;', 'var daytime;'],
-    rules: ['(clear && daytime)']
+    rules: ['(clear && daytime);']
   },
   cloudy: {
     _id: 'sorCvK53fyi5orAmj',
     description: 'clouds',
     variables: ['var clouds;', 'var daytime;'],
-    rules: ['(clouds && daytime)']
+    rules: ['(clouds && daytime);']
   },
   restaurant: {
     _id: 'tR4e2c7PPjWACwX87',
@@ -372,11 +372,11 @@ let DETECTORS = {
       'var cafes;',
       'var hakka;'
     ],
-    rules: ['italian = (pastashops || pizza) || ((sandwiches || delis) || ((italian || restaurants) || ((delicatessen || cheesesteaks) || ((catering || tuscan) || (hotdog || salad)))))',
-      'generic_restaurant = (spanish || newcanadian) || ((dimsum || shanghainese) || ((uzbek || cambodian) || ((himalayan || italian) || ((hungarian || persian) || ((kosher || modern_european) || ((steak || seafood) || ((tapasmallplates || african) || ((basque || chinese) || (french || bangladeshi)))))))))',
-      'lunch_places = (scottish || greek) || ((dominican || sandwiches) || ((vegan || indpak) || ((thai || delis) || ((hotel_bar || mediterranean) || ((gluten_free || buffets) || ((pakistani || vegetarian) || ((soup || halal) || ((delicatessen || wraps) || ((japacurry || catering) || ((cafes || hakka) || salad))))))))))',
-      'asian_places = (taiwanese || hkcafe) || ((burmese || indonesian) || ((dimsum || food_court) || ((buffets || cantonese) || ((asianfusion || malaysian) || ((singaporean || chinese) || (szechuan || panasian))))))',
-      '(italian || generic_restaurant) || (asian_places || lunch_places)'
+    rules: ['italian = (pastashops || pizza) || ((sandwiches || delis) || ((italian || restaurants) || ((delicatessen || cheesesteaks) || ((catering || tuscan) || (hotdog || salad)))));',
+      'generic_restaurant = (spanish || newcanadian) || ((dimsum || shanghainese) || ((uzbek || cambodian) || ((himalayan || italian) || ((hungarian || persian) || ((kosher || modern_european) || ((steak || seafood) || ((tapasmallplates || african) || ((basque || chinese) || (french || bangladeshi)))))))));',
+      'lunch_places = (scottish || greek) || ((dominican || sandwiches) || ((vegan || indpak) || ((thai || delis) || ((hotel_bar || mediterranean) || ((gluten_free || buffets) || ((pakistani || vegetarian) || ((soup || halal) || ((delicatessen || wraps) || ((japacurry || catering) || ((cafes || hakka) || salad))))))))));',
+      'asian_places = (taiwanese || hkcafe) || ((burmese || indonesian) || ((dimsum || food_court) || ((buffets || cantonese) || ((asianfusion || malaysian) || ((singaporean || chinese) || (szechuan || panasian))))));',
+      '(italian || generic_restaurant) || (asian_places || lunch_places);'
     ]
   },
   exercising: {
@@ -417,7 +417,7 @@ let DETECTORS = {
       'var fitness;',
       'var martialarts;'
     ],
-    rules: ['(((amateursportsteams || religiousschools) || ((physicaltherapy || fencing) || ((beachvolleyball || football) || tennis))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((badminton || healthtrainers) || ((bootcamps || pilates) || ((trampoline || dancestudio) || ((cyclingclasses || cardioclasses) || ((barreclasses || sports_clubs) || ((active || weightlosscenters) || ((yoga || aerialfitness) || ((surfing || fitness) || (martialarts || circuittraininggyms)))))))))))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((healthtrainers || poledancingclasses) || ((bootcamps || pilates) || ((dancestudio || brazilianjiujitsu) || ((cyclingclasses || cardioclasses) || ((barreclasses || intervaltraininggyms) || ((sports_clubs || weightlosscenters) || ((aerialfitness || communitycenters) || ((squash || surfing) || ((fitness || martialarts) || circuittraininggyms)))))))))))']
+    rules: ['(((amateursportsteams || religiousschools) || ((physicaltherapy || fencing) || ((beachvolleyball || football) || tennis))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((badminton || healthtrainers) || ((bootcamps || pilates) || ((trampoline || dancestudio) || ((cyclingclasses || cardioclasses) || ((barreclasses || sports_clubs) || ((active || weightlosscenters) || ((yoga || aerialfitness) || ((surfing || fitness) || (martialarts || circuittraininggyms)))))))))))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((healthtrainers || poledancingclasses) || ((bootcamps || pilates) || ((dancestudio || brazilianjiujitsu) || ((cyclingclasses || cardioclasses) || ((barreclasses || intervaltraininggyms) || ((sports_clubs || weightlosscenters) || ((aerialfitness || communitycenters) || ((squash || surfing) || ((fitness || martialarts) || circuittraininggyms)))))))))));']
   }
 };
 
@@ -590,11 +590,16 @@ function createBumped() {
       let newVars = JSON.parse(JSON.stringify(DETECTORS[place[0]]['variables']));
       newVars.push('var ' + relationship + ';');
 
+      let newRules = JSON.parse(JSON.stringify(DETECTORS[place[0]]['rules']));
+      let lastRule = newRules.pop();
+      lastRule = `${relationship} && ${lastRule}`;
+      newRules.push(lastRule);
+
       let detector = {
         '_id': Random.id(),
         'description': DETECTORS[place[0]].description + relationship,
         'variables': newVars,
-        'rules': ['(' + DETECTORS[place[0]].rules[0] + ' && ' + relationship + ')']
+        'rules': newRules
       };
       DETECTORS[place[0] + relationship] = detector;
 
