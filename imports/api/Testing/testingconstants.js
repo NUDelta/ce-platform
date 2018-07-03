@@ -599,7 +599,14 @@ function createBumped() {
       newVars.push('var ' + relationship + ';');
 
       let newRules = JSON.parse(JSON.stringify(DETECTORS[place[0]]['rules']));
+      // modify last detector rule
+      // when rules has a flat structure where rules.length == 1, last rule is the predicate
+      // i.e. ['(diners || restaurants || cafeteria || food_court);']
+      // when rules have a nested structure where rules.length > 1, last rule is the predicate
+      // i.e. ['worship_places = (buddhist_temples || churches);', '(worship_places || landmarks);']
       let lastRule = newRules.pop();
+      // each rule has a `;` at end, i.e. (rain && park);
+      // in order to modify the rule, must add relationship predicate preceding the rule
       lastRule = `${relationship} && ${lastRule}`;
       newRules.push(lastRule);
 

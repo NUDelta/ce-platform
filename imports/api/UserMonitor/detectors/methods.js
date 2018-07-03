@@ -74,6 +74,12 @@ const applyDetector = function (userAffordances, varDecl, rules) {
 };
 
 /**
+ * Takes a keyvalues object (i.e. JSON) and converts it to a javascript variable declaration.
+ * For example,
+ * If the keyvalues were
+ * {daytime: true, hour: 13, sunset_predicted_weather: "rain"}
+ * The function would output
+ * ['var daytime = true', 'var hour = 13', 'var sunset_predicted_weather = "rain"']
  * @param {Object} obj - key values that come from /location_keyvalues/{lat}/{lng}
  * @return {[String]} vardecl - each element has the form "var key = value;"
  */
@@ -81,7 +87,10 @@ const keyvalues2vardecl = function (obj) {
   let vardecl = [];
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
+      // ensures that a value of type string will remain that type in the javascript variable declaration
+      // i.e. sunset_predicted_weather: "rain" will convert to 'var sunset_predicted_weather = "rain"']
       let value = (typeof obj[key] === 'string' || obj[key] instanceof String) ? `"${obj[key]}"` : obj[key];
+
       vardecl.push(`var ${key} = ${value};`);
     }
   }
