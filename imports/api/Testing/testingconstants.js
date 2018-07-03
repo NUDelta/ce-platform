@@ -947,7 +947,7 @@ let EXPERIENCES = {
     notificationText: "Food fight!",
     callbacks: [{
         trigger: "cb.incidentFinished()",
-        function: sendNotificationFoodFight.toString();
+        function: sendNotificationFoodFight.toString()
     }]
   }
 };
