@@ -10,6 +10,7 @@ import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/method
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
+import {serverLog} from "../../logs";
 
 
 /**
@@ -284,6 +285,7 @@ export const createIncidentFromExperience = (experience) => {
  * @returns {object} need object
  */
 export const getNeedFromIncidentId = (iid, needName) => {
+  serverLog.call({message: `IID ${iid}`});
   let incident = Incidents.findOne(iid);
   let output = undefined;
 
