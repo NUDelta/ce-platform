@@ -3,6 +3,7 @@ import { Meteor } from "meteor/meteor";
 import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
+import {Detectors} from "../UserMonitor/detectors/detectors";
 
 
 let LOCATIONS = {
@@ -583,7 +584,14 @@ function createBumped() {
   };
 
   let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg', 'lovesMaxine'];
-  let places = [['bar', 'bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
+  let places = [
+    ["bar", "at a bar"],  // like Cheers!
+    ["coffee", "at a coffee shop"],
+    ["grocery", "at a grocery store"],
+    ["restaurant", "at a restaurant"],
+    ["train", "commuting"],
+    ["exercising", "exercising"]
+  ];
   _.forEach(relationships, (relationship) => {
     _.forEach(places, (place) => {
 
@@ -647,8 +655,17 @@ let sendNotificationSunset = function (sub) {
   notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
+let sendNotificationFoodFight = function (sub) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+};
+
+
 let EXPERIENCES = {
   bumped: createBumped(),
+  storyTime: createStorytime(),
   sunset: {
     _id: Random.id(),
     name: 'Sunset',
@@ -785,7 +802,7 @@ let EXPERIENCES = {
       function: sendNotificationScavenger.toString()
     }]
   },
-  'natureHunt': {
+  natureHunt: {
     _id: Random.id(),
     name: 'Nature Scavenger Hunt',
     participateTemplate: 'scavengerHuntParticipate',
@@ -897,7 +914,42 @@ let EXPERIENCES = {
       function: sendNotificationScavenger.toString()
     }]
   },
-  'storyTime': createStorytime(),
+  foodfight: {
+    _id: Random.id(),
+    name: "Food Fight!",
+    participateTemplate: "scavengerHuntParticipate",
+    resultsTemplate: "scavengerHunt",
+    contributionTypes: [
+      {
+        needName: "foodPhoto",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're eating?"
+        },
+        numberNeeded: 1
+      },
+      {
+        needName: "foodPhoto",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're eating?"
+        },
+        numberNeeded: 1
+      }
+    ],
+    description: "Food fight!",
+    notificationText: "Food fight!",
+    callbacks: [{
+        trigger: "cb.incidentFinished()",
+        function: sendNotificationFoodFight.toString();
+    }]
+  }
 };
 
 export const CONSTANTS = {
