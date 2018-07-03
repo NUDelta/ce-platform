@@ -33,6 +33,12 @@ Meteor.methods({
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
   },
+  startHalfHalf() {
+    let exp = CONSTANTS.EXPERIENCES.halfhalf;
+    Experiences.insert(exp);
+    let incident = createIncidentFromExperience(exp);
+    startRunningIncident(incident);
+  }
 });
 
 /* FIXME: Experiences are not workable, as the detector ids have changed

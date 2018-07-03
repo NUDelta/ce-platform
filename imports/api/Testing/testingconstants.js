@@ -669,6 +669,12 @@ let sendNotificationFoodFight = function (sub) {
   notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
+let sendNotificationHalfHalf = function (sub) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'View your two halves, side-by-side!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+};
 
 let EXPERIENCES = {
   bumped: createBumped(),
@@ -695,6 +701,30 @@ let EXPERIENCES = {
     callbacks: [{
       trigger: 'cb.incidentFinished()',
       function: sendNotificationSunset.toString()
+    }]
+  },
+  halfhalf: {
+    _id: Random.id(),
+    name: 'Daytime',
+    participateTemplate: 'halfhalfPhoto', // TODO: add halfhalf in templates
+    resultsTemplate: 'sunset',  // FIXME: make separate results template
+    contributionTypes: [{
+      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.daytime._id,  // For testing during workday
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 0, // no need to delay if its daytime outside
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
     }]
   },
   scavengerHunt: {
