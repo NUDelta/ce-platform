@@ -314,6 +314,7 @@ export const getNeedDelay = (iid, needName) => {
   let notificationDelayOutput = 0; // default to no delay if notificationDelay is not found
 
   _.forEach(incident.contributionTypes, (need) => {
+    // set notification delay and terminate for loop early if need names match
     if (need.needName === needName) {
       notificationDelayOutput = need.notificationDelay;
       return false;
