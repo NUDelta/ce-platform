@@ -4,12 +4,12 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser } from '../../OCEManager/OCEs/methods'
+import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
+    '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
-import { Availability } from "../../OpportunisticCoordinator/databaseHelpers";
 import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
 
@@ -31,25 +31,15 @@ Meteor.methods({
  * @param callback {function} callback function to run after code completion
  */
 export const onLocationUpdate = (uid, lat, lng, callback) => {
-  serverLog.call({message: `removing ${ uid } from all availabilities.`});
+  serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
 
-  //TODO: this could def be a cleaner call or its own function
-  let availabilityObjects = Availability.find().fetch();
-  _.forEach(availabilityObjects, (av) => {
-    _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
-    });
-  });
+  // clear users current availabilities
+  clearAvailabilitiesForUser(uid);
 
-  getAffordancesFromLocation(lat, lng, function (affordances) {
-    let delay = CONFIG.CONTEXT_DELAY;
-    let user = Meteor.users.findOne(uid);
-    serverLog.call({message: "affordances found for " + user});
+  // get affordances and begin coordination process
+  getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
+    // attempt to find a user with the given uid
+    let user = Meteor.users.findOne({_id: uid});
 
     if (user) {
       // get affordances via affordance aware
@@ -61,19 +51,17 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       updateLocationInDb(uid, lat, lng, affordances);
       callback(uid);
 
-      Meteor.setTimeout(function() {
-        let newAffs = Locations.findOne({uid: user._id}).affordances;
-        let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
+      // clear assignments and begin matching
+      let newAffs = Locations.findOne({uid: user._id}).affordances;
+      let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
 
-        let sharedAffs = [];
-        _.forEach(sharedKeys, (key) => {
-          sharedAffs[key] = newAffs[key];
-        });
+      let sharedAffs = [];
+      _.forEach(sharedKeys, (key) => {
+        sharedAffs[key] = newAffs[key];
+      });
 
-        console.log("on location change");
-        updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
-        sendToMatcher(uid, sharedAffs);
-      }, delay*60000);
+      updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
+      sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
     }
   });
 };
@@ -83,21 +71,37 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
  * location update and sends found matches to the OpportunisticCoordinator.
  *
  * @param uid {string} uid of user who's location just changed
- * @param lat {float} latitude of new location
- * @param lng {float} longitude of new location
+ * @param affordances {object} dictionary of user's affordances
+ * @param currLocation {object} current location of user as object with latitude/longitude keys and float values.
  */
-const sendToMatcher = (uid, affordances) => {
+const sendToMatcher = (uid, affordances, currLocation) => {
   // should check whether a user is available before sending to OpportunisticCoordinator
   // TODO: replace false with config.debug global setting
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
+    // get availabilities
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary);
+
+    // get delays for each incident-need pair
+    let incidentDelays = {};
+    _.forEach(availabilityDictionary, (needs, iid) => {
+      // create empty need object for each iid
+      incidentDelays[iid] = {};
+
+      // find and add delays for each need
+      _.forEach(needs, (individualNeed) => {
+        incidentDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
+      });
+    });
+
+    // start coordination process
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays, currLocation);
+  } else {
+    serverLog.call({ message: `user ${ uid } cannot participate yet.`})
   }
 };
 
-// TODO: implement this
 /**
  * Returns whether a user can participate based on when they were last notified/last participated.
  * Debug mode shortens the time between experiences for easier debugging.
@@ -105,9 +109,10 @@ const sendToMatcher = (uid, affordances) => {
  * @param uid {string} uid of user who's location just changed
  * @returns {boolean} whether a user can participate in an experience
  */
-const userIsAvailableToParticipate = (uid) => {
+export const userIsAvailableToParticipate = (uid) => {
   let time = 60 * 1000;
 
+  // adjust time for dev vs prod deployment (lower in dev for testing)
   if (CONFIG.MODE === "DEV") {
     time = time * 2;
   } else if (CONFIG.MODE === "PROD") {
@@ -116,7 +121,35 @@ const userIsAvailableToParticipate = (uid) => {
     time = time * 65;
   }
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time};
+  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time;
+};
+
+/**
+ * Computes distance between a start and end location in meters using the haversine forumla.
+ *
+ *  @param start {object} object with starting latitude/longitude keys and float values.
+ *  @param end {object} object with ending latitude/longitude keys and float values.
+ *  @returns {number} absolute distance between start and end in meters.
+ */
+export const distanceBetweenLocations = (start, end) => {
+  const r = 6378137.0; // Earth’s mean radius in meters
+  const degToRad = Math.PI / 180; // Degree to radian conversion.
+
+  // compute differences and latitudes in degrees
+  const dLat = (end.latitude - start.latitude) * degToRad;
+  const dLng = (end.longitude - start.longitude) * degToRad;
+  const lat1 = start.latitude * degToRad;
+  const lat2 = end.latitude * degToRad;
+
+  // compute c
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  // return distance in meters
+  return r * c;
+};
 
 /**
  * Updates the location for a user in the database.

@@ -1,501 +1,441 @@
-import {addContribution} from '../OCEManager/OCEs/methods';
-import {Submissions} from "../OCEManager/currentNeeds";
-import {Meteor} from "meteor/meteor";
+import { Meteor } from "meteor/meteor";
+
+import { Submissions } from "../OCEManager/currentNeeds";
+
+import { addContribution } from '../OCEManager/OCEs/methods';
+import {Detectors} from "../UserMonitor/detectors/detectors";
+
 
 let LOCATIONS = {
-  'park': {lat: 42.056838, lng: -87.675940},
-  'lakefill': {lat: 42.054902, lng: -87.670197},
-  'burgers': {lat: 42.046131, lng: -87.681559},
-  'grocery': {lat: 42.047621, lng: -87.679488},
+  'park': {
+    lat: 42.056838,
+    lng: -87.675940
+  },
+  'lakefill': {
+    lat: 42.054902,
+    lng: -87.670197
+  },
+  'burgers': {
+    lat: 42.046131,
+    lng: -87.681559
+  },
+  'grocery': {
+    lat: 42.047621,
+    lng: -87.679488
+  }
 };
 
 let USERS = {
-  'garrett': {
+  garrett: {
     username: 'garrett',
     password: 'password',
   },
-  'garretts_brother': {
+  garretts_brother: {
     username: 'garretts_brother',
     password: 'password',
   },
-  'meg': {
+  meg: {
     username: 'meg',
     password: 'password',
   },
-  'megs_sister': {
+  megs_sister: {
     username: 'megs_sister',
     password: 'password',
   },
-  'andrew': {
+  andrew: {
     username: 'andrew',
     password: 'password',
   },
-  'josh': {
+  josh: {
     username: 'josh',
     password: 'password',
   }
 };
 
 let DETECTORS = {
-  'field': {
-    '_id': 'rEbK6WMQnPPAGAXMX',
-    'description': 'fields',
-    'variables': [
-      'var baseball_fields;',
-      'var stadiums___arenas;',
-      'var soccer;',
-      'var parks;'
+  field: {
+    _id: 'XeepEbMjjW8yPzSAo',
+    description: 'fields',
+    variables: ['var stadiumsarenas;',
+      'var baseballfields;',
+      'var parks;',
+      'var playgrounds;'
     ],
-    'rules': [
-      '(parks || soccer || baseball_fields || stadiums___arenas)'
-    ]
+    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields);']
   },
-  'niceish_day': {
-    '_id': 'x7EgLErQx3qmiemqt',
-    'description': 'niceish_day',
-    'variables': [
-      'var clouds;',
-      'var clear;',
-      'var daytime;'
-    ],
-    'rules': [
-      'daytime && (clouds || clear)'
-    ]
+  niceish_day: {
+    _id: 'x7EgLErQx3qmiemqt',
+    description: 'niceish_day',
+    variables: ['var clouds;', 'var clear;', 'var daytime;'],
+    rules: ['daytime && (clouds || clear);']
   },
-  'night': {
-    '_id': 'Wth3TB9Lcf6me6vgy',
-    'description': 'places where it\'s nighttime,',
-    'variables': [
-      'var nighttime;',
-    ],
-    'rules': [
-      '(nighttime)'
-    ]
+  night: {
+    _id: 'Wth3TB9Lcf6me6vgy',
+    description: 'places where it\'s nighttime,',
+    variables: ['var nighttime;'],
+    rules: ['(nighttime);']
   },
-  'sunset': {
-    '_id': '44EXNzHS7oD2rbF68',
-    'description': 'places where it\'s sunset,',
-    'variables': [
-      'var sunset;',
-      'var clear;',
-    ],
-    'rules': [
-      'sunset && clear'
-    ]
+  sunset: {
+    _id: '44EXNzHS7oD2rbF68',
+    description: 'places where it\'s sunset,',
+    variables: ['var sunset;', 'var clear;'],
+    rules: ['sunset && clear;']
   },
-  'daytime': {
-    '_id': 'tyZMZvPKkkSPR4FpG',
-    'description': 'places where it\'s daytime,',
-    'variables': [
-      'var daytime;'
-    ],
-    'rules': [
-      'daytime'
-    ]
+  daytime: {
+    _id: 'tyZMZvPKkkSPR4FpG',
+    description: 'places where it\'s daytime,',
+    variables: ['var daytime;'],
+    rules: ['daytime;']
   },
-  'library': {
-    '_id': '5LqfPRajiQRe9BwBT',
-    'description': ' libaries,',
-    'variables': [
-      'var  libraries;'
-    ],
-    'rules': [
-      ' libraries'
-    ]
+  library: {
+    _id: '5LqfPRajiQRe9BwBT',
+    description: ' libaries,',
+    variables: ['var  libraries;'],
+    rules: [' libraries;']
   },
-  'gym': {
-    '_id': '3XqHN8A4EpCZRpegS',
-    'description': ' gym',
-    'variables': [
-      'var  gyms;'
-    ],
-    'rules': [
-      ' gyms'
-    ]
+  gym: {
+    _id: '3XqHN8A4EpCZRpegS',
+    description: ' gym',
+    variables: ['var  gyms;'],
+    rules: [' gyms;']
   },
-  'produce': {
-    '_id': 'oHCMYfBBcaphXqQnT',
-    'description': ' places where you can find fuits and veggies',
-    'variables': [
+  produce: {
+    _id: 'xDtnmQW3PBMuqq9pW',
+    description: 'places to find fruits and veggies',
+    variables: ['var communitygardens;',
+      'var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
       'var grocery;',
-      'var organic_stores;',
-      'var fruits___veggies;',
-      'var farmers_market;'
+      'var farmersmarket;',
+      'var organic_stores;'
     ],
-    'rules': [
-      '(grocery || organic_stores || fruits___veggies || farmers_market)'
-    ]
+    rules: ['communitygardens || ((intlgrocery || ethicgrocery) || ((markets || grocery) || (farmersmarket || organic_stores)));']
   },
-  'rainbow': {
-    '_id': 'ksxGTXMaSpCFdmqqN',
-    'description': 'rainbow flag',
-    'variables': [
-      'var gay_bars;'
-    ],
-    'rules': [
-      'gay_bars'
-    ]
+  rainbow: {
+    _id: 'ksxGTXMaSpCFdmqqN',
+    description: 'rainbow flag',
+    variables: ['var gaybars;'],
+    rules: ['gaybars;']
   },
-  'drugstore': {
-    '_id': 'k8KFfv3ATtbg2tnFB',
-    'description': 'drugstores',
-    'variables': [
-      'var drugstores;',
-      'var pharmacy;'
-    ],
-    'rules': [
-      '(drugstores || pharmacy)'
-    ]
+  drugstore: {
+    _id: 'k8KFfv3ATtbg2tnFB',
+    description: 'drugstores',
+    variables: ['var drugstores;', 'var pharmacy;'],
+    rules: ['(drugstores || pharmacy);']
   },
-  'costume_store': {
-    '_id': 'ECPk2mjuHJtrMotGg',
-    'description': 'costume_store',
-    'variables': [
-      'var costumes;',
-      'var party_supplies;'
-    ],
-    'rules': [
-      '(party_supplies || costumes)'
-    ]
+  costume_store: {
+    _id: 'ECPk2mjuHJtrMotGg',
+    description: 'costume_store',
+    variables: ['var costumes;', 'var partysupplies;'],
+    rules: ['(partysupplies || costumes);']
   },
-  'irish': {
-    '_id': '5CJGGtjqyY89n55XP',
-    'description': 'irish',
-    'variables': [
-      'var irish_pub;',
-      'var irish;'
-    ],
-    'rules': [
-      '(irish_pub || irish)'
-    ]
+  irish: {
+    _id: '5CJGGtjqyY89n55XP',
+    description: 'irish',
+    variables: ['var irish_pubs;', 'var irish;'],
+    rules: ['(irish_pubs || irish);']
   },
-  'hair_salon': {
-    '_id': 'eG4no7zpSnthwwcv5',
-    'description': 'hairsalon',
-    'variables': [
-      'var men_s_hair_salons;',
-      'var hair_salons;',
-      'var hair_stylists;',
-      'var blow_dry_out_services;',
+  hair_salon: {
+    _id: 'S8oZZwAWpFo5qGq87',
+    description: 'hairsalon',
+    variables: ['var menshair;',
+      'var hairstylists;',
+      'var hair_extensions;',
+      'var blowoutservices;',
+      'var hair;',
       'var barbers;'
     ],
-    'rules': [
-      '(men_s_hair_salons || hair_salons || hair_stylists || blow_dry_out_services || barbers)'
-    ]
+    rules: ['menshair || ((hairstylists || hair_extensions) || ((hair || barbers) || blowoutservices));']
   },
-  'gas_station': {
-    '_id': 'xZBgjwdPw8rtg86eo',
-    'description': 'gas_stations',
-    'variables': [
-      'var gas_stations;'
-    ],
-    'rules': [
-      'gas_stations'
-    ]
+  gas_station: {
+    _id: 'CctuBr3GtSXPkzNDQ',
+    description: 'gas station',
+    variables: ['var servicestations;'],
+    rules: ['servicestations;']
   },
-  'coffee': {
-    '_id': '5DrGWRyMpu7WWFo7m',
-    'description': 'coffee',
-    'variables': [
-      'var coffee___tea;',
+  coffee: {
+    _id: 'saxQsfSaBiHHoSEYK',
+    description: 'coffee',
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
       'var cafes;',
-      'var coffeeshops;'
+      'var coffeeshops;',
+      'var coffeeteasupplies;'
     ],
-    'rules': [
-      '(coffee___tea || cafes || coffeeshops)'
-    ]
+    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
   },
-  'bank': {
-    '_id': 'qR9s4EtPngjZeEp9u',
-    'description': 'banks',
-    'variables': [
-      'var banks___credit_unions;'
-    ],
-    'rules': [
-      'banks___credit_unions'
-    ]
+  bank: {
+    _id: 'qR9s4EtPngjZeEp9u',
+    description: 'banks',
+    variables: ['var banks;'],
+    rules: ['banks;']
   },
-  'beer': {
-    '_id': 'i3yMtjdjTyJQRendD',
-    'description': 'beer',
-    'variables': [
-      'var beer_bar;',
+  beer: {
+    _id: 'zrban5i9M6adgwMaK',
+    description: 'beer',
+    variables: ['var beergardens;',
+      'var beertours;',
+      'var sportsbars;',
       'var bars;',
-      'var sports_bars;',
-      'var dive_bars;',
-      'var irish_pub;',
+      'var irish_pubs;',
+      'var breweries;',
+      'var divebars;',
+      'var beerbar;',
+      'var beergarden;',
       'var pubs;',
-      'var beer_tours;',
-      'var beer_garden;',
-      'var beer;',
-      'var breweries;'
+      'var beer_and_wine;'
     ],
-    'rules': [
-      '(bars || sports_bars || beer_bar || beer || dive_bars || irish_pub || pubs || beer_tours || beer_garden || breweries)'
-    ]
+    rules: ['(beergardens || beertours) || ((sportsbars || bars) || ((irish_pubs || breweries) || ((divebars || beerbar) || ((pubs || beer_and_wine) || beergarden))));']
   },
-  'train': {
-    '_id': 'mu8JcPRF7mEernyNQ',
-    'description': 'trains',
-    'variables': [
-      'var public_transportation;',
-      'var trains;',
-      'var train_stations;'
-    ],
-    'rules': [
-      '(trains || train_stations || public_transportation)'
-    ]
+  train: {
+    _id: '2wH5bFr77ceho5BgF',
+    description: 'trains',
+    variables: ['var publictransport;', 'var trainstations;', 'var trains;'],
+    rules: ['(trainstations || trains) || publictransport;']
   },
-  'forest': {
-    '_id': 'FfZnzP72ip4SLY4eR',
-    'description': 'forests',
-    'variables': [
-      'var campgrounds;',
-      'var zoos;',
+  forest: {
+    _id: 'dhQf4PLNAGLy8QDJe',
+    description: 'forests',
+    variables: ['var campgrounds;',
       'var parks;',
-      'var botanical_gardens;',
-      'var hiking;'
+      'var zoos;',
+      'var hiking;',
+      'var gardens;'
     ],
-    'rules': [
-      '(campgrounds || botanical_gardens || hiking || zoos || parks)'
-    ]
+    rules: ['(campgrounds || parks) || ((hiking || gardens) || zoos);']
   },
-  'dinning_hall': {
-    '_id': 'sSK7rbbC9sHQBN94Y',
-    'description': 'dinninghalls',
-    'variables': [
-      'var diners;',
+  dinning_hall: {
+    _id: 'sSK7rbbC9sHQBN94Y',
+    description: 'dinninghalls',
+    variables: ['var diners;',
       'var restaurants;',
       'var cafeteria;',
       'var food_court;'
     ],
-    'rules': [
-      '(diners || restaurants || cafeteria || food_court)'
-    ]
+    rules: ['(diners || restaurants || cafeteria || food_court);']
   },
-  'castle': {
-    '_id': 'kMNownPaYRKxBXJfm',
-    'description': 'castle',
-    'variables': [
-      'var religious_schools;',
-      'var churches;',
-      'var landmarks___historical_buildings;',
+  castle: {
+    _id: 'gDcxZQ49QrwxzY7Ye',
+    description: 'castles',
+    variables: ['var mini_golf;',
       'var buddhist_temples;',
-      'var hindu_temples;',
+      'var religiousschools;',
       'var synagogues;',
+      'var hindu_temples;',
+      'var weddingchappels;',
+      'var churches;',
       'var mosques;'
     ],
-    'rules': [
-      '(mosques || hindu_temples || buddhist_temples || synagogues || churches || religious_schools || landmarks___historical_buildings)'
-    ]
+    rules: ['(mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques);']
   },
-  'bar': {
-    '_id': 'JLq2pGg8fizWGdZe2',
-    'description': 'bars',
-    'variables': [
-      'var dive_bars;',
-      'var gay_bars;',
-      'var country_dance_halls;',
-      'var tapas_bars;',
-      'var pool_halls;',
+  bar: {
+    _id: '6urWtr6Tasohdb43u',
+    description: 'bars',
+    variables: ['var beergardens;',
+      'var beertours;',
       'var champagne_bars;',
-      'var club_crawl;',
-      'var tiki_bars;',
-      'var sports_bars;',
-      'var island_pub;',
-      'var karaoke;',
-      'var piano_bars;',
-      'var pop_up_restaurants;',
-      'var irish_pub;',
-      'var speakeasies;',
-      'var lounges;',
-      'var pubs;',
-      'var whiskey_bars;',
-      'var music_venues;',
-      'var bar_crawl;',
-      'var irish;',
-      'var cocktail_bars;',
+      'var cocktailbars;',
+      'var sportsbars;',
       'var bars;',
-      'var nightlife;'
+      'var barcrawl;',
+      'var pianobars;',
+      'var brasseries;',
+      'var irish_pubs;',
+      'var tikibars;',
+      'var nightlife;',
+      'var breweries;',
+      'var divebars;',
+      'var poolhalls;',
+      'var island_pub;',
+      'var beerbar;',
+      'var speakeasies;',
+      'var irish;',
+      'var pubs;',
+      'var beer_and_wine;',
+      'var distilleries;',
+      'var beergarden;',
+      'var clubcrawl;',
+      'var gaybars;',
+      'var whiskeybars;'
     ],
-    'rules': [
-      '(dive_bars || gay_bars || tapas_bars || country_dance_halls || pool_halls || champagne_bars || club_crawl || tiki_bars || sports_bars || island_pub || karaoke || piano_bars || pop_up_restaurants || irish_pub || speakeasies || lounges || pubs || whiskey_bars || music_venues || bar_crawl || irish || bars || nightlife || cocktail_bars)'
-    ]
+    rules: ['((champagne_bars || cocktailbars) || ((barcrawl || pianobars) || ((tikibars || nightlife) || ((poolhalls || island_pub) || ((speakeasies || irish) || ((clubcrawl || pubs) || (gaybars || whiskeybars))))))) || ((beergardens || beertours) || ((sportsbars || bars) || ((brasseries || irish_pubs) || ((breweries || divebars) || ((poolhalls || beerbar) || ((pubs || beer_and_wine) || (distilleries || beergarden)))))));']
   },
-  'grocery': {
-    '_id': 'jtCXkXBi4k6oJerxP',
-    'description': 'grocery',
-    'variables': [
-      'var ethnic_grocery;',
-      'var international_grocery;',
+  grocery: {
+    _id: 'N5H9w632dbyhqHEsi',
+    description: 'grocery shopping',
+    variables: ['var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var wholesalers;',
+      'var pharmacy;',
       'var grocery;',
-      'var fruits___veggies;',
-      'var farmers_market;'
+      'var farmersmarket;',
+      'var convenience;',
+      'var importedfood;',
+      'var herbsandspices;',
+      'var drugstores;',
+      'var seafoodmarkets;',
+      'var marketstalls;',
+      'var organic_stores;',
+      'var publicmarkets;'
     ],
-    'rules': [
-      '(farmers_market || international_grocery || ethnic_grocery || grocery || fruits___veggies)'
-    ]
+    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
   },
-  'lake': {
-    '_id': '9iEpW4mb4ysHY5thP',
-    'description': 'lake',
-    'variables': [
-      'var lakes;'
-    ],
-    'rules': [
-      '(lakes)'
-    ]
+  lake: {
+    _id: '9iEpW4mb4ysHY5thP',
+    description: 'lake',
+    variables: ['var lakes;'],
+    rules: ['(lakes);']
   },
-  'rainy': {
-    '_id': 'puLHKiGkLCJWpKc62',
-    'description': 'rainy',
-    'variables': [
-      'var rain;'
-    ],
-    'rules': [
-      '(rain)'
-    ]
+  rainy: {
+    _id: 'puLHKiGkLCJWpKc62',
+    description: 'rainy',
+    variables: ['var rain;'],
+    rules: ['(rain);']
   },
-  'sunny': {
-    '_id': '6vyrBtdDAyRArMasj',
-    'description': 'clear',
-    'variables': [
-      'var clear;',
-      'var daytime;',
-    ],
-    'rules': [
-      '(clear && daytime)'
-    ]
+  sunny: {
+    _id: '6vyrBtdDAyRArMasj',
+    description: 'clear',
+    variables: ['var clear;', 'var daytime;'],
+    rules: ['(clear && daytime);']
   },
-  'cloudy': {
-    '_id': 'sorCvK53fyi5orAmj',
-    'description': 'clouds',
-    'variables': [
-      'var clouds;',
-      'var daytime;',
-    ],
-    'rules': [
-      '(clouds && daytime)'
-    ]
+  cloudy: {
+    _id: 'sorCvK53fyi5orAmj',
+    description: 'clouds',
+    variables: ['var clouds;', 'var daytime;'],
+    rules: ['(clouds && daytime);']
   },
-
-  'restaurant': {
-    '_id': 'MzyBGuc6fLGR8Kjii',
-    'description': 'restaurant',
-    'variables': [
-      'var american__traditional_;',
-      'var american__new_;',
-      'var latin_american;',
+  restaurant: {
+    _id: 'tR4e2c7PPjWACwX87',
+    description: 'eating restaurant',
+    variables: ['var italian;',
+      'var generic_restaurant;',
+      'var lunch_places;',
+      'var asian_places;',
+      'var pastashops;',
       'var pizza;',
-      'var pasta_shops;',
-      'var burgers;',
-      'var italian;',
-      'var dominican;',
-      'var trinidadian;',
-      'var halal;',
-      'var food_court;',
-      'var arabian;',
-      'var pakistani;',
-      'var indian;',
-      'var himalayan_nepalese;',
-      'var afghan;',
-      'var persian_iranian;',
-      'var lebanese;',
-      'var vegetarian;',
-      'var middle_eastern;',
-      'var kosher;',
-      'var chinese;',
-      'var mediterranean;',
-      'var filipino;',
-      'var puerto_rican;',
-      'var ethnic_food;',
-      'var african;',
-      'var soul_food;',
-      'var pub_food;',
-      'var buffets;',
-      'var mongolian;',
-      'var brazilian;',
-      'var hot_pot;',
-      'var fast_food;',
-      'var vegan;',
-      'var sushi_bars;',
-      'var salad;',
-      'var japanese;',
-      'var korean;',
+      'var spanish;',
+      'var newcanadian;',
+      'var scottish;',
+      'var greek;',
+      'var taiwanese;',
+      'var hkcafe;',
       'var sandwiches;',
-      'var imported_food;',
+      'var delis;',
+      'var dimsum;',
+      'var shanghainese;',
+      'var dominican;',
+      'var burmese;',
+      'var indonesian;',
       'var restaurants;',
-      'var diners;',
-      'var barbeque;',
-      'var soup;'
+      'var uzbek;',
+      'var cambodian;',
+      'var vegan;',
+      'var indpak;',
+      'var food_court;',
+      'var delicatessen;',
+      'var cheesesteaks;',
+      'var himalayan;',
+      'var thai;',
+      'var buffets;',
+      'var cantonese;',
+      'var catering;',
+      'var tuscan;',
+      'var hotdog;',
+      'var salad;',
+      'var hungarian;',
+      'var persian;',
+      'var hotel_bar;',
+      'var mediterranean;',
+      'var asianfusion;',
+      'var malaysian;',
+      'var kosher;',
+      'var modern_european;',
+      'var gluten_free;',
+      'var singaporean;',
+      'var chinese;',
+      'var szechuan;',
+      'var panasian;',
+      'var steak;',
+      'var seafood;',
+      'var pakistani;',
+      'var vegetarian;',
+      'var tapasmallplates;',
+      'var african;',
+      'var soup;',
+      'var halal;',
+      'var basque;',
+      'var french;',
+      'var bangladeshi;',
+      'var wraps;',
+      'var japacurry;',
+      'var cafes;',
+      'var hakka;'
     ],
-    'rules': [
-      '( american__traditional_ || american__new_ || latin_american || pizza || pasta_shops || burgers || italian || dominican || trinidadian || halal || food_court || arabian || pakistani || indian || himalayan_nepalese || afghan || persian_iranian || lebanese || vegetarian || middle_eastern || kosher || chinese || mediterranean || filipino || puerto_rican || ethnic_food || african || soul_food || pub_food || buffets || mongolian || brazilian || hot_pot || fast_food || vegan || sushi_bars || salad || japanese || korean || sandwiches || imported_food || restaurants || diners || barbeque || soup )'
+    rules: ['italian = (pastashops || pizza) || ((sandwiches || delis) || ((italian || restaurants) || ((delicatessen || cheesesteaks) || ((catering || tuscan) || (hotdog || salad)))));',
+      'generic_restaurant = (spanish || newcanadian) || ((dimsum || shanghainese) || ((uzbek || cambodian) || ((himalayan || italian) || ((hungarian || persian) || ((kosher || modern_european) || ((steak || seafood) || ((tapasmallplates || african) || ((basque || chinese) || (french || bangladeshi)))))))));',
+      'lunch_places = (scottish || greek) || ((dominican || sandwiches) || ((vegan || indpak) || ((thai || delis) || ((hotel_bar || mediterranean) || ((gluten_free || buffets) || ((pakistani || vegetarian) || ((soup || halal) || ((delicatessen || wraps) || ((japacurry || catering) || ((cafes || hakka) || salad))))))))));',
+      'asian_places = (taiwanese || hkcafe) || ((burmese || indonesian) || ((dimsum || food_court) || ((buffets || cantonese) || ((asianfusion || malaysian) || ((singaporean || chinese) || (szechuan || panasian))))));',
+      '(italian || generic_restaurant) || (asian_places || lunch_places);'
     ]
-  }, 'exercising':
-    {
-      "_id": "cTJmt5D6JGMNiJ3Yq",
-      "description": "exercising",
-      "variables": [
-        'var fitness___instruction;',
-        'var climbing;',
-        'var rock_climbing;',
-        'var badminton;',
-        'var parks;',
-        'var golf;',
-        'var bowling;',
-        'var kickboxing;',
-        'var circuit_training_gyms;',
-        'var soccer;',
-        'var professional_sports_teams;',
-        'var boxing;',
-        'var boot_camps;',
-        'var amateur_sports_teams;',
-        'var tennis;',
-        'var cardio_classes;',
-        'var interval_training_gyms;',
-        'var pool_halls;',
-        'var beach_volleyball;',
-        'var fencing_clubs;',
-        'var physical_therapy;',
-        'var barre_classes;',
-        'var trainers;',
-        'var spin_classes;',
-        'var cycling_classes;',
-        'var gyms;',
-        'var pilates;',
-        'var squash;',
-        'var martial_arts;',
-        'var dance_studios;',
-        'var surfing;',
-        'var muay_thai;',
-        'var weight_loss_centers;',
-        'var sports_clubs;',
-        'var aerial_fitness;',
-        'var pole_dancing_classes;',
-        'var brazilian_jiu_jitsu;',
-        'var community_centers;'
-      ],
-      "rules": [
-        "((((soccer || professional_sports_teams) || ((amateur_sports_teams || tennis) || ((pool_halls || beach_volleyball) || (fencing_clubs || physical_therapy)))) || ((kickboxing || circuit_training_gyms) || ((boxing || boot_camps) || ((cardio_classes || interval_training_gyms) || ((barre_classes || trainers) || ((spin_classes || cycling_classes) || ((gyms || fitness___instruction) || ((pilates || squash) || ((martial_arts || dance_studios) || ((surfing || muay_thai) || ((weight_loss_centers || sports_clubs) || ((aerial_fitness || pole_dancing_classes) || (brazilian_jiu_jitsu || community_centers))))))))))))) || (climbing || rock_climbing)) || (((badminton || parks) || (golf || bowling)) || fitness___instruction)"
-      ]
-    }
-
+  },
+  exercising: {
+    _id: '6eY5Z5vrfHcNrefM6',
+    description: 'exercising',
+    variables: ['var boxing;',
+      'var kickboxing;',
+      'var amateursportsteams;',
+      'var religiousschools;',
+      'var muaythai;',
+      'var gyms;',
+      'var physicaltherapy;',
+      'var fencing;',
+      'var tennis;',
+      'var healthtrainers;',
+      'var poledancingclasses;',
+      'var badminton;',
+      'var beachvolleyball;',
+      'var football;',
+      'var bootcamps;',
+      'var pilates;',
+      'var dancestudio;',
+      'var brazilianjiujitsu;',
+      'var trampoline;',
+      'var cyclingclasses;',
+      'var cardioclasses;',
+      'var barreclasses;',
+      'var intervaltraininggyms;',
+      'var sports_clubs;',
+      'var weightlosscenters;',
+      'var active;',
+      'var aerialfitness;',
+      'var communitycenters;',
+      'var yoga;',
+      'var squash;',
+      'var surfing;',
+      'var circuittraininggyms;',
+      'var fitness;',
+      'var martialarts;'
+    ],
+    rules: ['(((amateursportsteams || religiousschools) || ((physicaltherapy || fencing) || ((beachvolleyball || football) || tennis))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((badminton || healthtrainers) || ((bootcamps || pilates) || ((trampoline || dancestudio) || ((cyclingclasses || cardioclasses) || ((barreclasses || sports_clubs) || ((active || weightlosscenters) || ((yoga || aerialfitness) || ((surfing || fitness) || (martialarts || circuittraininggyms)))))))))))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((healthtrainers || poledancingclasses) || ((bootcamps || pilates) || ((dancestudio || brazilianjiujitsu) || ((cyclingclasses || cardioclasses) || ((barreclasses || intervaltraininggyms) || ((sports_clubs || weightlosscenters) || ((aerialfitness || communitycenters) || ((squash || surfing) || ((fitness || martialarts) || circuittraininggyms)))))))))));']
+  }
 };
 
-
 function createStorytime() {
-
   let storytimeCallback = function (sub) {
-
     Meteor.users.update({
       _id: sub.uid
     }, {
-      $set: {'profile.staticAffordances.participatedInStorytime': true}
+      $set: {
+        'profile.staticAffordances.participatedInStorytime': true
+      }
     });
 
-    var affordance = sub.content.affordance;
+    // set affordances for storytime
+    let affordance = sub.content.affordance;
 
+    // configure specific detectors
     let options = [
       ['Drinking butterbeer', CONSTANTS.DETECTORS.beer_storytime._id],
       ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
@@ -509,25 +449,42 @@ function createStorytime() {
       return x[1] !== affordance;
     });
 
+    // add need if not all pages are done
     let needName = 'page' + Random.id(3);
-    if (cb.numberOfSubmissions() == 7) {
+    if (cb.numberOfSubmissions() === 7) {
       needName = 'pageFinal'
     }
+
+    // create and add contribution
     let contribution = {
-      needName: needName, situation: {detector: affordance, number: '1'},
+      needName: needName,
+      situation: {
+        detector: affordance,
+        number: '1'
+      },
       toPass: {
         instruction: sub.content.sentence,
-        dropdownChoices: {name: 'affordance', options: options}
-      }, numberNeeded: 1
+        dropdownChoices: {
+          name: 'affordance',
+          options: options
+        }
+      },
+      numberNeeded: 1,
+      notificationDelay: 10 // 10 seconds for debugging
     };
+
     addContribution(sub.iid, contribution);
   };
 
+  // setup places and detectors for storytime
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
-  let detectorIds = ["N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie", "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"];
+  let detectorIds = [
+    "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
+    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"
+  ];
+
   let i = 0;
   _.forEach(places, (place) => {
-
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push('var participatedInStorytime;');
 
@@ -551,45 +508,53 @@ function createStorytime() {
     ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
   ];
 
+  // create story starting point
   let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
-
+  // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
       return x.uid;
     });
-    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
+    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
+      '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
-
-  let experience = {
+  // create and return storytime experience
+  return {
     _id: "wGWTtQjmgEYSuRtrk", //Random.id(),
     name: 'Storytime',
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
-      needName: 'pageOne', situation: {detector: DETECTORS.niceish_day._id, number: '1'},
+      needName: 'pageOne',
+      situation: {
+        detector: DETECTORS.niceish_day._id,
+        number: '1'
+      },
       toPass: {
         instruction: firstSentence,
         firstSentence: firstSentence,
         dropdownChoices: {
-          name: 'affordance', options: dropdownOptions
+          name: 'affordance',
+          options: dropdownOptions
         }
       },
-      numberNeeded: 1
-    },
-    ],
+      numberNeeded: 1,
+      notificationDelay: 10 // 10 seconds for debugging
+    }],
     description: 'We\'re writing a Harry Potter spin-off story',
     notificationText: 'Help write a Harry Potter spin-off story!',
-    callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
-      function: storytimeCallback.toString(),
-    }, {
-      trigger: 'cb.incidentFinished()',
-      function: sendNotification.toString()
-    }]
+    callbacks: [
+      {
+        trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
+        function: storytimeCallback.toString(),
+      },
+      {
+        trigger: 'cb.incidentFinished()',
+        function: sendNotification.toString()
+      }]
   };
-  return experience;
 }
 
 
@@ -608,7 +573,9 @@ function createBumped() {
     console.log("calling the bumped callback!!!");
 
     let otherSub = Submissions.findOne({
-      uid: {$ne: sub.uid},
+      uid: {
+        $ne: sub.uid
+      },
       iid: sub.iid,
       needName: sub.needName
     });
@@ -617,73 +584,111 @@ function createBumped() {
   };
 
   let relationships = ['lovesDTR', 'lovesGarrett', 'lovesMeg', 'lovesMaxine'];
-  let places = [['bar', 'bar'], ['coffee', 'coffee shop'], ['grocery', 'grocery store'], ['restaurant', "restaurant"]];
+  let places = [
+    ["bar", "at a bar"],  // like Cheers!
+    ["coffee", "at a coffee shop"],
+    ["grocery", "at a grocery store"],
+    ["restaurant", "at a restaurant"],
+    ["train", "commuting"],
+    ["exercising", "exercising"]
+  ];
   _.forEach(relationships, (relationship) => {
     _.forEach(places, (place) => {
 
       let newVars = JSON.parse(JSON.stringify(DETECTORS[place[0]]['variables']));
       newVars.push('var ' + relationship + ';');
 
+      let newRules = JSON.parse(JSON.stringify(DETECTORS[place[0]]['rules']));
+      // modify last detector rule
+      // when rules has a flat structure where rules.length == 1, last rule is the predicate
+      // i.e. ['(diners || restaurants || cafeteria || food_court);']
+      // when rules have a nested structure where rules.length > 1, last rule is the predicate
+      // i.e. ['worship_places = (buddhist_temples || churches);', '(worship_places || landmarks);']
+      let lastRule = newRules.pop();
+      // each rule has a `;` at end, i.e. (rain && park);
+      // in order to modify the rule, must add relationship predicate preceding the rule
+      lastRule = `${relationship} && ${lastRule}`;
+      newRules.push(lastRule);
+
       let detector = {
         '_id': Random.id(),
         'description': DETECTORS[place[0]].description + relationship,
         'variables': newVars,
-        'rules': ['(' + DETECTORS[place[0]].rules[0] + ' && ' + relationship + ');']
+        'rules': newRules
       };
       DETECTORS[place[0] + relationship] = detector;
 
       for (let i = 0; i < 1; i++) {
         let need = {
           needName: place[0] + relationship + i,
-          situation: {detector: detector._id, number: '2'},
-          toPass: {instruction: 'You are at a  ' + place[1] + ' at the same time as '},
-          numberNeeded: 2
+          situation: {
+            detector: detector._id,
+            number: '2'
+          },
+          toPass: {
+            instruction: 'You are at a  ' + place[1] + ' at the same time as '
+          },
+          numberNeeded: 2,
+          notificationDelay: 30 // 30 seconds for debugging
         };
+
         let callback = {
           trigger: 'cb.numberOfSubmissions(\'' + place[0] + relationship + i + '\') === 2',
           function: bumpedCallback.toString(),
         };
 
-
         experience.contributionTypes.push(need);
         experience.callbacks.push(callback)
-
       }
-
-
     })
   });
 
   return experience;
-
 }
 
 let sendNotificationScavenger = function (sub) {
-  let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
+
   notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-
 };
+
 let sendNotificationSunset = function (sub) {
-  let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
-  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
+  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+};
+
+let sendNotificationFoodFight = function (sub) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 
 let EXPERIENCES = {
-  'bumped': createBumped(),
-  'sunset': {
+  bumped: createBumped(),
+  storyTime: createStorytime(),
+  sunset: {
     _id: Random.id(),
     name: 'Sunset',
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'sunset',
     contributionTypes: [{
-      needName: 'sunset', situation: {detector: DETECTORS.sunset._id, number: '1'},
-      toPass: {instruction: 'Take a photo of the sunset!'}, numberNeeded: 20
+      needName: 'sunset',
+      situation: {
+        detector: DETECTORS.sunset._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of the sunset!'
+      },
+      numberNeeded: 20,
+      notificationDelay: 0, // no need to delay if its a sunset outside
     }],
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
@@ -692,44 +697,111 @@ let EXPERIENCES = {
       function: sendNotificationSunset.toString()
     }]
   },
-  'scavengerHunt': {
+  scavengerHunt: {
     _id: Random.id(),
     name: 'St. Patrick\'s Day Scavenger Hunt',
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'beer', situation: {detector: DETECTORS.beer._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of beer?'}, numberNeeded: 1
+      needName: 'beer',
+      situation: {
+        detector: DETECTORS.beer._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of beer?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 30, // 30 seconds for debugging
     }, {
-      needName: 'greenProduce', situation: {detector: DETECTORS.produce._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of green vegetables? #leprechaunfood'}, numberNeeded: 1
+      needName: 'greenProduce',
+      situation: {
+        detector: DETECTORS.produce._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
+      },
+      numberNeeded: 1,
+      notificationDelay: 20, // 20 seconds for debugging
     }, {
-      needName: 'coins', situation: {detector: DETECTORS.drugstore._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of chocolate gold coins on display?'}, numberNeeded: 1
+      needName: 'coins',
+      situation: {
+        detector: DETECTORS.drugstore._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of chocolate gold coins on display?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'leprechaun', situation: {detector: DETECTORS.costume_store._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a Leprechaun costume?'}, numberNeeded: 1
+      needName: 'leprechaun',
+      situation: {
+        detector: DETECTORS.costume_store._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a Leprechaun costume?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 15, // 15 seconds for debugging
     }, {
-      needName: 'irishSign', situation: {detector: DETECTORS.irish._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of an Irish sign?'}, numberNeeded: 1
+      needName: 'irishSign',
+      situation: {
+        detector: DETECTORS.irish._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of an Irish sign?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging (passing by)
     }, {
-      needName: 'trimmings', situation: {detector: DETECTORS.hair_salon._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of some Leprechaun beard trimmings?'}, numberNeeded: 1
+      needName: 'trimmings',
+      situation: {
+        detector: DETECTORS.hair_salon._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of some Leprechaun beard trimmings?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
       needName: 'liquidGold',
-      situation: {detector: DETECTORS.gas_station._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'},
-      numberNeeded: 1
+      situation: {
+        detector: DETECTORS.gas_station._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
       needName: 'potOfGold',
-      situation: {detector: DETECTORS.bank._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'},
-      numberNeeded: 1
+      situation: {
+        detector: DETECTORS.bank._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'rainbow', situation: {detector: DETECTORS.rainbow._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a rainbow flag?'}, numberNeeded: 1
-    }
-    ],
+      needName: 'rainbow',
+      situation: {
+        detector: DETECTORS.rainbow._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a rainbow flag?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
+    }],
     description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
     callbacks: [{
@@ -737,40 +809,111 @@ let EXPERIENCES = {
       function: sendNotificationScavenger.toString()
     }]
   },
-  'natureHunt': {
+  natureHunt: {
     _id: Random.id(),
     name: 'Nature Scavenger Hunt',
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'tree', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a tree?'}, numberNeeded: 1
+      needName: 'tree',
+      situation: {
+        detector: DETECTORS.forest._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a tree?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'leaf', situation: {detector: DETECTORS.forest._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of a leaf?'}, numberNeeded: 1
+      needName: 'leaf',
+      situation: {
+        detector: DETECTORS.forest._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of a leaf?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'grass', situation: {detector: DETECTORS.field._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the grass?'}, numberNeeded: 1
+      needName: 'grass',
+      situation: {
+        detector: DETECTORS.field._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the grass?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'lake', situation: {detector: DETECTORS.lake._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the lake?'}, numberNeeded: 1
+      needName: 'lake',
+      situation: {
+        detector: DETECTORS.lake._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the lake?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 10, // 10 seconds for debugging
     }, {
-      needName: 'moon', situation: {detector: DETECTORS.night._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the moon?'}, numberNeeded: 1
+      needName: 'moon',
+      situation: {
+        detector: DETECTORS.night._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the moon?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging
     }, {
-      needName: 'sun', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the sun?'}, numberNeeded: 1
+      needName: 'sun',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the sun?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging
     }, {
-      needName: 'blueSky', situation: {detector: DETECTORS.sunny._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the blue sky?'}, numberNeeded: 1
+      needName: 'blueSky',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the blue sky?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging
     }, {
-      needName: 'clouds', situation: {detector: DETECTORS.cloudy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the clouds?'}, numberNeeded: 1
+      needName: 'clouds',
+      situation: {
+        detector: DETECTORS.cloudy._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the clouds?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging
     }, {
-      needName: 'puddle', situation: {detector: DETECTORS.rainy._id, number: '1'},
-      toPass: {instruction: 'Can you take a photo of the puddle?'}, numberNeeded: 1
-    },
-    ],
+      needName: 'puddle',
+      situation: {
+        detector: DETECTORS.rainy._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you take a photo of the puddle?'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1, // 1 seconds for debugging
+    }],
     description: 'Find an item for a scavenger hunt',
     notificationText: 'Help us out with our nature scavenger hunt',
     callbacks: [{
@@ -778,17 +921,49 @@ let EXPERIENCES = {
       function: sendNotificationScavenger.toString()
     }]
   },
-  'storyTime': createStorytime(),
-
+  foodfight: {
+    _id: Random.id(),
+    name: "Food Fight!",
+    participateTemplate: "scavengerHuntParticipate",
+    resultsTemplate: "scavengerHunt",
+    contributionTypes: [
+      {
+        needName: "foodPhoto",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're eating?"
+        },
+        numberNeeded: 1
+      },
+      {
+        needName: "foodPhoto",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're eating?"
+        },
+        numberNeeded: 1
+      }
+    ],
+    description: "Food fight!",
+    notificationText: "Food fight!",
+    callbacks: [{
+        trigger: "cb.incidentFinished()",
+        function: sendNotificationFoodFight.toString()
+    }]
+  }
 };
-
 
 export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
   'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
-
 };
 
 // Meteor.call('locations.updateUserLocationAndAffordances', {

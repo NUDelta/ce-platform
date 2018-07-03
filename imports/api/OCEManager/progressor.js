@@ -1,10 +1,6 @@
 // Imports needed for the callbacks
-import { addContribution } from "imports/api/OCEManager/OCEs/methods.js";
-import { CONSTANTS } from "../Testing/testingconstants";
-import { notify } from "../OpportunisticCoordinator/server/noticationMethods";
-
-import {Incidents} from "imports/api/OCEManager/OCEs/experiences.js";
-import {Submissions} from "./currentNeeds";
+import { Incidents } from "./OCEs/experiences";
+import { Submissions } from "./currentNeeds";
 
 const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({

@@ -5,25 +5,21 @@ import { Assignments } from "./databaseHelpers";
 import { Availability } from "./databaseHelpers";
 import { Incidents } from "../OCEManager/OCEs/experiences.js";
 import { Submissions } from "../OCEManager/currentNeeds.js";
-import { Users } from "../UserMonitor/users/users.js";
-import { numUnfinishedNeeds } from "../OCEManager/progressorHelper";
+import { numUnfinishedNeeds } from "../OCEManager/progressor";
 import { addEmptySubmissionsForNeed } from "../OCEManager/OCEs/methods.js";
 
-import {
-  _addActiveIncidentToUsers,
-  _removeActiveIncidentFromUsers,
-  _removeIncidentFromUsersEntirely
-} from "../UserMonitor/users/methods";
+import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from
+    "../UserMonitor/users/methods";
 import { doesUserMatchNeed } from "../OCEManager/OCEs/methods";
 import { CONFIG } from "../config";
+import { serverLog } from "../logs";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   if (incident) {
-    let currentNeed = incident.contributionTypes.find(function(x) {
+    return incident.contributionTypes.find(function(x) {
       return x.needName === needName;
     });
-    return currentNeed;
   } else {
     return null;
   }
@@ -48,15 +44,14 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   _.forEach(availability, av => {
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
-      return;
-      //TODO: does this return actuall prevent it from going into this loop?
+      return; // continue forEach
     }
 
     let updatedNeeds = { iid: iid, needUserMaps: [] };
-
     _.forEach(av.needUserMaps, needUserMap => {
       let needName = needUserMap.needName;
 
+      // user to availability if they can fulfill needName
       if (availabilityDictionary[iid].includes(needName)) {
         Availability.update(
           {
@@ -66,13 +61,14 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           {
             $addToSet: { "needUserMaps.$.uids": uid }
           },
-          (err, docs) => {
+          (err) => {
             if (err) {
               console.log("error,", err);
             }
           }
         );
 
+        // add needs and users who can fulfill need to current incident
         let newusers = new Set(needUserMap.uids);
         newusers.add(uid);
         updatedNeeds.needUserMaps.push({
@@ -82,6 +78,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
       }
     });
 
+    // add needs and users for current incident
     updatedEntries.push(updatedNeeds);
   });
 
@@ -99,10 +96,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  * @param uid {string} user to update assignment for
  * @param affordances {[string]} list of user's affordances as an array of key/values
  */
-export const updateAssignmentDbdAfterUserLocationChange = (
-  uid,
-  affordances
-) => {
+export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => {
   let currentAssignments = Assignments.find({
     needUserMaps: {
       $elemMatch: {
@@ -113,9 +107,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (
 
 
   _.forEach(currentAssignments, assignment => {
-
     _.forEach(assignment.needUserMaps, needUserMap => {
-
       let matchPredicate = doesUserMatchNeed(
         uid,
         affordances,

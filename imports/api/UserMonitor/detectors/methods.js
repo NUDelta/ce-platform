@@ -1,7 +1,8 @@
-import { Meteor } from 'meteor/meteor';
-import { Detectors } from './detectors'
-import {serverLog} from "../../logs";
+import { HTTP } from 'meteor/http';
 
+import { Detectors } from './detectors'
+
+import { serverLog } from "../../logs";
 
 /**
  * Gets affordances based on location, then calls a callback
@@ -11,11 +12,16 @@ import {serverLog} from "../../logs";
  * @param {function} callback takes two arguments: uid and affordances
  */
 export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
+  // setup url with lat and lng from tracking package
   let url = `http://affordanceaware.herokuapp.com/location_keyvalues/${ lat }/${ lng }`;
-  request(url, Meteor.bindEnvironment(function (error, response, body) {
+
+  // make request to affordance aware
+  HTTP.get(url, {}, (error, response) => {
     let affordances = {};
+
+    // check if valid response from affordance aware
     if (!error && response.statusCode === 200) {
-      affordances = JSON.parse(body);
+      affordances = JSON.parse(response.content);
       if (affordances !== Object(affordances)) {
         serverLog.call({
           message: "Locations/methods expected type Object but did not receive an Object, doing nothing"
@@ -28,9 +34,9 @@ export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
     }
 
     // callback with either retrieved affordances or empty object
-    serverLog.call({  message: `Affordances successfully retrieved for ${ lat }, ${ lng }.` });
+    serverLog.call({  message: `Affordances successfully retrieved for ${ uid } at ${ lat }, ${ lng }.` });
     callback(uid, affordances);
-  }));
+  });
 };
 
 /**
@@ -68,6 +74,12 @@ const applyDetector = function (userAffordances, varDecl, rules) {
 };
 
 /**
+ * Takes a keyvalues object (i.e. JSON) and converts it to a javascript variable declaration.
+ * For example,
+ * If the keyvalues were
+ * {daytime: true, hour: 13, sunset_predicted_weather: "rain"}
+ * The function would output
+ * ['var daytime = true', 'var hour = 13', 'var sunset_predicted_weather = "rain"']
  * @param {Object} obj - key values that come from /location_keyvalues/{lat}/{lng}
  * @return {[String]} vardecl - each element has the form "var key = value;"
  */
@@ -75,7 +87,11 @@ const keyvalues2vardecl = function (obj) {
   let vardecl = [];
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      vardecl.push("var " + key + " = " + obj[key] + ";")
+      // ensures that a value of type string will remain that type in the javascript variable declaration
+      // i.e. sunset_predicted_weather: "rain" will convert to 'var sunset_predicted_weather = "rain"']
+      let value = (typeof obj[key] === 'string' || obj[key] instanceof String) ? `"${obj[key]}"` : obj[key];
+
+      vardecl.push(`var ${key} = ${value};`);
     }
   }
   return vardecl;

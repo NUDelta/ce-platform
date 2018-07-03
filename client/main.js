@@ -8,6 +8,5 @@ if (Meteor.isDevelopment) {
   Incidents = require('../imports/api/OCEManager/OCEs/experiences.js').Incidents;
   Locations = require('../imports/api/UserMonitor/locations/locations.js').Locations;
   Detectors = require('../imports/api/UserMonitor/detectors/detectors.js').Detectors;
-  TextEntries = require('../imports/api/text-entries/text-entries.js').TextEntries;
   Submissions = require('../imports/api/OCEManager/currentNeeds.js').Submissions;
 }
