@@ -244,7 +244,10 @@ Template.api_custom.events({
   'change input[name=photo]'(event, target) {
     photoUpload(event);
   },
-  'click #openHalfHalfCamera'() {
-    CameraPreview.startCamera({x: 50, y: 50, width: 300, height: 300, toBack: false, previewDrag: true, tapPhoto: true});
+  'click #openHalfHalfCamera'(event, target) {
+    CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
+
+    // above
+    // CameraPreview.startCamera({x: 10, y: 150, width: 300, height: 300, toBack: false, previewDrag: true, tapPhoto: true});
   }
 });

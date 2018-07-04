@@ -40,10 +40,32 @@
       .camera-upload {
         padding-bottom: 1%;
       }
+
+      .camera-overlay {
+        display: grid;
+        grid-gap: 0px;
+        grid-template-columns: 150px 150px;
+        grid-template-rows: 300px;
+        grid-template-areas: "lefthalf righthalf";
+      }
+
+      .lefthalf {
+        grid-area: lefthalf;
+        background: rgba(255,0,0,0.75);
+      }
+
+      .righthalf {
+        grid-area: righthalf;
+        background: rgba(0,255,0,0.75);
+      }
     </style>
   </head>
   <div class="instruction">
     {{this.toPass.instruction}}
+  </div>
+  <div class="camera-overlay">
+    <div class="lefthalf"></div>
+    <div class="righthalf"></div>
   </div>
   <button id="openHalfHalfCamera">Open Camera</button>
 
