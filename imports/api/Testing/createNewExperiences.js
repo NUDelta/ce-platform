@@ -33,8 +33,14 @@ Meteor.methods({
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
   },
-  startHalfHalf() {
-    let exp = CONSTANTS.EXPERIENCES.halfhalf;
+  startHalfHalfDay() {
+    let exp = CONSTANTS.EXPERIENCES.halfhalfDay;
+    Experiences.insert(exp);
+    let incident = createIncidentFromExperience(exp);
+    startRunningIncident(incident);
+  },
+  startHalfHalfNight() {
+    let exp = CONSTANTS.EXPERIENCES.halfhalfNight;
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);

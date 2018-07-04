@@ -703,15 +703,39 @@ let EXPERIENCES = {
       function: sendNotificationSunset.toString()
     }]
   },
-  halfhalf: {
+  halfhalfDay: {
     _id: Random.id(),
-    name: 'Daytime',
+    name: 'Half Half Daytime',
     participateTemplate: 'halfhalfPhoto', // TODO: add halfhalf in templates
     resultsTemplate: 'sunset',  // FIXME: make separate results template
     contributionTypes: [{
       needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
       situation: {
         detector: DETECTORS.daytime._id,  // For testing during workday
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 0, // no need to delay if its daytime outside
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
+    }]
+  },
+  halfhalfNight: {
+    _id: Random.id(),
+    name: 'Half Half Nighttime',
+    participateTemplate: 'halfhalfPhoto', // TODO: add halfhalf in templates
+    resultsTemplate: 'sunset',  // FIXME: make separate results template
+    contributionTypes: [{
+      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.night._id,  // For testing during evening
         number: '1'
       },
       toPass: {
