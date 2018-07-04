@@ -243,5 +243,8 @@ Template.api_custom.events({
   },
   'change input[name=photo]'(event, target) {
     photoUpload(event);
+  },
+  'click #openHalfHalfCamera'() {
+    CameraPreview.startCamera({x: 50, y: 50, width: 300, height: 300, toBack: false, previewDrag: true, tapPhoto: true});
   }
 });
