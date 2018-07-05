@@ -8,6 +8,7 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
+import { Images } from '../../api/ImageUpload/images.js';
 import { log } from '../../api/logs.js';
 
 import { CONSTANTS } from "../../api/Testing/testingconstants";
@@ -89,6 +90,7 @@ function clearDatabase () {
   Locations.remove({});
   Incidents.remove({});
   Detectors.remove({});
+  Images.remove({});
 }
 
 function createTestExperiences(){
