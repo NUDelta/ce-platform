@@ -1,5 +1,6 @@
 import { FS } from 'meteor/cfs:base-package';
 import { gm } from 'meteor/cfs:graphicsmagick';
+import {serverLog} from "../logs";
 
 const createSquareThumb = (fileObj, readStream, writeStream) => {
   const size = '400';
@@ -11,6 +12,7 @@ const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
   transformer.stream().pipe(writeStream);
   transformer.identify({ bufferStream: true }, FS.Utility.safeCallback((err, metadata) => {
     if (err) {
+      serverLog.call({message: "Failed in addDimensionsAndOrient"})
       // handle the error
     } else {
       const orientation = metadata.Orientation;

@@ -166,6 +166,7 @@ Template.api_custom.events({
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       const picture = event.target.photo && event.target.photo.files[index];
+      debugger;
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
