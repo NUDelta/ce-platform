@@ -245,9 +245,9 @@ Template.api_custom.events({
     photoUpload(event);
   },
   'click #openHalfHalfCamera'(event, target) {
-    CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
+    // CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
 
     // above
-    // CameraPreview.startCamera({x: 10, y: 150, width: 300, height: 300, toBack: false, previewDrag: true, tapPhoto: true});
+    CameraPreview.startCamera({x: 10, y: 150, width: 300, height: 300, toBack: true, previewDrag: true, tapPhoto: true});
   }
 });
