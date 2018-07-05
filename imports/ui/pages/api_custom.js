@@ -245,9 +245,27 @@ Template.api_custom.events({
     photoUpload(event);
   },
   'click #openHalfHalfCamera'(event, target) {
-    // CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
+    CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
+  },
+  'click #takeHalfHalfPhoto'(event,target) {
+    CameraPreview.takePicture(function(imgData){
+      document.getElementById('originalPicture').src = 'data:image/jpeg;base64,' + imgData;
+    });
+  },
+  'click #hideCamera'(event, target) {
+    // hide Camera and overlay
+    CameraPreview.hide();
+    document.getElementsByClassName('camera-overlay').hide();
 
-    // above
-    CameraPreview.startCamera({x: 10, y: 150, width: 300, height: 300, toBack: true, previewDrag: true, tapPhoto: true});
+    // show photos
+    document.getElementById('originalPicture').show();
+  },
+  'click #showCamera'(event, target) {
+    // show Camera and overlay
+    CameraPreview.show();
+    document.getElementsByClassName('camera-overlay').show();
+
+    // hide photos
+    document.getElementById('originalPicture').hide();
   }
 });
