@@ -10,6 +10,13 @@
     <input type="file" name="photo" required>
 </template>
 
+<template name="halfhalfCamera">
+  {{> loadingOverlay}}
+  <label id={{this}} class="fileinput">
+    <img src="#" id="originalPicture"/>
+  </label>
+</template>
+
 <template name="text">
     <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
           placeholder="Write here" required></textarea>

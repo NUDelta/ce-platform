@@ -52,8 +52,6 @@ Template.storyPage.helpers({
   }
 });
 
-
-
 Template.bumped.helpers({
 
   nameOfFriend() {
