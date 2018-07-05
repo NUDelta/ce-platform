@@ -82,6 +82,38 @@ Template.bumped.helpers({
   }
 });
 
+/**
+ * Convert a base64 string in a Blob according to the data and contentType.
+ *
+ * @param b64Data {String} Pure base64 string without contentType
+ * @param contentType {String} the content type of the file i.e (image/jpeg - image/png - text/plain)
+ * @param sliceSize {Int} SliceSize to process the byteCharacters
+ * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+ * @return Blob
+ */
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  let byteCharacters = atob(b64Data);
+  let byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    let byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    let byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, {type: contentType});
+}
+
 
 
   // data2pass() {
@@ -165,8 +197,23 @@ Template.api_custom.events({
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
-      const picture = event.target.photo && event.target.photo.files[index];
-      debugger;
+      let picture;
+      if (event.target.photo) { // form has input[name=photo]
+        // imageFile
+        picture = event.target.photo.files[index]
+      } else {
+        let ImageURL = $('.fileinput-preview').attr('src');
+        // Split the base64 string in data and contentType
+        let block = ImageURL.split(";");
+        // Get the content type
+        let contentType = block[0].split(":")[1];
+        // get the real base64 content of the file
+        let realData = block[1].split(",")[1];
+
+        picture = b64toBlob(realData, contentType);
+      }
+
+
       // save image and get id of new document
       const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
@@ -248,7 +295,7 @@ Template.api_custom.events({
   },
   'click #takeHalfHalfPhoto'(event,target) {
     CameraPreview.takePicture(function(imgData){
-      document.getElementById('originalPicture').src = 'data:image/jpeg;base64,' + imgData;
+      $('.fileinput-preview').attr('src', 'data:image/jpeg;base64,' + imgData);
     });
   },
   'click #hideCamera'(event, target) {
@@ -257,7 +304,7 @@ Template.api_custom.events({
     document.getElementsByClassName('camera-overlay').hide();
 
     // show photos
-    document.getElementById('originalPicture').show();
+    $('.fileinput-preview').attr('src').show();
   },
   'click #showCamera'(event, target) {
     // show Camera and overlay
@@ -265,6 +312,6 @@ Template.api_custom.events({
     document.getElementsByClassName('camera-overlay').show();
 
     // hide photos
-    document.getElementById('originalPicture').hide();
+    $('.fileinput-preview').attr('src').hide();
   }
 });
