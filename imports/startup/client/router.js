@@ -53,6 +53,7 @@ Router.route('api.custom', {
     this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
     this.subscribe('users.all').wait();
 
@@ -64,6 +65,8 @@ Router.route('api.custom', {
       incident: Incidents.findOne(),
       location: Locations.findOne(),
       notification_log: Notification_log.find().fetch(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
       users: Meteor.users.find().fetch()
     };
   }

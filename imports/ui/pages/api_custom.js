@@ -17,6 +17,7 @@ import { Images } from '../../api/ImageUpload/images.js';
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
+import {Meteor} from "meteor/meteor";
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -82,6 +83,59 @@ Template.bumped.helpers({
   }
 });
 
+Template.halfhalfPhoto.helpers({
+  getName(x){
+    return x.friendName;
+  },
+  getImage(x){
+    return x.image;
+  },
+  getMyImage(x){
+    return x.myImage;
+  },
+  bumpees() {
+    // copied from bumpedResults template helper in api_custom_results.js
+    // TODO: if a total copy, maybe reuse this helper function in both places instead of copying code
+    // TODO: WILL THIS BREAK IF NO SUBMISSIONS EXIST?
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    let otherSubs = this.submissions.filter(function(x){
+      return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
+    });
+
+    let contents = otherSubs.map(function(x){
+      let myInfoDic = mySubs.find(function(y){
+        return y.needName === x.needName;
+      });
+      return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
+    });
+
+    console.log("contents", contents);
+
+    let images = this.images;
+    contents.reverse();
+
+    contents = contents.map(function(x){
+      let img = images.find(function(y){
+        return y._id === x.image;
+      });
+      let myImg = images.find(function(y){
+        return y._id === x.myImage;
+      });
+
+      return {friendName: x.friendName,image: img, myImage: myImg};
+    });
+
+    console.log("contents2", contents);
+    return contents;
+  }
+});
 /**
  * Convert a base64 string in a Blob according to the data and contentType.
  *

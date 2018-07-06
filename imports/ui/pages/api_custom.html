@@ -59,13 +59,22 @@
       }
     </style>
   </head>
+
   <div class="instruction">
     {{this.toPass.instruction}}
   </div>
+  {{#each object in bumpees}}
   <div class="camera-overlay">
-    <div class="lefthalf"></div>
+    <div class="lefthalf">
+      {{#if (getImage object)}}
+        <div style="min-height:150px;display:inline-block;">
+          {{> Template.dynamic template="displayImage" data=(getImage object)}}
+        </div>
+      {{/if}}
+    </div>
     <div class="righthalf"></div>
   </div>
+  {{/each}}
   <form>
     <div class="camera-upload">
       {{> Template.dynamic template="halfhalfCamera" data="proof"}}
