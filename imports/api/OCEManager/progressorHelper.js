@@ -45,7 +45,7 @@ export const getUnfinishedNeedNames = function() {
  *
  * @param mostRecentSub {object} submission db object that was just submitted
  */
-function adminUpdates(mostRecentSub) {
+export const adminUpdates = function(mostRecentSub) {
 
   serverLog.call({message: "inside adminUpdates"});
   Meteor.users.update(
