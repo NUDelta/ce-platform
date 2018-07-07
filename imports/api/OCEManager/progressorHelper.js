@@ -47,7 +47,7 @@ export const getUnfinishedNeedNames = function() {
  */
 function adminUpdates(mostRecentSub) {
 
-  console.log("inside adminUpdates");
+  serverLog.call({message: "inside adminUpdates"});
   Meteor.users.update(
     { _id: mostRecentSub.uid },
     {
