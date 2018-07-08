@@ -42,20 +42,20 @@
       }
 
       .lefthalf {
-        grid-area: lefthalf;
+        grid-area: half0;
         background: transparent;
       }
 
-      .righthalf {
-        grid-area: righthalf;
-        background: rgba(0,255,0,0.25);
+      .half1 {
+        grid-area: half1;
+        background: transparent;
       }
       .camera-overlay {
         display: grid;
         grid-gap: 0px;
         grid-template-columns: 150px 150px;
         grid-template-rows: 300px;
-        grid-template-areas: "lefthalf righthalf";
+        grid-template-areas: "half0 half1";
       }
     </style>
   </head>
@@ -64,16 +64,20 @@
     {{this.toPass.instruction}}
   </div>
   <div class="camera-overlay">
-    <div class="lefthalf">
-      {{#each object in bumpees}}
-      {{#if (getImage object)}}
-        <div style="min-height:150px;display:inline-block;">
-          {{> Template.dynamic template="displayImage" data=(getImage object)}}
-        </div>
-      {{/if}}
+    {{#if notEmpty this.images }}
+      {{#each image in this.images }}
+        {{#if zeroIndex @index }}
+          <div class="half0">
+            {{> Template.dynamic template="displayImage" data=image}}
+          </div>
+        {{else}}
+          <div class="half1"></div>
+        {{/if}}
       {{/each}}
-    </div>
-    <div class="righthalf"></div>
+    {{else}}
+      <div class="half0"></div>
+      <div class="half1"></div>
+    {{/if}}
   </div>
   <form>
     <div class="camera-upload">
@@ -84,6 +88,7 @@
       Submit
     </button>
   </form>
+  <button id="testPhoto">Take Test Photo</button>
   <button id="openHalfHalfCamera">Open Camera</button>
   <button id="takeHalfHalfPhoto">Take Photo</button>
   <button id="hideCamera">hide Camera, show Photo</button>
