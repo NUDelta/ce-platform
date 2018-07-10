@@ -65,8 +65,7 @@ Router.route('api.custom', {
       incident: Incidents.findOne(),
       location: Locations.findOne(),
       notification_log: Notification_log.find().fetch(),
-      images: Images.find({}).fetch(),
-      submissions: Submissions.find({}).fetch(),
+      image: Images.findOne(),  // 0 or 1 submission only, for halfhalf
       users: Meteor.users.find().fetch()
     };
   }
