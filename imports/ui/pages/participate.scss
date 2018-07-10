@@ -50,18 +50,17 @@
     z-index: -1;
   }
 
-  .glyphicon {
+  .glyphicon-camera {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
-  }
-
-  .glyphicon-camera {
     font-size: 35px;
     top: 50%;
     left: 50%;
   }
 
   .glyphicon-remove {
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
     font-size: 20px;
     top: 10%;
     right: 5%;

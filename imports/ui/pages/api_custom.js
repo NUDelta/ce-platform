@@ -157,10 +157,17 @@ Template.halfhalfPhoto.events({
     $('.fileinput-preview').show();
   },
   'click #startCamera'() {
-    $('.fileinput-preview').hide();
     // TODO: position this square photo properly at a responsive xy coordinate
     CameraPreview.startCamera({x: 5, y: 100, width: 300, height:300, camera: "front", tapPhoto: true, previewDrag: false, toBack: true});
     CameraPreview.show();
+    $('.fileinput-preview').hide();
+
+    // show camera control buttons
+    $('#takeHalfHalfPhoto').style.display = "block";
+    $('#retakePhoto').style.display = "block";
+    $('#switchCamera').style.display = "block";
+
+    $('#startCamera').style.display = "none";
   },
   'click #takeHalfHalfPhoto'(event,target) {
     CameraPreview.takePicture(function(imgData){
@@ -176,6 +183,9 @@ Template.halfhalfPhoto.events({
     // document.getElementsByClassName('camera-overlay').show();
     $('.fileinput-preview').hide();
     $('#retakePhoto').hide();
+  },
+  'click #switchCamera'() {
+    CameraPreview.switchCamera();
   }
 });
 
