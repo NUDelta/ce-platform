@@ -17,7 +17,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
-    "build-dev": "meteor build ../ce-platform-ios  --server=http://192.168.1.143:3000",
+    "build-dev": "meteor build ../ce-platform-ios  --server=http://10.105.131.163:3000",
     "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "repository": {
