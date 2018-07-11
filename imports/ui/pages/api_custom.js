@@ -169,7 +169,7 @@ Template.halfhalfPhoto.events({
     CameraPreview.takePicture(function(imgData){
       let rect;
       // first one to take picture, so the left half of image will be cropped and used
-      if (this.image == null) {
+      if (document.getElementById('lefthalf-preview') !== null) {
         let cameraOverlay = document.getElementById('lefthalf-preview');
         rect = cameraOverlay.getBoundingClientRect();
       }
