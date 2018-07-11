@@ -178,7 +178,7 @@ Template.halfhalfPhoto.events({
         let cameraOverlay = document.getElementById('righthalf-preview');
         rect = cameraOverlay.getBoundingClientRect();
       }
-      b64Crop(imgData, rect.width, rect.height, rect.x, rect.y, function(croppedImgUrl) {
+      b64Crop(imgData, rect.offsetWidth, rect.offsetHeight, rect.x, rect.y, function(croppedImgUrl) {
         $('.fileinput-preview').attr('src', croppedImgUrl);
         CameraPreview.hide();
         $('.fileinput-preview').show();
