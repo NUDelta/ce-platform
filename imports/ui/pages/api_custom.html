@@ -66,20 +66,20 @@
     {{this.toPass.instruction}}
   </div>
   <form id="participate">
-    <div class="camera-overlay">
+    <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
       {{#if isNull image}}
-         <div class="lefthalf">
+         <div id="leftHalf" class="lefthalf">
           <label id="lefthalf-preview" class="fileinput">
             <img src="#" class="fileinput-preview"/>
           </label>
          </div>
-        <div class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
+        <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
       {{else}}
-        <div class="lefthalf">
-          {{> Template.dynamic template="displayImage" data=image}}
+        <div id="leftHalf" class="lefthalf">
+          {{> Template.dynamic template="displayFullImage" data=image}}
         </div>
-        <div class="righthalf">
+        <div id="rightHalf" class="righthalf">
          <label id="righthalf-preview" class="fileinput">
             <img src="#" class="fileinput-preview"/>
           </label>
