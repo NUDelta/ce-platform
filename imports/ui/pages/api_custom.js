@@ -154,10 +154,10 @@ Template.halfhalfPhoto.events({
     $('.fileinput-preview').show();
   },
   'click #startCamera'() {
-    let cameraOverlay = document.getElementById('cameraOverlay');
-    let rect = cameraOverlay.getBoundingClientRect();
+    let halfOverlay = document.getElementById('leftHalf');
+    let rect = halfOverlay.getBoundingClientRect();
     CameraPreview.startCamera({
-      x: rect.left, y: rect.top, width: rect.width, height: rect.height, camera: "front",
+      x: rect.left, y: rect.top, width: rect.width*2, height: rect.height, camera: "front",
       tapPhoto: true, previewDrag: false, toBack: true});
     CameraPreview.show();
     $('.fileinput-preview').hide();
@@ -170,13 +170,13 @@ Template.halfhalfPhoto.events({
       let rect;
       // first one to take picture, so the left half of image will be cropped and used
       if (document.getElementById('lefthalf-preview') !== null) {
-        let cameraOverlay = document.getElementById('lefthalf-preview');
-        rect = cameraOverlay.getBoundingClientRect();
+        let halfOverlay = document.getElementById('lefthalf-preview');
+        rect = halfOverlay.getBoundingClientRect();
       }
       // second one to take picture, so the right half of image will be cropped and used
       else {
-        let cameraOverlay = document.getElementById('righthalf-preview');
-        rect = cameraOverlay.getBoundingClientRect();
+        let halfOverlay = document.getElementById('righthalf-preview');
+        rect = halfOverlay.getBoundingClientRect();
       }
       b64Crop(imgData, rect.width, rect.height, rect.x, rect.y, function(croppedImgUrl) {
         $('.fileinput-preview').attr('src', croppedImgUrl);
@@ -277,7 +277,8 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
       x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
       rect_width_int, rect_height_int,    // Crop interpolated rectangle
       0, 0,                               // Place the result at 0, 0 in the canvas,
-      rect_width_int, rect_height_int);   // Crop interpolated rectangle
+      rect_width, rect_height);   // Crop interpolated rectangle
+      // rect_width_int, rect_height_int);   // Crop interpolated rectangle
 
     // Get base64 representation of cropped image
     let cropped_img_base64 = canvas.toDataURL();
