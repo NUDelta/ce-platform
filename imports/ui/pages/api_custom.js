@@ -166,9 +166,7 @@ Template.halfhalfPhoto.events({
     document.getElementById('startCamera').style.display = "none";
   },
   'click #takeHalfHalfPhoto'(event,target) {
-    CameraPreview.takePicture({
-      width: window.screen.width, height: window.screen.height, quality: 85
-    }, function(imgData){
+    CameraPreview.takePicture(function(imgData){
       let rect;
       // first one to take picture, so the left half of image will be cropped and used
       if (document.getElementById('lefthalf-preview') !== null) {
@@ -262,12 +260,11 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     // Required to interpolate rectangle(from screen) into original image
     let x_axis_scale = image.width / window.screen.width;
-    // let x_axis_scale = image.width / window.screen.width;
     let y_axis_scale = image.height / window.screen.height;
 
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * x_axis_scale;
+    let y_coord_int = y_coord * y_axis_scale;
     let rect_width_int = rect_width * x_axis_scale;
     let rect_height_int = rect_height * x_axis_scale;
 
@@ -277,7 +274,10 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     document.getElementById('varIW').value = image.width;
     document.getElementById('varIH').value = image.height;
-    document.getElementById('varRatio').value = x_coord_int;
+    document.getElementById('varXRatio').value = x_axis_scale;
+    document.getElementById('varYRatio').value = y_axis_scale;
+    document.getElementById('varXCoordInt').value = x_coord_int;
+    document.getElementById('varYCoordInt').value = y_coord_int;
     ctx.drawImage(image,
       x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
       rect_width_int, rect_height_int,    // Crop interpolated rectangle
