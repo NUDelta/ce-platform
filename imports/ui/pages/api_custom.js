@@ -267,9 +267,9 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * x_axis_scale;
+    let y_coord_int = y_coord * y_axis_scale;
     let rect_width_int = rect_width * x_axis_scale;
-    let rect_height_int = rect_height * x_axis_scale;
+    let rect_height_int = rect_height * y_axis_scale;
 
     // Set canvas size equivalent to interpolated rectangle size
     canvas.width = rect_width_int;
