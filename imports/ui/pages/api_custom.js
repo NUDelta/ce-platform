@@ -261,7 +261,6 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     // Required to interpolate rectangle(from screen) into original image
     // Use ratio for x-axis, since in iOS, images have aspect ratio closer to "square" than the screen
     let x_axis_scale = image.width / window.screen.width;
-    // let y_axis_scale = image.height / window.screen.height;
 
     // in iOS, images have aspect ratio closer to "square" than screen;
     // thus, the image is placed vertically centered (and horizontally scaled to screen width),
@@ -284,7 +283,6 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     document.getElementById('varSW').value = window.screen.width;
     document.getElementById('varSH').value = window.screen.height;
     document.getElementById('varXRatio').value = x_axis_scale;
-    document.getElementById('varYRatio').value = y_axis_scale;
     document.getElementById('varXCoord').value = x_coord;
     document.getElementById('varYCoord').value = y_coord;
     document.getElementById('varXCoordInt').value = x_coord_int;
