@@ -178,7 +178,7 @@ Template.halfhalfPhoto.events({
         let cameraOverlay = document.getElementById('righthalf-preview');
         rect = cameraOverlay.getBoundingClientRect();
       }
-      b64Crop(imgData, rect.offsetWidth, rect.offsetHeight, rect.x, rect.y, function(croppedImgUrl) {
+      b64Crop(imgData, rect.width, rect.height, rect.x, rect.y, function(croppedImgUrl) {
         $('.fileinput-preview').attr('src', croppedImgUrl);
         CameraPreview.hide();
         $('.fileinput-preview').show();
@@ -232,6 +232,19 @@ function b64toBlob(b64Data, contentType, sliceSize) {
   return new Blob(byteArrays, {type: contentType});
 }
 
+/**
+ * Crop a base64 string image given cropping rectangle parameters
+ *
+ * @param base64PictureData {String} Pure base64 string without contentType
+ * @param rect_width {Number}
+ * @param rect_height {Number}
+ * @param x_coord {Number}
+ * @param y_coord {Number}
+ * @param callback {Function}
+ * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
+ * @return base64imageURL
+ */
+//
 function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, callback) {
 
   // image will contain ORIGINAL image
@@ -247,13 +260,14 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     // Required to interpolate rectangle(from screen) into original image
     let x_axis_scale = image.width / window.screen.width;
-    let y_axis_scale = image.height / window.screen.height;
+    // let x_axis_scale = image.width / window.screen.width;
+    // let y_axis_scale = image.height / window.screen.height;
 
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * y_axis_scale;
+    let y_coord_int = y_coord * x_axis_scale;
     let rect_width_int = rect_width * x_axis_scale;
-    let rect_height_int = rect_height * y_axis_scale;
+    let rect_height_int = rect_height * x_axis_scale;
 
     // Set canvas size equivalent to interpolated rectangle size
     canvas.width = rect_width_int;
@@ -274,6 +288,35 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     return cropped_img_base64;
   };
 };
+
+// cameraPreviewOptions
+//  = {x: 0,y: 70, width: window.screen.width, height: window.screen.width / 1.77 ... }
+// let capturedImage = new Image();
+// capturedImage.src = 'data:image/jpeg;base64,' + imageData;
+// getImagePortion(capturedImage,window.screen.width, window.screen.width/1.77, 0, 650, 2.6)
+// function getImagePortion(imgObj, newWidth, newHeight, startX, startY, ratio){
+//   /* the parameters: - the image element - the new width - the new height - the x point we start taking pixels - the y point we start taking pixels - the ratio */
+//   //set up canvas for thumbnail
+//   let tnCanvas = document.createElement('canvas');
+//   let tnCanvasContext = tnCanvas.getContext('2d');
+//   tnCanvas.width = newWidth;
+//   tnCanvas.height = newHeight;
+//
+//   /* use the sourceCanvas to duplicate the entire image. This step was crucial for iOS4 and under devices.  */
+//   let bufferCanvas = document.createElement('canvas');
+//   let bufferContext = bufferCanvas.getContext('2d');
+//   bufferCanvas.width = imgObj.width;
+//   bufferCanvas.height = imgObj.height;
+//   bufferContext.drawImage(imgObj, 0, 0);
+//
+//   /* now we use the drawImage method to take the pixels from our bufferCanvas and draw them into our thumbnail canvas */
+//   tnCanvasContext.drawImage(bufferCanvas,
+//     startX, startY,
+//     newWidth * ratio, newHeight * ratio,
+//     0, 0,
+//     newWidth, newHeight);
+//   return tnCanvas.toDataURL();
+// }
 
 
 
