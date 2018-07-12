@@ -258,28 +258,30 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
   // Load original image into image element
   image.src = 'data:image/jpeg;base64,' + base64PictureData;
-  image.onload = function(){
-
-    // Required to interpolate rectangle(from screen) into original image
-    let x_axis_scale = image.width / window.screen.width;
-    // let x_axis_scale = image.width / window.screen.width;
-    let y_axis_scale = image.height / window.screen.height;
-
-    // INTERPOLATE
-    let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * y_axis_scale;
-    let rect_width_int = rect_width * x_axis_scale;
-    let rect_height_int = rect_height * y_axis_scale;
-
-    // Set canvas size equivalent to interpolated rectangle size
-    canvas.width = rect_width_int;
-    canvas.height = rect_height_int;
-
-    ctx.drawImage(image,
-      x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
-      rect_width_int, rect_height_int,    // Crop interpolated rectangle
-      0, 0,                               // Place the result at 0, 0 in the canvas,
-      rect_width_int, rect_height_int);   // Crop interpolated rectangle
+  // image.onload = function(){
+  //
+  //   // Required to interpolate rectangle(from screen) into original image
+  //   let x_axis_scale = image.width / window.screen.width;
+  //   // let x_axis_scale = image.width / window.screen.width;
+  //   let y_axis_scale = image.height / window.screen.height;
+  //
+  //   // INTERPOLATE
+  //   let x_coord_int = x_coord * x_axis_scale;
+  //   let y_coord_int = y_coord * y_axis_scale;
+  //   let rect_width_int = rect_width * x_axis_scale;
+  //   let rect_height_int = rect_height * y_axis_scale;
+  //
+  //   // Set canvas size equivalent to interpolated rectangle size
+  //   canvas.width = rect_width_int;
+  //   canvas.height = rect_height_int;
+  //
+  //   ctx.drawImage(image,
+  //     x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
+  //     rect_width_int, rect_height_int,    // Crop interpolated rectangle
+  //     0, 0,                               // Place the result at 0, 0 in the canvas,
+  //     rect_width_int, rect_height_int);   // Crop interpolated rectangle
+  image.onload = function() {
+    drawImageProp(ctx, this, 0, 0, rect_width, rect_height);
 
     // Get base64 representation of cropped image
     let cropped_img_base64 = canvas.toDataURL();
@@ -287,9 +289,97 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     // Now we are ready to send cropped image TO SERVER
     callback(cropped_img_base64);
 
-    return cropped_img_base64;
   };
+  // image.onload = function(){
+  //
+  //   // Required to interpolate rectangle(from screen) into original image
+  //   let x_axis_scale = image.width / window.screen.width;
+  //   // let x_axis_scale = image.width / window.screen.width;
+  //   let y_axis_scale = image.height / window.screen.height;
+  //
+  //   // INTERPOLATE
+  //   let x_coord_int = x_coord * x_axis_scale;
+  //   let y_coord_int = y_coord * x_axis_scale;
+  //   let rect_width_int = rect_width * x_axis_scale;
+  //   let rect_height_int = rect_height * x_axis_scale;
+  //
+  //   // Set canvas size equivalent to interpolated rectangle size
+  //   canvas.width = rect_width_int;
+  //   canvas.height = rect_height_int;
+  //
+  //   ctx.drawImage(image,
+  //     x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
+  //     rect_width_int, rect_height_int,    // Crop interpolated rectangle
+  //     0, 0,                               // Place the result at 0, 0 in the canvas,
+  //     rect_width_int, rect_height_int);   // Crop interpolated rectangle
+  //
+  //   // Get base64 representation of cropped image
+  //   let cropped_img_base64 = canvas.toDataURL();
+  //
+  //   // Now we are ready to send cropped image TO SERVER
+  //   callback(cropped_img_base64);
+  //
+  //   return cropped_img_base64;
+  // };
 };
+
+/**
+ * By Ken Fyrstenberg Nilsen
+ *
+ * drawImageProp(context, image [, x, y, width, height [,offsetX, offsetY]])
+ *
+ * var offsetX = 0.5;   // center x
+ * var offsetY = 0.5;   // center y
+ * drawImageProp(ctx, image, 0, 0, width, height, offsetX, offsetY);
+ * If image and context are only arguments rectangle will equal canvas
+ */
+function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
+
+  if (arguments.length === 2) {
+    x = y = 0;
+    w = ctx.canvas.width;
+    h = ctx.canvas.height;
+  }
+
+  // default offset is center
+  offsetX = typeof offsetX === "number" ? offsetX : 0.5;
+  offsetY = typeof offsetY === "number" ? offsetY : 0.5;
+
+  // keep bounds [0.0, 1.0]
+  if (offsetX < 0) offsetX = 0;
+  if (offsetY < 0) offsetY = 0;
+  if (offsetX > 1) offsetX = 1;
+  if (offsetY > 1) offsetY = 1;
+
+  var iw = img.width,
+    ih = img.height,
+    r = Math.min(w / iw, h / ih),
+    nw = iw * r,   // new prop. width
+    nh = ih * r,   // new prop. height
+    cx, cy, cw, ch, ar = 1;
+
+  // decide which gap to fill
+  if (nw < w) ar = w / nw;
+  if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh;  // updated
+  nw *= ar;
+  nh *= ar;
+
+  // calc source rectangle
+  cw = iw / (nw / w);
+  ch = ih / (nh / h);
+
+  cx = (iw - cw) * offsetX;
+  cy = (ih - ch) * offsetY;
+
+  // make sure source rectangle is valid
+  if (cx < 0) cx = 0;
+  if (cy < 0) cy = 0;
+  if (cw > iw) cw = iw;
+  if (ch > ih) ch = ih;
+
+  // fill image in dest. rectangle
+  ctx.drawImage(img, cx, cy, cw, ch,  x, y, w, h);
+}
 
 // cameraPreviewOptions
 //  = {x: 0,y: 70, width: window.screen.width, height: window.screen.width / 1.77 ... }
