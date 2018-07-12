@@ -261,11 +261,11 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     // Required to interpolate rectangle(from screen) into original image
     let x_axis_scale = image.width / window.screen.width;
     // let x_axis_scale = image.width / window.screen.width;
-    // let y_axis_scale = image.height / window.screen.height;
+    let y_axis_scale = image.height / window.screen.height;
 
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * x_axis_scale;
+    let y_coord_int = y_coord * y_axis_scale;
     let rect_width_int = rect_width * x_axis_scale;
     let rect_height_int = rect_height * x_axis_scale;
 
@@ -277,8 +277,7 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
       x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
       rect_width_int, rect_height_int,    // Crop interpolated rectangle
       0, 0,                               // Place the result at 0, 0 in the canvas,
-      rect_width, rect_height);   // Crop interpolated rectangle
-      // rect_width_int, rect_height_int);   // Crop interpolated rectangle
+      rect_width_int, rect_height_int);   // Crop interpolated rectangle
 
     // Get base64 representation of cropped image
     let cropped_img_base64 = canvas.toDataURL();
