@@ -166,7 +166,9 @@ Template.halfhalfPhoto.events({
     document.getElementById('startCamera').style.display = "none";
   },
   'click #takeHalfHalfPhoto'(event,target) {
-    CameraPreview.takePicture(function(imgData){
+    CameraPreview.takePicture({
+      width: window.screen.width, height: window.screen.height, quality: 85
+    }, function(imgData){
       let rect;
       // first one to take picture, so the left half of image will be cropped and used
       if (document.getElementById('lefthalf-preview') !== null) {
@@ -265,7 +267,7 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = y_coord * y_axis_scale;
+    let y_coord_int = y_coord * x_axis_scale;
     let rect_width_int = rect_width * x_axis_scale;
     let rect_height_int = rect_height * x_axis_scale;
 
