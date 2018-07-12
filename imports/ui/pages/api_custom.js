@@ -265,6 +265,10 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
     // INTERPOLATE
     let x_coord_int = x_coord * x_axis_scale;
     let y_coord_int = y_coord * y_axis_scale;
+
+
+    // getting the ratio right with x_axis_scale
+    // let x_axis_scale = image.width / window.screen.width;
     let rect_width_int = rect_width * x_axis_scale;
     let rect_height_int = rect_height * x_axis_scale;
 
@@ -274,10 +278,18 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
 
     document.getElementById('varIW').value = image.width;
     document.getElementById('varIH').value = image.height;
+    document.getElementById('varSW').value = window.screen.width;
+    document.getElementById('varSH').value = window.screen.height;
     document.getElementById('varXRatio').value = x_axis_scale;
     document.getElementById('varYRatio').value = y_axis_scale;
+    document.getElementById('varXCoord').value = x_coord;
+    document.getElementById('varYCoord').value = y_coord;
     document.getElementById('varXCoordInt').value = x_coord_int;
     document.getElementById('varYCoordInt').value = y_coord_int;
+    document.getElementById('varWidth').value = rect_width;
+    document.getElementById('varHeight').value = rect_height;
+    document.getElementById('varWidthInt').value = rect_width_int;
+    document.getElementById('varHeightInt').value = rect_height_int;
     ctx.drawImage(image,
       x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
       rect_width_int, rect_height_int,    // Crop interpolated rectangle
