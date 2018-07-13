@@ -141,6 +141,8 @@ Template.halfhalfPhoto.helpers({
   }
 });
 
+
+
 Template.halfhalfPhoto.events({
   'click #testPhoto'() {
     let imageSet = [
@@ -154,10 +156,9 @@ Template.halfhalfPhoto.events({
     $('.fileinput-preview').show();
   },
   'click #startCamera'() {
-    let halfOverlay = document.getElementById('leftHalf');
-    let rect = halfOverlay.getBoundingClientRect();
+    let rect = getPreviewRect();
     CameraPreview.startCamera({
-      x: rect.left, y: rect.top, width: rect.width*2, height: rect.height, camera: "front",
+      x: rect.left, y: rect.top, width: rect.width, height: rect.height, camera: "front",
       tapPhoto: true, previewDrag: false, toBack: true});
     CameraPreview.show();
     $('.fileinput-preview').hide();
@@ -167,17 +168,7 @@ Template.halfhalfPhoto.events({
   },
   'click #takeHalfHalfPhoto'(event,target) {
     CameraPreview.takePicture(function(imgData){
-      let rect;
-      // first one to take picture, so the left half of image will be cropped and used
-      if (document.getElementById('lefthalf-preview') !== null) {
-        let halfOverlay = document.getElementById('lefthalf-preview');
-        rect = halfOverlay.getBoundingClientRect();
-      }
-      // second one to take picture, so the right half of image will be cropped and used
-      else {
-        let halfOverlay = document.getElementById('righthalf-preview');
-        rect = halfOverlay.getBoundingClientRect();
-      }
+      let rect = getPreviewRect();
       b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
         $('.fileinput-preview').attr('src', croppedImgUrl);
         CameraPreview.hide();
@@ -199,6 +190,25 @@ Template.halfhalfPhoto.events({
     CameraPreview.switchCamera();
   }
 });
+
+/** Based on whether the preview window is on the left or right, this function returns the rectangle that
+ * contains information about the coordinates of the preview.
+ *
+ * @returns rect {DOMRect}
+ */
+function getPreviewRect() {
+  let rect;
+  // first one to take picture, so the left half of image will be cropped and used
+  if (document.getElementById('lefthalf-preview') !== null) {
+    let halfOverlay = document.getElementById('lefthalf-preview');
+    rect = halfOverlay.getBoundingClientRect();
+  }
+  else {
+    let halfOverlay = document.getElementById('righthalf-preview');
+    rect = halfOverlay.getBoundingClientRect();
+  }
+  return rect;
+}
 
 /**
  * Convert a base64 string in a Blob according to the data and contentType.
@@ -328,7 +338,7 @@ function b64CropLikeCordova(base64PictureData, rect_width, rect_height, callback
 
     return cropped_img_base64;
   };
-};
+}
 
 // cameraPreviewOptions
 //  = {x: 0,y: 70, width: window.screen.width, height: window.screen.width / 1.77 ... }
