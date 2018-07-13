@@ -1,5 +1,21 @@
 
 #results {
+  .half0 {
+    /*allow image to be wider than div*/
+    /*https://stackoverflow.com/questions/8970682/allow-image-to-be-wider-than-containing-div*/
+    /*how to let html images overlap one another*/
+    /*https://stackoverflow.com/questions/5182170/how-to-let-an-html-image-overlap-another*/
+    position: absolute;
+    overflow: visible;
+    height: 90vw;
+    width: 45vw;
+  }
+  .half1 {
+    position: absolute;
+    overflow: visible;
+    height: 90vw;
+    width: 45vw;
+  }
   select.form-control {
     display: inline-block;
     width: auto;

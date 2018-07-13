@@ -110,6 +110,70 @@ Template.bumpedResults.events({
 
 });
 
+Template.halfhalfResults.helpers({
+  hasTwo(arrayObj) {
+    return arrayObj.length == 2;
+  },
+  firstElement(listObj){
+    return listObj[0];
+  },
+  getName(x){
+    console.log(x);
+    return x.friendName;
+  },
+  getImage(x){
+    return x.image;
+  },
+  getMyImage(x){
+    return x.myImage;
+  },
+  bumpees() {
+
+    let mySubs = this.submissions.filter(function (x) {
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function (x) {
+      return x.needName;
+    });
+
+    // other submissions that match my needs
+    let otherSubs = this.submissions.filter(function (x) {
+      return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
+    });
+
+    // for every submission, create a content object with image metadata and friend metadata
+    let contents = otherSubs.map(function (x) {
+      let myInfoDic = mySubs.find(function (y) {
+        return y.needName === x.needName;
+      });
+      return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
+    });
+
+    console.log("contents", contents);
+
+    let images = this.images;
+
+    // so we have them in some chronological order?
+    contents.reverse();
+
+    // update contents, replacing image metadata with image data
+    contents = contents.map(function (x) {
+      let img = images.find(function (y) {
+        return y._id === x.image;
+      });
+      let myImg = images.find(function (y) {
+        return y._id === x.myImage;
+      });
+
+      return {friendName: x.friendName, image: img, myImage: myImg};
+    });
+
+    console.log("contents2", contents);
+    return contents;
+  }
+});
+
 Template.scavengerHunt.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){

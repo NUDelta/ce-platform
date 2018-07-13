@@ -1,14 +1,13 @@
 #participate {
   #lefthalf-preview {
-    // allow image to be wider than div
-    // https://stackoverflow.com/questions/8970682/allow-image-to-be-wider-than-containing-div
-    // how to let html images overlap one another
-    // https://stackoverflow.com/questions/5182170/how-to-let-an-html-image-overlap-another
+    /*allow image to be wider than div*/
+    /*https://stackoverflow.com/questions/8970682/allow-image-to-be-wider-than-containing-div*/
+    /*how to let html images overlap one another*/
+    /*https://stackoverflow.com/questions/5182170/how-to-let-an-html-image-overlap-another*/
     position: absolute;
     overflow: visible;
     height: 90vw;
     width: 45vw;
-    padding-left: 0px;
   }
   #righthalf-preview {
     position: absolute;
@@ -16,7 +15,6 @@
     height: 90vw;
     width: 45vw;
   }
-
   .fileinput {
     display: block;
     border: 1px solid #ddd;

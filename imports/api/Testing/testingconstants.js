@@ -706,8 +706,8 @@ let EXPERIENCES = {
   halfhalfDay: {
     _id: Random.id(),
     name: 'Half Half Daytime',
-    participateTemplate: 'halfhalfPhoto', // TODO: add halfhalf in templates
-    resultsTemplate: 'sunset',  // FIXME: make separate results template
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
     contributionTypes: [{
       needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
       situation: {
@@ -730,8 +730,8 @@ let EXPERIENCES = {
   halfhalfNight: {
     _id: Random.id(),
     name: 'Half Half Nighttime',
-    participateTemplate: 'halfhalfPhoto', // TODO: add halfhalf in templates
-    resultsTemplate: 'sunset',  // FIXME: make separate results template
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
     contributionTypes: [{
       needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
       situation: {
