@@ -178,7 +178,7 @@ Template.halfhalfPhoto.events({
         let halfOverlay = document.getElementById('righthalf-preview');
         rect = halfOverlay.getBoundingClientRect();
       }
-      b64Crop(imgData, rect.width, rect.height, rect.x, rect.y, function(croppedImgUrl) {
+      b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
         $('.fileinput-preview').attr('src', croppedImgUrl);
         CameraPreview.hide();
         $('.fileinput-preview').show();
@@ -233,19 +233,21 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 }
 
 /**
- * Crop a base64 string image given cropping rectangle parameters
+ * Crop a base64 string image given a cropping rectangle, in the same way that
+ * the iOS cordova-plugin-camera-preview creates its preview image.
+ * See captureOutput function src/ios/CameraRendererController.m of
+ * https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
+ * for details on how the image preview is created
  *
  * @param base64PictureData {String} Pure base64 string without contentType
  * @param rect_width {Number}
  * @param rect_height {Number}
- * @param x_coord {Number}
- * @param y_coord {Number}
  * @param callback {Function}
  * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
  * @return base64imageURL
  */
 //
-function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, callback) {
+function b64CropLikeCordova(base64PictureData, rect_width, rect_height, callback) {
 
   // image will contain ORIGINAL image
   let image = new Image();
@@ -258,41 +260,62 @@ function b64Crop(base64PictureData, rect_width, rect_height, x_coord, y_coord, c
   image.src = 'data:image/jpeg;base64,' + base64PictureData;
   image.onload = function(){
 
-    // Required to interpolate rectangle(from screen) into original image
-    // Use ratio for x-axis, since in iOS, images have aspect ratio closer to "square" than the screen
-    let x_axis_scale = image.width / window.screen.width;
+    let scaleHeight = rect_height/image.height;
+    let scaleWidth = rect_width/image.width;
+
+    let scale;
+    let x_trans;
+    let y_trans;
+    // for photos taken vertically, and a square (rect_width, rect_height)
+    // scaleHeight ~ 0.5, while scaleWidth ~ 1.
+    // thus, first logical branch will be used.
+    if (scaleHeight < scaleWidth) {
+      scale = scaleWidth;
+      x_trans = 0;
+      // y_trans = ((scale * image.height) - rect_height) / 2;
+      // NOTE: scale units are inverse here, since we want to operate in image units, not screen units
+      y_trans = (image.height - (rect_height / scale)) / 2;
+    } else {
+      scale = scaleHeight;
+      // x_trans = ((scale * image.width) - rect_width) / 2;
+      // NOTE: scale units are inverse here, since we want to operate in image units, not screen units
+      x_trans = (image.width - (rect_width / scale)) / 2;
+      y_trans = 0;
+    }
+
+    // let x_axis_scale = image.width / window.screen.width;
 
     // in iOS, images have aspect ratio closer to "square" than screen;
     // thus, the image is placed vertically centered (and horizontally scaled to screen width),
     // with some vertical gap between the top/bottom of image, and top/bottom of screen.
-    let y_gap = (window.screen.height / 2) - ((image.height / x_axis_scale) / 2);
+    // let y_gap = (window.screen.height / 2) - ((image.height / x_axis_scale) / 2);
 
     // INTERPOLATE
-    let x_coord_int = x_coord * x_axis_scale;
-    let y_coord_int = (y_coord - y_gap) * x_axis_scale;
+    // let x_coord_int = (x_coord / scale);
+    // let y_coord_int = y_coord / scale;
 
-    let rect_width_int = rect_width * x_axis_scale;
-    let rect_height_int = rect_height * x_axis_scale;
+    let rect_width_int = rect_width / scale;
+    let rect_height_int = rect_height / scale;
 
     // Set canvas size equivalent to interpolated rectangle size
     canvas.width = rect_width_int;
     canvas.height = rect_height_int;
 
-    document.getElementById('varIW').value = image.width;
-    document.getElementById('varIH').value = image.height;
-    document.getElementById('varSW').value = window.screen.width;
-    document.getElementById('varSH').value = window.screen.height;
-    document.getElementById('varXRatio').value = x_axis_scale;
-    document.getElementById('varXCoord').value = x_coord;
-    document.getElementById('varYCoord').value = y_coord;
-    document.getElementById('varXCoordInt').value = x_coord_int;
-    document.getElementById('varYCoordInt').value = y_coord_int;
-    document.getElementById('varWidth').value = rect_width;
-    document.getElementById('varHeight').value = rect_height;
-    document.getElementById('varWidthInt').value = rect_width_int;
-    document.getElementById('varHeightInt').value = rect_height_int;
+    // document.getElementById('varIW').value = image.width;
+    // document.getElementById('varIH').value = image.height;
+    // document.getElementById('varSW').value = window.screen.width;
+    // document.getElementById('varSH').value = window.screen.height;
+    // document.getElementById('varXRatio').value = x_axis_scale;
+    // document.getElementById('varXCoord').value = x_coord;
+    // document.getElementById('varYCoord').value = y_coord;
+    // document.getElementById('varXCoordInt').value = x_coord_int;
+    // document.getElementById('varYCoordInt').value = y_coord_int;
+    // document.getElementById('varWidth').value = rect_width;
+    // document.getElementById('varHeight').value = rect_height;
+    // document.getElementById('varWidthInt').value = rect_width_int;
+    // document.getElementById('varHeightInt').value = rect_height_int;
     ctx.drawImage(image,
-      x_coord_int, y_coord_int,           // Start CROPPING from x_coord(interpolated) and y_coord(interpolated)
+      x_trans, y_trans,                   // Start CROPPING from (x_trans, y_trans). See variable xlate in iOS code.
       rect_width_int, rect_height_int,    // Crop interpolated rectangle
       0, 0,                               // Place the result at 0, 0 in the canvas,
       rect_width_int, rect_height_int);   // Crop interpolated rectangle
