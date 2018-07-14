@@ -35,6 +35,12 @@ Template.registerHelper( 'getImageById', (data, id) => {
   return image;
 });
 
+Template.registerHelper('getUserById', (users, uid) => {
+  return users.find(function (x) {
+    return x._id === uid;
+  });
+});
+
 Template.photosByCategories.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
@@ -111,8 +117,19 @@ Template.bumpedResults.events({
 });
 
 Template.halfhalfResults.helpers({
-  hasTwo(arrayObj) {
-    return arrayObj.length == 2;
+  subsAllCompleted(subs) {
+    // submissions will be complete if there is a valid uid attached to them
+    // FIXME(rlouie): When using this, saw that more than 2 submissions were created during runs. Sometimes, 2/3/4.
+    return subs.every(function(e) { return e.uid !== null; });
+  },
+  hasTwo(arr) {
+    return arr.length == 2;
+  },
+  getUserById(users, uid) {
+    let user = users.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
   },
   firstElement(listObj){
     return listObj[0];

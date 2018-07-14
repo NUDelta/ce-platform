@@ -1,5 +1,5 @@
 #participate {
-  #lefthalf-preview {
+  #leftHalfPreview {
     /*allow image to be wider than div*/
     /*https://stackoverflow.com/questions/8970682/allow-image-to-be-wider-than-containing-div*/
     /*how to let html images overlap one another*/
@@ -9,7 +9,7 @@
     height: 90vw;
     width: 45vw;
   }
-  #righthalf-preview {
+  #rightHalfPreview {
     position: absolute;
     overflow: visible;
     height: 90vw;

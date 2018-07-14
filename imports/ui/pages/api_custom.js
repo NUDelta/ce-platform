@@ -40,6 +40,7 @@ Template.api_custom.helpers({
       image: this.image,
     }
   },
+
 });
 Template.storyPage.helpers({
 
@@ -85,9 +86,13 @@ Template.bumped.helpers({
 });
 
 Template.halfhalfParticipate.helpers({
-  isNull(obj) {
-    return obj == null;
-  }
+  getUserById(users, uid) {
+    let user = users.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+
 });
 
 Template.halfhalfParticipate.events({
@@ -148,12 +153,12 @@ Template.halfhalfParticipate.events({
 function getPreviewRect() {
   let rect;
   // first one to take picture, so the left half of image will be cropped and used
-  if (document.getElementById('lefthalf-preview') !== null) {
-    let halfOverlay = document.getElementById('lefthalf-preview');
+  if (document.getElementById('leftHalfPreview') !== null) {
+    let halfOverlay = document.getElementById('leftHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
   else {
-    let halfOverlay = document.getElementById('righthalf-preview');
+    let halfOverlay = document.getElementById('rightHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
   return rect;
@@ -367,6 +372,7 @@ Template.api_custom.events({
           Images.update({ _id: imageFile._id }, {
             $set: {
               iid: iid,
+              uid: uid,
               lat: location.lat,
               lng: location.lng,
               needName: needName,

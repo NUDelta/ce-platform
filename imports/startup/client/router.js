@@ -53,8 +53,8 @@ Router.route('api.custom', {
     this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
-    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
+    // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
 
     this.next();
@@ -65,7 +65,7 @@ Router.route('api.custom', {
       incident: Incidents.findOne(),
       location: Locations.findOne(),
       notification_log: Notification_log.find().fetch(),
-      image: Images.findOne(),  // 0 or 1 submission only, for halfhalf
+      image: Images.findOne(),
       users: Meteor.users.find().fetch()
     };
   }
@@ -88,6 +88,7 @@ Router.route('api.customresults', {
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
     this.next();
   },
   data: function () {
@@ -95,6 +96,7 @@ Router.route('api.customresults', {
       experience: Experiences.findOne(),
       images: Images.find({}).fetch(),
       submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
     };
   }
 });

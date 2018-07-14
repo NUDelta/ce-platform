@@ -108,6 +108,9 @@
         height: 90vw;
         width: 45vw;
       }
+      .centered {
+        text-align: center;
+      }
     </style>
   </head>
 
@@ -115,7 +118,10 @@
 
     {{#if hasTwo images}}
       {{#each image in images}}
-        <div class="half{{@index}}">
+        <div class="half{{@index}} centered">
+          {{#let user=(getUserById users image.uid)}}
+            <u>{{user.username}}</u>
+          {{/let}}
           {{> Template.dynamic template="displayFullImage" data=image}}
         </div>
       {{/each}}

@@ -57,27 +57,30 @@
 
   <div class="instruction">
     {{this.toPass.instruction}}
+    {{#if image}}
+      {{#let user=(getUserById users image.uid)}}
+        <u>{{user.username}}</u> framed the left half. You can align the right half with theirs.
+      {{/let}}
+    {{else}}
+      Frame the left half. Then somebody will frame the right half.
+    {{/if}}
   </div>
   <form id="participate">
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
-      {{#if isNull image}}
-         <div id="leftHalf" class="lefthalf">
-          <label id="lefthalf-preview" class="fileinput">
-            <img src="#" class="fileinput-preview"/>
-          </label>
-         </div>
-        <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
-      {{else}}
+      {{#if image}}
         <div id="leftHalf" class="lefthalf">
           {{> Template.dynamic template="displayFullImage" data=image}}
         </div>
         <div id="rightHalf" class="righthalf">
-         <label id="righthalf-preview" class="fileinput">
-            <img src="#" class="fileinput-preview"/>
-          </label>
+          {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
         </div>
-      {{/if}}
+      {{else}}
+        <div id="leftHalf" class="lefthalf">
+          {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+        </div>
+        <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
+     {{/if}}
     </div>
 
     <button type="button" id="testPhoto" class="btn btn-default">
