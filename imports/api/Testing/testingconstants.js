@@ -4,7 +4,7 @@ import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
 import {Detectors} from "../UserMonitor/detectors/detectors";
-
+import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 
 let LOCATIONS = {
   'park': {
