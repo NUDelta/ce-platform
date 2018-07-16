@@ -285,7 +285,6 @@ export const createIncidentFromExperience = (experience) => {
  * @returns {object} need object
  */
 export const getNeedFromIncidentId = (iid, needName) => {
-  serverLog.call({message: `IID ${iid}`});
   let incident = Incidents.findOne(iid);
   let output = undefined;
 

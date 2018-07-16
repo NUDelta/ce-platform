@@ -3,6 +3,8 @@ import { Incidents } from "./OCEs/experiences";
 import { Submissions } from "./currentNeeds";
 import {serverLog} from "../logs";
 import {adminUpdates} from "./progressorHelper";
+// needed because a callback uses `notify`
+import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 
 const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
