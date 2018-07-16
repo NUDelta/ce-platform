@@ -9,38 +9,21 @@ import { addContribution, createIncidentFromExperience, startRunningIncident } f
 
 
 Meteor.methods({
-  startFreshBumped() {
-    let experience = CONSTANTS.EXPERIENCES.bumped;
-    Experiences.insert(experience);
-    let incident = createIncidentFromExperience(experience);
-    startRunningIncident(incident);
-  },
-  startFreshStorytime() {
-    let exp = CONSTANTS.EXPERIENCES.storyTime;
-    Experiences.insert(exp);
-    let incident = createIncidentFromExperience(exp);
-    startRunningIncident(incident);
-  },
-  startFreshNatureHunt() {
-    let exp = CONSTANTS.EXPERIENCES.natureHunt;
-    Experiences.insert(exp);
-    let incident = createIncidentFromExperience(exp);
-    startRunningIncident(incident);
-  },
-  startFreshFoodFight() {
-    let exp = CONSTANTS.EXPERIENCES.foodfight;
-    Experiences.insert(exp);
-    let incident = createIncidentFromExperience(exp);
-    startRunningIncident(incident);
-  },
-  startHalfHalfDay() {
-    let exp = CONSTANTS.EXPERIENCES.halfhalfDay;
-    Experiences.insert(exp);
-    let incident = createIncidentFromExperience(exp);
-    startRunningIncident(incident);
-  },
-  startHalfHalfNight() {
-    let exp = CONSTANTS.EXPERIENCES.halfhalfNight;
+  /** createOCE - general function to start OCEs through a Meteor RPC, i.e. through the browser console
+   *
+   * @param name [String] A key in CONSTANTS.EXPERIENCES object found in testingconstants.js
+   */
+  createOCE({name}) {
+    new SimpleSchema({
+      name: { type: String }
+    }).validate({name});
+
+    if (!(name in CONSTANTS.EXPERIENCES)) {
+      throw new Meteor.Error('createOCE.keynotfound',
+        `OCE by the name '${name}' was not found in CONSTANTS.EXPERIENCES`);
+    }
+
+    let exp = CONSTANTS.EXPERIENCES[name];
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);

@@ -783,54 +783,54 @@ let EXPERIENCES = {
 
   halfhalfAsynch: createHalfHalf(),
   halfhalfSynch: createHalfHalf({numberInSituation: 2}),
-  // halfhalfDay: {
-  //   _id: Random.id(),
-  //   name: 'Half Half Daytime',
-  //   participateTemplate: 'halfhalfParticipate',
-  //   resultsTemplate: 'halfhalfResults',
-  //   contributionTypes: [{
-  //     needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
-  //     situation: {
-  //       detector: DETECTORS.daytime._id,  // For testing during workday
-  //       number: '1'
-  //     },
-  //     toPass: {
-  //       instruction: 'Take a photo of like Half Half Travel!'
-  //     },
-  //     numberNeeded: 2,
-  //     notificationDelay: 0, // no need to delay if its daytime outside
-  //   }],
-  //   description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
-  //   notificationText: 'Participate in Half Half Travel!',
-  //   callbacks: [{
-  //     trigger: 'cb.incidentFinished()',
-  //     function: sendNotificationHalfHalf.toString()
-  //   }]
-  // },
-  // halfhalfNight: {
-  //   _id: Random.id(),
-  //   name: 'Half Half Nighttime',
-  //   participateTemplate: 'halfhalfParticipate',
-  //   resultsTemplate: 'halfhalfResults',
-  //   contributionTypes: [{
-  //     needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
-  //     situation: {
-  //       detector: DETECTORS.night._id,  // For testing during evening
-  //       number: '1'
-  //     },
-  //     toPass: {
-  //       instruction: 'Take a photo of like Half Half Travel!'
-  //     },
-  //     numberNeeded: 2,
-  //     notificationDelay: 0, // no need to delay if its daytime outside
-  //   }],
-  //   description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
-  //   notificationText: 'Participate in Half Half Travel!',
-  //   callbacks: [{
-  //     trigger: 'cb.incidentFinished()',
-  //     function: sendNotificationHalfHalf.toString()
-  //   }]
-  // },
+  halfhalfDay: {
+    _id: Random.id(),
+    name: 'Half Half Daytime',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.daytime._id,  // For testing during workday
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 0, // no need to delay if its daytime outside
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
+    }]
+  },
+  halfhalfNight: {
+    _id: Random.id(),
+    name: 'Half Half Nighttime',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.night._id,  // For testing during evening
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 0, // no need to delay if its daytime outside
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
+    }]
+  },
   // scavengerHunt: {
   //   _id: Random.id(),
   //   name: 'St. Patrick\'s Day Scavenger Hunt',
