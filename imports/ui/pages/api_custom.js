@@ -95,6 +95,38 @@ Template.halfhalfParticipate.helpers({
 
 });
 
+Template.halfhalfParticipate.onCreated(() => {
+  // Cordova CameraPreview starts Off
+  Session.set('CameraPreviewOn', false);
+});
+
+// Scrolling
+$(window).scroll(_.debounce(function(){
+    if (typeof CameraPreview !== 'undefined') {
+      if (Session.get('CameraPreviewOn')) {
+        CameraPreview.stopCamera();
+        // Don't set Session CameraPreviewOn to false, because the stop-scroll event needs this info
+      }
+    }
+  }, 150, { 'leading': true, 'trailing': false })
+);
+
+// Stop Scrolling
+$(window).scroll(_.debounce(function(){
+    if (typeof CameraPreview !== 'undefined') {
+      if (Session.get('CameraPreviewOn')) {
+        startCameraAtPreviewRect();
+        Session.set('CameraPreviewOn', true);
+      }
+    }
+  }, 150)
+);
+
+Template.halfhalfParticipate.onDestroyed(() => {
+  CameraPreview.stopCamera();
+  Session.set('CameraPreviewOn', false);
+});
+
 Template.halfhalfParticipate.events({
   'click #testPhoto'() {
     let imageSet = [
@@ -109,39 +141,48 @@ Template.halfhalfParticipate.events({
     imagePreview.show();
   },
   'click #startCamera'(){
-    let rect = getPreviewRect();
-    CameraPreview.startCamera({
-      x: rect.left, y: rect.top, width: rect.width, height: rect.height, camera: "front",
-      tapPhoto: true, previewDrag: false, toBack: true});
-    CameraPreview.show();
+    if (typeof CameraPreview !== 'undefined') {
+      startCameraAtPreviewRect();
+      Session.set('CameraPreviewOn', true);
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
     $(".fileinput-preview").hide();
-    document.getElementById('takeHalfHalfPhoto').style.display = "inline";
-    document.getElementById('switchCamera').style.display = "inline";
-    document.getElementById('startCamera').style.display = "none";
+    toggleCameraControls('startCamera');
   },
   'click #takeHalfHalfPhoto'(){
-    CameraPreview.takePicture(function(imgData){
-      let rect = getPreviewRect();
-      b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
-        let imagePreview = $(".fileinput-preview");
-        imagePreview.attr('src', croppedImgUrl);
-        imagePreview.show();
-        CameraPreview.hide();
-        document.getElementById('retakePhoto').style.display = "inline";
-        document.getElementById('takeHalfHalfPhoto').style.display = "none";
-        document.getElementById('switchCamera').style.display = "none";
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.takePicture(function(imgData){
+        let rect = getPreviewRect();
+        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+          let imagePreview = $(".fileinput-preview");
+          imagePreview.attr('src', croppedImgUrl);
+          imagePreview.show();
+          CameraPreview.stopCamera();
+          toggleCameraControls('stopCamera');
+          Session.set('CameraPreviewOn', false);
+        });
       });
-    });
-  },
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+ },
   'click #retakePhoto'(){
-    CameraPreview.show();
+    if (typeof CameraPreview !== 'undefined') {
+      startCameraAtPreviewRect();
+      Session.set('CameraPreviewOn', true);
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
     $(".fileinput-preview").hide();
-    document.getElementById('retakePhoto').style.display = "none";
-    document.getElementById('takeHalfHalfPhoto').style.display = "inline";
-    document.getElementById('switchCamera').style.display = "inline";
+    toggleCameraControls('startCamera');
   },
   'click #switchCamera'(){
-    CameraPreview.switchCamera();
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.switchCamera();
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
   }
 });
 
@@ -164,6 +205,37 @@ function getPreviewRect() {
   return rect;
 }
 
+function startCameraAtPreviewRect(
+  {
+    camera = "front",
+    tapPhoto = true,
+    previewDrag = false,
+    toBack = true
+  } = {}
+) {
+  let rect = getPreviewRect();
+  CameraPreview.startCamera({
+    x: rect.left, y: rect.top, width: rect.width, height: rect.height,
+    camera: camera, tapPhoto: tapPhoto, previewDrag: previewDrag, toBack: toBack});
+}
+
+function toggleCameraControls(mode) {
+  if (mode === "startCamera") {
+    $(".fileinput-preview").hide();
+    document.getElementById('retakePhoto').style.display = "none";
+    document.getElementById('takeHalfHalfPhoto').style.display = "inline";
+    document.getElementById('switchCamera').style.display = "inline";
+    document.getElementById('startCamera').style.display = "none";
+  }
+  else if (mode === "stopCamera") {
+    document.getElementById('retakePhoto').style.display = "inline";
+    document.getElementById('takeHalfHalfPhoto').style.display = "none";
+    document.getElementById('switchCamera').style.display = "none";
+  }
+  else {
+    console.log("toggleCameraControls requires passing either 'startCamera' or 'stopCamera' as first parameter");
+  }
+}
 /**
  * Convert a base64 string in a Blob according to the data and contentType.
  *
