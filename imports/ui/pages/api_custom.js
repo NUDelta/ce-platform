@@ -492,7 +492,7 @@ Template.api_custom.events({
     //makes it disappear so you don't see it while image is submitting
     document.getElementById('participate-btn').style.display = 'none';
   },
-  'click .fileinput, touchstart .glyphicon-camera'(event, target) {
+  'click .fileinput, touchstart .fileinput-new'(event, target) {
     photoInput(event);
   },
   'click .glyphicon-remove'(event, target) {
