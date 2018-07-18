@@ -8,7 +8,22 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
 
-## iOS Build
+## iOS Development Running 
+Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process. 
+
+1. Find your ipaddress using `ifconfig |grep inet`. On northwesterns network, it sometimes looks something like `10.105.X.Y`. On a home WiFi network, it might look like `192.168.X.Y`
+2. From the ce-platform directory, run `meteor run ios-device -p 3000 --mobile-server=http://{ipaddress}:3000`
+3. At some point, the previous command will have opened an xcodeproject, which lives at `ce-platform/.meteor/local/cordova-build/platforms/ios`. Navigate there by typing `cd ce-platform/.meteor/local/cordova-build/platforms/ios`.
+4. `pod install` to install dependencies.
+5. `open ce-platform.xcworkspace` to open the workspace file, which will have the pod dependencies linked. You can close the `ce-platform.xcodeproject file now.
+6. Get the "CE Platform" provisioning profile from developer.apple.com and import the profile into xcode. You can do this by dragging the *.mobileprovision file onto the xcode icon, or by going to General > Signing (Debug or Release) > Import Profile...
+7. Set the Provisioning Profile to "CE Platform"
+8. Set your build target to the iPhone you have plugged in to your computer, and press the Play button.
+9. ce-platform should start up on your iPhone. Client logging should be available in XCode Terminal. Server logging should be available in the terminal you ran the `meteor run ios-device ...` commmand.
+
+## iOS Enterprise Build
+
+For a quick script that does the meteor build and sets up the xcworkspace, see the `ipaHelper.sh` script. For all the details that lead to writing the streamlined script, see the rest of this section.
 
 ### Building iOS Application from Meteor
 1. Deploy Meteor application to Galaxy or Heroku, or start a local server.
