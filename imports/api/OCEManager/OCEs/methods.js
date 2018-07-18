@@ -10,7 +10,6 @@ import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/method
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
-import {serverLog} from "../../logs";
 
 
 /**

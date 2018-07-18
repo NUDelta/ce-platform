@@ -73,17 +73,11 @@
 <template name="halfhalfResults">
   <head>
     <style>
-      .instruction {
-        padding-top: 4%;
-        padding-bottom: 4%;
-      }
       .half0 {
         grid-area: half0;
-        background: transparent;
       }
       .half1 {
         grid-area: half1;
-        background: transparent;
       }
       .camera-overlay {
         display: grid;
@@ -91,22 +85,6 @@
         grid-template-columns: 45vw 45vw;
         grid-template-rows: 90vw;
         grid-template-areas: "half0 half1";
-      }
-      #half0-preview {
-        /*allow image to be wider than div*/
-        /*https://stackoverflow.com/questions/8970682/allow-image-to-be-wider-than-containing-div*/
-        /*how to let html images overlap one another*/
-        /*https://stackoverflow.com/questions/5182170/how-to-let-an-html-image-overlap-another*/
-        position: absolute;
-        overflow: visible;
-        height: 90vw;
-        width: 45vw;
-      }
-      #half1-preview {
-        position: absolute;
-        overflow: visible;
-        height: 90vw;
-        width: 45vw;
       }
       .centered {
         text-align: center;

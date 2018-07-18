@@ -2,7 +2,9 @@ body {
   font-size: 15px;
   margin-top: 55px;
   margin-bottom: 65px;
-  //background-color: #f8f8f8;
+  // transparent body required for the CameraPreview instance to be displayed behind the layout HTML.
+  // this is required when CameraPreview is started with toBack = true
+  // see documentation on startCamera https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
   background-color: transparent;
   font-family: 'Karla', 'Roboto', Helvetica;
 }
@@ -179,8 +181,7 @@ hr {
 }
 
 .participate-chunk {
-  //background-color: #fff;
-  background-color: transparent;
+  background-color: #fff;
   box-shadow: 1px 3px 10px 0 rgba(0, 0, 0, 0.1);
   border: none;
 }
