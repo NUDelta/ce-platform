@@ -152,16 +152,21 @@ Template.halfhalfParticipate.events({
   },
   'click #takeHalfHalfPhoto'(){
     if (typeof CameraPreview !== 'undefined') {
-      CameraPreview.takePicture(function(imgData){
-        let rect = getPreviewRect();
-        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
-          let imagePreview = $(".fileinput-preview");
-          imagePreview.attr('src', croppedImgUrl);
-          imagePreview.show();
-          CameraPreview.stopCamera();
-          toggleCameraControls('stopCamera');
-          Session.set('CameraPreviewOn', false);
-        });
+      CameraPreview.takePicture({
+        // dimensions of an iPhone 6s front-facing camera
+        // any larger dimensions displays the captured picture with significant lag
+        // TODO(rlouie): test these parameters with many devices, whose supported photo sizes might make this not work
+        width: 960, height: 1280, quality: 85
+      },function(imgData){
+          let rect = getPreviewRect();
+          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+            let imagePreview = $(".fileinput-preview");
+            imagePreview.attr('src', croppedImgUrl);
+            imagePreview.show();
+            CameraPreview.stopCamera();
+            toggleCameraControls('stopCamera');
+            Session.set('CameraPreviewOn', false);
+          });
       });
     } else {
       console.error("Could not access the CameraPreview")
