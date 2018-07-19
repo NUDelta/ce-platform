@@ -117,13 +117,8 @@ Template.bumpedResults.events({
 });
 
 Template.halfhalfResults.helpers({
-  subsAllCompleted(subs) {
-    // submissions will be complete if there is a valid uid attached to them
-    // FIXME(rlouie): When using this, saw that more than 2 submissions were created during runs. Sometimes, 2/3/4.
-    return subs.every(function(e) { return e.uid !== null; });
-  },
-  hasTwo(arr) {
-    return arr.length == 2;
+  lengthEqual(arr, number) {
+    return arr.length === number;
   },
   getUserById(users, uid) {
     let user = users.find(function(x) {
@@ -131,63 +126,26 @@ Template.halfhalfResults.helpers({
     });
     return user;
   },
-  firstElement(listObj){
-    return listObj[0];
+  elementAtIndex(arr, index){
+    return arr[index];
   },
-  getName(x){
-    console.log(x);
-    return x.friendName;
-  },
-  getImage(x){
-    return x.image;
-  },
-  getMyImage(x){
-    return x.myImage;
-  },
-  bumpees() {
+  resultsGroupedByNeed() {
 
-    let mySubs = this.submissions.filter(function (x) {
+    let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
 
-    let myNeedNames = mySubs.map(function (x) {
+    let myNeedNames = mySubs.map(function(x){
       return x.needName;
     });
 
-    // other submissions that match my needs
-    let otherSubs = this.submissions.filter(function (x) {
-      return (myNeedNames.includes(x.needName)) && (x.uid !== Meteor.userId());
-    });
-
-    // for every submission, create a content object with image metadata and friend metadata
-    let contents = otherSubs.map(function (x) {
-      let myInfoDic = mySubs.find(function (y) {
-        return y.needName === x.needName;
+    return myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = this.images.filter((img) => {
+        return img.needName == needName;
       });
-      return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
+      return {needName: needName, images: needImages};
     });
-
-    console.log("contents", contents);
-
-    let images = this.images;
-
-    // so we have them in some chronological order?
-    contents.reverse();
-
-    // update contents, replacing image metadata with image data
-    contents = contents.map(function (x) {
-      let img = images.find(function (y) {
-        return y._id === x.image;
-      });
-      let myImg = images.find(function (y) {
-        return y._id === x.myImage;
-      });
-
-      return {friendName: x.friendName, image: img, myImage: myImg};
-    });
-
-    console.log("contents2", contents);
-    return contents;
   }
 });
 

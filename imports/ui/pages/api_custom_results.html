@@ -92,10 +92,11 @@
     </style>
   </head>
 
-  <div id="cameraOverlay" class="camera-overlay">
-
-    {{#if hasTwo images}}
-      {{#each image in images}}
+  {{#each needGroup in resultsGroupedByNeed}}
+    <div>{{needGroup.needName}}</div>
+    <div class="camera-overlay">
+    {{#if (lengthEqual needGroup.images 2) }}
+      {{#each image in needGroup.images}}
         <div class="half{{@index}} centered">
           {{#let user=(getUserById users image.uid)}}
             <u>{{user.username}}</u>
@@ -105,14 +106,14 @@
       {{/each}}
     {{else}}
       <div class="half0">
-        {{> Template.dynamic template="displayFullImage" data=(firstElement images)}}
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needGroup.images 0) }}
       </div>
       <div class="half1" style="background-color: rgba(125,125,125,0.5);">
         Waiting for your second half!
       </div>
     {{/if}}
-  </div>
-
+    </div>
+  {{/each}}
 </template>
 
 <template name="cheersResults">
