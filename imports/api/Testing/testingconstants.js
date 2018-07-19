@@ -655,7 +655,7 @@ function createBumped() {
 function createHalfHalf(
   {
     numberInSituation = 1,
-    notificationDelay = 30,
+    notificationDelay = 120,
   } = {}
 ) {
   let experience = {
