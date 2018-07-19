@@ -70,30 +70,36 @@
 
   <div class="instruction">
     {{this.toPass.instruction}}
-    {{#if image}}
-      {{#let user=(getUserById users image.uid)}}
-        <u>{{user.username}}</u> framed the left half. You can align the right half with theirs.
-      {{/let}}
-    {{else}}
-      Frame the left half. Then somebody will frame the right half.
-    {{/if}}
+    {{#let needImages=(imagesByNeed this.images this.needName) }}
+      {{#if (lengthEqual needImages 1) }}
+        {{#let image=(firstElement needImages) }}
+          {{#let user=(getUserById users image.uid) }}
+            <u>{{user.username}}</u> framed the left half. You can align the right half with theirs.
+          {{/let}}
+        {{/let}}
+      {{else}}
+        Frame the left half. Then somebody will frame the right half.
+      {{/if}}
+    {{/let}}
   </div>
   <form id="participate">
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
-      {{#if image}}
-        <div id="leftHalf" class="lefthalf">
-          {{> Template.dynamic template="displayFullImage" data=image}}
-        </div>
-        <div id="rightHalf" class="righthalf">
-          {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
-        </div>
-      {{else}}
-        <div id="leftHalf" class="lefthalf">
-          {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
-        </div>
-        <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
-     {{/if}}
+      {{#let needImages=(imagesByNeed this.images this.needName) }}
+        {{#if (lengthEqual needImages 1) }}
+          <div id="leftHalf" class="lefthalf">
+            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+          </div>
+          <div id="rightHalf" class="righthalf">
+            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+          </div>
+        {{else}}
+          <div id="leftHalf" class="lefthalf">
+            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+          </div>
+          <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
+        {{/if}}
+      {{/let}}
     </div>
 
     <div class="camera-controls">

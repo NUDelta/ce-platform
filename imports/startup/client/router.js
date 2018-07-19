@@ -65,7 +65,7 @@ Router.route('api.custom', {
       incident: Incidents.findOne(),
       location: Locations.findOne(),
       notification_log: Notification_log.find().fetch(),
-      image: Images.findOne(),
+      images: Images.find({}).fetch(),
       users: Meteor.users.find().fetch()
     };
   }
