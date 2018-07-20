@@ -5,6 +5,7 @@ import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
@@ -98,12 +99,22 @@ Template.halfhalfParticipate.helpers({
   },
   firstElement(array) {
     return array[0];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
   }
 });
 
 Template.halfhalfParticipate.onCreated(() => {
   // Cordova CameraPreview starts Off
   Session.set('CameraPreviewOn', false);
+
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
 });
 
 // Scrolling
@@ -146,6 +157,7 @@ Template.halfhalfParticipate.events({
     let imagePreview = template.$(".fileinput-preview");
     imagePreview.attr('src', sampleImgSrc);
     imagePreview.show();
+    template.imageSubmitReady.set(true);
   },
   'click #startCamera'(event, template){
     if (typeof CameraPreview !== 'undefined') {
@@ -156,6 +168,7 @@ Template.halfhalfParticipate.events({
     }
     // using an instance of jquery tied to current template scope
     template.$(".fileinput-preview").hide();
+    template.imageSubmitReady.set(false);
     toggleCameraControls('startCamera');
   },
   'click #takeHalfHalfPhoto'(event, template){
@@ -172,6 +185,7 @@ Template.halfhalfParticipate.events({
             let imagePreview = template.$(".fileinput-preview");
             imagePreview.attr('src', croppedImgUrl);
             imagePreview.show();
+            template.imageSubmitReady.set(true);
             CameraPreview.stopCamera();
             toggleCameraControls('stopCamera');
             Session.set('CameraPreviewOn', false);
@@ -181,7 +195,7 @@ Template.halfhalfParticipate.events({
       console.error("Could not access the CameraPreview")
     }
  },
-  'click #retakePhoto'(){
+  'click #retakePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       startCameraAtPreviewRect();
       Session.set('CameraPreviewOn', true);
@@ -189,6 +203,7 @@ Template.halfhalfParticipate.events({
       console.error("Could not access the CameraPreview")
     }
     $(".fileinput-preview").hide();
+    template.imageSubmitReady.set(true);
     toggleCameraControls('startCamera');
   },
   'click #switchCamera'(){
