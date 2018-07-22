@@ -652,7 +652,7 @@ function createBumped() {
  * @param notificationDelay [Integer] notificationDelay for all places
  * @returns {{name: string, participateTemplate: string, resultsTemplate: string, contributionTypes: Array, description: string, notificationText: string, callbacks: Array}}
  */
-function createHalfHalf(
+const createHalfHalf = function(
   {
     numberInSituation = 1,
     notificationDelay = 120,
@@ -721,7 +721,7 @@ function createHalfHalf(
   });
 
   return experience;
-}
+};
 
 let sendNotificationScavenger = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
@@ -771,7 +771,7 @@ let EXPERIENCES = {
         instruction: 'Take a photo of the sunset!'
       },
       numberNeeded: 20,
-      notificationDelay: 0, // no need to delay if its a sunset outside
+      notificationDelay: 1,
     }],
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
@@ -798,7 +798,7 @@ let EXPERIENCES = {
         instruction: 'Take a photo of like Half Half Travel!'
       },
       numberNeeded: 2,
-      notificationDelay: 0, // no need to delay if its daytime outside
+      notificationDelay: 1,
     }],
     description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
     notificationText: 'Participate in Half Half Travel!',
@@ -1096,6 +1096,8 @@ let EXPERIENCES = {
 export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
+  // Comment out if you would like to only test specific experiences
+  // 'EXPERIENCES': (({ halfhalfAsynch }) => ({ halfhalfAsynch}))(EXPERIENCES),
   'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };
