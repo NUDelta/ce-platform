@@ -220,7 +220,7 @@ Template.halfhalfParticipate.events({
  *
  * @returns rect {DOMRect}
  */
-function getPreviewRect() {
+const getPreviewRect = function() {
   let rect;
   // first one to take picture, so the left half of image will be cropped and used
   if (document.getElementById('leftHalfPreview') !== null) {
@@ -232,9 +232,9 @@ function getPreviewRect() {
     rect = halfOverlay.getBoundingClientRect();
   }
   return rect;
-}
+};
 
-function startCameraAtPreviewRect(
+const startCameraAtPreviewRect = function(
   {
     camera = "front",
     tapPhoto = true,
@@ -246,9 +246,9 @@ function startCameraAtPreviewRect(
   CameraPreview.startCamera({
     x: rect.left, y: rect.top, width: rect.width, height: rect.height,
     camera: camera, tapPhoto: tapPhoto, previewDrag: previewDrag, toBack: toBack});
-}
+};
 
-function toggleCameraControls(mode) {
+const toggleCameraControls = function(mode) {
   if (mode === "startCamera") {
     $(".fileinput-preview").hide();
     document.getElementById('retakePhoto').style.display = "none";
@@ -264,7 +264,8 @@ function toggleCameraControls(mode) {
   else {
     console.log("toggleCameraControls requires passing either 'startCamera' or 'stopCamera' as first parameter");
   }
-}
+};
+
 /**
  * Convert a base64 string in a Blob according to the data and contentType.
  *
@@ -274,7 +275,7 @@ function toggleCameraControls(mode) {
  * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
  * @return Blob
  */
-function b64toBlob(b64Data, contentType, sliceSize) {
+const b64toBlob = function(b64Data, contentType, sliceSize) {
   contentType = contentType || '';
   sliceSize = sliceSize || 512;
 
@@ -295,7 +296,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
   }
 
   return new Blob(byteArrays, {type: contentType});
-}
+};
 
 /**
  * Crop a base64 string image given a cropping rectangle, in the same way that
@@ -311,8 +312,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
  * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
  * @return base64imageURL
  */
-//
-function b64CropLikeCordova(base64PictureData, rect_width, rect_height, callback) {
+const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, callback) {
 
   // image will contain ORIGINAL image
   let image = new Image();
@@ -362,7 +362,7 @@ function b64CropLikeCordova(base64PictureData, rect_width, rect_height, callback
 
     return cropped_img_base64;
   };
-}
+};
 
 // data2pass() {
   //   //TODO: clean up this hot mess of a function

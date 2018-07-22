@@ -120,8 +120,8 @@ Template.halfhalfResults.helpers({
   lengthEqual(arr, number) {
     return arr.length === number;
   },
-  getUserById(users, uid) {
-    let user = users.find(function(x) {
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
       return x._id === uid;
     });
     return user;
