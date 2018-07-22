@@ -822,7 +822,7 @@ let EXPERIENCES = {
         instruction: 'Take a photo of like Half Half Travel!'
       },
       numberNeeded: 2,
-      notificationDelay: 0, // no need to delay if its daytime outside
+      notificationDelay: 1, // no need to delay if its daytime outside
     }],
     description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
     notificationText: 'Participate in Half Half Travel!',
