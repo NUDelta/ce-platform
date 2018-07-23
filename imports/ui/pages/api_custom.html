@@ -36,35 +36,20 @@
         padding-top: 4%;
         padding-bottom: 4%;
       }
-      .lefthalf {
-        grid-area: lefthalf;
-      }
-      .righthalf {
-        grid-area: righthalf;
-      }
-      .camera-overlay {
-        display: grid;
-        grid-gap: 0;
-        grid-template-columns: 45vw 45vw;
-        grid-template-rows: 90vw;
-        grid-template-areas: "lefthalf righthalf";
-      }
 
-      .pos1 {grid-area: pos1}
-      .pos2 {grid-area: pos2}
-      .pos3 {grid-area: pos3}
-      .pos4 {grid-area: pos4}
-      .pos5 {grid-area: pos5}
-      .camera-controls {
-        display: grid;
-        /* 5vw x 4 gaps = 20vw */
-        grid-gap: 5vw;
-        grid-template-columns: repeat(5, 13vw);
-        grid-template-areas: "pos1 pos2 pos3 pos4 pos5";
-      }
-      .glyphicon-size {
-        font-size: 5vw;
-      }
+
+      /*.pos1 {grid-area: pos1}*/
+      /*.pos2 {grid-area: pos2}*/
+      /*.pos3 {grid-area: pos3}*/
+      /*.pos4 {grid-area: pos4}*/
+      /*.pos5 {grid-area: pos5}*/
+      /*.camera-controls {*/
+        /*display: grid;*/
+        /*!* 5vw x 4 gaps = 20vw *!*/
+        /*grid-gap: 5vw;*/
+        /*grid-template-columns: repeat(5, 13vw);*/
+        /*grid-template-areas: "pos1 pos2 pos3 pos4 pos5";*/
+      /*}*/
     </style>
   </head>
 
@@ -87,36 +72,35 @@
       {{> loadingOverlay}}
       {{#let needImages=(imagesByNeed this.images this.needName) }}
         {{#if (lengthEqual needImages 1) }}
-          <div id="leftHalf" class="lefthalf">
-            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            <div class="content">
+              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+            </div>
           </div>
-          <div id="rightHalf" class="righthalf">
+          <div id="rightHalf" class="righthalf halfsquare">
             {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
           </div>
         {{else}}
-          <div id="leftHalf" class="lefthalf">
+          <div id="leftHalf" class="lefthalf halfsquare">
             {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
           </div>
-          <div id="rightHalf" class="righthalf" style="background-color: rgba(125,125,125,0.5);"></div>
+          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
         {{/if}}
       {{/let}}
     </div>
 
     <div class="camera-controls">
-      <button type="button" id="testPhoto" class="btn btn-default pos1">
-        <span class="glyphicon glyphicon-paperclip glyphicon-size"></span>
+      <button type="button" id="startCamera" class="btn-borderless center-control">
+        <span class="glyphicon glyphicon-camera glyphicon-large"></span>
       </button>
-      <button type="button" id="startCamera" class="btn btn-default pos3">
-        <span class="glyphicon glyphicon-camera glyphicon-size"></span>
+      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
       </button>
-      <button type="button" id="takeHalfHalfPhoto" class="btn btn-default pos3" style="display: none">
-        <span class="glyphicon glyphicon-record glyphicon-size"></span>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
       </button>
-      <button type="button" id="retakePhoto" class="btn btn-default pos5" style="display: none">
-        <span class="glyphicon glyphicon-trash glyphicon-size"></span>
-      </button>
-      <button type="button" id="switchCamera" class="btn btn-default pos5" style="display: none">
-        <span class="glyphicon glyphicon-refresh glyphicon-size"></span>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
       </button>
     </div>
     <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"

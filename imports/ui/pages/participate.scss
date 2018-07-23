@@ -1,12 +1,78 @@
 #participate {
-  #leftHalfPreview {
-    height: 90vw;
-    width: 45vw;
+  // BEGIN halfhalfParticipate
+  .lefthalf {
+    grid-area: lefthalf;
   }
-  #rightHalfPreview {
-    height: 90vw;
-    width: 45vw;
+
+  .righthalf {
+    grid-area: righthalf;
   }
+
+  .camera-overlay {
+    display: grid;
+    grid-gap: 0;
+    /*grid-template-columns: 45vw 45vw;*/
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "lefthalf righthalf";
+  }
+
+  .halfsquare {
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .halfsquare::before {
+    content: '';
+    display: block;
+    /*since 100% containing div width is half the sidelength of a square,*/
+    /*200% of containing div width is the full sidelength of a square.*/
+    padding-top: 200%;
+  }
+
+  .halfsquare .content {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .btn-borderless {
+    border: transparent !important;
+    background-color: transparent !important;
+    padding: 1vw;
+  }
+
+  .left-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 5%;
+    transform: translate(-5%, 0);
+  }
+
+  .center-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .right-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 95%;
+    transform: translate(-95%, 0);
+  }
+
+  .glyphicon-medium {
+    font-size: 24px;
+  }
+
+  .glyphicon-large {
+    font-size: 32px;
+  }
+  // END halfhalfParticipate
+
   .fileinput {
     display: block;
     border: 1px solid #ddd;
