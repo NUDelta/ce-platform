@@ -700,7 +700,7 @@ const createHalfHalf = function(
     let [detectorName, situationDescription, delay] = place;
 
     let need = {
-      needName: `halfhalfAsynch${detectorName}`,
+      needName: `half half: ${situationDescription}`,
       situation: {
         detector: DETECTORS[detectorName]._id,
         number: numberInSituation
@@ -789,7 +789,7 @@ let EXPERIENCES = {
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
     contributionTypes: [{
-      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      needName: 'half half: daytime', // FIXME: make more semantically meaningful
       situation: {
         detector: DETECTORS.daytime._id,  // For testing during workday
         number: '1'
@@ -813,7 +813,7 @@ let EXPERIENCES = {
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
     contributionTypes: [{
-      needName: 'halfhalfNeed', // FIXME: make more semantically meaningful
+      needName: 'half half: nighttime', // FIXME: make more semantically meaningful
       situation: {
         detector: DETECTORS.night._id,  // For testing during evening
         number: '1'
