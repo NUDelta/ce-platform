@@ -29,12 +29,93 @@
     </form>
 </template>
 
+<template name="halfhalfParticipate">
+  <head>
+    <style>
+      .instruction {
+        padding-top: 4%;
+        padding-bottom: 4%;
+      }
+
+
+      /*.pos1 {grid-area: pos1}*/
+      /*.pos2 {grid-area: pos2}*/
+      /*.pos3 {grid-area: pos3}*/
+      /*.pos4 {grid-area: pos4}*/
+      /*.pos5 {grid-area: pos5}*/
+      /*.camera-controls {*/
+        /*display: grid;*/
+        /*!* 5vw x 4 gaps = 20vw *!*/
+        /*grid-gap: 5vw;*/
+        /*grid-template-columns: repeat(5, 13vw);*/
+        /*grid-template-areas: "pos1 pos2 pos3 pos4 pos5";*/
+      /*}*/
+    </style>
+  </head>
+
+  <div class="instruction">
+    {{this.toPass.instruction}}
+    {{#let needImages=(imagesByNeed this.images this.needName) }}
+      {{#if (lengthEqual needImages 1) }}
+        {{#let image=(firstElement needImages) }}
+          {{#let user=(getUserById users image.uid) }}
+            <u>{{user.username}}</u> framed the left half. You can align the right half with theirs.
+          {{/let}}
+        {{/let}}
+      {{else}}
+        Frame the left half. Then somebody will frame the right half.
+      {{/if}}
+    {{/let}}
+  </div>
+  <form id="participate">
+    <div id="cameraOverlay" class="camera-overlay">
+      {{> loadingOverlay}}
+      {{#let needImages=(imagesByNeed this.images this.needName) }}
+        {{#if (lengthEqual needImages 1) }}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            <div class="content">
+              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+            </div>
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+          </div>
+        {{else}}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
+        {{/if}}
+      {{/let}}
+    </div>
+
+    <div class="camera-controls">
+      <button type="button" id="startCamera" class="btn-borderless center-control">
+        <span class="glyphicon glyphicon-camera glyphicon-large"></span>
+      </button>
+      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+      Submit
+    </button>
+  </form>
+</template>
+
 <template name="bumped">
     <head>
         <style>
             .instruction {
                 padding-top: 4%;
-                padding-bottomsub: 4%;
+                padding-bottom: 4%;
             }
 
             .camera-upload {
@@ -68,7 +149,7 @@
         <style>
             .instruction {
                 padding-top: 4%;
-                padding-bottomsub: 4%;
+                padding-bottom: 4%;
             }
 
             .camera-upload {
@@ -172,7 +253,7 @@
         showcase all the colors.</p>
     <div id="participate">
         <form class="col col-xs-12">
-            {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
             <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
@@ -207,7 +288,7 @@
     {{/if}}
     <div id="participate">
         <form class="col col-xs-12">
-            {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
             <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit

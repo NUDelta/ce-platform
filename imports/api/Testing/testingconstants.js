@@ -4,7 +4,7 @@ import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
 import {Detectors} from "../UserMonitor/detectors/detectors";
-
+import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 
 let LOCATIONS = {
   'park': {
@@ -646,6 +646,83 @@ function createBumped() {
   return experience;
 }
 
+/** createHalfHalf
+ *
+ * @param numberInSituation [Integer] number of people that need to be in the same situation at the same time
+ * @param notificationDelay [Integer] notificationDelay for all places
+ * @returns {{name: string, participateTemplate: string, resultsTemplate: string, contributionTypes: Array, description: string, notificationText: string, callbacks: Array}}
+ */
+const createHalfHalf = function(
+  {
+    numberInSituation = 1,
+    notificationDelay = 120,
+  } = {}
+) {
+  let experience = {
+    name: 'Half Half Bumped',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [],
+    description: 'Participate in HalfHalf Travel: Capture your side of the story',
+    notificationText: 'Participate in HalfHalf Travel: Capture your side of the story',
+    callbacks: []
+  };
+
+
+  let completedCallback = function(sub) {
+    console.log("a full need completed for half half travel!!!");
+
+    let otherSub = Submissions.findOne({
+      uid: {
+        $ne: sub.uid
+      },
+      iid: sub.iid,
+      needName: sub.needName
+    });
+
+    notify([sub.uid, otherSub.uid], sub.iid,
+      'A half half travel photo was completed!',
+      'See the two halves of an interdependent, visual story you created with someone else!',
+      '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+
+  let places = [
+    ["bar", "at a bar", notificationDelay],
+    ["coffee", "at a coffee shop", notificationDelay],
+    ["grocery", "at a grocery store", notificationDelay],
+    ["restaurant", "at a restaurant", notificationDelay],
+    ["train", "commuting", notificationDelay],
+    ["exercising", "exercising", notificationDelay]
+  ];
+
+  _.forEach(places, (place) => {
+
+    let [detectorName, situationDescription, delay] = place;
+
+    let need = {
+      needName: `half half: ${situationDescription}`,
+      situation: {
+        detector: DETECTORS[detectorName]._id,
+        number: numberInSituation
+      },
+      toPass: {
+        instruction: `Having a good time ${situationDescription}? Try taking one side of a photo.`
+      },
+      numberNeeded: 2,
+      notificationDelay: delay
+    };
+
+    let callback = {
+      trigger: `cb.numberOfSubmissions("${need.needName}") === 2`,
+      function: completedCallback.toString(),
+    };
+    experience.contributionTypes.push(need);
+    experience.callbacks.push(callback)
+  });
+
+  return experience;
+};
+
 let sendNotificationScavenger = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
@@ -669,6 +746,12 @@ let sendNotificationFoodFight = function (sub) {
   notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
+let sendNotificationHalfHalf = function (sub) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
+    return x.uid;
+  });
+  notify(uids, sub.iid, 'View your two halves, side-by-side!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+};
 
 let EXPERIENCES = {
   bumped: createBumped(),
@@ -688,13 +771,64 @@ let EXPERIENCES = {
         instruction: 'Take a photo of the sunset!'
       },
       numberNeeded: 20,
-      notificationDelay: 0, // no need to delay if its a sunset outside
+      notificationDelay: 1,
     }],
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
     callbacks: [{
       trigger: 'cb.incidentFinished()',
       function: sendNotificationSunset.toString()
+    }]
+  },
+
+  halfhalfAsynch: createHalfHalf(),
+  halfhalfSynch: createHalfHalf({numberInSituation: 2}),
+  halfhalfDay: {
+    _id: Random.id(),
+    name: 'Half Half Daytime',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'half half: daytime', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.daytime._id,  // For testing during workday
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
+    }]
+  },
+  halfhalfNight: {
+    _id: Random.id(),
+    name: 'Half Half Nighttime',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'half half: nighttime', // FIXME: make more semantically meaningful
+      situation: {
+        detector: DETECTORS.night._id,  // For testing during evening
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of like Half Half Travel!'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1, // no need to delay if its daytime outside
+    }],
+    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+    notificationText: 'Participate in Half Half Travel!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
     }]
   },
   scavengerHunt: {
@@ -962,6 +1096,8 @@ let EXPERIENCES = {
 export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
+  // Comment out if you would like to only test specific experiences
+  // 'EXPERIENCES': (({ halfhalfAsynch }) => ({ halfhalfAsynch}))(EXPERIENCES),
   'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };

@@ -1,13 +1,17 @@
 // Imports needed for the callbacks
 import { Incidents } from "./OCEs/experiences";
 import { Submissions } from "./currentNeeds";
+import {serverLog} from "../logs";
+import {adminUpdates} from "./progressorHelper";
+// needed because a callback uses `notify`
+import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 
 const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
   changed(submission, old) {
-    console.log(submission);
+    serverLog.call({message: `Submissions DB Changed! \n ${submission}`});
     if(!(submission.uid === null)){
       adminUpdates(submission);
       runCallbacks(submission);

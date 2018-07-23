@@ -2,7 +2,10 @@ body {
   font-size: 15px;
   margin-top: 55px;
   margin-bottom: 65px;
-  background-color: #f8f8f8;
+  // transparent body required for the CameraPreview instance to be displayed behind the layout HTML.
+  // this is required when CameraPreview is started with toBack = true
+  // see documentation on startCamera https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
+  background-color: transparent;
   font-family: 'Karla', 'Roboto', Helvetica;
 }
 
@@ -228,9 +231,4 @@ hr {
   font-size: 14px;
   padding-top: 5px;
   color: #777;
-}
-
-.col-md-6 {
-  padding-left: 5px;
-  padding-right: 5px;
 }

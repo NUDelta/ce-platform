@@ -20,7 +20,7 @@ let second = false;
 describe('Simple End To End', function () {
   this.timeout(30000);
 
-  let NEEDNAME = 'atFruit';
+  let NEEDNAME = 'atProduce';
   beforeEach((done) => {
 
     if (second) {
@@ -33,7 +33,7 @@ describe('Simple End To End', function () {
       Accounts.createUser(CONSTANTS.users.b);
       Accounts.createUser(CONSTANTS.users.c);
 
-      Detectors.insert(CONSTANTS.detectors.fruit);
+      Detectors.insert(CONSTANTS.DETECTORS.produce);
       Experiences.insert(CONSTANTS.experiences.atLocation, (err) => {
         if (err) {
           console.log("ERROR INSERTING EXPERIENCE", err)

@@ -4,6 +4,12 @@
     {{/if}}
 </template>
 
+<template name="displayFullImage">
+  {{#if this.isUploaded}}
+    <img src="{{this.url store="images"}}" alt="image loading...">
+  {{/if}}
+</template>
+
 <template name="displayThanksgivingImage">
     {{#if this.img.isUploaded}}
         <img src="{{this.img.url store="ImageUpload"}}" alt="image loading...">

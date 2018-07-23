@@ -35,6 +35,12 @@ Template.registerHelper( 'getImageById', (data, id) => {
   return image;
 });
 
+Template.registerHelper('getUserById', (users, uid) => {
+  return users.find(function (x) {
+    return x._id === uid;
+  });
+});
+
 Template.photosByCategories.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
@@ -108,6 +114,39 @@ Template.bumpedResults.helpers({
 
 Template.bumpedResults.events({
 
+});
+
+Template.halfhalfResults.helpers({
+  lengthEqual(arr, number) {
+    return arr.length === number;
+  },
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+  resultsGroupedByNeed() {
+
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    return myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = this.images.filter((img) => {
+        return img.needName == needName;
+      });
+      return {needName: needName, images: needImages};
+    });
+  }
 });
 
 Template.scavengerHunt.helpers({

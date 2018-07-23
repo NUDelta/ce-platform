@@ -70,7 +70,51 @@
 
 </template>
 
+<template name="halfhalfResults">
+  <head>
+    <style>
+      .half0 {
+        grid-area: half0;
+      }
+      .half1 {
+        grid-area: half1;
+      }
+      .camera-overlay {
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: 45vw 45vw;
+        grid-template-rows: 90vw;
+        grid-template-areas: "half0 half1";
+      }
+      .centered {
+        text-align: center;
+      }
+    </style>
+  </head>
 
+  {{#each needGroup in resultsGroupedByNeed}}
+    <div>{{needGroup.needName}}</div>
+    <div class="camera-overlay">
+    {{#if (lengthEqual needGroup.images 2) }}
+      {{#each image in needGroup.images}}
+        <div class="half{{@index}} centered">
+          {{#let user=(getUserById users image.uid)}}
+            <u>{{user.username}}</u>
+          {{/let}}
+          {{> Template.dynamic template="displayFullImage" data=image}}
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="half0">
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needGroup.images 0) }}
+      </div>
+      <div class="half1" style="background-color: rgba(125,125,125,0.5);">
+        Waiting for your second half!
+      </div>
+    {{/if}}
+    </div>
+  {{/each}}
+</template>
 
 <template name="cheersResults">
   <head>
