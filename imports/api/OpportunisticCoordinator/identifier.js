@@ -197,13 +197,18 @@ const _addUsersToAssignmentDb = (uids, iid, needName) => {
 };
 
 /**
-* Checking if a need fails. If so, mark OCEManager as failures
-* and create fresh OCEManager to re-try
-*
-* @param iid {string} incident with failed need
-* @param needName {string} need that failed
-*
-**/
+ * Checking if a need fails. We define failure in the case when
+ * situation.number !== number of completed submissions for a need.
+ * This might happen in a synchronous OCE like bumped, where two people are required in the situation,
+ * yet one person did submit, and the other person did not.  This is a failure, since both submissions
+ * were neccessary to complete a need.
+ * If so, mark OCEManager as failures
+ * and create fresh OCEManager to re-try
+ *
+ * @param iid {string} incident with failed need
+ * @param needName {string} need that failed
+ *
+ **/
 const checkIfNeedFailed = (iid, needName) => {
   if (numUnfinishedNeeds(iid, needName) > 0) {
 
@@ -249,21 +254,26 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
     );
   });
 
+  const needUserMap = getNeedUserMapForNeed(iid, needName);
+
+  if (needUserMap.uids.length === 0) {
+    // FIXME(rlouie): Fix and then uncomment so that needs that fail (during a synchronous OCE) are handled properly
+    // checkIfNeedFailed(iid, needName);
+  }
+};
+
+export const getNeedUserMapForNeed = (iid, needName) => {
   let assignment = Assignments.findOne({
     _id: iid,
     "needUserMaps.needName": needName
   });
 
-
   let needUserMap = assignment.needUserMaps.find(x => {
     return x.needName === needName;
   });
 
-  if (needUserMap.uids.length === 0) {
-    checkIfNeedFailed(iid, needName);
-  }
+  return needUserMap;
 };
-
 // const locationCursor = Locations.find();
 //
 // /**
