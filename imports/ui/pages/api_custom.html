@@ -37,19 +37,6 @@
         padding-bottom: 4%;
       }
 
-
-      /*.pos1 {grid-area: pos1}*/
-      /*.pos2 {grid-area: pos2}*/
-      /*.pos3 {grid-area: pos3}*/
-      /*.pos4 {grid-area: pos4}*/
-      /*.pos5 {grid-area: pos5}*/
-      /*.camera-controls {*/
-        /*display: grid;*/
-        /*!* 5vw x 4 gaps = 20vw *!*/
-        /*grid-gap: 5vw;*/
-        /*grid-template-columns: repeat(5, 13vw);*/
-        /*grid-template-areas: "pos1 pos2 pos3 pos4 pos5";*/
-      /*}*/
     </style>
   </head>
 
@@ -67,6 +54,12 @@
       {{/if}}
     {{/let}}
   </div>
+  {{#if this.toPass.exampleImage}}
+    <div>
+      <u>Example to try</u>
+      <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+    </div>
+  {{/if}}
   <form id="participate">
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
