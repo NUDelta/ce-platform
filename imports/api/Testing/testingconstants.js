@@ -831,6 +831,43 @@ let EXPERIENCES = {
       function: sendNotificationHalfHalf.toString()
     }]
   },
+  halfhalfEmbodiedMimicry: {
+    _id: Random.id(),
+    name: 'Body Mirror',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'Hand Silhouette',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+    }, {
+      needName: 'I eat with my hands',
+      situation: {
+        detector: DETECTORS.grocery._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 90,
+    }],
+    description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
+    notificationText: 'Your situation made you available to participate in Body Mirror!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationHalfHalf.toString()
+    }]
+  },
   scavengerHunt: {
     _id: Random.id(),
     name: 'St. Patrick\'s Day Scavenger Hunt',
@@ -1097,8 +1134,8 @@ export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
   // Comment out if you would like to only test specific experiences
-  // 'EXPERIENCES': (({ halfhalfAsynch }) => ({ halfhalfAsynch}))(EXPERIENCES),
-  'EXPERIENCES': EXPERIENCES,
+  'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
+  // 'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 
