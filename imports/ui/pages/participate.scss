@@ -43,6 +43,11 @@
     padding: 1vw;
   }
 
+  .camera-controls {
+    // this margin matches the height of the bottom nav bar, so it wont overlap the camera icon
+    margin-bottom: 52px;
+  }
+
   .left-control {
     position: absolute;
     margin-top: 10px;
