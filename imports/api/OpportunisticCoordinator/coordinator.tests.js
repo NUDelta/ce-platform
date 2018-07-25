@@ -1,10 +1,16 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Availability } from './databaseHelpers.js';
-import { updateAvailability } from './identifier';
+import {
+  adminUpdatesForAddingUsersToIncident, adminUpdatesForRemovingUsersToIncident, getNeedUserMapForNeed,
+  updateAvailability
+} from './identifier';
+import {CONSTANTS} from "../Testing/testingconstants";
+import {createIncidentFromExperience, startRunningIncident} from "../OCEManager/OCEs/methods";
+import {Experiences, Incidents} from "../OCEManager/OCEs/experiences";
 
 describe('Availability Tests', () => {
-  let id1 = '26Jjd7ffARhLvZJLs';
-  let id2 = '39Jjd7ffARhLvZJLs';
+  let id1 = Random.id();
+  let id2 = Random.id();
 
   beforeEach(() => {
     resetDatabase();
@@ -59,4 +65,57 @@ describe('Availability Tests', () => {
       }
     });
   })
+});
+
+describe('Assignments test', () => {
+
+  const testExperience = 'halfhalfDay';
+  var testIncident;
+  beforeEach(() => {
+    resetDatabase();
+
+    // createOCE
+    // NOTE: DETECTORS are unnecessary, since we will trigger the assignment to needs manually
+    let exp = CONSTANTS.EXPERIENCES[testExperience];
+    Experiences.insert(exp);
+    testIncident = createIncidentFromExperience(exp);
+    // Submissions, Availability, and Assignments are inserted here
+    startRunningIncident(testIncident);
+  });
+
+  it('should add user to Assignment DB once they have been assigned to a need', () => {
+
+    const needName = CONSTANTS.EXPERIENCES[testExperience].contributionTypes[0].needName;
+    const incident = Incidents.findOne(testIncident);
+
+    // single user participating
+    const uids = [Random.id()];
+    const beforeNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
+    adminUpdatesForAddingUsersToIncident(uids, incident._id, needName);
+    const afterNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
+
+    if (beforeNeedUserMap.uids.length + uids.length !== afterNeedUserMap.uids.length) {
+      chai.assert(false, `Number of users assigned to need should be ${uids.length} more than before it started`)
+    }
+  });
+  it('should remove user from Assignment DB since they participated', () => {
+
+    const needName = CONSTANTS.EXPERIENCES[testExperience].contributionTypes[0].needName;
+    const incident = Incidents.findOne(testIncident);
+
+    // Adding 3 users
+    const uids_to_add = [Random.id(), Random.id(), Random.id()];
+    adminUpdatesForAddingUsersToIncident(uids_to_add, incident._id, needName);
+    const beforeNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
+
+    // One user participated, so we will remove them
+    const uids_to_remove = [uids_to_add[0]];
+    adminUpdatesForRemovingUsersToIncident(uids_to_remove, incident._id, needName);
+    const afterNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
+
+    if (beforeNeedUserMap.uids.length - 1 !== afterNeedUserMap.uids.length) {
+      chai.assert(false, 'One user participated, but one user was NOT removed from the assignments for this need');
+    }
+  });
+
 });
