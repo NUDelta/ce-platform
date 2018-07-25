@@ -11,7 +11,8 @@ const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
   //e.g. if a photo upload fails this will still run not matter what
   changed(submission, old) {
-    serverLog.call({message: `Submissions DB Changed! \n ${submission}`});
+    serverLog.call({message: `Submissions DB Changed!`});
+    serverLog.call({message: `${Object.keys(submission)}`});
     if(!(submission.uid === null)){
       adminUpdates(submission);
       runCallbacks(submission);
