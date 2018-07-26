@@ -89,31 +89,46 @@
       .centered {
         text-align: center;
       }
+      .need-group-container {
+        /* give some space for the following text*/
+        margin-bottom: 40px;
+      }
     </style>
   </head>
 
-  {{#each needGroup in resultsGroupedByNeed}}
-    <div>{{needGroup.needName}}</div>
-    <div class="camera-overlay">
-    {{#if (lengthEqual needGroup.images 2) }}
-      {{#each image in needGroup.images}}
-        <div class="half{{@index}} centered">
-          {{#let user=(getUserById users image.uid)}}
-            <u>{{user.username}}</u>
-          {{/let}}
-          {{> Template.dynamic template="displayFullImage" data=image}}
+  <div id="results">
+    <h4>{{this.experience.name}}</h4>
+    {{#each needGroup in resultsGroupedByNeed}}
+      <div class="need-group-container">
+        <div>{{needGroup.needName}}</div>
+        <div class="camera-overlay">
+          {{#if (lengthEqual needGroup.images 2) }}
+            {{#each image in needGroup.images}}
+              <div class="half{{@index}} centered halfsquare">
+                {{#let user=(getUserById users image.uid)}}
+                  <u>{{user.username}}</u>
+                {{/let}}
+                <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+              </div>
+            {{/each}}
+          {{else}}
+            {{#let image=(elementAtIndex needGroup.images 0) }}
+              <div class="half0 centered halfsquare">
+                {{#let user=(getUserById users image.uid)}}
+                  <u>{{user.username}}</u>
+                {{/let}}
+                <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+              </div>
+              <div class="half1 halfsquare">
+                <br/>
+                <div class="content" style="background-color: rgba(125,125,125,0.5);">Waiting for another person to fill in the right half!</div>
+              </div>
+            {{/let}}
+          {{/if}}
         </div>
-      {{/each}}
-    {{else}}
-      <div class="half0">
-        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needGroup.images 0) }}
       </div>
-      <div class="half1" style="background-color: rgba(125,125,125,0.5);">
-        Waiting for your second half!
-      </div>
-    {{/if}}
-    </div>
-  {{/each}}
+    {{/each}}
+  </div>
 </template>
 
 <template name="cheersResults">

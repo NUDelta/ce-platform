@@ -46,4 +46,24 @@
     font-size: 12px;
     color: rgba(0, 0, 0, 0.6);
   }
+
+  .halfsquare {
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .halfsquare::before {
+    content: '';
+    display: block;
+    /*since 100% containing div width is half the sidelength of a square,*/
+    /*200% of containing div width is the full sidelength of a square.*/
+    padding-top: 200%;
+  }
+
+  .halfsquare .content {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+  }
 }
