@@ -4,11 +4,13 @@ import {createIncidentFromExperience, startRunningIncident} from "./OCEs/methods
 import {CONSTANTS} from "../Testing/testingconstants";
 import {Experiences, Incidents} from "./OCEs/experiences";
 import {Submissions} from "./currentNeeds";
-import {adminUpdates} from "./progressorHelper";
+import {adminUpdatesForAddingUsersToIncident, updateAvailability} from "../OpportunisticCoordinator/identifier";
+import { Accounts } from 'meteor/accounts-base';
+import {findUserByUsername} from "../UserMonitor/users/methods";
 
 describe('Progressor Tests', function() {
 
-  const testExperience = 'halfhalfDay';
+  const OCE_NAME = 'halfhalfDay';
   let numUnfinishedBefore;
   let numSubsBefore;
   let needName;
@@ -19,22 +21,32 @@ describe('Progressor Tests', function() {
   before(function() {
     resetDatabase();
 
-    // createOCE
-    // NOTE: DETECTORS are unnecessary, since we will trigger the assignment to needs manually
-    let testExp = CONSTANTS.EXPERIENCES[testExperience];
+    // Create User
+    Accounts.createUser(CONSTANTS.USERS.garrett);
+    const testUser = findUserByUsername('garrett');
+
+    // Start OCE
+    let testExp = CONSTANTS.EXPERIENCES[OCE_NAME];
     Experiences.insert(testExp);
     let testIncident = createIncidentFromExperience(testExp);
-    // Submissions, Availability, and Assignments are inserted here
     startRunningIncident(testIncident);
 
-    // update Submissions
-    needName = CONSTANTS.EXPERIENCES[testExperience].contributionTypes[0].needName;
+    // Collect params for the need to be participating in
     experience = Experiences.findOne(testExp);
     incident = Incidents.findOne(testIncident);
+    needName = CONSTANTS.EXPERIENCES[OCE_NAME].contributionTypes[0].needName;
+
+    // User is Available
+    updateAvailability(testUser._id, { [incident._id]: [needName] });
+
+    // Assign User to OCE
+    adminUpdatesForAddingUsersToIncident([testUser._id], incident._id, needName);
+
+    // update Submissions
     numUnfinishedBefore = numUnfinishedNeeds(incident._id, needName);
     numSubsBefore = Submissions.find({iid: incident._id, needName: needName}).count();
     submissionObject = {
-      uid: Random.id(),
+      uid: testUser._id,
       eid: experience._id,
       iid: incident._id,
       needName: needName,
@@ -43,8 +55,6 @@ describe('Progressor Tests', function() {
       lat: null, // not important in this test
       lng: null, // not important in this test
     };
-    // TODO(rlouie): since it seems impossible to wait for Submissions DB to change, and the observe callbacks to occur,
-    // TODO(cont'd): these tests pass, but submissions might be altered at a later time in an undesirable way
     updateSubmission(submissionObject);
   });
 
