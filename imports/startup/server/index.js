@@ -4,4 +4,3 @@ import './register-api.js';
 import './push.js';
 import './fixtures.js';
 import './router.js';
-import './cron.js';
