@@ -18,7 +18,7 @@ import "../OCEManager/progressorHelper";
 let second = false;
 
 describe('Simple End To End', function () {
-  this.timeout(30000);
+  this.timeout(60*1000);
 
   let OCE_NAME = 'scavengerHunt';
   let NEEDNAME = 'greenProduce';
@@ -32,7 +32,18 @@ describe('Simple End To End', function () {
     } else {
       second = true;
       resetDatabase();
-      Accounts.createUser(CONSTANTS.USERS[USERNAME]);
+      // Create User
+      // NOTE: tried to use Account.createUser, but does not properly trigger the onCreateUser callback in time
+      let user = CONSTANTS.USERS[USERNAME];
+      user.profile = {};
+      user.profile.experiences = [];
+      user.profile.subscriptions = [];
+      user.profile.lastParticipated = null;
+      user.profile.lastNotified = null;
+      user.profile.pastIncidents = [];
+      user.profile.activeIncidents = [];
+      user.profile.staticAffordances = user.profile.staticAffordances || {};
+      Meteor.users.insert(user);
 
       Detectors.insert(CONSTANTS.DETECTORS.produce);
 
@@ -43,29 +54,38 @@ describe('Simple End To End', function () {
       startRunningIncident(testIncident);
 
       let uid = findUserByUsername(USERNAME)._id;
-      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function () {
+      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function (uid) {
         done();
       });
     }
   });
 
-  it('user gets added to experience', () => {
-    let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
-    let iid = incident._id;
-    let user = findUserByUsername(USERNAME);
-
-    //user has incident as an active incident
-    chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
-
-    //assignments has user assigned
-    let assignmentEntry = Assignments.findOne({ _id: iid });
-
-    let needUserMap = assignmentEntry.needUserMaps.find((x) => {
-      return x.needName ===  NEEDNAME;
+  it('user gets added to experience', (done) => {
+    const contributionForNeed = CONSTANTS.EXPERIENCES[OCE_NAME].contributionTypes.find(function(x) {
+      return x.needName === NEEDNAME;
     });
+    const notificationDelay = contributionForNeed.notificationDelay;
+    Meteor.setTimeout(function() {
+      let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+      let iid = incident._id;
+      let user = findUserByUsername(USERNAME);
 
-    chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
-    chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+      console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+      //user has incident as an active incident
+      chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+
+      //assignments has user assigned
+      let assignmentEntry = Assignments.findOne({ _id: iid });
+
+      let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+        return x.needName ===  NEEDNAME;
+      });
+
+      chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
+      chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+
+      done();
+    }, notificationDelay * 1000);
   });
 
   it('user participates in experience', (done) => {
