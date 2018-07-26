@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Random } from 'meteor/random'
-import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
