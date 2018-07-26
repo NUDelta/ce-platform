@@ -39,29 +39,21 @@ describe('Availability Tests', () => {
 
     _.forEach(firstEntry.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === 'need1') {
-        if (needUserMap.uids.indexOf('1') === -1) {
-          chai.assert(false, 'user not added to need1');
-        }
+        chai.assert(needUserMap.uids.includes('1'), 'user not added to need1');
       }
 
       if (needUserMap.needName === 'need2') {
-        if (needUserMap.uids.indexOf('1') !== -1) {
-          chai.assert(false, 'user not removed from need2');
-        }
+        chai.assert.isFalse(needUserMap.uids.includes('1'), 'user not removed from need2');
       }
     });
 
     _.forEach(secondEntry.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === 'need3') {
-        if (needUserMap.uids.indexOf('1') === -1) {
-          chai.assert(false, 'user not added to need 3');
-        }
+        chai.assert(needUserMap.uids.includes('1'), 'user not added to need3');
       }
 
       if (needUserMap.needName === 'need4') {
-        if (needUserMap.uids.indexOf('1') === -1) {
-          chai.assert(false, 'user not added to need 4');
-        }
+        chai.assert(needUserMap.uids.includes('1'), 'user not added to need4');
       }
     });
   })
