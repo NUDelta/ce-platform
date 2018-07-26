@@ -254,12 +254,14 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
     );
   });
 
+  /*
   const needUserMap = getNeedUserMapForNeed(iid, needName);
 
   if (needUserMap.uids.length === 0) {
     // FIXME(rlouie): Fix and then uncomment so that needs that fail (during a synchronous OCE) are handled properly
-    // checkIfNeedFailed(iid, needName);
+    checkIfNeedFailed(iid, needName);
   }
+  */
 };
 
 export const getNeedUserMapForNeed = (iid, needName) => {
@@ -268,11 +270,15 @@ export const getNeedUserMapForNeed = (iid, needName) => {
     "needUserMaps.needName": needName
   });
 
-  let needUserMap = assignment.needUserMaps.find(x => {
-    return x.needName === needName;
-  });
+  if (assignment) {
+    serverLog.call({message: `assignment obj: ${Object.keys(assignment)}`});
+    serverLog.call({message: `needUserMaps: ${Object.keys(assignment.needUserMaps)}`});
+    let needUserMap = assignment.needUserMaps.find(x => {
+      return x.needName === needName;
+    });
 
-  return needUserMap;
+    return needUserMap;
+  }
 };
 // const locationCursor = Locations.find();
 //
