@@ -18,7 +18,7 @@ import "../OCEManager/progressorHelper";
 let second = false;
 
 describe('Simple End To End', function () {
-  this.timeout(60*1000);
+  this.timeout(120*1000);
 
   let OCE_NAME = 'scavengerHunt';
   let NEEDNAME = 'greenProduce';
@@ -54,7 +54,7 @@ describe('Simple End To End', function () {
       startRunningIncident(testIncident);
 
       let uid = findUserByUsername(USERNAME)._id;
-      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function (uid) {
+      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function() {
         done();
       });
     }
@@ -65,36 +65,40 @@ describe('Simple End To End', function () {
       return x.needName === NEEDNAME;
     });
     const notificationDelay = contributionForNeed.notificationDelay;
+
+    // Wait to check if user.profile and assignments has changed, notificationDelay seconds after first matching
     Meteor.setTimeout(function() {
-      let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
-      let iid = incident._id;
-      let user = findUserByUsername(USERNAME);
+      try {
+        let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+        let iid = incident._id;
+        let user = findUserByUsername(USERNAME);
 
-      console.log('user.profile.activeIncidents', user.profile.activeIncidents);
-      //user has incident as an active incident
-      chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+        console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+        //user has incident as an active incident
+        chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
 
-      //assignments has user assigned
-      let assignmentEntry = Assignments.findOne({ _id: iid });
+        //assignments has user assigned
+        let assignmentEntry = Assignments.findOne({ _id: iid });
 
-      let needUserMap = assignmentEntry.needUserMaps.find((x) => {
-        return x.needName ===  NEEDNAME;
-      });
+        let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+          return x.needName ===  NEEDNAME;
+        });
 
-      chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
-      chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+        chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
+        chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
 
-      done();
+        done();
+      } catch (err) { done(err); }
     }, notificationDelay * 1000);
   });
 
   it('user participates in experience', (done) => {
     let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
     let iid = incident._id;
-    let user = findUserByUsername(USERNAME);
+    let uid = findUserByUsername(USERNAME)._id;
 
     let submission = {
-      uid: user._id,
+      uid: uid,
       eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id,
       iid: iid,
       needName: NEEDNAME,
@@ -106,11 +110,15 @@ describe('Simple End To End', function () {
 
     updateSubmission(submission);
 
+    // Wait several seconds so the observe changes of Submissions collection can run
     Meteor.setTimeout(function () {
-      chai.assert.isFalse(user.profile.activeIncidents.includes(iid), 'active incident not removed from user profile');
-      chai.assert(user.profile.pastIncidents.includes(iid), 'past incident not added to user profile');
-      done()
-    }, 20 * 1000);
+      try {
+        let user = findUserByUsername(USERNAME);
+        chai.assert.isFalse(user.profile.activeIncidents.includes(iid), 'active incident not removed from user profile');
+        chai.assert(user.profile.pastIncidents.includes(iid), 'past incident not added to user profile');
+        done();
+      } catch (err) { done(err); }
+    }, 5 * 1000);
 
   });
 

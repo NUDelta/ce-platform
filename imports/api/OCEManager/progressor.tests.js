@@ -10,6 +10,7 @@ import {findUserByUsername} from "../UserMonitor/users/methods";
 import {serverLog} from "../logs";
 
 describe('Progressor Tests', function() {
+  this.timeout(30*1000);
 
   const OCE_NAME = 'halfhalfDay';
   let needIndex = 0;
@@ -57,77 +58,49 @@ describe('Progressor Tests', function() {
     // Assign User to OCE
     adminUpdatesForAddingUsersToIncident([testUser._id], incident._id, needName);
 
+    // Wait for notificationDelay seconds before submitting
     Meteor.setTimeout(function() {
-      // update Submissions
-      numUnfinishedBefore = numUnfinishedNeeds(incident._id, needName);
-      numSubsBefore = Submissions.find({iid: incident._id, needName: needName}).count();
-      submissionObject = {
-        uid: testUser._id,
-        eid: experience._id,
-        iid: incident._id,
-        needName: needName,
-        content: {}, // not important in this test
-        timestamp: Date.now(),
-        lat: null, // not important in this test
-        lng: null, // not important in this test
-      };
-      updateSubmission(submissionObject);
-      done();
+      try {
+        // update Submissions
+        numUnfinishedBefore = numUnfinishedNeeds(incident._id, needName);
+        numSubsBefore = Submissions.find({iid: incident._id, needName: needName}).count();
+        submissionObject = {
+          uid: testUser._id,
+          eid: experience._id,
+          iid: incident._id,
+          needName: needName,
+          content: {}, // not important in this test
+          timestamp: Date.now(),
+          lat: null, // not important in this test
+          lng: null, // not important in this test
+        };
+        updateSubmission(submissionObject);
+        done();
+      } catch(err) { done(err); }
     }, notificationDelay * 1000);
   });
 
-  it('should update submissions for single user-need participation', function() {
-    const justSubmitted = Submissions.findOne({
-      eid: submissionObject.eid,
-      iid: submissionObject.iid,
-      needName: submissionObject.needName,
-      uid: submissionObject.uid
-    });
-    const numUnfinishedAfter = numUnfinishedNeeds(incident._id, submissionObject.needName);
-    const numSubsAfter = Submissions.find({iid: incident._id, needName: submissionObject.needName}).count();
+  it('should update submissions for single user-need participation', function(done) {
+    // Wait for several seconds so the observe changes of Submissions collection can run
+    Meteor.setTimeout(function() {
+      try {
+        const justSubmitted = Submissions.findOne({
+          eid: submissionObject.eid,
+          iid: submissionObject.iid,
+          needName: submissionObject.needName,
+          uid: submissionObject.uid
+        });
+        const numUnfinishedAfter = numUnfinishedNeeds(incident._id, submissionObject.needName);
+        const numSubsAfter = Submissions.find({iid: incident._id, needName: submissionObject.needName}).count();
 
-    chai.assert.typeOf(justSubmitted, 'Object', 'Should have found the submission that was just updated');
-    chai.assert.equal(numSubsBefore, numSubsAfter, `Number of submissions should not change, only contents of them`);
-    chai.assert.equal(numUnfinishedBefore - 1, numUnfinishedAfter,
-      `Before single user submission: ${numUnfinishedBefore} unfinished needs; After: ${numUnfinishedAfter}`
-    );
-
-    // @see https://wietse.loves.engineering/testing-promises-with-mocha-90df8b7d2e35
-    // @see https://stackoverflow.com/questions/11235815/is-there-a-way-to-get-chai-working-with-asynchronous-mocha-tests
-    // if you want this Promise/Timeout code to work
-    // add `async` before callback definition i.e. `async function() {}`
-    // const subUpdatedPromise = new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     const justSubmitted = Submissions.findOne({
-    //       eid: submissionObject.eid,
-    //       iid: submissionObject.iid,
-    //       needName: submissionObject.needName,
-    //       uid: submissionObject.uid
-    //     });
-    //     const numUnfinishedAfter = numUnfinishedNeeds(incident._id, needName);
-    //     const numSubsAfter = Submissions.find({iid: incident._id, needName: needName}).count();
-    //
-    //     const result = {
-    //       justSubmitted: justSubmitted,
-    //       numUnfinishedAfter: numUnfinishedAfter,
-    //       numSubsAfter: numSubsAfter
-    //     };
-    //     resolve(result);
-    //   }, 100);
-    // });
-    //
-    // try {
-    //   const result = await subUpdatedPromise;
-    //   chai.assert.typeOf(result.justSubmitted, 'Object', 'Should have found the submission that was just updated');
-    //   chai.assert.equal(numSubsBefore, result.numSubsAfter, `Number of submissions should not change, only contents of them`);
-    //   chai.assert.equal(numUnfinishedBefore - 1, result.numUnfinishedAfter,
-    //     `Before single user submission: ${numUnfinishedBefore} unfinished needs; After: ${result.numUnfinishedAfter}`
-    //   );
-    //   done();
-    // } catch(err) {
-    //   done(err);
-    // }
-
+        chai.assert.typeOf(justSubmitted, 'Object', 'Should have found the submission that was just updated');
+        chai.assert.equal(numSubsBefore, numSubsAfter, `Number of submissions should not change, only contents of them`);
+        chai.assert.equal(numUnfinishedBefore - 1, numUnfinishedAfter,
+          `Before single user submission: ${numUnfinishedBefore} unfinished needs; After: ${numUnfinishedAfter}`
+        );
+        done();
+      } catch (err) { done(err); }
+    }, 5 * 1000);
   });
 
 });
