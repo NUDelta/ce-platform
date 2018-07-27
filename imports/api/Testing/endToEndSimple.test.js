@@ -66,7 +66,7 @@ describe('Simple End To End', function () {
     });
     const notificationDelay = contributionForNeed.notificationDelay;
 
-    // Wait to check if user.profile and assignments has changed, notificationDelay seconds after first matching
+    // Wait to check if user.profile and assignments has changed, > notificationDelay seconds after first matching
     Meteor.setTimeout(function() {
       try {
         let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
@@ -89,7 +89,7 @@ describe('Simple End To End', function () {
 
         done();
       } catch (err) { done(err); }
-    }, notificationDelay * 1000);
+    }, (notificationDelay + 5) * 1000);
   });
 
   it('user participates in experience', (done) => {
