@@ -6,8 +6,9 @@ import {Experiences, Incidents} from "./OCEs/experiences";
 import {Submissions} from "./currentNeeds";
 import {adminUpdatesForAddingUsersToIncident, updateAvailability} from "../OpportunisticCoordinator/identifier";
 import {findUserByUsername} from "../UserMonitor/users/methods";
+import {Assignments, Availability} from "../OpportunisticCoordinator/databaseHelpers";
 
-describe('Progressor Tests', function() {
+describe('Progressor Tests - Single Submission', function() {
   this.timeout(30*1000);
 
   const OCE_NAME = 'halfhalfDay';
@@ -73,32 +74,64 @@ describe('Progressor Tests', function() {
           lng: null, // not important in this test
         };
         updateSubmission(submissionObject);
-        done();
+        // Wait for several seconds so the observe changes of Submissions collection can run
+        Meteor.setTimeout(function() { done(); }, 5 * 1000);
       } catch(err) { done(err); }
     }, notificationDelay * 1000);
   });
 
-  it('should update submissions for single user-need participation', function(done) {
-    // Wait for several seconds so the observe changes of Submissions collection can run
-    Meteor.setTimeout(function() {
-      try {
-        const justSubmitted = Submissions.findOne({
-          eid: submissionObject.eid,
-          iid: submissionObject.iid,
-          needName: submissionObject.needName,
-          uid: submissionObject.uid
-        });
-        const numUnfinishedAfter = numUnfinishedNeeds(incident._id, submissionObject.needName);
-        const numSubsAfter = Submissions.find({iid: incident._id, needName: submissionObject.needName}).count();
+  it('should update submissions for single user-need participation', function() {
+    const justSubmitted = Submissions.findOne({
+      eid: submissionObject.eid,
+      iid: submissionObject.iid,
+      needName: submissionObject.needName,
+      uid: submissionObject.uid
+    });
+    const numUnfinishedAfter = numUnfinishedNeeds(incident._id, submissionObject.needName);
+    const numSubsAfter = Submissions.find({iid: incident._id, needName: submissionObject.needName}).count();
 
-        chai.assert.typeOf(justSubmitted, 'Object', 'Should have found the submission that was just updated');
-        chai.assert.equal(numSubsBefore, numSubsAfter, `Number of submissions should not change, only contents of them`);
-        chai.assert.equal(numUnfinishedBefore - 1, numUnfinishedAfter,
-          `Before single user submission: ${numUnfinishedBefore} unfinished needs; After: ${numUnfinishedAfter}`
-        );
-        done();
-      } catch (err) { done(err); }
-    }, 5 * 1000);
+    chai.assert.typeOf(justSubmitted, 'Object', 'Should have found the submission that was just updated');
+    chai.assert.equal(numSubsBefore, numSubsAfter, `Number of submissions should not change, only contents of them`);
+    chai.assert.equal(numUnfinishedBefore - 1, numUnfinishedAfter,
+      `Before single user submission: ${numUnfinishedBefore} unfinished needs; After: ${numUnfinishedAfter}`
+    );
   });
 
+  it('should remove the incident from active incidents in users profile', function() {
+    const user = Meteor.users.findOne({_id: submissionObject.uid});
+    chai.assert.isFalse(user.profile.activeIncidents.includes(submissionObject.iid),
+      'active incident not removed from user profile');
+  });
+
+  it('should add the incident to past incidents in users profile', function() {
+    const user = Meteor.users.findOne({_id: submissionObject.uid});
+    chai.assert(user.profile.pastIncidents.includes(submissionObject.iid), 'past incident not added to user profile');
+  });
+
+  it('should remove the uid from the availability for that incident', function() {
+    const avail = Availability.findOne({_id: submissionObject.iid});
+    _.forEach(avail.needUserMaps, (needUserMap) => {
+      if (needUserMap.needName === submissionObject.needName) {
+        chai.assert.isFalse(needUserMap.uids.includes(submissionObject.uid),
+          `user not removed from the availability for ${needUserMap.needName}`);
+      }
+    });
+  });
+
+  it('should remove the uid from the assignment for that incident', function() {
+    const assign = Assignments.findOne({_id: submissionObject.iid});
+    _.forEach(assign.needUserMaps, (needUserMap) => {
+      if (needUserMap.needName === submissionObject.needName) {
+        chai.assert.isFalse(needUserMap.uids.includes(submissionObject.uid),
+          `user not removed from the assignments for ${needUserMap.needName}`);
+      }
+    });
+  });
+
+  it('should set user profile last participated approximately to the time of submission', function () {
+    const user = Meteor.users.findOne({_id: submissionObject.uid});
+    let epsilon = Math.abs(submissionObject.timestamp - user.profile.lastParticipated);
+    chai.assert.isBelow(epsilon, 30*1000,
+      'user.profile.lastParticipated was not updated properly to be within epsilon seconds of the submission');
+  });
 });
