@@ -55,7 +55,7 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
  */
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, incidentDelays, currLocation) => {
   // bin user need availabilities by time, and send to coordinator together
-  // { '10000': { 'iid1': [need1, need2], 'iid2': [need1] }, '20000': { 'iid1': ['need1'], 'iid3': ['need1'] } }
+  // { '10000': { 'iid1': [need1, need2], 'iid2': [need1] }, '20000': { 'iid1': ['need3'], 'iid3': ['need1'] } }
   let binnedUserAvailabilities = {};
 
   _.forEach(userAvailability, (needs, iid) => {
@@ -102,7 +102,7 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, inc
  * once notified, however, they are no longer available to participate, so check (2) when using (1) as a condition.
  *
  * @param uid {string} user whose location just updated
- * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
+ * @param availabilityDictionary {object} availabilities when timeout was set as {iid: [need, need], iid: [need]}
  * @param lastLocation {object} location of user when timeout was set as object with
  *    latitude/longitude keys and float values.
  * @returns {Function}

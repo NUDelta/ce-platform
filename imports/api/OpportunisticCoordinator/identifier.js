@@ -164,11 +164,7 @@ export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
  * @param needName {string} name of need to remove users from
  */
 // user location moved but did not participate. remove incident entirely from user
-export const adminUpdatesForRemovingUsersToIncidentEntirely = (
-  uids,
-  iid,
-  needName
-) => {
+export const adminUpdatesForRemovingUsersToIncidentEntirely = (uids, iid, needName) => {
   //TODO: make this function take a single user not an array
   _removeUsersFromAssignmentDb(uids, iid, needName);
   _removeIncidentFromUsersEntirely(uids, iid);
