@@ -6,19 +6,19 @@ import {adminUpdates} from "./progressorHelper";
 // needed because a callback uses `notify`
 import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 
-// const submissionsCursor = Submissions.find({});
-// const submissionsHandle = submissionsCursor.observe({
-//   //TODO: make it so we can check the submission when through completely first?
-//   //e.g. if a photo upload fails this will still run not matter what
-//   changed(submission, old) {
-//     serverLog.call({message: `Submissions DB Changed!`});
-//     serverLog.call({message: `${Object.keys(submission)}`});
-//     if(!(submission.uid === null)){
-//       adminUpdates(submission);
-//       runCallbacks(submission);
-//     }
-//   }
-// });
+const submissionsCursor = Submissions.find({});
+const submissionsHandle = submissionsCursor.observe({
+  //TODO: make it so we can check the submission when through completely first?
+  //e.g. if a photo upload fails this will still run not matter what
+  changed(submission, old) {
+    serverLog.call({message: `Submissions DB Changed!`});
+    serverLog.call({message: `${Object.keys(submission)}`});
+    if(!(submission.uid === null)){
+      adminUpdates(submission);
+      runCallbacks(submission);
+    }
+  }
+});
 Meteor.methods({
   updateSubmission(submission) {
     updateSubmission(submission);
@@ -26,64 +26,28 @@ Meteor.methods({
 });
 
 export const updateSubmission = function(submission) {
-  if (submission.uid !== null) {
-    // called without callback, therefore update blocks until db acknowledges write, or throws exception
-    Submissions.update(
-      {
-        eid: submission.eid,
-        iid: submission.iid,
-        needName: submission.needName,
-        uid: null
-      },
-      {
-        $set: {
-          uid: submission.uid,
-          content: submission.content,
-          timestamp: submission.timestamp,
-          lat: submission.lat,
-          lng: submission.lng
-        }
-      },
-    );
-
-    // TODO: make it so we can check the submission when through completely first?
-    // e.g. if a photo upload fails this will still run not matter what
-    const updatedSub = Submissions.find(
-      {
-        // identifiers
-        eid: submission.eid,
-        iid: submission.iid,
-        needName: submission.needName,
-        timestamp: submission.timestamp
-      });
-    adminUpdates(updatedSub);
-    runCallbacks(updatedSub);
-
-  } else {
-    serverLog.call({message: 'Submission not inserted because it did not come with a uid'});
-  }
-  // Submissions.update(
-  //   {
-  //     eid: submission.eid,
-  //     iid: submission.iid,
-  //     needName: submission.needName,
-  //     uid: null
-  //   },
-  //   {
-  //     $set: {
-  //       uid: submission.uid,
-  //       content: submission.content,
-  //       timestamp: submission.timestamp,
-  //       lat: submission.lat,
-  //       lng: submission.lng
-  //     }
-  //   },
-  //   (err) => {
-  //     if (err) {
-  //       console.log("submission not inserted", err);
-  //     }
-  //   }
-  // );
+  Submissions.update(
+    {
+      eid: submission.eid,
+      iid: submission.iid,
+      needName: submission.needName,
+      uid: null
+    },
+    {
+      $set: {
+        uid: submission.uid,
+        content: submission.content,
+        timestamp: submission.timestamp,
+        lat: submission.lat,
+        lng: submission.lng
+      }
+    },
+    (err) => {
+      if (err) {
+        console.log("submission not inserted", err);
+      }
+    }
+  );
 };
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
