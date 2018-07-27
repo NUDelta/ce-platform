@@ -7,6 +7,9 @@ import {
 import {CONSTANTS} from "../Testing/testingconstants";
 import {createIncidentFromExperience, startRunningIncident} from "../OCEManager/OCEs/methods";
 import {Experiences, Incidents} from "../OCEManager/OCEs/experiences";
+import {findUserByUsername} from "../UserMonitor/users/methods";
+import { Detectors } from "../UserMonitor/detectors/detectors";
+import {insertTestOCE, insertTestUser, startTestOCE} from "./populateDatabase";
 
 describe('Availability Tests', () => {
   let id1 = Random.id();
@@ -110,4 +113,47 @@ describe('Assignments test', () => {
     }
   });
 
+});
+
+describe('Availability with location updates', function() {
+
+  describe('Availability with location updates and notifications', function() {
+    this.timeout(10 * 1000);
+
+    const USERNAME = 'garrett';
+    const OCE_NAME = 'scavengerHunt';
+    const NEEDNAME = 'greenProduce';
+
+    before(function(done) {
+      resetDatabase();
+
+      insertTestUser(USERNAME);
+      Detectors.insert(CONSTANTS.DETECTORS.produce);
+      startTestOCE(OCE_NAME);
+
+      let uid = findUserByUsername(USERNAME)._id;
+
+      // location update
+      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function() {
+        done();
+      });
+
+      // user added availability
+
+
+      // (assigned) and notified
+
+    });
+
+    it('user should still be available to participate after receiving the notification, ' +
+       'if they moved but still match the affordances', function() {
+
+      // one more location update, but they still match the affordances
+
+      // check if they are still available to participate
+
+      // check if they are reassigned
+    });
+
+  });
 });
