@@ -1,16 +1,15 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import { Accounts } from 'meteor/accounts-base';
 import { Experiences } from '../OCEManager/OCEs/experiences';
 import { Users } from '../UserMonitor/users/users';
-import { Incidents} from "../OCEManager/OCEs/experiences";
+import { Incidents } from "../OCEManager/OCEs/experiences";
 import { CONSTANTS } from './testingconstants';
 import { onLocationUpdate } from '../UserMonitor/locations/methods';
 import { createIncidentFromExperience, startRunningIncident } from '../OCEManager/OCEs/methods';
-import { findUserByUsername } from '../UserMonitor/users/methods';
-import { Assignments } from '../OpportunisticCoordinator/databaseHelpers';
+import { findUserByUsername } from "../UserMonitor/users/methods";
+import { Assignments} from "../OpportunisticCoordinator/databaseHelpers";
 import { Random } from 'meteor/random'
 import { Detectors } from "../UserMonitor/detectors/detectors";
-// import {updateSubmission} from "../OCEManager/client/methods";
+import { updateSubmission} from "../OCEManager/progressor";
 
 import "../OCEManager/progressorHelper";
 
@@ -18,9 +17,12 @@ import "../OCEManager/progressorHelper";
 let second = false;
 
 describe('Simple End To End', function () {
-  this.timeout(30000);
+  this.timeout(120*1000);
 
-  let NEEDNAME = 'atProduce';
+  let OCE_NAME = 'scavengerHunt';
+  let NEEDNAME = 'greenProduce';
+  let USERNAME = 'garrett';
+
   beforeEach((done) => {
 
     if (second) {
@@ -29,70 +31,93 @@ describe('Simple End To End', function () {
     } else {
       second = true;
       resetDatabase();
-      Accounts.createUser(CONSTANTS.users.a);
-      Accounts.createUser(CONSTANTS.users.b);
-      Accounts.createUser(CONSTANTS.users.c);
+      // Create User
+      // NOTE: tried to use Account.createUser, but does not properly trigger the onCreateUser callback in time
+      let user = CONSTANTS.USERS[USERNAME];
+      user.profile = {};
+      user.profile.experiences = [];
+      user.profile.subscriptions = [];
+      user.profile.lastParticipated = null;
+      user.profile.lastNotified = null;
+      user.profile.pastIncidents = [];
+      user.profile.activeIncidents = [];
+      user.profile.staticAffordances = user.profile.staticAffordances || {};
+      Meteor.users.insert(user);
 
       Detectors.insert(CONSTANTS.DETECTORS.produce);
-      Experiences.insert(CONSTANTS.experiences.atLocation, (err) => {
-        if (err) {
-          console.log("ERROR INSERTING EXPERIENCE", err)
-        }
-      });
 
-      let incident = createIncidentFromExperience(CONSTANTS.experiences.atLocation);
-      startRunningIncident(incident);
+      // Start OCE
+      let testExp = CONSTANTS.EXPERIENCES[OCE_NAME];
+      Experiences.insert(testExp);
+      let testIncident = createIncidentFromExperience(testExp);
+      startRunningIncident(testIncident);
 
-      let uid = findUserByUsername('a@gmail.com')._id;
-      onLocationUpdate(uid, CONSTANTS.locations.park.lat, CONSTANTS.locations.park.lng, function () {
+      let uid = findUserByUsername(USERNAME)._id;
+      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function() {
         done();
       });
     }
   });
 
-  it('user gets added to experience', () => {
-    let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
-    let iid = incident._id;
-    let user = findUserByUsername('a@gmail.com');
-
-    //user has incident as an active incident
-    let addedToUser = (user.profile.activeIncidents.indexOf(iid) !== -1);
-    chai.assert(addedToUser, 'active incident not added to user profile');
-
-    //assignments has user assigned
-    let assignmentEntry = Assignments.findOne({ _id: iid });
-
-    let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+  it('user gets added to experience', (done) => {
+    const contributionForNeed = CONSTANTS.EXPERIENCES[OCE_NAME].contributionTypes.find(function(x) {
       return x.needName === NEEDNAME;
     });
+    const notificationDelay = contributionForNeed.notificationDelay;
 
-    chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
-    chai.assert(needUserMap.uids.indexOf(user._id) !== -1, 'uid not in needUserMap in Assignment DB');
+    // Wait to check if user.profile and assignments has changed, > notificationDelay seconds after first matching
+    Meteor.setTimeout(function() {
+      try {
+        let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+        let iid = incident._id;
+        let user = findUserByUsername(USERNAME);
+
+        console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+        //user has incident as an active incident
+        chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+
+        //assignments has user assigned
+        let assignmentEntry = Assignments.findOne({ _id: iid });
+
+        let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+          return x.needName ===  NEEDNAME;
+        });
+
+        chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
+        chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+
+        done();
+      } catch (err) { done(err); }
+    }, (notificationDelay + 5) * 1000);
   });
 
   it('user participates in experience', (done) => {
-    let incident = Incidents.findOne({ eid: CONSTANTS.experiences.atLocation._id });
+    let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
     let iid = incident._id;
-    let user = findUserByUsername('a@gmail.com');
+    let uid = findUserByUsername(USERNAME)._id;
 
     let submission = {
-      uid: user._id,
-      eid: CONSTANTS.experiences.atLocation._id,
+      uid: uid,
+      eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id,
       iid: iid,
       needName: NEEDNAME,
       content: {},
       timestamp: Date.now(),
-      lat: 43,
-      lng: -87,
+      lat: CONSTANTS.LOCATIONS.grocery.lat,
+      lng: CONSTANTS.LOCATIONS.grocery.lng,
     };
 
     updateSubmission(submission);
 
+    // Wait several seconds so the observe changes of Submissions collection can run
     Meteor.setTimeout(function () {
-      chai.assert((user.profile.activeIncidents.indexOf(iid) === -1), 'active incident not removed from user profile');
-      chai.assert((user.profile.pastIncidents.indexOf(iid) !== -1), 'past incident not added to user profile');
-      done()
-    }, 20 * 1000);
+      try {
+        let user = findUserByUsername(USERNAME);
+        chai.assert.isFalse(user.profile.activeIncidents.includes(iid), 'active incident not removed from user profile');
+        chai.assert(user.profile.pastIncidents.includes(iid), 'past incident not added to user profile');
+        done();
+      } catch (err) { done(err); }
+    }, 5 * 1000);
 
   });
 
