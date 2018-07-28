@@ -145,7 +145,7 @@ Template.halfhalfParticipate.onDestroyed(() => {
 });
 
 Template.halfhalfParticipate.events({
- 'click #startCamera'(event, template){
+  'click #startCamera'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       startCameraAtPreviewRect();
       Session.set('CameraPreviewOn', true);
@@ -180,7 +180,7 @@ Template.halfhalfParticipate.events({
     } else {
       console.error("Could not access the CameraPreview")
     }
- },
+  },
   'click #retakePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       CameraPreview.show()
@@ -198,7 +198,15 @@ Template.halfhalfParticipate.events({
     } else {
       console.error("Could not access the CameraPreview")
     }
-  }
+  },
+  // LEAVE click #testImage event commented out! For non-mobile testing only
+  // 'click #testImage'(event, template) {
+  //   // let sampleImgSrc = "data:image/png:base64..."
+  //   let imagePreview = template.$(".fileinput-preview");
+  //   imagePreview.attr('src', sampleImgSrc);
+  //   imagePreview.show();
+  //   template.imageSubmitReady.set(true);
+  // }
 });
 
 /** Based on whether the preview window is on the left or right, this function returns the rectangle that
@@ -403,7 +411,8 @@ Template.api_custom.events({
 
 
     const experience = this.experience;
-    const location = this.location;
+    // give null values for use when testing submitted photos on the web, without location data
+    const location = this.location ? this.location : {lat: null, lng: null};
     const iid = Router.current().params.iid;
     const needName = Router.current().params.needName;
     const uid = Meteor.userId();
