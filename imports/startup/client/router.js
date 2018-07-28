@@ -6,7 +6,6 @@ import '../../ui/layout/layout.js';
 import '../../ui/layout/spread_layout.js';
 
 import '../../ui/pages/home.js';
-import '../../ui/pages/cron.html';
 
 import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/profile.js';
@@ -105,26 +104,6 @@ Router.route('api.customresults', {
 Router.route('/', {
   name: 'home',
 });
-
-
-Router.route('cron', {
-  path: '/cron',
-  template: 'cron',
-  before: function () {
-    let uid =  Meteor.userId();
-    console.log("tryna insert log",uid);
-    let dic = {
-      uid: uid,
-      timestamp: Date.now(),
-      route: "cron",
-      params: {}
-    };
-    console.log(dic);
-    Meteor.call('insertLog', dic);
-    this.next();
-  }
-});
-
 
 
 Router.route('admin.debug', {
