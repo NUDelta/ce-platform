@@ -123,7 +123,7 @@ Template.bumpedResults.events({
  * @param chunkSize {Integer} Size of every group
  * @see https://ourcodeworld.com/articles/read/278/how-to-split-an-array-into-chunks-of-the-same-size-easily-in-javascript
  */
-function chunkArray(myArray, chunk_size){
+export const chunkArray = (myArray, chunk_size) => {
   let results = [];
 
   while (myArray.length) {
@@ -131,7 +131,7 @@ function chunkArray(myArray, chunk_size){
   }
 
   return results;
-}
+};
 
 Template.halfhalfResults.helpers({
   lengthEqual(arr, number) {

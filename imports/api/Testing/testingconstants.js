@@ -797,7 +797,7 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Take a photo of like Half Half Travel!'
       },
-      numberNeeded: 2,
+      numberNeeded: 10,
       notificationDelay: 1,
     }],
     description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
