@@ -670,19 +670,18 @@ const createHalfHalf = function(
 
 
   let completedCallback = function(sub) {
-    console.log("a full need completed for half half travel!!!");
+    console.log("Another pair of halves completed a photo");
 
-    let otherSub = Submissions.findOne({
-      uid: {
-        $ne: sub.uid
-      },
+    let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
-    });
+    }).fetch();
 
-    notify([sub.uid, otherSub.uid], sub.iid,
-      'A half half travel photo was completed!',
-      'See the two halves of an interdependent, visual story you created with someone else!',
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    notify(participants, sub.iid,
+      `Two people completed a half half photo`,
+      `See the results under ${sub.needName}`,
       '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
@@ -713,7 +712,7 @@ const createHalfHalf = function(
     };
 
     let callback = {
-      trigger: `cb.numberOfSubmissions("${need.needName}") === 2`,
+      trigger: `cb.numberOfSubmissions("${need.needName}") % 2`,
       function: completedCallback.toString(),
     };
     experience.contributionTypes.push(need);
@@ -746,11 +745,20 @@ let sendNotificationFoodFight = function (sub) {
   notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
-let sendNotificationHalfHalf = function (sub) {
-  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
-    return x.uid;
-  });
-  notify(uids, sub.iid, 'View your two halves, side-by-side!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+const sendNotificationTwoHalvesCompleted = function(sub) {
+  console.log("Another pair of halves completed a photo");
+
+  let submissions = Submissions.find({
+    iid: sub.iid,
+    needName: sub.needName
+  }).fetch();
+
+  let participants = submissions.map((submission) => { return submission.uid; });
+
+  notify(participants, sub.iid,
+    `Two people completed a half half photo`,
+    `See the results under ${sub.needName}`,
+    '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 let EXPERIENCES = {
@@ -797,14 +805,14 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Take a photo of like Half Half Travel!'
       },
-      numberNeeded: 10,
+      numberNeeded: 50, // arbitrarily high for a study
       notificationDelay: 1,
     }],
     description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
     notificationText: 'Participate in Half Half Travel!',
     callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationHalfHalf.toString()
+      trigger: 'cb.numberOfSubmissions("half half: daytime") % 2 === 0',
+      function: sendNotificationTwoHalvesCompleted.toString()
     }]
   },
   halfhalfNight: {
@@ -821,14 +829,14 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Take a photo of like Half Half Travel!'
       },
-      numberNeeded: 2,
+      numberNeeded: 50, // arbitrarily high for a study
       notificationDelay: 1, // no need to delay if its daytime outside
     }],
     description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
     notificationText: 'Participate in Half Half Travel!',
     callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationHalfHalf.toString()
+      trigger: 'cb.numberOfSubmissions("half half: nighttime") % 2 === 0',
+      function: sendNotificationTwoHalvesCompleted.toString()
     }]
   },
   halfhalfEmbodiedMimicry: {
@@ -846,7 +854,7 @@ let EXPERIENCES = {
         instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
       },
-      numberNeeded: 2,
+      numberNeeded: 50,
       notificationDelay: 1,
     }, {
       needName: 'I eat with my hands',
@@ -858,14 +866,14 @@ let EXPERIENCES = {
         instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
       },
-      numberNeeded: 2,
+      numberNeeded: 50,
       notificationDelay: 90,
     }],
     description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
     notificationText: 'Your situation made you available to participate in Body Mirror!',
     callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationHalfHalf.toString()
+      trigger: 'cb.number()',
+      function: sendNotificationTwoHalvesCompleted.toString()
     }]
   },
   scavengerHunt: {
