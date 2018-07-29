@@ -42,7 +42,7 @@
 
   <div class="instruction">
     {{this.toPass.instruction}}
-    {{#let needImages=(imagesByNeed this.images this.needName) }}
+    {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
       {{#if (lengthEqual needImages 1) }}
         {{#let image=(firstElement needImages) }}
           {{#let user=(getUserById users image.uid) }}
@@ -63,7 +63,7 @@
   <form id="participate">
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
-      {{#let needImages=(imagesByNeed this.images this.needName) }}
+      {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
         {{#if (lengthEqual needImages 1) }}
           <div id="leftHalf" class="lefthalf halfsquare">
             <div class="content">

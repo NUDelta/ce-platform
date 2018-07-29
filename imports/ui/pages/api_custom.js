@@ -81,6 +81,23 @@ Template.bumped.helpers({
   }
 });
 
+/**
+ * Returns an array with arrays of the given size.
+ *
+ * @param myArray {Array} Array to split
+ * @param chunkSize {Integer} Size of every group
+ * @see https://ourcodeworld.com/articles/read/278/how-to-split-an-array-into-chunks-of-the-same-size-easily-in-javascript
+ */
+export const chunkArray = (myArray, chunk_size) => {
+  let results = [];
+
+  while (myArray.length) {
+    results.push(myArray.splice(0, chunk_size));
+  }
+
+  return results;
+};
+
 Template.halfhalfParticipate.helpers({
   getUserById(users, uid) {
     let user = users.find(function(x) {
@@ -88,11 +105,22 @@ Template.halfhalfParticipate.helpers({
     });
     return user;
   },
-  // images already filtered by activeIncident. Now get it for current need
-  imagesByNeed(images, needName) {
-    return images.filter(function(x) {
+  /** mostRecentImageDyadForNeed
+   *
+   * @param images [Image document object] assumes documents already filtered by activeIncident
+   * @param needName [String] need name
+   * @return [ImageDocument, ImageDocument] or [ImageDocument]
+   */
+  mostRecentImageDyadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
       return x.needName === needName;
-    })
+    });
+    let imagesGroupedByDyad = chunkArray(needImages, 2);
+    return imagesGroupedByDyad[imagesGroupedByDyad.length - 1];
   },
   lengthEqual(array, number) {
     return array.length === number;
