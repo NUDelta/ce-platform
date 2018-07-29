@@ -116,6 +116,23 @@ Template.bumpedResults.events({
 
 });
 
+/**
+ * Returns an array with arrays of the given size.
+ *
+ * @param myArray {Array} Array to split
+ * @param chunkSize {Integer} Size of every group
+ * @see https://ourcodeworld.com/articles/read/278/how-to-split-an-array-into-chunks-of-the-same-size-easily-in-javascript
+ */
+function chunkArray(myArray, chunk_size){
+  let results = [];
+
+  while (myArray.length) {
+    results.push(myArray.splice(0, chunk_size));
+  }
+
+  return results;
+}
+
 Template.halfhalfResults.helpers({
   lengthEqual(arr, number) {
     return arr.length === number;
@@ -129,7 +146,10 @@ Template.halfhalfResults.helpers({
   elementAtIndex(arr, index){
     return arr[index];
   },
-  resultsGroupedByNeed() {
+  /** So we can show the contributions of a dyad, for each need
+   * @returns {needName: String, imagesGroupedByDyad: [(a,b) (c, d) (e)]}
+   */
+  resultsGroupedByNeedAndDyad() {
 
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
@@ -144,10 +164,12 @@ Template.halfhalfResults.helpers({
       let needImages = this.images.filter((img) => {
         return img.needName == needName;
       });
-      return {needName: needName, images: needImages};
+
+      return {needName: needName, imagesGroupedByDyad: chunkArray(needImages, 2)};
     });
   }
 });
+
 
 Template.scavengerHunt.helpers({
   categories() {
