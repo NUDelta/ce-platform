@@ -89,9 +89,9 @@
       .centered {
         text-align: center;
       }
-      .need-group-container {
+      .image-group-container {
         /* give some space for the following text*/
-        margin-bottom: 40px;
+        margin-bottom: 50px;
       }
     </style>
   </head>
@@ -101,33 +101,35 @@
     {{#each needGroup in resultsGroupedByNeedAndDyad}}
       <div class="need-group-container">
         <div>{{needGroup.needName}}</div>
-        <div class="camera-overlay">
-          {{#each imageGroup in needGroup.imagesGroupedByDyad}}
-            {{#if (lengthEqual imageGroup 2) }}
-              {{#each image in imageGroup}}
-                <div class="half{{@index}} centered halfsquare">
-                  {{#let user=(getUserById users image.uid)}}
-                    <u>{{user.username}}</u>
-                  {{/let}}
-                  <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
-                </div>
-              {{/each}}
-            {{else}}
-              {{#let image=(elementAtIndex imageGroup 0) }}
-                <div class="half0 centered halfsquare">
-                  {{#let user=(getUserById users image.uid)}}
-                    <u>{{user.username}}</u>
-                  {{/let}}
-                  <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
-                </div>
-                <div class="half1 halfsquare">
-                  <br/>
-                  <div class="content" style="background-color: rgba(125,125,125,0.5);">Waiting for another person to fill in the right half!</div>
-                </div>
-              {{/let}}
-            {{/if}}
-          {{/each}}
-        </div>
+        {{#each imageGroup in needGroup.imagesGroupedByDyad}}
+          <div class="image-group-container">
+            <div class="camera-overlay">
+              {{#if (lengthEqual imageGroup 2) }}
+                {{#each image in imageGroup}}
+                  <div class="half{{@index}} centered halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      <u>{{user.username}}</u>
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                {{/each}}
+              {{else}}
+                {{#let image=(elementAtIndex imageGroup 0) }}
+                  <div class="half0 centered halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      <u>{{user.username}}</u>
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                  <div class="half1 halfsquare">
+                    <br/>
+                    <div class="content" style="background-color: rgba(125,125,125,0.5);">Waiting for another person to fill in the right half!</div>
+                  </div>
+                {{/let}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
       </div>
     {{/each}}
   </div>
