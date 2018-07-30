@@ -8,7 +8,7 @@ import { Detectors } from './detectors';
 import { CONSTANTS } from "../../Testing/testingconstants";
 
 
-describe('Detector Tests', function () {
+describe('Small Detector Tests', function () {
   let detectorId = CONSTANTS.DETECTORS.produce._id;
 
   beforeEach(function () {
@@ -61,4 +61,32 @@ describe('Detector Tests', function () {
   //   });
   //
   // });
+});
+
+describe('Detectors in testingcontants.js are valid', function() {
+
+  before(function () {
+    resetDatabase();
+    _.forEach(Object.keys(CONSTANTS.DETECTORS), (key) => {
+      Detectors.insert(CONSTANTS.DETECTORS[key]);
+    });
+  });
+
+  it('should compile when applying the detector', function() {
+
+    // this affordance can be arbitrary
+    let affordances = {'grocery': true};
+
+    let allDetectors = Detectors.find().fetch();
+
+    _.forEach(allDetectors, (detector) => {
+      try {
+        matchAffordancesWithDetector(affordances, detector._id);
+      } catch(err) {
+        console.error(`Detector failed to compile with id (${detector._id}) and description (${detector.description})`)
+        throw(err);
+      }
+    });
+  });
+
 });
