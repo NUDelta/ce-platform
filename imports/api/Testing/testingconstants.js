@@ -89,9 +89,13 @@ let DETECTORS = {
   },
   library: {
     _id: '5LqfPRajiQRe9BwBT',
-    description: ' libaries,',
-    variables: ['var  libraries;'],
-    rules: [' libraries;']
+    description: 'libraries and other books',
+    variables: [
+      'var libraries;',
+      'var usedbooks;',
+      'var bookstores;'
+    ],
+    rules: ['(libraries || bookstores);']
   },
   gym: {
     _id: '3XqHN8A4EpCZRpegS',
@@ -227,7 +231,7 @@ let DETECTORS = {
       'var churches;',
       'var mosques;'
     ],
-    rules: ['(mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques);']
+    rules: ['((mini_golf || ((buddhist_temples || religiousschools) || ((synagogues || hindu_temples) || (weddingchappels || churches)))) || mosques);']
   },
   bar: {
     _id: '6urWtr6Tasohdb43u',
@@ -419,6 +423,62 @@ let DETECTORS = {
       'var martialarts;'
     ],
     rules: ['(((amateursportsteams || religiousschools) || ((physicaltherapy || fencing) || ((beachvolleyball || football) || tennis))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((badminton || healthtrainers) || ((bootcamps || pilates) || ((trampoline || dancestudio) || ((cyclingclasses || cardioclasses) || ((barreclasses || sports_clubs) || ((active || weightlosscenters) || ((yoga || aerialfitness) || ((surfing || fitness) || (martialarts || circuittraininggyms)))))))))))) || ((boxing || kickboxing) || ((muaythai || gyms) || ((healthtrainers || poledancingclasses) || ((bootcamps || pilates) || ((dancestudio || brazilianjiujitsu) || ((cyclingclasses || cardioclasses) || ((barreclasses || intervaltraininggyms) || ((sports_clubs || weightlosscenters) || ((aerialfitness || communitycenters) || ((squash || surfing) || ((fitness || martialarts) || circuittraininggyms)))))))))));']
+  },
+  eating_japanese: {
+    _id: "vpP7boQqvLzxhDxjg",
+    description: "eating a japanese meal",
+    variables: [
+      "var sushi;",
+      "var japanese;",
+      "var tonkatsu;",
+      "var teppanyaki;",
+      "var tempura;",
+      "var ramen;",
+      "var izakaya;",
+      "var udon;"
+    ],
+    rules: ["(sushi || japanese) || ((tonkatsu || teppanyaki) || ((tempura || ramen) || (izakaya || udon)));"]
+  },
+  eating_with_chopsticks: {
+    _id: "5Ay2Ys9DAH2PcPS4a",
+    description: "eating with chopsticks",
+    variables: [
+      "var korean;",
+      "var hawaiian;",
+      "var japacurry;",
+      "var sushi;",
+      "var singaporean;",
+      "var hakka;",
+      "var laotian;",
+      "var cambodian;",
+      "var japanese;",
+      "var tonkatsu;",
+      "var chinese;",
+      "var taiwanese;",
+      "var vietnamese;",
+      "var indonesian;",
+      "var panasian;",
+      "var thai;",
+      "var noodles;",
+      "var hotpot;",
+      "var tcm;",
+      "var cantonese;",
+      "var asianfusion;",
+      "var dimsum;",
+      "var shanghainese;",
+      "var burmese;",
+      "var teppanyaki;",
+      "var tempura;",
+      "var szechuan;",
+      "var hkcafe;",
+      "var ramen;",
+      "var izakaya;",
+      "var malaysian;",
+      "var udon;"
+    ],
+    rules: [
+      "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
+    ]
   }
 };
 
@@ -492,7 +552,8 @@ function createStorytime() {
       '_id': detectorIds[i],
       'description': DETECTORS[place].description + "_storytime",
       'variables': newVars,
-      'rules': ['(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;']
+      // 'rules': ['(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;']
+      'rules': [`!participatedInStorytime && ${DETECTORS[place].rules[0]}`]
     };
 
     i++;
@@ -722,6 +783,149 @@ const createHalfHalf = function(
   return experience;
 };
 
+const halfhalfEmbodiedContributionTypes = function() {
+  return [{
+    needName: 'Hand Silhouette',
+    situation: {
+      detector: DETECTORS.sunny._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 1,
+  }, {
+    needName: 'I eat with my hands',
+    situation: {
+      detector: DETECTORS.grocery._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 90,
+  }, {
+    needName: 'Coffee Date',
+    situation: {
+      detector: DETECTORS.coffee._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Are you at a cafe? Take a photo, holding your cup, mug, or plate towards the center of the screen.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 4
+  }, {
+    needName: 'Raise a glass',
+    situation: {
+      detector: DETECTORS.bar._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
+      // exampleImage: TODO(rlouie): get image holding a glass / bottle, indoors. Maybe towards the lights in the bar
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }, {
+    needName: 'Itadakimasu (I humbly receive this meal)',
+    situation: {
+      detector: DETECTORS.eating_japanese._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, while holding chopsticks in your hand, saying "Itadakimasu" which translates to "I humbly receive this meal"',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }, {
+    needName: 'Religious Architecture',
+    situation: {
+      detector: DETECTORS.castle._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Do you notice the details of religious buildings? Do so now, by outstretching your hand and pointing out of the elements that stick out to you most.',
+      // TODO(rlouie): take a photo for embodied mimicry of a building
+      // exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-visual-mimicry-religious.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 30
+  }, {
+    needName: 'Touch a sunset',
+    situation: {
+      detector: DETECTORS.sunset._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What does the sunset look like where you are? Find a good view of the sunset. Then, take a photo, with your hands outstretched towards the sun.',
+    },
+    numberNeeded: 50,
+    notificationDelay: 1,
+  }, {
+    needName: 'Eating with Chopsticks',
+    situation: {
+      detector: DETECTORS.eating_with_chopsticks._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What can you pick up using chopsticks? Take a photo of what you are eating, holding your chopsticks.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 15
+  }, {
+    needName: 'Whats in your grocery basket',
+    situation: {
+      detector: DETECTORS.grocery._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What are you planning on eating for the week? Take a photo holding up a favorite or essential item in your shopping basket or cart.',
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 5
+  }, {
+    needName: 'filling up gas',
+    situation: {
+      detector: DETECTORS.gas_station._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 2
+  }, {
+    needName: 'reading a book',
+    situation: {
+      detector: DETECTORS.library._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Sorry to interrupt your reading! Find the nearest book, and take a photo holding up the book to your face.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }];
+};
+
+const createCallbacksForEmbodiedMimicry = function(contributionTypes) {
+  return contributionTypes.map((need) => {
+    return {
+      trigger: `cb.numberOfSubmissions(${need.needName}) % 2 === 0`,
+      function: sendNotificationTwoHalvesCompleted.toString()
+    };
+  });
+};
+
 let sendNotificationScavenger = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
@@ -844,37 +1048,10 @@ let EXPERIENCES = {
     name: 'Body Mirror',
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
-    contributionTypes: [{
-      needName: 'Hand Silhouette',
-      situation: {
-        detector: DETECTORS.sunny._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
-      },
-      numberNeeded: 50,
-      notificationDelay: 1,
-    }, {
-      needName: 'I eat with my hands',
-      situation: {
-        detector: DETECTORS.grocery._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-    }],
+    contributionTypes: halfhalfEmbodiedContributionTypes(),
     description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
     notificationText: 'Your situation made you available to participate in Body Mirror!',
-    callbacks: [{
-      trigger: 'cb.number()',
-      function: sendNotificationTwoHalvesCompleted.toString()
-    }]
+    callbacks: createCallbacksForEmbodiedMimicry(halfhalfEmbodiedContributionTypes())
   },
   scavengerHunt: {
     _id: Random.id(),
