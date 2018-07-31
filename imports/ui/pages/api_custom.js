@@ -258,7 +258,7 @@ const getPreviewRect = function() {
 
 const startCameraAtPreviewRect = function(
   {
-    camera = "front",
+    camera = "back",
     tapPhoto = true,
     previewDrag = false,
     toBack = true
