@@ -27,6 +27,33 @@ Meteor.methods({
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
+  },
+  /** upsertDetector - general function to update or insert detectors through a Meteor RPC
+   *
+   * @param name [String] A key in CONSTANTS.DETECTORS object found in testingconstants.js
+   */
+  upsertDetector({name}) {
+    new SimpleSchema({
+      name: { type: String }
+    }).validate({name});
+
+    if (!(name in CONSTANTS.DETECTORS)) {
+      throw new Meteor.Error('upsertDetector.keynotfound',
+        `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
+    }
+
+    let {numberAffected, insertedId} = Detectors.upsert(
+      {
+        _id: CONSTANTS.DETECTORS[name]._id
+      }, {
+        $set : {
+          description: CONSTANTS.DETECTORS[name].description,
+          variables: CONSTANTS.DETECTORS[name].variables,
+          rules: CONSTANTS.DETECTORS[name].rules
+        }
+      }
+    );
+    console.log(`Method call to "upsertDetector"! numberAffected: ${numberAffected}, insertedId: ${insertedId}`);
   }
 });
 
