@@ -16,6 +16,9 @@ import '../../ui/pages/api_custom.js';
 import '../../ui/pages/api_custom_results.html';
 import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
+import '../../ui/pages/participate_backdoor.html';
+import '../../ui/pages/participate_backdoor.js';
+
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -105,6 +108,19 @@ Router.route('/', {
   name: 'home',
 });
 
+Router.route('participate.backdoor', {
+  path: '/participate/backdoor',
+  template: 'participateBackdoor',
+  before: function() {
+    this.subscribe('submissions.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      submissions: Submissions.find({}).fetch()
+    }
+  }
+});
 
 Router.route('admin.debug', {
   path: '/admin/debug',
