@@ -852,8 +852,7 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     toPass: {
       instruction: 'Do you notice the details of religious buildings? Do so now, by outstretching your hand and pointing out of the elements that stick out to you most.',
-      // TODO(rlouie): take a photo for embodied mimicry of a building
-      // exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-visual-mimicry-religious.jpg'
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
     },
     numberNeeded: 50,
     notificationDelay: 30
@@ -865,6 +864,7 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     toPass: {
       instruction: 'What does the sunset look like where you are? Find a good view of the sunset. Then, take a photo, with your hands outstretched towards the sun.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-sunset-heart.jpg'
     },
     numberNeeded: 50,
     notificationDelay: 1,
@@ -898,7 +898,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       number: '1'
     },
     toPass: {
-      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump'
+      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 2
@@ -914,6 +914,42 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10
+  }, {
+    needName: 'Hold a flower',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a flower in the park or garden. Take a photo, with your hand shaped as a half-circle.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
+  }, {
+    needName: 'Feet towards the trees',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a patch of grass to lay your back on. Then, raise your feet. Take a photo of your foot stretching high into the sky',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
+  }, {
+    needName: 'Leaf Mask',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a leaf in the park. Take a photo of the leaf covering your face, like it was a mask.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
   }];
 };
 
