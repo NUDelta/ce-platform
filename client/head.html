@@ -30,4 +30,25 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+  <!-- TODO(rlouie): Hacky Solution to White Screen of Death -->
+  <!--@see https://github.com/meteor/meteor/issues/7018#issuecomment-301562610-->
+  <script type="text/javascript">
+    // Rescue code in the event of app failure to start
+    if (navigator.splashscreen != null) {
+      navigator.splashscreen.show();
+    }
+    setTimeout(function() {
+      var appStarted;
+      appStarted = Session.get('global.started');
+      if (appStarted) {
+        if (navigator.splashscreen != null) {
+          navigator.splashscreen.hide();
+        }
+      } else {
+        window.location.reload();
+      }
+      return
+    }, 6000);
+  </script>
 </head>
