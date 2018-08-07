@@ -21,10 +21,19 @@ Router.route('/api/geolocation', {where: 'server'})
 
     const uid = this.request.body.userId;
     const location = this.request.body.location;
-    // const activity = this.request.body.activity;
+
+    // FIXME(rlouie): Separate concerns to Affinder/Detectors to handle the logic for using activity info
+    let not_traveling_on_bicycle_or_vehicle;
+    if ('activity' in Object.keys(location)) {
+      not_traveling_on_bicycle_or_vehicle = !((location.activity.type === "in_vehicle") || (location.activity.type === "on_bicycle"));
+    } else {
+      serverLog.call({message: `no activity data for ${uid}. defaulting to a value that allows location update`});
+      not_traveling_on_bicycle_or_vehicle = true;
+    }
 
     // only do a location update if valid uid
-    if (uid !== null) {
+    // and if we are not traveling on a bicycle or in a vehicle
+    if ((uid !== null) && (not_traveling_on_bicycle_or_vehicle)) {
       onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function (uid) {
         serverLog.call({message: "triggering internal location update for: " + uid});
       });
