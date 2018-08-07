@@ -24,7 +24,7 @@ Router.route('/api/geolocation', {where: 'server'})
 
     // FIXME(rlouie): Separate concerns to Affinder/Detectors to handle the logic for using activity info
     let not_traveling_on_bicycle_or_vehicle;
-    if ('activity' in Object.keys(location)) {
+    if ('activity' in location) {
       not_traveling_on_bicycle_or_vehicle = !((location.activity.type === "in_vehicle") || (location.activity.type === "on_bicycle"));
     } else {
       serverLog.call({message: `no activity data for ${uid}. defaulting to a value that allows location update`});
