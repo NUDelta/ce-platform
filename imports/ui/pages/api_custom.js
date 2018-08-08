@@ -139,52 +139,15 @@ Template.halfhalfParticipate.helpers({
 });
 
 Template.halfhalfParticipate.onCreated(() => {
-  // Cordova CameraPreview starts Off
-  Session.set('CameraPreviewOn', false);
-
   Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
 });
-
-// Scrolling
-$(window).scroll(_.debounce(function(){
-    if (typeof CameraPreview !== 'undefined') {
-      if (Session.get('CameraPreviewOn')) {
-        CameraPreview.stopCamera();
-        // Don't set Session CameraPreviewOn to false, because the stop-scroll event needs this info
-      }
-    }
-  }, 150, { 'leading': true, 'trailing': false })
-);
-
-// Stop Scrolling
-$(window).scroll(_.debounce(function(){
-    if (typeof CameraPreview !== 'undefined') {
-      if (Session.get('CameraPreviewOn')) {
-        startCameraAtPreviewRect();
-        Session.set('CameraPreviewOn', true);
-      }
-    }
-  }, 150)
-);
 
 Template.halfhalfParticipate.onDestroyed(() => {
   CameraPreview.stopCamera();
-  Session.set('CameraPreviewOn', false);
 });
 
 Template.halfhalfParticipate.events({
-  'click #startCamera'(event, template){
-    if (typeof CameraPreview !== 'undefined') {
-      startCameraAtPreviewRect();
-      Session.set('CameraPreviewOn', true);
-    } else {
-      console.error("Could not access the CameraPreview")
-    }
-    // using an instance of jquery tied to current template scope
-    template.$(".fileinput-preview").hide();
-    template.imageSubmitReady.set(false);
-    toggleCameraControls('startCamera');
-  },
   'click #takeHalfHalfPhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       CameraPreview.takePicture({
@@ -202,7 +165,6 @@ Template.halfhalfParticipate.events({
             template.imageSubmitReady.set(true);
             CameraPreview.hide();
             toggleCameraControls('stopCamera');
-            Session.set('CameraPreviewOn', false);
           });
       });
     } else {
@@ -212,7 +174,6 @@ Template.halfhalfParticipate.events({
   'click #retakePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       CameraPreview.show()
-      Session.set('CameraPreviewOn', true);
     } else {
       console.error("Could not access the CameraPreview")
     }
@@ -226,6 +187,38 @@ Template.halfhalfParticipate.events({
     } else {
       console.error("Could not access the CameraPreview")
     }
+  },
+  'click #goToParticipate'(event, template) {
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('participate').style.display = "block";
+
+    // For speed of loading CameraPreview, we will only start the instance once, and use shows/hides to toggle
+    if (template.cameraStarted.get()) {
+      // an image was NOT taken previously and ready to submit, so...
+      if (!template.imageSubmitReady.get()) {
+        // we can show the camera preview
+        CameraPreview.show();
+      }
+    } else {
+      // start CameraPreview instance running
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
+      }
+      // using an instance of jquery tied to current template scope
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
+    }
+  },
+  'click #goToInstruction'() {
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+
+    // For speed of loading CameraPreview, we will only start the instance once, and use shows/hides to toggle
+    CameraPreview.hide();
   },
   // LEAVE click #testImage event commented out! For non-mobile testing only
   // 'click #testImage'(event, template) {
@@ -276,7 +269,6 @@ const toggleCameraControls = function(mode) {
     document.getElementById('retakePhoto').style.display = "none";
     document.getElementById('takeHalfHalfPhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "inline";
-    document.getElementById('startCamera').style.display = "none";
   }
   else if (mode === "stopCamera") {
     document.getElementById('retakePhoto').style.display = "inline";

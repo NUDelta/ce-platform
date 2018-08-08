@@ -37,10 +37,26 @@
         padding-bottom: 4%;
       }
 
+      .glyphicon-medium {
+        font-size: 24px;
+      }
+
+      .glyphicon-large {
+        font-size: 32px;
+      }
+
+      .right-align {
+        float: right;
+      }
+
+      .navigation-buttons {
+        margin-bottom: 10px;
+      }
+
     </style>
   </head>
 
-  <div class="instruction">
+  <div id="instruction" class="instruction">
     {{this.toPass.instruction}}
     {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
       {{#if (lengthEqual needImages 1) }}
@@ -53,14 +69,20 @@
         Frame the left half. Then somebody will frame the right half.
       {{/if}}
     {{/let}}
+    {{#if this.toPass.exampleImage}}
+      <div>
+        <u>Example to try</u>
+        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+      </div>
+    {{/if}}
+    <button id="goToParticipate" class="btn btn-primary right-align">
+      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
   </div>
-  {{#if this.toPass.exampleImage}}
-    <div>
-      <u>Example to try</u>
-      <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
-    </div>
-  {{/if}}
-  <form id="participate">
+  <form id="participate" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
       {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
@@ -85,9 +107,6 @@
     <div class="camera-controls">
       <!-- LEAVE testImage button commented out!!! -->
       <!--<button type="button" id="testImage" class="left-control">Test</button>-->
-      <button type="button" id="startCamera" class="btn-borderless center-control">
-        <span class="glyphicon glyphicon-camera glyphicon-large"></span>
-      </button>
       <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
         <span class="glyphicon glyphicon-record glyphicon-large"></span>
       </button>
