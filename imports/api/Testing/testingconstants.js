@@ -479,7 +479,151 @@ let DETECTORS = {
     rules: [
       "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
     ]
-  }
+  },
+  hour0: {
+    _id: "v2ANTJr1I7wle3Ek8",
+    description: "during 00:00",
+    variables: ["var hour;"],
+    rules: ["hour == 0"]
+  },
+  hour1: {
+    _id: "kDIB1oQOnKktS1j4Z",
+    description: "during 01:00",
+    variables: ["var hour;"],
+    rules: ["hour == 1"]
+  },
+  hour2: {
+    _id: "ZId1ezjZGAkfbpcWB",
+    description: "during 02:00",
+    variables: ["var hour;"],
+    rules: ["hour == 2"]
+  },
+  hour3: {
+    _id: "qZRVcySQpf2g6xcfA",
+    description: "during 03:00",
+    variables: ["var hour;"],
+    rules: ["hour == 3"]
+  },
+  hour4: {
+    _id: "3JSnJAmYQzJFgqJpD",
+    description: "during 04:00",
+    variables: ["var hour;"],
+    rules: ["hour == 4"]
+  },
+  hour5: {
+    _id: "iosGAkRVqT0zYlHmA",
+    description: "during 05:00",
+    variables: ["var hour;"],
+    rules: ["hour == 5"]
+  },
+  hour6: {
+    _id: "RxDnq3KRXKQjLHymw",
+    description: "during 06:00",
+    variables: ["var hour;"],
+    rules: ["hour == 6"]
+  },
+  hour7: {
+    _id: "rnQQ9xRK4LyqPNSnN",
+    description: "during 07:00",
+    variables: ["var hour;"],
+    rules: ["hour == 7"]
+  },
+  hour8: {
+    _id: "WRaFXtU7Igw6mjpzd",
+    description: "during 08:00",
+    variables: ["var hour;"],
+    rules: ["hour == 8"]
+  },
+  hour9: {
+    _id: "7IlqQnNFaAoJmDLy6",
+    description: "during 09:00",
+    variables: ["var hour;"],
+    rules: ["hour == 9"]
+  },
+  hour10: {
+    _id: "K5Y0rpCXcxAdPIkBA",
+    description: "during 10:00",
+    variables: ["var hour;"],
+    rules: ["hour == 10"]
+  },
+  hour11: {
+    _id: "a5DzoZ3nb6fKQDaRn",
+    description: "during 11:00",
+    variables: ["var hour;"],
+    rules: ["hour == 11"]
+  },
+  hour12: {
+    _id: "htseIlmY5c7Q9Ihnh",
+    description: "during 12:00",
+    variables: ["var hour;"],
+    rules: ["hour == 12"]
+  },
+  hour13: {
+    _id: "t5CT9YiIQvsZufVq8",
+    description: "during 13:00",
+    variables: ["var hour;"],
+    rules: ["hour == 13"]
+  },
+  hour14: {
+    _id: "zepMCtTEOlELnXOM3",
+    description: "during 14:00",
+    variables: ["var hour;"],
+    rules: ["hour == 14"]
+  },
+  hour15: {
+    _id: "aHwbbglrhLeQqDYK6",
+    description: "during 15:00",
+    variables: ["var hour;"],
+    rules: ["hour == 15"]
+  },
+  hour16: {
+    _id: "tcftEov84sDlZHx1B",
+    description: "during 16:00",
+    variables: ["var hour;"],
+    rules: ["hour == 16"]
+  },
+  hour17: {
+    _id: "53puB2TSVHxsHtbZ2",
+    description: "during 17:00",
+    variables: ["var hour;"],
+    rules: ["hour == 17"]
+  },
+  hour18: {
+    _id: "Jdz8DFUyC37jqROOq",
+    description: "during 18:00",
+    variables: ["var hour;"],
+    rules: ["hour == 18"]
+  },
+  hour19: {
+    _id: "tV0Jt9xgGkME1MBla",
+    description: "during 19:00",
+    variables: ["var hour;"],
+    rules: ["hour == 19"]
+  },
+  hour20: {
+    _id: "LtUoOKZMm0ovNnsmX",
+    description: "during 20:00",
+    variables: ["var hour;"],
+    rules: ["hour == 20"]
+  },
+  hour21: {
+    _id: "X9YChduJTWV9UXVez",
+    description: "during 21:00",
+    variables: ["var hour;"],
+    rules: ["hour == 21"]
+  },
+  hour22: {
+    _id: "NFNWR5VMUse3B8j0B",
+    description: "during 22:00",
+    variables: ["var hour;"],
+    rules: ["hour == 22"]
+  },
+  hour23: {
+    _id: "NvegeW31LiB8Zm77M",
+    description: "during 23:00",
+    variables: ["var hour;"],
+    rules: ["hour == 23"]
+  },
 };
 
 function createStorytime() {
@@ -953,6 +1097,24 @@ const halfhalfEmbodiedContributionTypes = function() {
   }];
 };
 
+const create24hoursContributionTypes = function(toPassConstructor, numberNeeded) {
+  let needs = [];
+  for (i = 0; i < 24; i++) {
+    let need = {
+      needName: `hour ${i}`,
+      situation: {
+        detector: DETECTORS[`hour${i}`]._id,
+        number: 1
+      },
+      toPass: toPassConstructor(i),
+      numberNeeded: numberNeeded,
+      notificationDelay: 1
+    };
+    needs.push(need);
+  }
+  return needs;
+};
+
 const createCallbacksForEmbodiedMimicry = function(contributionTypes) {
   return contributionTypes.map((need) => {
     return {
@@ -960,6 +1122,14 @@ const createCallbacksForEmbodiedMimicry = function(contributionTypes) {
       function: sendNotificationTwoHalvesCompleted.toString()
     };
   });
+};
+
+const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
+  let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
+    return x.uid;
+  });
+
+  notify(uids, sub.iid, 'Someone added to the 24 hour photo album. Click here to see progress on the album.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 let sendNotificationScavenger = function (sub) {
@@ -1028,7 +1198,28 @@ let EXPERIENCES = {
       function: sendNotificationSunset.toString()
     }]
   },
-
+  halfhalf24: {
+    _id: Random.id(),
+    name: 'Half Half over 24 hours',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults', // FIXME(rlouie): should be a template grouped by time
+    contributionTypes: create24hoursContributionTypes(
+      function(i) {
+        let zpad_i = ("00" + i).slice(-2);
+        let toPass = {
+          instruction: `<span style="color: #0351ff">This experience is for testing the Half Half Photo Experience!</span><b> Take a picture of what you are doing today at hour ${zpad_i}:00 today.</b>`
+        };
+        return toPass;
+      },
+      10
+    ),
+    description: 'Create a photo collage of what you and others are doing at each of the hours in a day',
+    notificationText: 'Take a photo of what you are doing at this hour',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: sendNotificationNew24HourPhotoAlbumSub.toString()
+    }]
+  },
   halfhalfAsynch: createHalfHalf(),
   halfhalfSynch: createHalfHalf({numberInSituation: 2}),
   halfhalfDay: {
