@@ -203,17 +203,20 @@ Template.halfhalfParticipate.events({
         CameraPreview.show();
       }
     } else {
-      // start CameraPreview instance running
-      if (typeof CameraPreview !== 'undefined') {
-        startCameraAtPreviewRect();
-        template.cameraStarted.set(true);
-      } else {
-        console.error("Could not access the CameraPreview")
-      }
-      // using an instance of jquery tied to current template scope
-      template.$(".fileinput-preview").hide();
-      template.imageSubmitReady.set(false);
-      toggleCameraControls('startCamera');
+      // Wait for the participate div to load before setting the location of the preview
+      Meteor.setTimeout(() => {
+        // start CameraPreview instance running
+        if (typeof CameraPreview !== 'undefined') {
+          startCameraAtPreviewRect();
+          template.cameraStarted.set(true);
+        } else {
+          console.error("Could not access the CameraPreview")
+        }
+        // using an instance of jquery tied to current template scope
+        template.$(".fileinput-preview").hide();
+        template.imageSubmitReady.set(false);
+        toggleCameraControls('startCamera');
+      }, 150);
     }
   },
   'click #goToInstruction'() {
