@@ -150,11 +150,14 @@ Template.halfhalfParticipate.onDestroyed(() => {
 Template.halfhalfParticipate.events({
   'click #takeHalfHalfPhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
+      toggleCameraControls('takePhotoInProgress');
+
       CameraPreview.takePicture({
-        // dimensions of an iPhone 6s front-facing camera
+        // dimensions of an iPhone 6s front-facing camera are 960 1280
         // any larger dimensions displays the captured picture with significant lag
+        // reducing to 480 x 640 in an attempt to speed up webclient image processing
         // TODO(rlouie): test these parameters with many devices, whose supported photo sizes might make this not work
-        width: 960, height: 1280, quality: 85
+        width: 480, height: 640, quality: 85
       },function(imgData){
           let rect = getPreviewRect();
           b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
@@ -164,7 +167,7 @@ Template.halfhalfParticipate.events({
             imagePreview.show();
             template.imageSubmitReady.set(true);
             CameraPreview.hide();
-            toggleCameraControls('stopCamera');
+            toggleCameraControls('takePhotoDone');
           });
       });
     } else {
@@ -270,13 +273,18 @@ const toggleCameraControls = function(mode) {
     document.getElementById('takeHalfHalfPhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "inline";
   }
-  else if (mode === "stopCamera") {
-    document.getElementById('retakePhoto').style.display = "inline";
+  else if (mode === "takePhotoInProgress") {
+    document.getElementById('takePhotoInProgress').style.display = "inline";
     document.getElementById('takeHalfHalfPhoto').style.display = "none";
     document.getElementById('switchCamera').style.display = "none";
   }
+  else if (mode === "takePhotoDone") {
+    document.getElementById('takePhotoInProgress').style.display = "none";
+    document.getElementById('retakePhoto').style.display = "inline";
+  }
   else {
-    console.log("toggleCameraControls requires passing either 'startCamera' or 'stopCamera' as first parameter");
+    console.log("toggleCameraControls requires passing either 'startCamera' or 'takePhotoInProgress' or \
+                'takePhotoDone' as first parameter");
   }
 };
 
