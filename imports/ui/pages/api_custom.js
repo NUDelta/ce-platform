@@ -216,7 +216,7 @@ Template.halfhalfParticipate.events({
         template.$(".fileinput-preview").hide();
         template.imageSubmitReady.set(false);
         toggleCameraControls('startCamera');
-      }, 150);
+      }, 300);
     }
   },
   'click #goToInstruction'() {
