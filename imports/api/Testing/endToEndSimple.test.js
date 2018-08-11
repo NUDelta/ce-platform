@@ -10,8 +10,8 @@ import { Assignments} from "../OpportunisticCoordinator/databaseHelpers";
 import { Random } from 'meteor/random'
 import { Detectors } from "../UserMonitor/detectors/detectors";
 import { updateSubmission} from "../OCEManager/progressor";
-
 import "../OCEManager/progressorHelper";
+import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populateDatabase";
 
 
 let second = false;
@@ -31,26 +31,9 @@ describe('Simple End To End', function () {
     } else {
       second = true;
       resetDatabase();
-      // Create User
-      // NOTE: tried to use Account.createUser, but does not properly trigger the onCreateUser callback in time
-      let user = CONSTANTS.USERS[USERNAME];
-      user.profile = {};
-      user.profile.experiences = [];
-      user.profile.subscriptions = [];
-      user.profile.lastParticipated = null;
-      user.profile.lastNotified = null;
-      user.profile.pastIncidents = [];
-      user.profile.activeIncidents = [];
-      user.profile.staticAffordances = user.profile.staticAffordances || {};
-      Meteor.users.insert(user);
-
+      insertTestUser(USERNAME);
       Detectors.insert(CONSTANTS.DETECTORS.produce);
-
-      // Start OCE
-      let testExp = CONSTANTS.EXPERIENCES[OCE_NAME];
-      Experiences.insert(testExp);
-      let testIncident = createIncidentFromExperience(testExp);
-      startRunningIncident(testIncident);
+      startTestOCE(OCE_NAME);
 
       let uid = findUserByUsername(USERNAME)._id;
       onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function() {
