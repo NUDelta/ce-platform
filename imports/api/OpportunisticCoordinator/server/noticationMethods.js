@@ -41,6 +41,19 @@ export const notifyForParticipating = function (uids, iid, subject, text, route)
   }
 };
 
+/**
+ * Sends an additional notification in the chance that the person was available, but lost the opportunity
+ * to participate
+ *
+ * @param uids
+ * @param subject [String] title for notification
+ * @param text [String] body for the notification
+ */
+export const notifyForMissingParticipation = function(uids, subject, text) {
+
+  // TODO(rlouie): fill out this function and use it
+};
+
 export const notify = function (uids, iid, subject, text, route) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
