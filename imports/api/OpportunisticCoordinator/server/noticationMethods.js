@@ -43,15 +43,18 @@ export const notifyForParticipating = function (uids, iid, subject, text, route)
 
 /**
  * Sends an additional notification in the chance that the person was available, but lost the opportunity
- * to participate
+ * to participate.
+ * TODO(rlouie): For transparency, send users to a route that explains what the situation that they missed was.
  *
  * @param uids
  * @param subject [String] title for notification
  * @param text [String] body for the notification
  */
-export const notifyForMissingParticipation = function(uids, subject, text) {
+export const notifyForMissingParticipation = function(uids) {
+  // Don't set users profile lastNotified, because this parameter means lastNotified TO participate,
+  // where as this notification is an apology
 
-  // TODO(rlouie): fill out this function and use it
+  _sendPush(uids, "Your situation changed!", "You missed a chance to participate.", "/", null, true);
 };
 
 export const notify = function (uids, iid, subject, text, route) {

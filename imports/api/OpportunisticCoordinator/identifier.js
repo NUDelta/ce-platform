@@ -13,6 +13,7 @@ import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncid
 import { doesUserMatchNeed } from "../OCEManager/OCEs/methods";
 import { CONFIG } from "../config";
 import { serverLog } from "../logs";
+import {notifyForMissingParticipation} from "./server/noticationMethods";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -124,11 +125,7 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
             assignment._id,
             needUserMap.needName
           );
-
-          // user removed from assignment because they moved but didn't participate
-          // TODO(rlouie): retract the notification for participating
-          // set the lastNotified in their user profile to null,
-          // or do something to allow them to participate again sooner than had they done it successfully
+          notifyForMissingParticipation([uid]);
         }, delay * 60000);
 
       }
