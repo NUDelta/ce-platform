@@ -105,11 +105,20 @@ const sendToMatcher = (uid, affordances, currLocation) => {
 /**
  * Returns whether a user can participate based on when they were last notified/last participated.
  * Debug mode shortens the time between experiences for easier debugging.
+ * (1) If you participated in a need, we could let them continue and participate in more needs!
+ * ... Otherwise if they take all the neds, let others have the opportunity to participate in other needs.
+ * (2) If you were notified to participate, but you didn't get a chance, well don't limit this person!
+ * .... They are out an about and are more likely to run into more experiences.
+ * (3) If you are assigned to an experience currently, you've already been matched! Don't send additional experiences.
+ * ... This could be confusing... which one do you choose to participate in right now? The moment doesn't hold
+ * its rareness of mapping to one memory.
+ * TODO(rlouie): Move this function to a file that is about identifying availability, instead of about location methods
  *
  * @param uid {string} uid of user who's location just changed
  * @returns {boolean} whether a user can participate in an experience
  */
 export const userIsAvailableToParticipate = (uid) => {
+
   let time = 60 * 1000;
 
   // adjust time for dev vs prod deployment (lower in dev for testing)
