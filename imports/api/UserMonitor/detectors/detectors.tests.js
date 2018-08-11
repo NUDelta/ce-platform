@@ -1,4 +1,3 @@
-/*
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import {
   matchAffordancesWithDetector,
