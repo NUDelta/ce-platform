@@ -118,19 +118,36 @@ const sendToMatcher = (uid, affordances, currLocation) => {
  * @returns {boolean} whether a user can participate in an experience
  */
 export const userIsAvailableToParticipate = (uid) => {
+  const user = Meteor.users.findOne(uid);
+  return !(userParticipatedTooRecently(user) || userIsAssignedAlready(user));
+};
 
-  let time = 60 * 1000;
-
+/**
+ * Determines if user participated too recently within a time window specified internally to this function
+ * @param user {Object} has Meteor.users Schema
+ * @return {boolean} whether the user participated too recently or not
+ */
+export const userParticipatedTooRecently = (user) => {
+  let minutes = 60 * 1000;
+  let waitTimeAfterParticipating;
   // adjust time for dev vs prod deployment (lower in dev for testing)
   if (CONFIG.MODE === "DEV") {
-    time = time * 2;
-  } else if (CONFIG.MODE === "PROD") {
-    time = time * 65;
+    waitTimeAfterParticipating = minutes * 2;
   } else {
-    time = time * 65;
+    waitTimeAfterParticipating = minutes * 65;
   }
+  const lastParticipated = user.profile.lastParticipated;
+  const now = Date.now();
+  return (now - lastParticipated) < waitTimeAfterParticipating;
+};
 
-  return (Date.now() - Meteor.users.findOne(uid).profile.lastNotified)  > time;
+/**
+ * Checks if user has an active incident, meaning they were assigned to an incident
+ * @param user {Object} has Meteor.users Schema
+ * @return {boolean} whether user is currently assigned to an experience or not
+ */
+export const userIsAssignedAlready = (user) => {
+  return user.profile.activeIncidents.length > 0;
 };
 
 /**
