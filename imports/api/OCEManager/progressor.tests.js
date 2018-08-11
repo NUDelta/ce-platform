@@ -7,11 +7,13 @@ import {Submissions} from "./currentNeeds";
 import {adminUpdatesForAddingUsersToIncident, updateAvailability} from "../OpportunisticCoordinator/identifier";
 import {findUserByUsername} from "../UserMonitor/users/methods";
 import {Assignments, Availability} from "../OpportunisticCoordinator/databaseHelpers";
+import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populateDatabase";
 
 describe('Progressor Tests - Single Submission', function() {
   this.timeout(30*1000);
 
   const OCE_NAME = 'halfhalfDay';
+  const USERNAME = 'garrett';
   let needIndex = 0;
   let numUnfinishedBefore;
   let numSubsBefore;
@@ -24,18 +26,8 @@ describe('Progressor Tests - Single Submission', function() {
     resetDatabase();
 
     // Create User
-    // NOTE: tried to use Account.createUser, but does not properly trigger the onCreateUser callback in time
-    let user = CONSTANTS.USERS.garrett;
-    user.profile = {};
-    user.profile.experiences = [];
-    user.profile.subscriptions = [];
-    user.profile.lastParticipated = null;
-    user.profile.lastNotified = null;
-    user.profile.pastIncidents = [];
-    user.profile.activeIncidents = [];
-    user.profile.staticAffordances = user.profile.staticAffordances || {};
-    Meteor.users.insert(user);
-    const testUser = findUserByUsername('garrett');
+    insertTestUser(USERNAME);
+    const testUser = findUserByUsername(USERNAME);
     console.log(`testUser: ${Object.keys(testUser)}`);
     console.log(`testUser.profile: ${Object.keys(testUser.profile)}`);
 
