@@ -24,7 +24,6 @@ export const insertTestUser = (username) => {
  */
 export const startTestOCE = (oce_name) => {
   let testExp = CONSTANTS.EXPERIENCES[oce_name];
-  Experiences.insert(testExp);
   let testIncident = createIncidentFromExperience(testExp);
   startRunningIncident(testIncident);
 };
