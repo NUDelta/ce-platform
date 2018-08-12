@@ -29,7 +29,7 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
       //administrative updates
       adminUpdatesForAddingUsersToIncident(newUsersUids, iid, needName);
 
-      let route = "apiCustom/" + iid + "/" + needName;
+      let route = "/";
       notifyForParticipating(newUsersUids, iid, "Event " + experience.name + " is starting!",
         experience.notificationText, route);
 
