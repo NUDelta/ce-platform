@@ -47,8 +47,6 @@ export const notifyForParticipating = function (uids, iid, subject, text, route)
  * TODO(rlouie): For transparency, send users to a route that explains what the situation that they missed was.
  *
  * @param uids
- * @param subject [String] title for notification
- * @param text [String] body for the notification
  */
 export const notifyForMissingParticipation = function(uids) {
   // Don't set users profile lastNotified, because this parameter means lastNotified TO participate,
