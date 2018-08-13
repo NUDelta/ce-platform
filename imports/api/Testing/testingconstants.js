@@ -972,6 +972,180 @@ const createHalfHalf = function(
   return experience;
 };
 
+/**
+ * TODO(rlouie): replace exampleImage with a single person equivalent
+ * @return {*[]}
+ */
+const stagedActionsContributionTypes = function() {
+  return [{
+    needName: 'Hand Silhouette',
+    situation: {
+      detector: DETECTORS.sunny._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 1,
+  }, {
+    needName: 'I eat with my hands',
+    situation: {
+      detector: DETECTORS.grocery._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 90,
+  }, {
+    needName: 'Coffee Date',
+    situation: {
+      detector: DETECTORS.coffee._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Are you at a cafe? Take a photo, holding your cup, mug, or plate towards the center of the screen.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 4
+  }, {
+    needName: 'Raise a glass',
+    situation: {
+      detector: DETECTORS.bar._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
+      // exampleImage: TODO(rlouie): get image holding a glass / bottle, indoors. Maybe towards the lights in the bar
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }, {
+    needName: 'Itadakimasu (I humbly receive this meal)',
+    situation: {
+      detector: DETECTORS.eating_japanese._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Take a photo, while holding chopsticks in your hand, saying "Itadakimasu" which translates to "I humbly receive this meal"',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }, {
+    needName: 'Religious Architecture',
+    situation: {
+      detector: DETECTORS.castle._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Do you notice the details of religious buildings? Do so now, by outstretching your hand and pointing out of the elements that stick out to you most.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 30
+  }, {
+    needName: 'Touch a sunset',
+    situation: {
+      detector: DETECTORS.sunset._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What does the sunset look like where you are? Find a good view of the sunset. Then, take a photo, with your hands outstretched towards the sun.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-sunset-heart.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 1,
+  }, {
+    needName: 'Eating with Chopsticks',
+    situation: {
+      detector: DETECTORS.eating_with_chopsticks._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What can you pick up using chopsticks? Take a photo of what you are eating, holding your chopsticks.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 15
+  }, {
+    needName: 'Whats in your grocery basket',
+    situation: {
+      detector: DETECTORS.grocery._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'What are you planning on eating for the week? Take a photo holding up a favorite or essential item in your shopping basket or cart.',
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 5
+  }, {
+    needName: 'filling up gas',
+    situation: {
+      detector: DETECTORS.gas_station._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump.'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 2
+  }, {
+    needName: 'reading a book',
+    situation: {
+      detector: DETECTORS.library._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Sorry to interrupt your reading! Find the nearest book, and take a photo holding up the book to your face.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60 * 10
+  }, {
+    needName: 'Hold a flower',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a flower in the park or garden. Take a photo, with your hand shaped as a half-circle.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
+  }, {
+    needName: 'Feet towards the trees',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a patch of grass to lay your back on. Then, raise your feet. Take a photo of your foot stretching high into the sky',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
+  }, {
+    needName: 'Leaf Mask',
+    situation: {
+      detector: DETECTORS.forest._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Find a leaf in the park. Take a photo of the leaf covering your face, like it was a mask.',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
+  }];
+};
+
 const halfhalfEmbodiedContributionTypes = function() {
   return [{
     needName: 'Hand Silhouette',
@@ -1160,13 +1334,34 @@ const create24hoursContributionTypes = function(toPassConstructor, numberNeeded)
   return needs;
 };
 
-const createCallbacksForEmbodiedMimicry = function(contributionTypes) {
+/**
+ *
+ * @param contributionTypes
+ * @param triggerTemplate [String] should be written as a string, with ES6 templating syntax i.e. ${need.attribute}.
+ *        If using templating syntax, you have access to the each individual need object
+ * @param sendNotificationFn
+ */
+const createCallbacksForMultipleNeeds = function(contributionTypes, triggerTemplate, sendNotificationFn) {
   return contributionTypes.map((need) => {
     return {
-      trigger: `cb.numberOfSubmissions(${need.needName}) % 2 === 0`,
-      function: sendNotificationTwoHalvesCompleted.toString()
+      trigger: eval('`' + triggerTemplate + '`'),
+      function: sendNotificationFn.toString()
     };
   });
+};
+
+const sendNotificationNewStagedActions = function(sub) {
+  let submissions = Submissions.find({
+    iid: sub.iid,
+    needName: sub.needName
+  }).fetch();
+
+  let participants = submissions.map((submission) => { return submission.uid; });
+
+  notify(participants, sub.iid,
+    `Another person performed a staged action similar to you`,
+    `See the results under ${sub.needName}`,
+    '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
@@ -1330,7 +1525,26 @@ let EXPERIENCES = {
     contributionTypes: halfhalfEmbodiedContributionTypes(),
     description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
     notificationText: 'Your situation made you available to participate in Body Mirror!',
-    callbacks: createCallbacksForEmbodiedMimicry(halfhalfEmbodiedContributionTypes())
+    callbacks: createCallbacksForMultipleNeeds(
+      halfhalfEmbodiedContributionTypes(),
+      'cb.numberOfSubmissions(${need.needName}) % 2 === 0',
+      sendNotificationTwoHalvesCompleted)
+  },
+  mechanismPoorHalfHalf: {
+    _id: Random.id(),
+    name: 'Staged Actions',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'stagedActionResults',
+    contributionTypes: stagedActionsContributionTypes(),
+    description: 'Your situation is the stage. Ready, set, action!',
+    notificationText: 'Your situation made you available to participate in Staged Actions!',
+    // FIXME(rlouie): Callback doesnt run correctly
+    // Exception in changed observe/observeChanges callback: SyntaxError: missing ) after argument list
+    // at _.forEach.callbackPair (imports/api/OCEManager/progressor.js:64:14)
+    callbacks: createCallbacksForMultipleNeeds(
+      stagedActionsContributionTypes(),
+      'cb.newSubmission(${need.needName})',
+      sendNotificationNewStagedActions)
   },
   scavengerHunt: {
     _id: Random.id(),

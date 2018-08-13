@@ -322,4 +322,50 @@ Template.sunset.onDestroyed(function() {
     Meteor.clearTimeout(timeout)
     timeout = null;
   });
+});
+
+
+
+// BEGIN staged action
+let timeoutSA = null;
+
+let slideIndexSA = 1;
+function showSlidesAutoSA() {
+  // let i
+  let slides = document.getElementsByClassName("stagedActionSlides");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  slideIndexSA++;
+
+  if (slideIndexSA > slides.length) {slideIndexSA = 1}
+  if (slideIndexSA < 1) {slideIndexSA = slides.length}
+  if (slides[slideIndexSA-1]) {
+    slides[slideIndexSA-1].style.display = "block";
+  } else {
+    console.error(`slides[${slideIndexSA-1}] undefined`);
+    console.log(slides.item(slideIndexSA-1));
+    console.log('------');
+  }
+  timeout = Meteor.setTimeout(showSlidesAutoSA, 1500);
+};
+
+Template.sunset.onRendered(function() {
+  this.autorun(() => {
+    showSlidesAutoSA();
+    // window.onload = function () {
+    //   console.log("run slideshow before");
+    //   // showSlidesAutoSA();
+    //   console.log("run slideshow after");
+    // }
+  });
 })
+
+Template.sunset.onDestroyed(function() {
+  this.autorun(() => {
+    console.log("destroyed")
+    Meteor.clearTimeout(timeoutSA)
+    timeoutSA = null;
+  });
+});
+// END staged action
