@@ -626,7 +626,55 @@ let DETECTORS = {
   },
 };
 
+
+
 function createStorytime() {
+  // setup places and detectors for storytime
+  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
+  // FIXME(rlouie): There is 7 places, but 8 IDs here.
+  // Either (1) make 7 ids or (2) let storytime have random start affordances, and give swirling clouds an affordance
+  let detectorIds = [
+    "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
+    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"
+  ];
+
+  let i = 0;
+  _.forEach(places, (place) => {
+    let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
+    newVars.push('var participatedInStorytime;');
+
+    DETECTORS[place + "_storytime"] = {
+      '_id': detectorIds[i],
+      'description': DETECTORS[place].description + "_storytime",
+      'variables': newVars,
+      'rules': [`!participatedInStorytime && ${DETECTORS[place].rules[0]}`]
+    };
+
+    i++;
+  });
+
+  let dropdownOptions = [
+    ['Drinking butterbeer', "N3uajhH3chDssFq3r"],
+    ['Hogwarts Express at Platform 9 3/4', "Ly9vMvepymC4QNJqA"],
+    ['Forbidden Forest', "52j9BfZ8DkZvSvhhf"],
+    ['Dinner at the Great Hall', "AKxSxuYBFqKP3auie"],
+    ['Hogwarts Castle', "LTnK6z94KQTJKTmZ8"],
+    ['Quidditch Pitch', "cDFgLqAAhtFWdmXkd"],
+    ['Training in the Room of Requirement ', "H5P9ga8HHpCbxBza8"]
+  ];
+
+  // create story starting point
+  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
+  // notify users when story is complete
+  let sendNotification = function (sub) {
+    let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+      return x.uid;
+    });
+
+    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
+      '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+
   let storytimeCallback = function (sub) {
     Meteor.users.update({
       _id: sub.uid
@@ -638,17 +686,17 @@ function createStorytime() {
 
     // set affordances for storytime
     let affordance = sub.content.affordance;
-
     // configure specific detectors
     let options = [
-      ['Drinking butterbeer', CONSTANTS.DETECTORS.beer_storytime._id],
-      ['Hogwarts Express at Platform 9 3/4', CONSTANTS.DETECTORS.train_storytime._id],
-      ['Forbidden Forest', CONSTANTS.DETECTORS.forest_storytime._id],
-      ['Dinner at the Great Hall', CONSTANTS.DETECTORS.dinning_hall_storytime._id],
-      ['Hogwarts Castle', CONSTANTS.DETECTORS.castle_storytime._id],
-      ['Quidditch Pitch', CONSTANTS.DETECTORS.field_storytime._id],
-      ['Training in the Room of Requirement ', CONSTANTS.DETECTORS.gym_storytime._id]
+      ['Drinking butterbeer', "N3uajhH3chDssFq3r"],
+      ['Hogwarts Express at Platform 9 3/4', "Ly9vMvepymC4QNJqA"],
+      ['Forbidden Forest', "52j9BfZ8DkZvSvhhf"],
+      ['Dinner at the Great Hall', "AKxSxuYBFqKP3auie"],
+      ['Hogwarts Castle', "LTnK6z94KQTJKTmZ8"],
+      ['Quidditch Pitch', "cDFgLqAAhtFWdmXkd"],
+      ['Training in the Room of Requirement ', "H5P9ga8HHpCbxBza8"]
     ];
+
     options = options.filter(function (x) {
       return x[1] !== affordance;
     });
@@ -678,51 +726,6 @@ function createStorytime() {
     };
 
     addContribution(sub.iid, contribution);
-  };
-
-  // setup places and detectors for storytime
-  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
-  let detectorIds = [
-    "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
-    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"
-  ];
-
-  let i = 0;
-  _.forEach(places, (place) => {
-    let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
-    newVars.push('var participatedInStorytime;');
-
-    DETECTORS[place + "_storytime"] = {
-      '_id': detectorIds[i],
-      'description': DETECTORS[place].description + "_storytime",
-      'variables': newVars,
-      // 'rules': ['(' + DETECTORS[place].rules[0] + ' ) && !participatedInStorytime;']
-      'rules': [`!participatedInStorytime && ${DETECTORS[place].rules[0]}`]
-    };
-
-    i++;
-  });
-
-  let dropdownOptions = [
-    ['Drinking butterbeer', DETECTORS.beer_storytime._id],
-    ['Hogwarts Express at Platform 9 3/4', DETECTORS.train_storytime._id],
-    ['Forbidden Forest', DETECTORS.forest_storytime._id],
-    ['Dinner at the Great Hall', DETECTORS.dinning_hall_storytime._id],
-    ['Hogwarts Castle', DETECTORS.castle_storytime._id],
-    ['Quidditch Pitch', DETECTORS.field_storytime._id],
-    ['Training in the Room of Requirement ', DETECTORS.gym_storytime._id]
-  ];
-
-  // create story starting point
-  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
-  // notify users when story is complete
-  let sendNotification = function (sub) {
-    let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
-      return x.uid;
-    });
-
-    notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
-      '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
 
   // create and return storytime experience
