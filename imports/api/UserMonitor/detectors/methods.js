@@ -7,12 +7,13 @@ import { serverLog } from "../../logs";
 /**
  * Gets affordances based on location, then calls a callback
  * @param {string} uid user id
- * @param {float} lat current latitude of location
- * @param {float} lng current longitude of location
+ * @param location {object} location object from the background geolocation package
  * @param {function} callback takes two arguments: uid and affordances
  */
-export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
+export const getAffordancesFromLocation = function (uid, location, callback) {
   // setup url with lat and lng from tracking package
+  let lat = location.coords.latitude;
+  let lng = location.coords.longitude;
   let url = `http://affordanceaware.herokuapp.com/location_keyvalues/${ lat }/${ lng }`;
 
   // make request to affordance aware
@@ -35,7 +36,7 @@ export const getAffordancesFromLocation = function (uid, lat, lng, callback) {
 
     // callback with either retrieved affordances or empty object
     serverLog.call({  message: `Affordances successfully retrieved for ${ uid } at ${ lat }, ${ lng }.` });
-    callback(uid, affordances);
+    callback(uid, location, affordances);
   });
 };
 
