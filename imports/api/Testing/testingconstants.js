@@ -627,44 +627,69 @@ let DETECTORS = {
 };
 
 
-
-function createStorytime() {
+/**
+ * Create Storytime Helper.
+ *
+ * @param version [number] determines which detector comes first
+ * @return {{_id: string, name: string, participateTemplate: string, resultsTemplate: string, contributionTypes: *[], description: string, notificationText: string, callbacks: *[]}}
+ */
+function createStorytime(version) {
   // setup places and detectors for storytime
-  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
-  // FIXME(rlouie): There is 7 places, but 8 IDs here.
-  // Either (1) make 7 ids or (2) let storytime have random start affordances, and give swirling clouds an affordance
+  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym", "niceish_day"];
   let detectorIds = [
-    "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
-    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8", "M5SpmZQdc82GJ7xDj"
+    "M5SpmZQdc82GJ7xDj", "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
+    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8"
   ];
 
   let i = 0;
   _.forEach(places, (place) => {
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
-    newVars.push('var participatedInStorytime;');
+    newVars.push(`var participatedInStorytime${version};`);
+    let newRules = JSON.parse(JSON.stringify(DETECTORS[place]['rules']));
+    // modify last detector rule
+    // when rules has a flat structure where rules.length == 1, last rule is the predicate
+    // i.e. ['(diners || restaurants || cafeteria || food_court);']
+    // when rules have a nested structure where rules.length > 1, last rule is the predicate
+    // i.e. ['worship_places = (buddhist_temples || churches);', '(worship_places || landmarks);']
+    let lastRule = newRules.pop();
+    // each rule has a `;` at end, i.e. (rain && park);
+    // in order to modify the rule, must add predicate preceding the rule
+    lastRule = `!participatedInStorytime${version} && ${lastRule}`;
+    newRules.push(lastRule);
 
     DETECTORS[place + "_storytime"] = {
-      '_id': detectorIds[i],
+      '_id': detectorIds[i] + version,
       'description': DETECTORS[place].description + "_storytime",
       'variables': newVars,
-      'rules': [`!participatedInStorytime && ${DETECTORS[place].rules[0]}`]
+      'rules': newRules
     };
 
     i++;
   });
 
   let dropdownOptions = [
-    ['Drinking butterbeer', "N3uajhH3chDssFq3r"],
-    ['Hogwarts Express at Platform 9 3/4', "Ly9vMvepymC4QNJqA"],
-    ['Forbidden Forest', "52j9BfZ8DkZvSvhhf"],
-    ['Dinner at the Great Hall', "AKxSxuYBFqKP3auie"],
-    ['Hogwarts Castle', "LTnK6z94KQTJKTmZ8"],
-    ['Quidditch Pitch', "cDFgLqAAhtFWdmXkd"],
-    ['Training in the Room of Requirement ', "H5P9ga8HHpCbxBza8"]
+    ['Swirling Clouds', `M5SpmZQdc82GJ7xDj${version}`],
+    ['Drinking butterbeer', `N3uajhH3chDssFq3r${version}`],
+    ['Hogwarts Express at Platform 9 3/4', `Ly9vMvepymC4QNJqA${version}`],
+    ['Forbidden Forest', `52j9BfZ8DkZvSvhhf${version}`],
+    ['Dinner at the Great Hall', `AKxSxuYBFqKP3auie${version}`],
+    ['Hogwarts Castle', `LTnK6z94KQTJKTmZ8${version}`],
+    ['Quidditch Pitch', `cDFgLqAAhtFWdmXkd${version}`],
+    ['Training in the Room of Requirement ', `H5P9ga8HHpCbxBza8${version}`],
   ];
-
+  let sentences = [
+    'Harry Potter looked up at the clouds swirling above him.',
+    'The wizard looked into her goblet, hardly realizing the unusual color of the concoction she was being forced to drink.',
+    'The wizard prepared themselves in a lunge, and then dove forward towards the Platform 9 3/4 wall.',
+    'The wizard looked down at their feet, hardly believing the magical plants growing in the Forbidden Forest.',
+    'Any young wizard who has their first meal in the Hogwarts Great Hall has to be surprised by the type of food on the menu.',
+    'Hogwarts castle had looked so good in photos, but this new wizard looked up at it unimpressed.',
+    'Harry Potter saw the snitch diving towards the ground. He aimed his broom towards the grassy ground and followed, reaching his hand out to grab it.',
+    'The new wizard of Dumbledore\'s Army was training very hard in the Room of Requirement.'
+  ];
   // create story starting point
-  let firstSentence = 'Harry Potter looked up at the clouds swirling above him.';
+  let firstDetector = dropdownOptions[version][1];
+  let firstSentence = sentences[version];
   // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
@@ -674,27 +699,43 @@ function createStorytime() {
     notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
       '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
+  // reduce drop down options to all situations besides the one that was already used
+  dropdownOptions = dropdownOptions.filter(function(x) {
+    return x[1] !== dropdownOptions[version][1];
+  });
 
+  /**
+   * NOTE: if callback depends on any variables defined outside of its scope, we must use some solution so that
+   * the variables values are substituted into the callback.toString()
+   *
+   * For a dynamic code generation solution,
+   * @see https://stackoverflow.com/questions/29182244/convert-a-string-to-a-template-string
+   *
+   * @param sub
+   */
   let storytimeCallback = function (sub) {
     Meteor.users.update({
       _id: sub.uid
     }, {
       $set: {
-        'profile.staticAffordances.participatedInStorytime': true
+        ['profile.staticAffordances.participatedInStorytime${version}']: true
       }
     });
 
     // set affordances for storytime
     let affordance = sub.content.affordance;
+
     // configure specific detectors
     let options = [
-      ['Drinking butterbeer', "N3uajhH3chDssFq3r"],
-      ['Hogwarts Express at Platform 9 3/4', "Ly9vMvepymC4QNJqA"],
-      ['Forbidden Forest', "52j9BfZ8DkZvSvhhf"],
-      ['Dinner at the Great Hall', "AKxSxuYBFqKP3auie"],
-      ['Hogwarts Castle', "LTnK6z94KQTJKTmZ8"],
-      ['Quidditch Pitch', "cDFgLqAAhtFWdmXkd"],
-      ['Training in the Room of Requirement ', "H5P9ga8HHpCbxBza8"]
+      // note that these strings are not templates. the values will be substituted later in a subsequent template eval
+      ['Swirling Clouds', 'M5SpmZQdc82GJ7xDj${version}'],
+      ['Drinking butterbeer', 'N3uajhH3chDssFq3r${version}'],
+      ['Hogwarts Express at Platform 9 3/4', 'Ly9vMvepymC4QNJqA${version}'],
+      ['Forbidden Forest', '52j9BfZ8DkZvSvhhf${version}'],
+      ['Dinner at the Great Hall', 'AKxSxuYBFqKP3auie${version}'],
+      ['Hogwarts Castle', 'LTnK6z94KQTJKTmZ8${version}'],
+      ['Quidditch Pitch', 'cDFgLqAAhtFWdmXkd${version}'],
+      ['Training in the Room of Requirement ', 'H5P9ga8HHpCbxBza8${version}'],
     ];
 
     options = options.filter(function (x) {
@@ -730,14 +771,14 @@ function createStorytime() {
 
   // create and return storytime experience
   return {
-    _id: "wGWTtQjmgEYSuRtrk", //Random.id(),
+    _id: Random.id(),
     name: 'Storytime',
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
       needName: 'pageOne',
       situation: {
-        detector: DETECTORS.niceish_day._id,
+        detector: firstDetector,
         number: '1'
       },
       toPass: {
@@ -756,7 +797,8 @@ function createStorytime() {
     callbacks: [
       {
         trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
-        function: storytimeCallback.toString(),
+        // substitute any variables used outside of the callback function scope
+        function: eval('`' + storytimeCallback.toString() + '`'),
       },
       {
         trigger: 'cb.incidentFinished()',
@@ -1176,7 +1218,14 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  storyTime: createStorytime(),
+  storyTime: createStorytime(0),
+  storyTime1: createStorytime(1),
+  storyTime2: createStorytime(2),
+  storyTime3: createStorytime(3),
+  storyTime4: createStorytime(4),
+  storyTime5: createStorytime(5),
+  storyTime6: createStorytime(6),
+  storyTime7: createStorytime(7),
   sunset: {
     _id: Random.id(),
     name: 'Sunset',
