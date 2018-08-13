@@ -187,6 +187,15 @@ export const distanceBetweenLocations = (start, end) => {
  * @param affordances {object} affordances key/value dictionary
  */
 const updateLocationInDb = (uid, location, affordances) => {
+  // check if nested objects exist
+  if (!('activity' in location)) {
+    location.activity = {}
+  }
+
+  if (!('battery' in location)) {
+    location.battery = {}
+  }
+
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
 
@@ -224,17 +233,17 @@ const updateLocationInDb = (uid, location, affordances) => {
     uid: uid,
     lat: lat,
     lng: lng,
-    speed: location.coords.speed,
-    floor: location.coords.floor,
-    accuracy: location.coords.accuracy,
-    altitude_accuracy: location.coords.altitude_accuracy,
-    altitude: location.coords.altitude,
-    heading: location.coords.heading,
-    is_moving: location.is_moving,
-    activity_type: location.activity.type,
-    activity_confidence: location.activity.confidence,
-    battery_level: location.battery.level,
-    battery_is_charging: location.battery.is_charging,
+    speed: location.coords.speed || -1,
+    floor: location.coords.floor || -1,
+    accuracy: location.coords.accuracy || -1,
+    altitude_accuracy: location.coords.altitude_accuracy || -1,
+    altitude: location.coords.altitude || -1,
+    heading: location.coords.heading || -1,
+    is_moving: location.is_moving || false,
+    activity_type: location.activity.type || "",
+    activity_confidence: location.activity.confidence || -1,
+    battery_level: location.battery.level || -1,
+    battery_is_charging: location.battery.is_charging || false,
     timestamp: Date.now(),
     affordances: affordances,
   });
