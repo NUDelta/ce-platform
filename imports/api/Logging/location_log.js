@@ -22,6 +22,47 @@ Schema.Location_log = new SimpleSchema({
     min: -180,
     max: 180
   },
+  speed: {
+    type: Number,
+    decimal: true
+  },
+  floor: {
+    type: Number,
+    decimal: true
+  },
+  accuracy: {
+    type: Number,
+    decimal: true
+  },
+  altitude_accuracy: {
+    type: Number,
+    decimal: true
+  },
+  altitude: {
+    type: Number,
+    decimal: true
+  },
+  heading: {
+    type: Number,
+    decimal: true
+  },
+  is_moving: {
+    type: Boolean
+  },
+  activity_type: {
+    type: String
+  },
+  activity_confidence: {
+    type: Number,
+    decimal: true
+  },
+  battery_level: {
+    type: Number,
+    decimal: true
+  },
+  battery_is_charging: {
+    type: Boolean
+  },
   timestamp: {
     type: Date,
   },

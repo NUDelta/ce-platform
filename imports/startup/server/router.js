@@ -34,7 +34,7 @@ Router.route('/api/geolocation', {where: 'server'})
     // only do a location update if valid uid
     // and if we are not traveling on a bicycle or in a vehicle
     if ((uid !== null) && (not_traveling_on_bicycle_or_vehicle)) {
-      onLocationUpdate(uid, location.coords.latitude, location.coords.longitude, function (uid) {
+      onLocationUpdate(uid, location, function (uid) {
         serverLog.call({message: "triggering internal location update for: " + uid});
       });
     } else {

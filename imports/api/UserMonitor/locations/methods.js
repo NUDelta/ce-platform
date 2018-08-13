@@ -26,18 +26,20 @@ Meteor.methods({
  * Run on updates from LocationTracking package.
  *
  * @param uid {string} uid of user who's location just changed
- * @param lat {float} latitude of new location
- * @param lng {float} longitude of new location
+ * @param location {object} location object from the background geolocation package
  * @param callback {function} callback function to run after code completion
  */
-export const onLocationUpdate = (uid, lat, lng, callback) => {
+export const onLocationUpdate = (uid, location, callback) => {
   serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
 
   // clear users current availabilities
   clearAvailabilitiesForUser(uid);
 
   // get affordances and begin coordination process
-  getAffordancesFromLocation(uid, lat, lng, function (uid, affordances) {
+  getAffordancesFromLocation(uid, location, function (uid, bgLocationObject, affordances) {
+    let lat = location.coords.latitude;
+    let lng = location.coords.longitude;
+
     // attempt to find a user with the given uid
     let user = Meteor.users.findOne({_id: uid});
 
@@ -48,7 +50,7 @@ export const onLocationUpdate = (uid, lat, lng, callback) => {
       affordances = affordances !== null ? affordances : {};
 
       // update information in database
-      updateLocationInDb(uid, lat, lng, affordances);
+      updateLocationInDb(uid, bgLocationObject, affordances);
       callback(uid);
 
       // clear assignments and begin matching
@@ -181,11 +183,13 @@ export const distanceBetweenLocations = (start, end) => {
  * Updates the location for a user in the database.
  *
  * @param uid {string} uid of user who's location just changed
- * @param lat {float} latitude of new location
- * @param lng {float} longitude of new location
+ * @param location {object} location object from the background geolocation package
  * @param affordances {object} affordances key/value dictionary
  */
-const updateLocationInDb = (uid, lat, lng, affordances) => {
+const updateLocationInDb = (uid, location, affordances) => {
+  let lat = location.coords.latitude;
+  let lng = location.coords.longitude;
+
   // get user's current location and update, if exists. otherwise, create a new entry.
   const entry = Locations.findOne({ uid: uid });
   if (entry) {
@@ -220,6 +224,17 @@ const updateLocationInDb = (uid, lat, lng, affordances) => {
     uid: uid,
     lat: lat,
     lng: lng,
+    speed: location.coords.speed,
+    floor: location.coords.floor,
+    accuracy: location.coords.accuracy,
+    altitude_accuracy: location.coords.altitude_accuracy,
+    altitude: location.coords.altitude,
+    heading: location.coords.heading,
+    is_moving: location.is_moving,
+    activity_type: location.activity.type,
+    activity_confidence: location.activity.confidence,
+    battery_level: location.battery.level,
+    battery_is_charging: location.battery.is_charging,
     timestamp: Date.now(),
     affordances: affordances,
   });
