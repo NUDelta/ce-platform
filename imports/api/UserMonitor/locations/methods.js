@@ -107,21 +107,25 @@ const sendToMatcher = (uid, affordances, currLocation) => {
 /**
  * Returns whether a user can participate based on when they were last notified/last participated.
  * Debug mode shortens the time between experiences for easier debugging.
- * (1) If you participated in a need, we could let them continue and participate in more needs!
- * ... Otherwise if they take all the neds, let others have the opportunity to participate in other needs.
+ * (1) If you participated in a need, we could let them continue and participate in more needs! One argument
+ *     allowing multiple participation in quick succession is that people are more likely to run into multiple
+ *     opportunities, if they already out. The opportunity to participate (given our system model is dependent on
+ *     being near places registered on Yelp) is very much tied to being out and about.
+ *     The counter argument is that, we should not let a single user participate in all the needs,
+ *     as to allow others to have the opportunity to participate in other needs.
  * (2) If you were notified to participate, but you didn't get a chance, well don't limit this person!
  * .... They are out an about and are more likely to run into more experiences.
- * (3) If you are assigned to an experience currently, you've already been matched! Don't send additional experiences.
- * ... This could be confusing... which one do you choose to participate in right now? The moment doesn't hold
- * its rareness of mapping to one memory.
  * TODO(rlouie): Move this function to a file that is about identifying availability, instead of about location methods
+ * TODO(rlouie): decide if system should limit participation
  *
  * @param uid {string} uid of user who's location just changed
  * @returns {boolean} whether a user can participate in an experience
  */
 export const userIsAvailableToParticipate = (uid) => {
-  const user = Meteor.users.findOne(uid);
-  return !(userParticipatedTooRecently(user) || userIsAssignedAlready(user));
+  // dont ever limit the user if they match the needs
+  return true;
+  // const user = Meteor.users.findOne(uid);
+  // return !(userParticipatedTooRecently(user) || userIsAssignedAlready(user));
 };
 
 /**
@@ -145,6 +149,7 @@ export const userParticipatedTooRecently = (user) => {
 
 /**
  * Checks if user has an active incident, meaning they were assigned to an incident
+ *
  * @param user {Object} has Meteor.users Schema
  * @return {boolean} whether user is currently assigned to an experience or not
  */
