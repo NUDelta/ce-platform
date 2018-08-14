@@ -122,10 +122,8 @@ const sendToMatcher = (uid, affordances, currLocation) => {
  * @returns {boolean} whether a user can participate in an experience
  */
 export const userIsAvailableToParticipate = (uid) => {
-  // dont ever limit the user if they match the needs
-  return true;
-  // const user = Meteor.users.findOne(uid);
-  // return !(userParticipatedTooRecently(user) || userIsAssignedAlready(user));
+  const user = Meteor.users.findOne(uid);
+  return !userParticipatedTooRecently(user);
 };
 
 /**
@@ -140,7 +138,7 @@ export const userParticipatedTooRecently = (user) => {
   if (CONFIG.MODE === "DEV") {
     waitTimeAfterParticipating = minutes * 2;
   } else {
-    waitTimeAfterParticipating = minutes * 65;
+    waitTimeAfterParticipating = minutes * 20;
   }
   const lastParticipated = user.profile.lastParticipated;
   const now = Date.now();
