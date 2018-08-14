@@ -11,20 +11,21 @@
 </template>
 
 <template name="photosByCategories">
-    Thanks for participating in the experience {{this.experience.name}}! See results from other
-    users below.<br>
-    {{#each cat in categories}}
-        <b>Images for {{cat}} </b><br>
+  <style>
+    .image-contrib {
+      padding-bottom: 10px;
+    }
+  </style>
+    Thanks for participating in the experience <em>{{this.experience.name}}</em>! See results from other
+    users <span style="color: #0351ff">who shared the same situation</span> below.<br><br>
+    {{#each cat in myCategories}}
+      <b style="color: #0351ff">Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
-          <div class="card text-white bg-dark">
-            <div class="card-header">
-              {{#let user=(getUserById users image.uid)}}
-                <p class="card-subtitle">{{user.username}}</p>
-              {{/let}}
-            </div>
-            <div class="card-img-top">
-              {{> Template.dynamic template="displayImage" data=image}}
-            </div>
+          <div class="image-contrib card">
+            {{#let user=(getUserById users image.uid)}}
+              <p class="card-subtitle">{{user.username}}</p>
+            {{/let}}
+            {{> Template.dynamic template="displayImage" data=image}}
           </div>
         {{/each}}
         <br><br>

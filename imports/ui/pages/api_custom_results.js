@@ -50,6 +50,18 @@ Template.photosByCategories.helpers({
     let categoriesSet = new Set(needNames);
     return [...categoriesSet];
   },
+  myCategories() {
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    let categoriesSet = new Set(myNeedNames);
+    return [...categoriesSet];
+  },
   imagesByCategory(category){
     let specific = this.images.filter(function(x){
       return x.needName === category;
