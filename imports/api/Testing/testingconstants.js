@@ -636,13 +636,19 @@ let DETECTORS = {
 function createStorytime(version) {
   // setup places and detectors for storytime
   let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym", "niceish_day"];
-  let detectorIds = [
-    "M5SpmZQdc82GJ7xDj", "N3uajhH3chDssFq3r", "Ly9vMvepymC4QNJqA", "52j9BfZ8DkZvSvhhf", "AKxSxuYBFqKP3auie",
-    "LTnK6z94KQTJKTmZ8", "cDFgLqAAhtFWdmXkd", "H5P9ga8HHpCbxBza8"
+  let detectorIds = places.map((x) => { return Random.id(); });
+  let dropdownText = [
+    'Swirling Clouds',
+    'Drinking butterbeer',
+    'Hogwarts Express at Platform 9 3/4',
+    'Forbidden Forest',
+    'Dinner at the Great Hall',
+    'Hogwarts Castle',
+    'Quidditch Pitch',
+    'Training in the Room of Requirement ',
   ];
 
-  let i = 0;
-  _.forEach(places, (place) => {
+  _.forEach(places, (place, i) => {
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push(`var participatedInStorytime${version};`);
     let newRules = JSON.parse(JSON.stringify(DETECTORS[place]['rules']));
@@ -658,25 +664,15 @@ function createStorytime(version) {
     newRules.push(lastRule);
 
     DETECTORS[place + "_storytime"] = {
-      '_id': detectorIds[i] + version,
+      '_id': detectorIds[i],
       'description': DETECTORS[place].description + "_storytime",
       'variables': newVars,
       'rules': newRules
     };
-
-    i++;
   });
 
-  let dropdownOptions = [
-    ['Swirling Clouds', `M5SpmZQdc82GJ7xDj${version}`],
-    ['Drinking butterbeer', `N3uajhH3chDssFq3r${version}`],
-    ['Hogwarts Express at Platform 9 3/4', `Ly9vMvepymC4QNJqA${version}`],
-    ['Forbidden Forest', `52j9BfZ8DkZvSvhhf${version}`],
-    ['Dinner at the Great Hall', `AKxSxuYBFqKP3auie${version}`],
-    ['Hogwarts Castle', `LTnK6z94KQTJKTmZ8${version}`],
-    ['Quidditch Pitch', `cDFgLqAAhtFWdmXkd${version}`],
-    ['Training in the Room of Requirement ', `H5P9ga8HHpCbxBza8${version}`],
-  ];
+  let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorIds);
+  // create story starting point
   let sentences = [
     'Harry Potter looked up at the clouds swirling above him.',
     'The wizard looked into her goblet, hardly realizing the unusual color of the concoction she was being forced to drink.',
@@ -687,9 +683,8 @@ function createStorytime(version) {
     'Harry Potter saw the snitch diving towards the ground. He aimed his broom towards the grassy ground and followed, reaching his hand out to grab it.',
     'The new wizard of Dumbledore\'s Army was training very hard in the Room of Requirement.'
   ];
-  // create story starting point
-  let firstDetector = dropdownOptions[version][1];
   let firstSentence = sentences[version];
+  let [firstSituation, firstDetector] = DROPDOWN_OPTIONS[version];
   // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
@@ -699,10 +694,6 @@ function createStorytime(version) {
     notify(uids, sub.iid, 'Our story is finally complete. Click here to read it!',
       '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
-  // reduce drop down options to all situations besides the one that was already used
-  dropdownOptions = dropdownOptions.filter(function(x) {
-    return x[1] !== dropdownOptions[version][1];
-  });
 
   /**
    * NOTE: if callback depends on any variables defined outside of its scope, we must use some solution so that
@@ -710,7 +701,7 @@ function createStorytime(version) {
    *
    * For a dynamic code generation solution,
    * @see https://stackoverflow.com/questions/29182244/convert-a-string-to-a-template-string
-   *
+   * @see https://medium.com/@oprearocks/serializing-object-methods-using-es6-template-strings-and-eval-c77c894651f0
    * @param sub
    */
   let storytimeCallback = function (sub) {
@@ -725,18 +716,8 @@ function createStorytime(version) {
     // set affordances for storytime
     let affordance = sub.content.affordance;
 
-    // configure specific detectors
-    let options = [
-      // note that these strings are not templates. the values will be substituted later in a subsequent template eval
-      ['Swirling Clouds', 'M5SpmZQdc82GJ7xDj${version}'],
-      ['Drinking butterbeer', 'N3uajhH3chDssFq3r${version}'],
-      ['Hogwarts Express at Platform 9 3/4', 'Ly9vMvepymC4QNJqA${version}'],
-      ['Forbidden Forest', '52j9BfZ8DkZvSvhhf${version}'],
-      ['Dinner at the Great Hall', 'AKxSxuYBFqKP3auie${version}'],
-      ['Hogwarts Castle', 'LTnK6z94KQTJKTmZ8${version}'],
-      ['Quidditch Pitch', 'cDFgLqAAhtFWdmXkd${version}'],
-      ['Training in the Room of Requirement ', 'H5P9ga8HHpCbxBza8${version}'],
-    ];
+    // HACKY TEMPLATE DYNAMIC CODE GENERATION
+    let options = eval('${JSON.stringify(DROPDOWN_OPTIONS)}');
 
     options = options.filter(function (x) {
       return x[1] !== affordance;
@@ -783,10 +764,11 @@ function createStorytime(version) {
       },
       toPass: {
         instruction: firstSentence,
+        firstSituation: firstSituation,
         firstSentence: firstSentence,
         dropdownChoices: {
           name: 'affordance',
-          options: dropdownOptions
+          options: DROPDOWN_OPTIONS
         }
       },
       numberNeeded: 1,
