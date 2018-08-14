@@ -973,79 +973,78 @@ const createHalfHalf = function(
 };
 
 /**
- * TODO(rlouie): replace exampleImage with a single person equivalent
+ *
+ * @param numberInSituation [Number] Controls asynchronous vs synchronous. Defaults to Asynchronous.
  * @return {*[]}
  */
-const stagedActionsContributionTypes = function() {
+const sameSituationContributionTypes = function(
+  {
+    numberInSituation = 1
+  } = {}
+) {
   return [{
-    needName: 'Hand Silhouette',
+    needName: 'Warm, Sunny Weather',
     situation: {
       detector: DETECTORS.sunny._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
+      instruction: '<span style="color: #0351ff">Are you enjoying good weather today?</span> Share a photo of how you are experiencing the sun.'
     },
     numberNeeded: 50,
     notificationDelay: 1,
   }, {
-    needName: 'I eat with my hands',
+    needName: 'Shopping for groceries',
     situation: {
       detector: DETECTORS.grocery._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
+      instruction: '<span style="color: #0351ff">Are you inside shopping for groceries?</span> Share a photo of what you are buying or looking at.'
     },
     numberNeeded: 50,
     notificationDelay: 90,
   }, {
-    needName: 'Coffee Date',
+    needName: 'Visiting a Cafe',
     situation: {
       detector: DETECTORS.coffee._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Are you at a cafe? Take a photo, holding your cup, mug, or plate towards the center of the screen.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
+      instruction: '<span style="color: #0351ff">Are you spending part of the day at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 4
   }, {
-    needName: 'Raise a glass',
+    needName: 'Going out for drinks',
     situation: {
       detector: DETECTORS.bar._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
-      // exampleImage: TODO(rlouie): get image holding a glass / bottle, indoors. Maybe towards the lights in the bar
+      instruction: '<span style="color: #0351ff">Are you out drinking right now?</span> Share a photo of yourself at this bar.',
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10
   }, {
-    needName: 'Itadakimasu (I humbly receive this meal)',
+    needName: 'Eating Japanese Food',
     situation: {
       detector: DETECTORS.eating_japanese._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Take a photo, while holding chopsticks in your hand, saying "Itadakimasu" which translates to "I humbly receive this meal"',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
+      instruction: '<span style="color: #0351ff">Are you enjoying Japanese food right now?</span> Share a photo of yourself dining at this restaurant.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10
   }, {
-    needName: 'Religious Architecture',
+    needName: 'Religious Worship',
     situation: {
       detector: DETECTORS.castle._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Do you notice the details of religious buildings? Do so now, by outstretching your hand and pointing out of the elements that stick out to you most.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
+      instruction: '<span style="color: #0351ff">Are you at a center for religious worship?</span> Share a photo of what practicing your faith looks like.'
     },
     numberNeeded: 50,
     notificationDelay: 30
@@ -1053,93 +1052,43 @@ const stagedActionsContributionTypes = function() {
     needName: 'Touch a sunset',
     situation: {
       detector: DETECTORS.sunset._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'What does the sunset look like where you are? Find a good view of the sunset. Then, take a photo, with your hands outstretched towards the sun.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-sunset-heart.jpg'
+      instruction: '<span style="color: #0351ff">Are you out and about during sunset?</span> Share a photo of what the sky looks like where you are.'
     },
     numberNeeded: 50,
     notificationDelay: 1,
   }, {
-    needName: 'Eating with Chopsticks',
+    needName: 'Eating Asian Food',
     situation: {
       detector: DETECTORS.eating_with_chopsticks._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'What can you pick up using chopsticks? Take a photo of what you are eating, holding your chopsticks.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
+      instruction: '<span style="color: #0351ff">Are you eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 15
   }, {
-    needName: 'Whats in your grocery basket',
-    situation: {
-      detector: DETECTORS.grocery._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'What are you planning on eating for the week? Take a photo holding up a favorite or essential item in your shopping basket or cart.',
-    },
-    numberNeeded: 50,
-    notificationDelay: 60 * 5
-  }, {
-    needName: 'filling up gas',
-    situation: {
-      detector: DETECTORS.gas_station._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump.'
-    },
-    numberNeeded: 50,
-    notificationDelay: 60 * 2
-  }, {
-    needName: 'reading a book',
+    needName: 'Studying at the library',
     situation: {
       detector: DETECTORS.library._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Sorry to interrupt your reading! Find the nearest book, and take a photo holding up the book to your face.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
+      instruction: '<span style="color: #0351ff">Are you spending part of the day studying or reading?</span> Share a photo of what you are doing.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10
   }, {
-    needName: 'Hold a flower',
+    needName: 'Greenery',
     situation: {
       detector: DETECTORS.forest._id,
-      number: '1'
+      number: numberInSituation
     },
     toPass: {
-      instruction: 'Find a flower in the park or garden. Take a photo, with your hand shaped as a half-circle.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
-    },
-    numberNeeded: 50,
-    notificationDelay: 15
-  }, {
-    needName: 'Feet towards the trees',
-    situation: {
-      detector: DETECTORS.forest._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'Find a patch of grass to lay your back on. Then, raise your feet. Take a photo of your foot stretching high into the sky',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
-    },
-    numberNeeded: 50,
-    notificationDelay: 15
-  }, {
-    needName: 'Leaf Mask',
-    situation: {
-      detector: DETECTORS.forest._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'Find a leaf in the park. Take a photo of the leaf covering your face, like it was a mask.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
+      instruction: '<span style="color: #0351ff">Are you spending time at a park?</span> Share a photo of what is going on around you.'
     },
     numberNeeded: 50,
     notificationDelay: 15
@@ -1535,14 +1484,14 @@ let EXPERIENCES = {
     name: 'Staged Actions',
     participateTemplate: 'uploadPhoto',
     resultsTemplate: 'stagedActionResults',
-    contributionTypes: stagedActionsContributionTypes(),
+    contributionTypes: sameSituationContributionTypes(),
     description: 'Your situation is the stage. Ready, set, action!',
     notificationText: 'Your situation made you available to participate in Staged Actions!',
     // FIXME(rlouie): Callback doesnt run correctly
     // Exception in changed observe/observeChanges callback: SyntaxError: missing ) after argument list
     // at _.forEach.callbackPair (imports/api/OCEManager/progressor.js:64:14)
     callbacks: createCallbacksForMultipleNeeds(
-      stagedActionsContributionTypes(),
+      sameSituationContributionTypes(),
       'cb.newSubmission(${need.needName})',
       sendNotificationNewStagedActions)
   },
