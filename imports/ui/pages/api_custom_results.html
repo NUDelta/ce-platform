@@ -16,7 +16,16 @@
     {{#each cat in categories}}
         <b>Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
-            {{> Template.dynamic template="displayImage" data=image}}
+          <div class="card text-white bg-dark">
+            <div class="card-header">
+              {{#let user=(getUserById users image.uid)}}
+                <p class="card-subtitle">{{user.username}}</p>
+              {{/let}}
+            </div>
+            <div class="card-img-top">
+              {{> Template.dynamic template="displayImage" data=image}}
+            </div>
+          </div>
         {{/each}}
         <br><br>
     {{/each}}
