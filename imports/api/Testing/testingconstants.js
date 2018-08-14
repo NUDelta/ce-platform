@@ -1479,14 +1479,14 @@ let EXPERIENCES = {
       'cb.numberOfSubmissions(${need.needName}) % 2 === 0',
       sendNotificationTwoHalvesCompleted)
   },
-  mechanismPoorHalfHalf: {
+  sameSituationAwareness: {
     _id: Random.id(),
-    name: 'Staged Actions',
+    name: 'Our Small Moments',
     participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'stagedActionResults',
+    resultsTemplate: 'photosByCategories',
     contributionTypes: sameSituationContributionTypes(),
-    description: 'Your situation is the stage. Ready, set, action!',
-    notificationText: 'Your situation made you available to participate in Staged Actions!',
+    description: 'During the small moments, we might be experiencing more together than we let on.',
+    notificationText: 'Your situation made you available to participate in Our Small Moments!',
     // FIXME(rlouie): Callback doesnt run correctly
     // Exception in changed observe/observeChanges callback: SyntaxError: missing ) after argument list
     // at _.forEach.callbackPair (imports/api/OCEManager/progressor.js:64:14)
