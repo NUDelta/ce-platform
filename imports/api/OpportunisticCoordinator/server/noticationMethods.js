@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Push } from 'meteor/raix:push';
 import { log } from '../../logs.js';
 import { CONFIG } from '../../config.js';
+import {Submissions} from "../../OCEManager/currentNeeds";
 
 /**
  * _sendPush - sends a notification to the given user
@@ -59,6 +60,41 @@ export const notify = function (uids, iid, subject, text, route) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
     _sendPush(uids, subject, text, route, iid, true);
+};
+
+/**
+ * Used as submission callback, it will notify all users who have submitted to the incident
+ *
+ * @param subject [String]
+ * @param text [String]
+ * @return [Function]
+ */
+export const notifyUsersInIncident = function(subject, text) {
+  const functionTemplate = function (sub) {
+    let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
+      return x.uid;
+    });
+
+    notify(uids, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+  return eval('`'+functionTemplate.toString()+'`');
+};
+
+/**
+ * Used as submission callback, it will notify all users who have submitted to the Need in the incident
+ *
+ * @param subject [String]
+ * @param text [String]
+ * @return [Function]
+ */
+export const notifyUsersInNeed = function(subject, text) {
+  const functionTemplate = function(sub) {
+    let uids = Submissions.find({iid: sub.iid, needName: sub.needName}).fetch().map((x) => {
+      return x.uid;
+    });
+    notify(uids, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+  return eval('`'+functionTemplate.toString()+'`');
 };
 
 Meteor.methods({

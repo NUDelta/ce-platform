@@ -337,7 +337,7 @@
     </div>
 </template>
 
-<template name="independentStorybook">
+<template name="storyBook_noInterdependence">
   <head>
     <style>
       .mySlides {
@@ -385,7 +385,7 @@
     </style>
   </head>
 
-  <h1>Harry Potter Spin-off</h1><br>
+  <h1>{{this.experience.name}}</h1><br>
   Thanks for participating! Read what you and others have written so far.
   <div class="slideshow-container">
     {{#each submission in this.submissions}}
