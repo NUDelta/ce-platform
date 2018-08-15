@@ -4,7 +4,7 @@ import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
 import {Detectors} from "../UserMonitor/detectors/detectors";
-import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
+import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
 
 let LOCATIONS = {
   'park': {
@@ -635,7 +635,7 @@ let DETECTORS = {
  */
 function createStorytime(version) {
   // setup places and detectors for storytime
-  let places = ["beer", "train", "forest", "dinning_hall", "castle", "field", "gym", "niceish_day"];
+  let places = ["niceish_day", "beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
   let detectorIds = places.map((x) => { return Random.id(); });
   let dropdownText = [
     'Swirling Clouds',
@@ -684,7 +684,7 @@ function createStorytime(version) {
     'The new wizard of Dumbledore\'s Army was training very hard in the Room of Requirement.'
   ];
   let firstSentence = sentences[version];
-  let [firstSituation, firstDetector] = DROPDOWN_OPTIONS[version];
+  let firstDetector = DROPDOWN_OPTIONS[version][1];
   // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
@@ -764,7 +764,6 @@ function createStorytime(version) {
       },
       toPass: {
         instruction: firstSentence,
-        firstSituation: firstSituation,
         firstSentence: firstSentence,
         dropdownChoices: {
           name: 'affordance',
@@ -789,6 +788,56 @@ function createStorytime(version) {
   };
 }
 
+const createIndependentStorybook = () => {
+
+  let place_situation_delay = [
+    ["niceish_day",'Swirling Clouds', 5],
+    ["beer", 'Drinking butterbeer', 120],
+    ["train", 'Hogwarts Express at Platform 9 3/4', 30],
+    ["forest",'Forbidden Forest', 5],
+    ["dinning_hall",'Dinner at the Great Hall', 120],
+    ["castle",'Hogwarts Castle', 10],
+    ["field",'Quidditch Pitch', 5],
+    ["gym",'Training in the Room of Requirement', 5]
+  ];
+
+  return {
+    _id: Random.id(),
+    name: 'Humans of Hogwarts',
+    participateTemplate: 'storyPage_noInterdependence',
+    resultsTemplate: 'storyBook_noInterdependence',
+    contributionTypes: (function(place_situation_delay) {
+      return place_situation_delay.map((x) => {
+        let [place, situation, delay] = x;
+        return {
+          needName: situation,
+          situation: {
+            detector: DETECTORS[place]._id,
+            number: '1',
+          },
+          toPass: {
+            situation: situation
+          },
+          numberNeeded: 2,
+          notificationDelay: delay
+        }
+      });
+    })(place_situation_delay),
+    description: 'We\'re writing a Harry Potter spin-off story',
+    notificationText: 'Help write a Harry Potter spin-off story!',
+    callbacks: [
+      {
+        trigger: 'cb.newSubmission()',
+        function: (notifyUsersInIncident('Someone added to Humans of Hogwarts',
+          'View photos and lines others have created')).toString()
+      },
+      {
+        trigger: 'cb.incidentFinished()',
+        function: (notifyUsersInIncident('Humans of Hogwarts has finished',
+          "View everyone's photos and lines that were contributed")).toString()
+      }]
+  };
+};
 
 function createBumped() {
   let experience = {
@@ -1344,14 +1393,15 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  storyTime: createStorytime(0),
-  storyTime1: createStorytime(1),
-  storyTime2: createStorytime(2),
-  storyTime3: createStorytime(3),
-  storyTime4: createStorytime(4),
-  storyTime5: createStorytime(5),
-  storyTime6: createStorytime(6),
-  storyTime7: createStorytime(7),
+  // storyTime: createStorytime(0),
+  // storyTime1: createStorytime(1),
+  // storyTime2: createStorytime(2),
+  // storyTime3: createStorytime(3),
+  // storyTime4: createStorytime(4),
+  // storyTime5: createStorytime(5),
+  // storyTime6: createStorytime(6),
+  // storyTime7: createStorytime(7),
+  independentStorybook: createIndependentStorybook(),
   sunset: {
     _id: Random.id(),
     name: 'Sunset',
@@ -1475,7 +1525,8 @@ let EXPERIENCES = {
     callbacks: createCallbacksForMultipleNeeds(
       sameSituationContributionTypes(),
       'cb.newSubmission(${need.needName})',
-      sendNotificationNewStagedActions)
+      notifyUsersInNeed('Someone added to Our Small Moments', 'See the results under ${sub.needName}'))
+
   },
   scavengerHunt: {
     _id: Random.id(),

@@ -27,7 +27,7 @@ Template.api_custom_results.helpers({
   },
 });
 
-Template.registerHelper( 'getImageById', (data, id) => {
+Template.registerHelper('getImageById', (data, id) => {
   let image = data.images.find(function(x){
     return x._id === id;
   });
@@ -223,6 +223,15 @@ Template.scavengerHunt.helpers({
   }
 });
 
+Template.storyBook_noInterdependence.helpers({
+  notFirst(index) {
+    return index !== 0;
+  },
+  notLast(index){
+    // number of images is the number of pages
+    return index < this.images.length - 1;
+  },
+});
 
 Template.storybook.helpers({
   notFirst(index){
@@ -276,8 +285,25 @@ Template.storybook.onCreated(function() {
   });
 });
 
+Template.storyBook_noInterdependence.onCreated(function() {
+  this.autorun(() => {
+    window.onload = function () {
+      showSlides(1);
+    }
+  });
+});
 
 Template.storybook.events({
+  'click .prev'(event, instance) {
+    event.preventDefault();
+    plusSlides(-1)
+  },
+  'click .next'(event, instance) {
+    event.preventDefault();
+    plusSlides(1)
+  }
+});
+Template.storyBook_noInterdependence.events({
   'click .prev'(event, instance) {
     event.preventDefault();
     plusSlides(-1)
