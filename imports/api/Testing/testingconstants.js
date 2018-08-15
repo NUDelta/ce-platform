@@ -684,7 +684,7 @@ function createStorytime(version) {
     'The new wizard of Dumbledore\'s Army was training very hard in the Room of Requirement.'
   ];
   let firstSentence = sentences[version];
-  let firstDetector = DROPDOWN_OPTIONS[version][1];
+  let [firstSituation, firstDetector] = DROPDOWN_OPTIONS[version];
   // notify users when story is complete
   let sendNotification = function (sub) {
     let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
@@ -719,6 +719,10 @@ function createStorytime(version) {
     // HACKY TEMPLATE DYNAMIC CODE GENERATION
     let options = eval('${JSON.stringify(DROPDOWN_OPTIONS)}');
 
+    let [situation, detectorId] = options.find(function(x) {
+      return x[1] === affordance;
+    });
+
     options = options.filter(function (x) {
       return x[1] !== affordance;
     });
@@ -738,6 +742,8 @@ function createStorytime(version) {
       },
       toPass: {
         instruction: sub.content.sentence,
+        situation: situation,
+        previousUserId: sub.uid,
         dropdownChoices: {
           name: 'affordance',
           options: options
@@ -765,6 +771,7 @@ function createStorytime(version) {
       toPass: {
         instruction: firstSentence,
         firstSentence: firstSentence,
+        situation: firstSituation,
         dropdownChoices: {
           name: 'affordance',
           options: DROPDOWN_OPTIONS
@@ -1393,14 +1400,14 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  // storyTime: createStorytime(0),
-  // storyTime1: createStorytime(1),
-  // storyTime2: createStorytime(2),
-  // storyTime3: createStorytime(3),
-  // storyTime4: createStorytime(4),
-  // storyTime5: createStorytime(5),
-  // storyTime6: createStorytime(6),
-  // storyTime7: createStorytime(7),
+  storyTime: createStorytime(0),
+  storyTime1: createStorytime(1),
+  storyTime2: createStorytime(2),
+  storyTime3: createStorytime(3),
+  storyTime4: createStorytime(4),
+  storyTime5: createStorytime(5),
+  storyTime6: createStorytime(6),
+  storyTime7: createStorytime(7),
   independentStorybook: createIndependentStorybook(),
   sunset: {
     _id: Random.id(),
