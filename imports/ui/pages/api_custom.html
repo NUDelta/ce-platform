@@ -244,10 +244,21 @@
         </style>
     </head>
     <h2>Help us write a Harry Potter spin-off story</h2>
-    We need you to continue the story by picking up where the previous user left off.
+    Your situation makes you available to illustrate <span style="color: #0351ff">{{this.toPass.situation}}</span>.
+    {{#if pageOne}}
+      Continue the story by adding onto the first sentence.
+    {{else}}
+      Continue the story by adding onto the past sentence.
+    {{/if}}
     <form class="col col-xs-12" id="participate">
         <h3>Step 1</h3>
-        The previous user wrote:<br>
+        {{#if pageOne}}
+          The story starts with the following sentence:
+        {{else}}
+          {{#let user=(getUserById users this.toPass.previousUserId)}}
+            The previous user, <b>{{user.username}}</b>, wrote:<br>
+          {{/let}}
+        {{/if}}
         <p id="prevSentence">"{{this.toPass.instruction}}"</p>
         Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
         {{> Template.dynamic template="camera" data="illustration"}}

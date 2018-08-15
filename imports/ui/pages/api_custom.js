@@ -39,6 +39,9 @@ Template.api_custom.helpers({
 
 });
 Template.storyPage.helpers({
+  pageOne() {
+    return this.needName === 'pageOne'
+  },
   notLast(){
     return this.needName !== 'pageFinal';
   }
