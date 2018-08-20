@@ -1337,20 +1337,6 @@ const createCallbacksForMultipleNeeds = function(contributionTypes, triggerTempl
   });
 };
 
-const sendNotificationNewStagedActions = function(sub) {
-  let submissions = Submissions.find({
-    iid: sub.iid,
-    needName: sub.needName
-  }).fetch();
-
-  let participants = submissions.map((submission) => { return submission.uid; });
-
-  notify(participants, sub.iid,
-    `Another person performed a staged action similar to you`,
-    `See the results under ${sub.needName}`,
-    '/apicustomresults/' + sub.iid + '/' + sub.eid);
-};
-
 const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;

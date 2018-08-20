@@ -441,37 +441,6 @@
   </div>
 </template>
 
-
-<template name="stagedActionResults">
-  <head>
-    <style>
-      .title {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-weight: 700;
-      }
-      .stagedActionSlides {
-        display: none
-      }
-      #img0 {
-        display: block;
-      }
-    </style>
-  </head>
-  <div class="title">Actions for needName</div>
-  <div class="slideshow">
-    {{#each image in this.images}}
-      <div class="stagedActionSlides" id="img{{@index}}">
-        {{> Template.dynamic template="displayImage" data=image}}
-        <br>
-        {{#let user=(getUserById users image.uid)}}
-          Captured by {{user.username}} at ({{image.lat}}, {{image.lng}})
-        {{/let}}
-      </div>
-    {{/each}}
-  </div>
-</template>
-
 <!--&lt;!&ndash; TEMPLATE FOR THANKGIVING RESULTS &ndash;&gt;-->
 <!--<template name="thanksgivingResults">-->
 <!--<head>-->
