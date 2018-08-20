@@ -129,6 +129,11 @@ export const removeExperience = new ValidatedMethod({
   }
 });
 
+/**
+ * FIXME(rlouie): define [Schema.ContributionTypes] and [Schema.CallbackPair]
+ * so that we can use this ValidatedMethod for inserting experiences
+ * in contrast to simply Experience.insert(exp) without checking the JSON
+ */
 export const createExperience = new ValidatedMethod({
   name: 'api.createExperience',
   validate: new SimpleSchema({

@@ -8,7 +8,7 @@ import { serverLog } from "../../logs";
  * Gets affordances based on location, then calls a callback
  * @param {string} uid user id
  * @param location {object} location object from the background geolocation package
- * @param {function} callback takes two arguments: uid and affordances
+ * @param {function} callback takes two arguments: uid, bgLocationObject, and affordances
  */
 export const getAffordancesFromLocation = function (uid, location, callback) {
   // setup url with lat and lng from tracking package

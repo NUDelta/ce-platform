@@ -36,7 +36,14 @@ describe('Simple End To End', function () {
       startTestOCE(OCE_NAME);
 
       let uid = findUserByUsername(USERNAME)._id;
-      onLocationUpdate(uid, CONSTANTS.LOCATIONS.grocery.lat, CONSTANTS.LOCATIONS.grocery.lng, function() {
+      let bgLocationObj = {
+        "coords": {
+          "latitude": CONSTANTS.LOCATIONS.grocery.lat,
+          "longitude": CONSTANTS.LOCATIONS.grocery.lng
+        },
+        "activity": {"type": "unknown", "confidence": 100}
+      };
+      onLocationUpdate(uid, bgLocationObj, function() {
         done();
       });
     }
