@@ -1,4 +1,6 @@
 import { CONSTANTS } from "../Testing/testingconstants";
+import {createIncidentFromExperience, startRunningIncident} from "../OCEManager/OCEs/methods";
+import {Experiences} from "../OCEManager/OCEs/experiences";
 
 /**
  *
@@ -24,6 +26,7 @@ export const insertTestUser = (username) => {
  */
 export const startTestOCE = (oce_name) => {
   let testExp = CONSTANTS.EXPERIENCES[oce_name];
+  Experiences.insert(testExp);
   let testIncident = createIncidentFromExperience(testExp);
   startRunningIncident(testIncident);
 };

@@ -37,8 +37,8 @@ export const onLocationUpdate = (uid, location, callback) => {
 
   // get affordances and begin coordination process
   getAffordancesFromLocation(uid, location, function (uid, bgLocationObject, affordances) {
-    let lat = location.coords.latitude;
-    let lng = location.coords.longitude;
+    let lat = bgLocationObject.coords.latitude;
+    let lng = bgLocationObject.coords.longitude;
 
     // attempt to find a user with the given uid
     let user = Meteor.users.findOne({_id: uid});
