@@ -1,5 +1,4 @@
 import { Router } from 'meteor/iron:router';
-
 import '../../ui/blaze-helpers.js';
 
 import '../../ui/layout/layout.js';
@@ -7,6 +6,10 @@ import '../../ui/layout/spread_layout.js';
 
 import '../../ui/pages/home.js';
 
+import '../accounts_config.js';
+
+import '../../ui/pages/account_page.html';
+import '../../ui/pages/account_page.js';
 import '../../ui/pages/admin_locations.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/debug.html';
@@ -18,7 +21,6 @@ import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
-
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -32,6 +34,25 @@ import {Page_log} from "../../api/Logging/page_log/page_log";
 Router.configure({
   layoutTemplate: 'layout'
 });
+
+AccountsTemplates.configureRoute('enrollAccount');
+AccountsTemplates.configureRoute('signIn');
+AccountsTemplates.configureRoute('signUp');
+
+// Router.route('signin', {
+//   path: '/sign-in',
+//   template: 'signin'
+// });
+//
+// Router.route('signup', {
+//   path: '/sign-up',
+//   template: 'signup'
+// });
+//
+// Router.route('profile.image.upload', {
+//   path: '/profileImageUpload',
+//   templateE: 'profileImageUpload'
+// });
 
 Router.route('affordances', {
   path: '/affordances',
