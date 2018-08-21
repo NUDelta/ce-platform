@@ -1,0 +1,17 @@
+<template name="signin">
+  {{> atForm }}
+</template>
+
+<template name="signup">
+  {{> atForm }}
+</template>
+
+<template name="profileImageUpload">
+  <div>
+    <label for="{{_id}}">
+      <p>{{displayName}}</p>
+      <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
+    </label>
+    <input id="{{_id}}" type="file" name="at-field-{{_id}}">
+  </div>
+</template>

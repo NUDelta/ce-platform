@@ -296,7 +296,7 @@ const toggleCameraControls = function(mode) {
  * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
  * @return Blob
  */
-const b64toBlob = function(b64Data, contentType, sliceSize) {
+export const b64toBlob = function(b64Data, contentType, sliceSize) {
   contentType = contentType || '';
   sliceSize = sliceSize || 512;
 
