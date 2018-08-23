@@ -3,6 +3,10 @@
     <style>
       .profile-text {
         text-overflow: ellipsis;
+        font-weight: bold;
+      }
+      .at-avatar {
+        border-radius: 50%;
       }
     </style>
   </head>
@@ -19,6 +23,10 @@
     <style>
       .profile-text {
         text-overflow: ellipsis;
+        font-weight: bold;
+      }
+      .at-avatar {
+        border-radius: 50%;
       }
     </style>
   </head>
@@ -26,7 +34,7 @@
     {{this.user.profile.firstName}} {{this.user.profile.lastName}}
   </span>
   <span>
-    {{> Template.dynamic template="displayAvatarImageSmall" data=this.avatar}}
+    {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
   </span>
 </template>
 
@@ -35,11 +43,15 @@
     <style>
       .profile-text {
         text-overflow: ellipsis;
+        font-weight: bold;
+      }
+      .at-avatar {
+        border-radius: 50%;
       }
     </style>
   </head>
   <div>
-    {{> Template.dynamic template="displayAvatarImageSmall" data=this.avatar}}
+    {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
   </div>
   <div class="profile-text">
     {{this.user.profile.firstName}} {{this.user.profile.lastName}}

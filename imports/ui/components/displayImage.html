@@ -24,12 +24,18 @@
 
 <template name="displayAvatarImage">
   {{#if this.isUploaded}}
-    <img src="{{this.url store="avatars"}}" alt="profile image loading...">
+    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="50px">
   {{/if}}
 </template>
 
 <template name="displayAvatarImageSmall">
   {{#if this.isUploaded}}
-    <img src="{{this.url store="avatars"}}" alt="profile image loading..." width="30px">
+    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="30px">
+  {{/if}}
+</template>
+
+<template name="displayAvatarImageLarge">
+  {{#if this.isUploaded}}
+    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="96px">
   {{/if}}
 </template>
