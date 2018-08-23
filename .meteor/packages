@@ -42,7 +42,6 @@ nooitaf:colors
 oauth1@1.2.0
 mrt:moment-timezone
 cfs:graphicsmagick
-ian:accounts-ui-bootstrap-3
 msavin:mongol
 shell-server@0.3.1
 force-ssl@1.1.0
@@ -53,5 +52,6 @@ accounts-base@1.4.2
 practicalmeteor:chai
 erasaur:meteor-lodash
 dynamic-import@0.3.0
-useraccounts:bootstrap
 useraccounts:iron-routing
+aldeed:template-extension
+useraccounts:bootstrap

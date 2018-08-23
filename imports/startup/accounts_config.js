@@ -2,6 +2,11 @@ import {Avatars} from "../api/ImageUpload/images";
 
 AccountsTemplates.configure({
   defaultLayout: 'layout',
+  showLabels: false,
+  texts: {
+    navSignIn: "Sign In / Join",
+  },
+
   preSignUpHook: (password, info) => {
     // Try to upload photo
     let file_input = document.getElementById('profileImage');

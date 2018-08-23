@@ -91,6 +91,21 @@ select {
   float: right;
 }
 
+// useraccounts:unstyled
+// @see https://github.com/meteor-useraccounts/unstyled/tree/master/lib
+#at-nav-button {
+  color: #fff !important;
+  text-underline: #0097cf;
+}
+#at-btn {
+  background-color: #5dc18d !important;
+  color: #fff;
+  border: #fff;
+}
+#at-form {
+  padding: 0;
+}
+
 // footer nav
 .nav-footer {
   position: fixed;
