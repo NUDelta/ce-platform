@@ -64,6 +64,21 @@ Push notifications are currently configured to work with the Enterprise A certif
 ## Development Guidelines & Styles
 Please read through and follow these guidelines while contributing code to this project.
 
+### Dev Tips and Tricks
+- To clear the database and therefore propagate changes to dummy data in `fixture.js`, set the `CLEAR_DB` boolean in `config.js` to 1
+- if notifications stop working, check that production is set to true in config.push.json
+- to see logs in terminal: heroku logs -t --app ce-platform
+- "quote exceed" might mean the quota of the whole db is exceeded, the limit for free is 500MB
+
+#### Accessing Test Data to Test Participate and Results Views
+For the 4 OCEs used in the CHI 19 study, I made a data dump which has several dummy submissions.  It will allow you to look at all the participate and results screens to check your views.
+1. Download the data dump from our `ce-platform/mlab-dump` S3 bucket!
+2. Start a meteor server i.e. `meteor`
+3. Start a connection to the database i.e. `meteor mongo`
+4. Restore the data i.e. `mongorestore -h 127.0.0.1 --port 3001 -d meteor ce-dump-avatar-storytimerichpoor-samesituationrich/meteor`
+5. Several accounts were used to create data, like users `nagy` and `bonnie`. Their passwords are `password`
+6. If you want to create more data, do so within the app. Then use mongodump i.e. `mongodump -h 127.0.0.1 --port 3001 -d meteor`
+
 ### Javascript
 Refer to the [Airbnb Javascript style guide](https://github.com/airbnb/javascript). We're fully into ES6, so make sure you're familiar with using `let` over `var`, `() => {}` function shorthand, and so on.
 
@@ -97,10 +112,4 @@ Sort all imports in this order and into these groups, omitting any groups that d
 ### Methods
 You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the [Github Repo](https://github.com/meteor/validated-method/) and the [guide page](http://guide.meteor.com/methods.html) about this, but be sure to use these.
 
-### Dev Tips and Tricks
-- To clear the database and therefore propagate changes to dummy data in `fixture.js`, set the `CLEAR_DB` boolean in `config.js` to 1
 
-
-- if notifications stop working, check that production is set to true in config.push.json
-- to see logs in terminal: heroku logs -t --app ce-platform
-- "quote exceed" might mean the quota of the whole db is exceeded, the limit for free is 500MB
