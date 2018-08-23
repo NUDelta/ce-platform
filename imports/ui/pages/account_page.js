@@ -5,3 +5,5 @@ Template.profileImageUpload.events({
     photoUpload(event);
   },
 });
+
+Template.unstyledAtNavButton.replaces('atNavButton');
