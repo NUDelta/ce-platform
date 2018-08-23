@@ -256,7 +256,10 @@
           The story starts with the following sentence:
         {{else}}
           {{#let user=(getUserById users this.toPass.previousUserId)}}
-            The previous user, <b>{{user.username}}</b>, wrote:<br>
+            <div>
+              {{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+              wrote:
+            </div>
           {{/let}}
         {{/if}}
         <p id="prevSentence">"{{this.toPass.instruction}}"</p>
