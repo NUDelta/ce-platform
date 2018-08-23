@@ -299,7 +299,7 @@
         </style>
     </head>
 
-    <h1>Harry Potter Spin-off</h1><br>
+    <h4>Harry Potter Spin-off</h4>
     Thanks for participating! Read what you and others have written so far.
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
@@ -310,19 +310,16 @@
                 {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
               </div>
               {{#let illustratorId=submission.uid }}
-                <div>
-                  {{> displayLeftToRight_Avatar_FullName user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
-                  {{#if (notFirst @index) }}
-                    illustrated the sentence which...
-                  {{else}}
-                    illustrated the first sentence:
-                  {{/if}}
-                </div>
+                {{#if (notFirst @index) }}
+                  {{> displayLeftToRight_Avatar_FullName appendText="illustrated the sentence which..." user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
+                {{else}}
+                  {{> displayLeftToRight_Avatar_FullName appendText="illustrated the first sentence:" user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
+                {{/if}}
               {{/let}}
             </div>
           {{else}}
             <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
-              <i>We're looking for another user to illustrate your sentence...</i>
+              <i>Waiting for the next person to illustrate...</i>
             </div>
           {{/if}}
           <div class="row caption">
@@ -334,10 +331,7 @@
             <div class="caption-text col-xs-8">
               {{#if (notFirst @index) }}
                 {{#let prevAuthorId=(previousSentenceAuthorUid @index)}}
-                  <div>
-                    {{> displayLeftToRight_Avatar_FullName user=(getUserById users prevAuthorId) avatar=(userAvatarImg avatars (getUserById users prevAuthorId)) }}
-                    wrote:
-                  </div>
+                  {{> displayLeftToRight_Avatar_FullName appendText="wrote:" user=(getUserById users prevAuthorId) avatar=(userAvatarImg avatars (getUserById users prevAuthorId)) }}
                 {{/let}}
                 <div>{{previousSentence @index}}</div>
               {{else}}
@@ -403,7 +397,7 @@
     </style>
   </head>
 
-  <h1>{{this.experience.name}}</h1><br>
+  <h4>{{this.experience.name}}</h4><br>
   Thanks for participating! Read what you and others have written so far.
   <div class="slideshow-container">
     {{#each submission in this.submissions}}
@@ -419,10 +413,7 @@
           </div>
           <div class="caption-text col-xs-8">
             {{#let author=(getUserById users submission.uid) }}
-              <div>
-                {{> displayLeftToRight_Avatar_FullName user=author avatar=(userAvatarImg avatars author) }}
-                took a picture and wrote
-              </div>
+              {{> displayLeftToRight_Avatar_FullName appendText="took a picture and wrote" user=author avatar=(userAvatarImg avatars author) }}
             {{/let}}
             {{submission.content.sentence}}
           </div>
