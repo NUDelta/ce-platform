@@ -230,7 +230,8 @@ hr {
   display: grid;
   grid-gap: 3px;
   grid-template-columns: 54px 1fr;
-  grid-template-areas: "profile-image-left" "profile-text-right"
+  grid-template-areas: "profile-image-left" "profile-text-right";
+  padding: 4px;
 }
 .profile-image-left {
   height: 54px;
@@ -249,7 +250,8 @@ hr {
   display: grid;
   grid-gap: 3px;
   grid-template-columns: 1fr 54px;
-  grid-template-areas: "profile-text-left" "profile-image-right"
+  grid-template-areas: "profile-text-left" "profile-image-right";
+  padding: 4px;
 }
 .profile-image-right {
   height: 54px;
@@ -266,6 +268,7 @@ hr {
 //displayTopToBottom_Avatar_FullName
 .profile-card-top-bottom {
   text-align: center;
+  padding: 4px;
 }
 .profile-image {
   width: 54px;
