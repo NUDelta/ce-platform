@@ -79,6 +79,7 @@ Router.route('api.custom', {
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
 
     this.next();
   },

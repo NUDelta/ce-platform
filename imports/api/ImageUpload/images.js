@@ -6,6 +6,11 @@ const createSquareThumb = (fileObj, readStream, writeStream) => {
   gm(readStream).autoOrient().resize(size, size + '^').gravity('Center').extent(size, size).stream('png').pipe(writeStream);
 };
 
+const createSquareAvatarThumb = (fileObj, readStream, writeStream) => {
+  const size = '96';
+  gm(readStream).autoOrient().resize(size, size + '^').gravity('Center').extent(size, size).stream('png').pipe(writeStream);
+};
+
 const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
   const transformer = gm(readStream, fileObj.name()).autoOrient();
   transformer.stream().pipe(writeStream);
@@ -29,6 +34,15 @@ export const Images = new FS.Collection('images', {
     new FS.Store.GridFS('images', { transformWrite: addDimensionsAndOrient }),
     new FS.Store.GridFS('thumbs', { transformWrite: createSquareThumb })
   ],
+  filter: {
+    allow: {
+      contentTypes: ['image/*']
+    }
+  }
+});
+
+export const Avatars = new FS.Collection('avatars', {
+  stores: [new FS.Store.GridFS('avatars', { transformWrite: createSquareAvatarThumb })],
   filter: {
     allow: {
       contentTypes: ['image/*']
