@@ -1,5 +1,4 @@
-import {b64toBlob} from "../ui/pages/api_custom";
-import {Images} from "../api/ImageUpload/images";
+import {Avatars} from "../api/ImageUpload/images";
 
 AccountsTemplates.configure({
   defaultLayout: 'layout',
@@ -9,13 +8,19 @@ AccountsTemplates.configure({
     let imageFiles = file_input.files;
     if (imageFiles.length === 1) {
       let picture = imageFiles[0];
-      Images.insert(picture, (err, imageFile) => {
+      Avatars.insert(picture, (err, imageFile) => {
         if (err) {
           alert(err);
         } else {
-          console.log('upload success')
+          // LINK AVATARS?
+          Avatars.update({_id: imageFile._id}, {
+            $set: {
+              'username': info.username,
+              'email': info.email
+            }
+          });
 
-          // FIXME(rlouie): client side updating of Meteor.users not allowed unless doing it with an _id selector
+          let userId = Meteor.userId();
           // Meteor.users.update({ email: info.email, username: info.username }, {
 
           //   $set: {
@@ -29,6 +34,14 @@ AccountsTemplates.configure({
         }
       })
     }
+  },
+  postSignUpHook: (userId, info) => {
+    // TODO(rlouie): This post signup runs too fast, before the Avatar link to username/email is updated
+    let imageFile = Avatars.find({'username': info.username, 'email': info.email});
+    let imagesURL = {
+      "profile.image": "/cfs/files/avatars/" + imageFile._id
+    };
+    Meteor.users.update(userId, {$set: imagesURL});
   },
   onLogoutHook: () => {
     // AccountsTemplates.logout();
