@@ -290,7 +290,8 @@
                 padding-right: 3%;
             }
             .img {
-                height: 350px;
+                height: 300px;
+                width: 300px;
             }
             #img0 {
                 display: inline;
@@ -303,16 +304,27 @@
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
         <div class="mySlides" id="img{{@index}}">
-              {{#if (notLast @index)}}
-              <div class="illustration row">
-                  {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+          {{#if (notLast @index)}}
+            <div class="illustration row">
+              <div class="img">
+                {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
               </div>
-              {{else}}
-              <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
-                  <i>We're looking for another user to illustrate your sentence...</i>
-              </div>
-
-              {{/if}}
+              {{#let illustratorId=submission.uid }}
+                <div>
+                  {{> displayLeftToRight_Avatar_FullName user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
+                  {{#if (notFirst @index) }}
+                    illustrated the sentence which...
+                  {{else}}
+                    illustrated the first sentence:
+                  {{/if}}
+                </div>
+              {{/let}}
+            </div>
+          {{else}}
+            <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
+              <i>We're looking for another user to illustrate your sentence...</i>
+            </div>
+          {{/if}}
           <div class="row caption">
             <div class="col-xs-2">
               {{#if (notFirst @index) }}
@@ -321,14 +333,20 @@
             </div>
             <div class="caption-text col-xs-8">
               {{#if (notFirst @index) }}
-                  {{previousSentence @index}}
+                {{#let prevAuthorId=(previousSentenceAuthorUid @index)}}
+                  <div>
+                    {{> displayLeftToRight_Avatar_FullName user=(getUserById users prevAuthorId) avatar=(userAvatarImg avatars (getUserById users prevAuthorId)) }}
+                    wrote:
+                  </div>
+                {{/let}}
+                <div>{{previousSentence @index}}</div>
               {{else}}
                   {{firstSentence}}
               {{/if}}
             </div>
             <div class="col-xs-2">
               {{#if (notLast @index)}}
-                  <a class="next" style="font-size: 50px !important">&#10095;</a>
+                <a class="next" style="font-size: 50px !important">&#10095;</a>
               {{/if}}
             </div>
           </div>
@@ -400,6 +418,12 @@
             {{/if}}
           </div>
           <div class="caption-text col-xs-8">
+            {{#let author=(getUserById users submission.uid) }}
+              <div>
+                {{> displayLeftToRight_Avatar_FullName user=author avatar=(userAvatarImg avatars author) }}
+                took a picture and wrote
+              </div>
+            {{/let}}
             {{submission.content.sentence}}
           </div>
           <div class="col-xs-2">
