@@ -98,7 +98,8 @@
     margin: 0 auto;
   }
   .illustration {
-    height: 350px;
+    // story-img.attr(height) + avatar.attr(height)
+    height: 354px;
     overflow: hidden;
     margin-top: 10px;
     padding-left: 3%;
