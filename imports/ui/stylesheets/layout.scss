@@ -272,10 +272,8 @@ hr {
   display: block;
   margin: 0 auto;
 }
-.profile-text-ellipses {
-  white-space: nowrap;
-  //overflow: hidden;
-  text-overflow: ellipsis;
+.profile-text {
+  white-space: normal;
 }
 
 .profile-firstlast {

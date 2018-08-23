@@ -108,22 +108,15 @@
     <h4>{{this.experience.name}}</h4>
     {{#each needGroup in resultsGroupedByNeedAndDyad}}
       <div class="need-group-container">
-        <div>{{needGroup.needName}}</div>
         {{#each imageGroup in needGroup.imagesGroupedByDyad}}
+          <h5>{{needGroup.needName}}</h5>
           <div class="image-group-container">
             <div class="camera-overlay">
               {{#if (lengthEqual imageGroup 2) }}
                 {{#each image in imageGroup}}
                   <div class="half{{@index}} halfsquare">
                     {{#let user=(getUserById users image.uid)}}
-                      {{#if @index}}
-                        <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
-                        {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
-                      {{else}}
-                        <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
-                        {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
-                        <!--{{> displayLeftToRight_FullName_Avatar user=user avatar=(userAvatarImg avatars user) }}-->
-                      {{/if}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
                     {{/let}}
                     <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
                   </div>
@@ -132,8 +125,6 @@
                 {{#let image=(elementAtIndex imageGroup 0) }}
                   <div class="half0 halfsquare">
                     {{#let user=(getUserById users image.uid)}}
-                      <!--{{> displayLeftToRight_FullName_Avatar user=user avatar=(userAvatarImg avatars user) }}-->
-                      <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
                       {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
                     {{/let}}
                     <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>

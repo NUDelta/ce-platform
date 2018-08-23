@@ -57,13 +57,14 @@
   </head>
 
   <div id="instruction" class="instruction">
+    <h4>{{this.experience.name}}</h4>
     <div>
       {{{this.toPass.instruction}}}
       {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
         {{#if (lengthEqual needImages 1) }}
           {{#let image=(firstElement needImages) }}
             {{#let user=(getUserById users image.uid) }}
-              <u>{{user.username}}</u> framed the left half. You can align the right half with theirs.
+              {{> displayTopToBottom_Avatar_FullName appendText="framed the left half. You can align the right half with theirs." user=user avatar=(userAvatarImg avatars user) }}
             {{/let}}
           {{/let}}
         {{else}}
@@ -73,7 +74,7 @@
     </div>
     {{#if this.toPass.exampleImage}}
       <div>
-        <u>Example to try</u>
+        <h5>Example to try</h5>
         <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
       </div>
     {{/if}}
