@@ -22,7 +22,7 @@ Meteor.startup(() => {
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
       clearDatabase();
-      // createTestData();
+      createTestData();
     }
   }
 });
@@ -104,8 +104,7 @@ function createTestExperiences(){
 function createTestData(){
   // add test users
   Object.values(CONSTANTS.USERS).forEach(function (value) {
-    // Accounts.createUser(value)
-    console.log('FIXME(rlouie): Dont create user');
+    Accounts.createUser(value)
   });
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 

@@ -1,0 +1,47 @@
+<template name="displayLeftToRight_Avatar_FullName">
+  <head>
+    <style>
+      .profile-text {
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <span>
+    {{> Template.dynamic template="displayAvatarImageSmall" data=this.avatar}}
+  </span>
+  <span class="profile-text">
+    {{this.user.profile.firstName}} {{this.user.profile.lastName}}
+  </span>
+</template>
+
+<template name="displayLeftToRight_FullName_Avatar">
+  <head>
+    <style>
+      .profile-text {
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <span class="profile-text">
+    {{this.user.profile.firstName}} {{this.user.profile.lastName}}
+  </span>
+  <span>
+    {{> Template.dynamic template="displayAvatarImageSmall" data=this.avatar}}
+  </span>
+</template>
+
+<template name="displayTopToBottom_Avatar_FullName">
+  <head>
+    <style>
+      .profile-text {
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <div>
+    {{> Template.dynamic template="displayAvatarImageSmall" data=this.avatar}}
+  </div>
+  <div class="profile-text">
+    {{this.user.profile.firstName}} {{this.user.profile.lastName}}
+  </div>
+</template>

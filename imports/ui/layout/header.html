@@ -5,12 +5,11 @@
                 <a class="navbar-brand" href="/" style="color:white; font-size: smaller">Collective Experiences</a>
             </div>
             <ul class="nav navbar-nav navbar-right" style="color:white !important; font-size: smaller">
-              {{> atNavButton}}
-              <!--{{#if currentUser}}-->
-                <!--<li><a class="" id="signup" href="/">Sign Out</a></li>-->
-              <!--{{else}}-->
-                <!--<li><a class="" id="login-buttons-logout" href="/sign-in">Sign In</a></li>-->
-              <!--{{/if}}-->
+              {{#if currentUser}}
+                <li class="navbar-right">{{> atNavButton}}</li>
+              {{else}}
+                <li class="navbar-right">{{> atNavButton}}</li>
+              {{/if}}
             </ul>
         </div>
     </div>
