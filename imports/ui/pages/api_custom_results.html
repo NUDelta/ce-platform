@@ -22,10 +22,10 @@
       <b style="color: #0351ff">Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
           <div class="image-contrib card">
-            {{#let user=(getUserById users image.uid)}}
-              <p class="card-subtitle">{{user.username}}</p>
-            {{/let}}
             {{> Template.dynamic template="displayImage" data=image}}
+            {{#let user=(getUserById users image.uid)}}
+              {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+            {{/let}}
           </div>
         {{/each}}
         <br><br>
