@@ -265,11 +265,16 @@ hr {
 
 //displayTopToBottom_Avatar_FullName
 .profile-card-top-bottom {
-  width: 96px;
+  text-align: center;
+}
+.profile-image {
+  width: 54px;
+  display: block;
+  margin: 0 auto;
 }
 .profile-text-ellipses {
   white-space: nowrap;
-  overflow: hidden;
+  //overflow: hidden;
   text-overflow: ellipsis;
 }
 

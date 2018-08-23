@@ -1,5 +1,6 @@
 <template name="affordances">
     {{#if currentUser}}
+        <a href="/participate/backdoor">Participate Backdoor</a>
         <h4> Your Profile Information </h4>
           {{> displayLeftToRight_Avatar_FullName user=currentUser avatar=(userAvatarImg avatars currentUser) appendText="says hello to the class of 2017!"}}
           {{> displayLeftToRight_FullName_Avatar user=currentUser avatar=(userAvatarImg avatars currentUser) appendText="goes by nagyItUp and can be reached at nagy@nagyhakim.com" }}
