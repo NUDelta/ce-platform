@@ -66,4 +66,50 @@
     height: 100%;
     width: 100%;
   }
+
+  // BEGIN STORYBOOKS
+  .mySlides {
+    display: none
+  }
+  /* Slideshow container */
+  .slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+  }
+  /* Next & previous buttons */
+  #prev, #next {
+    cursor: pointer;
+    bottom: 0px;
+    color: black;
+    font-weight: bold;
+    font-size: 50px !important;
+    border-radius: 0 3px 3px 0;
+  }
+  /* Position the "next button" to the right */
+  #next {
+    border-radius: 3px 0 0 3px;
+  }
+  .caption {
+    margin-top: 15px;
+  }
+  .caption-text {
+    word-wrap: break-word;
+    margin: 0 auto;
+  }
+  .illustration {
+    height: 350px;
+    overflow: hidden;
+    margin-top: 10px;
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+  .story-img {
+    height: 300px;
+    width: 300px;
+  }
+  #img0 {
+    display: inline;
+  }
+  // END STORYBOOK
 }
