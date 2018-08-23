@@ -24,18 +24,35 @@
 
 <template name="displayAvatarImage">
   {{#if this.isUploaded}}
-    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="50px">
+    <img class="at-avatar" src="{{this.url store="avatars"}}" height="50px">
   {{/if}}
 </template>
 
 <template name="displayAvatarImageSmall">
   {{#if this.isUploaded}}
-    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="30px">
+    <img class="at-avatar" src="{{this.url store="avatars"}}" height="30px">
   {{/if}}
 </template>
 
 <template name="displayAvatarImageLarge">
   {{#if this.isUploaded}}
-    <img class="at-avatar" src="{{this.url store="avatars"}}" alt="profile image loading..." width="96px">
+    <img class="at-avatar" src="{{this.url store="avatars"}}" height="96px">
+  {{/if}}
+</template>
+
+<template name="displaySquareAvatarImage">
+  {{#if this.isUploaded}}
+    <img class="at-avatar-square" src="{{this.url store="avatars"}}" height="50px">
+  {{/if}}
+</template>
+
+<template name="displaySquareAvatarImageSmall">
+  {{#if this.isUploaded}}
+    <img class="at-avatar-square" src="{{this.url store="avatars"}}" height="30px">
+  {{/if}}
+</template>
+<template name="displaySquareAvatarImageLarge">
+  {{#if this.isUploaded}}
+    <img class="at-avatar-square" src="{{this.url store="avatars"}}" height="96px">
   {{/if}}
 </template>

@@ -62,33 +62,8 @@ img.logo {
   background-color: rgba(38, 49, 71, 0) !important;
 }
 
-// .navbar-nav a.dropdown-toggle:hover, a.dropdown-toggle:active, a.dropdown-toggle:visited {
-//   background-color: rgba(38, 49, 71, 1) !important;
-// }
-
-#login-buttons-password {
-  background-color: #5dc18d !important;
-  color: #fff;
-  border: #fff;
-}
-
-#login-buttons-logout {
-  background-color: #5dc18d !important;
-  color: #fff;
-  border: #fff;
-}
-
-#signup-link {
-  color: #fff !important;
-  padding-bottom: 10px;
-}
-
 select {
   width: 30%
-}
-
-.dropdown-toggle {
-  float: right;
 }
 
 // useraccounts:unstyled
@@ -247,3 +222,64 @@ hr {
   padding-top: 5px;
   color: #777;
 }
+
+// BEGIN PROFILE AVATAR
+
+// displayLeftToRight_Avatar_FullName
+.profile-card-avatar_fullname {
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: 50px 1fr;
+  grid-template-areas: "profile-image-left" "profile-text-right"
+}
+.profile-image-left {
+  height: 50px;
+  gridarea: profile-image-left;
+}
+.profile-text-right {
+  gridarea: profile-text-right;
+
+  /* wrap on line breaks like normal */
+  white-space: normal;
+  overflow: hidden;
+}
+
+// displayLeftToRight_FullName_Avatar
+.profile-card-fullname_avatar {
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: 1fr 50px;
+  grid-template-areas: "profile-text-left" "profile-image-right"
+}
+.profile-image-right {
+  height: 50px;
+  gridarea: profile-image-right;
+}
+.profile-text-left {
+  gridarea: profile-text-left;
+
+  /* wrap on line breaks like normal */
+  white-space: normal;
+  overflow: hidden;
+}
+
+//displayTopToBottom_Avatar_FullName
+.profile-card-top-bottom {
+  width: 96px;
+}
+.profile-text-ellipses {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-firstlast {
+  font-weight: bold;
+}
+.at-avatar {
+  border-radius: 50%;
+}
+.at-avatar-square {
+  border-radius: 0;
+}
+// END PROFILE AVATAR
