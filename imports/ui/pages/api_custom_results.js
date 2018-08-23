@@ -275,19 +275,15 @@ function showSlides(n) {
   slides[slideIndex-1].style.display = "block";
 }
 
-Template.storybook.onCreated(function() {
+Template.storybook.onRendered(function() {
   this.autorun(() => {
-    window.onload = function () {
-      showSlides(1);
-    }
+    showSlides(1);
   });
 });
 
-Template.storyBook_noInterdependence.onCreated(function() {
+Template.storyBook_noInterdependence.onRendered(function() {
   this.autorun(() => {
-    window.onload = function () {
-      showSlides(1);
-    }
+    showSlides(1);
   });
 });
 
@@ -309,12 +305,6 @@ Template.storyBook_noInterdependence.events({
   'click .next'(event, instance) {
     event.preventDefault();
     plusSlides(1)
-  }
-});
-
-Template.sunset.onCreated(() => {
-  window.onload = function(){
-    // showSlidesAuto();
   }
 });
 
