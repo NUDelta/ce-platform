@@ -251,7 +251,7 @@
       Continue the story by adding onto the past sentence.
     {{/if}}
     <form class="col col-xs-12" id="participate">
-        <h3>Step 1</h3>
+        <h4>Step 1</h4>
         {{#if pageOne}}
           The story starts with the following sentence:
         {{else}}
@@ -264,7 +264,7 @@
         {{> Template.dynamic template="camera" data="illustration"}}
 
         {{#if notLast}}
-            <h3>Step 2</h3>
+            <h4>Step 2</h4>
             Choose one of the following phrases and use it to write the next sentence: <br>
             {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
             {{> Template.dynamic template="text" data="sentence"}}
@@ -292,15 +292,15 @@
       }
     </style>
   </head>
-  <h2>Add to {{this.experience.name}}</h2>
+  <h4>Add to {{this.experience.name}}</h4>
   Your situation makes you available to describe <span style="color: #0351ff">{{this.toPass.situation}}</span>
 
   <form class="col col-xs-12" id="participate">
-    <h3>Step 1</h3>
+    <h4>Step 1</h4>
     Use <span style="color: #0351ff">{{this.toPass.situation}}</span> in a sentence describing a scene in Harry Potter.
     {{> Template.dynamic template="text" data="sentence"}}
 
-    <h3>Step 2</h3>
+    <h4>Step 2</h4>
     Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
     {{> Template.dynamic template="camera" data="illustration"}}
 

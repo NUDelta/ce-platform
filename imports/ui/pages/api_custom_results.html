@@ -251,54 +251,7 @@
 
 <!--TEMPLATE FOR STORYTIME-->
 <template name="storybook">
-    <head>
-        <style>
-            .mySlides {
-                display: none
-            }
-            /* Slideshow container */
-            .slideshow-container {
-                max-width: 1000px;
-                position: relative;
-                margin: auto;
-            }
-            /* Next & previous buttons */
-            #prev, #next {
-                cursor: pointer;
-                bottom: 0px;
-                color: black;
-                font-weight: bold;
-                font-size: 50px !important;
-                border-radius: 0 3px 3px 0;
-            }
-            /* Position the "next button" to the right */
-            #next {
-                border-radius: 3px 0 0 3px;
-            }
-            .caption {
-                margin-top: 15px;
-            }
-            .caption-text {
-                word-wrap: break-word;
-                margin: 0 auto;
-            }
-            .illustration {
-                height: 350px;
-                overflow: hidden;
-                margin-top: 10px;
-                padding-left: 3%;
-                padding-right: 3%;
-            }
-            .img {
-                height: 300px;
-                width: 300px;
-            }
-            #img0 {
-                display: inline;
-            }
-        </style>
-    </head>
-
+  <div id="results">
     <h4>Harry Potter Spin-off</h4>
     Thanks for participating! Read what you and others have written so far.
     <div class="slideshow-container">
@@ -306,7 +259,7 @@
         <div class="mySlides" id="img{{@index}}">
           {{#if (notLast @index)}}
             <div class="illustration row">
-              <div class="img">
+              <div class="story-img">
                 {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
               </div>
               {{#let illustratorId=submission.uid }}
@@ -318,7 +271,7 @@
               {{/let}}
             </div>
           {{else}}
-            <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
+            <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 300px;">
               <i>Waiting for the next person to illustrate...</i>
             </div>
           {{/if}}
@@ -347,84 +300,42 @@
         </div>
       {{/each}}
     </div>
+  </div>
 </template>
 
 <template name="storyBook_noInterdependence">
-  <head>
-    <style>
-      .mySlides {
-        display: none
-      }
-      /* Slideshow container */
-      .slideshow-container {
-        max-width: 1000px;
-        position: relative;
-        margin: auto;
-      }
-      /* Next & previous buttons */
-      #prev, #next {
-        cursor: pointer;
-        bottom: 0px;
-        color: black;
-        font-weight: bold;
-        font-size: 50px !important;
-        border-radius: 0 3px 3px 0;
-      }
-      /* Position the "next button" to the right */
-      #next {
-        border-radius: 3px 0 0 3px;
-      }
-      .caption {
-        margin-top: 15px;
-      }
-      .caption-text {
-        word-wrap: break-word;
-        margin: 0 auto;
-      }
-      .illustration {
-        height: 350px;
-        overflow: hidden;
-        margin-top: 10px;
-        padding-left: 3%;
-        padding-right: 3%;
-      }
-      .img {
-        height: 350px;
-      }
-      #img0 {
-        display: inline;
-      }
-    </style>
-  </head>
-
-  <h4>{{this.experience.name}}</h4><br>
-  Thanks for participating! Read what you and others have written so far.
-  <div class="slideshow-container">
-    {{#each submission in this.submissions}}
-      <div class="mySlides" id="img{{@index}}">
-        <div class="illustration row">
-          {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
-        </div>
-        <div class="row caption">
-          <div class="col-xs-2">
-            {{#if (notFirst @index) }}
-              <a class="prev" style="font-size: 50px !important">&#10094;</a>
-            {{/if}}
+  <div id="participate">
+    <h4>{{this.experience.name}}</h4>
+    Thanks for participating! Read what you and others have written so far.
+    <div class="slideshow-container">
+      {{#each submission in this.submissions}}
+        <div class="mySlides" id="img{{@index}}">
+          <div class="illustration row">
+            <div class="story-img">
+              {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+            </div>
           </div>
-          <div class="caption-text col-xs-8">
-            {{#let author=(getUserById users submission.uid) }}
-              {{> displayLeftToRight_Avatar_FullName appendText="took a picture and wrote" user=author avatar=(userAvatarImg avatars author) }}
-            {{/let}}
-            {{submission.content.sentence}}
-          </div>
-          <div class="col-xs-2">
-            {{#if (notLast @index)}}
-              <a class="next" style="font-size: 50px !important">&#10095;</a>
-            {{/if}}
+          <div class="row caption">
+            <div class="col-xs-2">
+              {{#if (notFirst @index) }}
+                <a class="prev" style="font-size: 50px !important">&#10094;</a>
+              {{/if}}
+            </div>
+            <div class="caption-text col-xs-8">
+              {{#let author=(getUserById users submission.uid) }}
+                {{> displayLeftToRight_Avatar_FullName appendText="took a picture and wrote" user=author avatar=(userAvatarImg avatars author) }}
+              {{/let}}
+              {{submission.content.sentence}}
+            </div>
+            <div class="col-xs-2">
+              {{#if (notLast @index)}}
+                <a class="next" style="font-size: 50px !important">&#10095;</a>
+              {{/if}}
+            </div>
           </div>
         </div>
-      </div>
-    {{/each}}
+      {{/each}}
+    </div>
   </div>
 </template>
 
