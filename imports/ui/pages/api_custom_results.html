@@ -96,17 +96,15 @@
         grid-template-rows: 90vw;
         grid-template-areas: "half0 half1";
       }
-      .centered {
-        text-align: center;
-      }
+
       .image-group-container {
         /* give some space for the following text*/
-        margin-bottom: 50px;
+        margin-bottom: 100px;
       }
     </style>
   </head>
 
-  <div id="results">
+  <div id="results" class="centered">
     <h4>{{this.experience.name}}</h4>
     {{#each needGroup in resultsGroupedByNeedAndDyad}}
       <div class="need-group-container">
@@ -116,24 +114,35 @@
             <div class="camera-overlay">
               {{#if (lengthEqual imageGroup 2) }}
                 {{#each image in imageGroup}}
-                  <div class="half{{@index}} centered halfsquare">
+                  <div class="half{{@index}} halfsquare">
                     {{#let user=(getUserById users image.uid)}}
-                      <u>{{user.username}}</u>
+                      {{#if @index}}
+                        <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
+                        {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                      {{else}}
+                        <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
+                        {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                        <!--{{> displayLeftToRight_FullName_Avatar user=user avatar=(userAvatarImg avatars user) }}-->
+                      {{/if}}
                     {{/let}}
                     <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
                   </div>
                 {{/each}}
               {{else}}
                 {{#let image=(elementAtIndex imageGroup 0) }}
-                  <div class="half0 centered halfsquare">
+                  <div class="half0 halfsquare">
                     {{#let user=(getUserById users image.uid)}}
-                      <u>{{user.username}}</u>
+                      <!--{{> displayLeftToRight_FullName_Avatar user=user avatar=(userAvatarImg avatars user) }}-->
+                      <!--{{> displayLeftToRight_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}-->
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
                     {{/let}}
                     <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
                   </div>
                   <div class="half1 halfsquare">
                     <br/>
-                    <div class="content" style="background-color: rgba(125,125,125,0.5);">Waiting for another person to fill in the right half!</div>
+                    <div class="content align-middle" style="background-color: rgba(125,125,125,0.5);">
+                      <p>Waiting for another person to fill in the right half!</p>
+                    </div>
                   </div>
                 {{/let}}
               {{/if}}
@@ -271,8 +280,8 @@
               {{/let}}
             </div>
           {{else}}
-            <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 300px;">
-              <i>Waiting for the next person to illustrate...</i>
+            <div class="illustration row align-middle" style="text-align: center; vertical-align: middle; line-height: 300px;">
+              <p><i>Waiting for the next person to illustrate the sentence...</i></p>
             </div>
           {{/if}}
           <div class="row caption">

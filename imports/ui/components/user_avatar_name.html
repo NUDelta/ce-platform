@@ -25,7 +25,7 @@
 <template name="displayTopToBottom_Avatar_FullName">
   <div class="profile-card-top-bottom">
     <div class="profile-image">
-      {{> Template.dynamic template="displaySquareAvatarImageLarge" data=this.avatar}}
+      {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
     </div>
     <div class="profile-text-ellipses">
       <span class="profile-firstlast">{{this.user.profile.firstName}} {{this.user.profile.lastName}}</span>

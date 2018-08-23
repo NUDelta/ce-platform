@@ -229,11 +229,11 @@ hr {
 .profile-card-avatar_fullname {
   display: grid;
   grid-gap: 3px;
-  grid-template-columns: 50px 1fr;
+  grid-template-columns: 54px 1fr;
   grid-template-areas: "profile-image-left" "profile-text-right"
 }
 .profile-image-left {
-  height: 50px;
+  height: 54px;
   gridarea: profile-image-left;
 }
 .profile-text-right {
@@ -248,11 +248,11 @@ hr {
 .profile-card-fullname_avatar {
   display: grid;
   grid-gap: 3px;
-  grid-template-columns: 1fr 50px;
+  grid-template-columns: 1fr 54px;
   grid-template-areas: "profile-text-left" "profile-image-right"
 }
 .profile-image-right {
-  height: 50px;
+  height: 54px;
   gridarea: profile-image-right;
 }
 .profile-text-left {
@@ -283,3 +283,16 @@ hr {
   border-radius: 0;
 }
 // END PROFILE AVATAR
+
+.centered {
+  text-align: center;
+}
+
+.align-middle {
+  position: absolute;
+  display: table;
+}
+.align-middle p {
+  display: table-cell;
+  vertical-align: middle;
+}
