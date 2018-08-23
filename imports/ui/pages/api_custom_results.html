@@ -308,7 +308,7 @@
     <h4>{{this.experience.name}}</h4>
     Thanks for participating! Read what you and others have written so far.
     <div class="slideshow-container">
-      {{#each submission in this.submissions}}
+      {{#each submission in (completedSubmissions this.submissions)}}
         <div class="mySlides" id="img{{@index}}">
           <div class="illustration row">
             <div class="story-img">

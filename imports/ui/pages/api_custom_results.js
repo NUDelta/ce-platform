@@ -219,6 +219,11 @@ Template.storyBook_noInterdependence.helpers({
     // number of images is the number of pages
     return index < this.images.length - 1;
   },
+  completedSubmissions(subs){
+    return subs.filter((sub) => {
+      return sub.uid !== null;
+    })
+  }
 });
 
 Template.storybook.helpers({
