@@ -21,3 +21,15 @@
         <image class="img-responsive" xlink:href="{{this.img.url store="thumbs"}}" x="0" y="0"/>
     {{/if}}
 </template>
+
+<template name="displayAvatarImage">
+  {{#if this.isUploaded}}
+    <img src="{{this.url store="avatars"}}" alt="profile image loading...">
+  {{/if}}
+</template>
+
+<template name="displayAvatarImageSmall">
+  {{#if this.isUploaded}}
+    <img src="{{this.url store="avatars"}}" alt="profile image loading..." width="30px">
+  {{/if}}
+</template>

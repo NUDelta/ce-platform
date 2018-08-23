@@ -12,41 +12,27 @@ AccountsTemplates.configure({
         if (err) {
           alert(err);
         } else {
-          // LINK AVATARS?
           Avatars.update({_id: imageFile._id}, {
             $set: {
               'username': info.username,
               'email': info.email
             }
+          }, (err, docs) => {
+            if (err) {
+              console.log('Failed to link profile Image with Meteor user profile');
+            }
           });
-
-          let userId = Meteor.userId();
-          // Meteor.users.update({ email: info.email, username: info.username }, {
-
-          //   $set: {
-          //     'profile.profileImage': imageFile._id
-          //   }
-          // }, (err, docs) => {
-          //   if (err) {
-          //     console.log('Failed to link profile Image with Meteor user profile');
-          //   }
-          // });
         }
       })
     }
-  },
-  postSignUpHook: (userId, info) => {
-    // TODO(rlouie): This post signup runs too fast, before the Avatar link to username/email is updated
-    let imageFile = Avatars.find({'username': info.username, 'email': info.email});
-    let imagesURL = {
-      "profile.image": "/cfs/files/avatars/" + imageFile._id
-    };
-    Meteor.users.update(userId, {$set: imagesURL});
-  },
-  onLogoutHook: () => {
-    // AccountsTemplates.logout();
-    // Router.go('/');
-    console.log("logged out");
+
+    info.profile.experiences = [];
+    info.profile.subscriptions = [];
+    info.profile.lastParticipated = null;
+    info.profile.lastNotified = null;
+    info.profile.pastIncidents = [];
+    info.profile.activeIncidents = [];
+    info.profile.staticAffordances = {};
   },
 });
 

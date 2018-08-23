@@ -27,19 +27,7 @@ Template.api_custom_results.helpers({
   },
 });
 
-Template.registerHelper('getImageById', (data, id) => {
-  let image = data.images.find(function(x){
-    return x._id === id;
-  });
 
-  return image;
-});
-
-Template.registerHelper('getUserById', (users, uid) => {
-  return users.find(function (x) {
-    return x._id === uid;
-  });
-});
 
 Template.photosByCategories.helpers({
   categories() {
