@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { serverLog } from '../api/logs.js';
+import { Tracker } from 'meteor/tracker';
 
 if (Meteor.isCordova) {
   export const toggleLocationTracking = () => {
@@ -139,13 +140,57 @@ if (Meteor.isCordova) {
         message: `heartbeat successfully called called for user ${ Meteor.userId() } with params ${ JSON.stringify(params) }.`
       });
     });
-
     // listen for connectivity change
     bgGeo.on('connectivitychange', function(event) {
       serverLog.call({
         message: `network connectivity change detected for user ${ Meteor.userId() }: ${ JSON.stringify(event) }.`
       });
     });
+
+    Tracker.autorun(() => {
+      bgGeo.reset({
+        reset: true, // always supply this configuration when application restarts
+
+        // Geolocation config
+        desiredAccuracy: 0, // highest accuracy, highest power consumption
+        distanceFilter: 10, // meters device must move before location update is generated
+        stationaryRadius: 25, // distance user must move in order to trigger location tracking
+        disableElasticity: true, // disable dynamic filtering and return every distanceFilter amount
+
+        // Activity Recognition config
+        activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
+
+        // Application config
+        stopOnTerminate: false, // continue tracking user even if they terminate the application
+        startOnBoot: true, // restart location tracking after device reboots
+        preventSuspend: true, // prevent iOS from suspending application while stationary
+        heartbeatInterval: 60, // firing heartbeat events (needed for preventSuspend)
+        pausesLocationUpdatesAutomatically: true, // used for conserving battery, when able
+        debug: false,  // debug sounds & notifications.
+        logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
+
+        // HTTP / SQLite config
+        url: `${ Meteor.absoluteUrl({secure: false}) }api/geolocation`, // submit location updates to backend route
+        method: "POST", // submission method
+        params: {
+          userId: Meteor.userId()
+        },
+        autoSync: true, // upload each location update as it is received
+        maxDaysToPersist: 1 // days for SQLite database to persist
+      }, function (state) {
+        // This callback is executed when the plugin is ready to use.
+        serverLog.call({ message: "Tracker: location tracking setup for: " + Meteor.userId()});
+        serverLog.call({ message: `Tracker: state: ${ JSON.stringify(state) }, bgGeo: ${ JSON.stringify(bgGeo) }` });
+
+        // begin tracking
+        if (!state.enabled) {
+          bgGeo.start(function() {
+            serverLog.call({ message: "Tracker: Background location tracking started for " + Meteor.userId()});
+          });
+        }
+      })
+    });
+
   });
 } else {
 }
