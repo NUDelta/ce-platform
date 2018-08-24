@@ -1,5 +1,11 @@
 import {Avatars} from "../api/ImageUpload/images";
 
+const getImageFiles = () => {
+  // @see `accounts_page.html` for file input
+  let file_input = document.getElementById('profileImage');
+  return file_input.files;
+};
+
 AccountsTemplates.configure({
   defaultLayout: 'layout',
   showLabels: false,
@@ -9,8 +15,7 @@ AccountsTemplates.configure({
 
   preSignUpHook: (password, info) => {
     // Try to upload photo
-    let file_input = document.getElementById('profileImage');
-    let imageFiles = file_input.files;
+    imageFiles = getImageFiles();
     if (imageFiles.length === 1) {
       let picture = imageFiles[0];
       Avatars.insert(picture, (err, imageFile) => {
@@ -41,7 +46,6 @@ AccountsTemplates.configure({
   },
 });
 
-// AccountsTemplates.removeField('email');
 AccountsTemplates.removeField('password');
 
 AccountsTemplates.addField({
@@ -60,15 +64,6 @@ AccountsTemplates.addField({
   displayName: "First name",
   placeholder: "First name",
   required: true,
-  // func: function(value) {
-  //   // true means validation error!
-  //   // false/null means no error
-  //   return value.match(/[a-z]/i);
-  // },
-  // errStr: 'First name: Only letters (a-z) allowed!',
-  // transform: function(value) {
-  //    return value.charAt(0).toUpperCase() + value.slice(1);
-  // },
 });
 
 AccountsTemplates.addField({
@@ -77,15 +72,6 @@ AccountsTemplates.addField({
   displayName: "Last name",
   placeholder: "Last name",
   required: true,
-  // func: function(value) {
-  //   // true means validation error!
-  //   // false/null means no error
-  //   return value.match(/[a-z]/i);
-  // },
-  // errStr: 'Last name: Only letters (a-z) allowed!',
-  // transform: function(value) {
-  //   return value.charAt(0).toUpperCase() + value.slice(1);
-  // },
 });
 
 AccountsTemplates.addField({
@@ -97,14 +83,11 @@ AccountsTemplates.addField({
   required: true,
   minLength: 6,
   errStr: 'Must be at least 6 characters',
-  // re: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/,
-  // errStr: 'At least 1 digit, 1 lowercase and 1 uppercase',
 });
 
 AccountsTemplates.addField({
   _id: 'profileImage',
-  type: 'url',
+  type: 'text', // currently this type doesn't matter, the important part is that we have a field with a custom template
   displayName: 'Profile photo',
   template: 'profileImageUpload',
-  // required: true,
 });

@@ -1817,8 +1817,8 @@ export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
   // Comment out if you would like to only test specific experiences
-  'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
-  // 'EXPERIENCES': EXPERIENCES,
+  // 'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
+  'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 
