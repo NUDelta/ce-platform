@@ -1,16 +1,16 @@
 #!/bin/bash
 xcodebuild clean \
-    -workspace ce-platform.xcworkspace/ \
-    -scheme ce-platform
+    -workspace Cerebro.xcworkspace/ \
+    -scheme Cerebro
 
 xcodebuild \
-    -workspace ce-platform.xcworkspace \
-    -scheme ce-platform \
-    -archivePath build/ce-platform.xcarchive \
+    -workspace Cerebro.xcworkspace \
+    -scheme Cerebro \
+    -archivePath build/Cerebro.xcarchive \
     archive
 
 xcodebuild \
   -exportArchive \
-  -archivePath build/ce-platform.xcarchive \
+  -archivePath build/Cerebro.xcarchive \
   -exportOptionsPlist exportOptions.plist \
-  -exportPath ce-platform-export
+  -exportPath Cerebro-export

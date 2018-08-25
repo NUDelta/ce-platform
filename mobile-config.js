@@ -1,3 +1,9 @@
+App.info({
+  // id: "edu.northwestern.delta.ce-platform",
+  id: "edu.northwestern.delta.A",
+  name: "Cerebro"
+});
+
 App.accessRule('*');
 App.accessRule('blob:*');
 App.accessRule('*.google.com/*');
