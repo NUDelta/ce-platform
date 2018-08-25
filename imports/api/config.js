@@ -6,7 +6,8 @@ export const CONFIG = {
   DEBUG: true,
   CONTEXT_DELAY: 0,
   LEAVING_CONTEXT_DELAY: 0,
-  CFS_STORAGE_ADAPTER: process.env.CFS_STORAGE_ADAPTER || "gridfs",
+  CFS_STORAGE_ADAPTER: "s3",  // use one or the other
+  // CFS_STORAGE_ADAPTER: "gridfs", // use one or the other
   AWS_REGION: process.env.AWS_REGION,
   AWS_BUCKET_CFS: process.env.AWS_BUCKET_CFS,
 };
