@@ -1,6 +1,6 @@
 import { FS } from 'meteor/cfs:base-package';
 import { gm } from 'meteor/cfs:graphicsmagick';
-import { AUTH } from "../config";
+import {AUTH, CONFIG} from "../config";
 
 const createSquareThumb = (fileObj, readStream, writeStream) => {
   const size = '400';
@@ -30,24 +30,35 @@ const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
   }));
 };
 
-var avatarStore = new FS.Store.S3("avatars", {
-  region: "us-east-2", //optional in most cases
+var imageFullStore = new FS.Store.S3("images", {
+  // region: "us-east-2",
   accessKeyId: AUTH.AWS_ACCESSKEY_ID,
   secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: "ce-platform-cfs", //required
-  // ACL: "myValue", //optional, default is 'private', but you can allow public or secure access routed through your app URL
-  folder: "avatars", //optional, which folder (key prefix) in the bucket to use
-  // The rest are generic store options supported by all storage adapters
+  bucket: AUTH.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local/images" : "prod/images",
+  transformWrite: addDimensionsAndOrient, //optional
+});
+
+var imageThumbStore = new FS.Store.S3("thumbs", {
+  // region: "us-east-2",
+  accessKeyId: AUTH.AWS_ACCESSKEY_ID,
+  secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
+  bucket: AUTH.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local/thumbs" : "prod/thumbs",
+  transformWrite: createSquareThumb, //optional
+});
+
+var avatarStore = new FS.Store.S3("avatars", {
+  // region: "us-east-2",
+  accessKeyId: AUTH.AWS_ACCESSKEY_ID,
+  secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
+  bucket: AUTH.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local/avatars" : "prod/avatars",
   transformWrite: createSquareAvatarThumb, //optional
-  // transformRead: myTransformReadFunction, //optional
-  // maxTries: 1 //optional, default 5
 });
 
 export const Images = new FS.Collection('images', {
-  stores: [
-    new FS.Store.GridFS('images', { transformWrite: addDimensionsAndOrient }),
-    new FS.Store.GridFS('thumbs', { transformWrite: createSquareThumb })
-  ],
+  stores: [imageFullStore, imageThumbStore],
   filter: {
     allow: {
       contentTypes: ['image/*']
@@ -56,7 +67,6 @@ export const Images = new FS.Collection('images', {
 });
 
 export const Avatars = new FS.Collection('avatars', {
-  // stores: [new FS.Store.GridFS('avatars', { transformWrite: createSquareAvatarThumb })],
   stores: [avatarStore],
   filter: {
     allow: {
