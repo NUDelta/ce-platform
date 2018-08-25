@@ -55,3 +55,4 @@ dynamic-import@0.3.0
 useraccounts:iron-routing
 aldeed:template-extension
 useraccounts:bootstrap
+cfs:s3

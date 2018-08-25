@@ -14,7 +14,9 @@ export const AUTH = {
   oauth_consumer_secret: "2t9PyZDkOvykIWYvwWCy0uWoTug",
   oauth_token: "kkU3B_Abdf30sx5tVB2fkFVbr3gzxMZO",
   accessTokenSecret: "GGs0J7wWWshnazwoOHB01j3A2sM",
-  oauth_signature_method: "HMAC-SHA1"
+  oauth_signature_method: "HMAC-SHA1",
+  AWS_ACCESSKEY_ID: process.env.AWS_ACCESSKEY_ID,
+  AWS_SECRET_ACCESSKEY: process.env.AWS_SECRET_ACCESSKEY,
 };
 
 export const getConfig = new ValidatedMethod({
