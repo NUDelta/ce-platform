@@ -1,6 +1,7 @@
 import { FS } from 'meteor/cfs:base-package';
 import { gm } from 'meteor/cfs:graphicsmagick';
 import {AUTH, CONFIG} from "../config";
+import {serverLog} from "../logs";
 
 const createSquareThumb = (fileObj, readStream, writeStream) => {
   const size = '400';
@@ -30,32 +31,38 @@ const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
   }));
 };
 
-var imageFullStore = new FS.Store.S3("images", {
-  region: CONFIG.AWS_REGION,
-  accessKeyId: AUTH.AWS_ACCESSKEY_ID,
-  secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: CONFIG.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local" : "prod",
-  transformWrite: addDimensionsAndOrient,
-});
-
-var imageThumbStore = new FS.Store.S3("thumbs", {
-  region: CONFIG.AWS_REGION,
-  accessKeyId: AUTH.AWS_ACCESSKEY_ID,
-  secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: CONFIG.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local" : "prod",
-  transformWrite: createSquareThumb,
-});
-
-var avatarStore = new FS.Store.S3("avatars", {
-  region: CONFIG.AWS_REGION,
-  accessKeyId: AUTH.AWS_ACCESSKEY_ID,
-  secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: CONFIG.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local" : "prod",
-  transformWrite: createSquareAvatarThumb,
-});
+if (CONFIG.CFS_STORAGE_ADAPTER === "gridfs") {
+  serverLog.call({message: 'Meteor CollectionFS using cfs:gridfs storage adapter'});
+  var imageFullStore = new FS.Store.GridFS('images', { transformWrite: addDimensionsAndOrient });
+  var imageThumbStore = new FS.Store.GridFS('thumbs', { transformWrite: createSquareThumb });
+  var avatarStore = new FS.Store.GridFS('avatars', { transformWrite: createSquareAvatarThumb });
+} else {
+  serverLog.call({message: 'Meteor CollectionFS using cfs:s3 storage adapter'});
+  var imageFullStore = new FS.Store.S3("images", {
+    region: CONFIG.AWS_REGION,
+    accessKeyId: AUTH.AWS_ACCESSKEY_ID,
+    secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
+    bucket: CONFIG.AWS_BUCKET_CFS,
+    folder: (CONFIG.MODE === "local") ? "local" : "prod",
+    transformWrite: addDimensionsAndOrient,
+  });
+  var imageThumbStore = new FS.Store.S3("thumbs", {
+    region: CONFIG.AWS_REGION,
+    accessKeyId: AUTH.AWS_ACCESSKEY_ID,
+    secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
+    bucket: CONFIG.AWS_BUCKET_CFS,
+    folder: (CONFIG.MODE === "local") ? "local" : "prod",
+    transformWrite: createSquareThumb,
+  });
+  var avatarStore = new FS.Store.S3("avatars", {
+    region: CONFIG.AWS_REGION,
+    accessKeyId: AUTH.AWS_ACCESSKEY_ID,
+    secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
+    bucket: CONFIG.AWS_BUCKET_CFS,
+    folder: (CONFIG.MODE === "local") ? "local" : "prod",
+    transformWrite: createSquareAvatarThumb,
+  });
+}
 
 export const Images = new FS.Collection('images', {
   stores: [imageFullStore, imageThumbStore],
