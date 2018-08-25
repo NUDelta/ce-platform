@@ -6,7 +6,8 @@ export const CONFIG = {
   DEBUG: true,
   CONTEXT_DELAY: 0,
   LEAVING_CONTEXT_DELAY: 0,
-
+  AWS_REGION: process.env.AWS_REGION,
+  AWS_BUCKET_CFS: process.env.AWS_BUCKET_CFS,
 };
 
 export const AUTH = {
@@ -17,7 +18,6 @@ export const AUTH = {
   oauth_signature_method: "HMAC-SHA1",
   AWS_ACCESSKEY_ID: process.env.AWS_ACCESSKEY_ID,
   AWS_SECRET_ACCESSKEY: process.env.AWS_SECRET_ACCESSKEY,
-  AWS_BUCKET_CFS: process.env.AWS_BUCKET_CFS,
 };
 
 export const getConfig = new ValidatedMethod({

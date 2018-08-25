@@ -31,30 +31,30 @@ const addDimensionsAndOrient = (fileObj, readStream, writeStream) => {
 };
 
 var imageFullStore = new FS.Store.S3("images", {
-  // region: "us-east-2",
+  region: CONFIG.AWS_REGION,
   accessKeyId: AUTH.AWS_ACCESSKEY_ID,
   secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: AUTH.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local/images" : "prod/images",
-  transformWrite: addDimensionsAndOrient, //optional
+  bucket: CONFIG.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local" : "prod",
+  transformWrite: addDimensionsAndOrient,
 });
 
 var imageThumbStore = new FS.Store.S3("thumbs", {
-  // region: "us-east-2",
+  region: CONFIG.AWS_REGION,
   accessKeyId: AUTH.AWS_ACCESSKEY_ID,
   secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: AUTH.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local/thumbs" : "prod/thumbs",
-  transformWrite: createSquareThumb, //optional
+  bucket: CONFIG.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local" : "prod",
+  transformWrite: createSquareThumb,
 });
 
 var avatarStore = new FS.Store.S3("avatars", {
-  // region: "us-east-2",
+  region: CONFIG.AWS_REGION,
   accessKeyId: AUTH.AWS_ACCESSKEY_ID,
   secretAccessKey: AUTH.AWS_SECRET_ACCESSKEY,
-  bucket: AUTH.AWS_BUCKET_CFS,
-  folder: (CONFIG.MODE === "local") ? "local/avatars" : "prod/avatars",
-  transformWrite: createSquareAvatarThumb, //optional
+  bucket: CONFIG.AWS_BUCKET_CFS,
+  folder: (CONFIG.MODE === "local") ? "local" : "prod",
+  transformWrite: createSquareAvatarThumb,
 });
 
 export const Images = new FS.Collection('images', {
