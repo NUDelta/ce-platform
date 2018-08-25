@@ -1,4 +1,4 @@
-import {Avatars} from "../api/ImageUpload/images";
+import {Avatars} from "../api/ImageUpload/client/images";
 
 const getImageFiles = () => {
   // @see `accounts_page.html` for file input

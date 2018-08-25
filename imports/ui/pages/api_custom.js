@@ -14,7 +14,7 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js
 import { Users } from '../../api/UserMonitor/users/users.js';
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Submissions } from '../../api/OCEManager/currentNeeds.js';
-import { Images } from '../../api/ImageUpload/images.js';
+import { Images } from '../../api/ImageUpload/client/images.js';
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'

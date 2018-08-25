@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Images, Avatars } from '../images.js';
+import { Images, Avatars } from "./images";
 
 Meteor.publish('images.activeIncident', function (incidentId) {
   //console.log('subscribing to ImageUpload.activeIncident', incidentId);

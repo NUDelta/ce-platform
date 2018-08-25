@@ -7,7 +7,7 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
-import { Images, Avatars } from '../../api/ImageUpload/images.js';
+import { Images, Avatars } from '../../api/ImageUpload/server/images.js';
 import { log } from '../../api/logs.js';
 
 import { CONSTANTS } from "../../api/Testing/testingconstants";

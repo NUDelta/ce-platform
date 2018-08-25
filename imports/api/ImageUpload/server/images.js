@@ -1,7 +1,7 @@
 import { FS } from 'meteor/cfs:base-package';
 import { gm } from 'meteor/cfs:graphicsmagick';
-import {AUTH, CONFIG} from "../config";
-import {serverLog} from "../logs";
+import { AUTH, CONFIG } from "../../config";
+import { serverLog } from "../../logs";
 
 const createSquareThumb = (fileObj, readStream, writeStream) => {
   const size = '400';
