@@ -1,7 +1,5 @@
 <template name="affordances">
     {{#if currentUser}}
-        <!--for easy participation testing-->
-        <!--<a href="/participate/backdoor">Participate Backdoor</a>-->
         <h4> Your Profile Information </h4>
         {{> displayTopToBottom_Avatar_FullName user=currentUser avatar=(userAvatarImg avatars currentUser)}}
         <div class="centered">
@@ -23,12 +21,4 @@
         <h4>Sign in to see your affordances!</h4>
     {{/if}}
 </template>
-
-<!--<div class="p-4">-->
-<!--<h4> Your current affordances </h4>-->
-        <!--{{#each key in affordanceKeys}}-->
-<!--{{key}} --->
-<!--{{affordanceValues key}}<br>-->
-        <!--{{/each}}-->
-<!--</div>-->
 
