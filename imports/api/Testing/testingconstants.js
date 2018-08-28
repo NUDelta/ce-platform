@@ -1160,6 +1160,17 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 15
+  }, {
+    needName: 'Rainy Day',
+    situation: {
+      detector: DETECTORS.rainy._id,
+      number: numberInSituation
+    },
+    toPass: {
+      instruction: '<span style="color: #0351ff">Is it raining today?</span> Share a photo of what it looks like outside.'
+    },
+    numberNeeded: 50,
+    notificationDelay: 15
   }];
 };
 
@@ -1295,13 +1306,13 @@ const halfhalfEmbodiedContributionTypes = function() {
     numberNeeded: 50,
     notificationDelay: 60 * 10
   }, {
-    needName: 'Hold a flower',
+    needName: 'Hold a plant',
     situation: {
       detector: DETECTORS.forest._id,
       number: '1'
     },
     toPass: {
-      instruction: 'Find a flower in the park or garden. Take a photo, with your hand shaped as a half-circle.',
+      instruction: 'Find a plant in the <span style="color: #0351ff">park or garden</span>. Take a photo, with your hand shaped as a half-circle.',
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
     },
     numberNeeded: 50,
@@ -1330,6 +1341,18 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     numberNeeded: 50,
     notificationDelay: 15
+  }, {
+    needName: 'Puddles',
+    situation: {
+      detector: DETECTORS.rainy._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Is it <span style="color: #0351ff">raining</span> today? Find a <span style="color: #0351ff">puddle</span> on the ground. Take a photo of yourself, stomping on the puddle!',
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-puddle-feet.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 5,
   }];
 };
 
