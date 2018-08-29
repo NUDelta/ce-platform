@@ -654,6 +654,13 @@ let DETECTORS = {
     variables: ["var hour;"],
     rules: ["hour == 23"]
   },
+  eating_pizza: {
+    _id: "D5QSW6S4mNUsxZPq7",
+    description: "eating pizza",
+    variables: ["var pizza;"],
+    rules: ["(pizza);"]
+  },
+
 };
 
 
@@ -1171,6 +1178,17 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 15
+  }, {
+    needName: "Eating some 'Za",
+    situation: {
+      detector: DETECTORS.eating_pizza._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Are you eating some <span style="color: #0351ff">pizza</span> today? Share a photo of yourself at the pizza restaurant',
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
   }];
 };
 
@@ -1353,6 +1371,18 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     numberNeeded: 50,
     notificationDelay: 5,
+  }, {
+    needName: "Slice of 'Za",
+    situation: {
+      detector: DETECTORS.eating_pizza._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: `Did you order <span style="color: #0351ff">pizza</span>? Hold up a <span style="color: #0351ff">slice of 'Za</span> and take a photo of half the slice!`,
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
   }];
 };
 
