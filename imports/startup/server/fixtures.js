@@ -130,6 +130,22 @@ function createTestData(){
   let uid5 = findUserByUsername('josh')._id;
 
   Meteor.users.update({
+    // everyone
+  }, {
+    $set: {
+      "profile.experiences": [],
+      "profile.subscriptions": [],
+      "profile.lastParticipated": null,
+      "profile.lastNotified": null,
+      "profile.pastIncidents": [],
+      "profile.activeIncidents": [],
+      "profile.staticAffordances": {}
+    }
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
     $set: { 'profile.staticAffordances': {"lovesGarrett": true} }
