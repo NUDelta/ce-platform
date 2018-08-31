@@ -1,5 +1,5 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import { Availability } from './databaseHelpers.js';
+import { Availability, Assignments } from './databaseHelpers.js';
 import {
   adminUpdatesForAddingUsersToIncident, adminUpdatesForRemovingUsersToIncident, getNeedUserMapForNeed,
   updateAvailability
@@ -7,9 +7,9 @@ import {
 import {CONSTANTS} from "../Testing/testingconstants";
 import {createIncidentFromExperience, startRunningIncident} from "../OCEManager/OCEs/methods";
 import {Experiences, Incidents} from "../OCEManager/OCEs/experiences";
-import {findUserByUsername} from "../UserMonitor/users/methods";
-import { Detectors } from "../UserMonitor/detectors/detectors";
-import {insertTestOCE, insertTestUser, startTestOCE} from "./populateDatabase";
+import { Submissions } from "../OCEManager/currentNeeds";
+import {insertTestOCE } from "./populateDatabase";
+import {checkIfThreshold} from "./server/strategizer";
 
 describe('Availability Tests', () => {
   let id1 = Random.id();
@@ -115,3 +115,106 @@ describe('Assignments test', () => {
 
 });
 
+describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
+
+  const incident_id = Random.id();
+  const eid = Random.id();  // doesn't really matter
+  const userA = Random.id();
+  const NEEDNAME = 'Coffee Time';
+  const updatedIncidentsAndNeeds = [
+    {
+      iid: incident_id,
+      needUserMaps: [
+        {
+          needName: NEEDNAME,
+          uids: [userA]
+        }
+      ]
+    }
+  ];
+  const numberNeeded = 4;
+  beforeEach(() => {
+    resetDatabase();
+
+    Incidents.insert({
+      _id: incident_id,
+      eid: eid,
+      callbacks: null, // dont need callbacks
+      contributionTypes: [
+        {
+          needName: NEEDNAME,
+          situation: {
+            detector: Random.id(),
+            number: 1
+          },
+          numberNeeded: numberNeeded,
+          notificationDelay: 10 // arbitrary
+        }
+      ]
+    });
+
+    // userA is available for incident.need1
+    Availability.insert({
+      _id: incident_id,
+      needUserMaps: [
+        { needName: NEEDNAME, uids: [userA] },
+      ],
+    });
+
+    // userA NOT assigned to incident yet
+    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUsersToIncident
+    // and the call to this function comes after checkIfThreshold
+    Assignments.insert({
+      _id: incident_id,
+      needUserMaps: [
+        { needName: NEEDNAME, uids: [] },
+      ],
+    });
+
+    // Empty submissions ready to be filled
+    for (let i = 0; i < numberNeeded; ++i) {
+      Submissions.insert({
+        _id: Random.id(),
+        eid : Random.id(),
+        iid : incident_id,
+        needName : NEEDNAME,
+        uid : null,
+      });
+    }
+  });
+
+  it('user should be able to participate on the first try', () => {
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
+    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA')
+  });
+  it('user should not be allowed to participate twice', () => {
+    // But user has already participated in the past
+    Submissions.insert({
+      _id: Random.id(),
+      eid : Random.id(),
+      iid : incident_id,
+      needName : NEEDNAME,
+      uid : userA,
+      content : {
+        "this": "is a previous submission"
+      }
+    });
+
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: {} }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+
+    chai.assert.isNil(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should NOT contain needName');
+  });
+
+});
