@@ -22,10 +22,13 @@ def followPath(path, uid):
 def setLocation(location, uid):
 	r = requests.post("http://localhost:3000/api/geolocation", json={
 	            "userId": uid,
-	            "location": {"coords": {
-	                "latitude": location[0],
-	                "longitude": location[1]
-	            }}
+	            "location": {
+	                "coords": {
+                        "latitude": location[0],
+                        "longitude": location[1]
+	                },
+	                "activity": {"type": "unknown", "confidence": 100}
+                }
 	        })
     #print(uid + "at location " + str(location[0]) + " " + str(location[1]))
 
