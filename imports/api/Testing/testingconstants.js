@@ -108,8 +108,8 @@ let DETECTORS = {
   sunset: {
     _id: '44EXNzHS7oD2rbF68',
     description: 'places where it\'s sunset,',
-    variables: ['var sunset;', 'var clear;'],
-    rules: ['sunset && clear;']
+    variables: ['var sunset;'],
+    rules: ['(sunset);']
   },
   daytime: {
     _id: 'tyZMZvPKkkSPR4FpG',
@@ -660,7 +660,38 @@ let DETECTORS = {
     variables: ["var pizza;"],
     rules: ["(pizza);"]
   },
-
+  big_bite_restaurant: {
+    _id : "kJQ8sCFbWddhMviMX",
+    description : "hand-held meals eaten with big bites",
+    variables : [
+      "var mexican;",
+      "var foodstands;",
+      "var cafes;",
+      "var delicatessen;",
+      "var driveintheater;",
+      "var cheesesteaks;",
+      "var hotdog;",
+      "var salvadoran;",
+      "var colombian;",
+      "var delis;",
+      "var wraps;",
+      "var hotdogs;",
+      "var burgers;",
+      "var tacos;",
+      "var tex_mex;",
+      "var newmexican;",
+      "var foodtrucks;",
+      "var bagels;",
+      "var comfortfood;",
+      "var sandwiches;",
+      "var argentine;",
+      "var bakeries;",
+      "var cuban;"
+    ],
+    rules : [
+      "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
+    ]
+  }
 };
 
 
@@ -1124,7 +1155,7 @@ const sameSituationContributionTypes = function(
     numberNeeded: 50,
     notificationDelay: 30
   }, {
-    needName: 'Touch a sunset',
+    needName: 'Enjoy sunset',
     situation: {
       detector: DETECTORS.sunset._id,
       number: numberInSituation
@@ -1185,7 +1216,29 @@ const sameSituationContributionTypes = function(
       number: '1'
     },
     toPass: {
-      instruction: 'Are you eating some <span style="color: #0351ff">pizza</span> today? Share a photo of yourself at the pizza restaurant',
+      instruction: 'Are you eating some <span style="color: #0351ff">pizza</span> today? Share a photo of yourself at the pizza restaurant.',
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
+  }, {
+    needName: "Eating out",
+    situation: {
+      detector: DETECTORS.restaurant._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
+  }, {
+    needName: "Eating Big Bites",
+    situation: {
+      detector: DETECTORS.big_bite_restaurant._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers right</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
     notificationDelay: 60,
@@ -1213,7 +1266,7 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     toPass: {
       instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
-      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-orange.jpg'
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-fruit-in-hand.jpg'
     },
     numberNeeded: 50,
     notificationDelay: 90,
@@ -1237,7 +1290,7 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     toPass: {
       instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
-      // exampleImage: TODO(rlouie): get image holding a glass / bottle, indoors. Maybe towards the lights in the bar
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10
@@ -1289,28 +1342,6 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     numberNeeded: 50,
     notificationDelay: 60 * 15
-  }, {
-    needName: 'Whats in your grocery basket',
-    situation: {
-      detector: DETECTORS.grocery._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'What are you planning on eating for the week? Take a photo holding up a favorite or essential item in your shopping basket or cart.',
-    },
-    numberNeeded: 50,
-    notificationDelay: 60 * 5
-  }, {
-    needName: 'filling up gas',
-    situation: {
-      detector: DETECTORS.gas_station._id,
-      number: '1'
-    },
-    toPass: {
-      instruction: 'You must be filling up at the station! Take a photo of your hand holding the filling pump.'
-    },
-    numberNeeded: 50,
-    notificationDelay: 60 * 2
   }, {
     needName: 'reading a book',
     situation: {
@@ -1383,7 +1414,53 @@ const halfhalfEmbodiedContributionTypes = function() {
     },
     numberNeeded: 50,
     notificationDelay: 60,
-  }];
+  }, {
+    needName: "Do you take cream with that",
+    situation: {
+      detector: DETECTORS.coffee._id, // any place that has cups (cafes + bars + restaurants)
+      number: '1'
+    },
+    toPass: {
+      instruction: `Do you have <span style="color: #0351ff">a cup or glass</span> you are drinking? Take a photo with it in the middle of the picture. You can even try to <span style="color: #0351ff">pour some extra "cream"</span> into it too!`,
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-teasing-lotion-in-a-cup.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
+  }, {
+    needName: "Eat from the same bowl", // bowl? Plate?  (basically all restaurants)
+    situation: {
+      detector: DETECTORS.restaurant._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: `Are you <span style="color: #0351ff">eating out</span> right now? Take a photo of yourself holding up <span style="color: #0351ff">a bowl or plate</span> to the middle of the screen.`,
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
+    },
+    numberNeeded: 50,
+    notificationDelay: 60,
+  }, {
+    needName: "Big Bites", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
+    situation: {
+      detector: DETECTORS.big_bite_restaurant._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: `Are you <span style="color: #0351ff">eating food that would require a big bite</span> right now? Take a photo of yourself <span style="color: #0351ff">holding up your food</span> to the middle of the screen.`,
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-big-bite.jpg'
+    },
+    numberNeeded: 50,
+  }, {
+    needName: "Friday Night",
+    situation: {
+      detector: DETECTORS.big_bite_restaurant._id,
+      number: '1'
+    },
+    toPass: {
+      instruction: `Are you <span style="color: #0351ff">eating out</span> right now? Take a photo of yourself holding up <span style="color: #0351ff">a bowl or plate</span> to the middle of the screen.`,
+      exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
+    },
+    numberNeeded: 50,
+  }]
 };
 
 const create24hoursContributionTypes = function(toPassConstructor, numberNeeded) {
