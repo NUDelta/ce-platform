@@ -69,6 +69,7 @@ Please read through and follow these guidelines while contributing code to this 
 - if notifications stop working, check that production is set to true in config.push.json
 - to see logs in terminal: heroku logs -t --app ce-platform
 - "quote exceed" might mean the quota of the whole db is exceeded, the limit for free is 500MB
+- Use this handy console log to keep track of any data flowing during the Identify, Coordinate, or Progress calls: `const util = require('util'); console.log('myVariable: ', util.inspect(myVariable, false, null));`
 
 #### Accessing Test Data to Test Participate and Results Views
 For the 4 OCEs used in the CHI 19 study, I made a data dump which has several dummy submissions.  It will allow you to look at all the participate and results screens to check your views.

@@ -134,9 +134,9 @@ export const userIsAvailableToParticipate = (uid) => {
 export const userParticipatedTooRecently = (user) => {
   let minutes = 60 * 1000;
   let waitTimeAfterParticipating;
-  // adjust time for dev vs prod deployment (lower in dev for testing)
-  if (CONFIG.MODE === "DEV") {
-    waitTimeAfterParticipating = minutes * 2;
+  // adjust time for local vs prod deployment (lower in local for testing)
+  if (CONFIG.MODE === "local") {
+    waitTimeAfterParticipating = minutes * 1;
   } else {
     waitTimeAfterParticipating = minutes * 20;
   }

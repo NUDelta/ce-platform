@@ -53,6 +53,11 @@ Schema.NeedType = new SimpleSchema({
     type: Number,
     optional: true,
     defaultValue: 0 // notify immediately for need if no value is specified
+  },
+  allowRepeatContributions: {
+    type: Boolean,
+    optional: true,
+    defaultValue: false
   }
 });
 
