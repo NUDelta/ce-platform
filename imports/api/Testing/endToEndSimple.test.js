@@ -14,14 +14,17 @@ import "../OCEManager/progressorHelper";
 import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populateDatabase";
 
 
-let second = false;
 
 describe('Simple End To End', function () {
-  this.timeout(120*1000);
+  this.timeout(5*60*1000);
 
-  let OCE_NAME = 'scavengerHunt';
-  let NEEDNAME = 'greenProduce';
+  let second = false;
+  let OCE_NAME = 'sameSituationAwareness';
+  let NEEDNAME = 'Shopping for groceries';
   let USERNAME = 'garrett';
+  let DETECTOR = CONSTANTS.DETECTORS.grocery;
+  let LOCATION = CONSTANTS.LOCATIONS.grocery;
+  let LOCATION2 = CONSTANTS.LOCATIONS.grocery2;
 
   beforeEach((done) => {
 
@@ -32,14 +35,14 @@ describe('Simple End To End', function () {
       second = true;
       resetDatabase();
       insertTestUser(USERNAME);
-      Detectors.insert(CONSTANTS.DETECTORS.produce);
+      Detectors.insert(DETECTOR);
       startTestOCE(OCE_NAME);
 
       let uid = findUserByUsername(USERNAME)._id;
       let bgLocationObj = {
         "coords": {
-          "latitude": CONSTANTS.LOCATIONS.grocery.lat,
-          "longitude": CONSTANTS.LOCATIONS.grocery.lng
+          "latitude": LOCATION.lat,
+          "longitude": LOCATION.lng
         },
         "activity": {"type": "unknown", "confidence": 100}
       };
@@ -93,8 +96,8 @@ describe('Simple End To End', function () {
       needName: NEEDNAME,
       content: {},
       timestamp: Date.now(),
-      lat: CONSTANTS.LOCATIONS.grocery.lat,
-      lng: CONSTANTS.LOCATIONS.grocery.lng,
+      lat: LOCATION.lat,
+      lng: LOCATION.lng,
     };
 
     updateSubmission(submission);
@@ -111,4 +114,54 @@ describe('Simple End To End', function () {
 
   });
 
+  it('user ALSO SHOULD be able to participate again, if need.allowRepeatContributions: true', (done) => {
+
+    // wait for userParticipatedTooRecently check to expire
+    Meteor.setTimeout(() => {
+
+      // move to another situation that matches the same need
+      let uid = findUserByUsername(USERNAME)._id;
+      let bgLocationObj = {
+        "coords": {
+          "latitude": LOCATION2.lat,
+          "longitude": LOCATION2.lng
+        },
+        "activity": {"type": "unknown", "confidence": 100}
+      };
+      onLocationUpdate(uid, bgLocationObj, function() {
+      });
+
+      const contributionForNeed = CONSTANTS.EXPERIENCES[OCE_NAME].contributionTypes.find(function(x) {
+        return x.needName === NEEDNAME;
+      });
+      const notificationDelay = contributionForNeed.notificationDelay;
+
+      // Wait to check if user.profile and assignments has changed, > notificationDelay seconds after first matching
+      Meteor.setTimeout(function() {
+        try {
+          let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+          let iid = incident._id;
+          let user = findUserByUsername(USERNAME);
+
+          console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+          //user has incident as an active incident
+          chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+
+          //assignments has user assigned
+          let assignmentEntry = Assignments.findOne({ _id: iid });
+
+          let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+            return x.needName ===  NEEDNAME;
+          });
+
+          chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
+          chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+
+          done();
+        } catch (err) { done(err); }
+      }, (notificationDelay + 5) * 1000);
+
+    // for value to wait on local, @see userParticipatedTooRecently in imports/api/UserMonitor/locations/methods.js
+    }, 60 * 1000);
+  });
 });

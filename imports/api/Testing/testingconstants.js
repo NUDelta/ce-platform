@@ -22,6 +22,10 @@ let LOCATIONS = {
   'grocery': {
     lat: 42.047621,
     lng: -87.679488
+  },
+  'grocery2': {
+    lat: 42.039818,
+    lng: -87.680088
   }
 };
 
@@ -40,7 +44,7 @@ let USERS = {
     email: 'garretts_brother@email.com',
     password: 'password',
     profile: {
-      firstName: 'Brother of Garrett',
+      firstName: 'Barrett', // theres an inside joke to this one
       lastName: 'Hedman'
     }
   },
@@ -1099,6 +1103,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 1,
+    allowRepeatContributions: true,
   }, {
     needName: 'Shopping for groceries',
     situation: {
@@ -1110,6 +1115,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 90,
+    allowRepeatContributions: true,
   }, {
     needName: 'Visiting a Cafe',
     situation: {
@@ -1120,7 +1126,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you spending part of the day at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 4
+    notificationDelay: 60 * 4,
+    allowRepeatContributions: true,
   }, {
     needName: 'Going out for drinks',
     situation: {
@@ -1131,7 +1138,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you out drinking right now?</span> Share a photo of yourself at this bar.',
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 60 * 10,
+    allowRepeatContributions: true,
   }, {
     needName: 'Eating Japanese Food',
     situation: {
@@ -1142,7 +1150,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you enjoying Japanese food right now?</span> Share a photo of yourself dining at this restaurant.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 60 * 10,
+    allowRepeatContributions: true,
   }, {
     needName: 'Religious Worship',
     situation: {
@@ -1153,7 +1162,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you at a center for religious worship?</span> Share a photo of what practicing your faith looks like.'
     },
     numberNeeded: 50,
-    notificationDelay: 30
+    notificationDelay: 30,
+    allowRepeatContributions: true,
   }, {
     needName: 'Enjoy sunset',
     situation: {
@@ -1165,6 +1175,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 1,
+    allowRepeatContributions: true,
   }, {
     needName: 'Eating Asian Food',
     situation: {
@@ -1175,7 +1186,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 15
+    notificationDelay: 60 * 15,
+    allowRepeatContributions: true,
   }, {
     needName: 'Studying at the library',
     situation: {
@@ -1186,7 +1198,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you spending part of the day studying or reading?</span> Share a photo of what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 60 * 10,
+    allowRepeatContributions: true,
   }, {
     needName: 'Greenery',
     situation: {
@@ -1197,7 +1210,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you spending time at a park?</span> Share a photo of what is going on around you.'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 15,
+    allowRepeatContributions: true,
   }, {
     needName: 'Rainy Day',
     situation: {
@@ -1208,7 +1222,8 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Is it raining today?</span> Share a photo of what it looks like outside.'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 1,
+    allowRepeatContributions: true,
   }, {
     needName: "Eating some 'Za",
     situation: {
@@ -1220,6 +1235,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 60,
+    allowRepeatContributions: true,
   }, {
     needName: "Eating out",
     situation: {
@@ -1231,6 +1247,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 60,
+    allowRepeatContributions: true,
   }, {
     needName: "Eating Big Bites",
     situation: {
@@ -1242,6 +1259,7 @@ const sameSituationContributionTypes = function(
     },
     numberNeeded: 50,
     notificationDelay: 60,
+    allowRepeatContributions: true,
   }];
 };
 

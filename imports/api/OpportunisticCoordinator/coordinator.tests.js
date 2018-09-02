@@ -115,7 +115,7 @@ describe('Assignments test', () => {
 
 });
 
-describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
+describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributions: false', () => {
 
   const incident_id = Random.id();
   const eid = Random.id();  // doesn't really matter
@@ -148,7 +148,9 @@ describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
             number: 1
           },
           numberNeeded: numberNeeded,
-          notificationDelay: 10 // arbitrary
+          notificationDelay: 1,
+          // not including the parameter defaults to false
+          // allowRepeatContributions: false
         }
       ]
     });
@@ -183,7 +185,7 @@ describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
     }
   });
 
-  it('user should be able to participate on the first try', () => {
+  it('user SHOULD be able to participate on the first try', () => {
     let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
 
     // should look something like this
@@ -194,7 +196,8 @@ describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
     let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
     chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA')
   });
-  it('user should not be allowed to participate twice', () => {
+
+  it('user SHOULD NOT be allowed to participate twice', () => {
     // But user has already participated in the past
     Submissions.insert({
       _id: Random.id(),
@@ -214,7 +217,122 @@ describe('Strategizer Test: Repeat Submissions to Same Incident', () => {
     chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
 
-    chai.assert.isNil(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should NOT contain needName');
+    // object should be empty
+    let obj = incidentsWithUsersToRun[incident_id];
+    if (Object.keys(obj).length === 0 && obj.constructor === Object) {
+      // TODO(rlouie): do this with multiple needs going on, or multiple users
+      chai.assert(true, 'incidentsWithUsersToRun should NOT contain needName or the User');
+    } else {
+      chai.assert(false, 'incidentsWithUsersToRun should NOT contain needName or the User');
+    }
+  });
+
+});
+
+describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributions: true', () => {
+
+  const incident_id = Random.id();
+  const eid = Random.id();  // doesn't really matter
+  const userA = Random.id();
+  const NEEDNAME = 'Coffee Time';
+  const updatedIncidentsAndNeeds = [
+    {
+      iid: incident_id,
+      needUserMaps: [
+        {
+          needName: NEEDNAME,
+          uids: [userA]
+        }
+      ]
+    }
+  ];
+  const numberNeeded = 4;
+  beforeEach(() => {
+    resetDatabase();
+
+    Incidents.insert({
+      _id: incident_id,
+      eid: eid,
+      callbacks: null, // dont need callbacks
+      contributionTypes: [
+        {
+          needName: NEEDNAME,
+          situation: {
+            detector: Random.id(),
+            number: 1
+          },
+          numberNeeded: numberNeeded,
+          notificationDelay: 1,
+          allowRepeatContributions: true
+        }
+      ]
+    });
+
+    // userA is available for incident.need1
+    Availability.insert({
+      _id: incident_id,
+      needUserMaps: [
+        { needName: NEEDNAME, uids: [userA] },
+      ],
+    });
+
+    // userA NOT assigned to incident yet
+    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUsersToIncident
+    // and the call to this function comes after checkIfThreshold
+    Assignments.insert({
+      _id: incident_id,
+      needUserMaps: [
+        { needName: NEEDNAME, uids: [] },
+      ],
+    });
+
+    // Empty submissions ready to be filled
+    for (let i = 0; i < numberNeeded; ++i) {
+      Submissions.insert({
+        _id: Random.id(),
+        eid : Random.id(),
+        iid : incident_id,
+        needName : NEEDNAME,
+        uid : null,
+      });
+    }
+  });
+
+  it('user SHOULD be able to participate on the first try', () => {
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
+    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA');
+  });
+
+  it('user ALSO SHOULD be allowed to participate twice', () => {
+    // But user has already participated in the past
+    Submissions.insert({
+      _id: Random.id(),
+      eid : Random.id(),
+      iid : incident_id,
+      needName : NEEDNAME,
+      uid : userA,
+      content : {
+        "this": "is a previous submission"
+      }
+    });
+
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
+    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA');
+
   });
 
 });
