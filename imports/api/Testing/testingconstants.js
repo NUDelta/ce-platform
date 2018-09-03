@@ -1679,7 +1679,7 @@ let EXPERIENCES = {
     notificationText: 'Your situation made you available to participate in Body Mirror!',
     callbacks: createCallbacksForMultipleNeeds(
       halfhalfEmbodiedContributionTypes(),
-      'cb.numberOfSubmissions(${need.needName}) % 2 === 0',
+      "cb.numberOfSubmissions(\"${need.needName}\") % 2 === 0",
       sendNotificationTwoHalvesCompleted)
   },
   sameSituationAwareness: {
@@ -1695,7 +1695,7 @@ let EXPERIENCES = {
     // at _.forEach.callbackPair (imports/api/OCEManager/progressor.js:64:14)
     callbacks: createCallbacksForMultipleNeeds(
       sameSituationContributionTypes(),
-      'cb.newSubmission(${need.needName})',
+      "cb.newSubmission(\"${need.needName}\")",
       notifyUsersInNeed('Someone added to Our Small Moments', 'See the results under ${sub.needName}'))
 
   },
