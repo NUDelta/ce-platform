@@ -12,7 +12,7 @@ import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populate
 describe('Progressor Tests - Single Submission', function() {
   this.timeout(30*1000);
 
-  const OCE_NAME = 'halfhalfDay';
+  const OCE_NAME = 'halfhalfEmbodiedMimicry';
   const USERNAME = 'garrett';
   let needIndex = 0;
   let numUnfinishedBefore;
