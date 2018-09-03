@@ -5,6 +5,7 @@ import { Submissions } from "../OCEManager/currentNeeds";
 import { addContribution } from '../OCEManager/OCEs/methods';
 import {Detectors} from "../UserMonitor/detectors/detectors";
 import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
+import {Incidents} from "../OCEManager/OCEs/experiences";
 
 let LOCATIONS = {
   'park': {
@@ -1502,11 +1503,12 @@ const create24hoursContributionTypes = function(toPassConstructor, numberNeeded)
 /**
  *
  * @param contributionTypes
- * @param triggerTemplate [String] should be written as a string, with ES6 templating syntax i.e. ${need.attribute}.
+ * @param triggerTemplate [String] should be written as a string, with ES6 templating syntax
+ *        i.e. "cb.newSubmission(\"${need.needName}\")"
  *        If using templating syntax, you have access to the each individual need object
  * @param sendNotificationFn
  */
-const createCallbacksForMultipleNeeds = function(contributionTypes, triggerTemplate, sendNotificationFn) {
+const notifCbForMultiNeeds = function(contributionTypes, triggerTemplate, sendNotificationFn) {
   return contributionTypes.map((need) => {
     return {
       trigger: eval('`' + triggerTemplate + '`'),
@@ -1667,6 +1669,55 @@ let EXPERIENCES = {
     callbacks: [{
       trigger: 'cb.numberOfSubmissions("half half: nighttime") % 2 === 0',
       function: sendNotificationTwoHalvesCompleted.toString()
+    }]
+  },
+  halfhalf_sunny: {
+    _id: Random.id(),
+    name: 'Hand Silhouette',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      needName: 'Hand Silhouette 1',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo, holding your hand towards the sky, covering the sun.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+    }],
+    description: 'Use the sun to make a silhouette of your hand',
+    notificationText: 'Participate in Hand Silhouette!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: (function(sub) {
+        let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+        let need = contributionTypes.find((x) => {
+          return x.needName === sub.needName;
+        });
+
+        // Convert Need Name i to Need Name i+1
+        let splitName = sub.needName.split(' ');
+        let iPlus1 = Number(splitName.pop()) + 1;
+        splitName.push(iPlus1);
+        let newNeedName = splitName.join(' ');
+
+        need.needName = newNeedName;
+        addContribution(sub.iid, need);
+
+        let participants = Submissions.find({
+          iid: sub.iid,
+          needName: sub.needName
+        }).map((submission) => { return submission.uid; });
+
+        notify(participants, sub.iid,
+          'A hand silhouette was completed',
+          `View the photo`,
+          '/apicustomresults/' + sub.iid + '/' + sub.eid);
+      }).toString()
     }]
   },
   halfhalfEmbodiedMimicry: {
