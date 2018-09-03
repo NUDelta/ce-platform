@@ -1728,7 +1728,7 @@ let EXPERIENCES = {
     contributionTypes: halfhalfEmbodiedContributionTypes(),
     description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
     notificationText: 'Your situation made you available to participate in Body Mirror!',
-    callbacks: createCallbacksForMultipleNeeds(
+    callbacks: notifCbForMultiNeeds(
       halfhalfEmbodiedContributionTypes(),
       "cb.numberOfSubmissions(\"${need.needName}\") % 2 === 0",
       sendNotificationTwoHalvesCompleted)
@@ -1741,14 +1741,10 @@ let EXPERIENCES = {
     contributionTypes: sameSituationContributionTypes(),
     description: 'During the small moments, we might be experiencing more together than we let on.',
     notificationText: 'Your situation made you available to participate in Our Small Moments!',
-    // FIXME(rlouie): Callback doesnt run correctly
-    // Exception in changed observe/observeChanges callback: SyntaxError: missing ) after argument list
-    // at _.forEach.callbackPair (imports/api/OCEManager/progressor.js:64:14)
-    callbacks: createCallbacksForMultipleNeeds(
+    callbacks: notifCbForMultiNeeds(
       sameSituationContributionTypes(),
       "cb.newSubmission(\"${need.needName}\")",
       notifyUsersInNeed('Someone added to Our Small Moments', 'See the results under ${sub.needName}'))
-
   },
   scavengerHunt: {
     _id: Random.id(),
