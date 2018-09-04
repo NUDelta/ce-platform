@@ -84,6 +84,24 @@ let USERS = {
       firstName: 'Josh',
       lastName: 'Shi'
     }
+  },
+  nagy: {
+    username: 'nagy',
+    email: 'nagy@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Nagy',
+      lastName: 'Hakim'
+    }
+  },
+  bonnie: {
+    username: 'bonnie',
+    email: 'bonnie@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Bonnie',
+      lastName: 'Ishiguro'
+    }
   }
 };
 
@@ -1809,13 +1827,117 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-fruit-in-hand.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 1,
+      notificationDelay: 90,
     }]),
     description: 'While shopping for groceries, create a half half photo.',
     notificationText: 'Participate in Grocery Buddies!',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Grocery Buddies photo completed','View the photo').toString()
+    }]
+  },
+  halfhalf_coffee: {
+    _id: Random.id(),
+    name: 'Coffee Date',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Coffee Date 1',
+      situation: {
+        detector: DETECTORS.coffee._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Are you at a cafe? Take a photo, holding your cup, mug, or plate towards the center of the screen.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 90,
+    }]),
+    description: 'While enjoying a cafe beverage, create a half half photo.',
+    notificationText: 'Participate in Coffee Date!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A Coffee Date photo completed','View the photo').toString()
+    }]
+  },
+  halfhalf_bar: {
+    _id: Random.id(),
+    name: 'Cheers',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Cheers 1',
+      situation: {
+        detector: DETECTORS.bar._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90
+    }]),
+    description: 'While enjoying your drink, create a half half photo.',
+    notificationText: 'Participate in Cheers!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A Cheers photo completed','View the photo').toString()
+    }]
+  },
+  halfhalf_japanese: {
+    _id: Random.id(),
+    name: 'Itadakimasu',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Itadakimasu 1',
+      situation: {
+        detector: DETECTORS.eating_japanese._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo, while holding chopsticks in your hand, saying "Itadakimasu" which translates to "I humbly receive this meal"',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 90,
+    }]),
+    description: 'While eating Japanese Food, create a half half photo.',
+    notificationText: 'Participate in Itadakimasu!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A Itadakimasu photo completed','View the photo').toString()
+    }]
+  },
+  halfhalf_religious: {
+    _id: Random.id(),
+    name: 'Religious Architecture',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Religious Architecture',
+      situation: {
+        detector: DETECTORS.castle._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Do you notice the details of religious buildings? Do so now, by outstretching your hand and pointing out of the elements that stick out to you most.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 30,
+    }]),
+    description: 'While visiting a place of worship, create a half half photo.',
+    notificationText: 'Participate in Religious Architecture!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A Religious Architecture photo completed','View the photo').toString()
     }]
   },
   halfhalfEmbodiedMimicry: {

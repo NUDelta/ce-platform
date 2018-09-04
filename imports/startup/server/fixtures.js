@@ -129,6 +129,9 @@ function createTestData(){
   let uid4 = findUserByUsername('megs_sister')._id;
   let uid5 = findUserByUsername('josh')._id;
 
+  let olinuid1 = findUserByUsername('nagy')._id;
+  let olinuid2 = findUserByUsername('bonnie')._id;
+
   Meteor.users.update({
     // everyone
   }, {
