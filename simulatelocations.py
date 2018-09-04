@@ -7,6 +7,7 @@ path1 = [(43, -87), (32, -120)]
 park =  (42.056838, -87.675940)
 burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
+grocery2 = (42.039818,-87.680088)
 coffee = (42.046881, -87.679555)
 beer = (42.047105, -87.682006)
 sydney = (-33, 151)
@@ -283,8 +284,17 @@ def garrettAndMegBump():
 
     print("meg and garret at grocery")
 
+def allUsersGrocery():
+    setLocation(grocery, sys.argv[1])
+    setLocation(grocery, sys.argv[2])
+    setLocation(grocery, sys.argv[3])
+    setLocation(grocery, sys.argv[4])
+    setLocation(grocery, sys.argv[5])
+
+    print("all users at grocery")
 
 if __name__ == "__main__":
+    allUsersGrocery()
     #garrettAndMegBump()
     #time.sleep(2)
-    onlyGarretAtLake()
+    #onlyGarretAtLake()
