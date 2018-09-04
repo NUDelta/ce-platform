@@ -1501,6 +1501,60 @@ const create24hoursContributionTypes = function(toPassConstructor, numberNeeded)
 };
 
 /**
+ * Side effect: Changes the global DETECTORS object, adding another detector with key "detectorKey_staticAffordance"
+ *
+ * @param staticAffordance
+ * @param detectorKey
+ * @returns newDetectorKey
+ */
+const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
+  let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorKey]['variables']));
+  newVars.push(`var ${staticAffordance};`);
+  let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorKey]['rules']));
+  // modify last detector rule
+  // when rules has a flat structure where rules.length == 1, last rule is the predicate
+  // i.e. ['(diners || restaurants || cafeteria || food_court);']
+  // when rules have a nested structure where rules.length > 1, last rule is the predicate
+  // i.e. ['worship_places = (buddhist_temples || churches);', '(worship_places || landmarks);']
+  let lastRule = newRules.pop();
+  // each rule has a `;` at end, i.e. (rain && park);
+  // in order to modify the rule, must add predicate preceding the rule
+  lastRule = `${staticAffordance} && ${lastRule}`;
+  newRules.push(lastRule);
+
+  let newDetectorKey = `${detectorKey}_${staticAffordance}`;
+  DETECTORS[newDetectorKey] = {
+    '_id': Random.id(),
+    'description': `${DETECTORS[detectorKey].description} ${staticAffordance}`,
+    'variables': newVars,
+    'rules': newRules
+  };
+  return newDetectorKey;
+};
+
+/**
+ *
+ * @param staticAffordances [String] the affordance to add
+ *        i.e. 'mechanismRich'
+ * @param contributionTypes [Array] list of all the needs by which to modify
+ * @return
+ */
+const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
+  return _.map(contributionTypes, (need) => {
+    let detectorKey;
+    _.forEach(_.keys(DETECTORS), (key) => {
+      if (DETECTORS[key]._id === need.situation.detector) {
+        detectorKey = key;
+      }
+    });
+    // WILL THROW ERROR if we don't find the matching detector id
+    let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
+    need.situation.detector = DETECTORS[newDetectorKey]._id;
+    return need;
+  });
+};
+
+/**
  *
  * @param contributionTypes
  * @param triggerTemplate [String] should be written as a string, with ES6 templating syntax
@@ -1717,7 +1771,7 @@ let EXPERIENCES = {
     name: 'Hand Silhouette',
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
-    contributionTypes: [{
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
@@ -1730,7 +1784,7 @@ let EXPERIENCES = {
       },
       numberNeeded: 2,
       notificationDelay: 1,
-    }],
+    }]),
     description: 'Use the sun to make a silhouette of your hand',
     notificationText: 'Participate in Hand Silhouette!',
     callbacks: [{
@@ -1743,11 +1797,11 @@ let EXPERIENCES = {
     name: 'Grocery Buddies',
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
-    contributionTypes: [{
+    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Grocery Buddies 1',
       situation: {
-        detector: DETECTORS.sunny._id,
+        detector: DETECTORS.grocery._id,
         number: '1'
       },
       toPass: {
@@ -1756,7 +1810,7 @@ let EXPERIENCES = {
       },
       numberNeeded: 2,
       notificationDelay: 1,
-    }],
+    }]),
     description: 'While shopping for groceries, create a half half photo.',
     notificationText: 'Participate in Grocery Buddies!',
     callbacks: [{
