@@ -1517,6 +1517,47 @@ const notifCbForMultiNeeds = function(contributionTypes, triggerTemplate, sendNo
   });
 };
 
+/** halfhalfRespawnAndNotify:
+ * This is a helper function that generates a callback function definition
+ * The callback will respawn or create a duplicate of the need that just completed,
+ * while also sending notifications to the participants of that need.
+ *
+ * This function makes strong assumptions about how your OCE contributionTypes are written.
+ * i.e. need.needName = 'Name of my need 1'
+ * i.e. need.needName = 'Hand Silhouette 1'
+ *
+ * @param subject [String] subject of notification
+ * @param text [String] accompanying subtext of notification
+ * @return {any} A function
+ */
+const halfhalfRespawnAndNotify = function(subject, text) {
+  functionTemplate = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    notify(participants, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
+  return eval('`'+functionTemplate.toString()+'`');
+};
+
 const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
@@ -1677,6 +1718,7 @@ let EXPERIENCES = {
     participateTemplate: 'halfhalfParticipate',
     resultsTemplate: 'halfhalfResults',
     contributionTypes: [{
+      // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
         detector: DETECTORS.sunny._id,
@@ -1693,31 +1735,33 @@ let EXPERIENCES = {
     notificationText: 'Participate in Hand Silhouette!',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: (function(sub) {
-        let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
-        let need = contributionTypes.find((x) => {
-          return x.needName === sub.needName;
-        });
-
-        // Convert Need Name i to Need Name i+1
-        let splitName = sub.needName.split(' ');
-        let iPlus1 = Number(splitName.pop()) + 1;
-        splitName.push(iPlus1);
-        let newNeedName = splitName.join(' ');
-
-        need.needName = newNeedName;
-        addContribution(sub.iid, need);
-
-        let participants = Submissions.find({
-          iid: sub.iid,
-          needName: sub.needName
-        }).map((submission) => { return submission.uid; });
-
-        notify(participants, sub.iid,
-          'A hand silhouette was completed',
-          `View the photo`,
-          '/apicustomresults/' + sub.iid + '/' + sub.eid);
-      }).toString()
+      function: halfhalfRespawnAndNotify('A hand silhouette was completed','View the photo').toString()
+    }]
+  },
+  halfhalf_grocery: {
+    _id: Random.id(),
+    name: 'Grocery Buddies',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [{
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Grocery Buddies 1',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo, holding a fruit or vegetable outstretched with your hands.',
+        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-fruit-in-hand.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+    }],
+    description: 'While shopping for groceries, create a half half photo.',
+    notificationText: 'Participate in Grocery Buddies!',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A Grocery Buddies photo completed','View the photo').toString()
     }]
   },
   halfhalfEmbodiedMimicry: {
