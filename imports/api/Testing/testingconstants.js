@@ -1118,7 +1118,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you enjoying good weather today?</span> Share a photo of how you are experiencing the sun.'
+      instruction: 'Are you enjoying <span style="color: #0351ff">good weather today?</span> Share a photo of how you are experiencing the sun.'
     },
     numberNeeded: 50,
     notificationDelay: 1,
@@ -1130,7 +1130,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you inside shopping for groceries?</span> Share a photo of what you are buying or looking at.'
+      instruction: 'Are you <span style="color: #0351ff">shopping for groceries?</span> Share a photo of what you are buying or looking at.'
     },
     numberNeeded: 50,
     notificationDelay: 90,
@@ -1142,7 +1142,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you spending part of the day at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
+      instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 4,
@@ -1154,7 +1154,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you out drinking right now?</span> Share a photo of yourself at this bar.',
+      instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10,
@@ -1166,7 +1166,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you enjoying Japanese food right now?</span> Share a photo of yourself dining at this restaurant.'
+      instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10,
@@ -1178,7 +1178,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you at a center for religious worship?</span> Share a photo of what practicing your faith looks like.'
+      instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
     },
     numberNeeded: 50,
     notificationDelay: 30,
@@ -1190,7 +1190,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you out and about during sunset?</span> Share a photo of what the sky looks like where you are.'
+      instruction: 'Are you out during <span style="color: #0351ff">sunset?</span> Share a photo of what the sky looks like where you are.'
     },
     numberNeeded: 50,
     notificationDelay: 1,
@@ -1202,7 +1202,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
+      instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 15,
@@ -1214,7 +1214,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Are you spending part of the day studying or reading?</span> Share a photo of what you are doing.'
+      instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
     },
     numberNeeded: 50,
     notificationDelay: 60 * 10,
@@ -1238,7 +1238,7 @@ const sameSituationContributionTypes = function(
       number: numberInSituation
     },
     toPass: {
-      instruction: '<span style="color: #0351ff">Is it raining today?</span> Share a photo of what it looks like outside.'
+      instruction: 'Is it <span style="color: #0351ff">raining</span> today? Share a photo of what it looks like outside.'
     },
     numberNeeded: 50,
     notificationDelay: 1,
@@ -1250,7 +1250,7 @@ const sameSituationContributionTypes = function(
       number: '1'
     },
     toPass: {
-      instruction: 'Are you eating some <span style="color: #0351ff">pizza</span> today? Share a photo of yourself at the pizza restaurant.',
+      instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
     },
     numberNeeded: 50,
     notificationDelay: 60,
@@ -1274,7 +1274,7 @@ const sameSituationContributionTypes = function(
       number: '1'
     },
     toPass: {
-      instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers right</span> today? Share a photo of yourself at the restaurant.',
+      instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
     notificationDelay: 60,
@@ -2237,6 +2237,356 @@ let EXPERIENCES = {
       halfhalfEmbodiedContributionTypes(),
       "cb.numberOfSubmissions(\"${need.needName}\") % 2 === 0",
       sendNotificationTwoHalvesCompleted)
+  },
+  situationaware_sunny: {
+    _id: Random.id(),
+    name: 'Sunny Days',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Sunny Days',
+      situation: {
+        detector: DETECTORS.sunny._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Are you enjoying <span style="color: #0351ff">good weather today?</span> Share a photo of how you are experiencing the sun.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 1,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Sunny Days!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Sunny Days', 'View the photo').toString()
+    }]
+  },
+  situationaware_grocery: {
+    _id: Random.id(),
+    name: 'Feed yourself',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Feed yourself',
+      situation: {
+        detector: DETECTORS.grocery._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">shopping for groceries?</span> Share a photo of what you are buying or looking at.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Feed yourself!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Feed yourself', 'View the photo').toString()
+    }]
+  },
+  situationaware_cafe: {
+    _id: Random.id(),
+    name: 'Cafe Days',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Cafe Days',
+      situation: {
+        detector: DETECTORS.coffee._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Cafe Days!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Cafe Days', 'View the photo').toString()
+    }]
+  },
+  situationaware_bar: {
+    _id: Random.id(),
+    name: 'Hit the Bars',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Hit the Bars',
+      situation: {
+        detector: DETECTORS.bar._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Hit the Bars!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Hit the Bars', 'View the photo').toString()
+    }]
+  },
+  situationaware_japanese: {
+    _id: Random.id(),
+    name: 'Eating Japanese Food',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Eating Japanese Food',
+      situation: {
+        detector: DETECTORS.eating_japanese._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Hit the Bars!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Eating Japanese Food', 'View the photo').toString()
+    }]
+  },
+  situationaware_religious: {
+    _id: Random.id(),
+    name: 'Religious Worship',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Religious Worship',
+      situation: {
+        detector: DETECTORS.castle._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 30,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Religious Worship!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Religious Worship', 'View the photo').toString()
+    }]
+  },
+  situationawareness_sunset: {
+    _id: Random.id(),
+    name: 'Catch the sunset',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Catch the sunset',
+      situation: {
+        detector: DETECTORS.sunset._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you out during <span style="color: #0351ff">sunset?</span> Share a photo of what the sky looks like where you are.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 1,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Catch the sunset!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Catch the sunset', 'View the photo').toString()
+    }]
+  },
+  situationawareness_asian: {
+    _id: Random.id(),
+    name: 'Eating Asian Food',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Eating Asian Food',
+      situation: {
+        detector: DETECTORS.eating_with_chopsticks._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Eating Asian Food!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Eating Asian Food', 'View the photo').toString()
+    }]
+  },
+  situationawareness_books: {
+    _id: Random.id(),
+    name: 'Reading a book',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Reading a book',
+      situation: {
+        detector: DETECTORS.library._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 90,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Reading a book!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Reading a book', 'View the photo').toString()
+    }]
+  },
+  situationawareness_parks: {
+    _id: Random.id(),
+    name: 'I love parks',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'I love parks',
+      situation: {
+        detector: DETECTORS.forest._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">at a park?</span> Share a photo of what is going on around you.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 15,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in I love parks!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for I love parks', 'View the photo').toString()
+    }]
+  },
+  situationawareness_rainy: {
+    _id: Random.id(),
+    name: 'Rainy Day',
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: 'Rainy Day',
+      situation: {
+        detector: DETECTORS.rainy._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'Is it <span style="color: #0351ff">raining</span> today? Share a photo of what it looks like outside.'
+      },
+      numberNeeded: 50,
+      notificationDelay: 1,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Rainy Day!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Rainy Day', 'View the photo').toString()
+    }]
+  },
+  situationawareness_pizza: {
+    _id: Random.id(),
+    name: "Eating some 'Za",
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: "Eating some 'Za",
+      situation: {
+        detector: DETECTORS.eating_pizza._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
+      },
+      numberNeeded: 50,
+      notificationDelay: 60,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Eating some \'Za!',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Eating some \'Za', 'View the photo').toString()
+    }]
+  },
+  situationawareness_eatout: {
+    _id: Random.id(),
+    name: "Eating out",
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: "Eating out",
+      situation: {
+        detector: DETECTORS.restaurant._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
+      },
+      numberNeeded: 50,
+      notificationDelay: 60,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Eating out',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Eating out', 'View the photo').toString()
+    }]
+  },
+  situationawareness_bigbite: {
+    _id: Random.id(),
+    name: "Eating Big Bites",
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: "Eating Big Bites",
+      situation: {
+        detector: DETECTORS.big_bite_restaurant._id,
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
+      },
+      numberNeeded: 50,
+      notificationDelay: 60,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are doing the same',
+    notificationText: 'Participate in Eating Big Bites',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for Eating Big Bites', 'View the photo').toString()
+    }]
   },
   sameSituationAwareness: {
     _id: Random.id(),
