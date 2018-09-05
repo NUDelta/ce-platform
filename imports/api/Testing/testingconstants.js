@@ -2388,7 +2388,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Religious Worship', 'View the photo').toString()
     }]
   },
-  situationawareness_sunset: {
+  situationaware_sunset: {
     _id: Random.id(),
     name: 'Catch the sunset',
     participateTemplate: 'uploadPhoto',
@@ -2413,7 +2413,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Catch the sunset', 'View the photo').toString()
     }]
   },
-  situationawareness_asian: {
+  situationaware_asian: {
     _id: Random.id(),
     name: 'Eating Asian Food',
     participateTemplate: 'uploadPhoto',
@@ -2438,7 +2438,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Eating Asian Food', 'View the photo').toString()
     }]
   },
-  situationawareness_books: {
+  situationaware_books: {
     _id: Random.id(),
     name: 'Reading a book',
     participateTemplate: 'uploadPhoto',
@@ -2463,7 +2463,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Reading a book', 'View the photo').toString()
     }]
   },
-  situationawareness_parks: {
+  situationaware_parks: {
     _id: Random.id(),
     name: 'I love parks',
     participateTemplate: 'uploadPhoto',
@@ -2488,7 +2488,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for I love parks', 'View the photo').toString()
     }]
   },
-  situationawareness_rainy: {
+  situationaware_rainy: {
     _id: Random.id(),
     name: 'Rainy Day',
     participateTemplate: 'uploadPhoto',
@@ -2513,7 +2513,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Rainy Day', 'View the photo').toString()
     }]
   },
-  situationawareness_pizza: {
+  situationaware_pizza: {
     _id: Random.id(),
     name: "Eating some 'Za",
     participateTemplate: 'uploadPhoto',
@@ -2538,7 +2538,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Eating some \'Za', 'View the photo').toString()
     }]
   },
-  situationawareness_eatout: {
+  situationaware_eatout: {
     _id: Random.id(),
     name: "Eating out",
     participateTemplate: 'uploadPhoto',
@@ -2563,7 +2563,7 @@ let EXPERIENCES = {
       function: notifyUsersInNeed('New moment for Eating out', 'View the photo').toString()
     }]
   },
-  situationawareness_bigbite: {
+  situationaware_bigbite: {
     _id: Random.id(),
     name: "Eating Big Bites",
     participateTemplate: 'uploadPhoto',
