@@ -1549,12 +1549,15 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
   newRules.push(lastRule);
 
   let newDetectorKey = `${detectorKey}_${staticAffordance}`;
-  DETECTORS[newDetectorKey] = {
-    '_id': Random.id(),
-    'description': `${DETECTORS[detectorKey].description} ${staticAffordance}`,
-    'variables': newVars,
-    'rules': newRules
-  };
+  // Change DETECTORS if newDetectorKey does not already exist (some experiences might have already created coffee_mechanismRich, for example)
+  if (!(newDetectorKey in DETECTORS)) {
+    DETECTORS[newDetectorKey] = {
+      '_id': Random.id(),
+      'description': `${DETECTORS[detectorKey].description} ${staticAffordance}`,
+      'variables': newVars,
+      'rules': newRules
+    };
+  }
   return newDetectorKey;
 };
 
