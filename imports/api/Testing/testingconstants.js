@@ -766,9 +766,9 @@ function createStorytime(version) {
   let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorIds);
   // create story starting point
   let sentences = [
-    'Harry Potter looked up at the clouds swirling above him.',
-    'The wizard looked into her goblet, hardly realizing the unusual color of the concoction she was being forced to drink.',
-    'The wizard prepared themselves in a lunge, and then dove forward towards the Platform 9 3/4 wall.',
+    'Ron looked up at the clouds swirling above him.',
+    'Hermoine looked into her goblet, hardly realizing the unusual color of the concoction she was being forced to drink.',
+    'Harry prepared himself for a lunge, and then dove forward towards the Platform 9 3/4 wall.',
     'The wizard looked down at their feet, hardly believing the magical plants growing in the Forbidden Forest.',
     'Any young wizard who has their first meal in the Hogwarts Great Hall has to be surprised by the type of food on the menu.',
     'Hogwarts castle had looked so good in photos, but this new wizard looked up at it unimpressed.',
@@ -848,10 +848,17 @@ function createStorytime(version) {
     addContribution(sub.iid, contribution);
   };
 
+  // FIXME(rlouie): Can't have more than version 0,1,2
+  let exp_names = [
+    "A Ron Weasley Story",
+    "A Hermoine Granger Story",
+    "A Harry Potter Story"
+  ];
+
   // create and return storytime experience
   return {
     _id: Random.id(),
-    name: 'Storytime',
+    name: exp_names[version],
     participateTemplate: 'storyPage',
     resultsTemplate: 'storybook',
     contributionTypes: [{
@@ -1683,11 +1690,11 @@ let EXPERIENCES = {
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),
-  storyTime3: createStorytime(3),
-  storyTime4: createStorytime(4),
-  storyTime5: createStorytime(5),
-  storyTime6: createStorytime(6),
-  storyTime7: createStorytime(7),
+  // storyTime3: createStorytime(3),
+  // storyTime4: createStorytime(4),
+  // storyTime5: createStorytime(5),
+  // storyTime6: createStorytime(6),
+  // storyTime7: createStorytime(7),
   independentStorybook: createIndependentStorybook(),
   sunset: {
     _id: Random.id(),
