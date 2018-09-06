@@ -151,7 +151,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesGarrett": true, "mechanismRich": true} }
+    $set: { 'profile.staticAffordances': {"lovesGarrett": true } }
   }, {
     multi: true
   });
@@ -168,6 +168,14 @@ function createTestData(){
     _id: {$in: [uid1, uid3, uid5]}
   }, {
     $set: { 'profile.staticAffordances.lovesDTR':  true}
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, olinuid1, olinuid2]}
+  }, {
+    $set: { 'profile.staticAffordances': { "mechanismRich": true} }
   }, {
     multi: true
   });
