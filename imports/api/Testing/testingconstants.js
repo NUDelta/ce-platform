@@ -731,7 +731,7 @@ function createStorytime(version) {
   let dropdownText = [
     'Swirling Clouds',
     'Drinking butterbeer',
-    'Hogwarts Express at Platform 9 3/4',
+    'Hogwarts Express',
     'Forbidden Forest',
     'Dinner at the Great Hall',
     'Hogwarts Castle',
@@ -742,6 +742,7 @@ function createStorytime(version) {
   _.forEach(places, (place, i) => {
     let newVars = JSON.parse(JSON.stringify(DETECTORS[place]['variables']));
     newVars.push(`var participatedInStorytime${version};`);
+    newVars.push(`var mechanismRich;`);
     let newRules = JSON.parse(JSON.stringify(DETECTORS[place]['rules']));
     // modify last detector rule
     // when rules has a flat structure where rules.length == 1, last rule is the predicate
@@ -751,12 +752,12 @@ function createStorytime(version) {
     let lastRule = newRules.pop();
     // each rule has a `;` at end, i.e. (rain && park);
     // in order to modify the rule, must add predicate preceding the rule
-    lastRule = `!participatedInStorytime${version} && ${lastRule}`;
+    lastRule = `mechanismRich && !participatedInStorytime${version} && ${lastRule}`;
     newRules.push(lastRule);
 
-    DETECTORS[place + "_storytime"] = {
+    DETECTORS[place + `_storytime${version}_mechanismRich`] = {
       '_id': detectorIds[i],
-      'description': DETECTORS[place].description + "_storytime",
+      'description': `${DETECTORS[place].description} storytime${version} mechanismRich`,
       'variables': newVars,
       'rules': newRules
     };
@@ -814,9 +815,9 @@ function createStorytime(version) {
       return x[1] === affordance;
     });
 
-    options = options.filter(function (x) {
-      return x[1] !== affordance;
-    });
+    // options = options.filter(function (x) {
+    //   return x[1] !== affordance;
+    // });
 
     // add need if not all pages are done
     let needName = 'page' + Random.id(3);
@@ -891,7 +892,7 @@ const createIndependentStorybook = () => {
   let place_situation_delay = [
     ["niceish_day",'Swirling Clouds', 5],
     ["beer", 'Drinking butterbeer', 120],
-    ["train", 'Hogwarts Express at Platform 9 3/4', 30],
+    ["train", 'Hogwarts Express', 30],
     ["forest",'Forbidden Forest', 5],
     ["dinning_hall",'Dinner at the Great Hall', 120],
     ["castle",'Hogwarts Castle', 10],
@@ -904,7 +905,7 @@ const createIndependentStorybook = () => {
     name: 'Humans of Hogwarts',
     participateTemplate: 'storyPage_noInterdependence',
     resultsTemplate: 'storyBook_noInterdependence',
-    contributionTypes: (function(place_situation_delay) {
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', (function(place_situation_delay) {
       return place_situation_delay.map((x) => {
         let [place, situation, delay] = x;
         return {
@@ -920,7 +921,7 @@ const createIndependentStorybook = () => {
           notificationDelay: delay
         }
       });
-    })(place_situation_delay),
+    })(place_situation_delay)),
     description: 'We\'re writing a Harry Potter spin-off story',
     notificationText: 'Help write a Harry Potter spin-off story!',
     callbacks: [
