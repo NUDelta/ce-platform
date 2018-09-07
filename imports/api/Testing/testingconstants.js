@@ -1605,7 +1605,7 @@ const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes)
     });
     // WILL THROW ERROR if we don't find the matching detector id
     let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    need.situation.detector = DETECTORS[newDetectorKey]._id;
+    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
     return need;
   });
 };
