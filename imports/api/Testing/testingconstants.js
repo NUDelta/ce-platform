@@ -6,6 +6,8 @@ import { addContribution } from '../OCEManager/OCEs/methods';
 import {Detectors} from "../UserMonitor/detectors/detectors";
 import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
 import {Incidents} from "../OCEManager/OCEs/experiences";
+import {Schema} from "../schema";
+import {serverLog} from "../logs";
 
 let LOCATIONS = {
   'park': {
@@ -717,6 +719,30 @@ let DETECTORS = {
   }
 };
 
+export const getDetectorId = (detector) => {
+  let db_detector = Detectors.findOne({description: detector.description});
+  if (db_detector) {
+    return db_detector._id;
+  } else {
+    return detector._id;
+  }
+};
+
+Meteor.methods({
+  getDetectorId({name}) {
+    new SimpleSchema({
+      name: { type: String }
+    }).validate({name});
+
+    if (!(name in CONSTANTS.DETECTORS)) {
+      throw new Meteor.Error('getDetectorId.keynotfound',
+        `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
+    }
+
+    console.log(getDetectorId(CONSTANTS.DETECTORS[name]))
+
+  }
+});
 
 /**
  * Create Storytime Helper.
@@ -2142,7 +2168,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: "Slice of 'Za 1",
       situation: {
-        detector: DETECTORS.eating_pizza._id,
+        detector: getDetectorId(DETECTORS.eating_pizza),
         number: '1'
       },
       toPass: {
@@ -2168,7 +2194,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: "Want cream with that 1",
       situation: {
-        detector: DETECTORS.coffee._id, // any place that has cups (cafes + bars + restaurants)
+        detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
         number: '1'
       },
       toPass: {
