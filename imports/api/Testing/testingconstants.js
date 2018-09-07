@@ -945,7 +945,7 @@ const createIndependentStorybook = () => {
         return {
           needName: situation,
           situation: {
-            detector: DETECTORS[place]._id,
+            detector: getDetectorId(DETECTORS[place]),
             number: '1',
           },
           toPass: {
@@ -1916,7 +1916,7 @@ let EXPERIENCES = {
         instruction: 'What are you <span style="color: #0351ff">drinking at the bar</span>? Take a photo, while <span style="color: #0351ff">raising your glass or bottle</span> in front of you.',
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
       },
-      numberNeeded: 50,
+      numberNeeded: 2,
       notificationDelay: 90
     }]),
     description: 'While enjoying your drink, create a half half photo.',
