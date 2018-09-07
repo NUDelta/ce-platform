@@ -2140,7 +2140,7 @@ let EXPERIENCES = {
     resultsTemplate: 'halfhalfResults',
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
-      needName: "Slice of 'Za",
+      needName: "Slice of 'Za 1",
       situation: {
         detector: DETECTORS.eating_pizza._id,
         number: '1'
@@ -2166,7 +2166,7 @@ let EXPERIENCES = {
     resultsTemplate: 'halfhalfResults',
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
-      needName: "Want cream with that",
+      needName: "Want cream with that 1",
       situation: {
         detector: DETECTORS.coffee._id, // any place that has cups (cafes + bars + restaurants)
         number: '1'
