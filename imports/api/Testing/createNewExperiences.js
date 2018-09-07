@@ -5,7 +5,10 @@ import { Detectors } from "../UserMonitor/detectors/detectors";
 import { Experiences, Incidents } from "../OCEManager/OCEs/experiences";
 
 import { CONSTANTS } from "./testingconstants";
-import { addContribution, createIncidentFromExperience, startRunningIncident } from "../OCEManager/OCEs/methods";
+import {
+  addContribution, createIncidentFromExperience, startRunningIncident,
+  updateExperienceCollectionDocument, updateIncidentFromExperience, updateRunningIncident
+} from "../OCEManager/OCEs/methods";
 
 
 Meteor.methods({
@@ -27,6 +30,36 @@ Meteor.methods({
     Experiences.insert(exp);
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
+  },
+  updateOCE({name, eid}) {
+    // FIXME(rlouie): NOTE: you must run Meteor method call updateSubmissionNeedName in addition to this function
+    new SimpleSchema({
+      name: { type: String },
+      eid: { type: String },
+    }).validate({name, eid});
+
+    if (!(name in CONSTANTS.EXPERIENCES)) {
+      throw new Meteor.Error('updateOCE.keynotfound',
+        `OCE by the name '${name}' was not found in CONSTANTS.EXPERIENCES`);
+    }
+
+    let old_exp = Experiences.findOne({_id: eid});
+    if (!old_exp) {
+      throw new Meteor.Error('updateOCE.experiencenotfound',
+        `Experience with id '${eid}' was not found in Experiences collection`);
+    }
+
+    let old_incident = Incidents.findOne({eid: eid});
+    if (!old_incident) {
+      throw new Meteor.Error('updateOCE.incidentnotfound',
+        `Incident with eid = '${eid}' was not found in Incidents collection`);
+    }
+
+    let exp = CONSTANTS.EXPERIENCES[name];
+    updateExperienceCollectionDocument(eid, exp);
+    let incident = updateIncidentFromExperience(eid, exp);
+    updateRunningIncident(incident);
+    // FIXME(rlouie): NOTE: you must run Meteor method call updateSubmissionNeedName in addition to this function
   },
   /** upsertDetector - general function to update or insert detectors through a Meteor RPC
    *

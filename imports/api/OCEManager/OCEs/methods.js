@@ -196,6 +196,24 @@ Meteor.methods({
   createAndstartIncident(eid) {
     let experience = Experiences.findOne(eid);
     startRunningIncident(createIncidentFromExperience(experience));
+  },
+  addNeed({iid, need}) {
+    new SimpleSchema({
+      iid: {type: String},
+      need: {type: Schema.NeedType}
+    }).validate({iid, need});
+
+    addContribution(iid, need);
+  },
+  updateSubmissionNeedName({iid, eid, oldNeedName, newNeedName}) {
+    new SimpleSchema({
+      iid: {type: String},
+      eid: {type: String},
+      oldNeedName: {type: String},
+      newNeedName: {type: String}
+    }).validate({iid, eid, oldNeedName, newNeedName});
+
+    updateSubmissionNeedName(iid, eid, oldNeedName, newNeedName);
   }
 });
 
@@ -239,6 +257,29 @@ export const addEmptySubmissionsForNeed = (iid, eid, need) => {
   }
 };
 
+/**
+ *
+ * @param iid
+ * @param eid
+ * @param oldNeedName
+ * @param newNeedName
+ */
+export const updateSubmissionNeedName = (iid, eid, oldNeedName, newNeedName) => {
+  Submissions.update(
+    {
+      iid: iid,
+      eid: eid,
+      needName: oldNeedName
+    }, {
+      $set: {
+        needName: newNeedName
+      }
+    }, {
+      multi: true
+    }
+  )
+};
+
 export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
@@ -259,6 +300,59 @@ export const startRunningIncident = (incident) => {
   });
 };
 
+/**
+ * For contributionTypes, please don't change up the number of needs! We don't handle that type of changes.
+ * Changes in needName are fine.
+ *
+ * @param incident
+ */
+export const updateRunningIncident = (incident) => {
+  let needUserMaps = [];
+
+  _.forEach(incident.contributionTypes, (need) => {
+    needUserMaps.push({needName: need.needName, uids: []});
+    // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
+  });
+
+  // clear the user activeIncidents before clearing the availabilities
+  let old_needUserMaps = Availability.find({_id: incident._id}).needUserMaps;
+  _.forEach(old_needUserMaps, (needUserMap) => {
+    if (needUserMap.uids.length > 0) {
+      _.forEach(needUserMap.uids, (uid) => {
+        Meteor.users.update(
+          {
+            _id: uid
+          }, {
+            $pull: {
+              "profile.activeIncidents": incident._id
+            }
+          });
+      });
+    }
+  });
+
+  Availability.update(
+    {
+      _id: incident._id,
+    }, {
+      $set: {
+        needUserMaps: needUserMaps
+      }
+    }
+  )
+
+  Assignments.update(
+    {
+      _id: incident._id,
+    }, {
+      $set: {
+        needUserMaps: needUserMaps
+      }
+    }
+  )
+
+
+};
 
 /**
  * Given an experience object, creates an incident
@@ -279,6 +373,50 @@ export const createIncidentFromExperience = (experience) => {
   });
 
   return incident;
+};
+
+/** Updates Incident based on experience definition;
+ * The complement to `createIncidentFromExperience`
+ *
+ * @param eid [String] existing experience id
+ * @param experience [Object] comes from CONSTANTS.EXPERIENCES
+ */
+export const updateIncidentFromExperience = (eid, experience) => {
+
+  // TODO(rlouie): TEST to see if the detector id gets messed up, since it is generated randomly
+  // TODO(rlouie): might need to make the call to updateDetector based on what is in DETECTORS
+  let incident = {
+    callbacks: experience.callbacks,
+    contributionTypes: experience.contributionTypes
+  };
+
+  Incidents.update(
+    {
+      eid: eid
+    }, {
+      $set: incident
+    });
+
+  return Incidents.findOne({eid: eid});
+};
+
+/** Updates the experience in the Experience collection, but keeps the same _id
+ * The complement to `Experience.insert(exp)`
+ *
+ * @param eid [String] existing experience id
+ * @param experience [Object] comes from CONSTANTS.EXPERIENCES
+ */
+export const updateExperienceCollectionDocument = (eid, experience) => {
+
+  delete experience._id;
+  Experiences.update(
+    {
+      _id: eid
+    }, {
+      $set: experience
+    });
+
+  return Experiences.findOne({_id: eid});
 };
 
 /**
