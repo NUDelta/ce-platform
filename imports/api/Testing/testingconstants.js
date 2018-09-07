@@ -739,7 +739,7 @@ Meteor.methods({
         `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
     }
 
-    console.log('CONSTANTS.DETECTORS: ' + CONSTANTS.DETECTORS[name]);
+    console.log('CONSTANTS.DETECTORS: ' + CONSTANTS.DETECTORS[name]._id);
     console.log('db.detectors preferably: ' + getDetectorId(CONSTANTS.DETECTORS[name]))
 
   }
