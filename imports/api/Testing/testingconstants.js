@@ -1831,7 +1831,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
-        detector: DETECTORS.sunny._id,
+        detector: getDetectorId(DETECTORS.sunny),
         number: '1'
       },
       toPass: {
@@ -1857,7 +1857,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Grocery Buddies 1',
       situation: {
-        detector: DETECTORS.grocery._id,
+        detector: getDetectorId(DETECTORS.grocery),
         number: '1'
       },
       toPass: {
@@ -1883,7 +1883,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Coffee Date 1',
       situation: {
-        detector: DETECTORS.coffee._id,
+        detector: getDetectorId(DETECTORS.coffee),
         number: '1'
       },
       toPass: {
@@ -1909,7 +1909,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Cheers 1',
       situation: {
-        detector: DETECTORS.bar._id,
+        detector: getDetectorId(DETECTORS.bar),
         number: '1'
       },
       toPass: {
@@ -1935,7 +1935,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Itadakimasu 1',
       situation: {
-        detector: DETECTORS.eating_japanese._id,
+        detector: getDetectorId(DETECTORS.eating_japanese),
         number: '1'
       },
       toPass: {
@@ -1961,7 +1961,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Religious Architecture 1',
       situation: {
-        detector: DETECTORS.castle._id,
+        detector: getDetectorId(DETECTORS.castle),
         number: '1'
       },
       toPass: {
@@ -1987,7 +1987,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Sunset Together 1',
       situation: {
-        detector: DETECTORS.sunset._id,
+        detector: getDetectorId(DETECTORS.sunset),
         number: '1'
       },
       toPass: {
@@ -2013,7 +2013,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Eating with Chopsticks 1',
       situation: {
-        detector: DETECTORS.eating_with_chopsticks._id,
+        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
         number: '1'
       },
       toPass: {
@@ -2039,7 +2039,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Book Buddies 1',
       situation: {
-        detector: DETECTORS.library._id,
+        detector: getDetectorId(DETECTORS.library),
         number: '1'
       },
       toPass: {
@@ -2065,7 +2065,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hold a plant 1',
       situation: {
-        detector: DETECTORS.forest._id,
+        detector: getDetectorId(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -2091,7 +2091,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Feet to the trees 1',
       situation: {
-        detector: DETECTORS.forest._id,
+        detector: getDetectorId(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -2117,7 +2117,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Leaf Mask 1',
       situation: {
-        detector: DETECTORS.forest._id,
+        detector: getDetectorId(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -2143,7 +2143,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Puddle Feet 1',
       situation: {
-        detector: DETECTORS.rainy._id,
+        detector: getDetectorId(DETECTORS.rainy),
         number: '1'
       },
       toPass: {
@@ -2221,7 +2221,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: "Share a plate 1", // bowl? Plate?  (basically all restaurants)
       situation: {
-        detector: DETECTORS.restaurant._id,
+        detector: getDetectorId(DETECTORS.restaurant),
         number: '1'
       },
       toPass: {
@@ -2246,7 +2246,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       needName: "Big Bites 1", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
       situation: {
-        detector: DETECTORS.big_bite_restaurant._id,
+        detector: getDetectorId(DETECTORS.big_bite_restaurant),
         number: '1'
       },
       toPass: {
@@ -2284,7 +2284,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Sunny Days',
       situation: {
-        detector: DETECTORS.sunny._id,
+        detector: getDetectorId(DETECTORS.sunny),
         number: '1'
       },
       toPass: {
@@ -2309,7 +2309,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Feed yourself',
       situation: {
-        detector: DETECTORS.grocery._id,
+        detector: getDetectorId(DETECTORS.grocery),
         number: 1
       },
       toPass: {
@@ -2334,7 +2334,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Cafe Days',
       situation: {
-        detector: DETECTORS.coffee._id,
+        detector: getDetectorId(DETECTORS.coffee),
         number: 1
       },
       toPass: {
@@ -2359,7 +2359,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Hit the Bars',
       situation: {
-        detector: DETECTORS.bar._id,
+        detector: getDetectorId(DETECTORS.bar),
         number: 1
       },
       toPass: {
@@ -2384,7 +2384,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Eating Japanese Food',
       situation: {
-        detector: DETECTORS.eating_japanese._id,
+        detector: getDetectorId(DETECTORS.eating_japanese),
         number: 1
       },
       toPass: {
@@ -2409,7 +2409,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Religious Worship',
       situation: {
-        detector: DETECTORS.castle._id,
+        detector: getDetectorId(DETECTORS.castle),
         number: 1
       },
       toPass: {
@@ -2434,7 +2434,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Catch the sunset',
       situation: {
-        detector: DETECTORS.sunset._id,
+        detector: getDetectorId(DETECTORS.sunset),
         number: 1
       },
       toPass: {
@@ -2459,7 +2459,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Eating Asian Food',
       situation: {
-        detector: DETECTORS.eating_with_chopsticks._id,
+        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
         number: 1
       },
       toPass: {
@@ -2484,7 +2484,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Reading a book',
       situation: {
-        detector: DETECTORS.library._id,
+        detector: getDetectorId(DETECTORS.library),
         number: 1
       },
       toPass: {
@@ -2509,7 +2509,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'I love parks',
       situation: {
-        detector: DETECTORS.forest._id,
+        detector: getDetectorId(DETECTORS.forest),
         number: 1
       },
       toPass: {
@@ -2534,7 +2534,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: 'Rainy Day',
       situation: {
-        detector: DETECTORS.rainy._id,
+        detector: getDetectorId(DETECTORS.rainy),
         number: 1
       },
       toPass: {
@@ -2559,7 +2559,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: "Eating some 'Za",
       situation: {
-        detector: DETECTORS.eating_pizza._id,
+        detector: getDetectorId(DETECTORS.eating_pizza),
         number: '1'
       },
       toPass: {
@@ -2584,7 +2584,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: "Eating out",
       situation: {
-        detector: DETECTORS.restaurant._id,
+        detector: getDetectorId(DETECTORS.restaurant),
         number: '1'
       },
       toPass: {
@@ -2609,7 +2609,7 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
       needName: "Eating Big Bites",
       situation: {
-        detector: DETECTORS.big_bite_restaurant._id,
+        detector: getDetectorId(DETECTORS.big_bite_restaurant),
         number: '1'
       },
       toPass: {
