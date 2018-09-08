@@ -779,7 +779,8 @@ function createStorytime(version) {
     let lastRule = newRules.pop();
     // each rule has a `;` at end, i.e. (rain && park);
     // in order to modify the rule, must add predicate preceding the rule
-    lastRule = `mechanismRich && !participatedInStorytime${version} && ${lastRule}`;
+    let lastRuleNoSemicolon = lastRule.split(';')[0];
+    lastRule = `(mechanismRich && (!participatedInStorytime${version} && (${lastRuleNoSemicolon})));`;
     newRules.push(lastRule);
 
     DETECTORS[place + `_storytime${version}_mechanismRich`] = {
@@ -1021,7 +1022,8 @@ function createBumped() {
       let lastRule = newRules.pop();
       // each rule has a `;` at end, i.e. (rain && park);
       // in order to modify the rule, must add relationship predicate preceding the rule
-      lastRule = `${relationship} && ${lastRule}`;
+      let lastRuleNoSemicolon = lastRule.split(';')[0];
+      lastRule = `(${relationship} && (${lastRuleNoSemicolon}));`;
       newRules.push(lastRule);
 
       let detector = {
@@ -1572,7 +1574,8 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
   let lastRule = newRules.pop();
   // each rule has a `;` at end, i.e. (rain && park);
   // in order to modify the rule, must add predicate preceding the rule
-  lastRule = `${staticAffordance} && ${lastRule}`;
+  let lastRuleNoSemicolon = lastRule.split(';')[0];
+  lastRule = `(${staticAffordance} && (${lastRuleNoSemicolon}));`;
   newRules.push(lastRule);
 
   let newDetectorKey = `${detectorKey}_${staticAffordance}`;
