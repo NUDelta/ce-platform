@@ -75,12 +75,13 @@ Meteor.methods({
         `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
     }
 
-    let {numberAffected, insertedId} = Detectors.upsert(
-      {
-        _id: CONSTANTS.DETECTORS[name]._id
+    let {numberAffected, insertedId} = Detectors.upsert({
+        // Selector
+        // Note: Don't select on _id, since _id in CONSTANTS.DETECTORS changes from deployments cuz of Random.id()
+        description: CONSTANTS.DETECTORS[name].description,
       }, {
+        // Modifier
         $set : {
-          description: CONSTANTS.DETECTORS[name].description,
           variables: CONSTANTS.DETECTORS[name].variables,
           rules: CONSTANTS.DETECTORS[name].rules
         }
