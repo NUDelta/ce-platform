@@ -125,7 +125,9 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
             assignment._id,
             needUserMap.needName
           );
-          notifyForMissingParticipation([uid]);
+          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after,
+          // FIXME(rlouie): they get continuously spammed
+          // notifyForMissingParticipation([uid]);
         }, delay * 60000);
 
       }
