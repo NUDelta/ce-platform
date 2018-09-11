@@ -5,7 +5,10 @@ import { Locations } from "../../UserMonitor/locations/locations";
 
 import { notifyForParticipating } from "./noticationMethods";
 import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../identifier";
-import { distanceBetweenLocations, userIsAvailableToParticipate} from "../../UserMonitor/locations/methods";
+import {
+  distanceBetweenLocations, userIsAvailableToParticipate,
+  userNotifiedTooRecently, userParticipatedTooRecently
+} from "../../UserMonitor/locations/methods";
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
 import { serverLog } from "../../logs";
@@ -29,11 +32,15 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
       //administrative updates
       adminUpdatesForAddingUsersToIncident(newUsersUids, iid, needName);
 
+      let usersNotNotifiedRecently = newUsersUids.filter((uid) => {
+        return !userNotifiedTooRecently(Meteor.users.findOne(uid));
+      });
+
       let route = "/";
-      notifyForParticipating(newUsersUids, iid, "Event " + experience.name + " is starting!",
+      notifyForParticipating(usersNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
         experience.notificationText, route);
 
-      _.forEach(newUsersUids, uid => {
+      _.forEach(usersNotNotifiedRecently, uid => {
         Notification_log.insert({
           uid: uid,
           iid: iid,
