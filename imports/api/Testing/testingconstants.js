@@ -2260,7 +2260,7 @@ let EXPERIENCES = {
       notificationDelay: 60,
     }]),
     description: 'While eating some non-trivially sized food, create a half half photo.',
-    notificationText: "Participate in Big Bites!",
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify("A 'Big Bites' photo completed",'View the photo').toString()
