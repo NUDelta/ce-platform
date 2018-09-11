@@ -146,6 +146,26 @@ export const userParticipatedTooRecently = (user) => {
 };
 
 /**
+ * User notified to recently within a time window specified internally to this function
+ *
+ * @param user {Object} has Meteor.users Schema
+ * @return {boolean} whether the user was notified too recently or not
+ */
+export const userNotifiedTooRecently = (user) => {
+  let minutes = 60 * 1000;
+  let waitTimeAfterNotified;
+  // adjust time for local vs prod deployment (lower in local for testing)
+  if (CONFIG.MODE === "local") {
+    waitTimeAfterNotified = minutes * 1;
+  } else {
+    waitTimeAfterNotified = minutes * 10;
+  }
+  const lastNotified = user.profile.lastNotified;
+  const now = Date.now();
+  return (now - lastNotified) < waitTimeAfterNotified;
+};
+
+/**
  * Checks if user has an active incident, meaning they were assigned to an incident
  *
  * @param user {Object} has Meteor.users Schema

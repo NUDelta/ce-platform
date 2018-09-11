@@ -908,7 +908,7 @@ function createStorytime(version) {
       notificationDelay: 10 // 10 seconds for debugging
     }],
     description: 'We\'re writing a Harry Potter spin-off story',
-    notificationText: 'Help write a Harry Potter spin-off story!',
+    notificationText: 'View this and other available experiences',
     callbacks: [
       {
         trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
@@ -958,7 +958,7 @@ const createIndependentStorybook = () => {
       });
     })(place_situation_delay)),
     description: 'We\'re writing a Harry Potter spin-off story',
-    notificationText: 'Help write a Harry Potter spin-off story!',
+    notificationText: 'View this and other available experiences',
     callbacks: [
       {
         trigger: 'cb.newSubmission()',
@@ -1845,7 +1845,7 @@ let EXPERIENCES = {
       notificationDelay: 1,
     }]),
     description: 'Use the sun to make a silhouette of your hand',
-    notificationText: 'Participate in Hand Silhouette!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A hand silhouette was completed','View the photo').toString()
@@ -1871,7 +1871,7 @@ let EXPERIENCES = {
       notificationDelay: 90,
     }]),
     description: 'While shopping for groceries, create a half half photo.',
-    notificationText: 'Participate in Grocery Buddies!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Grocery Buddies photo completed','View the photo').toString()
@@ -1897,7 +1897,7 @@ let EXPERIENCES = {
       notificationDelay: 90,
     }]),
     description: 'While enjoying a cafe beverage, create a half half photo.',
-    notificationText: 'Participate in Coffee Date!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Coffee Date photo completed','View the photo').toString()
@@ -1923,7 +1923,7 @@ let EXPERIENCES = {
       notificationDelay: 90
     }]),
     description: 'While enjoying your drink, create a half half photo.',
-    notificationText: 'Participate in Cheers!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Cheers photo completed','View the photo').toString()
@@ -1949,7 +1949,7 @@ let EXPERIENCES = {
       notificationDelay: 90,
     }]),
     description: 'While eating Japanese Food, create a half half photo.',
-    notificationText: 'Participate in Itadakimasu!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Itadakimasu photo completed','View the photo').toString()
@@ -1975,7 +1975,7 @@ let EXPERIENCES = {
       notificationDelay: 30,
     }]),
     description: 'While visiting a place of worship, create a half half photo.',
-    notificationText: 'Participate in Religious Architecture!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Religious Architecture photo completed','View the photo').toString()
@@ -2001,7 +2001,7 @@ let EXPERIENCES = {
       notificationDelay: 1,
     }]),
     description: 'While looking up at the sunset, create a half half photo.',
-    notificationText: 'Participate in Sunset Together!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Sunset Together photo completed','View the photo').toString()
@@ -2027,7 +2027,7 @@ let EXPERIENCES = {
       notificationDelay: 90
     }]),
     description: 'While eating asian food, create a half half photo.',
-    notificationText: 'Participate in Eating with Chopsticks!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('An Eating with Chopsticks photo completed','View the photo').toString()
@@ -2053,7 +2053,7 @@ let EXPERIENCES = {
       notificationDelay: 90,
     }]),
     description: 'While reading a book, create a half half photo.',
-    notificationText: 'Participate in Book Buddies!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Book Buddies photo completed','View the photo').toString()
@@ -2079,7 +2079,7 @@ let EXPERIENCES = {
       notificationDelay: 5,
     }]),
     description: 'While in the park, create a half half photo.',
-    notificationText: 'Participate in Plant Circle!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Plant Circle photo completed','View the photo').toString()
@@ -2105,7 +2105,7 @@ let EXPERIENCES = {
       notificationDelay: 5,
     }]),
     description: 'While in the park, create a half half photo.',
-    notificationText: 'Participate in Foot to the Trees!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Feet to the trees photo completed','View the photo').toString()
@@ -2131,7 +2131,7 @@ let EXPERIENCES = {
       notificationDelay: 5
     }]),
     description: 'While in the park, create a half half photo.',
-    notificationText: 'Participate in Leaf Mask!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A Feet to the trees photo completed','View the photo').toString()
@@ -2157,7 +2157,7 @@ let EXPERIENCES = {
       notificationDelay: 1,
     }]),
     description: 'With the puddles on a rainy day, create a half half photo.',
-    notificationText: 'Participate in Puddle Feet!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify('A "Puddle Feet" photo completed','View the photo').toString()
@@ -2183,7 +2183,7 @@ let EXPERIENCES = {
       notificationDelay: 60,
     }]),
     description: 'While eating pizza, create a half half photo.',
-    notificationText: "Participate in Slice of 'Za!",
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
@@ -2209,7 +2209,7 @@ let EXPERIENCES = {
       notificationDelay: 60,
     }]),
     description: 'While drinking coffee at a cafe, create a half half photo.',
-    notificationText: "Participate in Want cream with that!",
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify("A 'Want cream with that' photo completed",'View the photo').toString()
@@ -2235,7 +2235,7 @@ let EXPERIENCES = {
       notificationDelay: 60,
     }]),
     description: 'While eating out at a restaurant, create a half half photo.',
-    notificationText: "Participate in Share a plate!",
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: '(cb.numberOfSubmissions() % 2) === 0',
       function: halfhalfRespawnAndNotify("A 'Share a Plate' photo completed",'View the photo').toString()
@@ -2298,7 +2298,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Sunny Days!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Sunny Days', 'View the photo').toString()
@@ -2323,7 +2323,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Feed yourself!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Feed yourself', 'View the photo').toString()
@@ -2348,7 +2348,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Cafe Days!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Cafe Days', 'View the photo').toString()
@@ -2373,7 +2373,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Hit the Bars!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Hit the Bars', 'View the photo').toString()
@@ -2398,7 +2398,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Hit the Bars!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Eating Japanese Food', 'View the photo').toString()
@@ -2423,7 +2423,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Religious Worship!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Religious Worship', 'View the photo').toString()
@@ -2448,7 +2448,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Catch the sunset!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Catch the sunset', 'View the photo').toString()
@@ -2473,7 +2473,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Eating Asian Food!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Eating Asian Food', 'View the photo').toString()
@@ -2498,7 +2498,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Reading a book!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Reading a book', 'View the photo').toString()
@@ -2523,7 +2523,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in I love parks!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for I love parks', 'View the photo').toString()
@@ -2548,7 +2548,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Rainy Day!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Rainy Day', 'View the photo').toString()
@@ -2573,7 +2573,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Eating some \'Za!',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Eating some \'Za', 'View the photo').toString()
@@ -2598,7 +2598,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Eating out',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Eating out', 'View the photo').toString()
@@ -2623,7 +2623,7 @@ let EXPERIENCES = {
       allowRepeatContributions: true,
     }]),
     description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'Participate in Eating Big Bites',
+    notificationText: 'View this and other available experiences',
     callbacks: [{
       trigger: 'cb.newSubmission()',
       function: notifyUsersInNeed('New moment for Eating Big Bites', 'View the photo').toString()
