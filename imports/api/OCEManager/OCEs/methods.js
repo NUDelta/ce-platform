@@ -10,6 +10,7 @@ import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/method
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
+import {serverLog} from "../../logs";
 
 
 /**
@@ -76,8 +77,14 @@ export const findMatchesForUser = (uid, affordances) => {
  * @returns {boolean} whether user matches need queried for
  */
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
-  let detectorId = getNeedFromIncidentId(iid, needName).situation.detector;
-  return matchAffordancesWithDetector(affordances, detectorId);
+  let need = getNeedFromIncidentId(iid, needName);
+  if (!need) {
+    serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
+    return false;
+  } else {
+    let detectorId = need.situation.detector;
+    return matchAffordancesWithDetector(affordances, detectorId);
+  }
 };
 
 // TODO: Clean this up if possible
