@@ -31,31 +31,31 @@ Meteor.methods({
     let incident = createIncidentFromExperience(exp);
     startRunningIncident(incident);
   },
-  updateOCE({name, eid}) {
+  updateOCE({name}) {
     // FIXME(rlouie): NOTE: you must run Meteor method call updateSubmissionNeedName in addition to this function
     new SimpleSchema({
-      name: { type: String },
-      eid: { type: String },
-    }).validate({name, eid});
+      name: { type: String }
+    }).validate({name});
 
     if (!(name in CONSTANTS.EXPERIENCES)) {
       throw new Meteor.Error('updateOCE.keynotfound',
         `OCE by the name '${name}' was not found in CONSTANTS.EXPERIENCES`);
     }
 
-    let old_exp = Experiences.findOne({_id: eid});
+    let exp = CONSTANTS.EXPERIENCES[name];
+    let old_exp = Experiences.findOne({name: exp.name});
     if (!old_exp) {
       throw new Meteor.Error('updateOCE.experiencenotfound',
-        `Experience with id '${eid}' was not found in Experiences collection`);
+        `Experience with name '${exp.name}' was not found in Experiences collection`);
     }
 
+    let eid = old_exp._id;
     let old_incident = Incidents.findOne({eid: eid});
     if (!old_incident) {
       throw new Meteor.Error('updateOCE.incidentnotfound',
         `Incident with eid = '${eid}' was not found in Incidents collection`);
     }
 
-    let exp = CONSTANTS.EXPERIENCES[name];
     updateExperienceCollectionDocument(eid, exp);
     let incident = updateIncidentFromExperience(eid, exp);
     updateRunningIncident(incident);
