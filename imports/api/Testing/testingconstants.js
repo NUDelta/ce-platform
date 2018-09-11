@@ -755,6 +755,7 @@ function createStorytime(version) {
   // setup places and detectors for storytime
   let places = ["niceish_day", "beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
   let detectorIds = places.map((x) => { return Random.id(); });
+  let detectorNames = [];
   let dropdownText = [
     'Swirling Clouds',
     'Drinking butterbeer',
@@ -783,7 +784,10 @@ function createStorytime(version) {
     lastRule = `(mechanismRich && (!participatedInStorytime${version} && (${lastRuleNoSemicolon})));`;
     newRules.push(lastRule);
 
-    DETECTORS[place + `_storytime${version}_mechanismRich`] = {
+    let detectorName = `${place}_storytime${version}_mechanismRich`;
+    detectorNames.push(detectorName);
+
+    DETECTORS[detectorName] = {
       '_id': detectorIds[i],
       'description': `${DETECTORS[place].description} storytime${version} mechanismRich`,
       'variables': newVars,
@@ -791,6 +795,8 @@ function createStorytime(version) {
     };
   });
 
+  // Don't assume the Random detectorIds we created actually exist
+  detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
   let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorIds);
   // create story starting point
   let sentences = [
