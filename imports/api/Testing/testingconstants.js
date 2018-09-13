@@ -876,7 +876,7 @@ function createStorytime(version) {
         }
       },
       numberNeeded: 1,
-      notificationDelay: 10 // 10 seconds for debugging
+      notificationDelay: 90
     };
 
     addContribution(sub.iid, contribution);
@@ -911,7 +911,7 @@ function createStorytime(version) {
         }
       },
       numberNeeded: 1,
-      notificationDelay: 10 // 10 seconds for debugging
+      notificationDelay: 90
     }],
     description: 'We\'re writing a Harry Potter spin-off story',
     notificationText: 'View this and other available experiences',

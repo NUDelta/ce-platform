@@ -119,6 +119,27 @@ Router.route('api.customresults', {
   }
 });
 
+Router.route('api.customresults.admin', {
+  path: '/apicustomresultsadmin/:iid/:eid',
+  template: 'api_custom_results_admin',
+  before: function () {
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    };
+  }
+});
 
 Router.route('/', {
   name: 'home',
@@ -134,6 +155,22 @@ Router.route('participate.backdoor', {
   data: function () {
     return {
       submissions: Submissions.find({}).fetch()
+    }
+  }
+});
+
+Router.route('results.backdoor', {
+  path: '/results/backdoor',
+  template: 'resultsBackdoor',
+  before: function() {
+    this.subscribe('experiences.all').wait();
+    this.subscribe('submissions.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      submissions: Submissions.find({}).fetch(),
+      experiences: Experiences.find({}).fetch()
     }
   }
 });
