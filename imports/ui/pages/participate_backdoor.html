@@ -5,3 +5,11 @@
     {{/each}}
   </ul>
 </template>
+
+<template name="resultsBackdoor">
+  <ul>
+    {{#each link in apiCustomResultsAdminLinks}}
+      <li><a href="{{link}}">{{experienceName link}}</a></li>
+    {{/each}}
+  </ul>
+</template>

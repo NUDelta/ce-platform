@@ -2,6 +2,10 @@
     {{> Template.dynamic template=this.experience.resultsTemplate data=data}}
 </template>
 
+<template name="api_custom_results_admin">
+  {{> Template.dynamic template=(adminTemplate this.experience.resultsTemplate) data=data}}
+</template>
+
 <template name="basicPhotoList">
     Thanks for participating in the experience {{this.experience.name}}! See results from other
     users below.<br>
@@ -30,6 +34,28 @@
         {{/each}}
         <br><br>
     {{/each}}
+</template>
+
+<template name="photosByCategories_admin">
+  <style>
+    .image-contrib {
+      padding-bottom: 10px;
+    }
+  </style>
+  Thanks for participating in the experience <em>{{this.experience.name}}</em>! See results from other
+  users <span style="color: #0351ff">who shared the same situation</span> below.<br><br>
+  {{#each cat in categories}}
+    <b style="color: #0351ff">Images for {{cat}} </b><br>
+    {{#each image in (imagesByCategory cat)}}
+      <div class="image-contrib card">
+        {{> Template.dynamic template="displayImage" data=image}}
+        {{#let user=(getUserById users image.uid)}}
+          {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+        {{/let}}
+      </div>
+    {{/each}}
+    <br><br>
+  {{/each}}
 </template>
 
 <template name="bumpedResults">
@@ -81,6 +107,71 @@
 </template>
 
 <template name="halfhalfResults">
+  <head>
+    <style>
+      .half0 {
+        grid-area: half0;
+      }
+      .half1 {
+        grid-area: half1;
+      }
+      .camera-overlay {
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: 45vw 45vw;
+        grid-template-rows: 90vw;
+        grid-template-areas: "half0 half1";
+      }
+
+      .image-group-container {
+        /* give some space for the following text*/
+        margin-bottom: 100px;
+      }
+    </style>
+  </head>
+
+  <div id="results" class="centered">
+    <h4>{{this.experience.name}}</h4>
+    {{#each needGroup in resultsGroupedByNeedAndDyad}}
+      <div class="need-group-container">
+        {{#each imageGroup in needGroup.imagesGroupedByDyad}}
+          <h5>{{needGroup.needName}}</h5>
+          <div class="image-group-container">
+            <div class="camera-overlay">
+              {{#if (lengthEqual imageGroup 2) }}
+                {{#each image in imageGroup}}
+                  <div class="half{{@index}} halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                {{/each}}
+              {{else}}
+                {{#let image=(elementAtIndex imageGroup 0) }}
+                  <div class="half0 halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                  <div class="half1 halfsquare">
+                    <br/>
+                    <div class="content align-middle" style="background-color: rgba(125,125,125,0.5);">
+                      <p>Waiting for another person to fill in the right half!</p>
+                    </div>
+                  </div>
+                {{/let}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="halfhalfResults_admin">
   <head>
     <style>
       .half0 {
@@ -303,6 +394,10 @@
   </div>
 </template>
 
+<template name="storybook_admin">
+  {{> storybook}}
+</template>
+
 <template name="storyBook_noInterdependence">
   <div id="participate">
     <h4>{{this.experience.name}}</h4>
@@ -337,6 +432,10 @@
       {{/each}}
     </div>
   </div>
+</template>
+
+<template name="storyBook_noInterdependence_admin">
+  {{> storyBook_noInterdependence}}
 </template>
 
 <template name="sunset">

@@ -27,6 +27,32 @@ Template.api_custom_results.helpers({
   },
 });
 
+Template.api_custom_results_admin.onCreated(() => {
+  console.log("loaded admin");
+});
+
+Template.api_custom_results_admin.helpers({
+  data() {
+    this.submissions.sort(function compare(a, b) {
+      if (a.timestamp === undefined) {
+        return 1;
+      } else if (b.timestamp === undefined) {
+        return -1;
+      }
+
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateA - dateB;
+    });
+
+    console.log(this);
+    console.log(this.images);
+    return this;
+  },
+  adminTemplate(templateName) {
+    return templateName + '_admin';
+  }
+});
 
 
 Template.photosByCategories.helpers({
@@ -48,6 +74,24 @@ Template.photosByCategories.helpers({
     });
 
     let categoriesSet = new Set(myNeedNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+    let specific = this.images.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  }
+});
+
+Template.photosByCategories_admin.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+
+    let categoriesSet = new Set(needNames);
     return [...categoriesSet];
   },
   imagesByCategory(category){
@@ -159,6 +203,9 @@ Template.halfhalfResults.helpers({
       return x.needName;
     });
 
+    // only show examples where the need names are unique
+    myNeedNames = [... new Set(myNeedNames)];
+
     return myNeedNames.map((needName) => {
       // images already filtered by activeIncident. Now get them for each need
       let needImages = this.images.filter((img) => {
@@ -170,6 +217,43 @@ Template.halfhalfResults.helpers({
   }
 });
 
+Template.halfhalfResults_admin.helpers({
+  lengthEqual(arr, number) {
+    return arr.length === number;
+  },
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+  /** So we can show the contributions of a dyad, for each need
+   * @returns {needName: String, imagesGroupedByDyad: [(a,b) (c, d) (e)]}
+   */
+  resultsGroupedByNeedAndDyad() {
+
+    let mySubs = this.submissions;
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    // only show examples where the need names are unique
+    myNeedNames = [... new Set(myNeedNames)];
+
+    return myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = this.images.filter((img) => {
+        return img.needName == needName;
+      });
+
+      return {needName: needName, imagesGroupedByDyad: chunkArray(needImages, 2)};
+    });
+  }
+});
 
 Template.scavengerHunt.helpers({
   categories() {
