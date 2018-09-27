@@ -125,8 +125,10 @@ export const updateAssignmentDbdAfterUserLocationChange = (uid, affordances) => 
             assignment._id,
             needUserMap.needName
           );
-          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after,
-          // FIXME(rlouie): they get continuously spammed
+          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
+          // they get continuously spammed with notifications. A way better UI would be to remove the notification
+          // entirely.
+          // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
           // notifyForMissingParticipation([uid]);
         }, delay * 60000);
 
