@@ -383,15 +383,13 @@ export const createIncidentFromExperience = (experience) => {
 };
 
 /** Updates Incident based on experience definition;
- * The complement to `createIncidentFromExperience`
+ * The complement to `createIncidentFromExperience`.
  *
  * @param eid [String] existing experience id
  * @param experience [Object] comes from CONSTANTS.EXPERIENCES
  */
 export const updateIncidentFromExperience = (eid, experience) => {
 
-  // TODO(rlouie): TEST to see if the detector id gets messed up, since it is generated randomly
-  // TODO(rlouie): might need to make the call to updateDetector based on what is in DETECTORS
   let incident = {
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes
