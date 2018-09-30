@@ -258,13 +258,17 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
         $pull: { "needUserMaps.$.uids": uid }
       }
     );
+    console.log("assignment loop");
   });
+
+  //let assignment = Assignments[0];
 
   let assignment = Assignments.find({
     _id: iid,
     "needUserMaps.needName": needName
   });
 
+  console.log("_id: " + assignment._id);
   console.log("needUserMaps: " + assignment.needUserMaps);
 
   let needUserMap = assignment.needUserMaps.find(x => {
