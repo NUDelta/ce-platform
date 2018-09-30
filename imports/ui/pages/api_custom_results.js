@@ -27,15 +27,65 @@ Template.api_custom_results.helpers({
   },
 });
 
-Template.registerHelper( 'getImageById', (data, id) => {
-  let image = data.images.find(function(x){
-    return x._id === id;
-  });
-
-  return image;
+Template.api_custom_results_admin.onCreated(() => {
+  console.log("loaded admin");
 });
 
+Template.api_custom_results_admin.helpers({
+  data() {
+    this.submissions.sort(function compare(a, b) {
+      if (a.timestamp === undefined) {
+        return 1;
+      } else if (b.timestamp === undefined) {
+        return -1;
+      }
+
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateA - dateB;
+    });
+
+    console.log(this);
+    console.log(this.images);
+    return this;
+  },
+  adminTemplate(templateName) {
+    return templateName + '_admin';
+  }
+});
+
+
 Template.photosByCategories.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+
+    let categoriesSet = new Set(needNames);
+    return [...categoriesSet];
+  },
+  myCategories() {
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    let categoriesSet = new Set(myNeedNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+    let specific = this.images.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  }
+});
+
+Template.photosByCategories_admin.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
       return x.needName;
@@ -110,6 +160,101 @@ Template.bumpedResults.events({
 
 });
 
+/**
+ * Returns an array with arrays of the given size.
+ *
+ * @param myArray {Array} Array to split
+ * @param chunkSize {Integer} Size of every group
+ * @see https://ourcodeworld.com/articles/read/278/how-to-split-an-array-into-chunks-of-the-same-size-easily-in-javascript
+ */
+export const chunkArray = (myArray, chunk_size) => {
+  let results = [];
+
+  while (myArray.length) {
+    results.push(myArray.splice(0, chunk_size));
+  }
+
+  return results;
+};
+
+Template.halfhalfResults.helpers({
+  lengthEqual(arr, number) {
+    return arr.length === number;
+  },
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+  /** So we can show the contributions of a dyad, for each need
+   * @returns {needName: String, imagesGroupedByDyad: [(a,b) (c, d) (e)]}
+   */
+  resultsGroupedByNeedAndDyad() {
+
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
+    });
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    // only show examples where the need names are unique
+    myNeedNames = [... new Set(myNeedNames)];
+
+    return myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = this.images.filter((img) => {
+        return img.needName == needName;
+      });
+
+      return {needName: needName, imagesGroupedByDyad: chunkArray(needImages, 2)};
+    });
+  }
+});
+
+Template.halfhalfResults_admin.helpers({
+  lengthEqual(arr, number) {
+    return arr.length === number;
+  },
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+  /** So we can show the contributions of a dyad, for each need
+   * @returns {needName: String, imagesGroupedByDyad: [(a,b) (c, d) (e)]}
+   */
+  resultsGroupedByNeedAndDyad() {
+
+    let mySubs = this.submissions;
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
+    });
+
+    // only show examples where the need names are unique
+    myNeedNames = [... new Set(myNeedNames)];
+
+    return myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = this.images.filter((img) => {
+        return img.needName == needName;
+      });
+
+      return {needName: needName, imagesGroupedByDyad: chunkArray(needImages, 2)};
+    });
+  }
+});
+
 Template.scavengerHunt.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
@@ -150,6 +295,20 @@ Template.scavengerHunt.helpers({
   }
 });
 
+Template.storyBook_noInterdependence.helpers({
+  notFirst(index) {
+    return index !== 0;
+  },
+  notLast(index){
+    // number of images is the number of pages
+    return index < this.images.length - 1;
+  },
+  completedSubmissions(subs){
+    return subs.filter((sub) => {
+      return sub.uid !== null;
+    })
+  }
+});
 
 Template.storybook.helpers({
   notFirst(index){
@@ -168,6 +327,11 @@ Template.storybook.helpers({
     const instance = Template.instance()
     let previousSubmission = instance.data.submissions[index-1];
     return previousSubmission.content.sentence
+  },
+  previousSentenceAuthorUid(index) {
+    const instance = Template.instance()
+    let previousSubmission = instance.data.submissions[index-1];
+    return previousSubmission.uid;
   }
 });
 
@@ -195,14 +359,17 @@ function showSlides(n) {
   slides[slideIndex-1].style.display = "block";
 }
 
-Template.storybook.onCreated(function() {
+Template.storybook.onRendered(function() {
   this.autorun(() => {
-    window.onload = function () {
-      showSlides(1);
-    }
+    showSlides(1);
   });
 });
 
+Template.storyBook_noInterdependence.onRendered(function() {
+  this.autorun(() => {
+    showSlides(1);
+  });
+});
 
 Template.storybook.events({
   'click .prev'(event, instance) {
@@ -214,10 +381,14 @@ Template.storybook.events({
     plusSlides(1)
   }
 });
-
-Template.sunset.onCreated(() => {
-  window.onload = function(){
-    // showSlidesAuto();
+Template.storyBook_noInterdependence.events({
+  'click .prev'(event, instance) {
+    event.preventDefault();
+    plusSlides(-1)
+  },
+  'click .next'(event, instance) {
+    event.preventDefault();
+    plusSlides(1)
   }
 });
 
@@ -261,4 +432,4 @@ Template.sunset.onDestroyed(function() {
     Meteor.clearTimeout(timeout)
     timeout = null;
   });
-})
+});

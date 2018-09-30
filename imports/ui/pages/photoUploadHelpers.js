@@ -4,7 +4,7 @@ export const photoInput = function (event) {
   event.stopImmediatePropagation();
   event.stopPropagation();
   $('input[name=photo]').trigger('click');
-}
+};
 
 export const photoUpload = function (event) {
   const files = event.target.files;
@@ -17,4 +17,4 @@ export const photoUpload = function (event) {
     };
     reader.readAsDataURL(files[0]);
   }
-}
+};

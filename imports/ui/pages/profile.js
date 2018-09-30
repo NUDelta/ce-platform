@@ -3,8 +3,7 @@ import './profile.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
 
 import '../components/result_link.js';
 

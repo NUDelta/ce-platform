@@ -1,4 +1,75 @@
 #participate {
+  // BEGIN halfhalfParticipate
+  .lefthalf {
+    grid-area: lefthalf;
+  }
+
+  .righthalf {
+    grid-area: righthalf;
+  }
+
+  .camera-overlay {
+    display: grid;
+    grid-gap: 0;
+    /*grid-template-columns: 45vw 45vw;*/
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "lefthalf righthalf";
+  }
+
+  .halfsquare {
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .halfsquare::before {
+    content: '';
+    display: block;
+    /*since 100% containing div width is half the sidelength of a square,*/
+    /*200% of containing div width is the full sidelength of a square.*/
+    padding-top: 200%;
+  }
+
+  .halfsquare .content {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .btn-borderless {
+    border: transparent !important;
+    background-color: transparent !important;
+    padding: 1vw;
+  }
+
+  .camera-controls {
+    // this margin matches the height of the bottom nav bar, so it wont overlap the camera icon
+    margin-bottom: 52px;
+  }
+
+  .left-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 5%;
+    transform: translate(-5%, 0);
+  }
+
+  .center-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .right-control {
+    position: absolute;
+    margin-top: 10px;
+    left: 95%;
+    transform: translate(-95%, 0);
+  }
+  // END halfhalfParticipate
+
   .fileinput {
     display: block;
     border: 1px solid #ddd;
@@ -33,18 +104,17 @@
     z-index: -1;
   }
 
-  .glyphicon {
+  .glyphicon-camera.fileinput-new {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
-  }
-
-  .glyphicon-camera {
     font-size: 35px;
     top: 50%;
     left: 50%;
   }
 
   .glyphicon-remove {
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
     font-size: 20px;
     top: 10%;
     right: 5%;

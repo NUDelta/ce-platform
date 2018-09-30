@@ -1,5 +1,13 @@
 <template name="affordances">
     {{#if currentUser}}
+        <h4> Your Profile Information </h4>
+        {{> displayTopToBottom_Avatar_FullName user=currentUser avatar=(userAvatarImg avatars currentUser)}}
+        <div class="centered">
+          {{currentUser.username}}
+        </div>
+        <div class="centered">
+          {{currentUser.emails.[0].address}}
+        </div>
         <h4> Your location </h4>
         {{this.location.lat}} / {{this.location.lng}}
         <br><br>
@@ -9,15 +17,8 @@
             </div>
         </div>
     {{else}}
-        <h4>Sign in to see your affordances</h4>
+        <h3>Welcome to CE 👋</h3>
+        <h4>Sign in to see your affordances!</h4>
     {{/if}}
 </template>
-
-<!--<div class="p-4">-->
-<!--<h4> Your current affordances </h4>-->
-        <!--{{#each key in affordanceKeys}}-->
-<!--{{key}} --->
-<!--{{affordanceValues key}}<br>-->
-        <!--{{/each}}-->
-<!--</div>-->
 

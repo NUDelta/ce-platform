@@ -2,12 +2,15 @@ body {
   font-size: 15px;
   margin-top: 55px;
   margin-bottom: 65px;
-  background-color: #f8f8f8;
-  font-family: 'Karla', 'Roboto', Helvetica;
+  // transparent body required for the CameraPreview instance to be displayed behind the layout HTML.
+  // this is required when CameraPreview is started with toBack = true
+  // see documentation on startCamera https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
+  background-color: transparent;
+  font-family: 'Lato', 'Roboto', Helvetica;
 }
 
 p, input {
-  font-family: 'Karla',' Roboto', Helvetica;
+  font-family: 'Lato','Roboto', Helvetica;
   color: #000;
 }
 
@@ -59,33 +62,23 @@ img.logo {
   background-color: rgba(38, 49, 71, 0) !important;
 }
 
-// .navbar-nav a.dropdown-toggle:hover, a.dropdown-toggle:active, a.dropdown-toggle:visited {
-//   background-color: rgba(38, 49, 71, 1) !important;
-// }
-
-#login-buttons-password {
-  background-color: #5dc18d !important;
-  color: #fff;
-  border: #fff;
-}
-
-#login-buttons-logout {
-  background-color: #5dc18d !important;
-  color: #fff;
-  border: #fff;
-}
-
-#signup-link {
-  color: #fff !important;
-  padding-bottom: 10px;
-}
-
 select {
   width: 30%
 }
 
-.dropdown-toggle {
-  float: right;
+// useraccounts:unstyled
+// @see https://github.com/meteor-useraccounts/unstyled/tree/master/lib
+#at-nav-button {
+  color: #fff !important;
+  text-underline: #0097cf;
+}
+#at-btn {
+  background-color: #5dc18d !important;
+  color: #fff;
+  border: #fff;
+}
+#at-form {
+  padding: 0;
 }
 
 // footer nav
@@ -230,7 +223,82 @@ hr {
   color: #777;
 }
 
-.col-md-6 {
-  padding-left: 5px;
-  padding-right: 5px;
+// BEGIN PROFILE AVATAR
+
+// displayLeftToRight_Avatar_FullName
+.profile-card-avatar_fullname {
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: 54px 1fr;
+  grid-template-areas: "profile-image-left" "profile-text-right";
+  padding: 4px;
+}
+.profile-image-left {
+  height: 54px;
+  gridarea: profile-image-left;
+}
+.profile-text-right {
+  gridarea: profile-text-right;
+
+  /* wrap on line breaks like normal */
+  white-space: normal;
+  overflow: hidden;
+}
+
+// displayLeftToRight_FullName_Avatar
+.profile-card-fullname_avatar {
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: 1fr 54px;
+  grid-template-areas: "profile-text-left" "profile-image-right";
+  padding: 4px;
+}
+.profile-image-right {
+  height: 54px;
+  gridarea: profile-image-right;
+}
+.profile-text-left {
+  gridarea: profile-text-left;
+
+  /* wrap on line breaks like normal */
+  white-space: normal;
+  overflow: hidden;
+}
+
+//displayTopToBottom_Avatar_FullName
+.profile-card-top-bottom {
+  text-align: center;
+  padding: 4px;
+}
+.profile-image {
+  width: 54px;
+  display: block;
+  margin: 0 auto;
+}
+.profile-text {
+  white-space: normal;
+}
+
+.profile-firstlast {
+  font-weight: bold;
+}
+.at-avatar {
+  border-radius: 50%;
+}
+.at-avatar-square {
+  border-radius: 0;
+}
+// END PROFILE AVATAR
+
+.centered {
+  text-align: center;
+}
+
+.align-middle {
+  position: absolute;
+  display: table;
+}
+.align-middle p {
+  display: table-cell;
+  vertical-align: middle;
 }

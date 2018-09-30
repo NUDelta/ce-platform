@@ -1,27 +1,23 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Random } from 'meteor/random'
-import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
-import { Experiences } from '../../api/experiences/experiences.js';
-import { Incidents } from '../../api/incidents/incidents.js';
-import { Locations } from '../../api/locations/locations.js';
-import { Submissions } from "../../api/submissions/submissions";
-import { Availability } from "../../api/coordinator/availability";
-import { Assignments } from "../../api/coordinator/assignments";
+import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
+import { Locations } from '../../api/UserMonitor/locations/locations.js';
+import { Submissions } from "../../api/OCEManager/currentNeeds";
+import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
+import { Images, Avatars } from '../../api/ImageUpload/images.js';
 import { log } from '../../api/logs.js';
 
-import { CONSTANTS } from "../../api/testing/testingconstants";
-import { onLocationUpdate } from "../../api/locations/methods";
-import { createIncidentFromExperience, startRunningIncident } from "../../api/incidents/methods";
-import { findUserByUsername } from '../../api/users/methods';
-import { Detectors } from "../../api/detectors/detectors";
+import { CONSTANTS } from "../../api/Testing/testingconstants";
+import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
+import { findUserByUsername } from '../../api/UserMonitor/users/methods';
+import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
 Meteor.startup(() => {
   log.debug("Running in mode: ", process.env.MODE );
   log.debug("process.env is: ", process.env );
-
 
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
@@ -93,6 +89,8 @@ function clearDatabase () {
   Locations.remove({});
   Incidents.remove({});
   Detectors.remove({});
+  Images.remove({});
+  Avatars.remove({});
 }
 
 function createTestExperiences(){
@@ -101,21 +99,29 @@ function createTestExperiences(){
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   });
-  log.info(`Created ${ Experiences.find().count() } experiences`);
 }
 
 function createTestData(){
+  // add test users
   Object.values(CONSTANTS.USERS).forEach(function (value) {
     Accounts.createUser(value)
   });
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
+  // add detectors
   Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
     Detectors.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
+
+  // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
+  // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
+  // startRunningIncident(incident);
+
+  // start experiences
   createTestExperiences();
+  log.info(`Created ${ Experiences.find().count() } experiences`);
 
   let uid1 = findUserByUsername('garrett')._id;
   let uid2 = findUserByUsername('garretts_brother')._id;
@@ -123,10 +129,29 @@ function createTestData(){
   let uid4 = findUserByUsername('megs_sister')._id;
   let uid5 = findUserByUsername('josh')._id;
 
+  let olinuid1 = findUserByUsername('nagy')._id;
+  let olinuid2 = findUserByUsername('bonnie')._id;
+
+  Meteor.users.update({
+    // everyone
+  }, {
+    $set: {
+      "profile.experiences": [],
+      "profile.subscriptions": [],
+      "profile.lastParticipated": null,
+      "profile.lastNotified": null,
+      "profile.pastIncidents": [],
+      "profile.activeIncidents": [],
+      "profile.staticAffordances": {}
+    }
+  }, {
+    multi: true
+  });
+
   Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesGarrett": true} }
+    $set: { 'profile.staticAffordances': {"lovesGarrett": true } }
   }, {
     multi: true
   });
@@ -134,7 +159,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid3, uid4]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesMeg": true} }
+    $set: { 'profile.staticAffordances': {"lovesMeg": true, "mechanismPoor": true} }
   }, {
     multi: true
   });
@@ -143,6 +168,14 @@ function createTestData(){
     _id: {$in: [uid1, uid3, uid5]}
   }, {
     $set: { 'profile.staticAffordances.lovesDTR':  true}
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, olinuid1, olinuid2]}
+  }, {
+    $set: { 'profile.staticAffordances': { "mechanismRich": true} }
   }, {
     multi: true
   });

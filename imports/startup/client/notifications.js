@@ -1,10 +1,27 @@
 import { Push } from 'meteor/raix:push';
 import { Router } from 'meteor/iron:router';
-
 import { log, serverLog } from '../../api/logs.js';
 
-Push.addListener('startup', (notification) => {
+Push.Configure({
+  android: {
+    senderID: 12341234,
+    alert: true,
+    badge: true,
+    sound: true,
+    vibrate: true,
+    clearNotifications: true
+    // icon: '',
+    // iconColor: ''
+  },
+  ios: {
+    alert: true,
+    badge: true,
+    sound: true,
+    vibrate: true
+  }
+});
 
+Push.addListener('startup', (notification) => {
   if (notification.payload.route) {
     serverLog.call({message: `Cold start with ${ JSON.stringify(notification.payload) }`});
 
@@ -16,7 +33,6 @@ Push.addListener('startup', (notification) => {
     }
 
     Router.go(notification.payload.route);
-
   }
 });
 
@@ -32,7 +48,6 @@ Push.addListener('message', (notification) => {
     }
 
     Router.go(notification.payload.route);
-
   }
 });
 

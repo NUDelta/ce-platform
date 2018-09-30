@@ -2,6 +2,10 @@
     {{> Template.dynamic template=this.experience.resultsTemplate data=data}}
 </template>
 
+<template name="api_custom_results_admin">
+  {{> Template.dynamic template=(adminTemplate this.experience.resultsTemplate) data=data}}
+</template>
+
 <template name="basicPhotoList">
     Thanks for participating in the experience {{this.experience.name}}! See results from other
     users below.<br>
@@ -11,15 +15,47 @@
 </template>
 
 <template name="photosByCategories">
-    Thanks for participating in the experience {{this.experience.name}}! See results from other
-    users below.<br>
-    {{#each cat in categories}}
-        <b>Images for {{cat}} </b><br>
+  <style>
+    .image-contrib {
+      padding-bottom: 10px;
+    }
+  </style>
+    Thanks for participating in the experience <em>{{this.experience.name}}</em>! See results from other
+    users <span style="color: #0351ff">who shared the same situation</span> below.<br><br>
+    {{#each cat in myCategories}}
+      <b style="color: #0351ff">Images for {{cat}} </b><br>
         {{#each image in (imagesByCategory cat)}}
+          <div class="image-contrib card">
             {{> Template.dynamic template="displayImage" data=image}}
+            {{#let user=(getUserById users image.uid)}}
+              {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+            {{/let}}
+          </div>
         {{/each}}
         <br><br>
     {{/each}}
+</template>
+
+<template name="photosByCategories_admin">
+  <style>
+    .image-contrib {
+      padding-bottom: 10px;
+    }
+  </style>
+  Thanks for participating in the experience <em>{{this.experience.name}}</em>! See results from other
+  users <span style="color: #0351ff">who shared the same situation</span> below.<br><br>
+  {{#each cat in categories}}
+    <b style="color: #0351ff">Images for {{cat}} </b><br>
+    {{#each image in (imagesByCategory cat)}}
+      <div class="image-contrib card">
+        {{> Template.dynamic template="displayImage" data=image}}
+        {{#let user=(getUserById users image.uid)}}
+          {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+        {{/let}}
+      </div>
+    {{/each}}
+    <br><br>
+  {{/each}}
 </template>
 
 <template name="bumpedResults">
@@ -70,7 +106,135 @@
 
 </template>
 
+<template name="halfhalfResults">
+  <head>
+    <style>
+      .half0 {
+        grid-area: half0;
+      }
+      .half1 {
+        grid-area: half1;
+      }
+      .camera-overlay {
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: 45vw 45vw;
+        grid-template-rows: 90vw;
+        grid-template-areas: "half0 half1";
+      }
 
+      .image-group-container {
+        /* give some space for the following text*/
+        margin-bottom: 100px;
+      }
+    </style>
+  </head>
+
+  <div id="results" class="centered">
+    <h4>{{this.experience.name}}</h4>
+    {{#each needGroup in resultsGroupedByNeedAndDyad}}
+      <div class="need-group-container">
+        {{#each imageGroup in needGroup.imagesGroupedByDyad}}
+          <h5>{{needGroup.needName}}</h5>
+          <div class="image-group-container">
+            <div class="camera-overlay">
+              {{#if (lengthEqual imageGroup 2) }}
+                {{#each image in imageGroup}}
+                  <div class="half{{@index}} halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                {{/each}}
+              {{else}}
+                {{#let image=(elementAtIndex imageGroup 0) }}
+                  <div class="half0 halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                  <div class="half1 halfsquare">
+                    <br/>
+                    <div class="content align-middle" style="background-color: rgba(125,125,125,0.5);">
+                      <p>Waiting for another person to fill in the right half!</p>
+                    </div>
+                  </div>
+                {{/let}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="halfhalfResults_admin">
+  <head>
+    <style>
+      .half0 {
+        grid-area: half0;
+      }
+      .half1 {
+        grid-area: half1;
+      }
+      .camera-overlay {
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: 45vw 45vw;
+        grid-template-rows: 90vw;
+        grid-template-areas: "half0 half1";
+      }
+
+      .image-group-container {
+        /* give some space for the following text*/
+        margin-bottom: 100px;
+      }
+    </style>
+  </head>
+
+  <div id="results" class="centered">
+    <h4>{{this.experience.name}}</h4>
+    {{#each needGroup in resultsGroupedByNeedAndDyad}}
+      <div class="need-group-container">
+        {{#each imageGroup in needGroup.imagesGroupedByDyad}}
+          <h5>{{needGroup.needName}}</h5>
+          <div class="image-group-container">
+            <div class="camera-overlay">
+              {{#if (lengthEqual imageGroup 2) }}
+                {{#each image in imageGroup}}
+                  <div class="half{{@index}} halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                {{/each}}
+              {{else}}
+                {{#let image=(elementAtIndex imageGroup 0) }}
+                  <div class="half0 halfsquare">
+                    {{#let user=(getUserById users image.uid)}}
+                      {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+                    {{/let}}
+                    <div class="content">{{> Template.dynamic template="displayFullImage" data=image}}</div>
+                  </div>
+                  <div class="half1 halfsquare">
+                    <br/>
+                    <div class="content align-middle" style="background-color: rgba(125,125,125,0.5);">
+                      <p>Waiting for another person to fill in the right half!</p>
+                    </div>
+                  </div>
+                {{/let}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</template>
 
 <template name="cheersResults">
   <head>
@@ -178,69 +342,30 @@
 
 <!--TEMPLATE FOR STORYTIME-->
 <template name="storybook">
-    <head>
-        <style>
-            .mySlides {
-                display: none
-            }
-            /* Slideshow container */
-            .slideshow-container {
-                max-width: 1000px;
-                position: relative;
-                margin: auto;
-            }
-            /* Next & previous buttons */
-            #prev, #next {
-                cursor: pointer;
-                bottom: 0px;
-                color: black;
-                font-weight: bold;
-                font-size: 50px !important;
-                border-radius: 0 3px 3px 0;
-            }
-            /* Position the "next button" to the right */
-            #next {
-                border-radius: 3px 0 0 3px;
-            }
-            .caption {
-                margin-top: 15px;
-            }
-            .caption-text {
-                word-wrap: break-word;
-                margin: 0 auto;
-            }
-            .illustration {
-                height: 350px;
-                overflow: hidden;
-                margin-top: 10px;
-                padding-left: 3%;
-                padding-right: 3%;
-            }
-            .img {
-                height: 350px;
-            }
-            #img0 {
-                display: inline;
-            }
-        </style>
-    </head>
-
-    <h1>Harry Potter Spin-off</h1><br>
+  <div id="results">
+    <h4>{{this.experience.name}}</h4>
     Thanks for participating! Read what you and others have written so far.
     <div class="slideshow-container">
       {{#each submission in this.submissions}}
         <div class="mySlides" id="img{{@index}}">
-              {{#if (notLast @index)}}
-              <div class="illustration row">
-                  {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+          {{#if (notLast @index)}}
+            <div class="illustration row">
+              <div class="story-img">
+                {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
               </div>
-
-              {{else}}
-              <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 350px;">
-                  <i>We're looking for another user to illustrate your sentence...</i>
-              </div>
-
-              {{/if}}
+              {{#let illustratorId=submission.uid }}
+                {{#if (notFirst @index) }}
+                  {{> displayLeftToRight_Avatar_FullName appendText="illustrated the sentence which..." user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
+                {{else}}
+                  {{> displayLeftToRight_Avatar_FullName appendText="illustrated the first sentence:" user=(getUserById users illustratorId) avatar=(userAvatarImg avatars (getUserById users illustratorId)) }}
+                {{/if}}
+              {{/let}}
+            </div>
+          {{else}}
+            <div class="illustration row" style="text-align: center; vertical-align: middle; line-height: 300px;">
+              <p><i>Waiting for next person to illustrate</i></p>
+            </div>
+          {{/if}}
           <div class="row caption">
             <div class="col-xs-2">
               {{#if (notFirst @index) }}
@@ -249,20 +374,68 @@
             </div>
             <div class="caption-text col-xs-8">
               {{#if (notFirst @index) }}
-                  {{previousSentence @index}}
+                {{#let prevAuthorId=(previousSentenceAuthorUid @index)}}
+                  {{> displayLeftToRight_Avatar_FullName appendText="wrote:" user=(getUserById users prevAuthorId) avatar=(userAvatarImg avatars (getUserById users prevAuthorId)) }}
+                {{/let}}
+                <div>{{previousSentence @index}}</div>
               {{else}}
                   {{firstSentence}}
               {{/if}}
             </div>
             <div class="col-xs-2">
               {{#if (notLast @index)}}
-                  <a class="next" style="font-size: 50px !important">&#10095;</a>
+                <a class="next" style="font-size: 50px !important">&#10095;</a>
               {{/if}}
             </div>
           </div>
         </div>
       {{/each}}
     </div>
+  </div>
+</template>
+
+<template name="storybook_admin">
+  {{> storybook}}
+</template>
+
+<template name="storyBook_noInterdependence">
+  <div id="participate">
+    <h4>{{this.experience.name}}</h4>
+    Thanks for participating! Read what you and others have written so far.
+    <div class="slideshow-container">
+      {{#each submission in (completedSubmissions this.submissions)}}
+        <div class="mySlides" id="img{{@index}}">
+          <div class="illustration row">
+            <div class="story-img">
+              {{> Template.dynamic template="displayImage" data=(getImageById this submission.content.illustration)}}
+            </div>
+          </div>
+          <div class="row caption">
+            <div class="col-xs-2">
+              {{#if (notFirst @index) }}
+                <a class="prev" style="font-size: 50px !important">&#10094;</a>
+              {{/if}}
+            </div>
+            <div class="caption-text col-xs-8">
+              {{#let author=(getUserById users submission.uid) }}
+                {{> displayLeftToRight_Avatar_FullName appendText="took a picture and wrote" user=author avatar=(userAvatarImg avatars author) }}
+              {{/let}}
+              {{submission.content.sentence}}
+            </div>
+            <div class="col-xs-2">
+              {{#if (notLast @index)}}
+                <a class="next" style="font-size: 50px !important">&#10095;</a>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>
+
+<template name="storyBook_noInterdependence_admin">
+  {{> storyBook_noInterdependence}}
 </template>
 
 <template name="sunset">

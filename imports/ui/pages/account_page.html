@@ -1,0 +1,21 @@
+<template name="signin">
+  {{> atForm }}
+</template>
+
+<template name="signup">
+  {{> atForm }}
+</template>
+
+<template name="profileImageUpload">
+  <div>
+    <label for="{{_id}}">
+      <h4>{{displayName}}</h4>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" class="fileinput-preview thumbnail fileinput-exists"/>
+    </label>
+    <input id="{{_id}}" type="file" name="at-field-{{_id}}">
+  </div>
+</template>
+
+<template name="unstyledAtNavButton">
+  <a id="at-nav-button">{{text}}</a>
+</template>

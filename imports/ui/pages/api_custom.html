@@ -16,7 +16,7 @@
         </style>
     </head>
     <div class="instruction">
-        {{this.toPass.instruction}}
+      {{{this.toPass.instruction}}}
     </div>
     <form class="col col-xs-12" id="participate">
         <div class="camera-upload">
@@ -29,12 +29,113 @@
     </form>
 </template>
 
+<template name="halfhalfParticipate">
+  <head>
+    <style>
+      .instruction {
+        padding-top: 4%;
+        padding-bottom: 4%;
+      }
+
+      .glyphicon-medium {
+        font-size: 24px;
+      }
+
+      .glyphicon-large {
+        font-size: 32px;
+      }
+
+      .right-align {
+        float: right;
+      }
+
+      .navigation-buttons {
+        margin-bottom: 10px;
+      }
+
+    </style>
+  </head>
+
+  <div id="instruction" class="instruction">
+    <h4>{{this.experience.name}}</h4>
+    <div>
+      {{{this.toPass.instruction}}}
+      {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
+        {{#if (lengthEqual needImages 1) }}
+          {{#let image=(firstElement needImages) }}
+            {{#let user=(getUserById users image.uid) }}
+              {{> displayTopToBottom_Avatar_FullName appendText="framed the left half. You can align the right half with theirs." user=user avatar=(userAvatarImg avatars user) }}
+            {{/let}}
+          {{/let}}
+        {{else}}
+          Frame the left half. Then somebody will frame the right half.
+        {{/if}}
+      {{/let}}
+    </div>
+    {{#if this.toPass.exampleImage}}
+      <div>
+        <h5>Example to try</h5>
+        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+      </div>
+    {{/if}}
+    <button id="goToParticipate" class="btn btn-primary right-align">
+      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
+  </div>
+  <form id="participate" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
+    <div id="cameraOverlay" class="camera-overlay">
+      {{> loadingOverlay}}
+      {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
+        {{#if (lengthEqual needImages 1) }}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            <div class="content">
+              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+            </div>
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+          </div>
+        {{else}}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
+        {{/if}}
+      {{/let}}
+    </div>
+
+    <div class="camera-controls">
+      <!-- LEAVE testImage button commented out!!! -->
+      <!--<button type="button" id="testImage" class="left-control">Test</button>-->
+      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+        <span class="fa fa-spinner glyphicon-large"></span>
+      </button>
+      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+      Submit
+    </button>
+  </form>
+</template>
+
 <template name="bumped">
     <head>
         <style>
             .instruction {
                 padding-top: 4%;
-                padding-bottomsub: 4%;
+                padding-bottom: 4%;
             }
 
             .camera-upload {
@@ -68,7 +169,7 @@
         <style>
             .instruction {
                 padding-top: 4%;
-                padding-bottomsub: 4%;
+                padding-bottom: 4%;
             }
 
             .camera-upload {
@@ -172,26 +273,78 @@
             }
         </style>
     </head>
-    <h2>Help us write a Harry Potter spin-off story</h2>
-    We need you to continue the story by picking up where the previous user left off.
+    <!--<h4>Help us write a Harry Potter spin-off story</h4>-->
+    <h4>Help write {{this.experience.name}}</h4>
+    Your situation makes you available to illustrate <span style="color: #0351ff">{{this.toPass.situation}}</span>.
+    {{#if pageOne}}
+      Continue the story by adding onto the first sentence.
+    {{else}}
+      Continue the story by adding onto the past sentence.
+    {{/if}}
     <form class="col col-xs-12" id="participate">
-        <h3>Step 1</h3>
-        The previous user wrote:<br>
+        <h4>Step 1</h4>
+        {{#if pageOne}}
+          The story starts with the following sentence:
+        {{else}}
+          {{#let user=(getUserById users this.toPass.previousUserId)}}
+            <div class="centered">
+              {{> displayTopToBottom_Avatar_FullName appendText="wrote:" user=user avatar=(userAvatarImg avatars user) }}
+            </div>
+          {{/let}}
+        {{/if}}
         <p id="prevSentence">"{{this.toPass.instruction}}"</p>
         Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
         {{> Template.dynamic template="camera" data="illustration"}}
 
         {{#if notLast}}
-            <h3>Step 2</h3>
+            <h4>Step 2</h4>
             Choose one of the following phrases and use it to write the next sentence: <br>
+<<<<<<< HEAD
             {{> Template.dynamic template="dropdown" data="dropdownData"}}<br><br>
+=======
+            {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
+>>>>>>> master
             {{> Template.dynamic template="text" data="sentence"}}
         {{/if}}
-
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                 style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
         </button>
     </form>
+</template>
+
+<template name="storyPage_noInterdependence">
+  <head>
+    <style>
+      #prevSentence {
+        padding-right: 8%;
+        padding-left: 8%;
+        padding-top: 3%;
+        text-align: center;
+        font-weight: 900;
+      }
+
+      #participate {
+        margin-left: -3%;
+        padding-top: 1%;
+      }
+    </style>
+  </head>
+  <h4>Add to {{this.experience.name}}</h4>
+  Your situation makes you available to describe <span style="color: #0351ff">{{this.toPass.situation}}</span>
+
+  <form class="col col-xs-12" id="participate">
+    <h4>Step 1</h4>
+    Use <span style="color: #0351ff">{{this.toPass.situation}}</span> in a sentence describing a scene in Harry Potter.
+    {{> Template.dynamic template="text" data="sentence"}}
+
+    <h4>Step 2</h4>
+    Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
+    {{> Template.dynamic template="camera" data="illustration"}}
+
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
+    </button>
+  </form>
 </template>
 
 <!--  TEMPLATE FOR RAINBOW COLLAGE -->
@@ -201,7 +354,7 @@
         showcase all the colors.</p>
     <div id="participate">
         <form class="col col-xs-12">
-            {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
             <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
@@ -236,7 +389,7 @@
     {{/if}}
     <div id="participate">
         <form class="col col-xs-12">
-            {{ > Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
             <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit

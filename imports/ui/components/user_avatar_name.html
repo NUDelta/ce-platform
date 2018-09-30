@@ -1,0 +1,35 @@
+<template name="displayLeftToRight_Avatar_FullName">
+  <div class="profile-card-avatar_fullname">
+    <div class="profile-image-left">
+      {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
+    </div>
+    <div class="profile-text-right">
+      <span class="profile-firstlast">{{this.user.profile.firstName}} {{this.user.profile.lastName}}</span>
+      <span>{{this.appendText}}</span>
+    </div>
+  </div>
+</template>
+
+<template name="displayLeftToRight_FullName_Avatar">
+  <div class="profile-card-fullname_avatar">
+    <div class="profile-text-left">
+      <span class="profile-firstlast">{{this.user.profile.firstName}} {{this.user.profile.lastName}}</span>
+      <span>{{this.appendText}}</span>
+    </div>
+    <div class="profile-image-right">
+      {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
+    </div>
+  </div>
+</template>
+
+<template name="displayTopToBottom_Avatar_FullName">
+  <div class="profile-card-top-bottom">
+    <div class="profile-image">
+      {{> Template.dynamic template="displayAvatarImage" data=this.avatar}}
+    </div>
+    <div class="profile-text">
+      <span class="profile-firstlast">{{this.user.profile.firstName}} {{this.user.profile.lastName}}</span>
+      <span>{{this.appendText}}</span>
+    </div>
+  </div>
+</template>

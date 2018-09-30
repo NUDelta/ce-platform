@@ -1,23 +1,26 @@
 {
   "name": "ce-platform",
-  "version": "0.0.1",
-  "description": "This is a collective experiences platform.",
+  "version": "1.1.0",
+  "description": "A platform for running Collective Experiences, build with Meteor and Cordova.",
   "directories": {
     "test": "tests"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0",
-    "bcrypt": "^0.8.7",
+    "@babel/runtime": "^7.0.0-beta.47",
+    "bcrypt": "^2.0.1",
     "buffer-shims": "^1.0.0",
+    "cordova-custom-config": "^5.0.2",
     "core-util-is": "^1.0.2",
-    "meteor-node-stubs": "^0.2.5",
-    "photoswipe": "^4.1.1",
-    "request": "^2.81.0"
+    "meteor-node-stubs": "^0.4.1",
+    "photoswipe": "^4.1.1"
   },
   "devDependencies": {},
   "scripts": {
     "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
-    "test": "meteor test --driver-package practicalmeteor:mocha"
+    "build-dev": "run(){ meteor run ios-device -p $1 --mobile-server=http://$2:$1; }; run",
+    "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
+    "unittest": "meteor test --once --driver-package meteortesting:mocha",
+    "fulltest": "meteor test --once --full-app --driver-package meteortesting:mocha"
   },
   "repository": {
     "type": "git",
@@ -27,5 +30,6 @@
     "collective",
     "experiences"
   ],
-  "homepage": "https://github.com/NUDelta/ce-platform#readme"
+  "homepage": "https://github.com/NUDelta/ce-platform#readme",
+  "license": "MIT"
 }
