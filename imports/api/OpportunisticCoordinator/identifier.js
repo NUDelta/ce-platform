@@ -255,8 +255,14 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
         $pull: { "needUserMaps.$.uids": uid }
       }
     );
+    console.log("assignment loop");
   });
 
+<<<<<<< HEAD:imports/api/coordinator/methods.js
+  //let assignment = Assignments[0];
+
+  let assignment = Assignments.find({
+=======
   /*
   const needUserMap = getNeedUserMapForNeed(iid, needName);
 
@@ -269,10 +275,22 @@ const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
 
 export const getNeedUserMapForNeed = (iid, needName) => {
   let assignment = Assignments.findOne({
+>>>>>>> master:imports/api/OpportunisticCoordinator/identifier.js
     _id: iid,
     "needUserMaps.needName": needName
   });
 
+<<<<<<< HEAD:imports/api/coordinator/methods.js
+  console.log("_id: " + assignment._id);
+  console.log("needUserMaps: " + assignment.needUserMaps);
+
+  let needUserMap = assignment.needUserMaps.find(x => {
+    return x.needName === needName;
+  });
+
+  if (needUserMap.uids.length === 0) {
+    checkIfNeedFailed(iid, needName);
+=======
   if (assignment) {
     serverLog.call({message: `assignment obj: ${Object.keys(assignment)}`});
     serverLog.call({message: `needUserMaps: ${Object.keys(assignment.needUserMaps)}`});
@@ -281,6 +299,7 @@ export const getNeedUserMapForNeed = (iid, needName) => {
     });
 
     return needUserMap;
+>>>>>>> master:imports/api/OpportunisticCoordinator/identifier.js
   }
 };
 // const locationCursor = Locations.find();

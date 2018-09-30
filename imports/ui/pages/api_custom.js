@@ -38,6 +38,7 @@ Template.api_custom.helpers({
   },
 
 });
+
 Template.storyPage.helpers({
   pageOne() {
     return this.needName === 'pageOne'
@@ -47,6 +48,16 @@ Template.storyPage.helpers({
   }
 });
 
+<<<<<<< HEAD
+Template.Harry_Potter_Story.helpers({
+    dropdownData() {
+        console.log(this.toPass.dropdownChoices);
+        return this.toPass.dropdownChoices;
+    },
+});
+
+=======
+>>>>>>> master
 Template.bumped.helpers({
 
   nameOfFriend() {
@@ -432,6 +443,7 @@ Template.api_custom.onCreated(() => {
 Template.api_custom.events({
   'submit form'(event, instance) {
     event.preventDefault();
+    console.log("form was submitted");
 
     //this makes the loading circle show up
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';

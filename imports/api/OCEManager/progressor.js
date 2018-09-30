@@ -27,6 +27,7 @@ Meteor.methods({
 });
 
 export const updateSubmission = function(submission) {
+  console.log("update submission");
   Submissions.update(
     {
       eid: submission.eid,
@@ -53,15 +54,21 @@ export const updateSubmission = function(submission) {
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
 function runCallbacks(mostRecentSub) {
+<<<<<<< HEAD:imports/api/submissions/methods.js
+  console.log("running runCallBacks");
+=======
   // need `cb` since all the callbacks called in the eval references this manager
+>>>>>>> master:imports/api/OCEManager/progressor.js
   let cb = new CallbackManager(mostRecentSub);
 
   let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
 
   _.forEach(callbackArray, callbackPair => {
+    console.log("new submission, now checking for callbacks");
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if (eval(trigger)) {
+      console.log("callback triggered");
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });
@@ -82,6 +89,7 @@ class CallbackManager {
 
   //trigger used in callbacks: checks if the new sub was for the specified need
   newSubmission(needName) {
+    console.log("new submission");
     if (needName === undefined) {
       return true;
     } else {
