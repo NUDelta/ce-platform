@@ -1,1 +1,1 @@
-meteor
+web: meteor
