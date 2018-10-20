@@ -1011,7 +1011,8 @@ function createBumped() {
     ["grocery", "at a grocery store"],
     ["restaurant", "at a restaurant"],
     ["train", "commuting"],
-    ["exercising", "exercising"]
+    ["exercising", "exercising"],
+    ["library", "at a library"]
   ];
   _.forEach(relationships, (relationship) => {
     _.forEach(places, (place) => {
@@ -1074,6 +1075,8 @@ function createBumped() {
  * @param notificationDelay [Integer] notificationDelay for all places
  * @returns {{name: string, participateTemplate: string, resultsTemplate: string, contributionTypes: Array, description: string, notificationText: string, callbacks: Array}}
  */
+
+
 const createHalfHalf = function(
   {
     numberInSituation = 1,
@@ -2907,7 +2910,152 @@ let EXPERIENCES = {
         trigger: "cb.incidentFinished()",
         function: sendNotificationFoodFight.toString()
     }]
+  },
+  //4 CREATED EXPERIENCES
+  complete_menu: { //Unique Contributions towards shared goal
+    _id: Random.id(),
+    name: "Complete a menu!",
+    participateTemplate: "scavengerHuntParticipate",
+    resultsTemplate: "scavengerHunt",
+    contributionTypes: [
+      {
+        needName: "foodPhoto",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 2 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're eating?"
+        },
+        numberNeeded: 50 //50 photos before completed
+      }
+    ],
+    description: "Complete a menu!",
+    notificationText: "Complete a menu!",
+    callbacks: [{
+        trigger: "cb.incidentFinished()",
+        function: sendNotificationFoodFight.toString()
+    }]
+  },
+
+  halfhalf_classroom: {
+    _id: Random.id(),
+    name: 'Lecture hall',
+    participateTemplate: 'halfhalfParticipate',
+    resultsTemplate: 'halfhalfResults',
+    contributionTypes: [
+      {
+      // needName MUST have structure "My Need Name XYZ"
+      needName: 'Lecture Hall 1',
+      situation: {
+        detector: getDetectorId(DETECTORS.library),
+        number: 1
+      },
+      toPass: {
+        instruction: 'Are you in <span style="color: #0351ff">class</span>? Take a photo <span style="color: #0351ff"> of your lecture hall.</span>',
+        exampleImage: 'https://upload.wikimedia.org/wikipedia/commons/1/16/5th_Floor_Lecture_Hall.jpg'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+    }],
+    description: 'Take a picture of your professor lecturing',
+    notificationText: 'View this and other available experiences',
+    callbacks: [{
+      trigger: '(cb.numberOfSubmissions() % 2) === 0',
+      function: halfhalfRespawnAndNotify('A photo was taken','View the photo').toString()
+    }]
+  },
+
+  share_sunset: { //Share same situation same time
+    _id: Random.id(),
+    name: "Share a moment of sunset",
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: "Share a moment of sunset",
+      situation: {
+        detector: getDetectorId(DETECTORS.sunset),
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Can you see a <span style="color: #0351ff">sunset</span> near you? Share a photo of yourself with the sunset.',
+      },
+      numberNeeded: 50,
+      notificationDelay: 60,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are experiencing same situation',
+    notificationText: 'View this and other available experiences',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for a sunset ', 'View the photo').toString()
+    }]
+  },
+
+  // story_time: { //building on top of other's participation
+  //   _id: Random.id(),
+  //   //name: exp_names[version],
+  //   participateTemplate: 'storyPage',
+  //   resultsTemplate: 'storybook',
+  //   contributionTypes: [{
+  //     needName: 'pageOne',
+  //     situation: {
+  //       detector: firstDetector,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: firstSentence,
+  //       firstSentence: firstSentence,
+  //       situation: firstSituation,
+  //       dropdownChoices: {
+  //         name: 'affordance',
+  //         options: DROPDOWN_OPTIONS
+  //       }
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 90
+  //   }],
+  //   description: 'We\'re writing a Harry Potter spin-off story',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [
+  //     {
+  //       trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() <= 7)',
+  //       // substitute any variables used outside of the callback function scope
+  //       function: eval('`' + storytimeCallback.toString() + '`'),
+  //     },
+  //     {
+  //       trigger: 'cb.incidentFinished()',
+  //       function: sendNotification.toString()
+  //     }]
+    
+  // },
+
+  sunset_across: {
+    _id: Random.id(),
+    name: "Share a moment of sunset",
+    participateTemplate: 'uploadPhoto',
+    resultsTemplate: 'photosByCategories',
+    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+      needName: "sunsetPhoto",
+      situation: {
+        detector: getDetectorId(DETECTORS.sunset),
+        number: '1'
+      },
+      toPass: {
+        instruction: 'Take a photo of the sun!',
+      },
+      numberNeeded: 20,
+      notificationDelay: 60,
+      allowRepeatContributions: true,
+    }]),
+    description: 'Appreciate the small moments with others who are experiencing same situation',
+    notificationText: 'View this and other available experiences',
+    callbacks: [{
+      trigger: 'cb.newSubmission()',
+      function: notifyUsersInNeed('New moment for a sunset ', 'View the photo').toString()
+    }]
   }
+
 };
 
 export const CONSTANTS = {
@@ -2915,7 +3063,10 @@ export const CONSTANTS = {
   'USERS': USERS,
   // Comment out if you would like to only test specific experiences
   // 'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
-  'EXPERIENCES': EXPERIENCES,
+  //'EXPERIENCES': (({ situationaware_grocery }) => ({ situationaware_grocery }))(EXPERIENCES),
+  //'EXPERIENCES' : ((  {halfhalf_classroom} )  => ( {halfhalf_classroom} ))(EXPERIENCES),
+  'EXPERIENCES' : ((  { complete_menu, halfhalf_classroom} )  => ( {complete_menu, halfhalf_classroom} ))(EXPERIENCES),
+  // 'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 

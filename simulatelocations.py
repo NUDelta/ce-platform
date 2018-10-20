@@ -13,6 +13,7 @@ beer = (42.047105, -87.682006)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
+library = (42.0484004, -87.6802257) #This is working!!!
 
 
 def followPath(path, uid):
@@ -197,10 +198,12 @@ def allUsersAtCastle():
 	print("all usrs at castle")
 
 def allUsersAtRestaurant():
-    setLocation(burgers, sys.argv[1])
-    setLocation(burgers, sys.argv[2])
-    setLocation(burgers, sys.argv[3])
-    print("all users at burgers")
+	setLocation(burgers, sys.argv[1])
+	setLocation(burgers, sys.argv[2])
+	setLocation(burgers, sys.argv[3])
+	setLocation(burgers, sys.argv[4])
+	setLocation(burgers, sys.argv[5])
+	print("all users at burgers")
 
 
 def allUsersAtGrocery():
@@ -293,8 +296,19 @@ def allUsersGrocery():
 
     print("all users at grocery")
 
+def allUsersLib():
+    setLocation(library, sys.argv[1])
+    setLocation(library, sys.argv[2])
+    setLocation(library, sys.argv[3])
+    setLocation(library, sys.argv[4])
+    setLocation(library, sys.argv[5])
+
+    print("all users at library")
+
 if __name__ == "__main__":
-    allUsersGrocery()
+    #allUsersGrocery()
+	#allUsersAtRestaurant()
+	allUsersLib()
     #garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()
