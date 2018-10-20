@@ -2919,16 +2919,39 @@ let EXPERIENCES = {
     resultsTemplate: "scavengerHunt",
     contributionTypes: [
       {
-        needName: "foodPhoto",
+        needName: "Appetizer",
         situation: {
           detector: DETECTORS.restaurant._id,
-          number: 2 //At least 2 should be there
+          number: 1 //At least 2 should be there
         },
         toPass: {
-          instruction: "Can you take a photo of what you're eating?"
+          instruction: "Take a picture of your appetizer  "
         },
-        numberNeeded: 50 //50 photos before completed
+        numberNeeded: 1 //50 photos before completed
+      },
+      {
+        needName: "Main",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're main?"
+        },
+        numberNeeded: 1 //50 photos before completed
+      },
+      {
+        needName: "Dessert",
+        situation: {
+          detector: DETECTORS.restaurant._id,
+          number: 1 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Can you take a photo of what you're dessert?"
+        },
+        numberNeeded: 1 //50 photos before completed
       }
+
     ],
     description: "Complete a menu!",
     notificationText: "Complete a menu!",

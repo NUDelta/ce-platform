@@ -307,8 +307,8 @@ def allUsersLib():
 
 if __name__ == "__main__":
     #allUsersGrocery()
-	#allUsersAtRestaurant()
-	allUsersLib()
+	allUsersAtRestaurant()
+	#allUsersLib()
     #garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()
