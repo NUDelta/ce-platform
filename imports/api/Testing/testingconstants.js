@@ -2925,7 +2925,7 @@ let EXPERIENCES = {
           number: 1 //At least 2 should be there
         },
         toPass: {
-          instruction: "Take a picture of your appetizer  "
+          instruction: "Take a picture of your appetizer"
         },
         numberNeeded: 1 //50 photos before completed
       },
