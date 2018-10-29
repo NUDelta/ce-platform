@@ -15,7 +15,7 @@ Development build is nice to develop the mobile app, connected to a local server
 2. From the ce-platform directory, run `npm run build-dev 3000 192.168.X.Y` or equivalently `meteor run ios-device -p 3000 --mobile-server=http://{ipaddress}:3000`
 3. At some point, the previous command will have opened an xcodeproject, which lives at `ce-platform/.meteor/local/cordova-build/platforms/ios`. Navigate there by typing `cd ce-platform/.meteor/local/cordova-build/platforms/ios`.
 4. `pod install` to install dependencies.
-5. `open ce-platform.xcworkspace` to open the workspace file, which will have the pod dependencies linked. You can close the `Cerebro.xcodeproject file now.
+5. `open Cerebro.xcworkspace` to open the workspace file, which will have the pod dependencies linked. You can close the `Cerebro.xcodeproject file now.
 6. Change bundle identifier to `edu.northwestern.delta.ce-platform`
 7. Get the "CE Platform" provisioning profile from developer.apple.com and import the profile into xcode. You can do this by dragging the *.mobileprovision file onto the xcode icon, or by going to General > Signing (Debug or Release) > Import Profile...
 8. Set the Provisioning Profile to "CE Platform"
