@@ -1708,23 +1708,388 @@ let sendNotificationFoodFight = function (sub) {
   notify(uids, sub.iid, 'Wooh! Both participants have attacked each other with food pics', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
-const sendNotificationTwoHalvesCompleted = function(sub) {
-  console.log("Another pair of halves completed a photo");
+// const sendNotificationTwoHalvesCompleted = function(sub) {
+//   console.log("Another pair of halves completed a photo");
+//
+//   let submissions = Submissions.find({
+//     iid: sub.iid,
+//     needName: sub.needName
+//   }).fetch();
+//
+//   let participants = submissions.map((submission) => { return submission.uid; });
+//
+//   notify(participants, sub.iid,
+//     `Two people completed a half half photo`,
+//     `See the results under ${sub.needName}`,
+//     '/apicustomresults/' + sub.iid + '/' + sub.eid);
+// };
 
-  let submissions = Submissions.find({
-    iid: sub.iid,
-    needName: sub.needName
-  }).fetch();
-
-  let participants = submissions.map((submission) => { return submission.uid; });
-
-  notify(participants, sub.iid,
-    `Two people completed a half half photo`,
-    `See the results under ${sub.needName}`,
-    '/apicustomresults/' + sub.iid + '/' + sub.eid);
+let update_chapter_map = function (chapter_title, next_chapter_title) {
+    chapter_map.chapter_title = next_chapter_title;
 };
 
+let chapter_map;
+
+function Setting(name, contexts) {
+    this.name = name;
+    this.contexts = contexts;
+}
+
+function Chapter(title, setting, characters, objects) {
+    this.title = title;
+    this.setting = setting;
+    this.characters = characters;
+    this.objects = objects || [];
+    this.find_participants_for_character = find_participants_for_character;
+}
+
+function Character(name, owner_chapters, owned_objects, actions, contexts, first_chapter_appearance) {
+    this.name = name;
+    this.owner_chapters = owner_chapters;
+    this.owned_objects = owned_objects || [];
+    this.actions = actions || {};   // map of arrays based on chapter
+    this.contexts = contexts || {}; // map of chapter_title to list of contexts
+    this.current_participant = null;
+    this.active_chapter = first_chapter_appearance;
+}
+
+
+function Action(description, change_character_and_object, priority) {
+    this.description = description;
+    this.change_character_and_object = change_character_and_object;
+    this.priority = priority;
+}
+
+function Object(name, owner, first_chapter_appearance) {
+    this.name = name;
+    this.owner = owner || null;
+    this.active_chapter = first_chapter_appearance;
+}
+
+let find_participants_for_chapter = function (setting) {
+    // query database
+};
+
+let find_participants_for_character = function (character, chapter) {
+    var setting = new Setting(character.context[chapter]);
+    // query database
+};
+
+let update_chapter_context = function (chapters) {
+    // add chapter-specific context
+    for (var i = 0; i < chapters.length; i++) {
+        chapter = chapters[i];
+        for (var j = 0; j < chapter.characters.length; j++) {
+            chapter.characters[j].contexts[chapter.title] += chapter.setting.contexts;
+        }
+    }
+}
+
+let update_character_context = function (character, chapter, contexts) {
+    var chapter_title = chapter.title;
+    // add character-specific context for this chapter
+    character.contexts[chapter_title] += " && " + contexts;
+};
+
+let add_action_to_character = function (character, chapter, action) {
+    character.actions[chapter.title].push(action);
+};
+
+function writeNarrative() {
+    // create setting
+    var Common_Room = new Setting("Common ROOM", "grocery" /* "Common Room", "inside_a_building || in_a_school_building" */);
+    var Bedroom = new Setting("bedroom", "grocery" /* "Bedroom", "inside_a_building || in_a_dorm" */);
+
+    // create character
+    var bottle = new Object("bottle", "hermione", "1");
+    var health = new Object("health", "ron", "2B");
+    // name, chapters, objects, actions, contexts, first appearance
+    var harry = new Character("harry", ["1", "2A"], [],
+        {"1" : [], "2A" : [], "2B" : []}, {"1" : "", "2A" : "", "2B" : ""}, "1");
+    var ron = new Character("ron", ["2B"], [],
+        {"1" : [], "2A" : [], "2B" : []}, {"1" : "", "2A" : "", "2B" : ""}, "2B");
+    var hermione = new Character("hermione", ["1", "2B"], [],
+        {"1" : [], "2A" : [], "2B" : []}, {"1" : "", "2A" : "", "2B" : ""}, "1");
+
+    // create chapter
+    var chapter_one = new Chapter("1", Common_Room, [harry, hermione], [bottle]);
+    var chapter_twoA = new Chapter("2A", Bedroom, [harry], []);
+    var chapter_twoB = new Chapter("2B", Common_Room, [harry, ron, hermione], []);
+
+    // update context
+    update_chapter_context([chapter_one, chapter_twoA, chapter_twoB]);
+    /*
+    update_character_context(harry, chapter_one, "sitting_by_table");
+    update_character_context(harry, chapter_twoA, "sitting_by_bed");
+    update_character_context(hermione, chapter_one, "has_a_bottle");
+    update_character_context(ron, chapter_twoB, "sitting_by_table");
+    */
+
+    // update action
+    let a1_give_harry_bottle = function () {
+        bottle.owner = "harry";
+        harry.owned_objects.push(bottle);
+    };
+
+    let a1_take_potion_to_bed = function () {
+        update_chapter_map("1", "2");
+    };
+
+    let a1_leave_potion_on_table = function () {
+        bottle.owner = null;
+        harry.owned_objects.remove(bottle);
+        update_chapter_map("1", "2B");
+    };
+
+    let a2_leave_bedroom = function () {
+        bottle.owner = null;
+        harry.owned_objects.remove(bottle);
+    };
+
+    let a2B_drink_potion_bottle = function () {
+        health.owner = null;
+        ron.owned_objects.remove(health);
+    };
+
+    let a2B_rush_ron_outside = function () {
+        hermione.active_chapter = "3B";
+        ron.active_chapter = "3B";
+    };
+
+    let a2B_take_potion_to_class = function () {
+        bottle.owner = "harry";
+        harry.owned_objects.push(bottle);
+    };
+
+    add_action_to_character(harry, chapter_one, new Action("Take potion bottle with him to bed", a1_take_potion_to_bed, 1));
+    add_action_to_character(harry, chapter_one, new Action("Leave potion bottle on table", a1_leave_potion_on_table, 1));
+    add_action_to_character(harry, chapter_twoA, new Action("Leave the bedroom", a2_leave_bedroom, 0));
+    add_action_to_character(harry, chapter_twoB, new Action("Takes potion bottle with him to class", a2B_take_potion_to_class, 2));
+
+    add_action_to_character(ron, chapter_twoB, new Action("Drinks out of potion bottle", a2B_drink_potion_bottle, 0));
+
+    add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion bottle", a1_give_harry_bottle, 0));
+    add_action_to_character(hermione, chapter_twoB, new Action("Rush Ron outside", a2B_rush_ron_outside, 1));
+
+    return chapter_one;
+}
+
+function convertChapterToExperience(chapter) {
+  // total list of actions that will be completed in the chapter
+
+  console.log("DEBUG [creating chapter actions]");
+  let chapterActions = [];
+
+  for (let character of chapter.characters) {
+   for (let action of character.actions[chapter.title]) {
+         chapterActions.push(new Action(action.description, Random.id(), action.priority));
+         console.log("DEBUG action description = " + action.description);
+         console.log("DEBUG action priority = " + action.priority);
+     }
+  }
+  // find the first action
+  let first_action = chapterActions[0];
+  let max_priority_allowed = 0;
+  console.log("DEBUG first_action created = " + first_action.description);
+
+  for (let action of chapterActions) {
+   if (action.priority < first_action.priority) {
+     first_action = action;
+   }
+   if (action.priority > max_priority_allowed) {
+     max_priority_allowed = action.priority;
+   }
+  }
+  console.log("DEBUG first_action updated = " + first_action.description);
+  console.log("DEBUG max_priority_allowed = " + max_priority_allowed);
+
+  //need a way to keep number of already completed actions
+  let number_of_actions_done = 0;
+
+  chapterActions = chapterActions.filter(function(x) {
+      return x.priority == number_of_actions_done;
+  });
+
+  console.log("DEBUG chapterAction size updated = " + chapterActions.length);
+
+  console.log("DEBUG [creating send notification]");
+  let sendNotification = function(sub) {
+      let uids = Submissions.find({ iid: sub.iid }).fetch().map(function(x) {
+          return x.uid;
+      });
+      notify(
+          uids,
+          sub.iid,
+          "Chapter 1 is complete. Find out what happened here!",
+          "",
+          "/apicustomresults/" + sub.iid + "/" + sub.eid
+      );
+  };
+
+  console.log("DEBUG [creating callback]");
+  let hpStoryCallback = function(sub) {
+      console.log("DEBUG in callback");
+      var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
+      Meteor.users.update(
+          {_id: sub.uid},
+          {$set: {newSet : true}}
+          );
+      // an action has now been performed
+      number_of_actions_done += 1;
+      //not sure if this is still needed
+      let affordance = sub.content.affordance;
+      // takes the list of actions within the chapter
+      let options = chapterActions;
+      // filters out all the actions that cannot be done at the moment
+      options = options.filter(function(x) {
+          return x[2] == number_of_actions_done;
+      });
+      // which action in the chapter is being completed
+      let needName = "Action" + Random.id(3);
+      if (cb.numberOfSubmissions() === 2) {
+          needName = "pageFinal";
+      }
+      //finding the character of the action
+      let next_action = options[0];
+      let next_character;
+      for (let character of chapter.characters) {
+        for (let action of character.actions[chapter.title]) {
+          if (action.description == next_action.description) {
+            next_character = character;
+          }
+        }
+      }
+      let contribution = {
+          needName: needName,
+          situation: { detector: affordance, number: "1" },
+          toPass: {
+              characterName: next_character.name,
+              instruction:  sub.needName,
+              dropdownChoices: {
+                  name: "affordance",
+                  options: [chapterActions[0], DETECTORS.grocery._id]
+              }
+          },
+          numberNeeded: 1
+      };
+      addContribution(sub.iid, contribution);
+  };
+
+  console.log("DEBUG [creating character contexts]");
+  var character_contexts = [];
+
+  for (let character of chapter.characters) {
+      let character_context = [character.contexts[chapter.title], character.name];
+      console.log("DEBUG character context = " + character_context[0]);
+      console.log("DEBUG character name = " + character_context[1]);
+      character_contexts.push(character_context);
+  }
+  console.log("DEBUG character contexts size = " + character_contexts.length);
+
+  console.log("DEBUG [creating experience]");
+  let experience = {
+      name: "Harry Potter story chapter " + chapter.title,
+      participateTemplate: "Harry_Potter_Story",
+      resultsTemplate: "Harry_Potter_Story_Result",
+      contributionTypes: [],
+      description: "You are invited to participate in Harry Potter story",
+      notificationText: "You are invited to participate in Harry Potter story",
+      callbacks: [
+        {
+            //trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= " + max_priority_allowed + ")",
+            trigger: "cb.newSubmission()",
+            function: hpStoryCallback.toString()
+        },
+        {
+            trigger: "cb.incidentFinished()",
+            function: sendNotification.toString() //start the next chapter
+        }
+      ]
+  };
+  console.log("DEBUG experience name = " + experience.name);
+  console.log("DEBUG experience resultsTemplate = " + experience.resultsTemplate);
+  console.log("DEBUG experience contributionTypes size = " + experience.contributionTypes.length);
+  console.log("DEBUG experience description = " + experience.description);
+  console.log("DEBUG experience notificationText = " + experience.notificationText);
+  console.log("DEBUG experience callbacks size = " + experience.callbacks.length);
+
+  // set up detectors
+  console.log("DEBUG [creating detectors]");
+  let detectorIds = [
+      "oFCWkpZ3MSdXXyKbu",
+      "oFCWkpZ3MSdXXyKbb"
+  ];
+  let i = 0;
+  _.forEach(character_contexts, character_context => {
+      let newVars = JSON.parse(
+          JSON.stringify(DETECTORS[character_context[0]]["variables"])
+      );
+      newVars.push("var participatedInPotterNarrative" + chapter.title + ";");
+
+      let detector = {
+          '_id': detectorIds[i],
+          'description': DETECTORS[character_context[0]].description + "_PotterNarrative_" + chapter.title,
+          'variables': newVars,
+          'rules': [
+              "(" + DETECTORS[character_context[0]].rules[0] +
+              " ) && participatedInPotterNarrative" + chapter.title + ";"]
+      };
+      console.log("DEBUG detector [" + i + "]");
+      console.log("DEBUG id = " + detector._id);
+      console.log("DEBUG description = " + detector.description);
+      console.log("DEBUG variables = " + detector.variables);
+      console.log("DEBUG rules = " + detector.rules[0]);
+
+      // DETECTORS[character_context[0]] = detector;
+      Detectors.insert(detector, (err, docs) => {
+        if (err) {
+          console.log("ERROR");
+          console.log("error = " + err);
+        } else {
+          console.log("Detector added -");
+          console.log("docs = " + docs);
+        }
+      });
+
+      let first_character;
+      for (let character of chapter.characters) {
+          for (let action of character.actions[chapter.title]) {
+              if (action.description == first_action.description) {
+                  first_character = character;
+              }
+          }
+      }
+
+      if (i == 0) {
+        // insert first need
+        let need = {
+          needName: first_action.description, //should be the title of the action
+          situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
+          toPass: {
+              characterName: first_character.name,
+              instruction: "Please choose from the following list of actions",
+              firstSentence: chapter.title,
+              dropdownChoices: {
+                  name: "affordance",
+                  options:  [[first_action.description, DETECTORS.grocery._id]]
+              }
+          },
+          numberNeeded: 1
+        };
+        experience.contributionTypes.push(need);
+      }
+      i++;
+  });
+  // Experiences.insert(["HPStory": exp]);
+  //let incident = createIncidentFromExperience(exp);
+  //startRunningIncident(incident);
+  return experience;
+}
+
+let chapterOne = writeNarrative();
+
 let EXPERIENCES = {
+  hpstory : convertChapterToExperience(chapterOne) /*,
   bumped: createBumped(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
@@ -2907,15 +3272,15 @@ let EXPERIENCES = {
         trigger: "cb.incidentFinished()",
         function: sendNotificationFoodFight.toString()
     }]
-  }
+  } */
 };
 
 export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
   // Comment out if you would like to only test specific experiences
-  // 'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
-  'EXPERIENCES': EXPERIENCES,
+  'EXPERIENCES': (({ hpstory }) => ({ hpstory }))(EXPERIENCES),
+  //'EXPERIENCES': EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 

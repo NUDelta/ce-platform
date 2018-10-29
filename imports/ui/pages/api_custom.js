@@ -48,7 +48,6 @@ Template.storyPage.helpers({
   }
 });
 
-<<<<<<< HEAD
 Template.Harry_Potter_Story.helpers({
     dropdownData() {
         console.log(this.toPass.dropdownChoices);
@@ -56,8 +55,6 @@ Template.Harry_Potter_Story.helpers({
     },
 });
 
-=======
->>>>>>> master
 Template.bumped.helpers({
 
   nameOfFriend() {
@@ -446,7 +443,7 @@ Template.api_custom.events({
     console.log("form was submitted");
 
     //this makes the loading circle show up
-    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
+    //event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
     const experience = this.experience;

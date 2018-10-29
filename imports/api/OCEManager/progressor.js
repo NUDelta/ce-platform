@@ -54,11 +54,8 @@ export const updateSubmission = function(submission) {
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
 function runCallbacks(mostRecentSub) {
-<<<<<<< HEAD:imports/api/submissions/methods.js
   console.log("running runCallBacks");
-=======
   // need `cb` since all the callbacks called in the eval references this manager
->>>>>>> master:imports/api/OCEManager/progressor.js
   let cb = new CallbackManager(mostRecentSub);
 
   let callbackArray = Incidents.findOne(mostRecentSub.iid).callbacks;
@@ -126,6 +123,34 @@ class CallbackManager {
       }).count();
     }
   }
+
+  /**
+   * Assumes that submission takes the schema
+   * {
+   *  iid:
+   *  user:
+   *  info: {
+   *    sentence: "Fine, here is the sword."
+   *    action: true
+   *  }
+   * }
+   * @param chapterName
+   */
+    chapterEnd(chapterName) {
+      // check if recent submission is the end of a chapter
+      if (this.submission.info.action === true) {
+        return true;
+      }
+
+      return false;
+
+      // the process of searching through the database of submissions for the one with the matching iid
+      // return Submissions.find({
+      //   iid: this.submission.iid,
+      //   needName: chapterName,
+      //   uid: { $ne: null }
+      // })
+    }
 
   //trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future
   timeSinceFirstSubmission(need) {
