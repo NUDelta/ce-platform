@@ -1,3 +1,8 @@
+function Setting(name, contexts) {
+    this.name = name;
+    this.contexts = contexts;
+}
+
 function Chapter(story, setting, characters, objects, endCondition, progressCondition) {
     this.story = story;
     this.setting = setting;
@@ -7,6 +12,33 @@ function Chapter(story, setting, characters, objects, endCondition, progressCond
     this.lines = [];
     this.action = null;
     //a chapter ends when an action is committed, or when someone that has accepted to participate leaves
+}
+
+function Character(name, owner_chapters, owned_objects, actions, contexts, first_chapter_appearance) {
+    this.name = name;
+    //this.owner_chapters = owner_chapters;
+    this.owned_objects = owned_objects || [];
+    //this.actions = actions || {};   // map of arrays based on chapter
+    this.contexts = contexts || {}; // map of chapter_title to list of contexts
+    this.current_participant = null;
+    //this.active_chapter = first_chapter_appearance;
+}
+
+
+function Action(description, object, repercussions) {
+    this.object = object
+    this.description = description;
+    this.repercussions = repercussions;
+    //this.change_character_and_object = change_character_and_object;
+    //this.priority = priority;
+}
+
+function Object(name, owner, actions) {
+    this.name = name;
+    this.owner = owner || null;
+    //this.active_chapter = first_chapter_appearance;
+    this.actions = actions
+    this.actions.append(giveAway)
 }
 
 function endCondition {numSubs, timePassed, unique) {
@@ -45,7 +77,7 @@ chapterEnd(chapterName) {
 
   return false;
 
-  //example finding a particular submission 
+  //example finding a particular submission
   return Submissions.find({
     iid: this.submission.iid,
     needName: chapterName,
