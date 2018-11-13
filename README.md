@@ -31,8 +31,8 @@ For a quick script that does the meteor build and sets up the xcworkspace, see t
 2. Run `npm run build` to generate the Xcode project.
     1. Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
     2. *Note*: if this fails with an error saying that `dezalgo` module cannot be found, run `meteor npm i -g write-file-atomic path-is-inside async-some dezalgo`.
-    3. *Note*: if this fails with an error saying that `EACCES: permission denied` for one of the Pods in ce-platform-ios, you should try removing or moving the folder `../ce-platform-ios` to start a fresh build.
-3. Navigate to `../ce-platform-ios/ios/project` and run `pod install` to install needed dependencies. 
+    3. *Note*: if this fails with an error saying that `EACCES: permission denied` for one of the Pods in ce-platform-ios, you should try removing or moving the folder `../Cerebro-ios` to start a fresh build.
+3. Navigate to `../Cerebro-ios/ios/project` and run `pod install` to install needed dependencies. 
 
 ### Creating an .ipa File
 #### Setup
@@ -54,10 +54,10 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
 
 #### Export
-1. Navigate to `../ce-platform-ios/ios/project` and open the `.xcworkspace`. 
+1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`. 
 2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`). 
 3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
-4. The `.ipa` can be found in the `ce-platform-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
+4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
 
 
 
