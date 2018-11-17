@@ -2916,40 +2916,41 @@ let EXPERIENCES = {
     _id: Random.id(),
     name: "Complete a menu!",
     participateTemplate: "scavengerHuntParticipate",
+    timeToExpire: 123,
     resultsTemplate: "scavengerHunt",
     contributionTypes: [
       {
         needName: "Appetizer",
         situation: {
           detector: DETECTORS.restaurant._id,
-          number: 1 //At least 2 should be there
+          number: 2 //At least 2 should be there
         },
         toPass: {
           instruction: "Take a picture of your appetizer"
         },
-        numberNeeded: 1 //50 photos before completed
+        numberNeeded: 50 //50 photos before completed
       },
       {
         needName: "Main",
         situation: {
           detector: DETECTORS.restaurant._id,
-          number: 1 //At least 2 should be there
+          number: 2 //At least 2 should be there
         },
         toPass: {
           instruction: "Can you take a photo of what you're main?"
         },
-        numberNeeded: 1 //50 photos before completed
+        numberNeeded: 50 //50 photos before completed
       },
       {
         needName: "Dessert",
         situation: {
           detector: DETECTORS.restaurant._id,
-          number: 1 //At least 2 should be there
+          number: 2 //At least 2 should be there
         },
         toPass: {
           instruction: "Can you take a photo of what you're dessert?"
         },
-        numberNeeded: 1 //50 photos before completed
+        numberNeeded: 50 //50 photos before completed
       }
 
     ],

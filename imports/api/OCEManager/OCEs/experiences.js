@@ -93,6 +93,10 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Experience name',
   },
+  timeToExpire: { //developer input of expiration time
+    type: Number, //Microsecond
+    optional: true,
+  },
   participateTemplate: {
     type: String,
   },
@@ -138,6 +142,15 @@ Schema.Incident = new SimpleSchema({
   eid: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+  },
+  timeToExpire: { //developer input of expiration time
+    type: Number, //Microsecond
+    optional: true,
+  },
+  firstSubmissions: {
+    type: Date,
+    defaultValue: null,
+    optional: true
   },
   contributionTypes: {
     type: [Schema.NeedType],

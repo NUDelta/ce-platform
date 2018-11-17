@@ -22,7 +22,11 @@ def followPath(path, uid):
 	    time.sleep(1)
 
 def setLocation(location, uid):
-	r = requests.post("http://localhost:3000/api/geolocation", json={
+
+	local = "http://localhost:3000/"
+	herok = "https://staging-ce-platform.herokuapp.com/"
+	
+	r = requests.post(local + "api/geolocation", json={
 	            "userId": uid,
 	            "location": {
 	                "coords": {

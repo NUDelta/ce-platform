@@ -48,7 +48,38 @@ export const updateSubmission = function(submission) {
         console.log("submission not inserted", err);
       }
     }
-  );
+  )
+
+  inc = Incidents.findOne(
+    submission.iid
+    // , function(inc){
+    //   if(inc.firstSubmissions === undefined || inc.firstSubmissions === null ){
+    //     console.log(submission)
+    //     // Incidents.update(
+    //     //   {
+    //     //     _id : submission.iid
+    //     //   },
+    //     //   {
+    //     //     $set: {firstSubmissions : submission.timestamp}
+    //     //   }
+    //     // )
+    //   }
+    // }
+  )
+
+      if(inc.firstSubmissions === undefined || inc.firstSubmissions === null ){
+        console.log(inc)
+        console.log(submission)
+        Incidents.update(
+          {
+            _id : submission.iid
+          },
+          {
+            $set: {firstSubmissions : submission.timestamp}
+          }
+        )
+      }
+  
 };
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5

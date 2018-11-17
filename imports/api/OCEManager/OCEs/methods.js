@@ -369,6 +369,7 @@ export const createIncidentFromExperience = (experience) => {
   let incident = {
     eid: experience._id,
     callbacks: experience.callbacks,
+    timeToExpire: experience.timeToExpire, //add timetoexpire
     contributionTypes: experience.contributionTypes,
   };
 
