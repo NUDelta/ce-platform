@@ -4,7 +4,7 @@ import { log, serverLog } from '../../api/logs.js';
 
 Push.Configure({
   android: {
-    senderID: 12341234,
+    senderID: 937875917515,
     alert: true,
     badge: true,
     sound: true,
