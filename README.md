@@ -60,8 +60,17 @@ Push notifications are currently configured to work with the Enterprise A certif
 4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
 
 
+### Android Development
 
-## Development Guidelines & Styles
+0. Get the neccessary Android dependencies according to Meteor Mobile
+1. npm run build-dev-android $PORT $IP 
+    a. [Enable Android device for development, and enable USB debugging](http://techapple.net/2015/12/enable-developer-optionsusb-debugging-android/)
+    b. Had to change the build.gradle file, so that maven google was above the jcenter commands ([see more](https://stackoverflow.com/questions/50562212/gradle-build-tool-cannot-find-play-services-tasks-aar-why))
+    c. Plugin issues with phonegap-plugin-push, I had to remove node_modules, the platforms folder, and the reinstall with npm install. ([see more](https://stackoverflow.com/questions/51345214/ionic-adding-plugin-fails-because-it-already-exists-removing-plugin-fails-bec))
+ 
+Lots of the Android specific files live here: `cd .meteor/local/cordova-build/platforms/android`
+
+### Development Guidelines & Styles
 Please read through and follow these guidelines while contributing code to this project.
 
 ### Dev Tips and Tricks
