@@ -181,4 +181,5 @@ function createTestData(){
   });
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
+  //log.debug('uid1 ' + Meteor.users.find({_id: uid1})).username;
 }
