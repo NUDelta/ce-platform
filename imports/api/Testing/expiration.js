@@ -2,6 +2,7 @@
 // Command to add hours to IsoDate     date.setHours(12+x);     where x is number of hours added
 // Compare ISODate Objects         var diff = date1 - date2; (If date1 is later than date2, diff will be positive)
 // Current ISODATE.   var today = new Date();
+// Get Experiences   db.experiences.find({uid: {$ne: null}})
 
 // Need function to find first-submission of an experience
 function checkExperiences(){
@@ -41,6 +42,7 @@ function checkExperiences(){
 		var submissionID = idMap[keyArr[i]];
 		if(checkExpired(timeToExpiration,submissionID)){
 			print("Submission ID "+ submissionID + " from experience ID "+  keyArr[i] + " is an expired experience!");
+			updateExperience(keyArr[i]);
 		}
 		else{
 			print("Submission ID "+ submissionID + "from experience ID " +  keyArr[i] + " is valid.");
@@ -58,14 +60,19 @@ function checkExpired(timeToExpiration, submissionID){
 	expirationDate.setHours(offset+timeToExpiration);
 	var today = new Date();
 	var expired = (today-expirationDate)>0;
+	// expired = true; -> Used for running tests
 	return expired;
 }
 
+function updateExperience(experienceID){
+	print("Updating Experience with new detector");
+	db.experiences.update({_id: experienceID},{$set: {"contributionTypes.0.situation.detector" : "DETECTOR_ID_HERE"}});
+}
+
+// Example Update:     db.experiences.update({_id: id},{$set: {"contributionTypes.0.situation.detector" : "DETECTOR_ID_HERE"}})
 
 
-// Pseudo cron-job that runs script every 10 minutes
-window.setInterval(function(){
-	checkExperiences();
-}, 600000);
+
+
 
 
