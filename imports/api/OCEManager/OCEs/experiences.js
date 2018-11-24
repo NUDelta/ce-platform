@@ -103,6 +103,9 @@ Schema.Experience = new SimpleSchema({
   resultsTemplate: {
     type: String,
   },
+  detectors: { //Customize list of detectors
+    type: String,
+  },
   contributionTypes: {
     type: [Schema.NeedType],
   },

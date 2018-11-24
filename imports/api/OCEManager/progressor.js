@@ -66,7 +66,7 @@ export const updateSubmission = function(submission) {
     //   }
     // }
   )
-
+  
       if(inc.firstSubmissions === undefined || inc.firstSubmissions === null ){
         console.log(inc)
         console.log(submission)
