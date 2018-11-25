@@ -370,6 +370,7 @@ export const createIncidentFromExperience = (experience) => {
     eid: experience._id,
     callbacks: experience.callbacks,
     timeToExpire: experience.timeToExpire, //add timetoexpire
+    detectors: experience.detectors, //add detectors
     contributionTypes: experience.contributionTypes,
   };
 

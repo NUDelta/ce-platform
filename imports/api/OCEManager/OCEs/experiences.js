@@ -156,6 +156,10 @@ Schema.Incident = new SimpleSchema({
     defaultValue: null,
     optional: true
   },
+  detectors: { //Customize list of detectors
+    type: [String],
+    optional: true
+  },
   contributionTypes: {
     type: [Schema.NeedType],
     blackbox: true

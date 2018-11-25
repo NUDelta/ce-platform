@@ -2917,6 +2917,7 @@ let EXPERIENCES = {
     name: "Complete a menu!",
     participateTemplate: "scavengerHuntParticipate",
     timeToExpire: 123,
+    detectors: [DETECTORS.restaurant._id, DETECTORS.sunny._id],
     resultsTemplate: "scavengerHunt",
     contributionTypes: [
       {
