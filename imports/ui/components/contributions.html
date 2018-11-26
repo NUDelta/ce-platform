@@ -44,3 +44,66 @@
         {{/each}}
     </select>
 </template>
+
+<template name="message">
+  
+  <div class="message {{#if announcement}}announcement{{/if}}">
+    <div class="name">{{name}} <span class="timestamp">{{timestamp}}</span></div>
+    <div class="message-text">{{message}}{{#if announcement}} <img src="/tada.png" class="emoji" alt="tada">{{/if}}</div>
+  </div>
+  
+</template>
+
+
+<template name="chat">
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <title>Welcome to Live Chat with Meteor!</title>
+    </head>
+
+    <body>  
+      <div class="hint-box-container {{#if hideHint}}hidden{{/if}}">
+        <div class="hide-hint-button"></div>
+        <div class="hint-box">
+          <h2>Hint</h2>
+          <div>You can send messages anonymously or tell us your name. To set your name, just send a message saying "My name is _____" and we'll introduce you!</div>
+        </div>
+      </div>
+      
+      <div class="messages-box">
+        <div class="messages-scroll">
+          <div class="header">
+            <h1>Welcome to Meteor Live Chat!</h1>
+            <div>See this project on <a href="https://github.com/Pitchlyapp/meteor-live-chat">GitHub</a></div>
+          </div>
+          <div class="messages">
+            {{#if Template.subscriptionsReady}}
+              {{#each messages}}
+                {{> message}}
+              {{else}}
+                <div>Be the first to write a message!</div>
+              {{/each}}
+            {{else}}
+              {{> loader}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="new-message-container">
+        <form>
+          <input type="text" class="message-input" placeholder="Type your message here..."><button type="submit">Send</button>
+        </form>
+      </div>
+
+    </body>
+</template>
+
+<template name="loader">
+  
+  <svg class="loader" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px" height="50px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+    <path fill="#009fff" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"></path>
+  </svg>
+  
+</template>

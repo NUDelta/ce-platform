@@ -29,8 +29,8 @@ function Story(name, storyEndCondition, chapterEndCondition, characters, setting
   this.characters = characters;
   this.setting = setting;
   this.items = items;
-  initialize() {
-    new Chapter(setting, characters, objects)a
+  while (!storyEndCondition) {
+    let sub = new Chapter(this.setting, this.characters, this.objects, chapterEndCondition);
   }
 }
 
@@ -40,7 +40,7 @@ function Setting(name, contexts) {
 }
 
 
-function Chapter(setting, characters, objects) {
+function Chapter(setting, characters, objects, chapterEndCondition) {
     this.afk = false;
     this.setting = setting;
     this.characters = characters;

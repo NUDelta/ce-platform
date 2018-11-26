@@ -1806,11 +1806,11 @@ function writeNarrative() {
     var health = new Object("health", "ron", "2B");
     // name, chapters, objects, actions, contexts, first appearance
     var harry = new Character("harry", ["1", ], [],
-        {"1" : [], "2A" : [], "2B" : []}, {"1" : "test"}, "1");
+        {"1" : [], "2A" : [], "2B" : []}, {"1" : "grocery"}, "1");
     var ron = new Character("ron", ["2B"], [],
         {"1" : [], "2A" : [], "2B" : []}, {"1" : ""}, "2B");
     var hermione = new Character("hermione", ["1"], [],
-        {"1" : [], "2A" : [], "2B" : []}, {"1" : "test"}, "1");
+        {"1" : [], "2A" : [], "2B" : []}, {"1" : "grocery"}, "1");
 
     // create chapter
     var chapter_one = new Chapter("1", Common_Room, [harry, hermione], [bottle]);
@@ -1819,12 +1819,12 @@ function writeNarrative() {
 
     // update context
     //update_chapter_context([chapter_one, chapter_twoA, chapter_twoB]);
-    /*
-    update_character_context(harry, chapter_one, "sitting_by_table");
-    update_character_context(harry, chapter_twoA, "sitting_by_bed");
-    update_character_context(hermione, chapter_one, "has_a_bottle");
-    update_character_context(ron, chapter_twoB, "sitting_by_table");
-    */
+    
+    //update_character_context(harry, chapter_one, "grocery");
+    //update_character_context(harry, chapter_twoA, "sitting_by_bed");
+    //update_character_context(hermione, chapter_one, "grocery");
+    //update_character_context(ron, chapter_twoB, "sitting_by_table");
+    
 
     // update action
     let a1_give_harry_bottle = function () {
@@ -1869,7 +1869,7 @@ function writeNarrative() {
 
     //add_action_to_character(ron, chapter_twoB, new Action("Drinks out of potion bottle", a2B_drink_potion_bottle, 0));
 
-    //add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion bottle", a1_give_harry_bottle, 0));
+    add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion bottle", a1_give_harry_bottle, 0));
     //add_action_to_character(hermione, chapter_twoB, new Action("Rush Ron outside", a2B_rush_ron_outside, 1));
 
     let chapter_list = [];
@@ -1912,6 +1912,11 @@ function convertChapterToExperience(chapter) {
   //need a way to keep number of already completed actions
   let number_of_actions_done = 0;
 
+  //detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
+  //let CHAPTER_OPTIONS = _.zip(dropdownText, detectorIds);
+
+  let CHAPTER_OPTIONS = _.zip(chapterActions);
+
   chapterActions = chapterActions.filter(function(x) {
       return x.priority == number_of_actions_done;
   });
@@ -1932,6 +1937,7 @@ function convertChapterToExperience(chapter) {
           "/apicustomresults/" + sub.iid + "/" + sub.eid
       );
   };
+  
 
 
   console.log("DEBUG [creating callback]");
@@ -1939,8 +1945,8 @@ function convertChapterToExperience(chapter) {
 
   let hpStoryCallback = function(sub) {
       //et chapter = chapter_one;
-      console.log("current chapter is " + chapter.title)
       console.log("DEBUG in callback");
+      //console.log("current chapter is " + chapter.title)
       var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
       Meteor.users.update(
           {_id: sub.uid},
@@ -1950,6 +1956,17 @@ function convertChapterToExperience(chapter) {
       //not sure if this is still needed
       let affordance = sub.content.affordance;
 
+      let options = eval('${JSON.stringify(CHAPTER_OPTIONS)}');
+
+      // options = options.filter(function(x) {
+      //   return x[2] === cb.numberOfSubmissions() && x[1] === affordance;
+      // });
+
+      options = options.filter(function(x) {
+        return x[1] === cb.numberOfSubmissions();
+      });
+
+      /*
       let chapterActions = [];
 
       for (let character of chapter.characters) {
@@ -1960,15 +1977,15 @@ function convertChapterToExperience(chapter) {
          }
       }
       let options = chapterActions;
+      */
 
 
       // takes the list of actions within the chapter
-      let number_of_actions_done = 1;
       // filters out all the actions that cannot be done at the moment
       console.log("past eval calls");
       console.log("options are " + options)
       options = options.filter(function(x) {
-          return x.priority == number_of_actions_done;
+          return x.priority == cb.numberOfSubmissions();
       });
       number_of_actions_done += 1;
       // which action in the chapter is being completed
@@ -2011,7 +2028,7 @@ function convertChapterToExperience(chapter) {
 
   for (let character of chapter.characters) {
       let character_context = [character.contexts[chapter.title], character.name];
-      console.log("DEBUG character context = " + character_context[0]);
+      console.log("DEBUG character context = " + character_context[0][0]);
       console.log("DEBUG character name = " + character_context[1]);
       character_contexts.push(character_context);
   }
@@ -2052,9 +2069,11 @@ function convertChapterToExperience(chapter) {
   ];
   let i = 0;
   _.forEach(character_contexts, character_context => {
+      console.log("character_context = " + character_context);
       let newVars = JSON.parse(
-          JSON.stringify(DETECTORS[character_context[0]])
+          JSON.stringify(DETECTORS[character_context[0]]['variables'])
       );
+      console.log("newVars = " + newVars[0]);
       newVars.push("var participatedInPotterNarrative" + chapter.title + ";");
 
       let detector = {
