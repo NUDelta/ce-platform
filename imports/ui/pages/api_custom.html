@@ -272,6 +272,57 @@
     </form>
 </template>
 
+<template name="narrativeLine">
+    <head>
+        <style>
+            #prevSentence {
+                padding-right: 8%;
+                padding-left: 8%;
+                padding-top: 3%;
+                text-align: center;
+                font-weight: 900;
+            }
+
+            #participate {
+                margin-left: -3%;
+                padding-top: 1%;
+            }
+        </style>
+    </head>
+    <!--<h4>Help us write a Harry Potter spin-off story</h4>-->
+    <h4>Help tell the story of {{this.experience.name}}</h4>
+    You are the character of <span style="color: #0351ff">{{this.toPass.characterName}}</span>.
+    Add your lines when you feel ready.
+    <form class="col col-xs-12" id="participate">
+        <!-- this section is going to display the previous story lines
+        <h4>Step 1</h4>
+        {{#if pageOne}}
+          Here is what has happened thus far:
+        {{else}}
+          {{#let user=(getUserById users this.toPass.previousUserId)}}
+            <div class="centered">
+              {{> displayTopToBottom_Avatar_FullName appendText="wrote:" user=user avatar=(userAvatarImg avatars user) }}
+            </div>
+          {{/let}}
+        {{/if}}
+        -
+        <p id="prevSentence">"{{this.toPass.instruction}}"</p>
+        -->
+
+        {{#if notLast}}
+            Speak up when you want to, OR choose an action from the options below.
+          <!-- old pre summer
+          {{> Template.dynamic template="dropdown" data="dropdownData"}}<br><br>
+        -->
+            {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
+            {{> Template.dynamic template="text" data="sentence"}}
+        {{/if}}
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
+        </button>
+    </form>
+</template>
+
 
 <template name="storyPage">
     <head>

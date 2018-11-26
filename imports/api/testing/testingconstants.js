@@ -1736,12 +1736,13 @@ function Setting(name, contexts) {
     this.contexts = contexts;
 }
 
-function Chapter(title, setting, characters, objects) {
+function Chapter(title, setting, characters, objects, chapterEndCondition) {
     this.title = title;
     this.setting = setting;
     this.characters = characters;
     this.objects = objects || [];
-    this.find_participants_for_character = find_participants_for_character;
+    //this.find_participants_for_character = find_participants_for_character;
+    //this.chapterEndCondition = chapterEndCondition;
 }
 
 function Character(name, owner_chapters, owned_objects, actions, contexts, first_chapter_appearance) {
@@ -1819,12 +1820,12 @@ function writeNarrative() {
 
     // update context
     //update_chapter_context([chapter_one, chapter_twoA, chapter_twoB]);
-    
+
     //update_character_context(harry, chapter_one, "grocery");
     //update_character_context(harry, chapter_twoA, "sitting_by_bed");
     //update_character_context(hermione, chapter_one, "grocery");
     //update_character_context(ron, chapter_twoB, "sitting_by_table");
-    
+
 
     // update action
     let a1_give_harry_bottle = function () {
@@ -1916,6 +1917,7 @@ function convertChapterToExperience(chapter) {
   //let CHAPTER_OPTIONS = _.zip(dropdownText, detectorIds);
 
   let CHAPTER_OPTIONS = _.zip(chapterActions);
+  let CHAPTER_CHARACTERS = _.zip(chapter.characters);
 
   chapterActions = chapterActions.filter(function(x) {
       return x.priority == number_of_actions_done;
@@ -1937,7 +1939,7 @@ function convertChapterToExperience(chapter) {
           "/apicustomresults/" + sub.iid + "/" + sub.eid
       );
   };
-  
+
 
 
   console.log("DEBUG [creating callback]");
@@ -1947,7 +1949,7 @@ function convertChapterToExperience(chapter) {
       //et chapter = chapter_one;
       console.log("DEBUG in callback");
       //console.log("current chapter is " + chapter.title)
-      var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
+      //var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
       Meteor.users.update(
           {_id: sub.uid},
           {$set: {newSet : true}}
@@ -1957,6 +1959,7 @@ function convertChapterToExperience(chapter) {
       let affordance = sub.content.affordance;
 
       let options = eval('${JSON.stringify(CHAPTER_OPTIONS)}');
+      let characters = eval('${JSON.stringify(CHAPTER_CHARACTERS)}');
 
       // options = options.filter(function(x) {
       //   return x[2] === cb.numberOfSubmissions() && x[1] === affordance;
@@ -1998,7 +2001,7 @@ function convertChapterToExperience(chapter) {
       let next_action = options[0];
       console.log("next action is " + options)
       let next_character;
-      for (let character of chapter.characters) {
+      for (let character of CHAPTER_CHARACTERS) {
         for (let action of character.actions[chapter.title]) {
           console.log("reached nested");
           if (action.description == next_action.description) {
@@ -2008,7 +2011,7 @@ function convertChapterToExperience(chapter) {
       }
       console.log("past setting next character");
       let contribution = {
-          needName: chapter.title,
+          needName: sub.content.title,
           situation: { detector: affordance, number: "1" },
           toPass: {
               characterName: next_character.name,
@@ -2133,7 +2136,7 @@ function convertChapterToExperience(chapter) {
       i++;
   });
 console.log("current chapter after loop " + chapter.title);
-  
+
   // Experiences.insert(["HPStory": exp]);
   //let incident = createIncidentFromExperience(exp);
   //startRunningIncident(incident);
