@@ -29,8 +29,9 @@ function Story(name, storyEndCondition, chapterEndCondition, characters, setting
   this.characters = characters;
   this.setting = setting;
   this.items = items;
-  while (!storyEndCondition) {
+  while (!storyEndCondition && ) {
     let sub = new Chapter(this.setting, this.characters, this.objects, chapterEndCondition);
+    convertChapterToExperience(sub);
   }
 }
 
