@@ -1966,7 +1966,7 @@ function convertChapterToExperience(chapter) {
       // });
 
       options = options.filter(function(x) {
-        return x[1] === cb.numberOfSubmissions();
+        return x[1] === cb.numberOfSubmissions(); //returns the options that have the correct priority
       });
 
       /*

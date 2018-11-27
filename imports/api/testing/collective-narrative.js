@@ -29,8 +29,9 @@ function Story(name, storyEndCondition, chapterEndCondition, characters, setting
   this.characters = characters;
   this.setting = setting;
   this.items = items;
+  count = 1;
   while (!eval(storyEndCondition) && ) {
-    let sub = new Chapter(this.setting, this.characters, this.objects, chapterEndCondition);
+    let sub = new Chapter(this.name + " Chapter " + count, this.setting, this.characters, this.objects, chapterEndCondition);
     convertChapterToExperience(sub);
   }
 }
@@ -41,7 +42,8 @@ function Setting(name, contexts) {
 }
 
 
-function Chapter(setting, characters, objects, chapterEndCondition) {
+function Chapter(name, setting, characters, objects, chapterEndCondition) {
+    this.name = name;
     this.afk = false;
     this.setting = setting;
     this.characters = characters;
