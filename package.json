@@ -16,7 +16,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
+    "build": "meteor build ../Cerebro-build  --server=staging-ce-platform.herokuapp.com",
+    "build-debug": "meteor build ../Cerebro-build  --debug --server=staging-ce-platform.herokuapp.com",
     "build-dev": "run(){ meteor run ios-device -p $1 --mobile-server=http://$2:$1; }; run",
     "build-dev-android": "run(){ meteor run android-device -p $1 --mobile-server=http://$2:$1; }; run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
