@@ -1965,9 +1965,9 @@ function convertChapterToExperience(chapter) {
       //   return x[2] === cb.numberOfSubmissions() && x[1] === affordance;
       // });
 
-      options = options.filter(function(x) {
-        return x[1] === cb.numberOfSubmissions(); //returns the options that have the correct priority
-      });
+      // options = options.filter(function(x) {
+      //   return x[1] === cb.numberOfSubmissions(); //returns the options that have the correct priority
+      // });
 
       /*
       let chapterActions = [];
@@ -1981,16 +1981,19 @@ function convertChapterToExperience(chapter) {
       }
       let options = chapterActions;
       */
+      console.log("options are " + JSON.stringify(options));
+      options = options.filter(function(x) {
+          console.log(cb.numberOfSubmissions());
+          console.log(x.priority);
+          return x[0].priority == cb.numberOfSubmissions();
+      });
 
-
+      console.log("options are " + JSON.stringify(options));
       // takes the list of actions within the chapter
       // filters out all the actions that cannot be done at the moment
       console.log("past eval calls");
-      console.log("options are " + options)
-      options = options.filter(function(x) {
-          return x.priority == cb.numberOfSubmissions();
-      });
-      number_of_actions_done += 1;
+      //console.log("options are " + options)
+      
       // which action in the chapter is being completed
       let needName = "Action" + Random.id(3);
       if (cb.numberOfSubmissions() === 2) {
@@ -1999,26 +2002,51 @@ function convertChapterToExperience(chapter) {
       //finding the character of the action
       console.log("past checking actions")
       let next_action = options[0];
-      console.log("next action is " + options)
-      let next_character;
-      for (let character of CHAPTER_CHARACTERS) {
-        for (let action of character.actions[chapter.title]) {
+      console.log("next action is " + JSON.stringify(next_action));
+      let next_character = characters[0];
+      for (let character of characters) {
+        console.log("reached loop");
+        console.log("character is " + JSON.stringify(character));
+        console.log("character is " + character[0].name);
+        for (let action of character[0].actions[1]) { //figure out way to get chapter number
           console.log("reached nested");
-          if (action.description == next_action.description) {
+          if (action.priority == next_action.priority) {
             next_character = character;
           }
         }
       }
+      let optionDescriptions = [];
+      for (let option of options) {
+        console.log("optionDescriptions" + JSON.stringify(option[0]));
+        optionDescriptions.push([option[0].description, option[0].priority]);
+      }
+      console.log("optionDescriptions" + JSON.stringify(optionDescriptions));
       console.log("past setting next character");
       let contribution = {
-          needName: sub.content.title,
+          needName: "test",
+          //DETECTORS[character_context[0]]._id
           situation: { detector: affordance, number: "1" },
           toPass: {
               characterName: next_character.name,
-              instruction:  sub.needName,
+              instruction:  "Please choose from the following list of actions",
+              firstSentence: sub.needName,
+              /*
+              chapterName: chapter.title,
+          needName: first_action.description, //should be the title of the action
+          situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
+          toPass: {
+              instruction: "Please choose from the following list of actions",
+              firstSentence: chapter.title,
               dropdownChoices: {
                   name: "affordance",
-                  options: options
+                  options:  [[first_action.description, DETECTORS.grocery._id]]
+              }
+          },
+          numberNeeded: 1
+              */
+              dropdownChoices: {
+                  name: "affordance",
+                  options: optionDescriptions
               }
           },
           numberNeeded: 1
@@ -2031,9 +2059,10 @@ function convertChapterToExperience(chapter) {
 
   for (let character of chapter.characters) {
       let character_context = [character.contexts[chapter.title], character.name];
-      console.log("DEBUG character context = " + character_context[0][0]);
+      console.log("DEBUG Character = " + JSON.stringify(character_context));
+      console.log("DEBUG character context = " + character_context[0]);
       console.log("DEBUG character name = " + character_context[1]);
-      character_contexts.push(character_context);
+      character_contexts.push(character_context[0]);
   }
   console.log("DEBUG character contexts size = " + character_contexts.length);
 
@@ -2072,19 +2101,19 @@ function convertChapterToExperience(chapter) {
   ];
   let i = 0;
   _.forEach(character_contexts, character_context => {
-      console.log("character_context = " + character_context);
+      console.log("character_context = " + JSON.stringify(character_context));
       let newVars = JSON.parse(
-          JSON.stringify(DETECTORS[character_context[0]]['variables'])
+          JSON.stringify(DETECTORS[character_context]['variables'])
       );
-      console.log("newVars = " + newVars[0]);
+      console.log("newVars = " + newVars);
       newVars.push("var participatedInPotterNarrative" + chapter.title + ";");
 
       let detector = {
           '_id': detectorIds[i],
-          'description': DETECTORS[character_context[0]].description + "_PotterNarrative_" + chapter.title,
+          'description': DETECTORS[character_context].description + "_PotterNarrative_" + chapter.title,
           'variables': newVars,
           'rules': [
-              "(" + DETECTORS[character_context[0]].rules[0] +
+              "(" + DETECTORS[character_context].rules[0] +
               " ) && !participatedInPotterNarrative" + chapter.title + ";"]
       };
       console.log("DEBUG detector [" + i + "]");
@@ -2116,9 +2145,11 @@ function convertChapterToExperience(chapter) {
       if (i == 0) {
         // insert first need
         let need = {
+          chapterName: chapter.title,
           needName: first_action.description, //should be the title of the action
-          situation: {detector: DETECTORS[character_context[0]]._id, number: "1"},
+          situation: {detector: DETECTORS[character_context]._id, number: "1"},
           toPass: {
+              chapterName: chapter.title,
               characterName: first_character.name,
               instruction: "Please choose from the following list of actions",
               firstSentence: chapter.title,

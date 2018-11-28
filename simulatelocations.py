@@ -315,7 +315,7 @@ def allUsersGrocery():
     print("all users at grocery")
 
 if __name__ == "__main__":
-    allUsersGrocery()
-    #garrettAndMegBump()
+#allUsersGrocery()
+    garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()
