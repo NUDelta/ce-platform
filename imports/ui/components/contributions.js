@@ -1,6 +1,6 @@
 import { Template } from 'meteor/templating';
 import { Cookies } from 'meteor/mrt:cookies';
-import { Messages } from '../api/collections.js';
+import { Messages } from '../api/messages/messages.js';
 import moment from 'moment';
 import './contributions.html';
 import './loader.html';

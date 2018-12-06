@@ -15,6 +15,7 @@ import { Users } from '../../api/UserMonitor/users/users.js';
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Submissions } from '../../api/OCEManager/currentNeeds.js';
 import { Images } from '../../api/ImageUpload/images.js';
+import { Messages } from '../../api/messages/messages.js';
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
