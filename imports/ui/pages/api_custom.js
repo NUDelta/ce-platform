@@ -3,6 +3,7 @@ import '../components/contributions.html';
 import '../components/loading_overlay.html';
 import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
+import '../components/contributions.js';
 
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -439,7 +440,9 @@ Template.api_custom.onCreated(() => {
 });
 
 Template.api_custom.events({
-  'submit form'(event, instance) {
+  
+  'submit #participate'(event, instance) {
+    debugger; 
     event.preventDefault();
     console.log("form was submitted");
 
@@ -571,4 +574,5 @@ Template.api_custom.events({
   'change input[name=photo]'(event, target) {
     photoUpload(event);
   },
+  
 });

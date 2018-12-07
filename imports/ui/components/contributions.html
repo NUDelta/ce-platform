@@ -49,27 +49,19 @@
   
   <div class="message {{#if announcement}}announcement{{/if}}">
     <div class="name">{{name}} <span class="timestamp">{{timestamp}}</span></div>
-    <div class="message-text">{{message}}{{#if announcement}} <img src="/tada.png" class="emoji" alt="tada">{{/if}}</div>
+    <div class="message-text">{{message}}</div>
   </div>
   
 </template>
 
 
 <template name="chat">
-    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-      <title>Welcome to Live Chat with Meteor!</title>
-    </head>
 
     <body>  
       
       <!-- orevious lines of dialogue -->
       <div class="messages-box">
         <div class="messages-scroll">
-          <div class="header">
-            <div>Write a line of dialogue!</div>
-          </div>
           <div class="messages">
             {{#if Template.subscriptionsReady}}
               {{#each messages}}
@@ -85,9 +77,9 @@
 
       <!-- writing your own message -->
       <div class="new-message-container">
-        <form>
-          <input type="text" class="message-input" placeholder="Type your message here..."><button type="submit">Send</button>
-        </form>
+          <form id="message">
+            <input type="text" class="message-input" placeholder="Type your message here..."><button type="submit">Send</button>
+          </form>
       </div>
 
       <!-- dropdown menu for options -->

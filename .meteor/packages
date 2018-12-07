@@ -56,3 +56,4 @@ useraccounts:iron-routing
 aldeed:template-extension
 useraccounts:bootstrap
 underscore@1.0.10
+mrt:cookies@=0.3.0

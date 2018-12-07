@@ -1,9 +1,10 @@
-import { Template } from 'meteor/templating';
-import { Cookies } from 'meteor/mrt:cookies';
-import { Messages } from '../api/messages/messages.js';
-import moment from 'moment';
-import './contributions.html';
-import './loader.html';
+ import { Template } from 'meteor/templating';
+ import { Cookies } from 'meteor/mrt:cookies';
+ import { Meteor } from 'meteor/meteor';
+ import { Messages } from '../../api/messages/messages.js';
+ //import '../../api/messages/server/methods.js';
+ import moment from 'moment';
+ import './contributions.html';
 
 Template.message.helpers({
   
@@ -66,7 +67,7 @@ Template.chat.events({
   
   //send message
   
-  'submit form'(event, instance) {
+  'submit #message'(event, instance) {
     
     event.preventDefault();
     
@@ -75,6 +76,7 @@ Template.chat.events({
     
     const data = { message: $input.val() };
     const userName = Cookie.get("name");
+    console.log("data: " + data);
     
     if (userName) {
       data.name = userName;
@@ -99,5 +101,6 @@ Template.chat.events({
     Cookie.set("hideHint", (Cookie.get("hideHint")=="true") ? "false" : "true");
     
   }
+
   
 });

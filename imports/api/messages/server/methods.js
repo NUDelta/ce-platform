@@ -5,7 +5,8 @@ import { Messages } from '../messages.js';
 
 Meteor.methods({
 	
-	'sendMessage'(data) {
+	sendMessage: function (data) {
+    console.log("sending Message")
 
 		check(data, {
 			message: String, //the message to send

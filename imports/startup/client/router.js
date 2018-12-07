@@ -27,6 +27,7 @@ import '../../ui/pages/participate_backdoor.js';
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
 import {Avatars, Images} from "../../api/ImageUpload/images";
+import { Messages } from "../../api/messages/messages.js";
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Meteor } from "meteor/meteor";
 import {Assignments, Availability} from "../../api/OpportunisticCoordinator/databaseHelpers";
