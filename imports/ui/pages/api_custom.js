@@ -442,7 +442,6 @@ Template.api_custom.onCreated(() => {
 Template.api_custom.events({
   
   'submit #participate'(event, instance) {
-    debugger; 
     event.preventDefault();
     console.log("form was submitted");
 
@@ -456,15 +455,29 @@ Template.api_custom.events({
     const iid = Router.current().params.iid;
     const needName = Router.current().params.needName;
     const uid = Meteor.userId();
+    const user = Meteor.username();
     const timestamp = Date.now()
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+    var dialogue = [];
+    var action = "";
+    var chapterID = 0;
 
 
     const dropDowns = event.target.getElementsByClassName('dropdown');
     _.forEach(dropDowns, (dropDown) => {
       const index = dropDown.selectedIndex;
+      action = dropDown[index].text;
+      console.log("dropDown value" + dropDown[index].text)
+      chapterID = dropDown[index].value;
+      console.log("chapter name" + dropDown[index].value)
       submissions[dropDown.id] = dropDown[index].value
+    });
+
+    const messages = event.target.getElementsByClassName('messages');
+    _.forEach(messages, (message) => {
+      console.log("message value" + message)
+      dialogue.push(message.textContent);
     });
 
     const textBoxes = event.target.getElementsByClassName('textinput');
@@ -477,6 +490,10 @@ Template.api_custom.events({
     if (images.length === 0) {
       Router.go(resultsUrl);
     }
+
+    dialogue.push(user + " commited this action: " + action)
+    submissions[chapterID] = dialogue;
+    console.log("finished making dialogue" + dialogue[0]);
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
@@ -547,6 +564,8 @@ Template.api_custom.events({
       lat: location.lat,
       lng: location.lng
     };
+
+    console.log("submitted submission");
 
     Meteor.call('updateSubmission', submissionObject);
 

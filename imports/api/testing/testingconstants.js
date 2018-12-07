@@ -2147,14 +2147,14 @@ function convertChapterToExperience(chapter) {
         let need = {
           chapterName: chapter.title,
           needName: first_action.description, //should be the title of the action
-          situation: {detector: DETECTORS[character_context]._id, number: "1"},
+          situation: {detector: DETECTORS[character_context]._id, number: "2"},
           toPass: {
               chapterName: chapter.title,
               characterName: first_character.name,
               instruction: "Please choose from the following list of actions",
               firstSentence: chapter.title,
               dropdownChoices: {
-                  name: "affordance",
+                  name: chapter.title,
                   options:  [[first_action.description, DETECTORS.grocery._id]]
               }
           },

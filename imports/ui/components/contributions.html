@@ -40,17 +40,14 @@
     </head>
     <select class="dropdown" id={{this.name}}>
         {{#each option in this.options}}
-            <option value="{{option.[1]}}">{{option.[0]}} </option>
+            <option value="{{this.name}}">{{option.[0]}} </option>
         {{/each}}
     </select>
 </template>
 
 <template name="message">
   
-  <div class="message {{#if announcement}}announcement{{/if}}">
-    <div class="name">{{name}} <span class="timestamp">{{timestamp}}</span></div>
-    <div class="message-text">{{message}}</div>
-  </div>
+    <p class="messages">{{name}} <span class="timestamp">{{timestamp}}</span>: {{message}}</p>
   
 </template>
 
@@ -62,7 +59,7 @@
       <!-- orevious lines of dialogue -->
       <div class="messages-box">
         <div class="messages-scroll">
-          <div class="messages">
+          <div class="all-messages">
             {{#if Template.subscriptionsReady}}
               {{#each messages}}
                 {{> message}}
