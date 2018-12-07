@@ -73,20 +73,24 @@ Template.chat.events({
     
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
+    const $setChar = $el.find('.character');
+    const $chapter = $el.find('.chapter');
     
     const data = { message: $input.val() };
-    const userName = Cookie.get("name");
+    const userName = $setChar.text();
+    const chapterID = $chapter.text();
     console.log("data: " + data);
+    console.log("name: " + userName);
+    console.log("chapter: " + chapterID);
     
-    if (userName) {
-      data.name = userName;
-    }
+    data.name = userName;
+    data.chapterID = chapterID;
     
     Meteor.call("sendMessage", data, (error, response) => {
       if (error) {
         alert(error.reason);
       } else {
-        Cookie.set("name", response.name);
+        //Cookie.set("name", response.name);
         $input.val("");
       }
     });

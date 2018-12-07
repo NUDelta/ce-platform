@@ -483,6 +483,11 @@
   </head>
   <body>
   Thanks for participating in {{this.experience.name}}!
+    {{#each message in messages}}
+      {{message}}
+      <br>
+    {{/each}}
+
 </body>
 </template>
 

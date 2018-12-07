@@ -1793,8 +1793,8 @@ let update_character_context = function (character, chapter, contexts) {
     character.contexts[chapter_title] += " && " + contexts;
 };
 
-let add_action_to_character = function (character, chapter, action) {
-    character.actions[chapter.title].push(action);
+let add_action_to_character = function (character, chapterID, action) {
+    character.actions[chapterID].push(action);
 };
 
 function writeNarrative() {
@@ -1863,8 +1863,8 @@ function writeNarrative() {
         harry.owned_objects.push(bottle);
     };
 
-    add_action_to_character(harry, chapter_one, new Action("Take potion bottle with him to bed", a1_take_potion_to_bed, 1));
-    add_action_to_character(harry, chapter_one, new Action("Leave potion bottle on table", a1_leave_potion_on_table, 1));
+    add_action_to_character(harry, chapter_one, new Action("Take potion bottle with him to bed", '1', 1));
+    add_action_to_character(harry, chapter_one, new Action("Leave potion bottle on table", '1', 1));
     //add_action_to_character(harry, chapter_twoA, new Action("Leave the bedroom", a2_leave_bedroom, 0));
     //add_action_to_character(harry, chapter_twoB, new Action("Takes potion bottle with him to class", a2B_take_potion_to_class, 2));
 
@@ -2142,20 +2142,26 @@ function convertChapterToExperience(chapter) {
           }
       }
 
-      if (i == 0) {
+      for (let i = 0; i < chapter.characters.length; i++) {
         // insert first need
+        let actions = [];
+        for (let action in chapter.characters[i].actions[i]) {
+            actions.push([action.description, DETECTORS.grocery._id]);
+            console.log("Action is " + action.description);
+        }
+
         let need = {
           chapterName: chapter.title,
-          needName: first_action.description, //should be the title of the action
-          situation: {detector: DETECTORS[character_context]._id, number: "2"},
+          needName: first_action.description + i, //should be the title of the action
+          situation: {detector: DETECTORS[character_context]._id, number: "1"},
           toPass: {
               chapterName: chapter.title,
-              characterName: first_character.name,
+              characterName: chapter.characters[i].name,
               instruction: "Please choose from the following list of actions",
               firstSentence: chapter.title,
               dropdownChoices: {
                   name: chapter.title,
-                  options:  [[first_action.description, DETECTORS.grocery._id]]
+                  options:  actions
               }
           },
           numberNeeded: 1

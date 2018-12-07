@@ -455,7 +455,7 @@ Template.api_custom.events({
     const iid = Router.current().params.iid;
     const needName = Router.current().params.needName;
     const uid = Meteor.userId();
-    const user = Meteor.username();
+    const user = Meteor.user().username;
     const timestamp = Date.now()
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;

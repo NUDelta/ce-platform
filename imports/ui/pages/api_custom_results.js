@@ -433,3 +433,20 @@ Template.sunset.onDestroyed(function() {
     timeout = null;
   });
 });
+
+Template.Harry_Potter_Story_Result.helpers({
+  // getName(x ){
+  //   console.log(x);
+  //   return x.friendName;
+  // },
+  // getImage(x){
+  //   return x.image;
+  // },
+  // getMyImage(x){
+  //   return x.myImage;
+  // },
+  messages() {
+
+    return this.submissions["0"].content["1"];//content index should be chapter number
+  }
+})
