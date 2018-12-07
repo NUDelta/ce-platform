@@ -491,7 +491,7 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
-    dialogue.push(user + " commited this action: " + action)
+    dialogue.push(this.toPass.characterName + " commited this action: " + action)
     submissions[chapterID] = dialogue;
     console.log("finished making dialogue" + dialogue[0]);
 

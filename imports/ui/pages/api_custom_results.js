@@ -446,7 +446,7 @@ Template.Harry_Potter_Story_Result.helpers({
   //   return x.myImage;
   // },
   messages() {
-
-    return this.submissions["0"].content["1"];//content index should be chapter number
+    this.submissions["0"].content["1"].splice(0, 1);
+    return this.submissions["0"].content["1"];//VERY HACKY SOLUTION
   }
 })
