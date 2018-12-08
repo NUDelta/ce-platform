@@ -1370,7 +1370,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       number: '1'
     },
     toPass: {
-      instruction: 'What are you drinking? Take a photo, while raising your glass or bottle in front of you.',
+      instruction: 'What are you drinking? Take a photo, while raising your glass or wand in front of you.',
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
     },
     numberNeeded: 50,
@@ -1736,11 +1736,11 @@ function Setting(name, contexts) {
     this.contexts = contexts;
 }
 
-function Chapter(title, setting, characters, objects, chapterEndCondition) {
+function Chapter(title, setting, characters, items, chapterEndCondition) {
     this.title = title;
     this.setting = setting;
     this.characters = characters;
-    this.objects = objects || [];
+    this.items = items || [];
     //this.find_participants_for_character = find_participants_for_character;
     //this.chapterEndCondition = chapterEndCondition;
 }
@@ -1758,10 +1758,10 @@ function Character(name, owned_items, contexts) { //diff character for each chap
 }
 
 
-function Action(description, object, repercussions) {
-    this.object = object
+function Action(description, item, repercussions) {
+    this.item = item;
     this.description = description;
-    //this.repercussions = repercussions;
+    this.repercussions = repercussions;
     //this.change_character_and_object = change_character_and_object;
     //this.priority = priority;
 }
@@ -1774,6 +1774,18 @@ function Item(name, owner, transferrable, actions) {
     // if (transferrable) {
     //   this.actions.push()
     // }
+}
+
+function kill(recipient) {
+  recipient.status = false;
+  anyCharDead = true;
+}
+
+function transfer(object, recipient) {
+  recipient.owned_items.push(object); //adds the object to the recipient's list of owned objects
+  object.owner.owned_items.remove(object); //removes the object from the owner's list of owned items
+  object.owner = recipient; //sets the item's owner to the recipient
+
 }
 
 let find_participants_for_chapter = function (setting) {
@@ -1801,13 +1813,15 @@ let update_character_context = function (character, chapter, contexts) {
     character.contexts[chapter_title] += " && " + contexts;
 };
 
-let add_action_to_character = function (character, chapterID, action) {
-    character.actions[chapterID].push(action);
-};
 
 function addItemToCharacter(item, character) {
   character.owned_items.push(item);
   item.owner = character;
+}
+
+function addActionToItem(item, action) {
+  item.actions.push(action);
+  action.item = item;
 }
 
 function writeNarrative() {
@@ -1816,16 +1830,23 @@ function writeNarrative() {
     var Bedroom = new Setting("bedroom", "grocery" /* "Bedroom", "inside_a_building || in_a_dorm" */);
 
     // create character
-    //var bottle = new Object("bottle", "hermione", "1");
+    //var wand = new Object("wand", "hermione", "1");
     //var health = new Object("health", "ron", "2B");
     // name, chapters, objects, actions, contexts, first appearance
     var Harry = new Character("Harry", [], {"1" : "grocery"});
     var Hermione = new Character("Hermione", [], {"1" : "grocery"});
-    var give_bottle = new Action("give bottle", bottle, "")
-    var bottle = new Item("bottle", Hermione, true, [give_bottle])
-    addItemToCharacter(bottle, Hermione);
+
+
+    var wand = new Item("wand", Hermione, true, [])
+    addItemToCharacter(wand, Hermione);
+
+
+    var give_wand = new Action("give wand", wand, "transfer(wand, Harry)")
+    var avada = new Action("Avada Kedavra", wand, "kill(Harry)")
+    addActionToItem(wand, give_wand);
+    addActionToItem(wand, avada);
     // create chapter
-    var chapter_one = new Chapter("1", Common_Room, [Harry, Hermione], [bottle], "");
+    var chapter_one = new Chapter("1", Common_Room, [Harry, Hermione], [wand], "");
     //var chapter_twoB = new Chapter("2B", Bedroom, [harry, ron, hermione], []);
     //var chapter_twoA = new Chapter("2A", Bedroom, [harry], []);
 
@@ -1839,9 +1860,9 @@ function writeNarrative() {
 
 
     // update action
-    // let a1_give_harry_bottle = function () {
-    //     bottle.owner = "harry";
-    //     harry.owned_objects.push(bottle);
+    // let a1_give_harry_wand = function () {
+    //     wand.owner = "harry";
+    //     harry.owned_objects.push(wand);
     // };
 
     // let a1_take_potion_to_bed = function () {
@@ -1849,17 +1870,17 @@ function writeNarrative() {
     // };
 
     // let a1_leave_potion_on_table = function () {
-    //     bottle.owner = null;
-    //     harry.owned_objects.remove(bottle);
+    //     wand.owner = null;
+    //     harry.owned_objects.remove(wand);
     //     //update_chapter_map("1", "2B");
     // };
 
     // let a2_leave_bedroom = function () {
-    //     bottle.owner = null;
-    //     harry.owned_objects.remove(bottle);
+    //     wand.owner = null;
+    //     harry.owned_objects.remove(wand);
     // };
 
-    // let a2B_drink_potion_bottle = function () {
+    // let a2B_drink_potion_wand = function () {
     //     health.owner = null;
     //     ron.owned_objects.remove(health);
     // };
@@ -1870,18 +1891,18 @@ function writeNarrative() {
     // };
 
     // let a2B_take_potion_to_class = function () {
-    //     bottle.owner = "harry";
-    //     harry.owned_objects.push(bottle);
+    //     wand.owner = "harry";
+    //     harry.owned_objects.push(wand);
     // };
 
-    //add_action_to_character(harry, chapter_one, new Action("Take potion bottle with him to bed", '1', 1));
-    //add_action_to_character(harry, chapter_one, new Action("Leave potion bottle on table", '1', 1));
+    //add_action_to_character(harry, chapter_one, new Action("Take potion wand with him to bed", '1', 1));
+    //add_action_to_character(harry, chapter_one, new Action("Leave potion wand on table", '1', 1));
     //add_action_to_character(harry, chapter_twoA, new Action("Leave the bedroom", a2_leave_bedroom, 0));
-    //add_action_to_character(harry, chapter_twoB, new Action("Takes potion bottle with him to class", a2B_take_potion_to_class, 2));
+    //add_action_to_character(harry, chapter_twoB, new Action("Takes potion wand with him to class", a2B_take_potion_to_class, 2));
 
-    //add_action_to_character(ron, chapter_twoB, new Action("Drinks out of potion bottle", a2B_drink_potion_bottle, 0));
+    //add_action_to_character(ron, chapter_twoB, new Action("Drinks out of potion wand", a2B_drink_potion_wand, 0));
 
-    //add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion bottle", a1_give_harry_bottle, 0));
+    //add_action_to_character(hermione, chapter_one, new Action("Give Harry a potion wand", a1_give_harry_wand, 0));
     //add_action_to_character(hermione, chapter_twoB, new Action("Rush Ron outside", a2B_rush_ron_outside, 1));
 
     let chapter_list = [];
@@ -1892,11 +1913,19 @@ function writeNarrative() {
     return chapter_list;
 }
 
+let test_chapter = writeNarrative()[0];
+
 function convertChapterToExperience(chapter) {
   // total list of actions that will be completed in the chapter
 
   // console.log("DEBUG [creating chapter actions]");
   // let chapterActions = [];
+
+  // for (let item of chapter.items) {
+  //   for (let action of item.actions) {
+  //       chapterActions.push(action);
+  //   }
+  // }
 
   // for (let character of chapter.characters) {
   //  for (let action of character.actions[chapter.title]) {
@@ -1927,8 +1956,9 @@ function convertChapterToExperience(chapter) {
   //detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
   //let CHAPTER_OPTIONS = _.zip(dropdownText, detectorIds);
 
-  //let CHAPTER_OPTIONS = _.zip(chapterActions);
-  let CHAPTER_CHARACTERS = _.zip(chapter.characters);
+  //let CHAPTER_CHARACTERS = _.zip(chapter.characters);
+  let copy = chapter;
+  let CHAPTER = _.zip(copy);
 
   // chapterActions = chapterActions.filter(function(x) {
   //     return x.priority == number_of_actions_done;
@@ -1956,8 +1986,23 @@ function convertChapterToExperience(chapter) {
   console.log("DEBUG [creating callback]");
   //detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
 
-  let hpStoryCallback = function(sub) {
-      //et chapter = chapter_one;
+  let hpStoryCallback = function(sub, chapter) {
+    console.log("DEBUG IN CALLBACK");
+    // let chapter = eval('${JSON.stringify(CHAPTER)}');
+    console.log("chapter in callback is " + JSON.stringify(sub))
+    //console.log("chapter in callback 2is " + chapter)
+    for (let character of chapter.characters) {
+      for (let item of character.items) {
+        for (let action of item.actions) {
+          if (action.description == sub.content["action"]) {
+            eval (action.repercussions.toString());
+            console.log("wand owner is now " + item.owner)
+            //console.log("harry now owns " + Harry.owned_objects.length)
+            //console.log("hermy now owns " + Hermione.owned_objects.length)
+          }
+        }
+      }
+    }
       console.log("DEBUG in callback");
       //console.log("current chapter is " + chapter.title)
       //var newSet = "profile.staticAffordances.participatedInPotterNarrative" + chapter.title;
@@ -1968,9 +2013,6 @@ function convertChapterToExperience(chapter) {
       // an action has now been performed
       //not sure if this is still needed
       let affordance = sub.content.affordance;
-
-      //let options = eval('${JSON.stringify(CHAPTER_OPTIONS)}');
-      let characters = eval('${JSON.stringify(CHAPTER_CHARACTERS)}');
 
       // options = options.filter(function(x) {
       //   return x[2] === cb.numberOfSubmissions() && x[1] === affordance;
@@ -2014,31 +2056,14 @@ function convertChapterToExperience(chapter) {
       console.log("past checking actions")
       //let next_action = options[0];
       //console.log("next action is " + JSON.stringify(next_action));
-      let next_character = characters[0];
-      for (let character of characters) {
-        console.log("reached loop");
-        console.log("character is " + JSON.stringify(character));
-        console.log("character is " + character[0].name);
-        for (let action of character[0].actions[1]) { //figure out way to get chapter number
-          console.log("reached nested");
-          if (action.priority == next_action.priority) {
-            next_character = character;
-          }
-        }
-      }
-      let optionDescriptions = [];
-      for (let option of options) {
-        console.log("optionDescriptions" + JSON.stringify(option[0]));
-        optionDescriptions.push([option[0].description, option[0].priority]);
-      }
-      console.log("optionDescriptions" + JSON.stringify(optionDescriptions));
+
       console.log("past setting next character");
       let contribution = {
           needName: "test",
           //DETECTORS[character_context[0]]._id
           situation: { detector: affordance, number: "1" },
           toPass: {
-              characterName: next_character.name,
+              characterName: Harry.name,
               instruction:  "Please choose from the following list of actions",
               firstSentence: sub.needName,
               /*
@@ -2057,25 +2082,13 @@ function convertChapterToExperience(chapter) {
               */
               dropdownChoices: {
                   name: "affordance",
-                  options: optionDescriptions
+                  options: ["0"]
               }
           },
           numberNeeded: 1
       };
       addContribution(sub.iid, contribution);
   };
-
-  console.log("DEBUG [creating character contexts]");
-  var character_contexts = [];
-
-  for (let character of chapter.characters) {
-      let character_context = [character.contexts[chapter.title], character.name];
-      console.log("DEBUG Character = " + JSON.stringify(character_context));
-      console.log("DEBUG character context = " + character_context[0]);
-      console.log("DEBUG character name = " + character_context[1]);
-      character_contexts.push(character_context[0]);
-  }
-  console.log("DEBUG character contexts size = " + character_contexts.length);
 
   console.log("DEBUG [creating experience]");
   let experience = {
@@ -2089,8 +2102,8 @@ function convertChapterToExperience(chapter) {
         {
             //trigger: "cb.newSubmission() && (cb.numberOfSubmissions() <= " + max_priority_allowed + ")",
             trigger: "cb.newSubmission()",
-            function: sendNotification.toString()
-            //function: eval('`' + hpStoryCallback.toString() + '`')
+            //function: sendNotification.toString()
+            function: eval('`' + hpStoryCallback.toString() + '`')
         },
         {
             trigger: "cb.incidentFinished()",
@@ -2152,7 +2165,7 @@ function convertChapterToExperience(chapter) {
         for (let item of chapter.characters[i].owned_items) {
           console.log("inside: " + chapter.characters[i].name + "with" + item.name)
           for (let action of item.actions) {
-            actions.push([action.description, DETECTORS.grocery._id]);
+            actions.push(action.description);
             console.log("Action is " + action.description);
           }
         }
@@ -2185,10 +2198,8 @@ console.log("current chapter after loop " + chapter.title);
   return experience;
 }
 
-let chapters = writeNarrative()[0];
-
 let EXPERIENCES = {
-  hpstory : convertChapterToExperience(chapters) /*,
+  hpstory : convertChapterToExperience(test_chapter) /*,
   bumped: createBumped(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
@@ -2386,7 +2397,7 @@ let EXPERIENCES = {
         number: '1'
       },
       toPass: {
-        instruction: 'What are you <span style="color: #0351ff">drinking at the bar</span>? Take a photo, while <span style="color: #0351ff">raising your glass or bottle</span> in front of you.',
+        instruction: 'What are you <span style="color: #0351ff">drinking at the bar</span>? Take a photo, while <span style="color: #0351ff">raising your glass or wand</span> in front of you.',
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
       },
       numberNeeded: 2,
