@@ -1,4 +1,4 @@
-// Command to get submissions      db.submissions.find({uid: {$ne: null}})
+// Command to get submissions      
 // Command to add hours to IsoDate     date.setHours(12+x);     where x is number of hours added
 // Compare ISODate Objects         var diff = date1 - date2; (If date1 is later than date2, diff will be positive)
 // Current ISODATE.   var today = new Date();
@@ -59,18 +59,31 @@ function checkExpired(timeToExpiration, submissionID){
 	var offset = expirationDate.getHours();
 	expirationDate.setHours(offset+timeToExpiration);
 	var today = new Date();
-	var expired = (today-expirationDate)>0;
-	// expired = true; -> Used for running tests
+	var expired = (today-expirationDate)>=0;
+	//expired = true;  // USED FOR TESTING
 	return expired;
 }
 
 function updateExperience(experienceID){
 	print("Updating Experience with new detector");
-	db.experiences.update({_id: experienceID},{$set: {"contributionTypes.0.situation.detector" : "DETECTOR_ID_HERE"}});
+	var len = db.experiences.find({_id: {$eq: experienceID}})[0].contributionTypes.length;
+	//var tempstr = db.experiences.find({_id: {$eq: experienceID}})[0].detectors;
+	var tempstr = "tR4e2c7PPjWACwX87"
+	if(len > 0){
+		db.experiences.update({_id: experienceID},{$set: {"contributionTypes.0.situation.detector" : tempstr}});
+		db.incidents.update({eid: experienceID},{$set: {"contributionTypes.0.situation.detector" : tempstr}});
+	}
+	if(len > 1){
+		db.experiences.update({_id: experienceID},{$set: {"contributionTypes.1.situation.detector" : tempstr}});
+		db.incidents.update({eid: experienceID},{$set: {"contributionTypes.1.situation.detector" : tempstr}});
+	}
+	if(len > 2){
+		db.experiences.update({_id: experienceID},{$set: {"contributionTypes.2.situation.detector" : tempstr}});
+		db.incidents.update({eid: experienceID},{$set: {"contributionTypes.2.situation.detector" : tempstr}});
+	}
 }
 
 // Example Update:     db.experiences.update({_id: id},{$set: {"contributionTypes.0.situation.detector" : "DETECTOR_ID_HERE"}})
-
 
 
 

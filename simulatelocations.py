@@ -209,6 +209,13 @@ def allUsersAtRestaurant():
 	setLocation(burgers, sys.argv[5])
 	print("all users at burgers")
 
+def allUsersAtCoffee():
+	setLocation(coffee, sys.argv[1])
+	setLocation(coffee, sys.argv[2])
+	setLocation(coffee, sys.argv[3])
+	setLocation(coffee, sys.argv[4])
+	setLocation(coffee, sys.argv[5])
+	print("all users at coffee")
 
 def allUsersAtGrocery():
 	setLocation(grocery, sys.argv[1])
@@ -311,7 +318,8 @@ def allUsersLib():
 
 if __name__ == "__main__":
     #allUsersGrocery()
-	allUsersAtRestaurant()
+	#allUsersAtRestaurant()
+	allUsersAtCoffee()
 	#allUsersLib()
     #garrettAndMegBump()
     #time.sleep(2)
