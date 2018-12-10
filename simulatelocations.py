@@ -299,8 +299,8 @@ def onlyGarretAtLake():
 def garrettAndMegBump():
     setLocation(grocery, sys.argv[1])
     setLocation(grocery, sys.argv[3])
-    setLocation(train, sys.argv[2])
-    setLocation(train, sys.argv[4])
+    setLocation(grocery, sys.argv[5])
+    setLocation(grocery, sys.argv[4])
     setLocation(train, sys.argv[5])
 
     print("meg and garret at grocery")

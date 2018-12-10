@@ -494,6 +494,7 @@ Template.api_custom.events({
 
     dialogue.push(this.toPass.characterName + " commited this action: " + action)
     submissions[chapterID] = dialogue;
+    submissions["affordance"] = this.situation.detector;
     console.log("finished making dialogue" + dialogue[0]);
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that

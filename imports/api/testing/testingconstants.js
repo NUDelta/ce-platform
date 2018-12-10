@@ -2060,7 +2060,7 @@ function convertChapterToExperience(chapter) {
           );
       // an action has now been performed
       //not sure if this is still needed
-      let affordance = sub.content.affordance;
+      let affordance = sub.content["affordance"];
 
       // options = options.filter(function(x) {
       //   return x[2] === cb.numberOfSubmissions() && x[1] === affordance;
