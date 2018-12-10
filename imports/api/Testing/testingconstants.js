@@ -2917,7 +2917,7 @@ let EXPERIENCES = {
     name: "Complete a menu!",
     participateTemplate: "scavengerHuntParticipate",
     timeToExpire: 0,
-    detectors: [DETECTORS.coffee._id, DETECTORS.sunny._id],
+    detectors: [DETECTORS.restaurant._id],
     resultsTemplate: "scavengerHunt",
     contributionTypes: [
       {
@@ -3052,7 +3052,7 @@ let EXPERIENCES = {
   //       trigger: 'cb.incidentFinished()',
   //       function: sendNotification.toString()
   //     }]
-    
+
   // },
 
   sunset_across: {

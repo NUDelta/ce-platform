@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
+import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser, checkExpiredExperiences} from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
@@ -66,6 +66,7 @@ export const onLocationUpdate = (uid, location, callback) => {
       sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
     }
   });
+  checkExpiredExperiences();
 };
 
 /**

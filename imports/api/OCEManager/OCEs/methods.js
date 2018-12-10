@@ -39,6 +39,87 @@ export const clearAvailabilitiesForUser = (uid) => {
  * @param affordances {object} dictionary of user's affordances
  * @returns {object} object with keys as iids and values as array of matched needs
  */
+export const checkExpiredExperiences = () =>{
+  function checkExperiences(){
+    console.log("Checking Expired Experiences");
+  	var arr = Submissions.find({uid: {$ne: null}}).fetch();
+  	var length = arr.length;
+    console.log("array length is " + length);
+  	/*
+  	Optional Sorting -> Must be of BSON Object
+  	arr.sort(function(a, b) {
+      	return a.timestamp - b.timestamp;
+  	}); */
+
+  	// Hashmap to keep track of earliest submission time
+  	var map = {};
+  	// Adds earliest submission timestamp to the hashmap
+  	// map[eid] = first_submission_timestamp;
+
+  	var idMap = {};
+  	// Saves submission ID of earliest submission
+  	// map[eid] = first_submission_id;
+  	for(var i = 0; i<length; i++){
+  		// If not in map, add directly to map
+  		if(!(arr[i].eid in map)){
+  			map[arr[i].eid] = arr[i].timestamp;
+  			idMap[arr[i].eid] = arr[i]._id;
+  		}
+  		else if((arr[i].timestamp - map[arr[i].eid].timestamp) < 0){
+  			map[arr[i].eid] = arr[i].timestamp;
+  			idMap[arr[i].eid] = arr[i]._id;
+  		}
+  	}
+
+  	// Checks each experience and validates their expiration
+  	var keyArr = Object.keys(map);
+
+  	for(var i = 0; i<keyArr.length; i++){
+      console.log("keyArr of 0 is " + keyArr[0]);
+  		var timeToExpiration = Experiences.find({_id: {$eq: keyArr[i]}}).fetch()[0].timeToExpire;
+      console.log("Time to expiration is "+ timeToExpiration);
+  		//timeToExpiration = 0; ->>>>> USED FOR TESTING THE FUNCTION
+  		var submissionID = idMap[keyArr[i]];
+  		if(checkExpired(timeToExpiration,submissionID)){
+        console.log("Experience is expired with submissionID" + submissionID);
+  			updateExperience(keyArr[i]);
+  		}
+      else{
+        console.log("Experience not expired");
+      }
+  	}
+  	return;
+  }
+
+  function checkExpired(timeToExpiration, submissionID){
+  	var expirationDate = Submissions.find({_id: {$eq: submissionID}}).fetch()[0].timestamp;
+  	var offset = expirationDate.getHours();
+  	expirationDate.setHours(offset+timeToExpiration);
+  	var today = new Date();
+  	var expired = (today-expirationDate)>=0;
+    console.log("expired = "+ expired);
+  	return expired;
+  }
+
+  function updateExperience(experienceID){
+    console.log("Updating Experience");
+  	var len = Experiences.find({_id: {$eq: experienceID}}).fetch()[0].contributionTypes.length;
+  	var tempstr = Experiences.find({_id: {$eq: experienceID}}).fetch()[0].detectors[0];
+  	if(len > 0){
+  		Experiences.update({_id: experienceID},{$set: {"contributionTypes.0.situation.detector" : tempstr}});
+  		Incidents.update({eid: experienceID},{$set: {"contributionTypes.0.situation.detector" : tempstr}});
+  	}
+  	if(len > 1){
+  		Experiences.update({_id: experienceID},{$set: {"contributionTypes.1.situation.detector" : tempstr}});
+  		Incidents.update({eid: experienceID},{$set: {"contributionTypes.1.situation.detector" : tempstr}});
+  	}
+  	if(len > 2){
+  		Experiences.update({_id: experienceID},{$set: {"contributionTypes.2.situation.detector" : tempstr}});
+  		Incidents.update({eid: experienceID},{$set: {"contributionTypes.2.situation.detector" : tempstr}});
+  	}
+  }
+  checkExperiences();
+}
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();

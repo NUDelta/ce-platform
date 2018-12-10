@@ -1,4 +1,4 @@
-// Command to get submissions      
+// Command to get submissions
 // Command to add hours to IsoDate     date.setHours(12+x);     where x is number of hours added
 // Compare ISODate Objects         var diff = date1 - date2; (If date1 is later than date2, diff will be positive)
 // Current ISODATE.   var today = new Date();
@@ -83,9 +83,8 @@ function updateExperience(experienceID){
 	}
 }
 
+while(true){
+	checkExperiences();
+	sleep(1000*5*60); // Sleep for 5 minutes
+}
 // Example Update:     db.experiences.update({_id: id},{$set: {"contributionTypes.0.situation.detector" : "DETECTOR_ID_HERE"}})
-
-
-
-
-

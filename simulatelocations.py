@@ -25,7 +25,7 @@ def setLocation(location, uid):
 
 	local = "http://localhost:3000/"
 	herok = "https://staging-ce-platform.herokuapp.com/"
-	
+
 	r = requests.post(local + "api/geolocation", json={
 	            "userId": uid,
 	            "location": {
@@ -318,8 +318,8 @@ def allUsersLib():
 
 if __name__ == "__main__":
     #allUsersGrocery()
-	#allUsersAtRestaurant()
-	allUsersAtCoffee()
+	allUsersAtRestaurant()
+	#allUsersAtCoffee()
 	#allUsersLib()
     #garrettAndMegBump()
     #time.sleep(2)
