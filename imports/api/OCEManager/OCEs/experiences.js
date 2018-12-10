@@ -13,6 +13,10 @@ Schema.Callback = new SimpleSchema({
   },
   function: {
     type: String
+  },
+  chapter: {
+    type: Object,
+    optional: true,
   }
 });
 

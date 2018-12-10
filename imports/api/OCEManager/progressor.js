@@ -65,7 +65,17 @@ function runCallbacks(mostRecentSub) {
     let trigger = callbackPair.trigger;
     let fun = callbackPair.function;
     if (eval(trigger)) {
+    //   let chapter = callbackPair.chapter;
+    //   console.log("chapter in callback is " + JSON.stringify(chapter))
+    // console.log("chapter in callback 2is " + chapter)
+    //   console.log ("cn flag: " + mostRecentSub.needName.substring(0,2))
+    //   if (mostRecentSub.needName.substring(0,2) == "cn") {
+    //     console.log ("identifed CN")
+    //     console.log("fun is " + fun)
+    //     eval("(" + fun + "(" + chapter + "," +JSON.stringify(mostRecentSub) + "))");
+    //   }
       console.log("callback triggered");
+      console.log("fun: " + "(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
       eval("(" + fun + "(" + JSON.stringify(mostRecentSub) + "))");
     }
   });
