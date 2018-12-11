@@ -35,6 +35,7 @@ Template.api_custom.helpers({
     this.iid = Router.current().params.iid;
     this.needName = Router.current().params.needName;
     this.toPass = currentNeed.toPass;
+    this.situation = currentNeed.situation;
 
     return this;
   },
@@ -494,6 +495,7 @@ Template.api_custom.events({
 
     dialogue.push(this.toPass.characterName + " commited this action: " + action)
     submissions[chapterID] = dialogue;
+    console.log("affordance is " + this.situation.detector)
     submissions["affordance"] = this.situation.detector;
     console.log("finished making dialogue" + dialogue[0]);
 

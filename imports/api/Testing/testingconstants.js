@@ -2118,7 +2118,7 @@ function convertChapterToExperience(chapter) {
         }
         console.log("actions.length" + actions.length)
         let contribution = {
-          needName: sub.needName,
+          needName: sub.needName + i,
           //DETECTORS[character_context[0]]._id
           situation: { detector: affordance, number: "1" },
           toPass: {
