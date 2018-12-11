@@ -498,6 +498,7 @@ Template.api_custom.events({
     console.log("affordance is " + this.situation.detector)
     submissions["affordance"] = this.situation.detector;
     console.log("finished making dialogue" + dialogue[0]);
+    submissions["anyCharDead"] = this.toPass.anyCharDead;
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {

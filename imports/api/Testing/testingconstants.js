@@ -2010,6 +2010,8 @@ function convertChapterToExperience(chapter) {
     let characters = eval('${JSON.stringify(CHAPTER_CHARACTERS)}');
     console.log("chapter in callback is " + JSON.stringify(characters))
 
+    anyCharDead = sub.content["anyCharDead"];
+
     function kill(recipient) {
       recipient.status = false;
       anyCharDead = true;
@@ -2122,6 +2124,7 @@ function convertChapterToExperience(chapter) {
           //DETECTORS[character_context[0]]._id
           situation: { detector: affordance, number: "1" },
           toPass: {
+              anyCharDead: anyCharDead,
               characterName: character.name,
               instruction:  "Please choose from the following list of actions",
               firstSentence: sub.needName,
@@ -2168,7 +2171,7 @@ function convertChapterToExperience(chapter) {
             //function: eval('`' + hpStoryCallback.toString() + '`')
         },
         {
-            trigger: "cb.incidentFinished()",
+            trigger: "cb.anyCharDead()",
             //triggerFunction: if eval('`' + chapter.chapterEndCondition + '`'),
             function: sendNotification.toString() //start the next chapter
         }
@@ -2238,6 +2241,7 @@ function convertChapterToExperience(chapter) {
           needName: "cn" + i, //use as cn flag
           situation: {detector: DETECTORS[character_context]._id, number: "1"},
           toPass: {
+              anyCharDead: false,
               chapterName: chapter.title,
               characterName: chapter.characters[i].name,
               instruction: "Please choose from the following list of actions",

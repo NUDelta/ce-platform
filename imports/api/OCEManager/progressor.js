@@ -104,6 +104,10 @@ class CallbackManager {
     }
   }
 
+  anyCharDead() {
+    return this.submission.content["anyCharDead"];
+  }
+
   //trigger used in callbacks: checks if the need is finished
   needFinished(needName) {
     return numUnfinishedNeeds(this.submission.iid, needName) === 0;
