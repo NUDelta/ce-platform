@@ -113,4 +113,59 @@ Sort all imports in this order and into these groups, omitting any groups that d
 ### Methods
 You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the [Github Repo](https://github.com/meteor/validated-method/) and the [guide page](http://guide.meteor.com/methods.html) about this, but be sure to use these.
 
+### Relaxing detectors for expired experiences
+We created a template for new experiences that can replace their detectors after a certain time period (see timeToExpire field) has elapsed. This allows us to "relax" the detectors for an experience if the past detector was too specific which resulted in not having enough contributions to complete it.
 
+Here is an example of the new experience template:
+```js
+complete_menu: { //Unique Contributions towards shared goal
+    _id: Random.id(),
+    name: "Complete a menu!",
+    participateTemplate: "scavengerHuntParticipate",
+    timeToExpire: 123,                                       // Number of minutes to expiration
+    detectors: [DETECTORS.restaurant._id],                   // New updated detector for after expiration
+    resultsTemplate: "scavengerHunt",
+    contributionTypes: [
+      {
+        needName: "Coffee",             
+        situation: {
+          detector: DETECTORS.coffee._id,                    // Old detector for this experience contribution
+          number: 2 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Take a picture of your coffee?"
+        },
+        numberNeeded: 50 //50 photos before completed
+      },
+      {
+        needName: "Biscuit",
+        situation: {
+          detector: DETECTORS.coffee._id,                     // Old detector for this experience contribution
+          number: 2 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Can you take a photo of your biscuit?"
+        },
+        numberNeeded: 50 //50 photos before completed
+      },
+      {
+        needName: "Cake",
+        situation: {
+          detector: DETECTORS.coffee._id,                     // Old detector for this experience contribution
+          number: 2 //At least 2 should be there
+        },
+        toPass: {
+          instruction: "Can you take a photo of what your cake?"
+        },
+        numberNeeded: 50 //50 photos before completed
+      }
+
+    ],
+    description: "Complete a menu!",
+    notificationText: "Complete a menu!",
+    callbacks: [{
+        trigger: "cb.incidentFinished()",
+        function: sendNotificationFoodFight.toString()
+    }]
+  },
+```
