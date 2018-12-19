@@ -1,12 +1,17 @@
-# CE Platform
-The Collective Experience (CE) Platform facilitates the creation and operation of collective experience applications. By building to cordova/iOS and distributing this project as a native app, experiences can be launched with native push notifications and users can be targeted by their location for context-specific experiences. Currently, the platform facilitates image and text submissions for experiences.
-
 ## Setup and Local Development
 1. Install Meteor `curl https://install.meteor.com/ | sh`.
 2. Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`.
 3. Navigate to the project folder `cd ce-platform`.
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
+
+## Collective Narrative Directions for Testing
+1. Run the python script in the folder to setup sample geolocations for the testers
+2. Look into mongoDB database to see which characters are assigned to which participants
+3. Play out the role(s) of the first character(s) assigned through typing and selecting an action
+4. Once the action has been completed, run the python script again to refresh the assignments (this is needed for testing, not during actualy deployment)
+5. Play out the role(s) of the next character(s) assigned
+6. Once the story end condition is fulfilled, the page should display the entire conversation as a script
 
 ## iOS Development Running 
 Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process. 
