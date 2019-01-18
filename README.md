@@ -9,20 +9,23 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 5. Start the server using `meteor`.
 
 Hacky way in case meteor installation doesnt work (for Windows):
-
+```
 apt-get install mongodb-server
 $ sudo mkdir -p /data/db
 $ sudo chown -R $USER /data/db
 $ mongod
-
+```
 separate terminal in ce-platform directory:
+```
 $ export MONGO_URL=mongodb://127.0.0.1:27017/meteor
 $ meteor run
-
+```
 to open mongo shell
+```
 $ mongo
 use meteor
 db.users.find() //test command
+```
 
 ## iOS Development Running 
 Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process. 
