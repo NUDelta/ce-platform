@@ -15,12 +15,11 @@ $ sudo mkdir -p /data/db
 $ sudo chown -R $USER /data/db
 $ mongod
 ```
-separate terminal in ce-platform directory:
+Start a separate terminal and navigate to ce-platform directory:
 ```
-$ export MONGO_URL=mongodb://127.0.0.1:27017/meteor
-$ meteor run
+$ npm start
 ```
-to open mongo shell
+To open Mongo Shell
 ```
 $ mongo
 use meteor
