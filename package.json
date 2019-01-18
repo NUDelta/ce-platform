@@ -20,7 +20,8 @@
     "build-dev": "run(){ meteor run ios-device -p $1 --mobile-server=http://$2:$1; }; run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "unittest": "meteor test --once --driver-package meteortesting:mocha",
-    "fulltest": "meteor test --once --full-app --driver-package meteortesting:mocha"
+    "fulltest": "meteor test --once --full-app --driver-package meteortesting:mocha",
+    "start": "MONGO_URL=mongodb://127.0.0.1:27017/meteor meteor run"
   },
   "repository": {
     "type": "git",
