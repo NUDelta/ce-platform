@@ -8,7 +8,7 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
 
-### Hacky way in case meteor installation doesnt work (for Windows):
+### Hacky way in case Meteor installation doesnt work (for Windows):
 
 (These steps assume you have Windows Subsystem for Linux installed.)
 
@@ -20,11 +20,11 @@ $ sudo mkdir -p /data/db
 $ sudo chown -R $USER /data/db
 $ mongod
 ```
-Start a separate terminal and navigate to ce-platform directory then enter:
+Open a separate terminal and navigate to ce-platform directory then enter:
 ```
 $ npm start
 ```
-Open Mongo Shell and try to find users to verify that you're interacting with the correct data.
+Open Mongo Shell (in the first terminal) and try to find users to verify that you're interacting with the correct data.
 ```
 $ mongo
 > use meteor
