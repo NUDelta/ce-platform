@@ -10,7 +10,7 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 
 ### Windows Subsystem for Linux Specific Setup
 
-Follow steps 1 & 2 from above and then enter the following commands to install Mongo:
+Follow steps 1 & 2 from above and then enter the following commands to install Mongo and start a Mongo process:
 
 ```
 $ sudo apt-get install mongodb-server
