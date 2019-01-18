@@ -20,7 +20,7 @@ $ mongod
 ```
 Open a separate terminal and navigate to the `ce-platform` directory and run `npm start`.
 
-Open Mongo Shell (in the original terminal) and try to find users to verify that you're interacting with the correct data.
+Open Mongo Shell in another terminal and try to find users to verify that you're interacting with the correct data.
 ```
 $ mongo
 > use meteor
