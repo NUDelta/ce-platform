@@ -16,6 +16,16 @@
                 {{> googleMap name="yourLocation" options=mapOptions}}
             </div>
         </div>
+      <div class="p-4">
+      <h4> Your current affordances </h4>
+        <button id="toggle-affordance-info">Toggle to view Affordances</button>
+        <div id="affordance-info" style="display: none;">
+          {{#each key in affordanceKeys}}
+            {{key}}
+            {{affordanceValues key}}<br>
+          {{/each}}
+        </div>
+      </div>
     {{else}}
         <h3>Welcome to CE 👋</h3>
         <h4>Sign in to see your affordances!</h4>

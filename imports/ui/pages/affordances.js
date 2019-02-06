@@ -18,6 +18,20 @@ Template.affordances.onCreated(function () {
 
 });
 
+Template.affordances.events({
+
+  'click #toggle-affordance-info': function() {
+    var affordanceInfo = document.getElementById('affordance-info');
+
+    if (affordanceInfo.style.display == "block") {
+      affordanceInfo.style.display = "none";
+    } else {
+      affordanceInfo.style.display = "block";
+    }
+  }
+
+});
+
 Template.affordances.helpers({
   mapOptions() {
     let location = this.location
