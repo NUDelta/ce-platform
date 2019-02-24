@@ -179,6 +179,7 @@ Router.route('/', {
       };
       Meteor.call('insertLog', dic);
     }
+    this.next();
   }
 });
 
