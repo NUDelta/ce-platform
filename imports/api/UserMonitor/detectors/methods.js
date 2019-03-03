@@ -5,16 +5,21 @@ import { Detectors } from './detectors'
 import { serverLog } from "../../logs";
 
 /**
- * Gets affordances based on location, then calls a callback
+ * Gets place + weather and time affordances based on location, then calls a callback
  * @param {string} uid user id
  * @param location {object} location object from the background geolocation package
  * @param {function} callback takes two arguments: uid, bgLocationObject, and affordances
  */
-export const getAffordancesFromLocation = function (uid, location, callback) {
+
+
+export const getAffordancesFromLocation = function (uid, location, retrievePlaces, callback) {
   // setup url with lat and lng from tracking package
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
-  let url = `http://affordanceaware.herokuapp.com/location_keyvalues/${ lat }/${ lng }`;
+  let host = 'http://affordanceaware.herokuapp.com';
+  // let host = '0.0.0.0:5000';
+  let url = `${ host }/location_keyvalues/${ lat }/${ lng }` ? retrievePlaces :
+            `${ host }/location_weather_time_keyvalues/${ lat }/${ lng }`;
 
   // make request to affordance aware
   HTTP.get(url, {}, (error, response) => {

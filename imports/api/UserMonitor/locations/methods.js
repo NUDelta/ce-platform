@@ -7,7 +7,7 @@ import { Locations } from './locations.js';
 import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
-import { updateAssignmentDbdAfterUserLocationChange } from "../../OpportunisticCoordinator/identifier";
+import { decomissionFromAssignmentsIfAppropriate } from "../../OpportunisticCoordinator/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";
@@ -48,49 +48,20 @@ export const onLocationUpdate = (uid, location, callback) => {
   let user = Meteor.users.findOne({_id: uid});
 
   if (user) {
-    // based on activity info, decide whether place affordances are required
-    if (not_traveling_on_bicycle_or_vehicle) {
-      // get affordances and begin coordination process
-      getAffordancesFromLocation(uid, location, function (uid, bgLocationObject, affordances) {
-        let lat = bgLocationObject.coords.latitude;
-        let lng = bgLocationObject.coords.longitude;
-
-        // get affordances via affordance aware
-        let userAffordances = user.profile.staticAffordances;
-        affordances = Object.assign({}, affordances, userAffordances);
-        affordances = affordances !== null ? affordances : {};
-
-        // update information in database
-        updateLocationInDb(uid, bgLocationObject, affordances);
-        callback(uid);
-
-        // clear assignments and begin matching
-        let newAffs = Locations.findOne({uid: user._id}).affordances;
-        let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
-
-        let sharedAffs = [];
-        _.forEach(sharedKeys, (key) => {
-          sharedAffs[key] = newAffs[key];
-        });
-
-        updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
-        sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
-      });
-    }
-    else {
-      // TODO: query weather affordances only from affordance aware (requires custom routes for AA)
-      // For now, only log location so we have a continuous location signal, but don't get affordances
-      let lat = location.coords.latitude;
-      let lng = location.coords.longitude;
+    // retrieve place affordances if not traveling on bicycle or vehicle
+    let retrievePlaces = not_traveling_on_bicycle_or_vehicle;
+    // get affordances and begin coordination process
+    getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
+      let lat = bgLocationObject.coords.latitude;
+      let lng = bgLocationObject.coords.longitude;
 
       // get affordances via affordance aware
       let userAffordances = user.profile.staticAffordances;
-      let affordances = Object.assign({}, userAffordances);
+      affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
 
       // update information in database
-      updateLocationInDb(uid, location, affordances);
-      serverLog.call({message: 'location update while activity = in vehicle / bicycle'});
+      updateLocationInDb(uid, bgLocationObject, affordances);
       callback(uid);
 
       // clear assignments and begin matching
@@ -102,10 +73,10 @@ export const onLocationUpdate = (uid, location, callback) => {
         sharedAffs[key] = newAffs[key];
       });
 
-      updateAssignmentDbdAfterUserLocationChange(uid, sharedAffs);
+      decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
       sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
-    }
-  } // endif user
+    });
+  }
 };
 
 /**
