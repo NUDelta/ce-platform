@@ -34,7 +34,8 @@ export const getNeedObject = (iid, needName) => {
  * Updates the database with the availabilities of a user.
  *
  * @param uid {string}
- * @param availabilityDictionary {object} current availabilities as {iid: [need, need], iid: [need]}
+ * @param availabilityDictionary {object} current availabilities as
+ *  {iid: [[place, need], [place, need]], iid: [[place, need]]}
  * @return {[object]} array of object from Availability DB
  *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
@@ -44,6 +45,7 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   let availability = Availability.find().fetch();
   _.forEach(availability, av => {
     let iid = av._id;
+    let currentlyMatchedNeeds = availabilityDictionary[iid].map((place_need) => { return place_need[1]});
     if (!(iid in availabilityDictionary)) {
       return; // continue forEach
     }
@@ -52,8 +54,8 @@ export const updateAvailability = (uid, availabilityDictionary) => {
     _.forEach(av.needUserMaps, needUserMap => {
       let needName = needUserMap.needName;
 
-      // user to availability if they can fulfill needName
-      if (availabilityDictionary[iid].includes(needName)) {
+      // add user to availability if they can fulfill needName
+      if (currentlyMatchedNeeds.includes(needName)) {
         Availability.update(
           {
             _id: iid,
@@ -69,9 +71,35 @@ export const updateAvailability = (uid, availabilityDictionary) => {
           }
         );
 
-        // add needs and users who can fulfill need to current incident
+        // do the same mongo operation, but in JS so we run synchronously
         let newusers = new Set(needUserMap.uids);
         newusers.add(uid);
+        updatedNeeds.needUserMaps.push({
+          needName: needName,
+          uids: [...newusers]
+        });
+      }
+      // try to remove user from needs they are not currently available for
+      // NOTE: potentially redundant, clearAvailabilitiesForUser might have been already called
+      else {
+        Availability.update(
+          {
+            _id: iid,
+            "needUserMaps.needName": needName
+          },
+          {
+            $pull: { "needUserMaps.$.uids": uid }
+          },
+          (err) => {
+            if (err) {
+              console.log("error,", err);
+            }
+          }
+        );
+
+        // do the same mongo operation, but in JS so we run synchronously
+        let newusers = new Set(needUserMap.uids);
+        newusers.delete(uid);
         updatedNeeds.needUserMaps.push({
           needName: needName,
           uids: [...newusers]
@@ -109,6 +137,10 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
 
   _.forEach(currentAssignments, assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
+
+      _.forEach()
+      // boolean matchPredicate
+      // place matchPredicate.
       let matchPredicate = doesUserMatchNeed(
         uid,
         affordances,

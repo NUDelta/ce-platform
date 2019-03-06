@@ -52,8 +52,6 @@ export const onLocationUpdate = (uid, location, callback) => {
     let retrievePlaces = not_traveling_on_bicycle_or_vehicle;
     // get affordances and begin coordination process
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
-      let lat = bgLocationObject.coords.latitude;
-      let lng = bgLocationObject.coords.longitude;
 
       // get affordances via affordance aware
       let userAffordances = user.profile.staticAffordances;
@@ -61,20 +59,21 @@ export const onLocationUpdate = (uid, location, callback) => {
       affordances = affordances !== null ? affordances : {};
 
       // update information in database
-      updateLocationInDb(uid, bgLocationObject, affordances);
+      updateLocationInDb(uid, bgLocationObject, affordances); // blocking?
       callback(uid);
 
       // clear assignments and begin matching
-      let newAffs = Locations.findOne({uid: user._id}).affordances;
+      let newAffs = Locations.findOne({uid: user._id}).affordances; // newest affordances
+      // ??? why do this intersecion?
       let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
-
+      // ??? yea this too?
       let sharedAffs = [];
       _.forEach(sharedKeys, (key) => {
         sharedAffs[key] = newAffs[key];
       });
 
       decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
-      sendToMatcher(uid, sharedAffs, {'latitude': lat, 'longitude': lng});
+      sendToMatcher(uid, sharedAffs);
     });
   }
 };
@@ -85,31 +84,33 @@ export const onLocationUpdate = (uid, location, callback) => {
  *
  * @param uid {string} uid of user who's location just changed
  * @param affordances {object} dictionary of user's affordances
- * @param currLocation {object} current location of user as object with latitude/longitude keys and float values.
  */
-const sendToMatcher = (uid, affordances, currLocation) => {
+const sendToMatcher = (uid, affordances) => {
   // should check whether a user is available before sending to OpportunisticCoordinator
   // TODO: replace false with config.debug global setting
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
-    // get availabilities
+    // get availabilities containing iid/need/place information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
 
+    // update availabilityDictionary of most recent location
+    Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
+
     // get delays for each incident-need pair
-    let incidentDelays = {};
+    let needDelays = {};
     _.forEach(availabilityDictionary, (needs, iid) => {
       // create empty need object for each iid
-      incidentDelays[iid] = {};
+      needDelays[iid] = {};
 
       // find and add delays for each need
       _.forEach(needs, (individualNeed) => {
-        incidentDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
+        needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
       });
     });
 
     // start coordination process
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, incidentDelays, currLocation);
+    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, needDelays);
   } else {
     serverLog.call({ message: `user ${ uid } cannot participate yet.`})
   }
