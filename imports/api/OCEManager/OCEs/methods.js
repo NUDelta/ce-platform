@@ -5,7 +5,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Experiences } from './experiences.js';
 import { Schema } from '../../schema.js';
 import { getUnfinishedNeedNames } from '../progressorHelper';
-import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/methods";
+import { matchAffordancesWithDetector, getPlaceKeys,
+  onePlaceNotThesePlacesSets, placeSubsetAffordances } from "../../UserMonitor/detectors/methods";
 
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
@@ -36,33 +37,75 @@ export const clearAvailabilitiesForUser = (uid) => {
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
- * @param affordances {object} dictionary of user's affordances
- * @returns {object} object with keys as iids and values as array of matched needs
+ * @param affordances {object} dictionary of user's affordances, potentially nested
+ * e.g.,
+ * {
+     'sunny': true,
+     'trader_joes_evanston': {
+       'grocery': true
+     }
+   }
+ * @returns matches {object} object with keys as iids and values as array of matched [place, need] arrays
+ *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
  */
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
+  // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
+  let placeKeys = getPlaceKeys(affordances);
+  let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
+  // constructing matches to look like {iid : [ (place, needName), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
-      let doesMatchPredicate = doesUserMatchNeed(uid, affordances, iid, needName);
+      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
+        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
+        let affordanceSubsetToMatchForPlace = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-      if (doesMatchPredicate) {
-        if (matches[iid]) {
-          let currNeeds = matches[iid];
-          currNeeds.push(needName);
-          matches[iid] = currNeeds;
-        } else {
-          matches[iid] = [needName];
+        let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
+
+        if (doesMatchPredicate) {
+          if (matches[iid]) {
+            let place_needs = matches[iid];
+            place_needs.push([placeToMatch, needName]);
+            matches[iid] = place_needs;
+          } else {
+            matches[iid] = [[placeToMatch, needName]];
+          }
         }
-      }
-    });
+      });
+   });
   });
 
   return matches;
+};
+
+export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
+  let incidentIntersection = setIntersection(Object.keys(beforeAvails), Object.keys(afterAvails));
+  let sustainedAvailDict = {};
+  _.forEach(incidentIntersection, (incident) => {
+    let sustainedPlace_Need = setIntersection(beforeAvails[incident], afterAvails[incident]);
+    if (sustainedPlace_Need.length) {
+      sustainedAvailDict[incident] = sustainedPlace_Need;
+    }
+  });
+  return sustainedAvailDict;
+};
+
+export const setIntersection = function(A, B) {
+  let A_with_string_elements = A.map((e) => { return JSON.stringify(e)});
+  let B_with_string_elements = B.map((e) => { return JSON.stringify(e)});
+  let beforeSet = new Set(A_with_string_elements);
+  let afterSet = new Set(B_with_string_elements);
+
+  let intersection = new Set(
+    [...beforeSet].filter(x => afterSet.has(x)));
+
+  return Array.from(intersection).map((e) => { return JSON.parse(e)});
 };
 
 // TODO: ryan do this plz.

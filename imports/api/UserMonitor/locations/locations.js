@@ -28,6 +28,11 @@ Schema.Locations = new SimpleSchema({
   affordances: {
     type: Object,
     blackbox: true
+  },
+  availabilityDictionary: {
+    type: Object,
+    blackbox: true,
+    optional: true
   }
 });
 
