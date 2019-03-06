@@ -12,6 +12,7 @@ Template.affordances.onCreated(function () {
   GoogleMaps.ready('yourLocation', function (map) {
     let marker;
 
+    // FIXME(rlouie): currently broken, does not place marker
     // Create and move the marker when latLng changes.
     Tracker.autorun(function() {
       if (!this.location)
@@ -61,6 +62,7 @@ Template.affordances.helpers({
     }
   },
   timeSinceLastLocation() {
+    // FIXME(rlouie): currently returns NaN value
     let timediff_seconds = Math.floor((Date.now() - this.location.time) / 1000);
     // 1 minute
     if (timediff_seconds < 60) {
@@ -86,6 +88,6 @@ Template.affordances.helpers({
     return keys
   },
   affordanceValues(key){
-    return this.location.affordances[key]
+    return JSON.stringify(this.location.affordances[key]);
   }
 });
