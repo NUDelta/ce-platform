@@ -48,6 +48,6 @@ Template.affordances.helpers({
     return keys
   },
   affordanceValues(key){
-    return this.location.affordances[key]
+    return JSON.stringify(this.location.affordances[key]);
   }
 });
