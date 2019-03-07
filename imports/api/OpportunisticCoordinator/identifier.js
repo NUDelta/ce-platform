@@ -14,6 +14,7 @@ import { doesUserMatchNeed } from "../OCEManager/OCEs/methods";
 import { CONFIG } from "../config";
 import { serverLog } from "../logs";
 import {notifyForMissingParticipation} from "./server/noticationMethods";
+import {getPlaceKeys, onePlaceNotThesePlacesSets, placeSubsetAffordances} from "../UserMonitor/detectors/methods";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -45,10 +46,10 @@ export const updateAvailability = (uid, availabilityDictionary) => {
   let availability = Availability.find().fetch();
   _.forEach(availability, av => {
     let iid = av._id;
-    let currentlyMatchedNeeds = availabilityDictionary[iid].map((place_need) => { return place_need[1]});
     if (!(iid in availabilityDictionary)) {
       return; // continue forEach
     }
+    let currentlyMatchedNeeds = availabilityDictionary[iid].map((place_need) => { return place_need[1]});
 
     let updatedNeeds = { iid: iid, needUserMaps: [] };
     _.forEach(av.needUserMaps, needUserMap => {
@@ -134,37 +135,41 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
     }
   }).fetch();
 
+  let placeKeys = getPlaceKeys(affordances);
+  let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
 
   _.forEach(currentAssignments, assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
+      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
+        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
+        let affordanceSubsetToMatchForPlace = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-      _.forEach()
-      // boolean matchPredicate
-      // place matchPredicate.
-      let matchPredicate = doesUserMatchNeed(
-        uid,
-        affordances,
-        assignment._id,
-        needUserMap.needName
-      );
+        let matchPredicate = doesUserMatchNeed(
+          uid,
+          affordanceSubsetToMatchForPlace,
+          assignment._id,
+          needUserMap.needName
+        );
 
-      if (!matchPredicate && needUserMap.uids.includes(uid)) {
-        let delay = CONFIG.LEAVING_CONTEXT_DELAY;
+        //
+        if (!matchPredicate && needUserMap.uids.includes(uid)) {
+          let delay = CONFIG.LEAVING_CONTEXT_DELAY;
 
-        Meteor.setTimeout(function() {
-          adminUpdatesForRemovingUsersToIncidentEntirely(
-            [uid],
-            assignment._id,
-            needUserMap.needName
-          );
-          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
-          // they get continuously spammed with notifications. A way better UI would be to remove the notification
-          // entirely.
-          // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
-          // notifyForMissingParticipation([uid]);
-        }, delay * 60000);
+          Meteor.setTimeout(function () {
+            adminUpdatesForRemovingUsersToIncidentEntirely(
+              [uid],
+              assignment._id,
+              needUserMap.needName
+            );
+            // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
+            // they get continuously spammed with notifications. A way better UI would be to remove the notification
+            // entirely.
+            // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
+            // notifyForMissingParticipation([uid]);
+          }, delay * 60000);
 
-      }
+        }
+      });
     });
   });
 };
