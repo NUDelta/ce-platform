@@ -5,16 +5,20 @@ import { Assignments } from "./databaseHelpers";
 import { Availability } from "./databaseHelpers";
 import { Incidents } from "../OCEManager/OCEs/experiences.js";
 import { Submissions } from "../OCEManager/currentNeeds.js";
+import { Locations } from "../UserMonitor/locations/locations";
 import { numUnfinishedNeeds } from "../OCEManager/progressor";
 import { addEmptySubmissionsForNeed } from "../OCEManager/OCEs/methods.js";
 
 import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from
     "../UserMonitor/users/methods";
-import { doesUserMatchNeed } from "../OCEManager/OCEs/methods";
+import {doesUserMatchNeed, getNeedDelay} from "../OCEManager/OCEs/methods";
 import { CONFIG } from "../config";
 import { serverLog } from "../logs";
 import {notifyForMissingParticipation} from "./server/noticationMethods";
-import {getPlaceKeys, onePlaceNotThesePlacesSets, placeSubsetAffordances} from "../UserMonitor/detectors/methods";
+import {
+  flattenAffordanceDict, getPlaceKeys, onePlaceNotThesePlacesSets,
+  placeSubsetAffordances
+} from "../UserMonitor/detectors/methods";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -135,41 +139,52 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
     }
   }).fetch();
 
-  let placeKeys = getPlaceKeys(affordances);
-  let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+  let flatAffordances = flattenAffordanceDict(affordances);
 
   _.forEach(currentAssignments, assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
-      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
-        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        let affordanceSubsetToMatchForPlace = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-        let matchPredicate = doesUserMatchNeed(
-          uid,
-          affordanceSubsetToMatchForPlace,
-          assignment._id,
-          needUserMap.needName
-        );
+      let matchPredicate = doesUserMatchNeed(
+        uid,
+        flatAffordances,
+        assignment._id,
+        needUserMap.needName
+      );
 
-        //
-        if (!matchPredicate && needUserMap.uids.includes(uid)) {
-          let delay = CONFIG.LEAVING_CONTEXT_DELAY;
+      if (!matchPredicate && needUserMap.uids.includes(uid)) {
+        // note: decommissionDelay == notificationDelay
+        let delay = getNeedDelay(assignment._id, needUserMap.needName);
 
-          Meteor.setTimeout(function () {
+        Meteor.setTimeout(function () {
+
+          let nestedAffAfterDelay = Locations.findOne({uid: uid}).affordances;
+          let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
+
+          let matchPredicateAfterDelay = doesUserMatchNeed(
+            uid,
+            flatAffAfterDelay,
+            assignment._id,
+            needUserMap.needName
+          );
+
+          // Only remove after they do not match again after some decommission delay
+          if (!matchPredicateAfterDelay) {
+            console.log('removing user from Incident after decommission delay');
             adminUpdatesForRemovingUsersToIncidentEntirely(
               [uid],
               assignment._id,
               needUserMap.needName
             );
-            // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
-            // they get continuously spammed with notifications. A way better UI would be to remove the notification
-            // entirely.
-            // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
-            // notifyForMissingParticipation([uid]);
-          }, delay * 60000);
+          }
 
-        }
-      });
+          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
+          // they get continuously spammed with notifications. A way better UI would be to remove the notification
+          // entirely.
+          // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
+          // notifyForMissingParticipation([uid]);
+        }, delay * 1000);
+
+      }
     });
   });
 };

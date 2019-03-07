@@ -26,6 +26,10 @@ let LOCATIONS = {
     lat: 42.047621,
     lng: -87.679488
   },
+  'sushi': { // sashimi sashimi near whole foods
+    lat: 42.048068,
+    lng: -87.6811262
+  },
   'grocery2': {
     lat: 42.039818,
     lng: -87.680088
@@ -39,7 +43,10 @@ let USERS = {
     password: 'password',
     profile: {
       firstName: 'Garrett',
-      lastName: 'Hedman'
+      lastName: 'Hedman',
+      staticAffordances: {
+        mechanismRich: true
+      }
     }
   },
   garretts_brother: {
@@ -1725,7 +1732,7 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 };
 
 let EXPERIENCES = {
-  bumped: createBumped(),
+  // bumped: createBumped(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),
@@ -1734,103 +1741,103 @@ let EXPERIENCES = {
   // storyTime5: createStorytime(5),
   // storyTime6: createStorytime(6),
   // storyTime7: createStorytime(7),
-  independentStorybook: createIndependentStorybook(),
-  sunset: {
-    _id: Random.id(),
-    name: 'Sunset',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'sunset',
-    contributionTypes: [{
-      needName: 'sunset',
-      situation: {
-        detector: DETECTORS.sunset._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo of the sunset!'
-      },
-      numberNeeded: 20,
-      notificationDelay: 1,
-    }],
-    description: 'Create a timelapse of the sunset with others around the country',
-    notificationText: 'Take a photo of the sunset!',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationSunset.toString()
-    }]
-  },
-  halfhalf24: {
-    _id: Random.id(),
-    name: 'Half Half over 24 hours',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults', // FIXME(rlouie): should be a template grouped by time
-    contributionTypes: create24hoursContributionTypes(
-      function(i) {
-        let zpad_i = ("00" + i).slice(-2);
-        let toPass = {
-          instruction: `<span style="color: #0351ff">This experience is for testing the Half Half Photo Experience!</span><b> Take a picture of what you are doing today at hour ${zpad_i}:00 today.</b>`
-        };
-        return toPass;
-      },
-      10
-    ),
-    description: 'Create a photo collage of what you and others are doing at each of the hours in a day',
-    notificationText: 'Take a photo of what you are doing at this hour',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: sendNotificationNew24HourPhotoAlbumSub.toString()
-    }]
-  },
-  halfhalfAsynch: createHalfHalf(),
-  halfhalfSynch: createHalfHalf({numberInSituation: 2}),
-  halfhalfDay: {
-    _id: Random.id(),
-    name: 'Half Half Daytime',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: [{
-      needName: 'half half: daytime', // FIXME: make more semantically meaningful
-      situation: {
-        detector: DETECTORS.daytime._id,  // For testing during workday
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo of like Half Half Travel!'
-      },
-      numberNeeded: 50, // arbitrarily high for a study
-      notificationDelay: 1,
-    }],
-    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
-    notificationText: 'Participate in Half Half Travel!',
-    callbacks: [{
-      trigger: 'cb.numberOfSubmissions("half half: daytime") % 2 === 0',
-      function: sendNotificationTwoHalvesCompleted.toString()
-    }]
-  },
-  halfhalfNight: {
-    _id: Random.id(),
-    name: 'Half Half Nighttime',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: [{
-      needName: 'half half: nighttime', // FIXME: make more semantically meaningful
-      situation: {
-        detector: DETECTORS.night._id,  // For testing during evening
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo of like Half Half Travel!'
-      },
-      numberNeeded: 50, // arbitrarily high for a study
-      notificationDelay: 1, // no need to delay if its daytime outside
-    }],
-    description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
-    notificationText: 'Participate in Half Half Travel!',
-    callbacks: [{
-      trigger: 'cb.numberOfSubmissions("half half: nighttime") % 2 === 0',
-      function: sendNotificationTwoHalvesCompleted.toString()
-    }]
-  },
+  // independentStorybook: createIndependentStorybook(),
+  // sunset: {
+  //   _id: Random.id(),
+  //   name: 'Sunset',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'sunset',
+  //   contributionTypes: [{
+  //     needName: 'sunset',
+  //     situation: {
+  //       detector: DETECTORS.sunset._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Take a photo of the sunset!'
+  //     },
+  //     numberNeeded: 20,
+  //     notificationDelay: 1,
+  //   }],
+  //   description: 'Create a timelapse of the sunset with others around the country',
+  //   notificationText: 'Take a photo of the sunset!',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationSunset.toString()
+  //   }]
+  // },
+  // halfhalf24: {
+  //   _id: Random.id(),
+  //   name: 'Half Half over 24 hours',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults', // FIXME(rlouie): should be a template grouped by time
+  //   contributionTypes: create24hoursContributionTypes(
+  //     function(i) {
+  //       let zpad_i = ("00" + i).slice(-2);
+  //       let toPass = {
+  //         instruction: `<span style="color: #0351ff">This experience is for testing the Half Half Photo Experience!</span><b> Take a picture of what you are doing today at hour ${zpad_i}:00 today.</b>`
+  //       };
+  //       return toPass;
+  //     },
+  //     10
+  //   ),
+  //   description: 'Create a photo collage of what you and others are doing at each of the hours in a day',
+  //   notificationText: 'Take a photo of what you are doing at this hour',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: sendNotificationNew24HourPhotoAlbumSub.toString()
+  //   }]
+  // },
+  // halfhalfAsynch: createHalfHalf(),
+  // halfhalfSynch: createHalfHalf({numberInSituation: 2}),
+  // halfhalfDay: {
+  //   _id: Random.id(),
+  //   name: 'Half Half Daytime',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: [{
+  //     needName: 'half half: daytime', // FIXME: make more semantically meaningful
+  //     situation: {
+  //       detector: DETECTORS.daytime._id,  // For testing during workday
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Take a photo of like Half Half Travel!'
+  //     },
+  //     numberNeeded: 50, // arbitrarily high for a study
+  //     notificationDelay: 1,
+  //   }],
+  //   description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+  //   notificationText: 'Participate in Half Half Travel!',
+  //   callbacks: [{
+  //     trigger: 'cb.numberOfSubmissions("half half: daytime") % 2 === 0',
+  //     function: sendNotificationTwoHalvesCompleted.toString()
+  //   }]
+  // },
+  // halfhalfNight: {
+  //   _id: Random.id(),
+  //   name: 'Half Half Nighttime',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: [{
+  //     needName: 'half half: nighttime', // FIXME: make more semantically meaningful
+  //     situation: {
+  //       detector: DETECTORS.night._id,  // For testing during evening
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Take a photo of like Half Half Travel!'
+  //     },
+  //     numberNeeded: 50, // arbitrarily high for a study
+  //     notificationDelay: 1, // no need to delay if its daytime outside
+  //   }],
+  //   description: 'Create adventures that meet halfway! Ready to live in a parallel with someone else?',
+  //   notificationText: 'Participate in Half Half Travel!',
+  //   callbacks: [{
+  //     trigger: 'cb.numberOfSubmissions("half half: nighttime") % 2 === 0',
+  //     function: sendNotificationTwoHalvesCompleted.toString()
+  //   }]
+  // },
   halfhalf_sunny: {
     _id: Random.id(),
     name: 'Hand Silhouette',
@@ -1935,32 +1942,32 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify('A Cheers photo completed','View the photo').toString()
     }]
   },
-  halfhalf_japanese: {
-    _id: Random.id(),
-    name: 'Itadakimasu',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: 'Itadakimasu 1',
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_japanese),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Take a photo, while <span style="color: #0351ff">holding chopsticks in your hand</span>, saying "Itadakimasu" which translates to "I humbly receive this meal"',
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 90,
-    }]),
-    description: 'While eating Japanese Food, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify('A Itadakimasu photo completed','View the photo').toString()
-    }]
-  },
+  // halfhalf_japanese: {
+  //   _id: Random.id(),
+  //   name: 'Itadakimasu',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: 'Itadakimasu 1',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_japanese),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Take a photo, while <span style="color: #0351ff">holding chopsticks in your hand</span>, saying "Itadakimasu" which translates to "I humbly receive this meal"',
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 90,
+  //   }]),
+  //   description: 'While eating Japanese Food, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify('A Itadakimasu photo completed','View the photo').toString()
+  //   }]
+  // },
   halfhalf_religious: {
     _id: Random.id(),
     name: 'Religious Architecture',
@@ -2065,58 +2072,58 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify('A Book Buddies photo completed','View the photo').toString()
     }]
   },
-  halfhalf_plantcircle: {
-    _id: Random.id(),
-    name: 'Hold a plant',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: 'Hold a plant 1',
-      situation: {
-        detector: getDetectorId(DETECTORS.forest),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Find a plant in the <span style="color: #0351ff">park or garden</span>. Take a photo, with your hand shaped as a half-circle.',
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 5,
-    }]),
-    description: 'While in the park, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify('A Plant Circle photo completed','View the photo').toString()
-    }]
-  },
-  halfhalf_feettotrees: {
-    _id: Random.id(),
-    name: 'Feet to the trees',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: 'Feet to the trees 1',
-      situation: {
-        detector: getDetectorId(DETECTORS.forest),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Find a <span style="color: #0351ff">patch of grass to lay your back on</span>. Then, raise your feet. Take a photo of your foot stretching high into the sky',
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 5,
-    }]),
-    description: 'While in the park, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify('A Feet to the trees photo completed','View the photo').toString()
-    }]
-  },
+  // halfhalf_plantcircle: {
+  //   _id: Random.id(),
+  //   name: 'Hold a plant',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: 'Hold a plant 1',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.forest),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Find a plant in the <span style="color: #0351ff">park or garden</span>. Take a photo, with your hand shaped as a half-circle.',
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 5,
+  //   }]),
+  //   description: 'While in the park, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify('A Plant Circle photo completed','View the photo').toString()
+  //   }]
+  // },
+  // halfhalf_feettotrees: {
+  //   _id: Random.id(),
+  //   name: 'Feet to the trees',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: 'Feet to the trees 1',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.forest),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Find a <span style="color: #0351ff">patch of grass to lay your back on</span>. Then, raise your feet. Take a photo of your foot stretching high into the sky',
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 5,
+  //   }]),
+  //   description: 'While in the park, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify('A Feet to the trees photo completed','View the photo').toString()
+  //   }]
+  // },
   halfhalf_leakmask: {
     _id: Random.id(),
     name: 'Leaf Mask',
@@ -2195,58 +2202,58 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
     }]
   },
-  halfhalf_creamwiththat: {
-    _id: Random.id(),
-    name: "Want cream with that",
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: "Want cream with that 1",
-      situation: {
-        detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
-        number: '1'
-      },
-      toPass: {
-        instruction: `Do you have <span style="color: #0351ff">a cup or glass</span> you are drinking? Take a photo with it in the middle of the picture. You can even try to <span style="color: #0351ff">pour some extra "cream"</span> into it too!`,
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-teasing-lotion-in-a-cup.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 60,
-    }]),
-    description: 'While drinking coffee at a cafe, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify("A 'Want cream with that' photo completed",'View the photo').toString()
-    }]
-  },
-  halfhalf_eatfromsamebowl: {
-    _id: Random.id(),
-    name: "Share a plate",
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: "Share a plate 1", // bowl? Plate?  (basically all restaurants)
-      situation: {
-        detector: getDetectorId(DETECTORS.restaurant),
-        number: '1'
-      },
-      toPass: {
-        instruction: `Are you <span style="color: #0351ff">eating out</span> right now? Take a photo of yourself holding up <span style="color: #0351ff">a bowl or plate</span> to the middle of the screen.`,
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 60,
-    }]),
-    description: 'While eating out at a restaurant, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify("A 'Share a Plate' photo completed",'View the photo').toString()
-    }]
-  },
+  // halfhalf_creamwiththat: {
+  //   _id: Random.id(),
+  //   name: "Want cream with that",
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: "Want cream with that 1",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: `Do you have <span style="color: #0351ff">a cup or glass</span> you are drinking? Take a photo with it in the middle of the picture. You can even try to <span style="color: #0351ff">pour some extra "cream"</span> into it too!`,
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-teasing-lotion-in-a-cup.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 60,
+  //   }]),
+  //   description: 'While drinking coffee at a cafe, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify("A 'Want cream with that' photo completed",'View the photo').toString()
+  //   }]
+  // },
+  // halfhalf_eatfromsamebowl: {
+  //   _id: Random.id(),
+  //   name: "Share a plate",
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: "Share a plate 1", // bowl? Plate?  (basically all restaurants)
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.restaurant),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: `Are you <span style="color: #0351ff">eating out</span> right now? Take a photo of yourself holding up <span style="color: #0351ff">a bowl or plate</span> to the middle of the screen.`,
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 60,
+  //   }]),
+  //   description: 'While eating out at a restaurant, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify("A 'Share a Plate' photo completed",'View the photo').toString()
+  //   }]
+  // },
   halfhalf_bigbites: {
     _id: Random.id(),
     name: "Big Bites",
@@ -2272,369 +2279,369 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify("A 'Big Bites' photo completed",'View the photo').toString()
     }]
   },
-  halfhalfEmbodiedMimicry: {
-    _id: Random.id(),
-    name: 'Body Mirror',
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: halfhalfEmbodiedContributionTypes(),
-    description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
-    notificationText: 'Your situation made you available to participate in Body Mirror!',
-    callbacks: notifCbForMultiNeeds(
-      halfhalfEmbodiedContributionTypes(),
-      "cb.numberOfSubmissions(\"${need.needName}\") % 2 === 0",
-      sendNotificationTwoHalvesCompleted)
-  },
-  situationaware_sunny: {
-    _id: Random.id(),
-    name: 'Sunny Days',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Sunny Days',
-      situation: {
-        detector: getDetectorId(DETECTORS.sunny),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Are you enjoying <span style="color: #0351ff">good weather today?</span> Share a photo of how you are experiencing the sun.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 1,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Sunny Days', 'View the photo').toString()
-    }]
-  },
-  situationaware_grocery: {
-    _id: Random.id(),
-    name: 'Feed yourself',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Feed yourself',
-      situation: {
-        detector: getDetectorId(DETECTORS.grocery),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">shopping for groceries?</span> Share a photo of what you are buying or looking at.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Feed yourself', 'View the photo').toString()
-    }]
-  },
-  situationaware_cafe: {
-    _id: Random.id(),
-    name: 'Cafe Days',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Cafe Days',
-      situation: {
-        detector: getDetectorId(DETECTORS.coffee),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Cafe Days', 'View the photo').toString()
-    }]
-  },
-  situationaware_bar: {
-    _id: Random.id(),
-    name: 'Hit the Bars',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Hit the Bars',
-      situation: {
-        detector: getDetectorId(DETECTORS.bar),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Hit the Bars', 'View the photo').toString()
-    }]
-  },
-  situationaware_japanese: {
-    _id: Random.id(),
-    name: 'Eating Japanese Food',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Eating Japanese Food',
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_japanese),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Eating Japanese Food', 'View the photo').toString()
-    }]
-  },
-  situationaware_religious: {
-    _id: Random.id(),
-    name: 'Religious Worship',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Religious Worship',
-      situation: {
-        detector: getDetectorId(DETECTORS.castle),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 30,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Religious Worship', 'View the photo').toString()
-    }]
-  },
-  situationaware_sunset: {
-    _id: Random.id(),
-    name: 'Catch the sunset',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Catch the sunset',
-      situation: {
-        detector: getDetectorId(DETECTORS.sunset),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you out during <span style="color: #0351ff">sunset?</span> Share a photo of what the sky looks like where you are.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 1,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Catch the sunset', 'View the photo').toString()
-    }]
-  },
-  situationaware_asian: {
-    _id: Random.id(),
-    name: 'Eating Asian Food',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Eating Asian Food',
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Eating Asian Food', 'View the photo').toString()
-    }]
-  },
-  situationaware_books: {
-    _id: Random.id(),
-    name: 'Reading a book',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Reading a book',
-      situation: {
-        detector: getDetectorId(DETECTORS.library),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 90,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Reading a book', 'View the photo').toString()
-    }]
-  },
-  situationaware_parks: {
-    _id: Random.id(),
-    name: 'I love parks',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'I love parks',
-      situation: {
-        detector: getDetectorId(DETECTORS.forest),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">at a park?</span> Share a photo of what is going on around you.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 15,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for I love parks', 'View the photo').toString()
-    }]
-  },
-  situationaware_rainy: {
-    _id: Random.id(),
-    name: 'Rainy Day',
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: 'Rainy Day',
-      situation: {
-        detector: getDetectorId(DETECTORS.rainy),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Is it <span style="color: #0351ff">raining</span> today? Share a photo of what it looks like outside.'
-      },
-      numberNeeded: 50,
-      notificationDelay: 1,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Rainy Day', 'View the photo').toString()
-    }]
-  },
-  situationaware_pizza: {
-    _id: Random.id(),
-    name: "Eating some 'Za",
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: "Eating some 'Za",
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_pizza),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
-      },
-      numberNeeded: 50,
-      notificationDelay: 60,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Eating some \'Za', 'View the photo').toString()
-    }]
-  },
-  situationaware_eatout: {
-    _id: Random.id(),
-    name: "Eating out",
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: "Eating out",
-      situation: {
-        detector: getDetectorId(DETECTORS.restaurant),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
-      },
-      numberNeeded: 50,
-      notificationDelay: 60,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Eating out', 'View the photo').toString()
-    }]
-  },
-  situationaware_bigbite: {
-    _id: Random.id(),
-    name: "Eating Big Bites",
-    participateTemplate: 'uploadPhoto',
-    resultsTemplate: 'photosByCategories',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
-      needName: "Eating Big Bites",
-      situation: {
-        detector: getDetectorId(DETECTORS.big_bite_restaurant),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
-      },
-      numberNeeded: 50,
-      notificationDelay: 60,
-      allowRepeatContributions: true,
-    }]),
-    description: 'Appreciate the small moments with others who are doing the same',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: 'cb.newSubmission()',
-      function: notifyUsersInNeed('New moment for Eating Big Bites', 'View the photo').toString()
-    }]
-  },
+  // halfhalfEmbodiedMimicry: {
+  //   _id: Random.id(),
+  //   name: 'Body Mirror',
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: halfhalfEmbodiedContributionTypes(),
+  //   description: 'With your environment as the shared canvas, pose your body to be the mirror image of a friend',
+  //   notificationText: 'Your situation made you available to participate in Body Mirror!',
+  //   callbacks: notifCbForMultiNeeds(
+  //     halfhalfEmbodiedContributionTypes(),
+  //     "cb.numberOfSubmissions(\"${need.needName}\") % 2 === 0",
+  //     sendNotificationTwoHalvesCompleted)
+  // },
+  // situationaware_sunny: {
+  //   _id: Random.id(),
+  //   name: 'Sunny Days',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Sunny Days',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.sunny),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you enjoying <span style="color: #0351ff">good weather today?</span> Share a photo of how you are experiencing the sun.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 1,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Sunny Days', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_grocery: {
+  //   _id: Random.id(),
+  //   name: 'Feed yourself',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Feed yourself',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.grocery),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">shopping for groceries?</span> Share a photo of what you are buying or looking at.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Feed yourself', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_cafe: {
+  //   _id: Random.id(),
+  //   name: 'Cafe Days',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Cafe Days',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.coffee),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Cafe Days', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_bar: {
+  //   _id: Random.id(),
+  //   name: 'Hit the Bars',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Hit the Bars',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.bar),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Hit the Bars', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_japanese: {
+  //   _id: Random.id(),
+  //   name: 'Eating Japanese Food',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Eating Japanese Food',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_japanese),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Eating Japanese Food', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_religious: {
+  //   _id: Random.id(),
+  //   name: 'Religious Worship',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Religious Worship',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.castle),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 30,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Religious Worship', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_sunset: {
+  //   _id: Random.id(),
+  //   name: 'Catch the sunset',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Catch the sunset',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.sunset),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you out during <span style="color: #0351ff">sunset?</span> Share a photo of what the sky looks like where you are.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 1,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Catch the sunset', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_asian: {
+  //   _id: Random.id(),
+  //   name: 'Eating Asian Food',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Eating Asian Food',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_with_chopsticks),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Eating Asian Food', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_books: {
+  //   _id: Random.id(),
+  //   name: 'Reading a book',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Reading a book',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.library),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 90,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Reading a book', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_parks: {
+  //   _id: Random.id(),
+  //   name: 'I love parks',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'I love parks',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.forest),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">at a park?</span> Share a photo of what is going on around you.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 15,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for I love parks', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_rainy: {
+  //   _id: Random.id(),
+  //   name: 'Rainy Day',
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: 'Rainy Day',
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.rainy),
+  //       number: 1
+  //     },
+  //     toPass: {
+  //       instruction: 'Is it <span style="color: #0351ff">raining</span> today? Share a photo of what it looks like outside.'
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 1,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Rainy Day', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_pizza: {
+  //   _id: Random.id(),
+  //   name: "Eating some 'Za",
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: "Eating some 'Za",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_pizza),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 60,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Eating some \'Za', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_eatout: {
+  //   _id: Random.id(),
+  //   name: "Eating out",
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: "Eating out",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.restaurant),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 60,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Eating out', 'View the photo').toString()
+  //   }]
+  // },
+  // situationaware_bigbite: {
+  //   _id: Random.id(),
+  //   name: "Eating Big Bites",
+  //   participateTemplate: 'uploadPhoto',
+  //   resultsTemplate: 'photosByCategories',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
+  //     needName: "Eating Big Bites",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.big_bite_restaurant),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
+  //     },
+  //     numberNeeded: 50,
+  //     notificationDelay: 60,
+  //     allowRepeatContributions: true,
+  //   }]),
+  //   description: 'Appreciate the small moments with others who are doing the same',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: 'cb.newSubmission()',
+  //     function: notifyUsersInNeed('New moment for Eating Big Bites', 'View the photo').toString()
+  //   }]
+  // },
   sameSituationAwareness: {
     _id: Random.id(),
     name: 'Our Small Moments',
@@ -2760,154 +2767,154 @@ let EXPERIENCES = {
       function: sendNotificationScavenger.toString()
     }]
   },
-  natureHunt: {
-    _id: Random.id(),
-    name: 'Nature Scavenger Hunt',
-    participateTemplate: 'scavengerHuntParticipate',
-    resultsTemplate: 'scavengerHunt',
-    contributionTypes: [{
-      needName: 'tree',
-      situation: {
-        detector: DETECTORS.forest._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of a tree?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'leaf',
-      situation: {
-        detector: DETECTORS.forest._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of a leaf?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'grass',
-      situation: {
-        detector: DETECTORS.field._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the grass?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'lake',
-      situation: {
-        detector: DETECTORS.lake._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the lake?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'moon',
-      situation: {
-        detector: DETECTORS.night._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the moon?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging
-    }, {
-      needName: 'sun',
-      situation: {
-        detector: DETECTORS.sunny._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the sun?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging
-    }, {
-      needName: 'blueSky',
-      situation: {
-        detector: DETECTORS.sunny._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the blue sky?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging
-    }, {
-      needName: 'clouds',
-      situation: {
-        detector: DETECTORS.cloudy._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the clouds?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging
-    }, {
-      needName: 'puddle',
-      situation: {
-        detector: DETECTORS.rainy._id,
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of the puddle?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging
-    }],
-    description: 'Find an item for a scavenger hunt',
-    notificationText: 'Help us out with our nature scavenger hunt',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationScavenger.toString()
-    }]
-  },
-  foodfight: {
-    _id: Random.id(),
-    name: "Food Fight!",
-    participateTemplate: "scavengerHuntParticipate",
-    resultsTemplate: "scavengerHunt",
-    contributionTypes: [
-      {
-        needName: "foodPhoto",
-        situation: {
-          detector: DETECTORS.restaurant._id,
-          number: 1
-        },
-        toPass: {
-          instruction: "Can you take a photo of what you're eating?"
-        },
-        numberNeeded: 1
-      },
-      {
-        needName: "foodPhoto",
-        situation: {
-          detector: DETECTORS.restaurant._id,
-          number: 1
-        },
-        toPass: {
-          instruction: "Can you take a photo of what you're eating?"
-        },
-        numberNeeded: 1
-      }
-    ],
-    description: "Food fight!",
-    notificationText: "Food fight!",
-    callbacks: [{
-        trigger: "cb.incidentFinished()",
-        function: sendNotificationFoodFight.toString()
-    }]
-  }
+  // natureHunt: {
+  //   _id: Random.id(),
+  //   name: 'Nature Scavenger Hunt',
+  //   participateTemplate: 'scavengerHuntParticipate',
+  //   resultsTemplate: 'scavengerHunt',
+  //   contributionTypes: [{
+  //     needName: 'tree',
+  //     situation: {
+  //       detector: DETECTORS.forest._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of a tree?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'leaf',
+  //     situation: {
+  //       detector: DETECTORS.forest._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of a leaf?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'grass',
+  //     situation: {
+  //       detector: DETECTORS.field._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the grass?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'lake',
+  //     situation: {
+  //       detector: DETECTORS.lake._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the lake?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'moon',
+  //     situation: {
+  //       detector: DETECTORS.night._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the moon?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging
+  //   }, {
+  //     needName: 'sun',
+  //     situation: {
+  //       detector: DETECTORS.sunny._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the sun?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging
+  //   }, {
+  //     needName: 'blueSky',
+  //     situation: {
+  //       detector: DETECTORS.sunny._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the blue sky?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging
+  //   }, {
+  //     needName: 'clouds',
+  //     situation: {
+  //       detector: DETECTORS.cloudy._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the clouds?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging
+  //   }, {
+  //     needName: 'puddle',
+  //     situation: {
+  //       detector: DETECTORS.rainy._id,
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of the puddle?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging
+  //   }],
+  //   description: 'Find an item for a scavenger hunt',
+  //   notificationText: 'Help us out with our nature scavenger hunt',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationScavenger.toString()
+  //   }]
+  // },
+  // foodfight: {
+  //   _id: Random.id(),
+  //   name: "Food Fight!",
+  //   participateTemplate: "scavengerHuntParticipate",
+  //   resultsTemplate: "scavengerHunt",
+  //   contributionTypes: [
+  //     {
+  //       needName: "foodPhoto",
+  //       situation: {
+  //         detector: DETECTORS.restaurant._id,
+  //         number: 1
+  //       },
+  //       toPass: {
+  //         instruction: "Can you take a photo of what you're eating?"
+  //       },
+  //       numberNeeded: 1
+  //     },
+  //     {
+  //       needName: "foodPhoto",
+  //       situation: {
+  //         detector: DETECTORS.restaurant._id,
+  //         number: 1
+  //       },
+  //       toPass: {
+  //         instruction: "Can you take a photo of what you're eating?"
+  //       },
+  //       numberNeeded: 1
+  //     }
+  //   ],
+  //   description: "Food fight!",
+  //   notificationText: "Food fight!",
+  //   callbacks: [{
+  //       trigger: "cb.incidentFinished()",
+  //       function: sendNotificationFoodFight.toString()
+  //   }]
+  // }
 };
 
 export const CONSTANTS = {

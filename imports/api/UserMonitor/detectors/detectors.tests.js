@@ -5,7 +5,8 @@ import {
 }
   from './methods';
 import { Detectors } from './detectors';
-import { getPlaceKeys, onePlaceNotThesePlacesSets, placeSubsetAffordances } from './methods'
+import { getPlaceKeys, onePlaceNotThesePlacesSets,
+         placeSubsetAffordances, flattenAffordanceDict} from './methods'
 import { CONSTANTS } from "../../Testing/testingconstants";
 
 
@@ -121,6 +122,8 @@ describe('Helpers for Nested {Place: {Affordance: true}}', function() {
     'rainy': true
   };
 
+
+
   it('getPlaceKeys from query with 3 places', function() {
     let placeKeys = getPlaceKeys(aff1);
     console.log(placeKeys);
@@ -196,6 +199,11 @@ describe('Helpers for Nested {Place: {Affordance: true}}', function() {
     };
     chai.assert.equal(JSON.stringify(thisPlaceSubsetAffordances), JSON.stringify(ramen_subset));
 
+  });
+
+  it('flattened affordances should look like it did previously without nesting', function() {
+    let flatDict = flattenAffordanceDict(aff0);
+    chai.assert.equal(JSON.stringify(flatDict), JSON.stringify({'sunny': true, 'grocery': true}))
   });
 
 });
