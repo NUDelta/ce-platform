@@ -77,7 +77,7 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
 
   _.forEach(userAvailability, (matchingPlaceNeeds, iid) => {
     _.forEach(matchingPlaceNeeds, (individualPlace_Need) => {
-      let {placeMatch, individualNeed} = individualPlace_Need;
+      let [placeMatch, individualNeed] = individualPlace_Need;
 
       // get current delay in ms
       let currDelay = needDelays[iid][individualNeed] * 1000; // delay in ms

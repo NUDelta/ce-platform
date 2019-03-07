@@ -99,12 +99,13 @@ const sendToMatcher = (uid, affordances) => {
 
     // get delays for each incident-need pair
     let needDelays = {};
-    _.forEach(availabilityDictionary, (needs, iid) => {
+    _.forEach(availabilityDictionary, (place_needs, iid) => {
       // create empty need object for each iid
       needDelays[iid] = {};
 
       // find and add delays for each need
-      _.forEach(needs, (individualNeed) => {
+      _.forEach(place_needs, (individualPlace_individualNeed) => {
+        let [individualPlace, individualNeed] = individualPlace_individualNeed;
         needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
       });
     });
