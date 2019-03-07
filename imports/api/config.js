@@ -4,9 +4,6 @@ import { SimpleSchema } from "meteor/aldeed:simple-schema";
 export const CONFIG = {
   MODE: process.env.MODE || "local",
   DEBUG: true,
-  CONTEXT_DELAY: 0,
-  LEAVING_CONTEXT_DELAY: 0,
-
 };
 
 export const AUTH = {

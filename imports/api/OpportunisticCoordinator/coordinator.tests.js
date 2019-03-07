@@ -156,7 +156,7 @@ describe('Availability Collection Tests', function() {
 
 describe('Assignments Collection test', () => {
 
-  const testExperience = 'halfhalfDay';
+  const testExperience = 'halfhalf_sunny';
   var testIncident;
   beforeEach(() => {
     resetDatabase();

@@ -23,6 +23,7 @@ describe('Simple End To End', function () {
   let DETECTOR = CONSTANTS.DETECTORS.grocery;
   let LOCATION = CONSTANTS.LOCATIONS.grocery;
   let LOCATION2 = CONSTANTS.LOCATIONS.grocery2;
+  let LOCATION_NOMATCH = CONSTANTS.LOCATIONS.sushi;
 
   beforeEach((done) => {
 
@@ -80,6 +81,88 @@ describe('Simple End To End', function () {
         done();
       } catch (err) { done(err); }
     }, (notificationDelay + 5) * 1000);
+  });
+
+  it('user steps away from vicinity but returns within delay time', function(done) {
+    // move to a location on same block, but that should be outside of affordance radius
+    let uid = findUserByUsername(USERNAME)._id;
+    let bgLocationObj = {
+      "coords": {
+        "latitude": LOCATION_NOMATCH.lat,
+        "longitude": LOCATION_NOMATCH.lng
+      },
+      "activity": {"type": "unknown", "confidence": 100}
+    };
+    onLocationUpdate(uid, bgLocationObj, function() {
+      console.log("Temporarily moved outside of vicinity of grocery store");
+    });
+
+    const contributionForNeed = CONSTANTS.EXPERIENCES[OCE_NAME].contributionTypes.find(function(x) {
+      return x.needName === NEEDNAME;
+    });
+    const notificationDelay = contributionForNeed.notificationDelay;
+
+    // Wait some time less than notification Delay before moving back in
+    Meteor.setTimeout(function() {
+
+      console.log("Checking if decommissioned prematurely with first non-match");
+      // SAME CHECKS AS FIRST TIME, JUST HOPING NOW YOU DIDNT GET REMOVED
+      let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+      let iid = incident._id;
+      let user = findUserByUsername(USERNAME);
+
+      console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+      //user has incident as an active incident
+      chai.assert(user.profile.activeIncidents.includes(iid), 'decommissioned prematurely - active incident not added to user profile');
+
+      //assignments has user assigned
+      let assignmentEntry = Assignments.findOne({ _id: iid });
+
+      let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+        return x.needName ===  NEEDNAME;
+      });
+
+      chai.assert.typeOf(needUserMap.uids, 'array', 'decommissioned prematurely - no needUserMap in Assignment DB');
+      chai.assert(needUserMap.uids.includes(user._id), 'decommissioned prematurely - uid not in needUserMap in Assignment DB');
+
+      // Move back to location
+      onLocationUpdate(
+        uid, {
+          "coords": {
+            "latitude": LOCATION.lat,
+            "longitude": LOCATION.lng
+          },
+          "activity": {"type": "unknown", "confidence": 100}
+        }, function() {
+          console.log("Returned to the vicinity of Grocery Store")
+        });
+
+      Meteor.setTimeout(function() {
+        try {
+          // Users still active, now that they have moved back
+          let incident = Incidents.findOne({ eid: CONSTANTS.EXPERIENCES[OCE_NAME]._id });
+          let iid = incident._id;
+          let user = findUserByUsername(USERNAME);
+
+          console.log('user.profile.activeIncidents', user.profile.activeIncidents);
+          //user has incident as an active incident
+          chai.assert(user.profile.activeIncidents.includes(iid), 'remain assigned while back in vicinity -- active incident not added to user profile');
+
+          //assignments has user assigned
+          let assignmentEntry = Assignments.findOne({ _id: iid });
+
+          let needUserMap = assignmentEntry.needUserMaps.find((x) => {
+            return x.needName ===  NEEDNAME;
+          });
+
+          chai.assert.typeOf(needUserMap.uids, 'array', 'remain assigned while back in vicinity -- no needUserMap in Assignment DB');
+          chai.assert(needUserMap.uids.includes(user._id), 'remain assigned while back in vicinity -- uid not in needUserMap in Assignment DB');
+
+          done();
+        } catch (err) { done(err); }
+      }, 2 * 1000);
+
+    }, (notificationDelay) * 0.2 * 1000);
   });
 
   it('user participates in experience', (done) => {

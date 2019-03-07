@@ -106,6 +106,26 @@ export const placeSubsetAffordances = function(aff, notThesePlaces) {
 };
 
 /**
+ *
+ * @param nestedAff {object} nested affordance dict
+ * @return flatDict {object} flattened dict, without the place/business name, just categories
+ */
+export const flattenAffordanceDict = function(nestedAff) {
+  let placeKeys = getPlaceKeys(nestedAff);
+  let flatDict = {};
+  _.forEach(nestedAff, (affVal, affKey) => {
+    if (placeKeys.includes(affKey)) {
+      // affVal looks like {grocery: true}
+      Object.assign(flatDict, affVal);
+    }
+    else {
+      flatDict[affKey] = affVal;
+    }
+  });
+  return flatDict;
+};
+
+/**
  * Attempts to match affordances with a detector
  * @param {Object} affordances  key value pairs of { userAffordances: values }
  * @param {String} detectorId detector to attempt matching for
