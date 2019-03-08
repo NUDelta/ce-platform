@@ -19,6 +19,7 @@ import {
   flattenAffordanceDict, getPlaceKeys, onePlaceNotThesePlacesSets,
   placeSubsetAffordances
 } from "../UserMonitor/detectors/methods";
+import {Decommission_log} from "../Logging/decommission_log";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -157,7 +158,8 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
 
         Meteor.setTimeout(function () {
 
-          let nestedAffAfterDelay = Locations.findOne({uid: uid}).affordances;
+          let lastLocation = Locations.findOne({uid: uid});
+          let nestedAffAfterDelay = lastLocation.affordances;
           let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
 
           let matchPredicateAfterDelay = doesUserMatchNeed(
@@ -170,6 +172,20 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
           // Only remove after they do not match again after some decommission delay
           if (!matchPredicateAfterDelay) {
             console.log('removing user from Incident after decommission delay');
+
+            Decommission_log.insert({
+              iid: assignment._id,
+              uid: uid,
+              needName: needUserMap.needName,
+              lat: lastLocation.lat,
+              lng: lastLocation.lng,
+              timestamp: Date.now(),
+              needMatch: matchPredicateAfterDelay,
+              affordances: nestedAffAfterDelay
+            }, (err) => {
+              console.log(err);
+            });
+
             adminUpdatesForRemovingUsersToIncidentEntirely(
               [uid],
               assignment._id,
