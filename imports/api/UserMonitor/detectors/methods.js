@@ -8,7 +8,7 @@ import { serverLog } from "../../logs";
  * Gets place + weather and time affordances based on location, then calls a callback
  * @param {string} uid user id
  * @param location {object} location object from the background geolocation package
- * @param {function} callback takes two arguments: uid, bgLocationObject, and affordances
+ * @param {function} callback takes three arguments: uid, bgLocationObject, and affordances
  */
 
 

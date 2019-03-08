@@ -68,7 +68,8 @@ Schema.Location_log = new SimpleSchema({
   },
   affordances: {
     type: Object,
-    blackbox: true
+    blackbox: true,
+    optional: true
   }
 });
 

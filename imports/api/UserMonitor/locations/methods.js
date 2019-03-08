@@ -12,6 +12,7 @@ import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
+import {EstimatedLocation_log} from "../../Logging/estimated_location_log";
 
 Meteor.methods({
   triggerUpdate(lat, lng, uid){
@@ -27,7 +28,7 @@ Meteor.methods({
  *
  * @param uid {string} uid of user who's location just changed
  * @param location {object} location object from the background geolocation package
- * @param callback {function} callback function to run after code completion
+ * @param callback {function} callback function to run after code completion, takes in one argument, uid
  */
 export const onLocationUpdate = (uid, location, callback) => {
   serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
@@ -48,8 +49,21 @@ export const onLocationUpdate = (uid, location, callback) => {
   let user = Meteor.users.findOne({_id: uid});
 
   if (user) {
+
+    let rawLocationId = insertRawLocationInDB(uid, location);
+
+    // smooth location if not traveling on bicycle or vehicle
+    if (not_traveling_on_bicycle_or_vehicle) {
+      let [estimatedLat, estimatedLng] = estimateLocationViaAccuracyTimeWeightedAverage(lastNLocationsForUser(5, uid));
+
+      // modify bgGeolocation object with estimated location, if appropriate
+      location.coords['latitude'] = estimatedLat;
+      location.coords['longitude'] = estimatedLng;
+    }
+
     // retrieve place affordances if not traveling on bicycle or vehicle
     let retrievePlaces = not_traveling_on_bicycle_or_vehicle;
+
     // get affordances and begin coordination process
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
 
@@ -59,7 +73,8 @@ export const onLocationUpdate = (uid, location, callback) => {
       affordances = affordances !== null ? affordances : {};
 
       // update information in database
-      updateLocationInDb(uid, bgLocationObject, affordances); // blocking?
+      updateLocationInDb(uid, bgLocationObject, affordances);
+      insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
       callback(uid);
 
       // clear assignments and begin matching
@@ -215,14 +230,45 @@ export const distanceBetweenLocations = (start, end) => {
   return r * c;
 };
 
+
+const lastNLocationsForUser = function(N, uid) {
+  return Location_log.find({uid: uid}, {sort: {timestamp: -1}}, {limit: N});
+};
+
+const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) {
+  let weightedSumLat = 0;
+  let weightedSumLng = 0;
+  let totalWeight = 0;
+
+  let accuracyArr = lastNLocations.map((loc) => { return (loc.accuracy < 10) ? 10 : loc.accuracy; });
+  let timeArr = lastNLocations.map((loc) => { return loc.timestamp; });
+  let latArr = lastNLocations.map((loc) => { return loc.lat; });
+  let lngArr = lastNLocations.map((loc) => { return loc.lng; });
+
+  for (let i = 0; i < accuracyArr.length; i++) {
+    // when i = 0, e.g., most recent point
+    // 1 / ( log(dt + 1) + 1 ) =
+    // 1 / ( log(0 + 1) + 1 ) =
+    // 1 / ( 0 + 1 ) =
+    // 1 / ( 1 ) =
+    // 1
+    let w_i = (10 / accuracyArr[i]) * (1 / (Math.log(Math.abs(timeArr[0] - timeArr[i])) + 1) + 1);
+    totalWeight += w_i;
+    weightedSumLat += w_i * latArr[i];
+    weightedSumLng += w_i * lngArr[i];
+  }
+
+  let averageLat = weightedSumLat / totalWeight;
+  let averageLng = weightedSumLng / totalWeight;
+  return [averageLat, averageLng]
+};
+
 /**
- * Updates the location for a user in the database.
- *
- * @param uid {string} uid of user who's location just changed
- * @param location {object} location object from the background geolocation package
- * @param affordances {object} affordances key/value dictionary
+ * Inserts newest raw location into Locations_log,
+ * @param uid
+ * @param location
  */
-const updateLocationInDb = (uid, location, affordances) => {
+export const insertRawLocationInDB = (uid, location) => {
   // check if nested objects exist
   if (!('activity' in location)) {
     location.activity = {}
@@ -235,8 +281,42 @@ const updateLocationInDb = (uid, location, affordances) => {
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
 
-  // get user's current location and update, if exists. otherwise, create a new entry.
-  const entry = Locations.findOne({ uid: uid });
+  // store location update in logs
+  let _id = Location_log.insert({
+    uid: uid,
+    lat: lat,
+    lng: lng,
+    speed: location.coords.speed || -1,
+    floor: location.coords.floor || -1,
+    accuracy: location.coords.accuracy || -1,
+    altitude_accuracy: location.coords.altitude_accuracy || -1,
+    altitude: location.coords.altitude || -1,
+    heading: location.coords.heading || -1,
+    is_moving: location.is_moving || false,
+    activity_type: location.activity.type || "",
+    activity_confidence: location.activity.confidence || -1,
+    battery_level: location.battery.level || -1,
+    battery_is_charging: location.battery.is_charging || false,
+    timestamp: Date.now(),
+  });
+
+  return _id;
+};
+
+
+/**
+ * Updates the estimated location for a user in the database.
+ *
+ * @param uid {string} uid of user who's location just changed
+ * @param location {object} location object from the background geolocation package
+ * @param affordances {object} affordances key/value dictionary
+ */
+const updateLocationInDb = (uid, location, affordances) => {
+  let lat = location.coords.latitude;
+  let lng = location.coords.longitude;
+
+  // get user's current estimated location and update, if exists. otherwise, create a new entry.
+  const entry = Locations.findOne({uid: uid});
   if (entry) {
     Locations.update(entry._id, {
       $set: {
@@ -263,24 +343,23 @@ const updateLocationInDb = (uid, location, affordances) => {
       }
     });
   }
+};
 
-  // store location update in logs
-  Location_log.insert({
+
+const insertEstimatedLocationLog = (uid, location, affordances, rawLocationId) => {
+  let lat = location.coords.latitude;
+  let lng = location.coords.longitude;
+  let _id = EstimatedLocation_log.insert({
     uid: uid,
+    raw_location_id: rawLocationId,
     lat: lat,
     lng: lng,
-    speed: location.coords.speed || -1,
-    floor: location.coords.floor || -1,
-    accuracy: location.coords.accuracy || -1,
-    altitude_accuracy: location.coords.altitude_accuracy || -1,
-    altitude: location.coords.altitude || -1,
-    heading: location.coords.heading || -1,
-    is_moving: location.is_moving || false,
-    activity_type: location.activity.type || "",
-    activity_confidence: location.activity.confidence || -1,
-    battery_level: location.battery.level || -1,
-    battery_is_charging: location.battery.is_charging || false,
     timestamp: Date.now(),
-    affordances: affordances,
+    affordances: affordances
+  }, (err) => {
+    if (err) {
+      log.error("EstimatedLocation_log, can't add a new estimated location", err);
+    }
   });
+  return _id;
 };
