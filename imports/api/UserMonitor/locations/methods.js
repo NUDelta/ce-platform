@@ -232,8 +232,15 @@ export const distanceBetweenLocations = (start, end) => {
 
 
 const lastNLocationsForUser = function(N, uid) {
-  return Location_log.find({uid: uid}, {sort: {timestamp: -1}}, {limit: N});
+  let locs = Location_log.find({
+    uid: uid
+  }, {
+    sort: {timestamp: -1},
+    limit: N
+  }).map((doc) => {return doc; });
+  return locs;
 };
+
 
 const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) {
   let weightedSumLat = 0;
@@ -246,7 +253,7 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
   let lngArr = lastNLocations.map((loc) => { return loc.lng; });
 
   for (let i = 0; i < accuracyArr.length; i++) {
-    let dt = Math.abs(timeArr[0] - timeArr[i]);
+    let dt = Math.abs(timeArr[0] - timeArr[i]) / 1000; // time difference in seconds
     let w_i;
     if (dt == 0) {
       // when dt = 0 seconds, time-weighting component = 1
@@ -258,7 +265,8 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
       // 1 / ( log(0.1 + 1) ) =
       // 1 / ( log(1.1) ) =
       // 1 / ( some-positive-number )
-      w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 1)));
+      // w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 2.719)));
+      w_i = (10 / accuracyArr[i]) * (10 / (dt + 10));
     }
     totalWeight += w_i;
     weightedSumLat += w_i * latArr[i];
@@ -304,7 +312,7 @@ export const insertRawLocationInDB = (uid, location) => {
     activity_confidence: location.activity.confidence || -1,
     battery_level: location.battery.level || -1,
     battery_is_charging: location.battery.is_charging || false,
-    timestamp: Date.now(),
+    timestamp: location.simulation_timestamp || Date.now(),
   });
 
   return _id;
