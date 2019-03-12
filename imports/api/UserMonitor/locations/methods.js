@@ -246,13 +246,20 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
   let lngArr = lastNLocations.map((loc) => { return loc.lng; });
 
   for (let i = 0; i < accuracyArr.length; i++) {
-    // when i = 0, e.g., most recent point
-    // 1 / ( log(dt + 1) + 1 ) =
-    // 1 / ( log(0 + 1) + 1 ) =
-    // 1 / ( 0 + 1 ) =
-    // 1 / ( 1 ) =
-    // 1
-    let w_i = (10 / accuracyArr[i]) * (1 / (Math.log(Math.abs(timeArr[0] - timeArr[i])) + 1) + 1);
+    let dt = Math.abs(timeArr[0] - timeArr[i]);
+    let w_i;
+    if (dt == 0) {
+      // when dt = 0 seconds, time-weighting component = 1
+      w_i = (10 / accuracyArr[i]);
+    }
+    else {
+      // when dt > 0, time-weighting component =
+      // 1 / ( log(dt + 1) ) =
+      // 1 / ( log(0.1 + 1) ) =
+      // 1 / ( log(1.1) ) =
+      // 1 / ( some-positive-number )
+      w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 1)));
+    }
     totalWeight += w_i;
     weightedSumLat += w_i * latArr[i];
     weightedSumLng += w_i * lngArr[i];
