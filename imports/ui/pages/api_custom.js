@@ -77,6 +77,19 @@ Template.bumped.helpers({
   }
 });
 
+Template.bumpedThree.helpers({
+  friendNames() {
+    const friends = this.users.filter(friend => {
+      return this.notification_log.filter(notif => friend._id == notif.uid && friend._id !== Meteor.userId()).length > 0;
+    });
+
+    return {
+      friendOne: friends[0].username,
+      friendTwo: friends[1].username
+    }
+  }
+});
+
 /**
  * Returns an array with arrays of the given size.
  *

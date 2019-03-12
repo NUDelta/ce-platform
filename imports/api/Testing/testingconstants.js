@@ -1151,6 +1151,52 @@ const createHalfHalf = function(
   return experience;
 };
 
+const createBumpedThree = function() {
+  let experience = {
+    name: 'Bumped Three',
+    participateTemplate: 'bumpedThree',
+    resultsTemplate: 'bumpedThreeResults',
+    contributionTypes: [],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: []
+  };
+
+  const bumpedThreeCallback = function (sub) {
+    console.log("calling bumpedThree callback");
+    // to fill in
+  }
+
+  let places = [
+    ["coffee", "at a coffee shop"],
+  ];
+
+  _.forEach(places, (place) => {
+    const [detectorName, situationDescription] = place;
+
+    const need = {
+      needName: `bumped three: ${situationDescription}`,
+      situation: {
+        detector: DETECTORS[detectorName]._id,
+        number: 3
+      },
+      toPass: {
+        instruction: `Having a good time ${situationDescription}?`
+      },
+      numberNeeded: 3
+    };
+
+    let callback = {
+      trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
+      function: bumpedThreeCallback.toString(),
+    };
+    experience.contributionTypes.push(need);
+    experience.callbacks.push(callback)
+  });
+
+  return experience;
+}
+
 /**
  *
  * @param numberInSituation [Number] Controls asynchronous vs synchronous. Defaults to Asynchronous.
@@ -1732,7 +1778,8 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 };
 
 let EXPERIENCES = {
-  // bumped: createBumped(),
+  bumped: createBumped(),
+  bumpedThree: createBumpedThree(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),

@@ -46,6 +46,7 @@ export const onLocationUpdate = (uid, location, callback) => {
 
   // attempt to find a user with the given uid
   let user = Meteor.users.findOne({_id: uid});
+  serverLog.call({message: `user ${user}`});
 
   if (user) {
     // retrieve place affordances if not traveling on bicycle or vehicle
@@ -57,6 +58,7 @@ export const onLocationUpdate = (uid, location, callback) => {
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
+      serverLog.call({message: `affordances ${affordances}`});
 
       // update information in database
       updateLocationInDb(uid, bgLocationObject, affordances); // blocking?

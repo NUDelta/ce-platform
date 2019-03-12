@@ -56,6 +56,13 @@ Meteor.methods({
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
+  startBumpedThree(){
+    console.log("starting bumped three");
+    let value = CONSTANTS.EXPERIENCES.bumpedThree;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
   startScavengerHunt(){
     console.log("starting scavenger");
 
