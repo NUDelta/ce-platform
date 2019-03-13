@@ -15,3 +15,4 @@ import '../../api/OCEManager/server/publications.js';
 import '../../api/OpportunisticCoordinator/server/noticationMethods.js';
 import '../../api/Testing/createNewExperiences';
 import '../../api/Logging/page_log/methods.js';
+import '../../api/Logging/groundtruth_log/methods.js';

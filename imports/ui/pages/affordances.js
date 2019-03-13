@@ -28,8 +28,24 @@ Template.affordances.events({
     } else {
       affordanceInfo.style.display = "block";
     }
-  }
+  },
 
+  'submit form': function(event) {
+    event.preventDefault();
+
+    let label = document.getElementById('groundtruth-label').value;
+    let uid = Meteor.userId();
+
+    Meteor.call('insertGroundTruthLog', {
+      uid: uid, label: label
+    }, function(err, res) {
+      if (err) {
+        $("div#groundtruth-status").text('Failed to log [' + label + ']');
+      } else {
+        $("div#groundtruth-status").text('Yes! Logged [' + label + ']');
+      }
+    });
+  }
 });
 
 Template.affordances.helpers({
