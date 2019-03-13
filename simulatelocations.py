@@ -293,8 +293,18 @@ def allUsersGrocery():
 
     print("all users at grocery")
 
+def allUsersCoffee():
+    setLocation(coffee, sys.argv[1])
+    setLocation(coffee, sys.argv[2])
+    setLocation(coffee, sys.argv[3])
+    setLocation(coffee, sys.argv[4])
+    setLocation(coffee, sys.argv[5])
+
+    print("all users at coffee")
+
 if __name__ == "__main__":
-    allUsersGrocery()
-    #garrettAndMegBump()
+    # allUsersGrocery()
+	allUsersCoffee()
+    # garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()

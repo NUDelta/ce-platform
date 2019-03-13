@@ -106,6 +106,60 @@
 
 </template>
 
+<template name="bumpedThreeResults">
+  <head>
+    <style>
+      .sub_container {
+        display:flex;
+        flex-direction:row;
+        align-items: center;
+      }
+      .img_container {
+        min-height: 150px;
+        max-width: 50%;
+      }
+      .caption {
+        padding: 1em;
+      }
+      .pending_img {
+        min-height: 150px;
+        width: 50%;
+        background-color: #c1c1c1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  {{#with content}}
+    <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
+      <div class="caption">Check out what everyone is up to!</div>
+      <div class="sub_container">
+        <div class="img_container">{{> Template.dynamic template="displayImage" data=(myImage)}}</div> 
+        <div class="caption">"{{myCaption}}" -You</div>
+      </div>
+      <div class="sub_container">
+        {{#if imageOne}}
+          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
+          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageOne)}}</div> 
+        {{else}}
+          <div class="caption">We're still waiting on this submission. Hang tight!</div>
+          <div class="pending_img">?</div>
+          {{/if}}
+        </div>
+        <div class="sub_container">
+          {{#if imageTwo}}
+          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageTwo)}}</div> 
+          <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
+          {{else}}
+          <div class="pending_img">?</div>
+          <div class="caption">We're still waiting on this submission. Hang tight!</div>
+        {{/if}}
+      </div>
+    </div>
+  {{/with}}
+</template>
+
 <template name="halfhalfResults">
   <head>
     <style>

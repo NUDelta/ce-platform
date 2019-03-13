@@ -180,10 +180,10 @@
 
     {{#if Template.subscriptionsReady}}
         <div class="instruction">
-          <span>{{this.toPass.instruction}}</span>
+          <span>{{this.toPass.situationDescription}}</span>
           {{#with friendNames}}
             <span>
-                You just bumped into {{friendOne}} and {{friendTwo}}. Send a picture of your drink and some caption about it! (Why you ordered it, why you like it, etc.)
+                You just bumped into {{friendOne}} and {{friendTwo}}. {{instruction}}
             </span>
           {{/with}}
         </div>

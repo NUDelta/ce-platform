@@ -2,7 +2,7 @@ Push.debug = true;
 
 Push.Configure({
   apn: {
-    production: true,
+    production: false,
     keyData: Assets.getText("ios/pp.pem"),
     certData: Assets.getText("ios/cc.pem"),
     passphrase: "limo",
@@ -12,6 +12,6 @@ Push.Configure({
 
 Push.allow({
   send: function (userId, notification) {
-    return true; // Allow all users to send
+    return false; // Allow all users to send
   }
 });

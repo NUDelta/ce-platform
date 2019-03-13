@@ -1153,7 +1153,7 @@ const createHalfHalf = function(
 
 const createBumpedThree = function() {
   let experience = {
-    name: 'Bumped Three',
+    name: 'Group Bumped',
     participateTemplate: 'bumpedThree',
     resultsTemplate: 'bumpedThreeResults',
     contributionTypes: [],
@@ -1163,16 +1163,16 @@ const createBumpedThree = function() {
   };
 
   const bumpedThreeCallback = function (sub) {
-    console.log("calling bumpedThree callback");
+    console.log("A bumpedThree experience completed!");
     // to fill in
   }
 
   let places = [
-    ["coffee", "at a coffee shop"],
+    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
   ];
 
   _.forEach(places, (place) => {
-    const [detectorName, situationDescription] = place;
+    const [detectorName, situationDescription, instruction] = place;
 
     const need = {
       needName: `bumped three: ${situationDescription}`,
@@ -1181,7 +1181,8 @@ const createBumpedThree = function() {
         number: 3
       },
       toPass: {
-        instruction: `Having a good time ${situationDescription}?`
+        situationDescription: `Having a good time ${situationDescription}?`,
+        instruction: `${instruction}`
       },
       numberNeeded: 3
     };
