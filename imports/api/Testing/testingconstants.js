@@ -1169,6 +1169,7 @@ const createBumpedThree = function() {
 
   let places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    //weather/sky and other bumped three experiences can be added here
   ];
 
   _.forEach(places, (place) => {
