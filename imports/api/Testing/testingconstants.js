@@ -1178,7 +1178,7 @@ const createBumpedThree = function() {
     const need = {
       needName: `bumped three: ${situationDescription}`,
       situation: {
-        detector: DETECTORS[detectorName]._id,
+        detector: getDetectorId(DETECTORS[detectorName]),
         number: 3
       },
       toPass: {
