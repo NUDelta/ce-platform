@@ -23,8 +23,16 @@
                 {{> googleMap name="yourLocation" options=mapOptions}}
             </div>
         </div>
-      <div class="p-4">
-     </div>
+      <form id="groundtruth-form">
+        <div>
+          <label for="groundtruth-label">Event Label: </label>
+          <input type="text" id="groundtruth-label" name="groundtruth-label" required>
+        </div>
+        <div>
+          <button type="submit">Log Ground Truth</button>
+          <div id="groundtruth-status"></div>
+        </div>
+      </form>
     {{else}}
         <h3>Welcome to CE 👋</h3>
         <h4>Sign in to see your affordances!</h4>
