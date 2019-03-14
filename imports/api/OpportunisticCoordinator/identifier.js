@@ -20,6 +20,7 @@ import {
   placeSubsetAffordances
 } from "../UserMonitor/detectors/methods";
 import {Decommission_log} from "../Logging/decommission_log";
+import {AddedToIncident_log} from "../Logging/added_to_incident_log";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -180,10 +181,11 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
               lat: lastLocation.lat,
               lng: lastLocation.lng,
               timestamp: Date.now(),
-              needMatch: matchPredicateAfterDelay,
               affordances: nestedAffAfterDelay
             }, (err) => {
-              console.log(err);
+              if (err) {
+                console.log('Failed to insert to decommission_log: ', err);
+              }
             });
 
             adminUpdatesForRemovingUsersToIncidentEntirely(
@@ -216,6 +218,21 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
 
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
+
+  let timeAdded = Date.now();
+  _.forEach(uids, (uid) => {
+    AddedToIncident_log.insert({
+      uid: uid,
+      timestamp: timeAdded,
+      iid: iid,
+      needName: needName
+    }, (err) => {
+      if (err) {
+        console.log('Failed to insert to added_to_incident_log: ', err);
+      }
+    });
+  });
+
 };
 
 /**
