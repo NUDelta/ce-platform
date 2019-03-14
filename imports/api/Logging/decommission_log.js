@@ -36,9 +36,6 @@ Schema.Decommission_log = new SimpleSchema({
   timestamp: {
     type: Date,
   },
-  needMatch: {
-    type: Boolean
-  },
   affordances: {
     type: Object,
     blackbox: true,
