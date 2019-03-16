@@ -2,7 +2,7 @@ import { HTTP } from 'meteor/http';
 
 import { Detectors } from './detectors'
 
-import { serverLog } from "../../logs";
+import { log, serverLog } from "../../logs";
 
 /**
  * Gets place + weather and time affordances based on location, then calls a callback
@@ -156,7 +156,16 @@ const applyDetector = function (userAffordances, varDecl, rules) {
     .concat(rules)
     .join('\n');
 
-  return eval(mergedAffordancesWithRules);
+  try {
+    return eval(mergedAffordancesWithRules);
+  } catch (err) {
+    log.debug(`userAffordances: ${JSON.stringify(userAffordances)}`);
+    log.debug(`varDecl: ${JSON.stringify(varDecl)}`);
+    log.debug(`rules: ${JSON.stringify(rules)}`);
+    log.debug(`affordancesAsJavascriptVars: ${JSON.stringify(affordancesAsJavascriptVars)}`);
+    log.debug(`mergedAffordancesWithRules: ${JSON.stringify(mergedAffordancesWithRules)}`);
+    throw (err);
+  }
 };
 
 /**
