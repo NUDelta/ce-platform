@@ -13,7 +13,7 @@ import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncid
     "../UserMonitor/users/methods";
 import {doesUserMatchNeed, getNeedDelay} from "../OCEManager/OCEs/methods";
 import { CONFIG } from "../config";
-import { serverLog } from "../logs";
+import { log, serverLog } from "../logs";
 import {notifyForMissingParticipation} from "./server/noticationMethods";
 import {
   flattenAffordanceDict, getPlaceKeys, onePlaceNotThesePlacesSets,
@@ -157,54 +157,64 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
         // note: decommissionDelay == notificationDelay
         let delay = getNeedDelay(assignment._id, needUserMap.needName);
 
-        Meteor.setTimeout(function () {
-
-          let lastLocation = Locations.findOne({uid: uid});
-          let nestedAffAfterDelay = lastLocation.affordances;
-          let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
-
-          let matchPredicateAfterDelay = doesUserMatchNeed(
-            uid,
-            flatAffAfterDelay,
-            assignment._id,
-            needUserMap.needName
-          );
-
-          // Only remove after they do not match again after some decommission delay
-          if (!matchPredicateAfterDelay) {
-            console.log('removing user from Incident after decommission delay');
-
-            Decommission_log.insert({
-              iid: assignment._id,
-              uid: uid,
-              needName: needUserMap.needName,
-              lat: lastLocation.lat,
-              lng: lastLocation.lng,
-              timestamp: Date.now(),
-              affordances: nestedAffAfterDelay
-            }, (err) => {
-              if (err) {
-                console.log('Failed to insert to decommission_log: ', err);
-              }
-            });
-
-            adminUpdatesForRemovingUsersToIncidentEntirely(
-              [uid],
-              assignment._id,
-              needUserMap.needName
-            );
-          }
-
-          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
-          // they get continuously spammed with notifications. A way better UI would be to remove the notification
-          // entirely.
-          // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
-          // notifyForMissingParticipation([uid]);
-        }, delay * 1000);
-
+        Meteor.setTimeout(
+          decommissionIfSustained.bind(null, uid, assignment._id, needUserMap.needName, delay),
+          delay * 1000);
       }
     });
   });
+};
+
+/**
+ * Called after some decommissionDelay setTimeout, with parameters binded to this callback function
+ * @param userId
+ * @param incidentId
+ * @param needName
+ */
+let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) => {
+  let user = Meteor.users.findOne({_id: userId});
+  if (!user) {
+    log.warning(`No user exists for uid = ${userId}`);
+    return;
+  }
+  let activeIncidents = user.profile.activeIncidents;
+  if (!activeIncidents.includes(incidentId)) {
+    log.info(`No need to decommission { uid: ${userId} } from { iid: ${incidentId} }`);
+    return;
+  }
+  let lastLocation = Locations.findOne({uid: userId});
+  let nestedAffAfterDelay = lastLocation.affordances;
+  let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
+
+  let matchPredicateAfterDelay = doesUserMatchNeed(userId, flatAffAfterDelay, incidentId, needName);
+
+  // Only remove after they do not match again after some decommission delay
+  if (!matchPredicateAfterDelay) {
+    log.cerebro(`Removing user ${userId} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
+
+    Decommission_log.insert({
+      iid: incidentId,
+      uid: userId,
+      needName: needName,
+      lat: lastLocation.lat,
+      lng: lastLocation.lng,
+      timestamp: Date.now(),
+      affordances: nestedAffAfterDelay,
+      decommissionDelay: decommissionDelay
+    }, (err) => {
+      if (err) {
+        log.error(`Failed to insert to decommission_log: ${err}`);
+      }
+    });
+
+    adminUpdatesForRemovingUsersToIncidentEntirely([userId], incidentId, needName);
+  }
+
+  // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
+  // they get continuously spammed with notifications. A way better UI would be to remove the notification
+  // entirely.
+  // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
+  // notifyForMissingParticipation([uid]);
 };
 
 /**
@@ -219,6 +229,7 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
   _addUsersToAssignmentDb(uids, iid, needName);
   _addActiveIncidentToUsers(uids, iid);
 
+  log.cerebro(`Assigning [${iid}, ${needName}] to users ` + JSON.stringify(uids));
   let timeAdded = Date.now();
   _.forEach(uids, (uid) => {
     AddedToIncident_log.insert({
@@ -228,7 +239,7 @@ export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
       needName: needName
     }, (err) => {
       if (err) {
-        console.log('Failed to insert to added_to_incident_log: ', err);
+        log.error(`Failed to insert to added_to_incident_log: ${err}`);
       }
     });
   });
