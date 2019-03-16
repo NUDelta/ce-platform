@@ -166,6 +166,12 @@ export const updateUserExperiences = new ValidatedMethod({
   }
 });
 
+/**
+ * Not enough to remove experiences.
+ * Incidents need to be removed.
+ * Associated Submissions need to be removed.
+ * Associated
+ */
 export const removeExperience = new ValidatedMethod({
   name: 'experiences.remove',
   validate: new SimpleSchema({

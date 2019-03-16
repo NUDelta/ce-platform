@@ -265,8 +265,8 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
       // 1 / ( log(0.1 + 1) ) =
       // 1 / ( log(1.1) ) =
       // 1 / ( some-positive-number )
-      // w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 2.719)));
-      w_i = (10 / accuracyArr[i]) * (10 / (dt + 10));
+      w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 2.719)));
+      // w_i = (10 / accuracyArr[i]) * (10 / (dt + 10));
     }
     totalWeight += w_i;
     weightedSumLat += w_i * latArr[i];

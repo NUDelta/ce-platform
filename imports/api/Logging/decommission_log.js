@@ -40,6 +40,10 @@ Schema.Decommission_log = new SimpleSchema({
     type: Object,
     blackbox: true,
     optional: true
+  },
+  decommissionDelay: {
+    type: Number,
+    optional: true
   }
 });
 
