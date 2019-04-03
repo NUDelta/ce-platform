@@ -68,20 +68,31 @@ export const onLocationUpdate = (uid, location, callback) => {
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
 
       // get affordances via affordance aware
+      let user = Meteor.users.findOne({_id: uid});
+      if (!user) {
+        log.error(`uid = ${uid} passed to getAffordancesFromLocation did not correspond to a user `);
+        return;
+      }
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
 
-      // update information in database
+      // blocking, since everything in system works off of Locations collection
       updateLocationInDb(uid, bgLocationObject, affordances);
+
+      // non-blocking, since its for post-hoc analysis
       insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
       callback(uid);
 
       // clear assignments and begin matching
-      let newAffs = Locations.findOne({uid: user._id}).affordances; // newest affordances
-      // ??? why do this intersecion?
+      let newLoc = Locations.findOne({uid: uid});
+      if (!newLoc) {
+        log.error(`uid = ${uid} did not have a current location in Locations collection`);
+        return;
+      }
+      let newAffs = newLoc.affordances; // newest affordances
+      // TODO(rlouie): Ask Kapil -- why do this intersection???
       let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
-      // ??? yea this too?
       let sharedAffs = [];
       _.forEach(sharedKeys, (key) => {
         sharedAffs[key] = newAffs[key];
@@ -106,7 +117,7 @@ const sendToMatcher = (uid, affordances) => {
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
-    // get availabilities containing iid/need/place information
+    // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
 
     // update availabilityDictionary of most recent location
@@ -114,13 +125,13 @@ const sendToMatcher = (uid, affordances) => {
 
     // get delays for each incident-need pair
     let needDelays = {};
-    _.forEach(availabilityDictionary, (place_needs, iid) => {
+    _.forEach(availabilityDictionary, (place_need_distance_s, iid) => {
       // create empty need object for each iid
       needDelays[iid] = {};
 
       // find and add delays for each need
-      _.forEach(place_needs, (individualPlace_individualNeed) => {
-        let [individualPlace, individualNeed] = individualPlace_individualNeed;
+      _.forEach(place_need_distance_s, (individualPlace_individualNeed_individualDist) => {
+        let individualNeed = individualPlace_individualNeed_individualDist[1];
         needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
       });
     });
@@ -340,11 +351,19 @@ const updateLocationInDb = (uid, location, affordances) => {
         timestamp: Date.now(),
         affordances: affordances
       }
-    }, (err) => {
-      if (err) {
-        log.error("Locations/methods, can't update a location", err);
-      }
-    });
+    }); // blocking
+    // Locations.update(entry._id, {
+    //   $set: {
+    //     lat: lat,
+    //     lng: lng,
+    //     timestamp: Date.now(),
+    //     affordances: affordances
+    //   }
+    // }, (err) => {
+    //   if (err) {
+    //     log.error("Locations/methods, can't update a location", err);
+    //   }
+    // });
   } else {
     Locations.insert({
       uid: uid,
@@ -352,11 +371,18 @@ const updateLocationInDb = (uid, location, affordances) => {
       lng: lng,
       timestamp: Date.now(),
       affordances: affordances
-    }, (err) => {
-      if (err) {
-        log.error("Locations/methods, can't add a new location", err);
-      }
-    });
+    }); // blocking
+    // Locations.insert({
+    //   uid: uid,
+    //   lat: lat,
+    //   lng: lng,
+    //   timestamp: Date.now(),
+    //   affordances: affordances
+    // }, (err) => {
+    //   if (err) {
+    //     log.error("Locations/methods, can't add a new location", err);
+    //   }
+    // });
   }
 };
 
