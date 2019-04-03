@@ -11,7 +11,7 @@ import {
 } from "../../UserMonitor/locations/methods";
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
-import { serverLog } from "../../logs";
+import { serverLog, log } from "../../logs";
 import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
 
 /**
@@ -57,8 +57,8 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
  * Runs the OpportunisticCoordinator after a location update has occured.
  *
  * @param uid {string} user whose location just updated
- * @param userAvailability {object} object with keys as iids and values as array of matched [place, need] arrays
- *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
+ * @param userAvailability {object} object with keys as iids and values as array of matched [place, need, distance] arrays
+ *    e.g., { iid : [ (place1, needName1, dist1), (place2, needName2, dist2), (place3, needName3, dist3), ... ], ... }
  * @param needDelays {object} delay before attempting to run experiences as {iid: number}
  */
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, needDelays) => {
@@ -76,8 +76,8 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
   let binnedUserAvailabilities = {};
 
   _.forEach(userAvailability, (matchingPlaceNeeds, iid) => {
-    _.forEach(matchingPlaceNeeds, (individualPlace_Need) => {
-      let [placeMatch, individualNeed] = individualPlace_Need;
+    _.forEach(matchingPlaceNeeds, (individualPlace_Need_Dist) => {
+      let individualNeed = individualPlace_Need_Dist[1];
 
       // get current delay in ms
       let currDelay = needDelays[iid][individualNeed] * 1000; // delay in ms
@@ -93,8 +93,8 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
         binnedUserAvailabilities[currDelayStr][iid] = [];
       }
 
-      // add [place, need] to current delay for iid
-      binnedUserAvailabilities[currDelayStr][iid].push(individualPlace_Need);
+      // add [place, need, dist] to current delay for iid
+      binnedUserAvailabilities[currDelayStr][iid].push(individualPlace_Need_Dist);
     });
   });
 
@@ -144,7 +144,12 @@ const coordinatorWrapper = (uid, availabilityDictionary) => () => {
     let somePlaceNeedsSustained = Object.keys(sustainedAvailDict).length > 0;
     if (somePlaceNeedsSustained && userCanParticipate) {
       // update availabilities of users and check if any experience incidents can be run
+      log.cerebro(`sustainedAvailDict: ${JSON.stringify(sustainedAvailDict)}`);
+      // TODO updateAvailabilities maybe on user side with distance information
+      // sending notifications happen on the per experience/need side, rather than user centered where
+      // all the needs they qualify for at this instant will be aggregated.
       let updatedAvailability = updateAvailability(uid, sustainedAvailDict);
+      log.cerebro(`updatedAvailability: ${JSON.stringify(updatedAvailability)}`);
       let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
 
       // add users to incidents to be run

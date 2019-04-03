@@ -11,7 +11,7 @@ import { matchAffordancesWithDetector, getPlaceKeys,
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
-import {serverLog} from "../../logs";
+import {serverLog, log} from "../../logs";
 
 
 /**
@@ -58,23 +58,23 @@ export const findMatchesForUser = (uid, affordances) => {
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
-  // constructing matches to look like {iid : [ (place, needName), ... ], ... }
+  // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        let affordanceSubsetToMatchForPlace = placeSubsetAffordances(affordances, ignoreThesePlaces);
+        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
 
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
-            place_needs.push([placeToMatch, needName]);
+            place_needs.push([placeToMatch, needName, distInfo['distance']]);
             matches[iid] = place_needs;
           } else {
-            matches[iid] = [[placeToMatch, needName]];
+            matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
           }
         }
       });
@@ -84,13 +84,30 @@ export const findMatchesForUser = (uid, affordances) => {
   return matches;
 };
 
+/**
+ *
+ * @param beforeAvails
+ * @param afterAvails
+ * @return sustainedAvailDict {{Object}}
+ *    e.g., {"QybuLeDFSbTijxFbi":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
+ */
 export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
   let incidentIntersection = setIntersection(Object.keys(beforeAvails), Object.keys(afterAvails));
   let sustainedAvailDict = {};
   _.forEach(incidentIntersection, (incident) => {
-    let sustainedPlace_Need = setIntersection(beforeAvails[incident], afterAvails[incident]);
-    if (sustainedPlace_Need.length) {
-      sustainedAvailDict[incident] = sustainedPlace_Need;
+    let beforePlacesAndNeeds = beforeAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+
+    let sustainedPlace_Needs = setIntersection(beforePlacesAndNeeds, afterPlacesAndNeeds);
+    console.log(JSON.stringify(afterAvails[incident]));
+    console.log(JSON.stringify(sustainedPlace_Needs));
+    if (sustainedPlace_Needs.length) {
+      let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(sustainedPlace_Need =>
+        afterAvails[incident].find(place_need_dict =>
+          JSON.stringify(place_need_dict.slice(0,2)) == JSON.stringify(sustainedPlace_Need)
+        )
+      );
+      sustainedAvailDict[incident] = sustainedPlace_Need_Distances;
     }
   });
   return sustainedAvailDict;

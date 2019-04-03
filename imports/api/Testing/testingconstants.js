@@ -2270,7 +2270,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-big-bite.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 60,
+      notificationDelay: 60 * 3, // https://www.quora.com/Whats-the-average-time-that-customers-wait-between-entering-a-restaurant-and-getting-served
     }]),
     description: 'While eating some non-trivially sized food, create a half half photo.',
     notificationText: 'View this and other available experiences',

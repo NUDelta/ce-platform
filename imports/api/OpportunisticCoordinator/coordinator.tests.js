@@ -11,6 +11,7 @@ import {Experiences, Incidents} from "../OCEManager/OCEs/experiences";
 import { Submissions } from "../OCEManager/currentNeeds";
 import {insertTestOCE } from "./populateDatabase";
 import {checkIfThreshold} from "./server/strategizer";
+import { log } from "../logs";
 
 describe('Availability Collection Tests', function() {
   this.timeout(10*1000); // extend timeout to wait for asynch functions
@@ -432,38 +433,38 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
 describe('Sustained (place, need) Match for Availability Dictionary', function() {
   let availabilityDictionary = {
     "asianFoodCrawlIncident": [
-      ['ramen_dojo', 'noodleNeed'],
-      ['kongs_chinese', 'noodleNeed']
+      ['ramen_dojo', 'noodleNeed', 10.0],
+      ['kongs_chinese', 'noodleNeed', 20.5]
     ],
     "groceryBuddiesIncident": [
-      ['trader_joes', 'groceryNeed']
+      ['trader_joes', 'groceryNeed', 20.0]
     ],
     "sunsetTogether": [
-      ['', 'sunsetTogetherNeed'],
-      ['ramen_dojo', 'sunsetTogetherNeed'],
-      ['kongs_chinese', 'sunsetTogetherNeed'],
-      ['trader_joes', 'sunsetTogetherNeed']
+      ['', 'sunsetTogetherNeed', undefined],
+      ['ramen_dojo', 'sunsetTogetherNeed', undefined],
+      ['kongs_chinese', 'sunsetTogetherNeed', undefined],
+      ['trader_joes', 'sunsetTogetherNeed', undefined]
     ]
   };
 
   // sustained success - after notification delay
   let sustainedAfterAvailDict = {
     "asianFoodCrawlIncident": [
-      ['ramen_dojo', 'noodleNeed']
+      ['ramen_dojo', 'noodleNeed', 3.0]
     ]
   };
 
   // sustained for not place need -- after notification delay
   let sustainedWeatherTimeNeedAfterAvailDict = {
     "sunsetTogether": [
-      ['', 'sunsetTogetherNeed'],
+      ['', 'sunsetTogetherNeed', undefined],
     ]
   };
 
   // not sustained - after notification delay
   let notSustainedAfterAvailDict = {
     "asianFoodCrawlIncident": [
-      ['onsen_oden', 'noodleNeed']
+      ['onsen_oden', 'noodleNeed', 25.0]
     ]
   };
 
@@ -478,9 +479,10 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
   it('Sustained [Place, Needs]', function() {
     let incident = "asianFoodCrawlIncident";
 
+    let beforePlacesAndNeeds = availabilityDictionary[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let afterPlacesAndNeeds = sustainedAfterAvailDict[incident].map((place_need_dist) => place_need_dist.slice(0,2));
     let place_need_intersection = setIntersection(
-      availabilityDictionary[incident],
-      sustainedAfterAvailDict[incident]);
+      beforePlacesAndNeeds, afterPlacesAndNeeds);
 
     chai.assert.equal(
       JSON.stringify(place_need_intersection),
@@ -508,7 +510,7 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
       JSON.stringify(sustainedAvailDict),
       JSON.stringify({
         "asianFoodCrawlIncident": [
-          ['ramen_dojo', 'noodleNeed']
+          ['ramen_dojo', 'noodleNeed', 3.0]
         ]
       })
     )
@@ -530,7 +532,7 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
       JSON.stringify(sustainedAvailDict),
       JSON.stringify({
         "sunsetTogether": [
-          ['', 'sunsetTogetherNeed']
+          ['', 'sunsetTogetherNeed', undefined]
         ]
       })
     );

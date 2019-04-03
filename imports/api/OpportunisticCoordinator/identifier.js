@@ -42,7 +42,7 @@ export const getNeedObject = (iid, needName) => {
  *
  * @param uid {string}
  * @param availabilityDictionary {object} current availabilities as
- *  {iid: [[place, need], [place, need]], iid: [[place, need]]}
+ *  {iid: [[place, need, distance], [place, need, distance]], iid: [[place, need, distance]]}
  * @return {[object]} array of object from Availability DB
  *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
@@ -55,7 +55,8 @@ export const updateAvailability = (uid, availabilityDictionary) => {
     if (!(iid in availabilityDictionary)) {
       return; // continue forEach
     }
-    let currentlyMatchedNeeds = availabilityDictionary[iid].map((place_need) => { return place_need[1]});
+    let currentlyMatchedNeeds = availabilityDictionary[iid].map(
+      (place_need_distance) => place_need_distance[1]);
 
     let updatedNeeds = { iid: iid, needUserMaps: [] };
     _.forEach(av.needUserMaps, needUserMap => {
