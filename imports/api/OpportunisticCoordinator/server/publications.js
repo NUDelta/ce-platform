@@ -22,9 +22,9 @@ Meteor.publish('assignments.activeUser', function () {
     this.ready();
   } else {
     return Assignments.find({
-      'needUserMaps': {
+      'needUserMaps.users': {
         '$elemMatch': {
-          'uids': this.userId
+          'uid': this.userId
         }
       }
     });

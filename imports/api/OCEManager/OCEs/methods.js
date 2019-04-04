@@ -12,6 +12,7 @@ import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
 import {serverLog, log} from "../../logs";
+import {pullUserFromAvailabilityNeedUserMaps} from "../../OpportunisticCoordinator/server/identifier";
 
 
 /**
@@ -23,12 +24,7 @@ export const clearAvailabilitiesForUser = (uid) => {
   _.forEach(availabilityObjects, (av) => {
     // remove user for each need in each
     _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
+      pullUserFromAvailabilityNeedUserMaps(av._id, needEntry.needName, uid);
     });
   });
 };
@@ -301,13 +297,13 @@ export const addContribution = (iid, contribution) =>{
   Availability.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 
   Assignments.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 };
 
@@ -357,7 +353,7 @@ export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     addEmptySubmissionsForNeed(incident._id, incident.eid, need);
 
   });
@@ -383,15 +379,15 @@ export const updateRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
   });
 
   // clear the user activeIncidents before clearing the availabilities
   let old_needUserMaps = Availability.find({_id: incident._id}).needUserMaps;
   _.forEach(old_needUserMaps, (needUserMap) => {
-    if (needUserMap.uids.length > 0) {
-      _.forEach(needUserMap.uids, (uid) => {
+    if (needUserMap.users.length > 0) {
+      _.forEach(needUserMap.users, (uid) => {
         Meteor.users.update(
           {
             _id: uid
@@ -400,6 +396,7 @@ export const updateRunningIncident = (incident) => {
               "profile.activeIncidents": incident._id
             }
           });
+        // TODO(rlouie): maybe store activeIncidentNeedPlaceDistance info, so then pull incidents/needs like this too
       });
     }
   });

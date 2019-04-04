@@ -2,7 +2,10 @@ import { ValidatedMethod } from "meteor/mdg:validated-method";
 import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
 import { Submissions } from "./currentNeeds.js";
-import { adminUpdatesForRemovingUsersToIncident } from "../OpportunisticCoordinator/identifier";
+import {
+  adminUpdatesForRemovingUserToIncident,
+  pullUserFromAvailabilityNeedUserMaps
+} from "../OpportunisticCoordinator/server/identifier";
 import { Assignments, Availability } from "../OpportunisticCoordinator/databaseHelpers";
 import { Incidents } from "./OCEs/experiences.js";
 
@@ -53,19 +56,7 @@ export const adminUpdates = function(mostRecentSub) {
     }
   );
 
-  Availability.update(
-    {
-      _id: mostRecentSub.iid,
-      "needUserMaps.needName": mostRecentSub.needName
-    },
-    {
-      $pull: { "needUserMaps.$.uids": mostRecentSub.uid }
-    }
-  );
+  pullUserFromAvailabilityNeedUserMaps(mostRecentSub.iid, mostRecentSub.needName, mostRecentSub.uid);
 
-  adminUpdatesForRemovingUsersToIncident(
-    [mostRecentSub.uid],
-    mostRecentSub.iid,
-    mostRecentSub.needName
-  );
+  adminUpdatesForRemovingUserToIncident(mostRecentSub.uid, mostRecentSub.iid, mostRecentSub.needName);
 }

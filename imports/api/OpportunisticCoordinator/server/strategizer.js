@@ -1,6 +1,6 @@
 import { Submissions } from "../../OCEManager/currentNeeds";
 import { Assignments } from "../databaseHelpers";
-import { getNeedObject } from "../identifier";
+import { getNeedObject } from "./identifier";
 const util = require('util');
 
 /**
@@ -14,7 +14,9 @@ const util = require('util');
  *      needUserMaps: [
  *        {
  *          needName: string,
- *          uids: [uid]
+ *          users: [
+ *            {uid: uid, place: place, distance: distance}
+ *          ]
  *        }
  *      ]
  *    }
@@ -23,7 +25,7 @@ const util = require('util');
  */
 export const checkIfThreshold = updatedIncidentsAndNeeds => {
   //these are not needUsermaps
-  // console.log(util.inspect(updatedIncidentsAndNeeds, false, null));
+  // console.log('input to checkIfThreshold: ', util.inspect(updatedIncidentsAndNeeds, false, null));
 
   let incidentsWithUsersToRun = {};
 
@@ -33,10 +35,10 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     let usersInIncident = [].concat.apply(
       [],
       assignment.needUserMaps.map(function(needMap) {
-        return needMap.uids;
+        return needMap.users;
       })
     );
-    // console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
+    console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
 
     incidentsWithUsersToRun[incidentMapping.iid] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
@@ -50,11 +52,11 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
 
       // console.log('need: ', util.inspect(need, false, null));
       // Start by never keeping track of previous user submissions to the incident
-      let previousUsers = [];
+      let previousUids = [];
 
       // If we are not allowing repeat contributions, then do look at previous user submissions
       if (!need.allowRepeatContributions) {
-        previousUsers = Submissions.find({
+        previousUids = Submissions.find({
           iid: incidentMapping.iid,
           needName: needName
         })
@@ -63,10 +65,10 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
             return x.uid;
           });
       }
-      // console.log('previousUsers: ', util.inspect(previousUsers, false, null));
+      // console.log('previousUids: ', util.inspect(previousUids, false, null));
 
-      let usersNotInIncident = needUserMap.uids.filter(function(x) {
-        return !usersInIncident.includes(x) && !previousUsers.includes(x);
+      let usersNotInIncident = needUserMap.users.filter(function(user) {
+        return !usersInIncident.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
@@ -75,7 +77,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       });
       // console.log('assignmentNeed: ', util.inspect(assignmentNeed, false, null));
 
-      if (assignmentNeed.uids.length === 0) {
+      if (assignmentNeed.users.length === 0) {
         if (usersNotInIncident.length >= need.situation.number) {
           let newChosenUsers = chooseUsers(
             usersNotInIncident,
@@ -92,17 +94,17 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     });
   });
   // console.log('incidentsWithUsersToRun', util.inspect(incidentsWithUsersToRun, false, null));
-  return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
+  return incidentsWithUsersToRun;
 };
 
-const chooseUsers = (availableUids, iid, needUserMap) => {
+const chooseUsers = (availableUserMetas, iid, needUserMap) => {
   let numberPeopleNeeded = Submissions.find({
     iid: iid,
     needName: needUserMap.needName,
     uid: null
   }).count();
 
-  let usersWeAlreadyHave = needUserMap.uids;
+  let usersWeAlreadyHave = needUserMap.users;
 
   if (usersWeAlreadyHave.length === numberPeopleNeeded) {
     return [];
@@ -112,7 +114,7 @@ const chooseUsers = (availableUids, iid, needUserMap) => {
   } else {
     let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
 
-    let chosen = availableUids.splice(0, dif);
+    let chosen = availableUserMetas.splice(0, dif);
     return chosen;
   }
 };
