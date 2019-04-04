@@ -166,7 +166,8 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
 
   let flatAffordances = flattenAffordanceDict(affordances);
 
-  _.forEach(currentAssignments, assignment => {
+  // iterate over cursor
+  currentAssignments.forEach(assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
 
       let matchPredicate = doesUserMatchNeed(
