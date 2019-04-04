@@ -7,7 +7,7 @@ import { Locations } from './locations.js';
 import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
-import { decomissionFromAssignmentsIfAppropriate } from "../../OpportunisticCoordinator/identifier";
+import { decomissionFromAssignmentsIfAppropriate } from "../../OpportunisticCoordinator/server/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";

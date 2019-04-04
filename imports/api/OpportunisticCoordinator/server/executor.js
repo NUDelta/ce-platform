@@ -4,7 +4,7 @@ import { Incidents } from "../../OCEManager/OCEs/experiences";
 import { Locations } from "../../UserMonitor/locations/locations";
 
 import { notifyForParticipating } from "./noticationMethods";
-import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../identifier";
+import { adminUpdatesForAddingUserToIncident, updateAvailability } from "./identifier";
 import {
   distanceBetweenLocations, userIsAvailableToParticipate,
   userNotifiedTooRecently, userParticipatedTooRecently
@@ -19,22 +19,26 @@ import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
  *  marks in assignment DB 2b
  * @param incidentsWithUsersToRun {object} needs to run in format of
  *  { iid: { need: [uid, uid], need:[uid] }
+ * @param sustainedAvailDict {object} object that maps incident -> [[place, need, distance]], e.g.,
+ *  {"dtg89QvwFfK6Xo9Qu":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
  */
-export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
+export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    _.forEach(needUserMapping, (uids, needName) => {
-      let newUsersUids = uids.filter(function(uid) {
-        return !Meteor.users.findOne(uid).profile.activeIncidents.includes(iid);
+    _.forEach(needUserMapping, (usersMeta, needName) => {
+      let newUsersMeta = usersMeta.filter(function(userMeta) {
+        return !Meteor.users.findOne(userMeta.uid).profile.activeIncidents.includes(iid);
       });
 
       //administrative updates
-      adminUpdatesForAddingUsersToIncident(newUsersUids, iid, needName);
+      _.forEach(newUsersMeta, (userMeta) => {
+        adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
+      });
 
-      let usersNotNotifiedRecently = newUsersUids.filter((uid) => {
-        return !userNotifiedTooRecently(Meteor.users.findOne(uid));
+      let usersNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+        return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
       });
 
       let route = "/";

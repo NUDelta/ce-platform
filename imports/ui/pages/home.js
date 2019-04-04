@@ -38,7 +38,7 @@ Template.home.helpers({
 
     _.forEach(activeAssignments, (assignment) => {
       _.forEach(assignment.needUserMaps, (currNeedUserMap) => {
-        if (currNeedUserMap.uids.includes(Meteor.userId())) {
+        if (currNeedUserMap.users.find(user => user.uid === Meteor.userId())) {
           // get experience
           let experience = Experiences.findOne(Incidents.findOne(assignment._id).eid);
           output.push({
