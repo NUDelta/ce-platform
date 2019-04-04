@@ -1164,11 +1164,21 @@ const createBumpedThree = function() {
 
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
-    // to fill in
+    
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
   }
 
   let places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
     //weather/sky and other bumped three experiences can be added here
   ];
 

@@ -305,6 +305,7 @@ def allUsersCoffee():
 if __name__ == "__main__":
     # allUsersGrocery()
 	allUsersCoffee()
+	#allUsersAtPark()
     # garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()
