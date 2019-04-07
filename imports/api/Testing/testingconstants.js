@@ -939,13 +939,13 @@ const createIndependentStorybook = () => {
 
   let place_situation_delay = [
     ["niceish_day",'Swirling Clouds', 5],
-    ["beer", 'Drinking butterbeer', 120],
-    ["train", 'Hogwarts Express', 30],
-    ["forest",'Forbidden Forest', 5],
-    ["dinning_hall",'Dinner at the Great Hall', 120],
-    ["castle",'Hogwarts Castle', 10],
-    ["field",'Quidditch Pitch', 5],
-    ["gym",'Training in the Room of Requirement', 5]
+    ["beer", 'Drinking butterbeer', 90],
+    ["train", 'Hogwarts Express', 90],
+    ["forest",'Forbidden Forest', 90],
+    ["dinning_hall",'Dinner at the Great Hall', 90],
+    ["castle",'Hogwarts Castle', 90],
+    ["field",'Quidditch Pitch', 90],
+    ["gym",'Training in the Room of Requirement', 90]
   ];
 
   return {
@@ -1058,7 +1058,7 @@ function createBumped() {
             instruction: 'You are at a  ' + place[1] + ' at the same time as '
           },
           numberNeeded: 2,
-          notificationDelay: 30 // 30 seconds for debugging
+          notificationDelay: 90
         };
 
         let callback = {
@@ -1084,7 +1084,7 @@ function createBumped() {
 const createHalfHalf = function(
   {
     numberInSituation = 1,
-    notificationDelay = 120,
+    notificationDelay = 90
   } = {}
 ) {
   let experience = {
@@ -1195,7 +1195,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 4,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Going out for drinks',
@@ -1207,7 +1207,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Eating Japanese Food',
@@ -1219,7 +1219,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Religious Worship',
@@ -1231,7 +1231,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
     },
     numberNeeded: 50,
-    notificationDelay: 30,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Enjoy sunset',
@@ -1255,7 +1255,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 15,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Studying at the library',
@@ -1267,7 +1267,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Greenery',
@@ -1279,7 +1279,7 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you spending time at a park?</span> Share a photo of what is going on around you.'
     },
     numberNeeded: 50,
-    notificationDelay: 15,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Rainy Day',
@@ -1303,7 +1303,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: "Eating out",
@@ -1315,7 +1315,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: "Eating Big Bites",
@@ -1327,7 +1327,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }];
 };
@@ -1368,7 +1368,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 4
+    notificationDelay: 90,
   }, {
     needName: 'Raise a glass',
     situation: {
@@ -1380,7 +1380,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90,
   }, {
     needName: 'Itadakimasu (I humbly receive this meal)',
     situation: {
@@ -1392,7 +1392,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90,
   }, {
     needName: 'Religious Architecture',
     situation: {
@@ -1404,7 +1404,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 30
+    notificationDelay: 90
   }, {
     needName: 'Touch a sunset',
     situation: {
@@ -1428,7 +1428,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 15
+    notificationDelay: 90,
   }, {
     needName: 'reading a book',
     situation: {
@@ -1440,7 +1440,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90
   }, {
     needName: 'Hold a plant',
     situation: {
@@ -1452,7 +1452,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Feet towards the trees',
     situation: {
@@ -1464,7 +1464,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Leaf Mask',
     situation: {
@@ -1476,7 +1476,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Puddles',
     situation: {
@@ -1488,7 +1488,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-puddle-feet.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 5,
+    notificationDelay: 1,
   }, {
     needName: "Slice of 'Za",
     situation: {
@@ -1500,7 +1500,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Do you take cream with that",
     situation: {
@@ -1512,7 +1512,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-teasing-lotion-in-a-cup.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Eat from the same bowl", // bowl? Plate?  (basically all restaurants)
     situation: {
@@ -1524,7 +1524,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Big Bites", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
     situation: {
@@ -1985,7 +1985,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 30,
+      notificationDelay: 90,
     }]),
     description: 'While visiting a place of worship, create a half half photo.',
     notificationText: 'View this and other available experiences',
@@ -2089,7 +2089,7 @@ let EXPERIENCES = {
   //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
   //     },
   //     numberNeeded: 2,
-  //     notificationDelay: 5,
+  //     notificationDelay: 90,
   //   }]),
   //   description: 'While in the park, create a half half photo.',
   //   notificationText: 'View this and other available experiences',
@@ -2141,7 +2141,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 5
+      notificationDelay: 90
     }]),
     description: 'While in the park, create a half half photo.',
     notificationText: 'View this and other available experiences',
@@ -2193,7 +2193,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 60,
+      notificationDelay: 90,
     }]),
     description: 'While eating pizza, create a half half photo.',
     notificationText: 'View this and other available experiences',
@@ -2270,7 +2270,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-big-bite.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 60 * 3, // https://www.quora.com/Whats-the-average-time-that-customers-wait-between-entering-a-restaurant-and-getting-served
+      notificationDelay: 90, // https://www.quora.com/Whats-the-average-time-that-customers-wait-between-entering-a-restaurant-and-getting-served
     }]),
     description: 'While eating some non-trivially sized food, create a half half photo.',
     notificationText: 'View this and other available experiences',
