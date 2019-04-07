@@ -218,7 +218,7 @@ describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributio
   const NEEDNAME = 'Coffee Time';
   const updatedIncidentsAndNeeds = [
     {
-      iid: incident_id,
+      _id: incident_id,
       needUserMaps: [
         {
           needName: NEEDNAME,
@@ -339,7 +339,7 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
   const NEEDNAME = 'Coffee Time';
   const updatedIncidentsAndNeeds = [
     {
-      iid: incident_id,
+      _id: incident_id,
       needUserMaps: [
         {
           needName: NEEDNAME,

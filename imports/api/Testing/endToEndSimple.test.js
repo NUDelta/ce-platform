@@ -75,8 +75,8 @@ describe('Simple End To End', function () {
           return x.needName ===  NEEDNAME;
         });
 
-        chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
-        chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+        chai.assert.typeOf(needUserMap.users, 'array', 'no needUserMap in Assignment DB');
+        chai.assert(needUserMap.users.find(usermeta => usermeta.uid), 'uid not in needUserMap in Assignment DB');
 
         done();
       } catch (err) { done(err); }
@@ -84,6 +84,10 @@ describe('Simple End To End', function () {
   });
 
   it('user steps away from vicinity but returns within delay time', function(done) {
+
+    // FIXME(rlouie): Because we are smoothing location updates, it does not make sense to suddenly
+    // transport someone to another place in this model
+
     // move to a location on same block, but that should be outside of affordance radius
     let uid = findUserByUsername(USERNAME)._id;
     let bgLocationObj = {
@@ -122,8 +126,8 @@ describe('Simple End To End', function () {
         return x.needName ===  NEEDNAME;
       });
 
-      chai.assert.typeOf(needUserMap.uids, 'array', 'decommissioned prematurely - no needUserMap in Assignment DB');
-      chai.assert(needUserMap.uids.includes(user._id), 'decommissioned prematurely - uid not in needUserMap in Assignment DB');
+      chai.assert.typeOf(needUserMap.users, 'array', 'decommissioned prematurely - no needUserMap in Assignment DB');
+      chai.assert(needUserMap.users.find(usermeta => usermeta.uid), 'decommissioned prematurely - uid not in needUserMap in Assignment DB');
 
       // Move back to location
       onLocationUpdate(
@@ -155,8 +159,8 @@ describe('Simple End To End', function () {
             return x.needName ===  NEEDNAME;
           });
 
-          chai.assert.typeOf(needUserMap.uids, 'array', 'remain assigned while back in vicinity -- no needUserMap in Assignment DB');
-          chai.assert(needUserMap.uids.includes(user._id), 'remain assigned while back in vicinity -- uid not in needUserMap in Assignment DB');
+          chai.assert.typeOf(needUserMap.users, 'array', 'remain assigned while back in vicinity -- no needUserMap in Assignment DB');
+          chai.assert(needUserMap.users.find(usermeta => usermeta.uid), 'remain assigned while back in vicinity -- uid not in needUserMap in Assignment DB');
 
           done();
         } catch (err) { done(err); }
@@ -200,6 +204,9 @@ describe('Simple End To End', function () {
     // wait for userParticipatedTooRecently check to expire
     Meteor.setTimeout(() => {
 
+      // FIXME(rlouie): Because we are smoothing location updates, it does not make sense to suddenly
+      // transport someone to another place in this model
+
       // move to another situation that matches the same need
       let uid = findUserByUsername(USERNAME)._id;
       let bgLocationObj = {
@@ -235,8 +242,8 @@ describe('Simple End To End', function () {
             return x.needName ===  NEEDNAME;
           });
 
-          chai.assert.typeOf(needUserMap.uids, 'array', 'no needUserMap in Assignment DB');
-          chai.assert(needUserMap.uids.includes(user._id), 'uid not in needUserMap in Assignment DB');
+          chai.assert.typeOf(needUserMap.users, 'array', 'no needUserMap in Assignment DB');
+          chai.assert(needUserMap.users.find(usermeta => usermeta.uid), 'uid not in needUserMap in Assignment DB');
 
           done();
         } catch (err) { done(err); }
