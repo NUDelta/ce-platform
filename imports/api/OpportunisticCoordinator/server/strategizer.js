@@ -10,7 +10,7 @@ const util = require('util');
  * @param updatedIncidentsAndNeeds {[object]} array of object from Availability DB
  *  [
  *    {
- *      iid: string,
+ *      _id: string,
  *      needUserMaps: [
  *        {
  *          needName: string,
@@ -21,7 +21,19 @@ const util = require('util');
  *      ]
  *    }
  *  ]
- * @returns {{ iid: {need: [uid, uid], need: [uid] } } }
+ *
+ * @returns incidentsWithUsersToRun {object} needs to run in format of
+ *  {
+ *    [iid]: {
+ *      [need]: [
+ *        {uid: uid1, place: place1, distance: 10},
+ *        {uid: uid2, place: place2, distance: 15}
+ *      ],
+ *      [need]:[
+ *        {uid: uid3, place: place3, distance: 20}
+ *      ]
+ *    }
+ *  }
  */
 export const checkIfThreshold = updatedIncidentsAndNeeds => {
   //these are not needUsermaps
@@ -30,7 +42,8 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
   let incidentsWithUsersToRun = {};
 
   _.forEach(updatedIncidentsAndNeeds, incidentMapping => {
-    let assignment = Assignments.findOne(incidentMapping.iid);
+    // console.log('incidentMapping: ', util.inspect(incidentMapping, false, null));
+    let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
     let usersInIncident = [].concat.apply(
       [],
@@ -38,13 +51,13 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
         return needMap.users;
       })
     );
-    console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
+    // console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
 
-    incidentsWithUsersToRun[incidentMapping.iid] = {};
+    incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
       // get need object for current iid/current need and number of people
 
-      let iid = incidentMapping.iid;
+      let iid = incidentMapping._id;
       let needName = needUserMap.needName;
       //get need object
 
@@ -57,7 +70,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       // If we are not allowing repeat contributions, then do look at previous user submissions
       if (!need.allowRepeatContributions) {
         previousUids = Submissions.find({
-          iid: incidentMapping.iid,
+          iid: incidentMapping._id,
           needName: needName
         })
           .fetch()
@@ -86,7 +99,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
           );
           // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
           usersInIncident = usersInIncident.concat(newChosenUsers);
-          incidentsWithUsersToRun[incidentMapping.iid][
+          incidentsWithUsersToRun[incidentMapping._id][
             needUserMap.needName
             ] = newChosenUsers;
         }

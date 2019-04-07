@@ -18,11 +18,20 @@ import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
  * Sends notifications to the users, adds to the user's active experience list,
  *  marks in assignment DB 2b
  * @param incidentsWithUsersToRun {object} needs to run in format of
- *  { iid: { need: [uid, uid], need:[uid] }
- * @param sustainedAvailDict {object} object that maps incident -> [[place, need, distance]], e.g.,
- *  {"dtg89QvwFfK6Xo9Qu":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
+ *  {
+ *    [iid]: {
+ *      [need]: [
+ *        {uid: uid1, place: place1, distance: 10},
+ *        {uid: uid2, place: place2, distance: 15}
+ *      ],
+ *      [need]:[
+ *        {uid: uid3, place: place3, distance: 20}
+ *      ]
+ *    }
+ *  }
  */
 export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
+  // admin updates for all incidents and users
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
@@ -37,17 +46,18 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
-      let usersNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+      let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
         return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
       });
 
+      let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(usermeta => usermeta.uid);
       let route = "/";
-      notifyForParticipating(usersNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
+      notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
         experience.notificationText, route);
 
-      _.forEach(usersNotNotifiedRecently, uid => {
+      _.forEach(userMetasNotNotifiedRecently, usermeta => {
         Notification_log.insert({
-          uid: uid,
+          uid: usermeta.uid,
           iid: iid,
           needName: needName,
           timestamp: Date.now()
@@ -148,12 +158,7 @@ const coordinatorWrapper = (uid, availabilityDictionary) => () => {
     let somePlaceNeedsSustained = Object.keys(sustainedAvailDict).length > 0;
     if (somePlaceNeedsSustained && userCanParticipate) {
       // update availabilities of users and check if any experience incidents can be run
-      log.cerebro(`sustainedAvailDict: ${JSON.stringify(sustainedAvailDict)}`);
-      // TODO updateAvailabilities maybe on user side with distance information
-      // sending notifications happen on the per experience/need side, rather than user centered where
-      // all the needs they qualify for at this instant will be aggregated.
       let updatedAvailability = updateAvailability(uid, sustainedAvailDict);
-      log.cerebro(`updatedAvailability: ${JSON.stringify(updatedAvailability)}`);
       let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
 
       // add users to incidents to be run
