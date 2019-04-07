@@ -231,7 +231,7 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
       }
     });
 
-    adminUpdatesForRemovingUserToIncidentEntirely([userId], incidentId, needName);
+    adminUpdatesForRemovingUserToIncidentEntirely(userId, incidentId, needName);
   }
 
   // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
