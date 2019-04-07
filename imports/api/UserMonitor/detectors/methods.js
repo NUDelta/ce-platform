@@ -16,8 +16,8 @@ export const getAffordancesFromLocation = function (uid, location, retrievePlace
   // setup url with lat and lng from tracking package
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
-  // let host = 'http://affordanceaware.herokuapp.com';
-  let host = 'http://0.0.0.0:5000';
+  let host = 'http://affordanceaware.herokuapp.com';
+  // let host = 'http://0.0.0.0:5000';
   let url = retrievePlaces ? `${ host }/location_keyvalues/${ lat }/${ lng }` :
             `${ host }/location_weather_time_keyvalues/${ lat }/${ lng }`;
 
