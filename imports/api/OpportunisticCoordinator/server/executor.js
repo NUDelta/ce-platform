@@ -46,16 +46,17 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
-      let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-        return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
-      });
+      // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
+      // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+      //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
+      // });
 
-      let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(usermeta => usermeta.uid);
+      let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
       notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
         experience.notificationText, route);
 
-      _.forEach(userMetasNotNotifiedRecently, usermeta => {
+      _.forEach(newUsersMeta, usermeta => {
         Notification_log.insert({
           uid: usermeta.uid,
           iid: iid,
