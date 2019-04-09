@@ -53,17 +53,32 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 
       let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
-      notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-        experience.notificationText, route);
 
-      _.forEach(newUsersMeta, usermeta => {
-        Notification_log.insert({
-          uid: usermeta.uid,
-          iid: iid,
-          needName: needName,
-          timestamp: Date.now()
+      let needObject = experience.contributionTypes.find((need) => need.needName === needName);
+
+      if (needObject) {
+        log.cerebro(JSON.stringify(needObject));
+        if (needObject.notificationSubject && needObject.notificationText) {
+          notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
+            needObject.notificationText, route);
+        }
+        else if (experience.name && experience.notificationText) {
+          notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
+            experience.notificationText, route);
+        } else {
+          log.error('notification information cannot be found in the need or experience level');
+          return;
+        }
+
+        _.forEach(newUsersMeta, usermeta => {
+          Notification_log.insert({
+            uid: usermeta.uid,
+            iid: iid,
+            needName: needName,
+            timestamp: Date.now()
+          });
         });
-      });
+      }
     });
   });
 };

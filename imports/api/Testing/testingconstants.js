@@ -1175,6 +1175,8 @@ const sameSituationContributionTypes = function(
     allowRepeatContributions: true,
   }, {
     needName: 'Shopping for groceries',
+    notificationSubject: 'Inside a grocery store?',
+    notificationText: 'Participate in an experience where you and others are "Grocery Shopping"',
     situation: {
       detector: DETECTORS.grocery._id,
       number: numberInSituation
@@ -1872,6 +1874,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Grocery Buddies 1',
+      notificationSubject: 'Inside a grocery store?',
+      notificationText: 'Share an experience with others who are also grocery shopping',
       situation: {
         detector: getDetectorId(DETECTORS.grocery),
         number: '1'
@@ -1898,6 +1902,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Coffee Date 1',
+      notificationSubject: 'Inside a coffee shop?',
+      notificationText: 'Share an experience with others who are also at a coffee shop',
       situation: {
         detector: getDetectorId(DETECTORS.coffee),
         number: '1'
@@ -1924,6 +1930,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Cheers 1',
+      notificationSubject: 'Drinking at a bar?',
+      notificationText: 'Share an experience with others who are also drinking at a bar',
       situation: {
         detector: getDetectorId(DETECTORS.bar),
         number: '1'
@@ -1976,6 +1984,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Religious Architecture 1',
+      notificationSubject: 'Visiting a place of worship?',
+      notificationText: 'Share an experience with others who are also visiting a place of worship',
       situation: {
         detector: getDetectorId(DETECTORS.castle),
         number: '1'
@@ -2002,6 +2012,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Sunset Together 1',
+      notificationSubject: 'Can you see the sunset?',
+      notificationText: 'Share an experience with others who are also watching the sunset',
       situation: {
         detector: getDetectorId(DETECTORS.sunset),
         number: '1'
@@ -2028,6 +2040,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Eating with Chopsticks 1',
+      notificationSubject: 'Eating at an asian restaurant?',
+      notificationText: 'Share an experience with others who are also eating asian food',
       situation: {
         detector: getDetectorId(DETECTORS.eating_with_chopsticks),
         number: '1'
@@ -2054,6 +2068,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Book Buddies 1',
+      notificationSubject: 'Are you at a library?',
+      notificationText: 'Share an experience with others who are also at the library',
       situation: {
         detector: getDetectorId(DETECTORS.library),
         number: '1'
@@ -2132,6 +2148,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Leaf Mask 1',
+      notificationSubject: 'Are you at a park?',
+      notificationText: 'Share an experience with others who are also at a park',
       situation: {
         detector: getDetectorId(DETECTORS.forest),
         number: '1'
@@ -2158,6 +2176,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Puddle Feet 1',
+      notificationSubject: 'Are you outside while its raining?',
+      notificationText: 'Share an experience with others who are enjoying or enduring the rain',
       situation: {
         detector: getDetectorId(DETECTORS.rainy),
         number: '1'
@@ -2176,32 +2196,32 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify('A "Puddle Feet" photo completed','View the photo').toString()
     }]
   },
-  halfhalf_pizza: {
-    _id: Random.id(),
-    name: "Slice of 'Za",
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: "Slice of 'Za 1",
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_pizza),
-        number: '1'
-      },
-      toPass: {
-        instruction: `Did you order <span style="color: #0351ff">pizza</span>? Hold up a <span style="color: #0351ff">slice of 'Za</span> and take a photo of half the slice!`,
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 90,
-    }]),
-    description: 'While eating pizza, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
-    }]
-  },
+  // halfhalf_pizza: {
+  //   _id: Random.id(),
+  //   name: "Slice of 'Za",
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: "Slice of 'Za 1",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_pizza),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: `Did you order <span style="color: #0351ff">pizza</span>? Hold up a <span style="color: #0351ff">slice of 'Za</span> and take a photo of half the slice!`,
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 90,
+  //   }]),
+  //   description: 'While eating pizza, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
+  //   }]
+  // },
   // halfhalf_creamwiththat: {
   //   _id: Random.id(),
   //   name: "Want cream with that",
@@ -2261,6 +2281,8 @@ let EXPERIENCES = {
     resultsTemplate: 'halfhalfResults',
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       needName: "Big Bites 1", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
+      notificationSubject: 'Eating at a restaurant?',
+      notificationText: 'Share an experience with others who are enjoying big bites of their meal',
       situation: {
         detector: getDetectorId(DETECTORS.big_bite_restaurant),
         number: '1'

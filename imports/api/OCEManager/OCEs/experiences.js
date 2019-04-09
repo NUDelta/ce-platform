@@ -38,6 +38,14 @@ Schema.NeedType = new SimpleSchema({
   needName: {
     type: String
   },
+  notificationSubject: {
+    type: String,
+    optional: true,
+  },
+  notificationText: {
+    type: String,
+    optional: true,
+  },
   situation: {
     type: Schema.SituationDescription
   },
