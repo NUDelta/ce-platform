@@ -202,6 +202,18 @@ let DETECTORS = {
     variables: ['var irish_pubs;', 'var irish;'],
     rules: ['(irish_pubs || irish);']
   },
+  house: {
+    _id : "qFYpFhiCH9iGAZpwy",
+  	description : "house",
+  	variables : [
+		"var apartments;",
+		"var hauntedhouses;",
+		"var guesthouses;"
+	],
+	rules : [
+		"(hauntedhouses || guesthouses) || apartments;"
+	]
+  },
   hair_salon: {
     _id: 'S8oZZwAWpFo5qGq87',
     description: 'hairsalon',
@@ -1164,7 +1176,7 @@ const createBumpedThree = function() {
 
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
-    
+
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
