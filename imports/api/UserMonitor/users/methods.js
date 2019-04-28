@@ -6,21 +6,19 @@ export const findUserByUsername = function (username) {
   return Meteor.users.findOne({ 'username': username });
 };
 
-export const _addActiveIncidentToUsers = function (uids, iid) {
+export const _addActiveIncidentToUser = function (uid, iid) {
   Meteor.users.update({
-    _id: { $in: uids }
+    _id: uid
   }, {
     $addToSet: {
       'profile.activeIncidents': iid
     }
-  }, {
-    multi: true
   });
 };
 
-export const _removeActiveIncidentFromUsers = function (uids, iid) {
+export const _removeActiveIncidentFromUser = function (uid, iid) {
   Meteor.users.update({
-    _id: { $in: uids }
+    _id: uid
   }, {
     $pull: {
       'profile.activeIncidents': iid
@@ -28,22 +26,21 @@ export const _removeActiveIncidentFromUsers = function (uids, iid) {
     $addToSet: {
       'profile.pastIncidents': iid
     }
-  }, {
-    multi: true
   });
 
+  // TODO(rlouie): remove the active incident/need/place/dist info too
 };
 
-export const _removeIncidentFromUsersEntirely = function (uids, iid) {
+export const _removeIncidentFromUserEntirely = function (uid, iid) {
   Meteor.users.update({
-    _id: { $in: uids }
+    _id: uid
   }, {
     $pull: {
       'profile.activeIncidents': iid
     }
-  }, {
-    multi: true
   });
+
+  // TODO(rlouie): remove the active incident/need/place/dist info too
 };
 
 

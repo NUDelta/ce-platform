@@ -22,12 +22,12 @@ Schema.UserNeedMapping = new SimpleSchema({
   needName: {
     type: String
   },
-  uids: {
-    type: [String],
-    defaultValue: []
+  users: {
+    type: [Object], // {uid: String, place: String, distance: Number}
+    defaultValue: [],
+    blackbox: true
   },
 });
-
 export const UserNeedMapping = new Mongo.Collection('userneedmapping');
 UserNeedMapping.attachSchema(Schema.UserNeedMapping);
 
@@ -39,6 +39,8 @@ Schema.Availability = new SimpleSchema({
   },
   needUserMaps: {
     type: [Schema.UserNeedMapping],
+    blackbox: true,
+    //TODO: this shouldn't be blackbox true, figure out why it's not doing its thang
   },
 
 });

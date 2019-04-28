@@ -11,7 +11,8 @@ import { matchAffordancesWithDetector, getPlaceKeys,
 import { Incidents } from './experiences';
 import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
 import { Submissions } from '../../OCEManager/currentNeeds';
-import {serverLog} from "../../logs";
+import {serverLog, log} from "../../logs";
+import {pullUserFromAvailabilityNeedUserMaps} from "../../OpportunisticCoordinator/server/identifier";
 
 
 /**
@@ -23,12 +24,7 @@ export const clearAvailabilitiesForUser = (uid) => {
   _.forEach(availabilityObjects, (av) => {
     // remove user for each need in each
     _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
+      pullUserFromAvailabilityNeedUserMaps(av._id, needEntry.needName, uid);
     });
   });
 };
@@ -58,23 +54,23 @@ export const findMatchesForUser = (uid, affordances) => {
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
-  // constructing matches to look like {iid : [ (place, needName), ... ], ... }
+  // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        let affordanceSubsetToMatchForPlace = placeSubsetAffordances(affordances, ignoreThesePlaces);
+        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
 
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
-            place_needs.push([placeToMatch, needName]);
+            place_needs.push([placeToMatch, needName, distInfo['distance']]);
             matches[iid] = place_needs;
           } else {
-            matches[iid] = [[placeToMatch, needName]];
+            matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
           }
         }
       });
@@ -84,13 +80,30 @@ export const findMatchesForUser = (uid, affordances) => {
   return matches;
 };
 
+/**
+ *
+ * @param beforeAvails
+ * @param afterAvails
+ * @return sustainedAvailDict {{Object}}
+ *    e.g., {"QybuLeDFSbTijxFbi":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
+ */
 export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
   let incidentIntersection = setIntersection(Object.keys(beforeAvails), Object.keys(afterAvails));
   let sustainedAvailDict = {};
   _.forEach(incidentIntersection, (incident) => {
-    let sustainedPlace_Need = setIntersection(beforeAvails[incident], afterAvails[incident]);
-    if (sustainedPlace_Need.length) {
-      sustainedAvailDict[incident] = sustainedPlace_Need;
+    let beforePlacesAndNeeds = beforeAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+
+    let sustainedPlace_Needs = setIntersection(beforePlacesAndNeeds, afterPlacesAndNeeds);
+    console.log(JSON.stringify(afterAvails[incident]));
+    console.log(JSON.stringify(sustainedPlace_Needs));
+    if (sustainedPlace_Needs.length) {
+      let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(sustainedPlace_Need =>
+        afterAvails[incident].find(place_need_dict =>
+          JSON.stringify(place_need_dict.slice(0,2)) == JSON.stringify(sustainedPlace_Need)
+        )
+      );
+      sustainedAvailDict[incident] = sustainedPlace_Need_Distances;
     }
   });
   return sustainedAvailDict;
@@ -166,6 +179,12 @@ export const updateUserExperiences = new ValidatedMethod({
   }
 });
 
+/**
+ * Not enough to remove experiences.
+ * Incidents need to be removed.
+ * Associated Submissions need to be removed.
+ * Associated
+ */
 export const removeExperience = new ValidatedMethod({
   name: 'experiences.remove',
   validate: new SimpleSchema({
@@ -278,13 +297,13 @@ export const addContribution = (iid, contribution) =>{
   Availability.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 
   Assignments.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 };
 
@@ -334,7 +353,7 @@ export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     addEmptySubmissionsForNeed(incident._id, incident.eid, need);
 
   });
@@ -360,15 +379,15 @@ export const updateRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
   });
 
   // clear the user activeIncidents before clearing the availabilities
   let old_needUserMaps = Availability.find({_id: incident._id}).needUserMaps;
   _.forEach(old_needUserMaps, (needUserMap) => {
-    if (needUserMap.uids.length > 0) {
-      _.forEach(needUserMap.uids, (uid) => {
+    if (needUserMap.users.length > 0) {
+      _.forEach(needUserMap.users, (uid) => {
         Meteor.users.update(
           {
             _id: uid
@@ -377,6 +396,7 @@ export const updateRunningIncident = (incident) => {
               "profile.activeIncidents": incident._id
             }
           });
+        // TODO(rlouie): maybe store activeIncidentNeedPlaceDistance info, so then pull incidents/needs like this too
       });
     }
   });

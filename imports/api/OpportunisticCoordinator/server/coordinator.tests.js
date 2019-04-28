@@ -1,16 +1,17 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import { Availability, Assignments } from './databaseHelpers.js';
+import { Availability, Assignments } from '../databaseHelpers.js';
 import {
-  adminUpdatesForAddingUsersToIncident, adminUpdatesForRemovingUsersToIncident, getNeedUserMapForNeed,
+  adminUpdatesForAddingUserToIncident, adminUpdatesForRemovingUserToIncident, getNeedUserMapForNeed,
   updateAvailability
 } from './identifier';
-import {CONSTANTS} from "../Testing/testingconstants";
+import {CONSTANTS} from "../../Testing/testingconstants";
 import {createIncidentFromExperience, startRunningIncident,
-        setIntersection, sustainedAvailabilities} from "../OCEManager/OCEs/methods";
-import {Experiences, Incidents} from "../OCEManager/OCEs/experiences";
-import { Submissions } from "../OCEManager/currentNeeds";
-import {insertTestOCE } from "./populateDatabase";
-import {checkIfThreshold} from "./server/strategizer";
+        setIntersection, sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {Experiences, Incidents} from "../../OCEManager/OCEs/experiences";
+import { Submissions } from "../../OCEManager/currentNeeds";
+import {insertTestOCE } from "../populateDatabase";
+import {checkIfThreshold} from "./strategizer";
+import { log } from "../../logs";
 
 describe('Availability Collection Tests', function() {
   this.timeout(10*1000); // extend timeout to wait for asynch functions
@@ -24,40 +25,48 @@ describe('Availability Collection Tests', function() {
     Availability.insert({
       _id: id1,
       needUserMaps: [
-        { needName: 'need1', uids: ['1', '2', '3'] },
-        { needName: 'need2', uids: ['5', '3', '4', '1'] }
+        {
+          needName: 'need1', users: [
+            {uid: '1', place: "place1", distance: 10.0},
+            {uid: '2', place: "place2", distance: 20.1},
+            {uid: '3', place: "place3", distance: 30.2}
+          ]
+        },
+        {
+          needName: 'need2', users: [
+            {uid: '5', place: "place5", distance: 10.0},
+            {uid: '3', place: "place3", distance: 20.1},
+            {uid: '4', place: "place4", distance: 30.2},
+            {uid: '1', place: "place1", distance: 40.3}
+          ]
+        }
       ],
     });
     Availability.insert({
       _id: id2,
       needUserMaps: [
-        { needName: 'need3', uids: ['8', '2', '5'] },
-        { needName: 'need4', uids: ['9', '14', '5'] }
+        {
+          needName: 'need3', users: [
+            {uid: '8', place: "place8", distance: 10.0},
+            {uid: '2', place: "place2", distance: 20.1},
+            {uid: '5', place: "place5", distance: 30.2}
+          ]
+        },
+        {
+          needName: 'need4', users: [
+            {uid: '9', place: "place9", distance: 10.0},
+            {uid: '14', place: "place14", distance: 20.1},
+            {uid: '5', place: "place5", distance: 30.2}
+          ]
+        }
       ],
     });
   });
 
   it('-- updateAvailability properly handles Availability Collection sideeffects', function(done) {
     let updatedAvailability = updateAvailability('1', {
-      [id1]: [['place1', 'need1']],
-      [id2]: [['place3', 'need3'], ['place4', 'need4']] });
-    // [
-    //   {
-    //     "iid":"9oW25j3t7iue6fQGg",
-    //     "needUserMaps":[
-    //       { "needName":"need1", "uids":["1","2","3"] },
-    //       { "needName":"need2", "uids":["5","3","4"] }
-    //     ]
-    //   },
-    //   {
-    //     "iid":"PSQePJiPoi6hXd6nM",
-    //     "needUserMaps":[
-    //       { "needName":"need3","uids":["8","2","5","1"]},
-    //       {"needName":"need4","uids":["9","14","5","1"]}
-    //     ]
-    //   }
-    // ]
-
+      [id1]: [['place1', 'need1', 10.0]],
+      [id2]: [['place3', 'need3', 20.0], ['place4', 'need4', 15.0]] });
     console.log('updatedAvailability : ' + JSON.stringify(updatedAvailability));
 
     // Wait for asynchronous updates to Availability Collection
@@ -76,21 +85,25 @@ describe('Availability Collection Tests', function() {
 
       _.forEach(firstEntry.needUserMaps, (needUserMap) => {
         if (needUserMap.needName === 'need1') {
-          chai.assert(needUserMap.uids.includes('1'), 'user not kept on to need1');
+          let foundUser = needUserMap.users.find(user => user.uid === '1');
+          chai.assert(foundUser, 'user not kept on to need1');
         }
 
         if (needUserMap.needName === 'need2') {
-          chai.assert(!needUserMap.uids.includes('1'), 'user not removed from need2');
+          let foundUser = needUserMap.users.find(user => user.uid === '1');
+          chai.assert(!foundUser, 'user not removed from need2');
         }
       });
 
       _.forEach(secondEntry.needUserMaps, (needUserMap) => {
         if (needUserMap.needName === 'need3') {
-          chai.assert(needUserMap.uids.includes('1'), 'user not added to need3');
+          let foundUser = needUserMap.users.find(user => user.uid === '1');
+          chai.assert(foundUser, 'user not added to need3');
         }
 
         if (needUserMap.needName === 'need4') {
-          chai.assert(needUserMap.uids.includes('1'), 'user not added to need4');
+          let foundUser = needUserMap.users.find(user => user.uid === '1');
+          chai.assert(foundUser, 'user not added to need4');
         }
       });
 
@@ -101,28 +114,12 @@ describe('Availability Collection Tests', function() {
 
   it('-- updateAvailability properly returns updatedAvailability', () => {
     let updatedAvailability = updateAvailability('1', {
-      [id1]: [['place1', 'need1']],
-      [id2]: [['place3', 'need3'], ['place4', 'need4']] });
-    // [
-    //   {
-    //     "iid":"9oW25j3t7iue6fQGg",
-    //     "needUserMaps":[
-    //       { "needName":"need1", "uids":["1","2","3"] },
-    //       { "needName":"need2", "uids":["5","3","4"] }
-    //     ]
-    //   },
-    //   {
-    //     "iid":"PSQePJiPoi6hXd6nM",
-    //     "needUserMaps":[
-    //       { "needName":"need3","uids":["8","2","5","1"]},
-    //       {"needName":"need4","uids":["9","14","5","1"]}
-    //     ]
-    //   }
-    // ]
-
+      [id1]: [['place1', 'need1', undefined]],
+      [id2]: [['place3', 'need3', 10.0], ['place4', 'need4', 25.0]] });
     console.log('updatedAvailability : ' + JSON.stringify(updatedAvailability));
 
-    let [firstEntry, secondEntry] = updatedAvailability;
+    let firstEntry = updatedAvailability.find(doc => doc._id === id1);
+    let secondEntry = updatedAvailability.find(doc => doc._id === id2);
 
     let firstEntryNeedNames = firstEntry.needUserMaps.map((needUserMap) => { return needUserMap.needName});
     let secondEntryNeedNames = secondEntry.needUserMaps.map((needUserMap) => { return needUserMap.needName});
@@ -133,21 +130,25 @@ describe('Availability Collection Tests', function() {
 
     _.forEach(firstEntry.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === 'need1') {
-        chai.assert(needUserMap.uids.includes('1'), 'user not kept on to need1');
+        let foundUser = needUserMap.users.find(user => user.uid === '1');
+        chai.assert(foundUser, 'user not kept on to need1');
       }
 
       if (needUserMap.needName === 'need2') {
-        chai.assert.isFalse(needUserMap.uids.includes('1'), 'user not removed from need2');
+        let foundUser = needUserMap.users.find(user => user.uid === '1');
+        chai.assert(!foundUser, 'user not removed from need2');
       }
     });
 
     _.forEach(secondEntry.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === 'need3') {
-        chai.assert(needUserMap.uids.includes('1'), 'user not added to need3');
+        let foundUser = needUserMap.users.find(user => user.uid === '1');
+        chai.assert(foundUser, 'user not added to need3');
       }
 
       if (needUserMap.needName === 'need4') {
-        chai.assert(needUserMap.uids.includes('1'), 'user not added to need4');
+        let foundUser = needUserMap.users.find(user => user.uid === '1');
+        chai.assert(foundUser, 'user not added to need4');
       }
     });
   })
@@ -176,13 +177,13 @@ describe('Assignments Collection test', () => {
     const incident = Incidents.findOne(testIncident);
 
     // single user participating
-    const uids = [Random.id()];
+    const uid = Random.id();
     const beforeNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
-    adminUpdatesForAddingUsersToIncident(uids, incident._id, needName);
+    adminUpdatesForAddingUserToIncident(uid, incident._id, needName);
     const afterNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
 
-    if (beforeNeedUserMap.uids.length + uids.length !== afterNeedUserMap.uids.length) {
-      chai.assert(false, `Number of users assigned to need should be ${uids.length} more than before it started`)
+    if (beforeNeedUserMap.users.length + 1 !== afterNeedUserMap.users.length) {
+      chai.assert(false, `Number of users assigned to need should be 1 more than before it started`)
     }
   });
   it('should remove user from Assignment DB since they participated', () => {
@@ -192,15 +193,17 @@ describe('Assignments Collection test', () => {
 
     // Adding 3 users
     const uids_to_add = [Random.id(), Random.id(), Random.id()];
-    adminUpdatesForAddingUsersToIncident(uids_to_add, incident._id, needName);
+    _.forEach(uids_to_add, uid => {
+      adminUpdatesForAddingUserToIncident(uid, incident._id, needName);
+    });
     const beforeNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
 
     // One user participated, so we will remove them
-    const uids_to_remove = [uids_to_add[0]];
-    adminUpdatesForRemovingUsersToIncident(uids_to_remove, incident._id, needName);
+    const uid_to_remove = uids_to_add[0];
+    adminUpdatesForRemovingUserToIncident(uid_to_remove, incident._id, needName);
     const afterNeedUserMap = getNeedUserMapForNeed(incident._id, needName);
 
-    if (beforeNeedUserMap.uids.length - 1 !== afterNeedUserMap.uids.length) {
+    if (beforeNeedUserMap.users.length - 1 !== afterNeedUserMap.users.length) {
       chai.assert(false, 'One user participated, but one user was NOT removed from the assignments for this need');
     }
   });
@@ -215,11 +218,13 @@ describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributio
   const NEEDNAME = 'Coffee Time';
   const updatedIncidentsAndNeeds = [
     {
-      iid: incident_id,
+      _id: incident_id,
       needUserMaps: [
         {
           needName: NEEDNAME,
-          uids: [userA]
+          users: [
+            {uid: userA, place: 'placeA', distance: 10.0}
+          ]
         }
       ]
     }
@@ -251,17 +256,21 @@ describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributio
     Availability.insert({
       _id: incident_id,
       needUserMaps: [
-        { needName: NEEDNAME, uids: [userA] },
+        {
+          needName: NEEDNAME, users: [
+            { uid: userA, place: "place1", distance: 10.0 }
+          ]
+        },
       ],
     });
 
     // userA NOT assigned to incident yet
-    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUsersToIncident
+    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUserToIncident
     // and the call to this function comes after checkIfThreshold
     Assignments.insert({
       _id: incident_id,
       needUserMaps: [
-        { needName: NEEDNAME, uids: [] },
+        { needName: NEEDNAME, users: [] },
       ],
     });
 
@@ -285,8 +294,9 @@ describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributio
     chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
-    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
-    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA')
+    let users_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    let foundUser = users_for_need.find((userMeta) => userMeta.uid === userA);
+    chai.assert(foundUser, 'incidentsWithUsersToRun should contain userA');
   });
 
   it('user SHOULD NOT be allowed to participate twice', () => {
@@ -329,11 +339,13 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
   const NEEDNAME = 'Coffee Time';
   const updatedIncidentsAndNeeds = [
     {
-      iid: incident_id,
+      _id: incident_id,
       needUserMaps: [
         {
           needName: NEEDNAME,
-          uids: [userA]
+          users: [
+            {uid: userA, place: 'placeA', distance: 10.0}
+          ]
         }
       ]
     }
@@ -364,17 +376,22 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
     Availability.insert({
       _id: incident_id,
       needUserMaps: [
-        { needName: NEEDNAME, uids: [userA] },
+        {
+          needName: NEEDNAME,
+          users: [
+            {uid: userA, place: 'placeA', distance: 10.0}
+          ]
+        },
       ],
     });
 
     // userA NOT assigned to incident yet
-    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUsersToIncident
+    // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUserToIncident
     // and the call to this function comes after checkIfThreshold
     Assignments.insert({
       _id: incident_id,
       needUserMaps: [
-        { needName: NEEDNAME, uids: [] },
+        { needName: NEEDNAME, users: [] },
       ],
     });
 
@@ -398,8 +415,9 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
     chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
-    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
-    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA');
+    let users_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    let foundUser = users_for_need.find((userMeta) => userMeta.uid === userA);
+    chai.assert(foundUser, 'incidentsWithUsersToRun should contain userA');
   });
 
   it('user ALSO SHOULD be allowed to participate twice', () => {
@@ -422,9 +440,9 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
     chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
-    let uids_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
-    chai.assert(uids_for_need.includes(userA), 'incidentsWithUsersToRun should contain userA');
-
+    let users_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
+    let foundUser = users_for_need.find((userMeta) => userMeta.uid === userA);
+    chai.assert(foundUser, 'incidentsWithUsersToRun should contain userA');
   });
 
 });
@@ -432,38 +450,38 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
 describe('Sustained (place, need) Match for Availability Dictionary', function() {
   let availabilityDictionary = {
     "asianFoodCrawlIncident": [
-      ['ramen_dojo', 'noodleNeed'],
-      ['kongs_chinese', 'noodleNeed']
+      ['ramen_dojo', 'noodleNeed', 10.0],
+      ['kongs_chinese', 'noodleNeed', 20.5]
     ],
     "groceryBuddiesIncident": [
-      ['trader_joes', 'groceryNeed']
+      ['trader_joes', 'groceryNeed', 20.0]
     ],
     "sunsetTogether": [
-      ['', 'sunsetTogetherNeed'],
-      ['ramen_dojo', 'sunsetTogetherNeed'],
-      ['kongs_chinese', 'sunsetTogetherNeed'],
-      ['trader_joes', 'sunsetTogetherNeed']
+      ['', 'sunsetTogetherNeed', undefined],
+      ['ramen_dojo', 'sunsetTogetherNeed', undefined],
+      ['kongs_chinese', 'sunsetTogetherNeed', undefined],
+      ['trader_joes', 'sunsetTogetherNeed', undefined]
     ]
   };
 
   // sustained success - after notification delay
   let sustainedAfterAvailDict = {
     "asianFoodCrawlIncident": [
-      ['ramen_dojo', 'noodleNeed']
+      ['ramen_dojo', 'noodleNeed', 3.0]
     ]
   };
 
   // sustained for not place need -- after notification delay
   let sustainedWeatherTimeNeedAfterAvailDict = {
     "sunsetTogether": [
-      ['', 'sunsetTogetherNeed'],
+      ['', 'sunsetTogetherNeed', undefined],
     ]
   };
 
   // not sustained - after notification delay
   let notSustainedAfterAvailDict = {
     "asianFoodCrawlIncident": [
-      ['onsen_oden', 'noodleNeed']
+      ['onsen_oden', 'noodleNeed', 25.0]
     ]
   };
 
@@ -478,9 +496,10 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
   it('Sustained [Place, Needs]', function() {
     let incident = "asianFoodCrawlIncident";
 
+    let beforePlacesAndNeeds = availabilityDictionary[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let afterPlacesAndNeeds = sustainedAfterAvailDict[incident].map((place_need_dist) => place_need_dist.slice(0,2));
     let place_need_intersection = setIntersection(
-      availabilityDictionary[incident],
-      sustainedAfterAvailDict[incident]);
+      beforePlacesAndNeeds, afterPlacesAndNeeds);
 
     chai.assert.equal(
       JSON.stringify(place_need_intersection),
@@ -508,7 +527,7 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
       JSON.stringify(sustainedAvailDict),
       JSON.stringify({
         "asianFoodCrawlIncident": [
-          ['ramen_dojo', 'noodleNeed']
+          ['ramen_dojo', 'noodleNeed', 3.0]
         ]
       })
     )
@@ -530,7 +549,7 @@ describe('Sustained (place, need) Match for Availability Dictionary', function()
       JSON.stringify(sustainedAvailDict),
       JSON.stringify({
         "sunsetTogether": [
-          ['', 'sunsetTogetherNeed']
+          ['', 'sunsetTogetherNeed', undefined]
         ]
       })
     );

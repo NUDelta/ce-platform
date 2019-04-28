@@ -2,13 +2,13 @@ import { HTTP } from 'meteor/http';
 
 import { Detectors } from './detectors'
 
-import { serverLog } from "../../logs";
+import { log, serverLog } from "../../logs";
 
 /**
  * Gets place + weather and time affordances based on location, then calls a callback
  * @param {string} uid user id
  * @param location {object} location object from the background geolocation package
- * @param {function} callback takes two arguments: uid, bgLocationObject, and affordances
+ * @param {function} callback takes three arguments: uid, bgLocationObject, and affordances
  */
 
 
@@ -47,7 +47,7 @@ export const getAffordancesFromLocation = function (uid, location, retrievePlace
 
 /**
  * e.g.,
- * input: {'trader_joes_evanston: { grocery: true }}
+ * input: {'trader_joes_evanston: { grocery: true, distance: 10.0 }}
  * output: ['trader_joes_evanston']
  * @param aff {Object} possibly nested affordance dictionary
  * @return {Array} list of keys in dictionary, which are places
@@ -84,39 +84,55 @@ export const onePlaceNotThesePlacesSets = function(placeKeys) {
 };
 
 /**
- *
  * @param aff {Object} nested affordance dict
  * @param notThesePlaces {Array} list of string keys (of places) which should not be considered in subset
- * @return subsetAff {Object} flat affordance dict that can be used by matchAffordanceWithDetector
+ * @return [subsetAff, distanceInfo] {[Object, Object]}
+ *    subsetAff: flat affordance dict that can be used by matchAffordanceWithDetector
+ *    distanceInfo: dict with key "distance" and value denoting the distance (float, or undefined)
  */
 export const placeSubsetAffordances = function(aff, notThesePlaces) {
   let subsetAff = {};
+  let distanceInfo = {};
   _.forEach(Object.keys(aff), (key) => {
     if (!notThesePlaces.includes(key)) {
       let maybePlaceNestedAff = aff[key];
+
+      // maybePlaceNestedAff (aff[key]) looks like { grocery: true, distance: 10.0 }
       if (typeof maybePlaceNestedAff === 'object' && maybePlaceNestedAff !== null) {
-        Object.assign(subsetAff, maybePlaceNestedAff);
+        let categoryDict = JSON.parse(JSON.stringify(maybePlaceNestedAff));
+
+        // capture distance info
+        Object.assign(distanceInfo, { 'distance' : maybePlaceNestedAff['distance'] } );
+
+        // then ignore distance info for accessing subset affordances
+        delete categoryDict['distance'];
+
+        Object.assign(subsetAff, categoryDict);
       }
+      // maybePlaceNestedAff (aff[key]) is a boolean value (e.g., key = 'rainy', aff[key] = true)
       else {
         Object.assign(subsetAff, { [key] : aff[key]})
       }
     }
   });
-  return subsetAff;
+  return [subsetAff, distanceInfo];
 };
 
 /**
- *
  * @param nestedAff {object} nested affordance dict
- * @return flatDict {object} flattened dict, without the place/business name, just categories
+ * @return flatDict {object} flattened dict, without the place/business name and distance, just categories
  */
 export const flattenAffordanceDict = function(nestedAff) {
   let placeKeys = getPlaceKeys(nestedAff);
   let flatDict = {};
   _.forEach(nestedAff, (affVal, affKey) => {
+    // affVal looks like {grocery: true, distance: 10.0}
     if (placeKeys.includes(affKey)) {
-      // affVal looks like {grocery: true}
-      Object.assign(flatDict, affVal);
+      // ignore distance when creating place category affordances
+      let categoryDict = JSON.parse(JSON.stringify(affVal));
+      delete categoryDict['distance'];
+
+      Object.assign(flatDict, categoryDict);
     }
     else {
       flatDict[affKey] = affVal;
@@ -156,7 +172,16 @@ const applyDetector = function (userAffordances, varDecl, rules) {
     .concat(rules)
     .join('\n');
 
-  return eval(mergedAffordancesWithRules);
+  try {
+    return eval(mergedAffordancesWithRules);
+  } catch (err) {
+    log.debug(`userAffordances: ${JSON.stringify(userAffordances)}`);
+    log.debug(`varDecl: ${JSON.stringify(varDecl)}`);
+    log.debug(`rules: ${JSON.stringify(rules)}`);
+    log.debug(`affordancesAsJavascriptVars: ${JSON.stringify(affordancesAsJavascriptVars)}`);
+    log.debug(`mergedAffordancesWithRules: ${JSON.stringify(mergedAffordancesWithRules)}`);
+    throw (err);
+  }
 };
 
 /**

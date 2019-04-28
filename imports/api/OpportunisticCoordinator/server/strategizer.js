@@ -1,6 +1,6 @@
 import { Submissions } from "../../OCEManager/currentNeeds";
 import { Assignments } from "../databaseHelpers";
-import { getNeedObject } from "../identifier";
+import { getNeedObject } from "./identifier";
 const util = require('util');
 
 /**
@@ -10,39 +10,54 @@ const util = require('util');
  * @param updatedIncidentsAndNeeds {[object]} array of object from Availability DB
  *  [
  *    {
- *      iid: string,
+ *      _id: string,
  *      needUserMaps: [
  *        {
  *          needName: string,
- *          uids: [uid]
+ *          users: [
+ *            {uid: uid, place: place, distance: distance}
+ *          ]
  *        }
  *      ]
  *    }
  *  ]
- * @returns {{ iid: {need: [uid, uid], need: [uid] } } }
+ *
+ * @returns incidentsWithUsersToRun {object} needs to run in format of
+ *  {
+ *    [iid]: {
+ *      [need]: [
+ *        {uid: uid1, place: place1, distance: 10},
+ *        {uid: uid2, place: place2, distance: 15}
+ *      ],
+ *      [need]:[
+ *        {uid: uid3, place: place3, distance: 20}
+ *      ]
+ *    }
+ *  }
  */
 export const checkIfThreshold = updatedIncidentsAndNeeds => {
   //these are not needUsermaps
-  // console.log(util.inspect(updatedIncidentsAndNeeds, false, null));
+  // console.log('input to checkIfThreshold: ', util.inspect(updatedIncidentsAndNeeds, false, null));
 
   let incidentsWithUsersToRun = {};
 
   _.forEach(updatedIncidentsAndNeeds, incidentMapping => {
-    let assignment = Assignments.findOne(incidentMapping.iid);
+    // console.log('incidentMapping: ', util.inspect(incidentMapping, false, null));
+    let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
     let usersInIncident = [].concat.apply(
       [],
       assignment.needUserMaps.map(function(needMap) {
-        return needMap.uids;
+        return needMap.users;
       })
     );
     // console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
 
-    incidentsWithUsersToRun[incidentMapping.iid] = {};
+    incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
       // get need object for current iid/current need and number of people
 
-      let iid = incidentMapping.iid;
+      let iid = incidentMapping._id;
       let needName = needUserMap.needName;
       //get need object
 
@@ -50,12 +65,12 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
 
       // console.log('need: ', util.inspect(need, false, null));
       // Start by never keeping track of previous user submissions to the incident
-      let previousUsers = [];
+      let previousUids = [];
 
       // If we are not allowing repeat contributions, then do look at previous user submissions
       if (!need.allowRepeatContributions) {
-        previousUsers = Submissions.find({
-          iid: incidentMapping.iid,
+        previousUids = Submissions.find({
+          iid: incidentMapping._id,
           needName: needName
         })
           .fetch()
@@ -63,10 +78,10 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
             return x.uid;
           });
       }
-      // console.log('previousUsers: ', util.inspect(previousUsers, false, null));
+      // console.log('previousUids: ', util.inspect(previousUids, false, null));
 
-      let usersNotInIncident = needUserMap.uids.filter(function(x) {
-        return !usersInIncident.includes(x) && !previousUsers.includes(x);
+      let usersNotInIncident = needUserMap.users.filter(function(user) {
+        return !usersInIncident.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
@@ -75,7 +90,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       });
       // console.log('assignmentNeed: ', util.inspect(assignmentNeed, false, null));
 
-      if (assignmentNeed.uids.length === 0) {
+      if (assignmentNeed.users.length === 0) {
         if (usersNotInIncident.length >= need.situation.number) {
           let newChosenUsers = chooseUsers(
             usersNotInIncident,
@@ -84,7 +99,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
           );
           // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
           usersInIncident = usersInIncident.concat(newChosenUsers);
-          incidentsWithUsersToRun[incidentMapping.iid][
+          incidentsWithUsersToRun[incidentMapping._id][
             needUserMap.needName
             ] = newChosenUsers;
         }
@@ -92,17 +107,17 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     });
   });
   // console.log('incidentsWithUsersToRun', util.inspect(incidentsWithUsersToRun, false, null));
-  return incidentsWithUsersToRun; //{iid: {need: [uid, uid], need: [uid]}}
+  return incidentsWithUsersToRun;
 };
 
-const chooseUsers = (availableUids, iid, needUserMap) => {
+const chooseUsers = (availableUserMetas, iid, needUserMap) => {
   let numberPeopleNeeded = Submissions.find({
     iid: iid,
     needName: needUserMap.needName,
     uid: null
   }).count();
 
-  let usersWeAlreadyHave = needUserMap.uids;
+  let usersWeAlreadyHave = needUserMap.users;
 
   if (usersWeAlreadyHave.length === numberPeopleNeeded) {
     return [];
@@ -112,7 +127,7 @@ const chooseUsers = (availableUids, iid, needUserMap) => {
   } else {
     let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
 
-    let chosen = availableUids.splice(0, dif);
+    let chosen = availableUserMetas.splice(0, dif);
     return chosen;
   }
 };

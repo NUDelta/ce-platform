@@ -1,24 +1,26 @@
 import { ValidatedMethod } from "meteor/mdg:validated-method";
 import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
-import { Assignments } from "./databaseHelpers";
-import { Availability } from "./databaseHelpers";
-import { Incidents } from "../OCEManager/OCEs/experiences.js";
-import { Submissions } from "../OCEManager/currentNeeds.js";
-import { Locations } from "../UserMonitor/locations/locations";
-import { numUnfinishedNeeds } from "../OCEManager/progressor";
-import { addEmptySubmissionsForNeed } from "../OCEManager/OCEs/methods.js";
+import { Assignments } from "../databaseHelpers";
+import { Availability } from "../databaseHelpers";
+import { Incidents } from "../../OCEManager/OCEs/experiences.js";
+import { Submissions } from "../../OCEManager/currentNeeds.js";
+import { Locations } from "../../UserMonitor/locations/locations";
+import { numUnfinishedNeeds } from "../../OCEManager/progressor";
+import { addEmptySubmissionsForNeed } from "../../OCEManager/OCEs/methods.js";
 
-import { _addActiveIncidentToUsers, _removeActiveIncidentFromUsers, _removeIncidentFromUsersEntirely } from
-    "../UserMonitor/users/methods";
-import {doesUserMatchNeed, getNeedDelay} from "../OCEManager/OCEs/methods";
-import { CONFIG } from "../config";
-import { serverLog } from "../logs";
-import {notifyForMissingParticipation} from "./server/noticationMethods";
+import { _addActiveIncidentToUser, _removeActiveIncidentFromUser, _removeIncidentFromUserEntirely } from
+    "../../UserMonitor/users/methods";
+import {doesUserMatchNeed, getNeedDelay} from "../../OCEManager/OCEs/methods";
+import { CONFIG } from "../../config";
+import { log, serverLog } from "../../logs";
+import {notifyForMissingParticipation} from "./noticationMethods";
 import {
   flattenAffordanceDict, getPlaceKeys, onePlaceNotThesePlacesSets,
   placeSubsetAffordances
-} from "../UserMonitor/detectors/methods";
+} from "../../UserMonitor/detectors/methods";
+import {Decommission_log} from "../../Logging/decommission_log";
+import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -40,88 +42,111 @@ export const getNeedObject = (iid, needName) => {
  *
  * @param uid {string}
  * @param availabilityDictionary {object} current availabilities as
- *  {iid: [[place, need], [place, need]], iid: [[place, need]]}
+ *  {iid: [[place, need, distance], [place, need, distance]], iid: [[place, need, distance]]}
  * @return {[object]} array of object from Availability DB
  *  [{iid: string, needs: [{needName: string, users: [uid]}]]
  */
 export const updateAvailability = (uid, availabilityDictionary) => {
-  let updatedEntries = [];
+  let incidentsUpdated = [];
 
-  let availability = Availability.find().fetch();
-  _.forEach(availability, av => {
+  // iterate over cursor
+  let availability = Availability.find();
+  availability.forEach(av => {
     let iid = av._id;
     if (!(iid in availabilityDictionary)) {
       return; // continue forEach
     }
-    let currentlyMatchedNeeds = availabilityDictionary[iid].map((place_need) => { return place_need[1]});
+    incidentsUpdated.push(iid);
 
-    let updatedNeeds = { iid: iid, needUserMaps: [] };
     _.forEach(av.needUserMaps, needUserMap => {
       let needName = needUserMap.needName;
 
-      // add user to availability if they can fulfill needName
-      if (currentlyMatchedNeeds.includes(needName)) {
-        Availability.update(
-          {
-            _id: iid,
-            "needUserMaps.needName": needName
-          },
-          {
-            $addToSet: { "needUserMaps.$.uids": uid }
-          },
-          (err) => {
-            if (err) {
-              console.log("error,", err);
-            }
-          }
-        );
+      let matchingPlaceNeedDistance = availabilityDictionary[iid].find(
+        place_need_distance => place_need_distance[1] === needName);
 
-        // do the same mongo operation, but in JS so we run synchronously
-        let newusers = new Set(needUserMap.uids);
-        newusers.add(uid);
-        updatedNeeds.needUserMaps.push({
-          needName: needName,
-          uids: [...newusers]
-        });
+      // add user to availability if they can fulfill needName
+      if (matchingPlaceNeedDistance) {
+        // pull any old instances of the user object with {uid: <some_uid>}
+        pullUserFromAvailabilityNeedUserMaps(iid, needName, uid);
+
+        // push an updated instance of this user object
+        pushUserIntoAvailabilityNeedUserMaps(iid, needName, uid, matchingPlaceNeedDistance[0], matchingPlaceNeedDistance[2])
+
       }
       // try to remove user from needs they are not currently available for
       // NOTE: potentially redundant, clearAvailabilitiesForUser might have been already called
       else {
-        Availability.update(
-          {
-            _id: iid,
-            "needUserMaps.needName": needName
-          },
-          {
-            $pull: { "needUserMaps.$.uids": uid }
-          },
-          (err) => {
-            if (err) {
-              console.log("error,", err);
-            }
-          }
-        );
-
-        // do the same mongo operation, but in JS so we run synchronously
-        let newusers = new Set(needUserMap.uids);
-        newusers.delete(uid);
-        updatedNeeds.needUserMaps.push({
-          needName: needName,
-          uids: [...newusers]
-        });
+        pullUserFromAvailabilityNeedUserMaps(iid, needName, uid);
       }
     });
-
-    // add needs and users for current incident
-    updatedEntries.push(updatedNeeds);
   });
 
-  return updatedEntries;
+  return Availability.find({_id: {$in: incidentsUpdated}}).fetch();
+};
+
+export const pullUserFromAvailabilityNeedUserMaps = (iid, needName, uid) => {
+  Availability.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $pull: { "needUserMaps.$.users": {"uid" : uid } }
+    }
+  );
+};
+
+export const pushUserIntoAvailabilityNeedUserMaps = (iid, needName, uid, place, distance) => {
+  Availability.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $push: {
+        "needUserMaps.$.users": {
+          "uid": uid,
+          "place": place,
+          "distance": distance
+        }
+      }
+    }
+  );
 };
 
 /**
  * ASSIGNMENT DB FUNCTIONS
  */
+
+export const pullUserFromAssignmentsNeedUserMaps = (iid, needName, uid) => {
+  Assignments.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $pull: { "needUserMaps.$.users": {"uid" : uid } }
+    }
+  );
+};
+
+export const pushUserIntoAssignmentsNeedUserMaps = (iid, needName, uid, place, distance) => {
+  Assignments.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $push: {
+        "needUserMaps.$.users": {
+          "uid": uid,
+          "place": place,
+          "distance": distance
+        }
+      }
+    }
+  );
+};
 
 /**
  * Un-assigns a user to an incident if their location no longer matches
@@ -132,16 +157,17 @@ export const updateAvailability = (uid, availabilityDictionary) => {
  */
 export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
   let currentAssignments = Assignments.find({
-    needUserMaps: {
+    "needUserMaps.users": {
       $elemMatch: {
-        uids: uid
+        uid: uid
       }
     }
-  }).fetch();
+  });
 
   let flatAffordances = flattenAffordanceDict(affordances);
 
-  _.forEach(currentAssignments, assignment => {
+  // iterate over cursor
+  currentAssignments.forEach(assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
 
       let matchPredicate = doesUserMatchNeed(
@@ -151,104 +177,132 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
         needUserMap.needName
       );
 
-      if (!matchPredicate && needUserMap.uids.includes(uid)) {
+      if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {
         // note: decommissionDelay == notificationDelay
         let delay = getNeedDelay(assignment._id, needUserMap.needName);
 
-        Meteor.setTimeout(function () {
-
-          let nestedAffAfterDelay = Locations.findOne({uid: uid}).affordances;
-          let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
-
-          let matchPredicateAfterDelay = doesUserMatchNeed(
-            uid,
-            flatAffAfterDelay,
-            assignment._id,
-            needUserMap.needName
-          );
-
-          // Only remove after they do not match again after some decommission delay
-          if (!matchPredicateAfterDelay) {
-            console.log('removing user from Incident after decommission delay');
-            adminUpdatesForRemovingUsersToIncidentEntirely(
-              [uid],
-              assignment._id,
-              needUserMap.needName
-            );
-          }
-
-          // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
-          // they get continuously spammed with notifications. A way better UI would be to remove the notification
-          // entirely.
-          // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
-          // notifyForMissingParticipation([uid]);
-        }, delay * 1000);
-
+        Meteor.setTimeout(
+          decommissionIfSustained.bind(null, uid, assignment._id, needUserMap.needName, delay),
+          delay * 1000);
       }
     });
   });
 };
 
 /**
- *
- * @param uids {[string]} users to add
- * @param iid {string} incident to add users to
- * @param needName {string} name of need to add users to
+ * Called after some decommissionDelay setTimeout, with parameters binded to this callback function
+ * @param userId
+ * @param incidentId
+ * @param needName
  */
-export const adminUpdatesForAddingUsersToIncident = (uids, iid, needName) => {
-  //TODO: make this function take a single user not an array
+let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) => {
+  let user = Meteor.users.findOne({_id: userId});
+  if (!user) {
+    log.warning(`No user exists for uid = ${userId}`);
+    return;
+  }
+  let activeIncidents = user.profile.activeIncidents;
+  if (!activeIncidents.includes(incidentId)) {
+    log.info(`No need to decommission { uid: ${userId} } from { iid: ${incidentId} }`);
+    return;
+  }
+  let lastLocation = Locations.findOne({uid: userId});
+  let nestedAffAfterDelay = lastLocation.affordances;
+  let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
 
-  _addUsersToAssignmentDb(uids, iid, needName);
-  _addActiveIncidentToUsers(uids, iid);
+  let matchPredicateAfterDelay = doesUserMatchNeed(userId, flatAffAfterDelay, incidentId, needName);
+
+  // Only remove after they do not match again after some decommission delay
+  if (!matchPredicateAfterDelay) {
+    log.cerebro(`Removing user ${userId} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
+
+    Decommission_log.insert({
+      iid: incidentId,
+      uid: userId,
+      needName: needName,
+      lat: lastLocation.lat,
+      lng: lastLocation.lng,
+      timestamp: Date.now(),
+      affordances: nestedAffAfterDelay,
+      decommissionDelay: decommissionDelay
+    }, (err) => {
+      if (err) {
+        log.error(`Failed to insert to decommission_log: ${err}`);
+      }
+    });
+
+    adminUpdatesForRemovingUserToIncidentEntirely(userId, incidentId, needName);
+  }
+
+  // FIXME(rlouie): If people qualify for multiple needs, and then disqualify shortly after...
+  // they get continuously spammed with notifications. A way better UI would be to remove the notification
+  // entirely.
+  // TODO(rlouie): replace this call for notifyForMissingParticipation with a retract notification method
+  // notifyForMissingParticipation([uid]);
 };
 
 /**
  *
- * @param uids {[string]} users to remove
+ * @param uid {string} user to add
+ * @param iid {string} incident to add user to
+ * @param needName {string} name of need to add user to
+ */
+export const adminUpdatesForAddingUserToIncident = (uid, iid, needName) => {
+  _addUserToAssignmentDb(uid, iid, needName);
+  _addActiveIncidentToUser(uid, iid);
+  // TODO(rlouie): add extra incident/need/place/distance info
+  // _addActiveIncidentNeedPlaceDistanceToUsers(uid, incidentNeedPlaceDistance);
+
+  log.cerebro(`Assigning [${iid}, ${needName}] to users ` + JSON.stringify(uid));
+  AddedToIncident_log.insert({
+    uid: uid,
+    timestamp: Date.now(),
+    iid: iid,
+    needName: needName
+  }, (err) => {
+    if (err) {
+      log.error(`Failed to insert to added_to_incident_log: ${err}`);
+    }
+  });
+
+};
+
+/**
+ *
+ * @param uid {string} users to remove
  * @param iid {string} incident to remove users from
  * @param needName {string} name of need to remove users from
  */
 // user participated so need to remove from active incidents and add to past incidents
-export const adminUpdatesForRemovingUsersToIncident = (uids, iid, needName) => {
-  //TODO: make this function take a single user not an array
-
-  _removeUsersFromAssignmentDb(uids, iid, needName);
-  _removeActiveIncidentFromUsers(uids, iid);
+export const adminUpdatesForRemovingUserToIncident = (uid, iid, needName) => {
+  _removeUserFromAssignmentDb(uid, iid, needName);
+  _removeActiveIncidentFromUser(uid, iid);
 };
 
 /**
  *
- * @param uids {[string]} users to remove
- * @param iid {string} incident to remove users from
- * @param needName {string} name of need to remove users from
+ * @param uid {string} user to remove
+ * @param iid {string} incident to remove user from
+ * @param needName {string} name of need to remove user from
  */
 // user location moved but did not participate. remove incident entirely from user
-export const adminUpdatesForRemovingUsersToIncidentEntirely = (uids, iid, needName) => {
+export const adminUpdatesForRemovingUserToIncidentEntirely = (uid, iid, needName) => {
   //TODO: make this function take a single user not an array
-  _removeUsersFromAssignmentDb(uids, iid, needName);
-  _removeIncidentFromUsersEntirely(uids, iid);
+  _removeUserFromAssignmentDb(uid, iid, needName);
+  _removeIncidentFromUserEntirely(uid, iid);
 };
 
 /**
  * Adds all users in the array to the assignmentDB for the specified need.
  *
- * @param uids {[string]} array of users to remove
+ * @param uid {string} array of users to remove
  * @param iid {string} incident to add to
  * @param needName {string} need to add user to
  */
-const _addUsersToAssignmentDb = (uids, iid, needName) => {
-  //TODO: mongo so old can't use each, but maybe better way
-  _.forEach(uids, uid => {
-    Assignments.update(
-      {
-        _id: iid,
-        "needUserMaps.needName": needName
-      },
-      {
-        $addToSet: { "needUserMaps.$.uids": uid }
-      }
-    );
-  });
+const _addUserToAssignmentDb = (uid, iid, needName) => {
+  // addToSet by pulling the old users and pushing the new users
+  pullUserFromAssignmentsNeedUserMaps(iid, needName, uid);
+  pushUserIntoAssignmentsNeedUserMaps(iid, needName, uid)
 };
 
 /**
@@ -288,27 +342,20 @@ const checkIfNeedFailed = (iid, needName) => {
 /**
  * Removes user from assignmentDB for the specified need.
  *
- * @param uids {[string]} array of users to remove
+ * @param uid {string} user to remove
  * @param iid {string} incident to remove from
  * @param needName {string} need that user is assigned to
  */
-const _removeUsersFromAssignmentDb = (uids, iid, needName) => {
-  if (uids.length === 0) {
-    return;
-  }
-
-  _.forEach(uids, uid => {
-    Assignments.update(
-      {
-        _id: iid,
-        "needUserMaps.needName": needName
-      },
-      {
-        $pull: { "needUserMaps.$.uids": uid }
-      }
-    );
-  });
-
+const _removeUserFromAssignmentDb = (uid, iid, needName) => {
+  Assignments.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $pull: { "needUserMaps.$.users": {uid: uid} }
+    }
+  );
   /*
   const needUserMap = getNeedUserMapForNeed(iid, needName);
 
