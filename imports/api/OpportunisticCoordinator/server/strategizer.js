@@ -1,6 +1,7 @@
 import { Submissions } from "../../OCEManager/currentNeeds";
 import { Assignments } from "../databaseHelpers";
 import { getNeedObject } from "./identifier";
+import {Incidents} from "../../OCEManager/OCEs/experiences";
 const util = require('util');
 
 /**
@@ -45,6 +46,9 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     // console.log('incidentMapping: ', util.inspect(incidentMapping, false, null));
     let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
+
+    // FIXME(rlouie); usersInNeed (just dont re-run/notify people who are already in the set of needs?
+    // this will fix the current test case failure
     let usersInIncident = [].concat.apply(
       [],
       assignment.needUserMaps.map(function(needMap) {
@@ -80,6 +84,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       }
       // console.log('previousUids: ', util.inspect(previousUids, false, null));
 
+      // FIXME(rlouie):
       let usersNotInIncident = needUserMap.users.filter(function(user) {
         return !usersInIncident.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
       });
@@ -88,21 +93,19 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       let assignmentNeed = assignment.needUserMaps.find(function(x) {
         return x.needName === needName;
       });
-      // console.log('assignmentNeed: ', util.inspect(assignmentNeed, false, null));
 
-      if (assignmentNeed.users.length === 0) {
-        if (usersNotInIncident.length >= need.situation.number) {
-          let newChosenUsers = chooseUsers(
-            usersNotInIncident,
-            iid,
-            assignmentNeed
-          );
-          // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
-          usersInIncident = usersInIncident.concat(newChosenUsers);
-          incidentsWithUsersToRun[incidentMapping._id][
-            needUserMap.needName
-            ] = newChosenUsers;
-        }
+      // check for synchronous needs (need.situation.number >= 2)
+      if (usersNotInIncident.length >= need.situation.number) {
+        let newChosenUsers = chooseUsers(
+          usersNotInIncident,
+          iid,
+          assignmentNeed
+        );
+        // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+        usersInIncident = usersInIncident.concat(newChosenUsers);
+        incidentsWithUsersToRun[incidentMapping._id][
+          needUserMap.needName
+          ] = newChosenUsers;
       }
     });
   });
@@ -130,4 +133,25 @@ const chooseUsers = (availableUserMetas, iid, needUserMap) => {
     let chosen = availableUserMetas.splice(0, dif);
     return chosen;
   }
+};
+
+/**
+ * Helper for Dynamic Loading of Exact Participate Need
+ * Looks at the need.situation.detectors of an incident,
+ * returns the needNames should be aggregated
+ * @param incident, result of a Incident.findOne call
+ */
+export const needAggregator = (incident) => {
+  // keys: detectors
+  // values: needs
+  let res = {};
+  _.forEach(incident.contributionTypes, (need) => {
+    if (res[need.situation.detector]) {
+      res[need.situation.detector].push(need.needName);
+    }
+    else {
+      res[need.situation.detector] = [need.needName];
+    }
+  });
+  return res;
 };
