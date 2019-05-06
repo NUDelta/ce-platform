@@ -47,15 +47,6 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
 
-    // FIXME(rlouie); usersInNeed (just dont re-run/notify people who are already in the set of needs?
-    // this will fix the current test case failure
-    let usersInIncident = [].concat.apply(
-      [],
-      assignment.needUserMaps.map(function(needMap) {
-        return needMap.users;
-      })
-    );
-    // console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
 
     incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
@@ -66,27 +57,16 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       //get need object
 
       let need = getNeedObject(iid, needName);
-
       // console.log('need: ', util.inspect(need, false, null));
-      // Start by never keeping track of previous user submissions to the incident
-      let previousUids = [];
 
-      // If we are not allowing repeat contributions, then do look at previous user submissions
-      if (!need.allowRepeatContributions) {
-        previousUids = Submissions.find({
-          iid: incidentMapping._id,
-          needName: needName
-        })
-          .fetch()
-          .map(function(x) {
-            return x.uid;
-          });
-      }
+      let usersInNeed = usersAlreadyAssignedToNeed(iid, needName);
+      // console.log('usersInNeed : ', util.inspect(usersInIncident, false, null));
+
+      let previousUids = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
       // console.log('previousUids: ', util.inspect(previousUids, false, null));
 
-      // FIXME(rlouie):
       let usersNotInIncident = needUserMap.users.filter(function(user) {
-        return !usersInIncident.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
+        return !usersInNeed.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
@@ -102,10 +82,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
           assignmentNeed
         );
         // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
-        usersInIncident = usersInIncident.concat(newChosenUsers);
-        incidentsWithUsersToRun[incidentMapping._id][
-          needUserMap.needName
-          ] = newChosenUsers;
+        incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;
       }
     });
   });
@@ -113,6 +90,38 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
   return incidentsWithUsersToRun;
 };
 
+/**
+ * usersAlreadyAssignedToNeed
+ *
+ * Returns
+ * @param iid
+ * @param needName
+ * @return usersInNeed [Array] array of uids
+ */
+const usersAlreadyAssignedToNeed = (iid, needName) => {
+  let assignment = Assignments.findOne(iid);
+  let assignmentNeedMap = assignment.needUserMaps.find(function(x) {
+    return x.needName === needName;
+  });
+  return assignmentNeedMap.users;
+};
+
+/**
+ *
+ * @param iid
+ * @param needName
+ * @return previousUids [Array] array of uids
+ */
+const usersAlreadySubmittedToNeed = (iid, needName) => {
+  let previousUids = Submissions.find({
+    iid: iid, needName: needName
+  }).map(function(x) {
+      return x.uid;
+    });
+  return previousUids;
+};
+
+/** my mutex, but not dynamic on page load, but does it during the first assignment (for notification) **/
 const chooseUsers = (availableUserMetas, iid, needUserMap) => {
   let numberPeopleNeeded = Submissions.find({
     iid: iid,
