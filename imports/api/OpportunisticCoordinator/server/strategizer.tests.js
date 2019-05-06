@@ -307,8 +307,8 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
 
     Availability.insert(updatedIncidentsAndNeeds[0]);
 
-    // userA IS ALREADY assigned to incident, but has not participated
-    // userB NOT assigned to incident yet
+    // userA IS ALREADY assigned to need1 and need2, but has not participated
+    // userB NOT assigned to any of the needs
     // runNeedsWithThresholdMet does these types of updates via adminUpdatesForAddingUserToIncident
     // and the call to this function comes after checkIfThreshold
     Assignments.insert({
@@ -324,7 +324,6 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
           needName: needName2,
           users: [
             {uid: userA, place: place, distance: distance},
-            {uid: userB, place: place, distance: distance}
           ]
         }
       ],
@@ -349,7 +348,7 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
     }
   });
 
-  it('should allow userB to still be assigned to all open half half needs the first time', () => {
+  it('should allow userB to still be assigned to first open half half needs the first time', () => {
     let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
 
     // should look something like this
@@ -360,12 +359,28 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
     let users_for_need1 = incidentsWithUsersToRun[incident_id][needName1];
     let foundUserForNeed1 = users_for_need1.find((userMeta) => userMeta.uid === userB);
     chai.assert(foundUserForNeed1, `incidentsWithUsersToRun, ${needName1}, should contain userB`);
+    // chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][needName2], `incidentsWithUsersToRun should contain ${needName2}`);
+    // let users_for_need2 = incidentsWithUsersToRun[incident_id][needName2];
+    // let foundUserForNeed2 = users_for_need2.find((userMeta) => userMeta.uid === userB);
+    // chai.assert(foundUserForNeed2, `incidentsWithUsersToRun, ${needName2}, should contain userB`);
+  });
+
+  it('should allow userB to still be assigned to second open half half needs the first time', () => {
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+    // chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][needName1], `incidentsWithUsersToRun should contain ${needName1}`);
+    // let users_for_need1 = incidentsWithUsersToRun[incident_id][needName1];
+    // let foundUserForNeed1 = users_for_need1.find((userMeta) => userMeta.uid === userB);
+    // chai.assert(foundUserForNeed1, `incidentsWithUsersToRun, ${needName1}, should contain userB`);
     chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][needName2], `incidentsWithUsersToRun should contain ${needName2}`);
     let users_for_need2 = incidentsWithUsersToRun[incident_id][needName2];
     let foundUserForNeed2 = users_for_need2.find((userMeta) => userMeta.uid === userB);
     chai.assert(foundUserForNeed2, `incidentsWithUsersToRun, ${needName2}, should contain userB`);
   });
-
 
   // it('user ALSO SHOULD be allowed to participate twice', () => {
   //   // But user has already participated in the past
@@ -434,7 +449,7 @@ describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
   });
 
   it('should group Half Half Needs based on their common detector', () => {
-    let incident = Incidents.findOne({_id: iid});
+    let incident = Incidents.findOne({_id: incident_id});
     let res = needAggregator(incident);
 
     chai.assert(JSON.stringify(res),
