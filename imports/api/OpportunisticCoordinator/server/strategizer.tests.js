@@ -2,7 +2,8 @@ import { resetDatabase } from 'meteor/xolvio:cleaner';
 import {Incidents} from "../../OCEManager/OCEs/experiences";
 import {Submissions} from "../../OCEManager/currentNeeds";
 import {Assignments, Availability} from "../databaseHelpers";
-import {checkIfThreshold, needAggregator} from "./strategizer";
+import {checkIfThreshold} from "./strategizer";
+import {needAggregator} from "../strategizer";
 
 describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributions: false', () => {
 
