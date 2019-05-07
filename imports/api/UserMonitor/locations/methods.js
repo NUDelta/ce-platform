@@ -4,10 +4,13 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
+import { findMatchesForUser, getNeedDelay} from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
-import { decomissionFromAssignmentsIfAppropriate } from "../../OpportunisticCoordinator/server/identifier";
+import {
+  clearAvailabilitiesForUser,
+  decomissionFromAssignmentsIfAppropriate
+} from "../../OpportunisticCoordinator/server/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";

@@ -1,24 +1,21 @@
-import { ValidatedMethod } from "meteor/mdg:validated-method";
-import { SimpleSchema } from "meteor/aldeed:simple-schema";
+import {ValidatedMethod} from "meteor/mdg:validated-method";
+import {SimpleSchema} from "meteor/aldeed:simple-schema";
 
-import { Assignments } from "../databaseHelpers";
-import { Availability } from "../databaseHelpers";
-import { Incidents } from "../../OCEManager/OCEs/experiences.js";
-import { Submissions } from "../../OCEManager/currentNeeds.js";
-import { Locations } from "../../UserMonitor/locations/locations";
-import { numUnfinishedNeeds } from "../../OCEManager/progressor";
-import { addEmptySubmissionsForNeed } from "../../OCEManager/OCEs/methods.js";
+import {Assignments, Availability} from "../databaseHelpers";
+import {Incidents} from "../../OCEManager/OCEs/experiences.js";
+import {Submissions} from "../../OCEManager/currentNeeds.js";
+import {Locations} from "../../UserMonitor/locations/locations";
+import {numUnfinishedNeeds} from "../../OCEManager/progressor";
+import {addEmptySubmissionsForNeed} from "../../OCEManager/OCEs/methods.js";
 
-import { _addActiveIncidentToUser, _removeActiveIncidentFromUser, _removeIncidentFromUserEntirely } from
-    "../../UserMonitor/users/methods";
-import {doesUserMatchNeed, getNeedDelay} from "../../OCEManager/OCEs/methods";
-import { CONFIG } from "../../config";
-import { log, serverLog } from "../../logs";
-import {notifyForMissingParticipation} from "./noticationMethods";
 import {
-  flattenAffordanceDict, getPlaceKeys, onePlaceNotThesePlacesSets,
-  placeSubsetAffordances
-} from "../../UserMonitor/detectors/methods";
+  _addActiveIncidentToUser,
+  _removeActiveIncidentFromUser,
+  _removeIncidentFromUserEntirely
+} from "../../UserMonitor/users/methods";
+import {doesUserMatchNeed, getNeedDelay} from "../../OCEManager/OCEs/methods";
+import {log, serverLog} from "../../logs";
+import {flattenAffordanceDict} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
 
@@ -146,6 +143,21 @@ export const pushUserIntoAssignmentsNeedUserMaps = (iid, needName, uid, place, d
       }
     }
   );
+};
+
+/**
+ * Clears current availabilities for a user given a uid.
+ * @param uid {string} user to clear data for
+ */
+export const clearAvailabilitiesForUser = (uid) => {
+  let availabilityObjects = Availability.find().fetch();
+  _.forEach(availabilityObjects, (av) => {
+    // remove user for each need in each
+    _.forEach(av.needUserMaps, (needEntry) => {
+      // was a
+      pullUserFromAvailabilityNeedUserMaps(av._id, needEntry.needName, uid);
+    });
+  });
 };
 
 /**
@@ -382,6 +394,7 @@ export const getNeedUserMapForNeed = (iid, needName) => {
     return needUserMap;
   }
 };
+
 // const locationCursor = Locations.find();
 //
 // /**
