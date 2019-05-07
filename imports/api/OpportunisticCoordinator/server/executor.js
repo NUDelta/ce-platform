@@ -12,8 +12,9 @@ import {
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
 import { serverLog, log } from "../../logs";
-import {setIntersection, sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
 import {needAggregator} from "../strategizer";
+import {setIntersection} from "../../custom/arrayHelpers";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,

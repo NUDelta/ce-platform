@@ -2702,7 +2702,7 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
       },
-      numberNeeded: 1,
+      numberNeeded: 5,
       notificationDelay: 20, // 20 seconds for debugging
     }, {
       needName: 'coins',

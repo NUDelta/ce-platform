@@ -1,4 +1,5 @@
-import {setIntersection, sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {setIntersection} from "../../custom/arrayHelpers";
 
 describe('Sustained (place, need) Match for Availability Dictionary', function() {
   let availabilityDictionary = {
