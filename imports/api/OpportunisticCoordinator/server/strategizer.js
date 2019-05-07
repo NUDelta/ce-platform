@@ -1,7 +1,15 @@
-import { Submissions } from "../../OCEManager/currentNeeds";
-import { Assignments } from "../databaseHelpers";
-import { getNeedObject } from "./identifier";
-import {Incidents} from "../../OCEManager/OCEs/experiences";
+/**
+ * strategizer -- server side
+ */
+import {Submissions} from "../../OCEManager/currentNeeds";
+import {Assignments} from "../databaseHelpers";
+import {getNeedObject} from "./identifier";
+import {Experiences} from "../../OCEManager/OCEs/experiences";
+import {createIncidentFromExperience, startRunningIncident} from "../../OCEManager/OCEs/methods";
+import {CONSTANTS} from "../../Testing/testingconstants";
+import {Meteor} from "meteor/meteor";
+import {usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
+
 const util = require('util');
 
 /**
@@ -90,37 +98,6 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
   return incidentsWithUsersToRun;
 };
 
-/**
- * usersAlreadyAssignedToNeed
- *
- * Returns
- * @param iid
- * @param needName
- * @return usersInNeed [Array] array of uids
- */
-const usersAlreadyAssignedToNeed = (iid, needName) => {
-  let assignment = Assignments.findOne(iid);
-  let assignmentNeedMap = assignment.needUserMaps.find(function(x) {
-    return x.needName === needName;
-  });
-  return assignmentNeedMap.users;
-};
-
-/**
- *
- * @param iid
- * @param needName
- * @return previousUids [Array] array of uids
- */
-const usersAlreadySubmittedToNeed = (iid, needName) => {
-  let previousUids = Submissions.find({
-    iid: iid, needName: needName
-  }).map(function(x) {
-      return x.uid;
-    });
-  return previousUids;
-};
-
 /** my mutex, but not dynamic on page load, but does it during the first assignment (for notification) **/
 const chooseUsers = (availableUserMetas, iid, needUserMap) => {
   let numberPeopleNeeded = Submissions.find({
@@ -144,23 +121,3 @@ const chooseUsers = (availableUserMetas, iid, needUserMap) => {
   }
 };
 
-/**
- * Helper for Dynamic Loading of Exact Participate Need
- * Looks at the need.situation.detectors of an incident,
- * returns the needNames should be aggregated
- * @param incident, result of a Incident.findOne call
- */
-export const needAggregator = (incident) => {
-  // keys: detectors
-  // values: needs
-  let res = {};
-  _.forEach(incident.contributionTypes, (need) => {
-    if (res[need.situation.detector]) {
-      res[need.situation.detector].push(need.needName);
-    }
-    else {
-      res[need.situation.detector] = [need.needName];
-    }
-  });
-  return res;
-};

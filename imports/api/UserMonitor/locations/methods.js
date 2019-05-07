@@ -67,6 +67,7 @@ export const onLocationUpdate = (uid, location, callback) => {
     // get affordances and begin coordination process
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
 
+      log.info(`success: getAffordancesFromLocation`);
       // get affordances via affordance aware
       let user = Meteor.users.findOne({_id: uid});
       if (!user) {

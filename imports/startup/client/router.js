@@ -23,6 +23,8 @@ import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
+import '../../ui/pages/dynamic_participate.html';
+import '../../ui/pages/dynamic_participate.js';
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -67,6 +69,14 @@ Router.route('affordances', {
       users: Meteor.users.find().fetch()
     };
   }
+});
+
+Router.route('api.custom.dynamic', {
+  path: '/apicustomdynamic/:iid/:detectorId',
+  template: 'dynamicParticipate',
+  before: function() {
+    this.next();
+  },
 });
 
 Router.route('api.custom', {

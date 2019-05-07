@@ -84,17 +84,12 @@ iron:url@1.1.0
 jquery@1.11.11
 launch-screen@1.1.1
 livedata@1.0.18
-lmieulet:meteor-coverage@1.1.4
 localstorage@1.2.0
 logging@1.1.20
 mdg:validated-method@1.1.0
 mdg:validation-error@0.5.1
 meteor@1.9.3
 meteor-base@1.4.0
-meteorhacks:picker@1.0.3
-meteortesting:browser-tests@1.0.0
-meteortesting:mocha@1.1.2
-meteortesting:mocha-core@1.0.1
 meteortoys:toykit@3.0.4
 minifier-css@1.4.2
 minifier-js@2.4.1

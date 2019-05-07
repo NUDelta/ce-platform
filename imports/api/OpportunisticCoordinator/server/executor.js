@@ -12,7 +12,8 @@ import {
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
 import { serverLog, log } from "../../logs";
-import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {setIntersection, sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {needAggregator} from "../strategizer";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
@@ -36,7 +37,30 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    _.forEach(needUserMapping, (usersMeta, needName) => {
+    // { [detectorId]: [...needs], ...}
+    let needNamesBinnedByDetector = needAggregator(incident);
+    let assignedNeedNames = Object.keys(needUserMapping);
+
+    _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorId) => {
+
+      // might have to distinguish what is logged done when its not half half vs not.
+      // maybe use a "strategy" class model
+      // if (commonDetectorNeedNames.length == 1) {
+      //
+      // }
+
+      // before doing a dynamic strategy algorithm, make sure we are looking at the candidate needs
+      let candidateNeedNames = setIntersection(commonDetectorNeedNames, assignedNeedNames);
+
+      // TODO: send to a dynamic route endpoint
+      // choose a random need from the aggregated set for now
+      let needName = candidateNeedNames[0];
+
+      let usersMeta = needUserMapping[needName];
+      if (!usersMeta) {
+        return;
+      }
+
       let newUsersMeta = usersMeta.filter(function(userMeta) {
         return !Meteor.users.findOne(userMeta.uid).profile.activeIncidents.includes(iid);
       });
@@ -80,6 +104,10 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         });
       }
     });
+
+    // FIXME(rlouie): old, used to go through every need
+    // _.forEach(needUserMapping, (usersMeta, needName) => {
+    // });
   });
 };
 

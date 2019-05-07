@@ -12,7 +12,7 @@ Meteor.publish('availability.all', function () {
 });
 
 Meteor.publish('assignments.single', function (assignmentId) {
-  return Assignments.find(assignmentId);
+  return Assignments.find({_id: assignmentId});
 });
 
 Meteor.publish('assignments.activeUser', function () {
