@@ -79,31 +79,31 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
 
-      let needObject = experience.contributionTypes.find((need) => need.needName === needName);
-
-      if (needObject) {
-        log.cerebro(JSON.stringify(needObject));
-        if (needObject.notificationSubject && needObject.notificationText) {
-          notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
-            needObject.notificationText, route);
-        }
-        else if (experience.name && experience.notificationText) {
-          notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-            experience.notificationText, route);
-        } else {
-          log.error('notification information cannot be found in the need or experience level');
-          return;
-        }
-
-        _.forEach(newUsersMeta, usermeta => {
-          Notification_log.insert({
-            uid: usermeta.uid,
-            iid: iid,
-            needName: needName,
-            timestamp: Date.now()
-          });
-        });
+      // Try to notify, based on if the current need has need-specific notification info
+      let needObject = incident.contributionTypes.find((need) => need.needName === needName);
+      if (needObject && needObject.notificationSubject && needObject.notificationText) {
+        notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
+          needObject.notificationText, route);
       }
+      // Try to notify, based on experience-level notification info
+      else if (experience.name && experience.notificationText) {
+        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
+          experience.notificationText, route);
+      }
+      // Fail to notify, because these parameters are not defined
+      else {
+        log.error('notification information cannot be found in the need or experience level');
+        return;
+      }
+
+      _.forEach(newUsersMeta, usermeta => {
+        Notification_log.insert({
+          uid: usermeta.uid,
+          iid: iid,
+          needName: needName,
+          timestamp: Date.now()
+        });
+      });
     });
 
     // FIXME(rlouie): old, used to go through every need
