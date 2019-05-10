@@ -1,7 +1,7 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {SimpleSchema} from "meteor/aldeed:simple-schema";
 
-import {Assignments, Availability} from "../databaseHelpers";
+import {Assignments, Availability, ParticipatingNow} from "../databaseHelpers";
 import {Incidents} from "../../OCEManager/OCEs/experiences.js";
 import {Submissions} from "../../OCEManager/currentNeeds.js";
 import {Locations} from "../../UserMonitor/locations/locations";
@@ -18,6 +18,7 @@ import {log, serverLog} from "../../logs";
 import {flattenAffordanceDict} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
+
 
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
@@ -394,6 +395,79 @@ export const getNeedUserMapForNeed = (iid, needName) => {
     return needUserMap;
   }
 };
+
+
+Meteor.methods({
+  pushUserIntoParticipatingNow({iid, needName, uid}) {
+    new SimpleSchema({
+      iid: { type: String },
+      needName: { type: String },
+      uid: { type: String }
+    }).validate({iid, needName, uid});
+
+    pushUserIntoParticipatingNow(iid, needName, uid);
+  },
+  pullUserFromParticipatingNow({iid, needName, uid}) {
+    new SimpleSchema({
+      iid: { type: String },
+      needName: { type: String },
+      uid: { type: String }
+    }).validate({iid, needName, uid});
+
+    pullUserFromParticipatingNow(iid, needName, uid);
+  },
+});
+
+/**
+ * pushUserIntoParticipatingNow
+ *
+ * The list of users in each needUserMap is a counter for who has the participate route open
+ * This function increments this "semaphore" like counter, or adds users
+ * @param iid
+ * @param needName
+ * @param uid
+ * @param place
+ * @param distance
+ */
+export const pushUserIntoParticipatingNow = (iid, needName, uid) => {
+  ParticipatingNow.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $push: {
+        // note: this object is different than {"uid": uid, "place": place, "distance": distance}
+        "needUserMaps.$.users": {
+          "uid": uid
+        }
+      }
+    }
+  );
+};
+
+
+/**
+ * pullUserFromParticipatingNow
+ *
+ * The list of users in each needUserMap is a counter for who has the participate route open
+ * This function decrements this "semaphore" like counter, or removes users
+ * @param iid
+ * @param needName
+ * @param uid
+ */
+export const pullUserFromParticipatingNow = (iid, needName, uid) => {
+  ParticipatingNow.update(
+    {
+      _id: iid,
+      "needUserMaps.needName": needName
+    },
+    {
+      $pull: { "needUserMaps.$.users": {"uid" : uid } }
+    }
+  );
+};
+
 
 // const locationCursor = Locations.find();
 //

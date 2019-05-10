@@ -67,15 +67,3 @@ Schema.ParticipatingNow = new SimpleSchema({
 
 export const ParticipatingNow = new Mongo.Collection('participating_now');
 ParticipatingNow.attachSchema(Schema.ParticipatingNow);
-
-ParticipatingNow.allow({
-  insert: function () {
-    return true;
-  },
-  update: function () {
-    return true;
-  },
-  remove: function () {
-    return true;
-  }
-});
