@@ -1,3 +1,32 @@
 <template name="dynamicParticipate">
-  Loading participate screen...
+  <head>
+    <style>
+      #emoji {
+        text-align: center;
+      }
+
+      #title {
+        text-align: center;
+        color: #333;
+      }
+
+      #empty-state-text {
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: center;
+        color: #888;
+      }
+
+      #empty-state {
+        padding-top: 42%;
+      }
+    </style>
+  </head>
+  {{#if renderWaiting}}
+    <div id="empty-state">
+      <h1 id="emoji">🤖🧠👀</h1>
+      <h4 id="title">Waiting for an unoccupied participate screen...</h4>
+      <p id="empty-state-text">Others are currently participating! So please be patient</p>
+    </div>
+  {{/if}}
 </template>
