@@ -51,6 +51,10 @@ export const needAggregator = (incident) => {
   // keys: detectors
   // values: needs
   let res = {};
+  if (!incident) {
+    console.log('needAggregator: incident is null');
+    return res;
+  }
   _.forEach(incident.contributionTypes, (need) => {
     if (res[need.situation.detector]) {
       res[need.situation.detector].push(need.needName);
