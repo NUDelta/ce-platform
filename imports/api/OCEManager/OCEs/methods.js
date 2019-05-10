@@ -13,7 +13,7 @@ import {
 } from "../../UserMonitor/detectors/methods";
 
 import {Incidents} from './experiences';
-import {Assignments, Availability} from '../../OpportunisticCoordinator/databaseHelpers';
+import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
 import {Submissions} from '../../OCEManager/currentNeeds';
 import {serverLog} from "../../logs";
 import {setIntersection} from "../../custom/arrayHelpers";
@@ -284,6 +284,12 @@ export const addContribution = (iid, contribution) =>{
   },{
     $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
+
+  ParticipatingNow.update({
+    _id: iid
+  },{
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
+  });
 };
 
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
@@ -346,6 +352,11 @@ export const startRunningIncident = (incident) => {
     _id: incident._id,
     needUserMaps: needUserMaps
   });
+
+  ParticipatingNow.insert({
+    _id: incident._id,
+    needUserMaps: needUserMaps
+  });
 };
 
 /**
@@ -388,7 +399,7 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
   Assignments.update(
     {
@@ -398,8 +409,17 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
+  ParticipatingNow.update(
+    {
+      _id: incident._id,
+    }, {
+      $set: {
+        needUserMaps: needUserMaps
+      }
+    }
+  )
 
 };
 

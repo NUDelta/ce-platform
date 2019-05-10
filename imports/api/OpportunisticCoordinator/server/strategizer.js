@@ -8,7 +8,7 @@ import {Experiences} from "../../OCEManager/OCEs/experiences";
 import {createIncidentFromExperience, startRunningIncident} from "../../OCEManager/OCEs/methods";
 import {CONSTANTS} from "../../Testing/testingconstants";
 import {Meteor} from "meteor/meteor";
-import {usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
+import {numberSubmissionsRemaining, usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
 
 const util = require('util');
 
@@ -100,11 +100,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
 
 /** my mutex, but not dynamic on page load, but does it during the first assignment (for notification) **/
 const chooseUsers = (availableUserMetas, iid, needUserMap) => {
-  let numberPeopleNeeded = Submissions.find({
-    iid: iid,
-    needName: needUserMap.needName,
-    uid: null
-  }).count();
+  let numberPeopleNeeded = numberSubmissionsRemaining(iid, needUserMap.needName);
 
   let usersWeAlreadyHave = needUserMap.users;
 

@@ -1,6 +1,7 @@
 import { Mongo } from "meteor/mongo";
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Schema } from '../schema.js';
+import {Location_log} from "../Logging/location_log";
 
 Schema.Assignment = new SimpleSchema({
   _id: {
@@ -23,7 +24,9 @@ Schema.UserNeedMapping = new SimpleSchema({
     type: String
   },
   users: {
-    type: [Object], // {uid: String, place: String, distance: Number}
+    // For Availability and Assignments, this object can look like {"uid": uid, "place": place, "distance": distance}
+    // For ParticipatingNow, this object looks like {"uid": uid}
+    type: [Object],
     defaultValue: [],
     blackbox: true
   },
@@ -47,3 +50,32 @@ Schema.Availability = new SimpleSchema({
 
 export const Availability = new Mongo.Collection('availability');
 Availability.attachSchema(Schema.Availability);
+
+Schema.ParticipatingNow = new SimpleSchema({
+  _id: {
+    type: String,
+    optional: true,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  needUserMaps: {
+    type: [Schema.UserNeedMapping],
+    blackbox: true,
+    //TODO: this shouldn't be blackbox true, figure out why it's not doing its thang
+  },
+
+});
+
+export const ParticipatingNow = new Mongo.Collection('participating_now');
+ParticipatingNow.attachSchema(Schema.ParticipatingNow);
+
+ParticipatingNow.allow({
+  insert: function () {
+    return true;
+  },
+  update: function () {
+    return true;
+  },
+  remove: function () {
+    return true;
+  }
+});
