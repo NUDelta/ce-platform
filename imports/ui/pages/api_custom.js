@@ -409,26 +409,26 @@ Template.api_custom.onCreated(() => {
 
 Template.api_custom.onDestroyed(() => {
   // Called when loading another route, and the template is gracefully destroyed
-  if (Meteor.userId()) {
+  if (Meteor.userId() && this.state) {
     Meteor.call('pullUserFromParticipatingNow', {
       iid: this.state.get('iid'),
       needName: this.state.get('needName'),
       uid: Meteor.userId()
     });
+    this.state.destroy();
   }
-  this.state.destroy();
 });
 
 window.onbeforeunload = function() {
   // Called when user closes the browser window; onDestroyed is not called in this instance
-  if (Meteor.userId()) {
+  if (Meteor.userId() && this.state) {
     Meteor.call('pullUserFromParticipatingNow', {
       iid: this.state.get('iid'),
       needName: this.state.get('needName'),
       uid: Meteor.userId()
     });
+    this.state.destroy();
   }
-  this.state.destroy();
 };
 
 Template.api_custom.events({

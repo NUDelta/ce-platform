@@ -43,6 +43,7 @@ Template.home.helpers({
 
         let iid = assignment._id;
         let incident = Incidents.findOne(iid);
+
         // TODO(rlouie): errors on refresh? try the competing resource test garret/barrett
         let needNamesBinnedByDetector = needAggregator(incident);
 
