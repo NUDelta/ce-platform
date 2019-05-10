@@ -1617,19 +1617,11 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
     const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
-    const oldDetectorId = getDetectorId(DETECTORS[detectorKey]);
     if (!detectorKey) {
       throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
     }
     const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    if (detectorKey == newDetectorKey) {
-      throw "detectorKey == newDetectorKey"
-    }
-    const newDetectorId = getDetectorId(DETECTORS[newDetectorKey]);
-    if (oldDetectorId == newDetectorKey) {
-      throw "old and new"
-    }
-    need.situation.detector = newDetectorKey;
+    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
     return need;
   });
 };
