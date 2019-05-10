@@ -99,8 +99,13 @@ export const numberSubmissionsRemaining = (iid, needName) => {
 };
 
 export const needIsAvailableToParticipateNow = (incident, needName) => {
+  if (!incident) {
+    console.log(`Error in needAggregator: incident is null\n ${JSON.stringify(incident)}`);
+    return;
+  }
   if (!incident.contributionTypes) {
-    throw `Error in needAggregator: incident does not have contribution types\n ${JSON.stringify(incident)}`;
+    console.log(`Error in needAggregator: incident does not have contribution types\n ${JSON.stringify(incident)}`);
+    return;
   }
   const needObject = incident.contributionTypes.find(need => need.needName == needName);
   const numberNeeded = numberSubmissionsRemaining(incident._id, needName);

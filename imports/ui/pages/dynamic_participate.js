@@ -1,5 +1,6 @@
 import './dynamic_participate.html';
 import { Meteor } from 'meteor/meteor';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import {Incidents} from "../../api/OCEManager/OCEs/experiences";
@@ -9,6 +10,8 @@ import {
 import {Assignments} from "../../api/OpportunisticCoordinator/databaseHelpers";
 
 Template.dynamicParticipate.onCreated(function() {
+  this.state = new ReactiveDict();
+  this.state.set('renderWaiting', false);
   this.uid = Meteor.userId();
 
   if (!this.uid) {
@@ -51,6 +54,7 @@ Template.dynamicParticipate.onCreated(function() {
       if (!potentialNeedNames.length) {
         // tell user that somehow they were too late and there are no needs available for them
         // or redirect them away from this page -- don't go route them to a participate screen.
+        this.state.set('renderWaiting', true);
         return;
       }
 
@@ -61,3 +65,14 @@ Template.dynamicParticipate.onCreated(function() {
   });
 });
 
+Template.dynamicParticipate.helpers({
+  renderWaiting() {
+    return Template.instance().state.get('renderWaiting')
+  }
+});
+
+Template.dynamicParticipate.onDestroyed(() => {
+  if (this.state) {
+    this.state.destroy();
+  }
+});
