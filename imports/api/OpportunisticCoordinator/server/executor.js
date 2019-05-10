@@ -38,7 +38,7 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    // { [detectorId]: [...needs], ...}
+    // { [detectorId]: [need1, ...], ...}
     let needNamesBinnedByDetector = needAggregator(incident);
     let assignedNeedNames = Object.keys(needUserMapping);
 
@@ -105,10 +105,6 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         });
       });
     });
-
-    // FIXME(rlouie): old, used to go through every need
-    // _.forEach(needUserMapping, (usersMeta, needName) => {
-    // });
   });
 };
 

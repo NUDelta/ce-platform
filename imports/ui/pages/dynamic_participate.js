@@ -3,18 +3,25 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import {Incidents} from "../../api/OCEManager/OCEs/experiences";
-import {Submissions} from "../../api/OCEManager/currentNeeds";
-import {needAggregator} from "../../api/OpportunisticCoordinator/strategizer";
+import {
+  needAggregator, needIsAvailableToParticipateNow, prioritizeHalfCompletedNeeds
+} from "../../api/OpportunisticCoordinator/strategizer";
 import {Assignments} from "../../api/OpportunisticCoordinator/databaseHelpers";
 
 Template.dynamicParticipate.onCreated(function() {
   this.uid = Meteor.userId();
+
+  if (!this.uid) {
+    Router.go('home');
+    return;
+  }
   this.iid = Router.current().params.iid;
   this.detectorId = Router.current().params.detectorId;
   const handles = [
     this.subscribe('incidents.single', this.iid),
     this.subscribe('assignments.single', this.iid),
     this.subscribe('submissions.activeIncident', this.iid),
+    this.subscribe('participating.now.activeIncident', this.iid)
   ];
 
   this.autorun(() => {
@@ -34,44 +41,22 @@ Template.dynamicParticipate.onCreated(function() {
       this.assignment = Assignments.findOne();
       let needNamesBinnedByDetector = needAggregator(this.incident);
 
-      let potentialNeeds = needNamesBinnedByDetector[this.detectorId];
+      let potentialNeedNames = needNamesBinnedByDetector[this.detectorId];
 
       // TODO: filter additionally by only the needs in which this user is assigned to
 
-      const numberSubmissionsRemaining = (iid, needName) => {
-        let numberPeopleNeeded = Submissions.find({
-          iid: iid,
-          needName: needName,
-          uid: null
-        }).count();
-        return numberPeopleNeeded;
-      };
+      potentialNeedNames.sort(prioritizeHalfCompletedNeeds); // mutates
+      potentialNeedNames = potentialNeedNames.filter(needName => needIsAvailableToParticipateNow(this.incident, needName));
 
-      /**
-       * needA will be given a higher value in the sorting, if needA has more submission left
-       * (e.g., a photo that needs 1 more person to complete it will
-       * @param needA
-       * @param needB
-       * @return {number}
-       */
-      const prioritizeHalfCompletedNeeds = (needA, needB) => {
-        return numberSubmissionsRemaining(this.iid, needB) - numberSubmissionsRemaining(this.iid, needA);
-      };
-
-      potentialNeeds.sort(prioritizeHalfCompletedNeeds); // mutates
-
-      // at this point, assignments are already filtered by user has already participated in this need
-
-      // TODO: create collection that monitors the participateSemaphore; then filter the potentials
+      if (!potentialNeedNames.length) {
+        // tell user that somehow they were too late and there are no needs available for them
+        // or redirect them away from this page -- don't go route them to a participate screen.
+        return;
+      }
 
       // choose the top-1, then dynamically redirect to that participate
-      const chosenNeedName = potentialNeeds[0];
+      const chosenNeedName = potentialNeedNames[0];
       Router.go(`/apicustom/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
-
-      // _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorId) => {
-      //   relevantAssignments
-      // });
-      // this.assignment
     }
   });
 });

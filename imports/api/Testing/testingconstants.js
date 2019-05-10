@@ -729,6 +729,7 @@ let DETECTORS = {
 export const getDetectorId = (detector) => {
   let db_detector = Detectors.findOne({description: detector.description});
   if (db_detector) {
+    console.log(JSON.stringify(db_detector));
     return db_detector._id;
   } else {
     return detector._id;
@@ -1615,15 +1616,20 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    let detectorKey;
-    _.forEach(_.keys(DETECTORS), (key) => {
-      if (DETECTORS[key]._id === need.situation.detector) {
-        detectorKey = key;
-      }
-    });
-    // WILL THROW ERROR if we don't find the matching detector id
-    let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
+    const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
+    const oldDetectorId = getDetectorId(DETECTORS[detectorKey]);
+    if (!detectorKey) {
+      throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
+    }
+    const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
+    if (detectorKey == newDetectorKey) {
+      throw "detectorKey == newDetectorKey"
+    }
+    const newDetectorId = getDetectorId(DETECTORS[newDetectorKey]);
+    if (oldDetectorId == newDetectorKey) {
+      throw "old and new"
+    }
+    need.situation.detector = newDetectorKey;
     return need;
   });
 };
@@ -1857,6 +1863,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 1,
     }]),
     description: 'Use the sun to make a silhouette of your hand',
@@ -1885,6 +1892,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-fruit-in-hand.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90,
     }]),
     description: 'While shopping for groceries, create a half half photo.',
@@ -2702,6 +2710,7 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
       },
+      numberAllowedToParticipateAtSameTime: 1,
       numberNeeded: 5,
       notificationDelay: 20, // 20 seconds for debugging
     }, {

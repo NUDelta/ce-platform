@@ -26,6 +26,7 @@ Schema.SituationDescription = new SimpleSchema({
   detector: {
     type: String
   },
+  // sameTimeNumber (2 would mean that the situation requires 2 people to be in the situation at the same time)
   number: {
     type: Number,
   }
@@ -56,6 +57,13 @@ Schema.NeedType = new SimpleSchema({
   },
   numberNeeded: {
     type: Number,
+  },
+  // this is like a semaphore/mutex mechanism for participate routes as a resource a participant can latch onto
+  numberAllowedToParticipateAtSameTime: {
+    // if = 1, then this operates like a mutex
+    type: Number,
+    optional: true
+    // defaults to numberNeeded, like a semaphore.
   },
   notificationDelay: {
     type: Number,
