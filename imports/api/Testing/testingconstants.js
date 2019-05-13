@@ -1188,35 +1188,53 @@ const createBumpedThree = function() {
 
   }
 
+  let triads = ['triadOne', 'triadTwo', 'triadThree'];
   let places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
     ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
     //weather/sky and other bumped three experiences can be added here
   ];
+  _.forEach(triads, (triad) => {
+    _.forEach(places, (place) => {
+      const [detectorName, situationDescription, instruction] = place;
+      let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorName]['variables']));
+      newVars.push(`var ${triad};`);
 
-  _.forEach(places, (place) => {
-    const [detectorName, situationDescription, instruction] = place;
+      let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorName]['rules']));
+      let lastRule = newRules.pop();
+      let lastRuleNoSemicolon = lastRule.split(';')[0];
+      lastRule = `(${triad} && (${lastRuleNoSemicolon}));`;
+      newRules.push(lastRule);
 
-    const need = {
-      needName: `bumped three: ${situationDescription}`,
-      situation: {
-        detector: getDetectorId(DETECTORS[detectorName]),
-        number: 1
-      },
-      toPass: {
-        situationDescription: `Having a good time ${situationDescription}?`,
-        instruction: `${instruction}`
-      },
-      numberNeeded: 3,
-      // notificationDelay: 90 uncomment for testing
-    };
+      
+      let detector = {
+        '_id': Random.id(),
+        'description': DETECTORS[detectorName].description + triad,
+        'variables': newVars,
+        'rules': newRules
+      };
+      DETECTORS[detectorName + triad] = detector;
 
-    let callback = {
-      trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
-      function: bumpedThreeCallback.toString(),
-    };
-    experience.contributionTypes.push(need);
-    experience.callbacks.push(callback)
+      const need = {
+        needName: `bumped three: ${detectorName} ${triad}`,
+        situation: {
+          detector: detector._id,
+        number: '1'
+        },
+        toPass: {
+          situationDescription: `Having a good time ${situationDescription}?`,
+          instruction: `${instruction}`
+        },
+        numberNeeded: 3,
+        // notificationDelay: 90 uncomment for testing
+      };
+      let callback = {
+        trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
+        function: bumpedThreeCallback.toString(),
+      };
+      experience.contributionTypes.push(need);
+      experience.callbacks.push(callback)
+    });   
   });
 
   return experience;
