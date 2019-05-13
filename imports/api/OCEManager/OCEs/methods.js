@@ -497,6 +497,11 @@ export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   let output = undefined;
 
+  if (!incident) {
+    console.error(`Error in getNeedFromIncidentId: Could not find incident of iid = ${iid}`)
+    return false;
+  }
+
   _.forEach(incident.contributionTypes, (need) => {
     if (need.needName === needName) {
       output = need;
