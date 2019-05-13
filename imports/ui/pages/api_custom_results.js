@@ -161,7 +161,6 @@ Template.bumpedResults.events({
 
 Template.bumpedThreeResults.helpers({
   content() {
-    console.log(this);
     const {submissions, images, users} = this;
 
     const mySub = submissions.find(s => s.uid === Meteor.userId());

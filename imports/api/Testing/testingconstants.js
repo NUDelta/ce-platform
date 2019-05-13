@@ -1201,13 +1201,14 @@ const createBumpedThree = function() {
       needName: `bumped three: ${situationDescription}`,
       situation: {
         detector: getDetectorId(DETECTORS[detectorName]),
-        number: 3
+        number: 1
       },
       toPass: {
         situationDescription: `Having a good time ${situationDescription}?`,
         instruction: `${instruction}`
       },
-      numberNeeded: 3
+      numberNeeded: 3,
+      // notificationDelay: 90 uncomment for testing
     };
 
     let callback = {
@@ -1220,6 +1221,69 @@ const createBumpedThree = function() {
 
   return experience;
 }
+
+// const createImitationGame = function () {
+//   // everyone gets participate template with different roles specified
+//   // creator, descriptor, recreator
+//   // callbacks triggered to send updates to each participant, also have callback when experience completes
+//   // -trigger based on the number of submissions
+
+//   const scenarions = [
+//     {
+//       name: 'food art',
+//       detector: 'dinning_hall',
+//       image_url: 'insert'
+//     }
+//   ]
+
+//   scenarions.forEach((scenario) => {
+//     // create detectors
+//   });
+  
+//   let experience = {
+//     name: 'The Imitation Game',
+//     participateTemplate: 'imitationGame',
+//     resultsTemplate: 'imitationGameResults',
+//     contributionTypes: [],
+//     description: 'Share your experience with your friend and their friend!',
+//     notificationText: 'Share your experience with your friend and their friend!',
+//     callbacks: []
+//   };
+
+//   //modify to add triad variable
+//   let creator_detector = {
+//     '_id': Random.id(),
+//     'description': `dinning_hall imitation_game creator`,
+//     'variables': `${DETECTORS['dinning_hall'].variables} var imitatio`,
+//     'rules': ``
+//   };
+
+//   experience.contributionTypes.push(creator_detector);
+  
+//   let contribution = {
+//     needName: 'imitation_creator',
+//     situation: {
+//       detector: ,
+//       number: '1'
+//     },
+//     toPass: {
+//       instruction: ,
+
+//     },
+//     numberNeeded: 1,
+//     // notificationDelay: 90 uncomment for testing
+//   }
+  
+
+//   const  sendNotification = function (sub) {
+
+//   };
+
+//   const imitationGameCallback = function (sub) {
+//     // if one submission, notify second participant
+//     // if two submissions, notify third participant
+//   };
+// }
 
 /**
  *
