@@ -202,6 +202,18 @@ let DETECTORS = {
     variables: ['var irish_pubs;', 'var irish;'],
     rules: ['(irish_pubs || irish);']
   },
+  house: {
+    _id : "qFYpFhiCH9iGAZpwy",
+  	description : "house",
+  	variables : [
+		"var apartments;",
+		"var hauntedhouses;",
+		"var guesthouses;"
+	],
+	rules : [
+		"(hauntedhouses || guesthouses) || apartments;"
+	]
+  },
   hair_salon: {
     _id: 'S8oZZwAWpFo5qGq87',
     description: 'hairsalon',
@@ -939,13 +951,13 @@ const createIndependentStorybook = () => {
 
   let place_situation_delay = [
     ["niceish_day",'Swirling Clouds', 5],
-    ["beer", 'Drinking butterbeer', 120],
-    ["train", 'Hogwarts Express', 30],
-    ["forest",'Forbidden Forest', 5],
-    ["dinning_hall",'Dinner at the Great Hall', 120],
-    ["castle",'Hogwarts Castle', 10],
-    ["field",'Quidditch Pitch', 5],
-    ["gym",'Training in the Room of Requirement', 5]
+    ["beer", 'Drinking butterbeer', 90],
+    ["train", 'Hogwarts Express', 90],
+    ["forest",'Forbidden Forest', 90],
+    ["dinning_hall",'Dinner at the Great Hall', 90],
+    ["castle",'Hogwarts Castle', 90],
+    ["field",'Quidditch Pitch', 90],
+    ["gym",'Training in the Room of Requirement', 90]
   ];
 
   return {
@@ -1058,7 +1070,7 @@ function createBumped() {
             instruction: 'You are at a  ' + place[1] + ' at the same time as '
           },
           numberNeeded: 2,
-          notificationDelay: 30 // 30 seconds for debugging
+          notificationDelay: 90
         };
 
         let callback = {
@@ -1084,7 +1096,7 @@ function createBumped() {
 const createHalfHalf = function(
   {
     numberInSituation = 1,
-    notificationDelay = 120,
+    notificationDelay = 90
   } = {}
 ) {
   let experience = {
@@ -1164,40 +1176,132 @@ const createBumpedThree = function() {
 
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
-    // to fill in
+
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
   }
 
+  let triads = ['triadOne', 'triadTwo', 'triadThree'];
   let places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
     //weather/sky and other bumped three experiences can be added here
   ];
+  _.forEach(triads, (triad) => {
+    _.forEach(places, (place) => {
+      const [detectorName, situationDescription, instruction] = place;
+      let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorName]['variables']));
+      newVars.push(`var ${triad};`);
 
-  _.forEach(places, (place) => {
-    const [detectorName, situationDescription, instruction] = place;
+      let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorName]['rules']));
+      let lastRule = newRules.pop();
+      let lastRuleNoSemicolon = lastRule.split(';')[0];
+      lastRule = `(${triad} && (${lastRuleNoSemicolon}));`;
+      newRules.push(lastRule);
 
-    const need = {
-      needName: `bumped three: ${situationDescription}`,
-      situation: {
-        detector: getDetectorId(DETECTORS[detectorName]),
-        number: 3
-      },
-      toPass: {
-        situationDescription: `Having a good time ${situationDescription}?`,
-        instruction: `${instruction}`
-      },
-      numberNeeded: 3
-    };
+      
+      let detector = {
+        '_id': Random.id(),
+        'description': DETECTORS[detectorName].description + triad,
+        'variables': newVars,
+        'rules': newRules
+      };
+      DETECTORS[detectorName + triad] = detector;
 
-    let callback = {
-      trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
-      function: bumpedThreeCallback.toString(),
-    };
-    experience.contributionTypes.push(need);
-    experience.callbacks.push(callback)
+      const need = {
+        needName: `bumped three: ${detectorName} ${triad}`,
+        situation: {
+          detector: detector._id,
+        number: '1'
+        },
+        toPass: {
+          situationDescription: `Having a good time ${situationDescription}?`,
+          instruction: `${instruction}`
+        },
+        numberNeeded: 3,
+        // notificationDelay: 90 uncomment for testing
+      };
+      let callback = {
+        trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
+        function: bumpedThreeCallback.toString(),
+      };
+      experience.contributionTypes.push(need);
+      experience.callbacks.push(callback)
+    });   
   });
 
   return experience;
 }
+
+// const createImitationGame = function () {
+//   // everyone gets participate template with different roles specified
+//   // creator, descriptor, recreator
+//   // callbacks triggered to send updates to each participant, also have callback when experience completes
+//   // -trigger based on the number of submissions
+
+//   const scenarions = [
+//     {
+//       name: 'food art',
+//       detector: 'dinning_hall',
+//       image_url: 'insert'
+//     }
+//   ]
+
+//   scenarions.forEach((scenario) => {
+//     // create detectors
+//   });
+  
+//   let experience = {
+//     name: 'The Imitation Game',
+//     participateTemplate: 'imitationGame',
+//     resultsTemplate: 'imitationGameResults',
+//     contributionTypes: [],
+//     description: 'Share your experience with your friend and their friend!',
+//     notificationText: 'Share your experience with your friend and their friend!',
+//     callbacks: []
+//   };
+
+//   //modify to add triad variable
+//   let creator_detector = {
+//     '_id': Random.id(),
+//     'description': `dinning_hall imitation_game creator`,
+//     'variables': `${DETECTORS['dinning_hall'].variables} var imitatio`,
+//     'rules': ``
+//   };
+
+//   experience.contributionTypes.push(creator_detector);
+  
+//   let contribution = {
+//     needName: 'imitation_creator',
+//     situation: {
+//       detector: ,
+//       number: '1'
+//     },
+//     toPass: {
+//       instruction: ,
+
+//     },
+//     numberNeeded: 1,
+//     // notificationDelay: 90 uncomment for testing
+//   }
+  
+
+//   const  sendNotification = function (sub) {
+
+//   };
+
+//   const imitationGameCallback = function (sub) {
+//     // if one submission, notify second participant
+//     // if two submissions, notify third participant
+//   };
+// }
 
 /**
  *
@@ -1223,6 +1327,8 @@ const sameSituationContributionTypes = function(
     allowRepeatContributions: true,
   }, {
     needName: 'Shopping for groceries',
+    notificationSubject: 'Inside a grocery store?',
+    notificationText: 'Participate in an experience where you and others are "Grocery Shopping"',
     situation: {
       detector: DETECTORS.grocery._id,
       number: numberInSituation
@@ -1243,7 +1349,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 4,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Going out for drinks',
@@ -1255,7 +1361,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Eating Japanese Food',
@@ -1267,7 +1373,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Religious Worship',
@@ -1279,7 +1385,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you at a <span style="color: #0351ff">center for religious worship?</span> Share a photo of something around you.'
     },
     numberNeeded: 50,
-    notificationDelay: 30,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Enjoy sunset',
@@ -1303,7 +1409,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 15,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Studying at the library',
@@ -1315,7 +1421,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Greenery',
@@ -1327,7 +1433,7 @@ const sameSituationContributionTypes = function(
       instruction: '<span style="color: #0351ff">Are you spending time at a park?</span> Share a photo of what is going on around you.'
     },
     numberNeeded: 50,
-    notificationDelay: 15,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: 'Rainy Day',
@@ -1351,7 +1457,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating pizza</span> today? Share a photo of yourself at the pizza restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: "Eating out",
@@ -1363,7 +1469,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating out</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }, {
     needName: "Eating Big Bites",
@@ -1375,7 +1481,7 @@ const sameSituationContributionTypes = function(
       instruction: 'Are you <span style="color: #0351ff">eating burritos, sandwiches, or burgers</span> today? Share a photo of yourself at the restaurant.',
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90,
     allowRepeatContributions: true,
   }];
 };
@@ -1416,7 +1522,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cafe.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 4
+    notificationDelay: 90,
   }, {
     needName: 'Raise a glass',
     situation: {
@@ -1428,7 +1534,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90,
   }, {
     needName: 'Itadakimasu (I humbly receive this meal)',
     situation: {
@@ -1440,7 +1546,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90,
   }, {
     needName: 'Religious Architecture',
     situation: {
@@ -1452,7 +1558,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 30
+    notificationDelay: 90
   }, {
     needName: 'Touch a sunset',
     situation: {
@@ -1476,7 +1582,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 15
+    notificationDelay: 90,
   }, {
     needName: 'reading a book',
     situation: {
@@ -1488,7 +1594,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60 * 10
+    notificationDelay: 90
   }, {
     needName: 'Hold a plant',
     situation: {
@@ -1500,7 +1606,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Feet towards the trees',
     situation: {
@@ -1512,7 +1618,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-feet-towards-trees.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Leaf Mask',
     situation: {
@@ -1524,7 +1630,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 15
+    notificationDelay: 90
   }, {
     needName: 'Puddles',
     situation: {
@@ -1536,7 +1642,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-puddle-feet.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 5,
+    notificationDelay: 1,
   }, {
     needName: "Slice of 'Za",
     situation: {
@@ -1548,7 +1654,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Do you take cream with that",
     situation: {
@@ -1560,7 +1666,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-teasing-lotion-in-a-cup.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Eat from the same bowl", // bowl? Plate?  (basically all restaurants)
     situation: {
@@ -1572,7 +1678,7 @@ const halfhalfEmbodiedContributionTypes = function() {
       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-bowls-up.jpg'
     },
     numberNeeded: 50,
-    notificationDelay: 60,
+    notificationDelay: 90
   }, {
     needName: "Big Bites", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
     situation: {
@@ -1921,6 +2027,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Grocery Buddies 1',
+      notificationSubject: 'Inside a grocery store?',
+      notificationText: 'Share an experience with others who are also grocery shopping',
       situation: {
         detector: getDetectorId(DETECTORS.grocery),
         number: '1'
@@ -1947,6 +2055,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Coffee Date 1',
+      notificationSubject: 'Inside a coffee shop?',
+      notificationText: 'Share an experience with others who are also at a coffee shop',
       situation: {
         detector: getDetectorId(DETECTORS.coffee),
         number: '1'
@@ -1973,6 +2083,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Cheers 1',
+      notificationSubject: 'Drinking at a bar?',
+      notificationText: 'Share an experience with others who are also drinking at a bar',
       situation: {
         detector: getDetectorId(DETECTORS.bar),
         number: '1'
@@ -2025,6 +2137,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Religious Architecture 1',
+      notificationSubject: 'Visiting a place of worship?',
+      notificationText: 'Share an experience with others who are also visiting a place of worship',
       situation: {
         detector: getDetectorId(DETECTORS.castle),
         number: '1'
@@ -2034,7 +2148,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 30,
+      notificationDelay: 90,
     }]),
     description: 'While visiting a place of worship, create a half half photo.',
     notificationText: 'View this and other available experiences',
@@ -2051,6 +2165,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Sunset Together 1',
+      notificationSubject: 'Can you see the sunset?',
+      notificationText: 'Share an experience with others who are also watching the sunset',
       situation: {
         detector: getDetectorId(DETECTORS.sunset),
         number: '1'
@@ -2077,6 +2193,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Eating with Chopsticks 1',
+      notificationSubject: 'Eating at an asian restaurant?',
+      notificationText: 'Share an experience with others who are also eating asian food',
       situation: {
         detector: getDetectorId(DETECTORS.eating_with_chopsticks),
         number: '1'
@@ -2103,6 +2221,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Book Buddies 1',
+      notificationSubject: 'Are you at a library?',
+      notificationText: 'Share an experience with others who are also at the library',
       situation: {
         detector: getDetectorId(DETECTORS.library),
         number: '1'
@@ -2138,7 +2258,7 @@ let EXPERIENCES = {
   //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
   //     },
   //     numberNeeded: 2,
-  //     notificationDelay: 5,
+  //     notificationDelay: 90,
   //   }]),
   //   description: 'While in the park, create a half half photo.',
   //   notificationText: 'View this and other available experiences',
@@ -2181,6 +2301,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Leaf Mask 1',
+      notificationSubject: 'Are you at a park?',
+      notificationText: 'Share an experience with others who are also at a park',
       situation: {
         detector: getDetectorId(DETECTORS.forest),
         number: '1'
@@ -2190,7 +2312,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 5
+      notificationDelay: 90
     }]),
     description: 'While in the park, create a half half photo.',
     notificationText: 'View this and other available experiences',
@@ -2207,6 +2329,8 @@ let EXPERIENCES = {
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Puddle Feet 1',
+      notificationSubject: 'Are you outside while its raining?',
+      notificationText: 'Share an experience with others who are enjoying or enduring the rain',
       situation: {
         detector: getDetectorId(DETECTORS.rainy),
         number: '1'
@@ -2225,32 +2349,32 @@ let EXPERIENCES = {
       function: halfhalfRespawnAndNotify('A "Puddle Feet" photo completed','View the photo').toString()
     }]
   },
-  halfhalf_pizza: {
-    _id: Random.id(),
-    name: "Slice of 'Za",
-    participateTemplate: 'halfhalfParticipate',
-    resultsTemplate: 'halfhalfResults',
-    contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
-      // needName MUST have structure "My Need Name XYZ"
-      needName: "Slice of 'Za 1",
-      situation: {
-        detector: getDetectorId(DETECTORS.eating_pizza),
-        number: '1'
-      },
-      toPass: {
-        instruction: `Did you order <span style="color: #0351ff">pizza</span>? Hold up a <span style="color: #0351ff">slice of 'Za</span> and take a photo of half the slice!`,
-        exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
-      },
-      numberNeeded: 2,
-      notificationDelay: 60,
-    }]),
-    description: 'While eating pizza, create a half half photo.',
-    notificationText: 'View this and other available experiences',
-    callbacks: [{
-      trigger: '(cb.numberOfSubmissions() % 2) === 0',
-      function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
-    }]
-  },
+  // halfhalf_pizza: {
+  //   _id: Random.id(),
+  //   name: "Slice of 'Za",
+  //   participateTemplate: 'halfhalfParticipate',
+  //   resultsTemplate: 'halfhalfResults',
+  //   contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
+  //     // needName MUST have structure "My Need Name XYZ"
+  //     needName: "Slice of 'Za 1",
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS.eating_pizza),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: `Did you order <span style="color: #0351ff">pizza</span>? Hold up a <span style="color: #0351ff">slice of 'Za</span> and take a photo of half the slice!`,
+  //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
+  //     },
+  //     numberNeeded: 2,
+  //     notificationDelay: 90,
+  //   }]),
+  //   description: 'While eating pizza, create a half half photo.',
+  //   notificationText: 'View this and other available experiences',
+  //   callbacks: [{
+  //     trigger: '(cb.numberOfSubmissions() % 2) === 0',
+  //     function: halfhalfRespawnAndNotify("A \"Slice of 'Za\" photo completed",'View the photo').toString()
+  //   }]
+  // },
   // halfhalf_creamwiththat: {
   //   _id: Random.id(),
   //   name: "Want cream with that",
@@ -2310,6 +2434,8 @@ let EXPERIENCES = {
     resultsTemplate: 'halfhalfResults',
     contributionTypes: addStaticAffordanceToNeeds('mechanismRich', [{
       needName: "Big Bites 1", // Any restaurant that would serve something you'd eat with your hands (burrito, tacos, hotdogs, sandwiches, wraps, burgers, tradamerican, newamerican )
+      notificationSubject: 'Eating at a restaurant?',
+      notificationText: 'Share an experience with others who are enjoying big bites of their meal',
       situation: {
         detector: getDetectorId(DETECTORS.big_bite_restaurant),
         number: '1'
@@ -2319,7 +2445,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-big-bite.jpg'
       },
       numberNeeded: 2,
-      notificationDelay: 60,
+      notificationDelay: 90, // https://www.quora.com/Whats-the-average-time-that-customers-wait-between-entering-a-restaurant-and-getting-served
     }]),
     description: 'While eating some non-trivially sized food, create a half half photo.',
     notificationText: 'View this and other available experiences',

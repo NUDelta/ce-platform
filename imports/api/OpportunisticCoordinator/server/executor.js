@@ -4,51 +4,81 @@ import { Incidents } from "../../OCEManager/OCEs/experiences";
 import { Locations } from "../../UserMonitor/locations/locations";
 
 import { notifyForParticipating } from "./noticationMethods";
-import { adminUpdatesForAddingUsersToIncident, updateAvailability } from "../identifier";
+import { adminUpdatesForAddingUserToIncident, updateAvailability } from "./identifier";
 import {
   distanceBetweenLocations, userIsAvailableToParticipate,
   userNotifiedTooRecently, userParticipatedTooRecently
 } from "../../UserMonitor/locations/methods";
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
-import { serverLog } from "../../logs";
+import { serverLog, log } from "../../logs";
 import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
  *  marks in assignment DB 2b
  * @param incidentsWithUsersToRun {object} needs to run in format of
- *  { iid: { need: [uid, uid], need:[uid] }
+ *  {
+ *    [iid]: {
+ *      [need]: [
+ *        {uid: uid1, place: place1, distance: 10},
+ *        {uid: uid2, place: place2, distance: 15}
+ *      ],
+ *      [need]:[
+ *        {uid: uid3, place: place3, distance: 20}
+ *      ]
+ *    }
+ *  }
  */
-export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
+export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
+  // admin updates for all incidents and users
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    _.forEach(needUserMapping, (uids, needName) => {
-      let newUsersUids = uids.filter(function(uid) {
-        return !Meteor.users.findOne(uid).profile.activeIncidents.includes(iid);
+    _.forEach(needUserMapping, (usersMeta, needName) => {
+      let newUsersMeta = usersMeta.filter(function(userMeta) {
+        return !Meteor.users.findOne(userMeta.uid).profile.activeIncidents.includes(iid);
       });
 
       //administrative updates
-      adminUpdatesForAddingUsersToIncident(newUsersUids, iid, needName);
-
-      let usersNotNotifiedRecently = newUsersUids.filter((uid) => {
-        return !userNotifiedTooRecently(Meteor.users.findOne(uid));
+      _.forEach(newUsersMeta, (userMeta) => {
+        adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
+      // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
+      // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+      //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
+      // });
+
+      let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
-      notifyForParticipating(usersNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-        experience.notificationText, route);
 
-      _.forEach(usersNotNotifiedRecently, uid => {
-        Notification_log.insert({
-          uid: uid,
-          iid: iid,
-          needName: needName,
-          timestamp: Date.now()
+      let needObject = experience.contributionTypes.find((need) => need.needName === needName);
+
+      if (needObject) {
+        log.cerebro(JSON.stringify(needObject));
+        if (needObject.notificationSubject && needObject.notificationText) {
+          notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
+            needObject.notificationText, route);
+        }
+        else if (experience.name && experience.notificationText) {
+          notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
+            experience.notificationText, route);
+        } else {
+          log.error('notification information cannot be found in the need or experience level');
+          return;
+        }
+
+        _.forEach(newUsersMeta, usermeta => {
+          Notification_log.insert({
+            uid: usermeta.uid,
+            iid: iid,
+            needName: needName,
+            timestamp: Date.now()
+          });
         });
-      });
+      }
     });
   });
 };
@@ -57,8 +87,8 @@ export const runNeedsWithThresholdMet = incidentsWithUsersToRun => {
  * Runs the OpportunisticCoordinator after a location update has occured.
  *
  * @param uid {string} user whose location just updated
- * @param userAvailability {object} object with keys as iids and values as array of matched [place, need] arrays
- *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
+ * @param userAvailability {object} object with keys as iids and values as array of matched [place, need, distance] arrays
+ *    e.g., { iid : [ (place1, needName1, dist1), (place2, needName2, dist2), (place3, needName3, dist3), ... ], ... }
  * @param needDelays {object} delay before attempting to run experiences as {iid: number}
  */
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, needDelays) => {
@@ -76,8 +106,8 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
   let binnedUserAvailabilities = {};
 
   _.forEach(userAvailability, (matchingPlaceNeeds, iid) => {
-    _.forEach(matchingPlaceNeeds, (individualPlace_Need) => {
-      let [placeMatch, individualNeed] = individualPlace_Need;
+    _.forEach(matchingPlaceNeeds, (individualPlace_Need_Dist) => {
+      let individualNeed = individualPlace_Need_Dist[1];
 
       // get current delay in ms
       let currDelay = needDelays[iid][individualNeed] * 1000; // delay in ms
@@ -93,8 +123,8 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
         binnedUserAvailabilities[currDelayStr][iid] = [];
       }
 
-      // add [place, need] to current delay for iid
-      binnedUserAvailabilities[currDelayStr][iid].push(individualPlace_Need);
+      // add [place, need, dist] to current delay for iid
+      binnedUserAvailabilities[currDelayStr][iid].push(individualPlace_Need_Dist);
     });
   });
 

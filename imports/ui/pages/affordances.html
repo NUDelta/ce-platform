@@ -8,14 +8,31 @@
         <div class="centered">
           {{currentUser.emails.[0].address}}
         </div>
+        <button id="toggle-affordance-info">Toggle to view Affordances</button>
+        <div id="affordance-info" style="display: none;">
+          {{#each key in affordanceKeys}}
+            {{key}}
+            {{affordanceValues key}}<br>
+          {{/each}}
+        </div>
         <h4> Your location </h4>
         {{this.location.lat}} / {{this.location.lng}}
-        <br><br>
+       <br><br>
         <div class="row">
             <div style="width:95%; max-width: 95%; padding-left:5%; height: 300px">
                 {{> googleMap name="yourLocation" options=mapOptions}}
             </div>
         </div>
+      <form id="groundtruth-form">
+        <div>
+          <label for="groundtruth-label">Event Label: </label>
+          <input type="text" id="groundtruth-label" name="groundtruth-label" required>
+        </div>
+        <div>
+          <button type="submit">Log Ground Truth</button>
+          <div id="groundtruth-status"></div>
+        </div>
+      </form>
     {{else}}
         <h3>Welcome to CE 👋</h3>
         <h4>Sign in to see your affordances!</h4>

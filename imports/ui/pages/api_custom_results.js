@@ -105,7 +105,6 @@ Template.photosByCategories_admin.helpers({
 
 Template.bumpedResults.helpers({
   getName(x ){
-    console.log(x);
     return x.friendName;
   },
   getImage(x){
@@ -115,7 +114,6 @@ Template.bumpedResults.helpers({
     return x.myImage;
   },
   bumpees() {
-    console.log(this)
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -163,7 +161,6 @@ Template.bumpedResults.events({
 
 Template.bumpedThreeResults.helpers({
   content() {
-    console.log(this);
     const {submissions, images, users} = this;
 
     const mySub = submissions.find(s => s.uid === Meteor.userId());
