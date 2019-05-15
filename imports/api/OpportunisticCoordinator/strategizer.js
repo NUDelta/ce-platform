@@ -66,18 +66,6 @@ export const needAggregator = (incident) => {
   return res;
 };
 
-/**
- * needA will be given a higher value in the sorting, if needA has fewer submissions left
- * (e.g., a photo that needs 1 more person to complete it will be ranked higher)
- * TODO(rlouie): What about the case where some needs have 1 out of 2 more needed,
- *               while others just need 1 out of 1 submission to complete?
- * @param needA
- * @param needB
- * @return {number}
- */
-export const prioritizeHalfCompletedNeeds = (needA, needB) => {
-  return numberSubmissionsRemaining(this.iid, needB) - numberSubmissionsRemaining(this.iid, needA);
-};
 
 /**
  * numberSubmissionsNeeded
@@ -87,13 +75,20 @@ export const prioritizeHalfCompletedNeeds = (needA, needB) => {
  * @return {any | * | IDBRequest | void}
  */
 export const numberSubmissionsRemaining = (iid, needName) => {
+  if (!iid) {
+    console.error(`Error in numberSubmissionsRemaining: param iid undefined`)
+  }
+  if (!needName) {
+    console.error(`Error in numberSubmissionsRemaining: param needName undefined`)
+  }
   let numSubsNeeded = Submissions.find({
     iid: iid,
     needName: needName,
     uid: null
   }).count();
   if (!Number.isInteger(numSubsNeeded)) {
-    throw `Error in numSubmissionsNeeded: numSubsNeeded is not an Integer`;
+    console.error(`Error in numSubmissionsNeeded: numSubsNeeded is not an Integer`);
+    return;
   }
   return numSubsNeeded;
 };
@@ -101,6 +96,10 @@ export const numberSubmissionsRemaining = (iid, needName) => {
 export const needIsAvailableToParticipateNow = (incident, needName) => {
   if (!incident) {
     console.log(`Error in needAggregator: incident is null\n ${JSON.stringify(incident)}`);
+    return;
+  }
+  if (!needName) {
+    console.log(`Error in needAggregator: needName is null`);
     return;
   }
   if (!incident.contributionTypes) {
@@ -123,6 +122,10 @@ export const needIsAvailableToParticipateNow = (incident, needName) => {
  */
 export const numberUsersParticipatingNow = (iid, needName) => {
   let participatingNowInIncident = ParticipatingNow.findOne({_id: iid});
+  if (!participatingNowInIncident) {
+    console.error(`Error in numberUsersParticipatingNow: no doc in ParticipatingNow found for iid ${iid}`);
+    return;
+  }
   if (!Array.isArray(participatingNowInIncident.needUserMaps)) {
     console.error(`Error in numberUsersParticipatingNow: participatingNowInIncident.needUserMaps is not an array`);
     return;
