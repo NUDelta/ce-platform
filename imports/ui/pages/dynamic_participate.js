@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 import {Incidents} from "../../api/OCEManager/OCEs/experiences";
 import {
-  needAggregator, needIsAvailableToParticipateNow, prioritizeHalfCompletedNeeds
+  needAggregator, needIsAvailableToParticipateNow, numberSubmissionsRemaining, prioritizeHalfCompletedNeeds
 } from "../../api/OpportunisticCoordinator/strategizer";
 import {Assignments} from "../../api/OpportunisticCoordinator/databaseHelpers";
 
@@ -47,7 +47,18 @@ Template.dynamicParticipate.onCreated(function() {
       let potentialNeedNames = needNamesBinnedByDetector[this.detectorId];
 
       // TODO: filter additionally by only the needs in which this user is assigned to
-
+      /**
+       * needA will be given a higher value in the sorting, if needA has fewer submissions left
+       * (e.g., a photo that needs 1 more person to complete it will be ranked higher)
+       * TODO(rlouie): What about the case where some needs have 1 out of 2 more needed,
+       *               while others just need 1 out of 1 submission to complete?
+       * @param needA
+       * @param needB
+       * @return {number}
+       */
+      const prioritizeHalfCompletedNeeds = (needA, needB) => {
+        return numberSubmissionsRemaining(this.iid, needB) - numberSubmissionsRemaining(this.iid, needA);
+      };
       potentialNeedNames.sort(prioritizeHalfCompletedNeeds); // mutates
       potentialNeedNames = potentialNeedNames.filter(needName => needIsAvailableToParticipateNow(this.incident, needName));
 
