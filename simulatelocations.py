@@ -21,7 +21,8 @@ def followPath(path, uid):
 	    time.sleep(1)
 
 def setLocation(location, uid):
-	r = requests.post("http://localhost:3000/api/geolocation", json={
+	# r = requests.post("https://staging-ce-platform.herokuapp.com/api/geolocation", json={
+	r = requests.post("http://localhost:3000//api/geolocation", json={
 	            "userId": uid,
 	            "location": {
 	                "coords": {
@@ -294,13 +295,9 @@ def allUsersGrocery():
     print("all users at grocery")
 
 def allUsersCoffee():
-    setLocation(coffee, sys.argv[1])
-    setLocation(coffee, sys.argv[2])
-    setLocation(coffee, sys.argv[3])
-    setLocation(coffee, sys.argv[4])
-    setLocation(coffee, sys.argv[5])
-
-    print("all users at coffee")
+	for i in sys.argv:
+		setLocation(coffee, i)
+	print("all users at coffee")
 
 if __name__ == "__main__":
     # allUsersGrocery()

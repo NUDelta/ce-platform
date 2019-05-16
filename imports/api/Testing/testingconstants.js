@@ -1164,16 +1164,6 @@ const createHalfHalf = function(
 };
 
 const createBumpedThree = function() {
-  let experience = {
-    name: 'Group Bumped',
-    participateTemplate: 'bumpedThree',
-    resultsTemplate: 'bumpedThreeResults',
-    contributionTypes: [],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
-    callbacks: []
-  };
-
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
 
@@ -1188,55 +1178,91 @@ const createBumpedThree = function() {
 
   }
 
-  let triads = ['triadOne', 'triadTwo', 'triadThree'];
-  let places = [
+  let experience = {
+    name: 'Group Bumped',
+    participateTemplate: 'bumpedThree',
+    resultsTemplate: 'bumpedThreeResults',
+    contributionTypes: [],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+      trigger: `cb.numberOfSubmissions() === 3`, // ?
+      function: bumpedThreeCallback.toString(),
+    }]
+  };
+
+
+  const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
+  const places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
     ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
-    //weather/sky and other bumped three experiences can be added here
   ];
-  _.forEach(triads, (triad) => {
-    _.forEach(places, (place) => {
-      const [detectorName, situationDescription, instruction] = place;
-      let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorName]['variables']));
-      newVars.push(`var ${triad};`);
 
-      let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorName]['rules']));
-      let lastRule = newRules.pop();
-      let lastRuleNoSemicolon = lastRule.split(';')[0];
-      lastRule = `(${triad} && (${lastRuleNoSemicolon}));`;
-      newRules.push(lastRule);
-
-      
-      let detector = {
-        '_id': Random.id(),
-        'description': DETECTORS[detectorName].description + triad,
-        'variables': newVars,
-        'rules': newRules
-      };
-      DETECTORS[detectorName + triad] = detector;
-
-      const need = {
-        needName: `bumped three: ${detectorName} ${triad}`,
-        situation: {
-          detector: detector._id,
+  const needs = places.map(place => {
+    const [detectorName, situationDescription, instruction] = place;
+    return {
+      needName: `Bumped Three`,
+      situation: {
+        detector: getDetectorId(DETECTORS[detectorName]),
         number: '1'
-        },
-        toPass: {
-          situationDescription: `Having a good time ${situationDescription}?`,
-          instruction: `${instruction}`
-        },
-        numberNeeded: 3,
-        // notificationDelay: 90 uncomment for testing
-      };
-      let callback = {
-        trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
-        function: bumpedThreeCallback.toString(),
-      };
-      experience.contributionTypes.push(need);
-      experience.callbacks.push(callback)
-    });   
+      },
+      toPass: {
+        situationDescription: `Having a good time ${situationDescription}?`,
+        instruction: `${instruction}`
+      },
+      numberNeeded: 3,
+      // notificationDelay: 90 uncomment for testing
+    }
   });
 
+  staticAffordances.forEach(triad => {
+    experience.contributionTypes.push(addStaticAffordanceToNeeds(triad, needs));
+  });
+
+  // _.forEach(triads, (triad) => {
+  //   _.forEach(places, (place) => {
+  //     const [detectorName, situationDescription, instruction] = place;
+  //     let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorName]['variables']));
+  //     newVars.push(`var ${triad};`);
+
+  //     let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorName]['rules']));
+  //     let lastRule = newRules.pop();
+  //     let lastRuleNoSemicolon = lastRule.split(';')[0];
+  //     lastRule = `(${triad} && (${lastRuleNoSemicolon}));`;
+  //     newRules.push(lastRule);
+
+      
+  //     let detector = {
+  //       '_id': Random.id(), // use addStaticAffordanceToNeed function and getdetectorid instead of random , use halfhalfsunny as an example
+  //       'description': DETECTORS[detectorName].description + triad,
+  //       'variables': newVars,
+  //       'rules': newRules
+  //     };
+  //     DETECTORS[detectorName + triad] = detector;
+
+  //     const need = {
+  //       needName: `bumped three: ${detectorName} ${triad}`,
+  //       situation: {
+  //         detector: detector._id,
+  //       number: '1'
+  //       },
+  //       toPass: {
+  //         situationDescription: `Having a good time ${situationDescription}?`,
+  //         instruction: `${instruction}`
+  //       },
+  //       numberNeeded: 3,
+  //       // notificationDelay: 90 uncomment for testing
+  //     };
+  //     let callback = {
+  //       trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
+  //       function: bumpedThreeCallback.toString(),
+  //     };
+  //     experience.contributionTypes.push(need);
+  //     experience.callbacks.push(callback)
+  //   });   
+  // });
+  console.log(experience);
+  
   return experience;
 }
 
