@@ -47,7 +47,11 @@
                 </button>
             {{/if}}
         {{else}}
-            Loading...
+          <div id="empty-state">
+            <h1 id="emoji">🤞📲</h1>
+            <h4 id="title">Trying to fetch data...</h4>
+            <p id="empty-state-text">You may have to close and restart the app if this takes too long 😭</p>
+          </div>
         {{/if}}
     {{else}}
         <h3>Welcome to CE 👋</h3>

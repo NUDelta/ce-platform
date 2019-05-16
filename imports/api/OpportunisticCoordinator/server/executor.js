@@ -13,6 +13,8 @@ import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
 import { serverLog, log } from "../../logs";
 import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
+import {needAggregator} from "../strategizer";
+import {setIntersection} from "../../custom/arrayHelpers";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
@@ -36,7 +38,30 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    _.forEach(needUserMapping, (usersMeta, needName) => {
+    // { [detectorId]: [need1, ...], ...}
+    let needNamesBinnedByDetector = needAggregator(incident);
+    let assignedNeedNames = Object.keys(needUserMapping);
+
+    _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorId) => {
+
+      // might have to distinguish what is logged done when its not half half vs not.
+      // maybe use a "strategy" class model
+      // if (commonDetectorNeedNames.length == 1) {
+      //
+      // }
+
+      // before doing a dynamic strategy algorithm, make sure we are looking at the candidate needs
+      let candidateNeedNames = setIntersection(commonDetectorNeedNames, assignedNeedNames);
+
+      // TODO: send to a dynamic route endpoint
+      // choose a random need from the aggregated set for now
+      let needName = candidateNeedNames[0];
+
+      let usersMeta = needUserMapping[needName];
+      if (!usersMeta) {
+        return;
+      }
+
       let newUsersMeta = usersMeta.filter(function(userMeta) {
         return !Meteor.users.findOne(userMeta.uid).profile.activeIncidents.includes(iid);
       });
@@ -54,31 +79,31 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
 
-      let needObject = experience.contributionTypes.find((need) => need.needName === needName);
-
-      if (needObject) {
-        log.cerebro(JSON.stringify(needObject));
-        if (needObject.notificationSubject && needObject.notificationText) {
-          notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
-            needObject.notificationText, route);
-        }
-        else if (experience.name && experience.notificationText) {
-          notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-            experience.notificationText, route);
-        } else {
-          log.error('notification information cannot be found in the need or experience level');
-          return;
-        }
-
-        _.forEach(newUsersMeta, usermeta => {
-          Notification_log.insert({
-            uid: usermeta.uid,
-            iid: iid,
-            needName: needName,
-            timestamp: Date.now()
-          });
-        });
+      // Try to notify, based on if the current need has need-specific notification info
+      let needObject = incident.contributionTypes.find((need) => need.needName === needName);
+      if (needObject && needObject.notificationSubject && needObject.notificationText) {
+        notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
+          needObject.notificationText, route);
       }
+      // Try to notify, based on experience-level notification info
+      else if (experience.name && experience.notificationText) {
+        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
+          experience.notificationText, route);
+      }
+      // Fail to notify, because these parameters are not defined
+      else {
+        log.error('notification information cannot be found in the need or experience level');
+        return;
+      }
+
+      _.forEach(newUsersMeta, usermeta => {
+        Notification_log.insert({
+          uid: usermeta.uid,
+          iid: iid,
+          needName: needName,
+          timestamp: Date.now()
+        });
+      });
     });
   });
 };
