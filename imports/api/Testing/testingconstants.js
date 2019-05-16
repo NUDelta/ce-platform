@@ -741,6 +741,7 @@ let DETECTORS = {
 export const getDetectorId = (detector) => {
   let db_detector = Detectors.findOne({description: detector.description});
   if (db_detector) {
+    console.log(JSON.stringify(db_detector));
     return db_detector._id;
   } else {
     return detector._id;
@@ -1767,14 +1768,11 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    let detectorKey;
-    _.forEach(_.keys(DETECTORS), (key) => {
-      if (DETECTORS[key]._id === need.situation.detector) {
-        detectorKey = key;
-      }
-    });
-    // WILL THROW ERROR if we don't find the matching detector id
-    let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
+    const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
+    if (!detectorKey) {
+      throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
+    }
+    const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
     need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
     return need;
   });
@@ -2010,6 +2008,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hands-in-front.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 1,
     }]),
     description: 'Use the sun to make a silhouette of your hand',
@@ -2038,6 +2037,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-fruit-in-hand.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90,
     }]),
     description: 'While shopping for groceries, create a half half photo.',
@@ -2094,6 +2094,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-cheers.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90
     }]),
     description: 'While enjoying your drink, create a half half photo.',
@@ -2148,6 +2149,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-religious-building.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90,
     }]),
     description: 'While visiting a place of worship, create a half half photo.',
@@ -2176,6 +2178,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-sunset-heart.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 1,
     }]),
     description: 'While looking up at the sunset, create a half half photo.',
@@ -2204,6 +2207,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-holding-chopsticks.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90
     }]),
     description: 'While eating asian food, create a half half photo.',
@@ -2232,6 +2236,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-book-face.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90,
     }]),
     description: 'While reading a book, create a half half photo.',
@@ -2312,6 +2317,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-leaf-face.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90
     }]),
     description: 'While in the park, create a half half photo.',
@@ -2340,6 +2346,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-puddle-feet.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 1,
     }]),
     description: 'With the puddles on a rainy day, create a half half photo.',
@@ -2445,6 +2452,7 @@ let EXPERIENCES = {
         exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-big-bite.jpg'
       },
       numberNeeded: 2,
+      numberAllowedToParticipateAtSameTime: 1,
       notificationDelay: 90, // https://www.quora.com/Whats-the-average-time-that-customers-wait-between-entering-a-restaurant-and-getting-served
     }]),
     description: 'While eating some non-trivially sized food, create a half half photo.',
@@ -2855,7 +2863,8 @@ let EXPERIENCES = {
       toPass: {
         instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
       },
-      numberNeeded: 1,
+      numberAllowedToParticipateAtSameTime: 1, // for testing
+      numberNeeded: 5, // for testing
       notificationDelay: 20, // 20 seconds for debugging
     }, {
       needName: 'coins',

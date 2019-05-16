@@ -1,33 +1,22 @@
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import {Meteor} from 'meteor/meteor';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
-import { Experiences } from './experiences.js';
-import { Schema } from '../../schema.js';
-import { getUnfinishedNeedNames } from '../progressorHelper';
-import { matchAffordancesWithDetector, getPlaceKeys,
-  onePlaceNotThesePlacesSets, placeSubsetAffordances } from "../../UserMonitor/detectors/methods";
+import {Experiences} from './experiences.js';
+import {Schema} from '../../schema.js';
+import {getUnfinishedNeedNames} from '../progressorHelper';
+import {
+  getPlaceKeys,
+  matchAffordancesWithDetector,
+  onePlaceNotThesePlacesSets,
+  placeSubsetAffordances
+} from "../../UserMonitor/detectors/methods";
 
-import { Incidents } from './experiences';
-import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
-import { Submissions } from '../../OCEManager/currentNeeds';
-import {serverLog, log} from "../../logs";
-import {pullUserFromAvailabilityNeedUserMaps} from "../../OpportunisticCoordinator/server/identifier";
-
-
-/**
- * Clears current availabilities for a user given a uid.
- * @param uid {string} user to clear data for
- */
-export const clearAvailabilitiesForUser = (uid) => {
-  let availabilityObjects = Availability.find().fetch();
-  _.forEach(availabilityObjects, (av) => {
-    // remove user for each need in each
-    _.forEach(av.needUserMaps, (needEntry) => {
-      pullUserFromAvailabilityNeedUserMaps(av._id, needEntry.needName, uid);
-    });
-  });
-};
+import {Incidents} from './experiences';
+import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
+import {Submissions} from '../../OCEManager/currentNeeds';
+import {serverLog} from "../../logs";
+import {setIntersection} from "../../custom/arrayHelpers";
 
 /**
  * Loops through all unmet needs and returns all needs a user matches with.
@@ -109,17 +98,7 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
   return sustainedAvailDict;
 };
 
-export const setIntersection = function(A, B) {
-  let A_with_string_elements = A.map((e) => { return JSON.stringify(e)});
-  let B_with_string_elements = B.map((e) => { return JSON.stringify(e)});
-  let beforeSet = new Set(A_with_string_elements);
-  let afterSet = new Set(B_with_string_elements);
 
-  let intersection = new Set(
-    [...beforeSet].filter(x => afterSet.has(x)));
-
-  return Array.from(intersection).map((e) => { return JSON.parse(e)});
-};
 
 // TODO: ryan do this plz.
 /**
@@ -305,6 +284,12 @@ export const addContribution = (iid, contribution) =>{
   },{
     $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
+
+  ParticipatingNow.update({
+    _id: iid
+  },{
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
+  });
 };
 
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
@@ -367,6 +352,11 @@ export const startRunningIncident = (incident) => {
     _id: incident._id,
     needUserMaps: needUserMaps
   });
+
+  ParticipatingNow.insert({
+    _id: incident._id,
+    needUserMaps: needUserMaps
+  });
 };
 
 /**
@@ -409,7 +399,7 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
   Assignments.update(
     {
@@ -419,8 +409,17 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
+  ParticipatingNow.update(
+    {
+      _id: incident._id,
+    }, {
+      $set: {
+        needUserMaps: needUserMaps
+      }
+    }
+  )
 
 };
 

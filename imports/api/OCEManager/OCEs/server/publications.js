@@ -69,11 +69,11 @@ Meteor.publish('incidents.all', function () {
 });
 
 Meteor.publish('incidents.single', function (incidentId) {
-  return Incidents.find(incidentId);
+  return Incidents.find({_id: incidentId});
 });
 
 Meteor.publish('incidents.byId', function (incidentId) {
-  return Incidents.find(incidentId);
+  return Incidents.find({_id: incidentId});
 });
 
 Meteor.publish('incidents.activeUser', function () {
