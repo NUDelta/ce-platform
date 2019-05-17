@@ -1,3 +1,8 @@
+import './api_custom_results.html';
+
+import { ReactiveDict } from 'meteor/reactive-dict';
+import { ReactiveVar } from 'meteor/reactive-var';
+
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
@@ -159,6 +164,70 @@ Template.bumpedResults.events({
 });
 
 
+Template.groupCheersResults.helpers({
+  sortImages(images){
+    let newImages = this.images;
+    //sort images by time
+    //need to filter through needName as well
+    let sortedImages = newImages.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    return sortedImages;
+  },
+  sortNames(images, users){
+    let names = images.map(i => getUserById(users, i.uid));
+    console.log(names);
+    return names;
+  },
+  sortSubs(submissions){
+    //sort submissions by timestamp
+    let newSubs = submissions;
+    let sortedSubs = newSubs.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let captions = sortedSubs.map(s => s.content.sentence);
+    return captions;
+  },
+  getReacts(submissions, idx){
+    return submissions[idx][react];
+  },
+  getReactsUsers(submissions, idx){
+    return submissions[idx][reactUsers];
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+});
+
+Template.groupCheersResults.events({
+     'click #reactWow'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      reactSubmission('wow', this.submissions[idx]);
+      console.log(this);
+    },
+    'click #reactHeart'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      reactSubmission('heart', this.submissions[idx]);
+      console.log(this);
+    },
+    'click #reactLaugh'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      reactSubmission('laugh', this.submissions[idx]);
+      console.log(this);
+    }
+});
+
+export const getUserById = (users_arr, uid) => {
+  let user = users_arr.find(function(x) {
+    return x._id === uid;
+  });
+  if (uid){
+    return user.username;
+  } else {
+    return null;
+  }
+};
+
 Template.bumpedThreeResults.helpers({
   content() {
     console.log(this);
@@ -171,9 +240,8 @@ Template.bumpedThreeResults.helpers({
     const myImage = images.find(i => i._id === mySub.content.proof);
     const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
     const friendNames = otherSubs.map(s => users.find(u => u._id === s.uid));
-  
     results = {};
-    Object.assign(results, 
+    Object.assign(results,
       friendNames[0] && {friendOneName: friendNames[0].username},
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
@@ -186,7 +254,7 @@ Template.bumpedThreeResults.helpers({
 
     return results;
   }
-})
+});
 
 /**
  * Returns an array with arrays of the given size.
@@ -461,3 +529,41 @@ Template.sunset.onDestroyed(function() {
     timeout = null;
   });
 });
+
+export const reactSubmission = (react, submission) => {
+  console.log(submission);
+  let notification = true;
+
+  if (!submission.content["react"]){
+    submission.content["react"] = [react];
+    submission.content["reactUser"] = [submission.uid];
+  } else {
+    //if user already reacted, they can change reaction
+    if (submission.content["reactUser"].includes(submission.uid)){
+      let idx = submission.content["reactUser"].indexOf(submission.uid);
+      submission.content["react"][idx] = react;
+      notification = false;
+    } else {
+    //else just push reaction
+      submission.content["react"].push(react);
+      submission.content["reactUser"].push(react);
+    }
+  }
+
+  let submissionObject = {
+    uid: submission.uid,
+    eid: submission._id,
+    iid: submission.iid,
+    needName: submission.needName,
+    content: submission.content,
+    timestamp: submission.timestamp,
+    lat: submission.lat,
+    lng: submission.lng
+  };
+
+  console.log(submissionObject);
+  Meteor.call('updateSubmission', submissionObject);
+  if (notification){
+    //call notification
+  }
+};
