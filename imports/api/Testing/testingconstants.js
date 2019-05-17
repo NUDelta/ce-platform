@@ -1927,7 +1927,7 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  // bumpedThree: createBumpedThree(),
+  bumpedThree: createBumpedThree(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),
