@@ -1195,7 +1195,7 @@ const createBumpedThree = function() {
 
   const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
   const places = [
-    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    // ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
     ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
   ];
 
@@ -1216,8 +1216,23 @@ const createBumpedThree = function() {
     }
   });
 
+  console.log(needs);
+  
+
   staticAffordances.forEach(triad => {
-    experience.contributionTypes.push(addStaticAffordanceToNeeds(triad, needs));
+    // experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, needs)];
+    addStaticAffordanceToNeeds(triad, [ { needName: 'Bumped Three',
+         situation: { detector: getDetectorId(DETECTORS['coffee']), number: '1' },
+         toPass:
+          { situationDescription: 'Having a good time at a coffee shop?',
+            instruction: 'Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)' },
+         numberNeeded: 3 },
+       { needName: 'Bumped Three',
+         situation: { detector: getDetectorId(DETECTORS['daytime']), number: '1' },
+         toPass:
+          { situationDescription: 'Having a good time today?',
+            instruction: 'Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel.' },
+         numberNeeded: 3 } ])
   });
 
   // _.forEach(triads, (triad) => {
@@ -1794,6 +1809,7 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
+    console.log(need.situation.detector);
     const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
     if (!detectorKey) {
       throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
@@ -1911,7 +1927,7 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  bumpedThree: createBumpedThree(),
+  // bumpedThree: createBumpedThree(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),
