@@ -23,6 +23,8 @@ import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
+import '../../ui/pages/dynamic_participate.html';
+import '../../ui/pages/dynamic_participate.js';
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -69,29 +71,39 @@ Router.route('affordances', {
   }
 });
 
+Router.route('api.custom.dynamic', {
+  path: '/apicustomdynamic/:iid/:detectorId',
+  template: 'dynamicParticipate',
+  before: function() {
+    this.next();
+  },
+});
+
 Router.route('api.custom', {
   path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
   before: function () {
-    if (Meteor.userId()) {
-      let dic = {
-        uid: Meteor.userId(),
-        timestamp: Date.now(),
-        route: "customparticipate",
-        params: {
-          iid: this.params.iid,
-          eid: this.params.eid,
-          needName: this.params.needName
-        }
-      };
-      Meteor.call('insertLog', dic);
+    if (!Meteor.userId()) {
+      Router.go('home');
     }
+    let dic = {
+      uid: Meteor.userId(),
+      timestamp: Date.now(),
+      route: "customparticipate",
+      params: {
+        iid: this.params.iid,
+        eid: this.params.eid,
+        needName: this.params.needName
+      }
+    };
+    Meteor.call('insertLog', dic);
 
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
+    this.subscribe('participating.now.activeIncident', this.params.iid).wait();
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
     this.subscribe('avatars.all').wait();
