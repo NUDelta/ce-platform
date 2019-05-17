@@ -89,6 +89,128 @@ Template.bumpedThree.helpers({
   }
 });
 
+//see halfhalfParticipate helpers
+Template.groupCheers.helpers({
+  getUserById(users, uid) {
+    let user = users.find(function(x) {
+      return x._id === uid;
+    });
+    console.log(user);
+    return user;
+  },
+
+  mostRecentImageTriadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+  },
+  lengthEqual(array, number) {
+    console.log(array);
+    console.log(array.length);
+    console.log(number);
+    return array.length === number;
+  },
+  firstElement(array) {
+    return array[0];
+  },
+  secondElement(array){
+    return array[1];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
+  }
+});
+
+Template.groupCheers.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.groupCheers.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+//see halfhalf_participate.events
+Template.groupCheers.events({
+  'click #takePhoto'(event, template){
+    console.log(template);
+    if (typeof CameraPreview !== 'undefined') {
+      toggleCameraControls('takePhotoInProgress');
+      CameraPreview.takePicture({
+        width: 480, height: 640, quality: 85
+      },function(imgData){
+          let rect = getPreviewRect();
+          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+            // using an instance of jquery tied to current template scope
+            let imagePreview = template.$(".fileinput-preview");
+            imagePreview.attr('src', croppedImgUrl);
+            imagePreview.show();
+            template.imageSubmitReady.set(true);
+            CameraPreview.hide();
+            toggleCameraControls('takePhotoDone');
+          });
+      });
+    } else {
+      console.error("Could not access the CameraPreview");
+    }
+  },
+  'click #retakePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.show()
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+    $(".fileinput-preview").hide();
+    template.imageSubmitReady.set(false);
+    toggleCameraControls('startCamera');
+  },
+  'click #switchCamera'(){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.switchCamera();
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+  },
+  'click #goToParticipate'(event, template) {
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('triparticipate').style.display = "block";
+
+    if (template.cameraStarted.get()) {
+      if (!template.imageSubmitReady.get()) {
+        CameraPreview.show();
+      }
+    } else {
+      Meteor.setTimeout(() => {
+        if (typeof CameraPreview !== 'undefined') {
+          startCameraAtPreviewRect();
+          template.cameraStarted.set(true);
+        } else {
+          console.error("Could not access the CameraPreview")
+        }
+        template.$(".fileinput-preview").hide();
+        template.imageSubmitReady.set(false);
+        toggleCameraControls('startCamera');
+      }, 300);
+    }
+  },
+  'click #goToInstruction'() {
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('triparticipate').style.display = "none";
+    CameraPreview.hide();
+  },
+});
+
 /**
  * Returns an array with arrays of the given size.
  *
@@ -244,11 +366,14 @@ Template.halfhalfParticipate.events({
   // }
 });
 
-/** Based on whether the preview window is on the left or right, this function returns the rectangle that
+/** Based on whether the preview window is on the left or right for half_half
+ * or top left, top right, bottom for triad image
+ * this function returns the rectangle that
  * contains information about the coordinates of the preview.
  *
  * @returns rect {DOMRect}
  */
+
 const getPreviewRect = function() {
   let rect;
   // first one to take picture, so the left half of image will be cropped and used
@@ -256,12 +381,25 @@ const getPreviewRect = function() {
     let halfOverlay = document.getElementById('leftHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
-  else {
+  else if (document.getElementById('rightHalfPreview') !== null) {
     let halfOverlay = document.getElementById('rightHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
+  else if (document.getElementById('topLTriPreview') !== null) {
+    let triOverlay = document.getElementById('topLTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('topRTriPreview') !== null) {
+    let triOverlay = document.getElementById('topRTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else {
+    let triOverlay = document.getElementById('bottomTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
   return rect;
 };
+
 
 const startCameraAtPreviewRect = function(
   {
@@ -277,16 +415,23 @@ const startCameraAtPreviewRect = function(
     camera: camera, tapPhoto: tapPhoto, previewDrag: previewDrag, toBack: toBack});
 };
 
+//changeHalfHalfPhoto to just Photo to stop break
 const toggleCameraControls = function(mode) {
   if (mode === "startCamera") {
     $(".fileinput-preview").hide();
     document.getElementById('retakePhoto').style.display = "none";
-    document.getElementById('takeHalfHalfPhoto').style.display = "inline";
+    //do check
+    //document.getElementById('takeHalfHalfPhoto').style.display = "inline";
+    //do check
+    document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "inline";
   }
   else if (mode === "takePhotoInProgress") {
     document.getElementById('takePhotoInProgress').style.display = "inline";
-    document.getElementById('takeHalfHalfPhoto').style.display = "none";
+    //do check
+    //document.getElementById('takeHalfHalfPhoto').style.display = "none";
+    //do check
+    document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "none";
   }
   else if (mode === "takePhotoDone") {
