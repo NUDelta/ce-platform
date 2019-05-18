@@ -11,6 +11,7 @@ import { Assignments } from '../../api/OpportunisticCoordinator/databaseHelpers'
 import '../components/active_experience.js';
 import {needAggregator} from "../../api/OpportunisticCoordinator/strategizer";
 import {setIntersection} from "../../api/custom/arrayHelpers";
+import {getUserActiveIncidents} from "../../api/UserMonitor/users/methods";
 
 Template.home.onCreated(function () {
   this.state = new ReactiveDict();
@@ -79,8 +80,14 @@ Template.home.helpers({
     }
   },
   noActiveIncidents() {
-    let currActiveIncidents = Meteor.users.findOne(Meteor.userId()).activeIncidents();
-    return currActiveIncidents === null || currActiveIncidents.length === 0;
+    let user = Meteor.users.findOne(Meteor.userId());
+
+    // note(rlouie): was forced to use getUserActiveIncidents rather than user.activeIncidents collection helper
+    let currActiveIncidents = getUserActiveIncidents(user._id);
+
+    return (typeof currActiveIncidents === 'undefined' ||
+            currActiveIncidents === null ||
+            currActiveIncidents.length === 0);
   },
   getCurrentExperience(iid) {
     Template.instance().state.get('render');
