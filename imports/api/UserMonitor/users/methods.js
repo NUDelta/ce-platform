@@ -6,7 +6,8 @@ import { Assignments } from "../../OpportunisticCoordinator/databaseHelpers";
 // via dburles:collection-helpers
 Meteor.users.helpers({
   /**
-   * usage: Meteor.users.findOne().activeIncidents()
+   * usage in Meteor client/server code: Meteor.users.findOne().activeIncidents()
+   * usage in Meteor Blaze template JS code: N/A -- had difficulty doing this
    *
    * @returns: activeIncidents {Array} array of incident iids e.g. [iid1, iid2]
    */
@@ -19,10 +20,10 @@ Meteor.users.helpers({
  * activeIncidents are the ones in which a user is assigned.
  *
  * @param uid
- * @return activeIncidents {Array} array of incident iids e.g. [iid1, iid2]
+ * @return activeIncidents {Array} array of incident iids e.g. [iid1, iid2] or empty array []
  */
 export const getUserActiveIncidents = (uid) => {
-  return Assignments.find({"needUserMaps.users.uid": uid}, {fields: {_id: 1}}).map(doc => doc._id);
+  return Assignments.find({"needUserMaps.users.uid": uid}, {fields: {_id: 1}}).fetch().map(doc => doc._id);
 };
 
 export const findUserByUsername = function (username) {
