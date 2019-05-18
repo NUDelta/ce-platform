@@ -79,7 +79,7 @@ Template.home.helpers({
     }
   },
   noActiveIncidents() {
-    let currActiveIncidents = Meteor.users.findOne(Meteor.userId()).profile.activeIncidents;
+    let currActiveIncidents = Meteor.users.findOne(Meteor.userId()).activeIncidents();
     return currActiveIncidents === null || currActiveIncidents.length === 0;
   },
   getCurrentExperience(iid) {

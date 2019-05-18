@@ -18,7 +18,7 @@ Meteor.publish('experiences.activeUser', function () {
     const user = Meteor.users.findOne(this.userId);
 
     let experienceIds = Incidents.find({
-      _id: { $in: user.profile.activeIncidents }
+      _id: { $in: user.activeIncidents() }
     }).fetch().map((x) => {
       return x.eid
     });
@@ -84,7 +84,7 @@ Meteor.publish('incidents.activeUser', function () {
   } else {
     const user = Meteor.users.findOne(this.userId);
     return Incidents.find({
-      _id: { $in: user.profile.activeIncidents }
+      _id: { $in: user.activeIncidents() }
     });
   }
 });

@@ -15,7 +15,6 @@ export const insertTestUser = (username) => {
   user.profile.lastParticipated = null;
   user.profile.lastNotified = null;
   user.profile.pastIncidents = [];
-  user.profile.activeIncidents = [];
   user.profile.staticAffordances = user.profile.staticAffordances || {};
   Meteor.users.insert(user);
 };

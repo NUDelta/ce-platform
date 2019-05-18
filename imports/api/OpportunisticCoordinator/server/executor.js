@@ -63,7 +63,7 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       }
 
       let newUsersMeta = usersMeta.filter(function(userMeta) {
-        return !Meteor.users.findOne(userMeta.uid).profile.activeIncidents.includes(iid);
+        return !Meteor.users.findOne(userMeta.uid).activeIncidents().includes(iid);
       });
 
       //administrative updates
