@@ -9,7 +9,6 @@ import '../../api/UserMonitor/locations/methods.js';
 import '../../api/UserMonitor/detectors/server/publications.js';
 import '../../api/UserMonitor/detectors/methods.js';
 import '../../api/OpportunisticCoordinator/server/identifier.js';
-import '../../api/OpportunisticCoordinator/identifier.js';
 import '../../api/OpportunisticCoordinator/server/publications.js';
 import '../../api/OCEManager/progressorHelper.js';
 import '../../api/OCEManager/server/publications.js';
