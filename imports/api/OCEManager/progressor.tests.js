@@ -83,7 +83,7 @@ describe('Progressor Tests - Single Submission', function() {
 
   it('should remove the incident from active incidents in users profile', function() {
     const user = Meteor.users.findOne({_id: submissionObject.uid});
-    chai.assert.isFalse(user.profile.activeIncidents.includes(submissionObject.iid),
+    chai.assert.isFalse(user.activeIncidents().includes(submissionObject.iid),
       'active incident not removed from user profile');
   });
 

@@ -8,11 +8,7 @@ import {Locations} from "../../UserMonitor/locations/locations";
 import {numUnfinishedNeeds} from "../../OCEManager/progressor";
 import {addEmptySubmissionsForNeed} from "../../OCEManager/OCEs/methods.js";
 
-import {
-  _addActiveIncidentToUser,
-  _removeActiveIncidentFromUser,
-  _removeIncidentFromUserEntirely
-} from "../../UserMonitor/users/methods";
+import {_removeActiveIncidentFromUser} from "../../UserMonitor/users/methods";
 import {doesUserMatchNeed, getNeedDelay} from "../../OCEManager/OCEs/methods";
 import {log, serverLog} from "../../logs";
 import {flattenAffordanceDict} from "../../UserMonitor/detectors/methods";
@@ -214,7 +210,7 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
     log.warning(`No user exists for uid = ${userId}`);
     return;
   }
-  let activeIncidents = user.profile.activeIncidents;
+  let activeIncidents = user.activeIncidents();
   if (!activeIncidents.includes(incidentId)) {
     log.info(`No need to decommission { uid: ${userId} } from { iid: ${incidentId} }`);
     return;
@@ -262,7 +258,6 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
  */
 export const adminUpdatesForAddingUserToIncident = (uid, iid, needName) => {
   _addUserToAssignmentDb(uid, iid, needName);
-  _addActiveIncidentToUser(uid, iid);
   // TODO(rlouie): add extra incident/need/place/distance info
   // _addActiveIncidentNeedPlaceDistanceToUsers(uid, incidentNeedPlaceDistance);
 
@@ -302,7 +297,6 @@ export const adminUpdatesForRemovingUserToIncident = (uid, iid, needName) => {
 export const adminUpdatesForRemovingUserToIncidentEntirely = (uid, iid, needName) => {
   //TODO: make this function take a single user not an array
   _removeUserFromAssignmentDb(uid, iid, needName);
-  _removeIncidentFromUserEntirely(uid, iid);
 };
 
 /**

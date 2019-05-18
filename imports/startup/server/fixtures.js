@@ -140,7 +140,6 @@ function createTestData(){
       "profile.lastParticipated": null,
       "profile.lastNotified": null,
       "profile.pastIncidents": [],
-      "profile.activeIncidents": [],
       "profile.staticAffordances": {}
     }
   }, {

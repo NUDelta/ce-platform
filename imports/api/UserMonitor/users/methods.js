@@ -29,23 +29,10 @@ export const findUserByUsername = function (username) {
   return Meteor.users.findOne({ 'username': username });
 };
 
-export const _addActiveIncidentToUser = function (uid, iid) {
-  Meteor.users.update({
-    _id: uid
-  }, {
-    $addToSet: {
-      'profile.activeIncidents': iid
-    }
-  });
-};
-
 export const _removeActiveIncidentFromUser = function (uid, iid) {
   Meteor.users.update({
     _id: uid
   }, {
-    $pull: {
-      'profile.activeIncidents': iid
-    },
     $addToSet: {
       'profile.pastIncidents': iid
     }
@@ -53,19 +40,6 @@ export const _removeActiveIncidentFromUser = function (uid, iid) {
 
   // TODO(rlouie): remove the active incident/need/place/dist info too
 };
-
-export const _removeIncidentFromUserEntirely = function (uid, iid) {
-  Meteor.users.update({
-    _id: uid
-  }, {
-    $pull: {
-      'profile.activeIncidents': iid
-    }
-  });
-
-  // TODO(rlouie): remove the active incident/need/place/dist info too
-};
-
 
 export const getEmails = new ValidatedMethod({
   name: 'users.getEmails',
