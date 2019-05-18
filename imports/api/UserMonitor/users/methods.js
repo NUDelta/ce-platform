@@ -1,6 +1,29 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Assignments } from "../../OpportunisticCoordinator/databaseHelpers";
+
+// via dburles:collection-helpers
+Meteor.users.helpers({
+  /**
+   * usage: Meteor.users.findOne().activeIncidents()
+   *
+   * @returns: activeIncidents {Array} array of incident iids e.g. [iid1, iid2]
+   */
+  activeIncidents() {
+    return getUserActiveIncidents(this._id);
+  }
+});
+
+/**
+ * activeIncidents are the ones in which a user is assigned.
+ *
+ * @param uid
+ * @return activeIncidents {Array} array of incident iids e.g. [iid1, iid2]
+ */
+export const getUserActiveIncidents = (uid) => {
+  return Assignments.find({"needUserMaps.users.uid": uid}, {fields: {_id: 1}}).map(doc => doc._id);
+};
 
 export const findUserByUsername = function (username) {
   return Meteor.users.findOne({ 'username': username });

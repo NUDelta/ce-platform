@@ -57,3 +57,4 @@ aldeed:template-extension
 useraccounts:bootstrap
 underscore
 fortawesome:fontawesome
+dburles:collection-helpers
