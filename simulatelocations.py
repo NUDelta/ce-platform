@@ -4,7 +4,7 @@ import time
 
 path1 = [(43, -87), (32, -120)]
 
-park =  (42.056838, -87.675940)
+park =  (42.056838, -87.675940) 
 burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 grocery2 = (42.039818,-87.680088)
@@ -13,7 +13,7 @@ beer = (42.047105, -87.682006)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
-
+library = (42.058141, -87.674490)
 
 def followPath(path, uid):
 	for stop in path:
@@ -21,7 +21,10 @@ def followPath(path, uid):
 	    time.sleep(1)
 
 def setLocation(location, uid):
-	r = requests.post("http://localhost:3000/api/geolocation", json={
+	host = "http://localhost:3000" 
+	# host = "https://ce-platform.herokuapp.com"
+	# host = "https://staging-ce-platform.herokuapp.com"
+	r = requests.post(host + "/api/geolocation", json={
 	            "userId": uid,
 	            "location": {
 	                "coords": {
@@ -314,8 +317,24 @@ def allUsersGrocery():
 
     print("all users at grocery")
 
+def allUsersCoffee():
+	for i in sys.argv:
+		setLocation(coffee, i)
+	print("all users at coffee")
+
 if __name__ == "__main__":
+
 #allUsersGrocery()
     garrettAndMegBump()
+
+    # allUsersGrocery()
+	allUsersCoffee()
+	#allUsersAtPark()
+    # garrettAndMegBump()
+    # single user movement
+    # setLocation(burgers, sys.argv[1])
+    # allUsersGrocery()
+    #garrettAndMegBump()
+
     #time.sleep(2)
     #onlyGarretAtLake()

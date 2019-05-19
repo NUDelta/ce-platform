@@ -98,10 +98,10 @@ export const notifyUsersInNeed = function(subject, text) {
 };
 
 Meteor.methods({
-  sendNotification(uids, text, route) {
+  sendNotification(uids, subject, text, route) {
     log.cerebro('Sending manual push notifications to ' + uids);
 
-    _sendPush(uids, "", text, route, null, false);
+    _sendPush(uids, subject, text, route, null, false);
   }
 });
 

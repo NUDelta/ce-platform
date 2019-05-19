@@ -18,6 +18,36 @@ Template.affordances.onCreated(function () {
 
 });
 
+Template.affordances.events({
+
+  'click #toggle-affordance-info': function() {
+    var affordanceInfo = document.getElementById('affordance-info');
+
+    if (affordanceInfo.style.display == "block") {
+      affordanceInfo.style.display = "none";
+    } else {
+      affordanceInfo.style.display = "block";
+    }
+  },
+
+  'submit form': function(event) {
+    event.preventDefault();
+
+    let label = document.getElementById('groundtruth-label').value;
+    let uid = Meteor.userId();
+
+    Meteor.call('insertGroundTruthLog', {
+      uid: uid, label: label
+    }, function(err, res) {
+      if (err) {
+        $("div#groundtruth-status").text('Failed to log [' + label + ']');
+      } else {
+        $("div#groundtruth-status").text('Yes! Logged [' + label + ']');
+      }
+    });
+  }
+});
+
 Template.affordances.helpers({
   mapOptions() {
     let location = this.location
@@ -34,6 +64,6 @@ Template.affordances.helpers({
     return keys
   },
   affordanceValues(key){
-    return this.location.affordances[key]
+    return JSON.stringify(this.location.affordances[key]);
   }
 });

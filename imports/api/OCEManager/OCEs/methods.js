@@ -1,69 +1,104 @@
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import {Meteor} from 'meteor/meteor';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
-import { Experiences } from './experiences.js';
-import { Schema } from '../../schema.js';
-import { getUnfinishedNeedNames } from '../progressorHelper';
-import { matchAffordancesWithDetector } from "../../UserMonitor/detectors/methods";
+import {Experiences} from './experiences.js';
+import {Schema} from '../../schema.js';
+import {getUnfinishedNeedNames} from '../progressorHelper';
+import {
+  getPlaceKeys,
+  matchAffordancesWithDetector,
+  onePlaceNotThesePlacesSets,
+  placeSubsetAffordances
+} from "../../UserMonitor/detectors/methods";
 
-import { Incidents } from './experiences';
-import { Assignments, Availability } from '../../OpportunisticCoordinator/databaseHelpers';
-import { Submissions } from '../../OCEManager/currentNeeds';
+import {Incidents} from './experiences';
+import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
+import {Submissions} from '../../OCEManager/currentNeeds';
 import {serverLog} from "../../logs";
-
-
-/**
- * Clears current availabilities for a user given a uid.
- * @param uid {string} user to clear data for
- */
-export const clearAvailabilitiesForUser = (uid) => {
-  let availabilityObjects = Availability.find().fetch();
-  _.forEach(availabilityObjects, (av) => {
-    // remove user for each need in each
-    _.forEach(av.needUserMaps, (needEntry) => {
-      Availability.update({
-        _id: av._id,
-        'needUserMaps.needName': needEntry.needName,
-      }, {
-        $pull: {'needUserMaps.$.uids': uid}
-      });
-    });
-  });
-};
+import {setIntersection} from "../../custom/arrayHelpers";
 
 /**
  * Loops through all unmet needs and returns all needs a user matches with.
  *
  * @param uid {string} uid of user to find matches for
- * @param affordances {object} dictionary of user's affordances
- * @returns {object} object with keys as iids and values as array of matched needs
+ * @param affordances {object} dictionary of user's affordances, potentially nested
+ * e.g.,
+ * {
+     'sunny': true,
+     'trader_joes_evanston': {
+       'grocery': true
+     }
+   }
+ * @returns matches {object} object with keys as iids and values as array of matched [place, need] arrays
+ *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
  */
 export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
+  // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
+  let placeKeys = getPlaceKeys(affordances);
+  let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
+  // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
-      let doesMatchPredicate = doesUserMatchNeed(uid, affordances, iid, needName);
+      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
+        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
+        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-      if (doesMatchPredicate) {
-        if (matches[iid]) {
-          let currNeeds = matches[iid];
-          currNeeds.push(needName);
-          matches[iid] = currNeeds;
-        } else {
-          matches[iid] = [needName];
+        let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
+
+        if (doesMatchPredicate) {
+          if (matches[iid]) {
+            let place_needs = matches[iid];
+            place_needs.push([placeToMatch, needName, distInfo['distance']]);
+            matches[iid] = place_needs;
+          } else {
+            matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
+          }
         }
-      }
-    });
+      });
+   });
   });
 
   return matches;
 };
+
+/**
+ *
+ * @param beforeAvails
+ * @param afterAvails
+ * @return sustainedAvailDict {{Object}}
+ *    e.g., {"QybuLeDFSbTijxFbi":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
+ */
+export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
+  let incidentIntersection = setIntersection(Object.keys(beforeAvails), Object.keys(afterAvails));
+  let sustainedAvailDict = {};
+  _.forEach(incidentIntersection, (incident) => {
+    let beforePlacesAndNeeds = beforeAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+
+    let sustainedPlace_Needs = setIntersection(beforePlacesAndNeeds, afterPlacesAndNeeds);
+    console.log(JSON.stringify(afterAvails[incident]));
+    console.log(JSON.stringify(sustainedPlace_Needs));
+    if (sustainedPlace_Needs.length) {
+      let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(sustainedPlace_Need =>
+        afterAvails[incident].find(place_need_dict =>
+          JSON.stringify(place_need_dict.slice(0,2)) == JSON.stringify(sustainedPlace_Need)
+        )
+      );
+      sustainedAvailDict[incident] = sustainedPlace_Need_Distances;
+    }
+  });
+  return sustainedAvailDict;
+};
+
+
 
 // TODO: ryan do this plz.
 /**
@@ -123,6 +158,12 @@ export const updateUserExperiences = new ValidatedMethod({
   }
 });
 
+/**
+ * Not enough to remove experiences.
+ * Incidents need to be removed.
+ * Associated Submissions need to be removed.
+ * Associated
+ */
 export const removeExperience = new ValidatedMethod({
   name: 'experiences.remove',
   validate: new SimpleSchema({
@@ -235,13 +276,19 @@ export const addContribution = (iid, contribution) =>{
   Availability.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 
   Assignments.update({
     _id: iid
   },{
-    $push: {needUserMaps: {needName: contribution.needName, uids: []}}
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
+  });
+
+  ParticipatingNow.update({
+    _id: iid
+  },{
+    $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
 };
 
@@ -291,7 +338,7 @@ export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     addEmptySubmissionsForNeed(incident._id, incident.eid, need);
 
   });
@@ -302,6 +349,11 @@ export const startRunningIncident = (incident) => {
   });
 
   Assignments.insert({
+    _id: incident._id,
+    needUserMaps: needUserMaps
+  });
+
+  ParticipatingNow.insert({
     _id: incident._id,
     needUserMaps: needUserMaps
   });
@@ -317,25 +369,8 @@ export const updateRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, uids: []});
+    needUserMaps.push({needName: need.needName, users: []});
     // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
-  });
-
-  // clear the user activeIncidents before clearing the availabilities
-  let old_needUserMaps = Availability.find({_id: incident._id}).needUserMaps;
-  _.forEach(old_needUserMaps, (needUserMap) => {
-    if (needUserMap.uids.length > 0) {
-      _.forEach(needUserMap.uids, (uid) => {
-        Meteor.users.update(
-          {
-            _id: uid
-          }, {
-            $pull: {
-              "profile.activeIncidents": incident._id
-            }
-          });
-      });
-    }
   });
 
   Availability.update(
@@ -346,7 +381,7 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
   Assignments.update(
     {
@@ -356,8 +391,17 @@ export const updateRunningIncident = (incident) => {
         needUserMaps: needUserMaps
       }
     }
-  )
+  );
 
+  ParticipatingNow.update(
+    {
+      _id: incident._id,
+    }, {
+      $set: {
+        needUserMaps: needUserMaps
+      }
+    }
+  )
 
 };
 
@@ -434,6 +478,11 @@ export const updateExperienceCollectionDocument = (eid, experience) => {
 export const getNeedFromIncidentId = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   let output = undefined;
+
+  if (!incident) {
+    console.error(`Error in getNeedFromIncidentId: Could not find incident of iid = ${iid}`)
+    return false;
+  }
 
   _.forEach(incident.contributionTypes, (need) => {
     if (need.needName === needName) {

@@ -5,6 +5,7 @@
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
 
+
 ## Collective Narrative Directions for Testing
 1. Run the python script in the folder to setup sample geolocations for the testers
 2. Look into mongoDB database to see which characters are assigned to which participants
@@ -13,6 +14,25 @@
 5. Play out the role(s) of the next character(s) assigned
 6. Once the story end condition is fulfilled, the page should display the entire conversation as a script
 
+### Windows Subsystem for Linux Specific Setup
+
+Follow steps 1 & 2 from above and then enter the following commands to install Mongo and start a Mongo process:
+
+```
+$ sudo apt-get install mongodb-server
+$ sudo mkdir -p /data/db
+$ sudo chown -R $USER /data/db
+$ mongod
+```
+Open a separate terminal and navigate to the `ce-platform` directory and run `npm start`.
+
+Open Mongo Shell in another terminal and try to find users to verify that you're interacting with the correct data.
+```
+$ mongo
+> use meteor
+> db.users.find()
+```
+
 ## iOS Development Running 
 Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process. 
 
@@ -20,7 +40,7 @@ Development build is nice to develop the mobile app, connected to a local server
 2. From the ce-platform directory, run `npm run build-dev 3000 192.168.X.Y` or equivalently `meteor run ios-device -p 3000 --mobile-server=http://{ipaddress}:3000`
 3. At some point, the previous command will have opened an xcodeproject, which lives at `ce-platform/.meteor/local/cordova-build/platforms/ios`. Navigate there by typing `cd ce-platform/.meteor/local/cordova-build/platforms/ios`.
 4. `pod install` to install dependencies.
-5. `open ce-platform.xcworkspace` to open the workspace file, which will have the pod dependencies linked. You can close the `ce-platform.xcodeproject file now.
+5. `open Cerebro.xcworkspace` to open the workspace file, which will have the pod dependencies linked. You can close the `Cerebro.xcodeproject file now.
 6. Change bundle identifier to `edu.northwestern.delta.ce-platform`
 7. Get the "CE Platform" provisioning profile from developer.apple.com and import the profile into xcode. You can do this by dragging the *.mobileprovision file onto the xcode icon, or by going to General > Signing (Debug or Release) > Import Profile...
 8. Set the Provisioning Profile to "CE Platform"
@@ -36,8 +56,8 @@ For a quick script that does the meteor build and sets up the xcworkspace, see t
 2. Run `npm run build` to generate the Xcode project.
     1. Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
     2. *Note*: if this fails with an error saying that `dezalgo` module cannot be found, run `meteor npm i -g write-file-atomic path-is-inside async-some dezalgo`.
-    3. *Note*: if this fails with an error saying that `EACCES: permission denied` for one of the Pods in ce-platform-ios, you should try removing or moving the folder `../ce-platform-ios` to start a fresh build.
-3. Navigate to `../ce-platform-ios/ios/project` and run `pod install` to install needed dependencies. 
+    3. *Note*: if this fails with an error saying that `EACCES: permission denied` for one of the Pods in ce-platform-ios, you should try removing or moving the folder `../Cerebro-ios` to start a fresh build.
+3. Navigate to `../Cerebro-ios/ios/project` and run `pod install` to install needed dependencies. 
 
 ### Creating an .ipa File
 #### Setup
@@ -59,10 +79,10 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
 
 #### Export
-1. Navigate to `../ce-platform-ios/ios/project` and open the `.xcworkspace`. 
+1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`. 
 2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`). 
 3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
-4. The `.ipa` can be found in the `ce-platform-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
+4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
 
 
 

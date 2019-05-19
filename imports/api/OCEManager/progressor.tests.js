@@ -4,7 +4,7 @@ import {createIncidentFromExperience, startRunningIncident} from "./OCEs/methods
 import {CONSTANTS} from "../Testing/testingconstants";
 import {Experiences, Incidents} from "./OCEs/experiences";
 import {Submissions} from "./currentNeeds";
-import {adminUpdatesForAddingUsersToIncident, updateAvailability} from "../OpportunisticCoordinator/identifier";
+import {adminUpdatesForAddingUserToIncident, updateAvailability} from "../OpportunisticCoordinator/server/identifier";
 import {findUserByUsername} from "../UserMonitor/users/methods";
 import {Assignments, Availability} from "../OpportunisticCoordinator/databaseHelpers";
 import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populateDatabase";
@@ -44,7 +44,7 @@ describe('Progressor Tests - Single Submission', function() {
     updateAvailability(testUser._id, { [incident._id]: [needName] });
 
     // Assign User to OCE
-    adminUpdatesForAddingUsersToIncident([testUser._id], incident._id, needName);
+    adminUpdatesForAddingUserToIncident(testUser._id, incident._id, needName);
 
     // update Submissions
     numUnfinishedBefore = numUnfinishedNeeds(incident._id, needName);
@@ -83,7 +83,7 @@ describe('Progressor Tests - Single Submission', function() {
 
   it('should remove the incident from active incidents in users profile', function() {
     const user = Meteor.users.findOne({_id: submissionObject.uid});
-    chai.assert.isFalse(user.profile.activeIncidents.includes(submissionObject.iid),
+    chai.assert.isFalse(user.activeIncidents().includes(submissionObject.iid),
       'active incident not removed from user profile');
   });
 
@@ -96,7 +96,7 @@ describe('Progressor Tests - Single Submission', function() {
     const avail = Availability.findOne({_id: submissionObject.iid});
     _.forEach(avail.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === submissionObject.needName) {
-        chai.assert.isFalse(needUserMap.uids.includes(submissionObject.uid),
+        chai.assert(!needUserMap.users.find(user => user.uid === submissionObject.uid),
           `user not removed from the availability for ${needUserMap.needName}`);
       }
     });
@@ -106,7 +106,7 @@ describe('Progressor Tests - Single Submission', function() {
     const assign = Assignments.findOne({_id: submissionObject.iid});
     _.forEach(assign.needUserMaps, (needUserMap) => {
       if (needUserMap.needName === submissionObject.needName) {
-        chai.assert.isFalse(needUserMap.uids.includes(submissionObject.uid),
+        chai.assert(!needUserMap.users.find(user => user.uid === submissionObject.uid),
           `user not removed from the assignments for ${needUserMap.needName}`);
       }
     });
@@ -162,7 +162,7 @@ describe('Progressor Tests - Two Submissions for Half Half Need Respawn', functi
     // User is Available
     updateAvailability(testUser._id, { [incident._id]: [needName] });
     // Assign User to OCE
-    adminUpdatesForAddingUsersToIncident([testUser._id], incident._id, needName);
+    adminUpdatesForAddingUserToIncident(testUser._id, incident._id, needName);
     // Record Data before the Submission Update
     numSubsBefore = Submissions.find({iid: incident._id}).count();
     numNeedsBefore = incident.contributionTypes.length;
@@ -187,7 +187,7 @@ describe('Progressor Tests - Two Submissions for Half Half Need Respawn', functi
       // User is Available
       updateAvailability(testUser2._id, { [incident._id]: [needName] });
       // Assign User to OCE
-      adminUpdatesForAddingUsersToIncident([testUser2._id], incident._id, needName);
+      adminUpdatesForAddingUserToIncident(testUser2._id, incident._id, needName);
       // Update Submissions
       submissionObject = {
         uid: testUser2._id,

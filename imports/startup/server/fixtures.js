@@ -17,8 +17,7 @@ import { findUserByUsername } from '../../api/UserMonitor/users/methods';
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
 Meteor.startup(() => {
-  log.debug("Running in mode: ", process.env.MODE );
-  log.debug("process.env is: ", process.env );
+  log.debug(`Running in mode: ${process.env.MODE}`);
 
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
@@ -41,6 +40,7 @@ Meteor.methods({
     Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
       Detectors.insert(value);
     });
+    log.info(`${CONSTANTS.DETECTORS}`);
     log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
   startStorytime(){
@@ -53,6 +53,13 @@ Meteor.methods({
   startBumped(){
     console.log("starting bumped");
     let value = CONSTANTS.EXPERIENCES.bumped;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startBumpedThree(){
+    console.log("starting bumped three");
+    let value = CONSTANTS.EXPERIENCES.bumpedThree;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
@@ -142,7 +149,6 @@ function createTestData(){
       "profile.lastParticipated": null,
       "profile.lastNotified": null,
       "profile.pastIncidents": [],
-      "profile.activeIncidents": [],
       "profile.staticAffordances": {}
     }
   }, {
@@ -168,7 +174,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid3, uid5]}
   }, {
-    $set: { 'profile.staticAffordances.lovesDTR':  true}
+    $set: { 'profile.staticAffordances.lovesDTR':  true }
   }, {
     multi: true
   });
@@ -177,6 +183,14 @@ function createTestData(){
     _id: {$in: [uid1, uid2, olinuid1, olinuid2]}
   }, {
     $set: { 'profile.staticAffordances': { "mechanismRich": true} }
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, uid3, uid4, uid5]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triadOne": true} }
   }, {
     multi: true
   });

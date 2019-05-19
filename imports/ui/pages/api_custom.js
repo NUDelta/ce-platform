@@ -11,16 +11,15 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { Router } from 'meteor/iron:router';
 
-import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
 import { Users } from '../../api/UserMonitor/users/users.js';
-import { Locations } from '../../api/UserMonitor/locations/locations.js';
-import { Submissions } from '../../api/OCEManager/currentNeeds.js';
 import { Images } from '../../api/ImageUpload/images.js';
 import { Messages } from '../../api/messages/messages.js';
+import { Incidents } from "../../api/OCEManager/OCEs/experiences";
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
+import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -85,6 +84,19 @@ Template.bumped.helpers({
     let friendName =  user.username;
 
     return {key: 'nameOfFriend', value: friendName};
+  }
+});
+
+Template.bumpedThree.helpers({
+  friendNames() {
+    const friends = this.users.filter(friend => {
+      return this.notification_log.filter(notif => friend._id == notif.uid && friend._id !== Meteor.userId()).length > 0;
+    });
+
+    return {
+      friendOne: friends[0].username,
+      friendTwo: friends[1].username
+    }
   }
 });
 
@@ -396,49 +408,53 @@ const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, 
   };
 };
 
-// data2pass() {
-  //   //TODO: clean up this hot mess of a function
-  //   const instance = Template.instance();
-  //   const incident = instance.state.get('incident');
-  //   const subs = Submissions.find({ incidentId: incident._id }).fetch();
-  //   const hasSubs = subs.length > 0;
-  //
-  //   // TODO: fix, dont want to get by experience
-  //   const exp = instance.state.get('experience');
-  //   incident.situationNeeds.forEach((sitNeed) => {
-  //     if (sitNeed.notifiedUsers.includes(Meteor.userId())) {
-  //       situationNeedName = sitNeed.name;
-  //       contributionTemplateName = sitNeed.contributionTemplate;
-  //       affordance = sitNeed.affordance
-  //     }
-  //   });
-  //   let contributionTemplate;
-  //   exp.contributionGroups.forEach((group) => {
-  //     group.contributionTemplates.forEach((template) => {
-  //       if (template.name === contributionTemplateName) {
-  //         contributionTemplate = template
-  //       }
-  //     });
-  //   });
-  //
-  //   instance.state.set('situationNeedName', situationNeedName);
-  //   instance.state.set('contributionTemplate', contributionTemplate);
-  //
-  //   return {
-  //     'incident': incident,
-  //     'situationNeedName': situationNeedName,
-  //     'contributionTemplate': contributionTemplate,
-  //     'submissions': subs
-  //   }
-  // },
-  // template_name() {
-  //   const instance = Template.instance();
-  //   return instance.state.get('experience').participateTemplate;
-  // }
-
 Template.api_custom.onCreated(() => {
+  this.state = new ReactiveDict();
 
+  if (!Meteor.userId()) {
+    Router.go('home');
+    return;
+  }
+
+  const params = Router.current().params;
+  this.state.set('iid', params.iid);
+  this.state.set('needName', params.needName);
+
+  const incident = Incidents.findOne({_id: params.iid});
+  if (!needIsAvailableToParticipateNow(incident, params.needName)) {
+    // TODO: redirect to an apology page
+    Router.go('home');
+    return;
+  }
+
+  Meteor.call('pushUserIntoParticipatingNow', {
+    iid: params.iid, needName: params.needName, uid: Meteor.userId()
+  });
 });
+
+Template.api_custom.onDestroyed(() => {
+  // Called when loading another route, and the template is gracefully destroyed
+  if (Meteor.userId() && this.state) {
+    Meteor.call('pullUserFromParticipatingNow', {
+      iid: this.state.get('iid'),
+      needName: this.state.get('needName'),
+      uid: Meteor.userId()
+    });
+    this.state.destroy();
+  }
+});
+
+window.onbeforeunload = function() {
+  // Called when user closes the browser window; onDestroyed is not called in this instance
+  if (Meteor.userId() && this.state) {
+    Meteor.call('pullUserFromParticipatingNow', {
+      iid: this.state.get('iid'),
+      needName: this.state.get('needName'),
+      uid: Meteor.userId()
+    });
+    this.state.destroy();
+  }
+};
 
 Template.api_custom.events({
   

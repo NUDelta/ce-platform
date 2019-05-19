@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Assignments } from "../databaseHelpers";
+import {Assignments, ParticipatingNow} from "../databaseHelpers";
 import {Availability} from "../databaseHelpers";
 import {Notification_log} from "../../Logging/notification_log";
 
@@ -12,7 +12,7 @@ Meteor.publish('availability.all', function () {
 });
 
 Meteor.publish('assignments.single', function (assignmentId) {
-  return Assignments.find(assignmentId);
+  return Assignments.find({_id: assignmentId});
 });
 
 Meteor.publish('assignments.activeUser', function () {
@@ -22,9 +22,9 @@ Meteor.publish('assignments.activeUser', function () {
     this.ready();
   } else {
     return Assignments.find({
-      'needUserMaps': {
+      'needUserMaps.users': {
         '$elemMatch': {
-          'uids': this.userId
+          'uid': this.userId
         }
       }
     });
@@ -34,4 +34,8 @@ Meteor.publish('assignments.activeUser', function () {
 
 Meteor.publish('notification_log.activeIncident', function (iid) {
   return Notification_log.find({iid: iid});
+});
+
+Meteor.publish('participating.now.activeIncident', function (iid) {
+  return ParticipatingNow.find({_id: iid});
 });

@@ -1,14 +1,19 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Schema } from '../../schema.js';
+import { Schema } from '../schema.js';
 
-export const Locations = new Mongo.Collection('locations');
+export const EstimatedLocation_log= new Mongo.Collection('estimatedLocation_log');
 
-Schema.Locations = new SimpleSchema({
+Schema.EstimatedLocation_log = new SimpleSchema({
   uid: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     label: 'user id'
+  },
+  raw_location_id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    label: 'most recent corresponding raw location id'
   },
   lat: {
     type: Number,
@@ -27,7 +32,8 @@ Schema.Locations = new SimpleSchema({
   },
   affordances: {
     type: Object,
-    blackbox: true
+    blackbox: true,
+    optional: true
   },
   availabilityDictionary: {
     type: Object,
@@ -36,9 +42,9 @@ Schema.Locations = new SimpleSchema({
   }
 });
 
-Locations.attachSchema(Schema.Locations);
+EstimatedLocation_log.attachSchema(Schema.EstimatedLocation_log);
 
-Locations.allow({
+EstimatedLocation_log.allow({
   insert: function () {
     return true;
   },

@@ -23,6 +23,8 @@ import '../../ui/pages/api_custom_results.js';
 import '../../ui/pages/affordances.js';
 import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
+import '../../ui/pages/dynamic_participate.html';
+import '../../ui/pages/dynamic_participate.js';
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -46,6 +48,16 @@ Router.route('affordances', {
   path: '/affordances',
   template: 'affordances',
   before: function () {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "affordances",
+        params: {}
+      };
+      Meteor.call('insertLog', dic);
+    }
+
     this.subscribe('avatars.all').wait();
     this.subscribe('users.all').wait();
     this.subscribe('locations.activeUser').wait();
@@ -60,15 +72,39 @@ Router.route('affordances', {
   }
 });
 
+Router.route('api.custom.dynamic', {
+  path: '/apicustomdynamic/:iid/:detectorId',
+  template: 'dynamicParticipate',
+  before: function() {
+    this.next();
+  },
+});
+
 Router.route('api.custom', {
   path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
   before: function () {
+    if (!Meteor.userId()) {
+      Router.go('home');
+    }
+    let dic = {
+      uid: Meteor.userId(),
+      timestamp: Date.now(),
+      route: "customparticipate",
+      params: {
+        iid: this.params.iid,
+        eid: this.params.eid,
+        needName: this.params.needName
+      }
+    };
+    Meteor.call('insertLog', dic);
+
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('incidents.single', this.params.iid).wait();
     this.subscribe('locations.activeUser').wait();
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
+    this.subscribe('participating.now.activeIncident', this.params.iid).wait();
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
     this.subscribe('avatars.all').wait();
@@ -92,16 +128,18 @@ Router.route('api.customresults', {
   path: '/apicustomresults/:iid/:eid',
   template: 'api_custom_results',
   before: function () {
-    let dic = {
-      uid: Meteor.userId(),
-      timestamp: Date.now(),
-      route: "customresults",
-      params: {
-        iid: this.params.iid,
-        eid: this.params.eid
-      }
-    };
-    Meteor.call('insertLog', dic); //TODO: fix this so if user not logged in doesn't freak out
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "customresults",
+        params: {
+          iid: this.params.iid,
+          eid: this.params.eid
+        }
+      };
+      Meteor.call('insertLog', dic);
+    }
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('experiences.single', this.params.eid).wait();
     this.subscribe('submissions.activeIncident', this.params.iid).wait();
@@ -144,6 +182,18 @@ Router.route('api.customresults.admin', {
 
 Router.route('/', {
   name: 'home',
+  before: function() {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "home",
+        params: {}
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.next();
+  }
 });
 
 Router.route('participate.backdoor', {
@@ -209,6 +259,15 @@ Router.route('profile', {
   path: '/profile',
   template: 'profile',
   before: function () {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "profile",
+        params: {}
+      };
+      Meteor.call('insertLog', dic);
+    }
     this.subscribe('incidents.pastUser').wait();
     this.subscribe('experiences.pastUser').wait();
     this.next();

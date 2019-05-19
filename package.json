@@ -6,7 +6,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.55",
+    "@babel/runtime": "^7.4.3",
     "bcrypt": "^2.0.1",
     "buffer-shims": "^1.0.0",
     "cordova-custom-config": "^5.0.2",
@@ -18,11 +18,12 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com",
+    "build": "meteor build ../ce-platform-ios  --server=staging-ce-platform.herokuapp.com/",
     "build-dev": "run(){ meteor run ios-device -p $1 --mobile-server=http://$2:$1; }; run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "unittest": "meteor test --once --driver-package meteortesting:mocha",
-    "fulltest": "meteor test --once --full-app --driver-package meteortesting:mocha"
+    "fulltest": "meteor test --once --full-app --driver-package meteortesting:mocha",
+    "start": "MONGO_URL=mongodb://127.0.0.1:27017/meteor meteor run"
   },
   "repository": {
     "type": "git",

@@ -105,7 +105,6 @@ Template.photosByCategories_admin.helpers({
 
 Template.bumpedResults.helpers({
   getName(x ){
-    console.log(x);
     return x.friendName;
   },
   getImage(x){
@@ -115,7 +114,6 @@ Template.bumpedResults.helpers({
     return x.myImage;
   },
   bumpees() {
-
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -159,6 +157,35 @@ Template.bumpedResults.helpers({
 Template.bumpedResults.events({
 
 });
+
+
+Template.bumpedThreeResults.helpers({
+  content() {
+    const {submissions, images, users} = this;
+
+    const mySub = submissions.find(s => s.uid === Meteor.userId());
+    const myNeedNames = mySub.needName;
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
+
+    const myImage = images.find(i => i._id === mySub.content.proof);
+    const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    const friendNames = otherSubs.map(s => users.find(u => u._id === s.uid));
+  
+    results = {};
+    Object.assign(results, 
+      friendNames[0] && {friendOneName: friendNames[0].username},
+      {imageOne: otherImages[0]},
+      otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
+      {myImage: myImage},
+      mySub && {myCaption: mySub.content.sentence},
+      {imageTwo: otherImages[1]},
+      friendNames[1] && {friendTwoName: friendNames[1].username},
+      otherSubs[1] && {captionTwo: otherSubs[1].content.sentence}
+    )
+
+    return results;
+  }
+})
 
 /**
  * Returns an array with arrays of the given size.

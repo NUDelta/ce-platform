@@ -26,7 +26,7 @@ if (Meteor.isCordova) {
       desiredAccuracy: 0, // highest accuracy, highest power consumption
       distanceFilter: 10, // meters device must move before location update is generated
       stationaryRadius: 25, // distance user must move in order to trigger location tracking
-      disableElasticity: true, // disable dynamic filtering and return every distanceFilter amount
+      disableElasticity: false, // disable dynamic filtering and return every distanceFilter amount
 
       // Activity Recognition config
       activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
@@ -155,7 +155,7 @@ if (Meteor.isCordova) {
         desiredAccuracy: 0, // highest accuracy, highest power consumption
         distanceFilter: 10, // meters device must move before location update is generated
         stationaryRadius: 25, // distance user must move in order to trigger location tracking
-        disableElasticity: true, // disable dynamic filtering and return every distanceFilter amount
+        disableElasticity: false, // disable dynamic filtering and return every distanceFilter amount
 
         // Activity Recognition config
         activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
