@@ -176,7 +176,6 @@ Template.groupCheersResults.helpers({
   },
   sortNames(images, users){
     let names = images.map(i => getUserById(users, i.uid));
-    console.log(names);
     return names;
   },
   sortSubs(submissions){
@@ -188,32 +187,29 @@ Template.groupCheersResults.helpers({
     let captions = sortedSubs.map(s => s.content.sentence);
     return captions;
   },
-  getReacts(submissions, idx){
-    return submissions[idx][react];
-  },
-  getReactsUsers(submissions, idx){
-    return submissions[idx][reactUsers];
-  },
   elementAtIndex(arr, index){
     return arr[index];
   },
+  createReacts(submissions, users, idx){
+    return createReactString(submissions, users, idx);
+  }
 });
 
 Template.groupCheersResults.events({
-     'click #reactWow'(event, template){
+     'click .reactWow'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
-      reactSubmission('wow', this.submissions[idx]);
-      console.log(this);
+      react = event.target.textContent;
+      reactSubmission(react, this.submissions[idx]);
     },
-    'click #reactHeart'(event, template){
+    'click .reactHeart'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
-      reactSubmission('heart', this.submissions[idx]);
-      console.log(this);
+      react = event.target.textContent;
+      reactSubmission(react, this.submissions[idx]);
     },
-    'click #reactLaugh'(event, template){
+    'click .reactLaugh'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
-      reactSubmission('laugh', this.submissions[idx]);
-      console.log(this);
+      react = event.target.textContent;
+      reactSubmission(react, this.submissions[idx]);
     }
 });
 
@@ -226,6 +222,55 @@ export const getUserById = (users_arr, uid) => {
   } else {
     return null;
   }
+};
+
+export const createReactString = (submissions, users, idx) => {
+  reactionString = "";
+
+  if (submissions[idx].content["react"]){
+    for (i=0; i<submissions[idx].content["react"].length;i++){
+      let username = getUserById(users, submissions[idx].content["reactUser"][i]);
+      let react = submissions[idx].content["react"][i];
+      reactionString = reactionString + username + ": " + react + " ";
+    }
+  };
+  console.log(reactionString);
+  return reactionString;
+}
+
+export const reactSubmission = (react, submission) => {
+  let notification = true;
+  const uid = Meteor.userId();
+
+  if (!submission.content["react"]){
+    submission.content["react"] = [react];
+    submission.content["reactUser"] = [uid];
+  } else {
+    //if user already reacted, they can change reaction
+    if (submission.content["reactUser"].includes(uid)){
+      let idx = submission.content["reactUser"].indexOf(uid);
+      submission.content["react"][idx] = react;
+      notification = false;
+    } else {
+    //else just push reaction
+      submission.content["react"].push(react);
+      submission.content["reactUser"].push(uid);
+    }
+  }
+
+  let submissionObject = {
+    uid: uid,
+    eid: submission.eid,
+    iid: submission.iid,
+    _id: submission._id,
+    needName: submission.needName,
+    content: submission.content,
+    timestamp: submission.timestamp,
+    lat: submission.lat,
+    lng: submission.lng
+  };
+
+  Meteor.call('updateSubmission', submissionObject);
 };
 
 Template.bumpedThreeResults.helpers({
@@ -529,41 +574,3 @@ Template.sunset.onDestroyed(function() {
     timeout = null;
   });
 });
-
-export const reactSubmission = (react, submission) => {
-  console.log(submission);
-  let notification = true;
-
-  if (!submission.content["react"]){
-    submission.content["react"] = [react];
-    submission.content["reactUser"] = [submission.uid];
-  } else {
-    //if user already reacted, they can change reaction
-    if (submission.content["reactUser"].includes(submission.uid)){
-      let idx = submission.content["reactUser"].indexOf(submission.uid);
-      submission.content["react"][idx] = react;
-      notification = false;
-    } else {
-    //else just push reaction
-      submission.content["react"].push(react);
-      submission.content["reactUser"].push(react);
-    }
-  }
-
-  let submissionObject = {
-    uid: submission.uid,
-    eid: submission._id,
-    iid: submission.iid,
-    needName: submission.needName,
-    content: submission.content,
-    timestamp: submission.timestamp,
-    lat: submission.lat,
-    lng: submission.lng
-  };
-
-  console.log(submissionObject);
-  Meteor.call('updateSubmission', submissionObject);
-  if (notification){
-    //call notification
-  }
-};
