@@ -10,7 +10,8 @@ let money = new Object("money", Alan, true, [buy])
 
 
 function kill(recipient) {
-  recipient.status = dead;
+  recipient.status = false;
+  anyCharDead = true;
 }
 
 function buy(purchase) {
@@ -160,7 +161,7 @@ function convertChapterToExperience(chapter) {
       notify(
           uids,
           sub.iid,
-          "Chapter 1 is complete. Find out what happened here!",
+          "Hermione has died, ending this chapter",
           "",
           "/apicustomresults/" + sub.iid + "/" + sub.eid
       );

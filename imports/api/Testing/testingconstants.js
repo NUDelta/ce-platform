@@ -1841,7 +1841,7 @@ function addActionToItem(item, action) {
   //action.item = item;
 }
 
-function writeNarrative() {
+function writeNarrative1() {
     // create setting
     var Common_Room = new Setting("Common ROOM", "grocery" /* "Common Room", "inside_a_building || in_a_school_building" */);
     var Bedroom = new Setting("bedroom", "grocery" /* "Bedroom", "inside_a_building || in_a_dorm" */);
@@ -1931,7 +1931,34 @@ function writeNarrative() {
     return chapter_list;
 }
 
-let test_chapter = writeNarrative()[0];
+function writeNarrative2() {
+    var shop = new Setting("Weapons Shop", "grocery" /* "Common Room", "inside_a_building || in_a_school_building" */);
+    
+    // create character
+    //var wand = new Object("wand", "hermione", "1");
+    //var health = new Object("health", "ron", "2B");
+    // name, chapters, objects, actions, contexts, first appearance
+    var Alan = new Character("Alan", [], {"1" : "grocery"});
+    var Billy = new Character("Billy", [], {"1" : "grocery"});
+    var Caleb = new Character("Caleb", [], {"1" : "grocery"});
+    var Shopkeeper = new Character("Shopkeeper", [], {"1" : "grocery"});
+
+
+    var axe = new Item("axe", true, [])
+    addItemToCharacter(axe, Shopkeeper);
+
+
+    var give_axe= new Action("give axe", [transfer])
+    console.log("give_wand.repercussions " + give_wand.repercussions)
+    var murder = new Action("murder someone", [kill])
+    addActionToItem(axe, give_axe);
+    addActionToItem(axe, murder);
+    // create chapter
+    var chapter_one = new Chapter("1", shop, [Alan, Billy, Caleb, Shopkeeper], [axe], "anyCharDead = true;");
+
+}
+
+let test_chapter = writeNarrative2()[0];
 
 function convertChapterToExperience(chapter) {
   // total list of actions that will be completed in the chapter
