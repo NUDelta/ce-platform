@@ -62,13 +62,25 @@
         <div class="instruction">
           <span>{{this.toPass.situationDescription}}</span>
             <span>
-                {{instruction}}
+                {{this.toPass.instruction}}
             </span>
         </div>
         <form class="col col-xs-12" id="participate">
+            <span>
+                {{this.toPass.question1}}
+            </span>
             <div>
                 {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}
             </div>
+            <span>
+                {{this.toPass.question2}}
+            </span>
+            <div>
+              {{> Template.dynamic template="text" data="sentence"}}
+            </div>
+            <span>
+                {{this.toPass.question3}}
+            </span>
             <div>
               {{> Template.dynamic template="text" data="sentence"}}
             </div>

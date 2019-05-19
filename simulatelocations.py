@@ -324,8 +324,8 @@ def allUsersCoffee():
 
 if __name__ == "__main__":
 
-#allUsersGrocery()
-    garrettAndMegBump()
+	#allUsersGrocery()
+    #garrettAndMegBump()
 
     # allUsersGrocery()
 	allUsersCoffee()

@@ -484,11 +484,13 @@ Template.api_custom.events({
     const dropDowns = event.target.getElementsByClassName('dropdown');
     _.forEach(dropDowns, (dropDown) => {
       const index = dropDown.selectedIndex;
+      /*
       action = dropDown[index].text;
       console.log("dropDown value" + dropDown[index].text)
       chapterID = dropDown[index].value;
       submissions["action"] = action;
       console.log("chapter name" + dropDown[index].value)
+      */
       submissions[dropDown.id] = dropDown[index].value
     });
 

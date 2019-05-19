@@ -131,14 +131,10 @@ function createTestData(){
   createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
-  let uid1 = findUserByUsername('garrett')._id;
-  let uid2 = findUserByUsername('garretts_brother')._id;
-  let uid3 = findUserByUsername('meg')._id;
-  let uid4 = findUserByUsername('megs_sister')._id;
-  let uid5 = findUserByUsername('josh')._id;
+  let uid1 = findUserByUsername('meg')._id;
+  let uid2 = findUserByUsername('josh')._id;
+  let uid3 = findUserByUsername('andrew')._id;
 
-  let olinuid1 = findUserByUsername('nagy')._id;
-  let olinuid2 = findUserByUsername('bonnie')._id;
 
   Meteor.users.update({
     // everyone
@@ -154,7 +150,7 @@ function createTestData(){
   }, {
     multi: true
   });
-
+  /*
   Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
@@ -194,7 +190,15 @@ function createTestData(){
   }, {
     multi: true
   });
+*/
+Meteor.users.update({
+    _id: {$in: [uid1, uid2, uid3]}
+  }, {
+    $set: { 'profile.staticAffordances': { "cn": true} }
+  }, {
+    multi: true
+  });
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3);
   //log.debug('uid1 ' + Meteor.users.find({_id: uid1})).username;
 }

@@ -45,6 +45,25 @@
     </select>
 </template>
 
+<template name="text-dropdown">
+    <head>
+        <style>
+            #{{this.name}}{
+                height: 35px;
+                border: 1px solid rgba(34, 36, 38, 0.15);
+                color: rgba(0, 0, 0, 0.87);
+                background: #ffffff;
+                width: 80%;
+            }
+        </style>
+    </head>
+    <select class="dropdown" id={{this.name}}>
+        {{#each option in this.options}}
+            <option value="{{this.name}}">{{option}} </option>
+        {{/each}}
+    </select>
+</template>
+
 <template name="message">
   
     <p class="messages">{{name}} <span class="timestamp">{{timestamp}}</span>: {{message}}</p>
