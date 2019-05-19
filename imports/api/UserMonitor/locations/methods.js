@@ -210,15 +210,6 @@ export const userNotifiedTooRecently = (user) => {
   return (now - lastNotified) < waitTimeAfterNotified;
 };
 
-/**
- * Checks if user has an active incident, meaning they were assigned to an incident
- *
- * @param user {Object} has Meteor.users Schema
- * @return {boolean} whether user is currently assigned to an experience or not
- */
-export const userIsAssignedAlready = (user) => {
-  return user.profile.activeIncidents.length > 0;
-};
 
 /**
  * Computes distance between a start and end location in meters using the haversine forumla.

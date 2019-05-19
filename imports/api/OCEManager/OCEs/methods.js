@@ -373,24 +373,6 @@ export const updateRunningIncident = (incident) => {
     // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
   });
 
-  // clear the user activeIncidents before clearing the availabilities
-  let old_needUserMaps = Availability.find({_id: incident._id}).needUserMaps;
-  _.forEach(old_needUserMaps, (needUserMap) => {
-    if (needUserMap.users.length > 0) {
-      _.forEach(needUserMap.users, (uid) => {
-        Meteor.users.update(
-          {
-            _id: uid
-          }, {
-            $pull: {
-              "profile.activeIncidents": incident._id
-            }
-          });
-        // TODO(rlouie): maybe store activeIncidentNeedPlaceDistance info, so then pull incidents/needs like this too
-      });
-    }
-  });
-
   Availability.update(
     {
       _id: incident._id,

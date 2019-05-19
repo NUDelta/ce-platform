@@ -41,7 +41,6 @@ AccountsTemplates.configure({
     info.profile.lastParticipated = null;
     info.profile.lastNotified = null;
     info.profile.pastIncidents = [];
-    info.profile.activeIncidents = [];
     info.profile.staticAffordances = {};
   },
 });

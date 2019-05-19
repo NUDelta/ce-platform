@@ -64,9 +64,8 @@ describe('Simple End To End', function () {
         let iid = incident._id;
         let user = findUserByUsername(USERNAME);
 
-        console.log('user.profile.activeIncidents', user.profile.activeIncidents);
         //user has incident as an active incident
-        chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+        chai.assert(user.activeIncidents().includes(iid), 'active incident not added to user profile');
 
         //assignments has user assigned
         let assignmentEntry = Assignments.findOne({ _id: iid });
@@ -115,9 +114,8 @@ describe('Simple End To End', function () {
       let iid = incident._id;
       let user = findUserByUsername(USERNAME);
 
-      console.log('user.profile.activeIncidents', user.profile.activeIncidents);
       //user has incident as an active incident
-      chai.assert(user.profile.activeIncidents.includes(iid), 'decommissioned prematurely - active incident not added to user profile');
+      chai.assert(user.activeIncidents().includes(iid), 'decommissioned prematurely - active incident not added to user profile');
 
       //assignments has user assigned
       let assignmentEntry = Assignments.findOne({ _id: iid });
@@ -148,9 +146,8 @@ describe('Simple End To End', function () {
           let iid = incident._id;
           let user = findUserByUsername(USERNAME);
 
-          console.log('user.profile.activeIncidents', user.profile.activeIncidents);
           //user has incident as an active incident
-          chai.assert(user.profile.activeIncidents.includes(iid), 'remain assigned while back in vicinity -- active incident not added to user profile');
+          chai.assert(user.activeIncidents().includes(iid), 'remain assigned while back in vicinity -- active incident not added to user profile');
 
           //assignments has user assigned
           let assignmentEntry = Assignments.findOne({ _id: iid });
@@ -191,7 +188,7 @@ describe('Simple End To End', function () {
     Meteor.setTimeout(function () {
       try {
         let user = findUserByUsername(USERNAME);
-        chai.assert.isFalse(user.profile.activeIncidents.includes(iid), 'active incident not removed from user profile');
+        chai.assert.isFalse(user.activeIncidents().includes(iid), 'active incident not removed from user profile');
         chai.assert(user.profile.pastIncidents.includes(iid), 'past incident not added to user profile');
         done();
       } catch (err) { done(err); }
@@ -231,9 +228,8 @@ describe('Simple End To End', function () {
           let iid = incident._id;
           let user = findUserByUsername(USERNAME);
 
-          console.log('user.profile.activeIncidents', user.profile.activeIncidents);
           //user has incident as an active incident
-          chai.assert(user.profile.activeIncidents.includes(iid), 'active incident not added to user profile');
+          chai.assert(user.activeIncidents().includes(iid), 'active incident not added to user profile');
 
           //assignments has user assigned
           let assignmentEntry = Assignments.findOne({ _id: iid });
