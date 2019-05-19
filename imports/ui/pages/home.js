@@ -9,6 +9,9 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences';
 import { Assignments } from '../../api/OpportunisticCoordinator/databaseHelpers';
 
 import '../components/active_experience.js';
+import {needAggregator} from "../../api/OpportunisticCoordinator/strategizer";
+import {setIntersection} from "../../api/custom/arrayHelpers";
+import {getUserActiveIncidents} from "../../api/UserMonitor/users/methods";
 
 Template.home.onCreated(function () {
   this.state = new ReactiveDict();
@@ -32,32 +35,59 @@ Template.home.events({
 
 Template.home.helpers({
   activeUserAssigment() {
-    // create [{iid: incident_id, eid: experience_id, needName: assigned_need_name}]
-    let activeAssignments = Assignments.find().fetch();
-    let output = [];
+    if (Template.instance().subscriptionsReady()) {
+      // create [{iid: incident_id, experience: experience, detectorId: detector_id}]
+      let activeAssignments = Assignments.find().fetch();
+      let output = [];
 
-    _.forEach(activeAssignments, (assignment) => {
-      _.forEach(assignment.needUserMaps, (currNeedUserMap) => {
-        if (currNeedUserMap.users.find(user => user.uid === Meteor.userId())) {
+      _.forEach(activeAssignments, (assignment) => {
+
+        let iid = assignment._id;
+        let incident = Incidents.findOne(iid);
+
+        // TODO(rlouie): errors on refresh? try the competing resource test garret/barrett
+        let needNamesBinnedByDetector = needAggregator(incident);
+
+        // gah I wish the assignments had its own interface
+        let assignedNeedNames = assignment.needUserMaps.map(currNeedUserMap => {
+          if (currNeedUserMap.users.find(user => user.uid === Meteor.userId())) {
+            return currNeedUserMap.needName;
+          }
+        });
+
+        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorId) => {
+          let assignedNeedNamesForDetector = setIntersection(assignedNeedNames, needNamesForDetector);
+          if (assignedNeedNamesForDetector.length === 0) {
+            // user not assigned to any needs for this detector
+            return;
+          }
           // get experience
-          let experience = Experiences.findOne(Incidents.findOne(assignment._id).eid);
+          let experience = Experiences.findOne(Incidents.findOne(iid).eid);
+
+          // instead of knowing the specific need at the home screen,
+          // we only know the associated iid/detector; dynamic routing to the need will happen
           output.push({
             'iid': assignment._id,
             'experience': experience,
-            'needName': currNeedUserMap.needName
+            'detectorId': detectorId
           });
 
-          // user can only be assigned to one need in each assignment object
-          return false;
-        }
-      });
-    });
+        });
 
-    return output;
+      });
+
+      return output;
+    }
   },
   noActiveIncidents() {
-    let currActiveIncidents = Meteor.users.findOne(Meteor.userId()).profile.activeIncidents;
-    return currActiveIncidents === null || currActiveIncidents.length === 0;
+    let user = Meteor.users.findOne(Meteor.userId());
+
+    // note(rlouie): was forced to use getUserActiveIncidents rather than user.activeIncidents collection helper
+    let currActiveIncidents = getUserActiveIncidents(user._id);
+
+    return (typeof currActiveIncidents === 'undefined' ||
+            currActiveIncidents === null ||
+            currActiveIncidents.length === 0);
   },
   getCurrentExperience(iid) {
     Template.instance().state.get('render');

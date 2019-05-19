@@ -4,10 +4,13 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser, getNeedDelay, clearAvailabilitiesForUser } from
+import { findMatchesForUser, getNeedDelay} from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
-import { decomissionFromAssignmentsIfAppropriate } from "../../OpportunisticCoordinator/server/identifier";
+import {
+  clearAvailabilitiesForUser,
+  decomissionFromAssignmentsIfAppropriate
+} from "../../OpportunisticCoordinator/server/identifier";
 import { getAffordancesFromLocation } from '../detectors/methods';
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";
@@ -67,6 +70,7 @@ export const onLocationUpdate = (uid, location, callback) => {
     // get affordances and begin coordination process
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
 
+      log.info(`success: getAffordancesFromLocation`);
       // get affordances via affordance aware
       let user = Meteor.users.findOne({_id: uid});
       if (!user) {
@@ -204,15 +208,6 @@ export const userNotifiedTooRecently = (user) => {
   return (now - lastNotified) < waitTimeAfterNotified;
 };
 
-/**
- * Checks if user has an active incident, meaning they were assigned to an incident
- *
- * @param user {Object} has Meteor.users Schema
- * @return {boolean} whether user is currently assigned to an experience or not
- */
-export const userIsAssignedAlready = (user) => {
-  return user.profile.activeIncidents.length > 0;
-};
 
 /**
  * Computes distance between a start and end location in meters using the haversine forumla.

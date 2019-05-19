@@ -1,28 +1,39 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Assignments } from "../../OpportunisticCoordinator/databaseHelpers";
+
+// via dburles:collection-helpers
+Meteor.users.helpers({
+  /**
+   * usage in Meteor client/server code: Meteor.users.findOne().activeIncidents()
+   * usage in Meteor Blaze template JS code: N/A -- had difficulty doing this
+   *
+   * @returns: activeIncidents {Array} array of incident iids e.g. [iid1, iid2]
+   */
+  activeIncidents() {
+    return getUserActiveIncidents(this._id);
+  }
+});
+
+/**
+ * activeIncidents are the ones in which a user is assigned.
+ *
+ * @param uid
+ * @return activeIncidents {Array} array of incident iids e.g. [iid1, iid2] or empty array []
+ */
+export const getUserActiveIncidents = (uid) => {
+  return Assignments.find({"needUserMaps.users.uid": uid}, {fields: {_id: 1}}).fetch().map(doc => doc._id);
+};
 
 export const findUserByUsername = function (username) {
   return Meteor.users.findOne({ 'username': username });
-};
-
-export const _addActiveIncidentToUser = function (uid, iid) {
-  Meteor.users.update({
-    _id: uid
-  }, {
-    $addToSet: {
-      'profile.activeIncidents': iid
-    }
-  });
 };
 
 export const _removeActiveIncidentFromUser = function (uid, iid) {
   Meteor.users.update({
     _id: uid
   }, {
-    $pull: {
-      'profile.activeIncidents': iid
-    },
     $addToSet: {
       'profile.pastIncidents': iid
     }
@@ -30,19 +41,6 @@ export const _removeActiveIncidentFromUser = function (uid, iid) {
 
   // TODO(rlouie): remove the active incident/need/place/dist info too
 };
-
-export const _removeIncidentFromUserEntirely = function (uid, iid) {
-  Meteor.users.update({
-    _id: uid
-  }, {
-    $pull: {
-      'profile.activeIncidents': iid
-    }
-  });
-
-  // TODO(rlouie): remove the active incident/need/place/dist info too
-};
-
 
 export const getEmails = new ValidatedMethod({
   name: 'users.getEmails',

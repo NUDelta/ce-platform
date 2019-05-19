@@ -1,6 +1,15 @@
-import { Submissions } from "../../OCEManager/currentNeeds";
-import { Assignments } from "../databaseHelpers";
-import { getNeedObject } from "./identifier";
+/**
+ * strategizer -- server side
+ */
+import {Submissions} from "../../OCEManager/currentNeeds";
+import {Assignments} from "../databaseHelpers";
+import {getNeedObject} from "./identifier";
+import {Experiences} from "../../OCEManager/OCEs/experiences";
+import {createIncidentFromExperience, startRunningIncident} from "../../OCEManager/OCEs/methods";
+import {CONSTANTS} from "../../Testing/testingconstants";
+import {Meteor} from "meteor/meteor";
+import {numberSubmissionsRemaining, usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
+
 const util = require('util');
 
 /**
@@ -45,13 +54,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     // console.log('incidentMapping: ', util.inspect(incidentMapping, false, null));
     let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
-    let usersInIncident = [].concat.apply(
-      [],
-      assignment.needUserMaps.map(function(needMap) {
-        return needMap.users;
-      })
-    );
-    // console.log('usersInIncident: ', util.inspect(usersInIncident, false, null));
+
 
     incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
@@ -62,47 +65,32 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       //get need object
 
       let need = getNeedObject(iid, needName);
-
       // console.log('need: ', util.inspect(need, false, null));
-      // Start by never keeping track of previous user submissions to the incident
-      let previousUids = [];
 
-      // If we are not allowing repeat contributions, then do look at previous user submissions
-      if (!need.allowRepeatContributions) {
-        previousUids = Submissions.find({
-          iid: incidentMapping._id,
-          needName: needName
-        })
-          .fetch()
-          .map(function(x) {
-            return x.uid;
-          });
-      }
+      let usersInNeed = usersAlreadyAssignedToNeed(iid, needName);
+      // console.log('usersInNeed : ', util.inspect(usersInIncident, false, null));
+
+      let previousUids = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
       // console.log('previousUids: ', util.inspect(previousUids, false, null));
 
       let usersNotInIncident = needUserMap.users.filter(function(user) {
-        return !usersInIncident.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
+        return !usersInNeed.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
       let assignmentNeed = assignment.needUserMaps.find(function(x) {
         return x.needName === needName;
       });
-      // console.log('assignmentNeed: ', util.inspect(assignmentNeed, false, null));
 
-      if (assignmentNeed.users.length === 0) {
-        if (usersNotInIncident.length >= need.situation.number) {
-          let newChosenUsers = chooseUsers(
-            usersNotInIncident,
-            iid,
-            assignmentNeed
-          );
-          // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
-          usersInIncident = usersInIncident.concat(newChosenUsers);
-          incidentsWithUsersToRun[incidentMapping._id][
-            needUserMap.needName
-            ] = newChosenUsers;
-        }
+      // check for synchronous needs (need.situation.number >= 2)
+      if (usersNotInIncident.length >= need.situation.number) {
+        let newChosenUsers = chooseUsers(
+          usersNotInIncident,
+          iid,
+          assignmentNeed
+        );
+        // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+        incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;
       }
     });
   });
@@ -110,12 +98,9 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
   return incidentsWithUsersToRun;
 };
 
+/** my mutex, but not dynamic on page load, but does it during the first assignment (for notification) **/
 const chooseUsers = (availableUserMetas, iid, needUserMap) => {
-  let numberPeopleNeeded = Submissions.find({
-    iid: iid,
-    needName: needUserMap.needName,
-    uid: null
-  }).count();
+  let numberPeopleNeeded = numberSubmissionsRemaining(iid, needUserMap.needName);
 
   let usersWeAlreadyHave = needUserMap.users;
 
@@ -131,3 +116,4 @@ const chooseUsers = (availableUserMetas, iid, needUserMap) => {
     return chosen;
   }
 };
+

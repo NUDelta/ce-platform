@@ -1,9 +1,11 @@
 <template name="activeExperience">
     <div class="card">
         <div class="list-group-item participate-chunk" style="border-radius: 1px; padding: 0px;">
+          {{#if experience.image}}
             <div class="card-image">
-                <img src="{{experience.image}}" alt="image">
+              <img src="{{experience.image}}" alt="image">
             </div>
+          {{/if}}
             <div class="card-contents">
                 <span class="card-title" style="font-weight: 100;">{{experience.name}}</span>
                 <p class="list-group-item-text desc-text">{{experience.description}}</p>
@@ -12,7 +14,9 @@
                 </a> -->
             </div>
             <div class="card-action">
-                <a href="/apicustom/{{iid}}/{{experience._id}}/{{needName}}/">PARTICIPATE</a>
+                <!--<a href="/apicustom/{{iid}}/{{experience._id}}/{{needName}}/">PARTICIPATE</a>-->
+              <a href="/apicustomdynamic/{{iid}}/{{detectorId}}/">PARTICIPATE</a>
+
             </div>
         </div>
     </div>
