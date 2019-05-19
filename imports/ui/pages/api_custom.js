@@ -484,6 +484,10 @@ Template.api_custom.events({
     const dropDowns = event.target.getElementsByClassName('dropdown');
     _.forEach(dropDowns, (dropDown) => {
       const index = dropDown.selectedIndex;
+      console.log("index " + index)
+      console.log("dropDown value" + dropDown[index].value)
+      //console.log("dropDown " + JSON.stringify(dropDown))
+      //console.log("dropdown index" + JSON.stringify(dropDown[index]))
       /*
       action = dropDown[index].text;
       console.log("dropDown value" + dropDown[index].text)
@@ -491,7 +495,7 @@ Template.api_custom.events({
       submissions["action"] = action;
       console.log("chapter name" + dropDown[index].value)
       */
-      submissions[dropDown.id] = dropDown[index].value
+      submissions["busy"] = dropDown[index].value
     });
 
     const messages = event.target.getElementsByClassName('messages');

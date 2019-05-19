@@ -182,7 +182,7 @@ const createMurderMystery = function() {
   let question2 = "Name an interesting option on the menu"
   let question3 = "What did you order?"
 
-  let DROPDOWN_OPTIONS = _.zip(dropdownText, values);
+  let DROPDOWN_OPTIONS = _.zip(dropdownText);
 
   const MurderMysteryCallback = function (sub) {
     let submissions = Submissions.find({
@@ -247,7 +247,7 @@ const createMurderMystery = function() {
             question2: `${question2}`,
             question3: `${question3}`,
             dropdownChoices: {
-              name: 'response',
+              name: values,
               options: DROPDOWN_OPTIONS
             }
           },
