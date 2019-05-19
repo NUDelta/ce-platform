@@ -39,6 +39,7 @@ Meteor.methods({
     Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
       Detectors.insert(value);
     });
+    log.info(`${CONSTANTS.DETECTORS}`);
     log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
   startStorytime(){
@@ -173,7 +174,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid3, uid5]}
   }, {
-    $set: { 'profile.staticAffordances.lovesDTR':  true}
+    $set: { 'profile.staticAffordances.lovesDTR':  true }
   }, {
     multi: true
   });
@@ -182,6 +183,14 @@ function createTestData(){
     _id: {$in: [uid1, uid2, olinuid1, olinuid2]}
   }, {
     $set: { 'profile.staticAffordances': { "mechanismRich": true} }
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, uid3, uid4, uid5]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triadOne": true} }
   }, {
     multi: true
   });

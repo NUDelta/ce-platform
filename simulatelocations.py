@@ -302,16 +302,13 @@ def allUsersCoffee():
 	print("all users at coffee")
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     # allUsersGrocery()
 	allUsersCoffee()
 	#allUsersAtPark()
     # garrettAndMegBump()
-=======
     # single user movement
     # setLocation(burgers, sys.argv[1])
     # allUsersGrocery()
     #garrettAndMegBump()
->>>>>>> fix-need-blocking
     #time.sleep(2)
     #onlyGarretAtLake()

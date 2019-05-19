@@ -8,6 +8,7 @@ import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../Opportunistic
 import {Incidents} from "../OCEManager/OCEs/experiences";
 import {Schema} from "../schema";
 import {serverLog} from "../logs";
+import { log } from "util";
 
 let LOCATIONS = {
   'park': {
@@ -741,9 +742,12 @@ let DETECTORS = {
 export const getDetectorId = (detector) => {
   let db_detector = Detectors.findOne({description: detector.description});
   if (db_detector) {
-    console.log(JSON.stringify(db_detector));
+    console.log('getting db detector for', detector.description, 'which is', db_detector._id);
+    console.log(db_detector)
     return db_detector._id;
   } else {
+    console.log('getting detector for', detector.description, 'which is', detector._id);
+
     return detector._id;
   }
 };
@@ -758,10 +762,6 @@ Meteor.methods({
       throw new Meteor.Error('getDetectorId.keynotfound',
         `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
     }
-
-    console.log('CONSTANTS.DETECTORS: ' + CONSTANTS.DETECTORS[name]._id);
-    console.log('db.detectors preferably: ' + getDetectorId(CONSTANTS.DETECTORS[name]))
-
   }
 });
 
@@ -1011,8 +1011,6 @@ function createBumped() {
   };
 
   let bumpedCallback = function (sub) {
-    console.log("calling the bumped callback!!!");
-
     let otherSub = Submissions.findOne({
       uid: {
         $ne: sub.uid
@@ -1112,8 +1110,6 @@ const createHalfHalf = function(
 
 
   let completedCallback = function(sub) {
-    console.log("Another pair of halves completed a photo");
-
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -1165,20 +1161,19 @@ const createHalfHalf = function(
 };
 
 const createBumpedThree = function() {
+  // console.log(DETECTORS);
   const bumpedThreeCallback = function (sub) {
-    console.log("A bumpedThree experience completed!");
-
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
-
+    
     let participants = submissions.map((submission) => { return submission.uid; });
-
+    
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-
+    
   }
-
+  
   let experience = {
     name: 'Group Bumped',
     participateTemplate: 'bumpedThree',
@@ -1187,7 +1182,7 @@ const createBumpedThree = function() {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-      trigger: `cb.numberOfSubmissions() === 3`, // ?
+      trigger: `cb.numberOfSubmissions() === 3`,
       function: bumpedThreeCallback.toString(),
     }]
   };
@@ -1195,89 +1190,48 @@ const createBumpedThree = function() {
 
   const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
   const places = [
-    // ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
     ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
   ];
-
-  const needs = places.map(place => {
-    const [detectorName, situationDescription, instruction] = place;
-    return {
-      needName: `Bumped Three`,
-      situation: {
-        detector: getDetectorId(DETECTORS[detectorName]),
-        number: '1'
-      },
-      toPass: {
-        situationDescription: `Having a good time ${situationDescription}?`,
-        instruction: `${instruction}`
-      },
-      numberNeeded: 3,
-      // notificationDelay: 90 uncomment for testing
-    }
-  });
-
-  console.log(needs);
   
-
-  staticAffordances.forEach(triad => {
-    // experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, needs)];
-    addStaticAffordanceToNeeds(triad, [ { needName: 'Bumped Three',
-         situation: { detector: getDetectorId(DETECTORS['coffee']), number: '1' },
-         toPass:
-          { situationDescription: 'Having a good time at a coffee shop?',
-            instruction: 'Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)' },
-         numberNeeded: 3 },
-       { needName: 'Bumped Three',
-         situation: { detector: getDetectorId(DETECTORS['daytime']), number: '1' },
-         toPass:
-          { situationDescription: 'Having a good time today?',
-            instruction: 'Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel.' },
-         numberNeeded: 3 } ])
-  });
-
-  // _.forEach(triads, (triad) => {
-  //   _.forEach(places, (place) => {
-  //     const [detectorName, situationDescription, instruction] = place;
-  //     let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorName]['variables']));
-  //     newVars.push(`var ${triad};`);
-
-  //     let newRules = JSON.parse(JSON.stringify(DETECTORS[detectorName]['rules']));
-  //     let lastRule = newRules.pop();
-  //     let lastRuleNoSemicolon = lastRule.split(';')[0];
-  //     lastRule = `(${triad} && (${lastRuleNoSemicolon}));`;
-  //     newRules.push(lastRule);
-
-      
-  //     let detector = {
-  //       '_id': Random.id(), // use addStaticAffordanceToNeed function and getdetectorid instead of random , use halfhalfsunny as an example
-  //       'description': DETECTORS[detectorName].description + triad,
-  //       'variables': newVars,
-  //       'rules': newRules
-  //     };
-  //     DETECTORS[detectorName + triad] = detector;
-
-  //     const need = {
-  //       needName: `bumped three: ${detectorName} ${triad}`,
-  //       situation: {
-  //         detector: detector._id,
+  // const needs = places.map(place => {
+  //   const [detectorName, situationDescription, instruction] = place;
+  //   return {
+  //     needName: `Bumped Three ${detectorName}`,
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS[detectorName]),
   //       number: '1'
-  //       },
-  //       toPass: {
-  //         situationDescription: `Having a good time ${situationDescription}?`,
-  //         instruction: `${instruction}`
-  //       },
-  //       numberNeeded: 3,
-  //       // notificationDelay: 90 uncomment for testing
-  //     };
-  //     let callback = {
-  //       trigger: `cb.numberOfSubmissions("${need.needName}") === 3`,
-  //       function: bumpedThreeCallback.toString(),
-  //     };
-  //     experience.contributionTypes.push(need);
-  //     experience.callbacks.push(callback)
-  //   });   
+  //     },
+  //     toPass: {
+  //       situationDescription: `Having a good time ${situationDescription}?`,
+  //       instruction: `${instruction}`
+  //     },
+  //     numberNeeded: 3,
+  //     // notificationDelay: 90 uncomment for testing
+  //   }
   // });
-  console.log(experience);
+  
+  
+  staticAffordances.forEach(triad => {
+    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) => 
+      places.map(place => {
+        const [detectorName, situationDescription, instruction] = place;
+        return {
+          needName: `Bumped Three ${detectorName}`,
+          situation: {
+            detector: getDetectorId(DETECTORS[detectorName]),
+            number: 1
+          },
+          toPass: {
+            situationDescription: `Having a good time ${situationDescription}?`,
+            instruction: `${instruction}`
+          },
+          numberNeeded: 3,
+          // notificationDelay: 90 uncomment for testing
+        }
+      })
+    )(places))];
+  });
   
   return experience;
 }
@@ -1797,6 +1751,7 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
       'rules': newRules
     };
   }
+  console.log( DETECTORS[newDetectorKey].description,  DETECTORS[newDetectorKey]._id);
   return newDetectorKey;
 };
 
@@ -1809,13 +1764,17 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    console.log(need.situation.detector);
-    const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
-    if (!detectorKey) {
-      throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
-    }
-    const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
+    let detectorKey;
+    _.forEach(_.keys(DETECTORS), (key) => {
+      if (DETECTORS[key]._id === need.situation.detector) {
+        detectorKey = key;
+      }
+    });
+    // WILL THROW ERROR if we don't find the matching detector id
+
+    let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
+    need.situation.detector = DETECTORS[newDetectorKey]._id;
+    console.log('adding to need', newDetectorKey, DETECTORS[newDetectorKey]._id);
     return need;
   });
 };
@@ -1924,6 +1883,10 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
     `See the results under ${sub.needName}`,
     '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
+
+let TRIADIC_EXPERIENCES = {
+  bumpedThree: createBumpedThree(),
+}
 
 let EXPERIENCES = {
   bumped: createBumped(),
@@ -3149,6 +3112,7 @@ export const CONSTANTS = {
   // Comment out if you would like to only test specific experiences
   // 'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
   'EXPERIENCES': EXPERIENCES,
+  // 'EXPERIENCES': TRIADIC_EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 
