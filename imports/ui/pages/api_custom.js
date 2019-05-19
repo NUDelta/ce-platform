@@ -696,7 +696,7 @@ Template.api_custom.events({
       lng: location.lng
     };
 
-    Meteor.call('updateSubmission', submissionObject);
+    Meteor.call('createInitialSubmission', submissionObject);
 
   },
   'click #participate-btn'(event, instance) {
