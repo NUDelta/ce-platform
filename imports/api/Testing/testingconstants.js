@@ -999,6 +999,79 @@ const createIndependentStorybook = () => {
   };
 };
 
+const createMurderMystery = function() {
+  // console.log(DETECTORS);
+  const MurderMysteryCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+    
+    let participants = submissions.map((submission) => { return submission.uid; });
+    
+    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    
+  }
+  
+  let experience = {
+    name: 'Murder Mystery',
+    participateTemplate: 'mm',
+    resultsTemplate: 'mmresults',
+    contributionTypes: [],
+    description: "You've been invited to participate in a murder mystery!",
+    notificationText: "You've been invited to participate in a murder mystery!",
+    callbacks: []
+  };
+
+
+  const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
+  const places = [
+    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
+    ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
+  ];
+  
+  // const needs = places.map(place => {
+  //   const [detectorName, situationDescription, instruction] = place;
+  //   return {
+  //     needName: `Bumped Three ${detectorName}`,
+  //     situation: {
+  //       detector: getDetectorId(DETECTORS[detectorName]),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       situationDescription: `Having a good time ${situationDescription}?`,
+  //       instruction: `${instruction}`
+  //     },
+  //     numberNeeded: 3,
+  //     // notificationDelay: 90 uncomment for testing
+  //   }
+  // });
+  
+  
+  staticAffordances.forEach(triad => {
+    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) => 
+      places.map(place => {
+        const [detectorName, situationDescription, instruction] = place;
+        return {
+          needName: `Murder Mystery ${detectorName}`,
+          situation: {
+            detector: getDetectorId(DETECTORS[detectorName]),
+            number: 1
+          },
+          toPass: {
+            situationDescription: `Having a good time ${situationDescription}?`,
+            instruction: `${instruction}`
+          },
+          numberNeeded: 3,
+          // notificationDelay: 90 uncomment for testing
+        }
+      })
+    )(places))];
+  });
+  
+  return experience;
+}
+
 function createBumped() {
   let experience = {
     name: 'Bumped',
@@ -1176,7 +1249,7 @@ const createBumpedThree = function() {
   
   let experience = {
     name: 'Group Bumped',
-    participateTemplate: 'bumpedThree',
+    participateTemplate: 'bumpedThreeInitial',
     resultsTemplate: 'bumpedThreeResults',
     contributionTypes: [],
     description: 'Share your experience with your friend and their friend!',
@@ -1188,10 +1261,9 @@ const createBumpedThree = function() {
   };
 
 
-  const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
+  const staticAffordances = ['participantOne', 'participantTwo', 'participantThree'];
   const places = [
-    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
-    ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
+    ["coffee", "at a coffee shop", "Please help us build the story by answering some initial questions about your situation!"],
   ];
   
   // const needs = places.map(place => {
@@ -1212,8 +1284,8 @@ const createBumpedThree = function() {
   // });
   
   
-  staticAffordances.forEach(triad => {
-    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) => 
+  staticAffordances.forEach(participant => {
+    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(participant, ((places) => 
       places.map(place => {
         const [detectorName, situationDescription, instruction] = place;
         return {
