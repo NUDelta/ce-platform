@@ -1192,7 +1192,7 @@ const createGroupCheers = function() {
 
 const createBumpedThree = function() {
   // console.log(DETECTORS);
-  /**
+
   const bumpedThreeCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
@@ -1204,7 +1204,7 @@ const createBumpedThree = function() {
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
   }
-  **/
+
   let experience = {
     name: 'Group Bumped',
     participateTemplate: 'bumpedThree',
@@ -1218,6 +1218,7 @@ const createBumpedThree = function() {
     }]
   };
 
+  /**
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
 
@@ -1231,6 +1232,7 @@ const createBumpedThree = function() {
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
   };
+  **/
 
   const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
   const places = [
