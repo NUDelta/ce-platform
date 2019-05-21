@@ -6,6 +6,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
+//import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
 Template.api_custom_results.onCreated(() => {
@@ -199,17 +200,17 @@ Template.groupCheersResults.events({
      'click .reactWow'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
       react = event.target.textContent;
-      reactSubmission(react, this.submissions[idx]);
+      reactSubmission(react, this.users, this.submissions[idx]);
     },
     'click .reactHeart'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
       react = event.target.textContent;
-      reactSubmission(react, this.submissions[idx]);
+      reactSubmission(react, this.users, this.submissions[idx]);
     },
     'click .reactLaugh'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
       react = event.target.textContent;
-      reactSubmission(react, this.submissions[idx]);
+      reactSubmission(react, this.users, this.submissions[idx]);
     }
 });
 
@@ -234,14 +235,15 @@ export const createReactString = (submissions, users, idx) => {
       reactionString = reactionString + username + ": " + react + " ";
     }
   };
-  console.log(reactionString);
   return reactionString;
 }
 
-export const reactSubmission = (react, submission) => {
+export const reactSubmission = (react, users, submission) => {
   let notification = true;
   const uid = Meteor.userId();
+  const name = getUserById(users, uid);
 
+  //use uid
   if (!submission.content["react"]){
     submission.content["react"] = [react];
     submission.content["reactUser"] = [uid];
@@ -271,6 +273,14 @@ export const reactSubmission = (react, submission) => {
   };
 
   Meteor.call('updateSubmission', submissionObject);
+  //notify participant of reaction
+  Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
+   '/apicustomresults/' + submission.iid + '/', submission.iid);
+
+  /*
+  notify([submission.uid], submission.iid, '${name} reacted to your cheers!',
+  '', '/apicustomresults/' + submission.iid + '/' + sub.eid);
+  */
 };
 
 Template.bumpedThreeResults.helpers({
