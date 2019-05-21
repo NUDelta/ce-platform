@@ -1938,7 +1938,7 @@ let TRIADIC_EXPERIENCES = {
 
 let EXPERIENCES = {
   bumped: createBumped(),
-  bumpedThree: createBumpedThree(),
+  //bumpedThree: createBumpedThree(),
   groupCheers: createGroupCheers(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
