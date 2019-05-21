@@ -63,6 +63,13 @@ Meteor.methods({
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
+  startGroupCheers(){
+    console.log("starting group cheers");
+    let value = CONSTANTS.EXPERIENCES.groupCheers;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
   startScavengerHunt(){
     console.log("starting scavenger");
 

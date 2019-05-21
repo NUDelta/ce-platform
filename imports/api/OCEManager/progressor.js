@@ -23,10 +23,34 @@ const submissionsHandle = submissionsCursor.observe({
 Meteor.methods({
   updateSubmission(submission) {
     updateSubmission(submission);
-  }
+  },
+  createInitialSubmission(submission) {
+    createInitialSubmission(submission);
+  },
 });
 
 export const updateSubmission = function(submission) {
+  Submissions.update(
+    {
+      eid: submission.eid,
+      iid: submission.iid,
+      needName: submission.needName,
+      _id: submission._id,
+    },
+    {
+      $set: {
+        content: submission.content,
+      }
+    },
+    (err) => {
+      if (err) {
+        console.log("submission not inserted", err);
+      }
+    }
+  );
+};
+
+export const createInitialSubmission = function(submission) {
   Submissions.update(
     {
       eid: submission.eid,

@@ -1160,6 +1160,36 @@ const createHalfHalf = function(
   return experience;
 };
 
+const createGroupCheers = function() {
+  let experience = {
+    name: 'Group Cheers',
+    participateTemplate: 'groupCheers',
+    resultsTemplate: 'groupCheersResults',
+    contributionTypes: [{
+      needName: 'Group Cheers',
+      situation: {
+        detector: DETECTORS.bar._id,
+        number: 3
+      },
+    toPass: {
+      instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+      //change example image to be on s3 server
+      exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+    },
+    numberNeeded: 3,
+    notificationDelay: 1
+    }],
+    description: 'Share your accomplishments with your friend and their friend!',
+    notificationText: 'Share your accomplishments with your friend and their friend!',
+    callbacks: [{
+      trigger: `cb.numberOfSubmissions() === 3`,
+      function: callbackStub.toString()
+    }]
+  };
+
+  return experience;
+};
+
 const createBumpedThree = function() {
   // console.log(DETECTORS);
   const bumpedThreeCallback = function (sub) {
@@ -1187,6 +1217,22 @@ const createBumpedThree = function() {
     }]
   };
 
+<<<<<<< HEAD
+=======
+  const bumpedThreeCallback = function (sub) {
+    console.log("A bumpedThree experience completed!");
+
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+  };
+>>>>>>> cheers-three
 
   const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
   const places = [
@@ -1837,6 +1883,10 @@ const halfhalfRespawnAndNotify = function(subject, text) {
   return eval('`'+functionTemplate.toString()+'`');
 };
 
+const callbackStub = function(sub) {
+  console.log("experience complete");
+};
+
 const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
@@ -1891,6 +1941,7 @@ let TRIADIC_EXPERIENCES = {
 let EXPERIENCES = {
   bumped: createBumped(),
   bumpedThree: createBumpedThree(),
+  groupCheers: createGroupCheers(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),

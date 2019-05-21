@@ -1,6 +1,12 @@
+import './api_custom_results.html';
+
+import { ReactiveDict } from 'meteor/reactive-dict';
+import { ReactiveVar } from 'meteor/reactive-var';
+
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
+//import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
 Template.api_custom_results.onCreated(() => {
@@ -159,6 +165,124 @@ Template.bumpedResults.events({
 });
 
 
+Template.groupCheersResults.helpers({
+  sortImages(images){
+    let newImages = this.images;
+    //sort images by time
+    //need to filter through needName as well
+    let sortedImages = newImages.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    return sortedImages;
+  },
+  sortNames(images, users){
+    let names = images.map(i => getUserById(users, i.uid));
+    return names;
+  },
+  sortSubs(submissions){
+    //sort submissions by timestamp
+    let newSubs = submissions;
+    let sortedSubs = newSubs.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let captions = sortedSubs.map(s => s.content.sentence);
+    return captions;
+  },
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
+  createReacts(submissions, users, idx){
+    return createReactString(submissions, users, idx);
+  }
+});
+
+Template.groupCheersResults.events({
+     'click .reactWow'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      react = event.target.textContent;
+      reactSubmission(react, this.users, this.submissions[idx]);
+    },
+    'click .reactHeart'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      react = event.target.textContent;
+      reactSubmission(react, this.users, this.submissions[idx]);
+    },
+    'click .reactLaugh'(event, template){
+      let idx = parseInt(event.target.parentNode.dataset.val);
+      react = event.target.textContent;
+      reactSubmission(react, this.users, this.submissions[idx]);
+    }
+});
+
+export const getUserById = (users_arr, uid) => {
+  let user = users_arr.find(function(x) {
+    return x._id === uid;
+  });
+  if (uid){
+    return user.username;
+  } else {
+    return null;
+  }
+};
+
+export const createReactString = (submissions, users, idx) => {
+  reactionString = "";
+
+  if (submissions[idx].content["react"]){
+    for (i=0; i<submissions[idx].content["react"].length;i++){
+      let username = getUserById(users, submissions[idx].content["reactUser"][i]);
+      let react = submissions[idx].content["react"][i];
+      reactionString = reactionString + username + ": " + react + " ";
+    }
+  };
+  return reactionString;
+}
+
+export const reactSubmission = (react, users, submission) => {
+  let notification = true;
+  const uid = Meteor.userId();
+  const name = getUserById(users, uid);
+
+  //use uid
+  if (!submission.content["react"]){
+    submission.content["react"] = [react];
+    submission.content["reactUser"] = [uid];
+  } else {
+    //if user already reacted, they can change reaction
+    if (submission.content["reactUser"].includes(uid)){
+      let idx = submission.content["reactUser"].indexOf(uid);
+      submission.content["react"][idx] = react;
+      notification = false;
+    } else {
+    //else just push reaction
+      submission.content["react"].push(react);
+      submission.content["reactUser"].push(uid);
+    }
+  }
+
+  let submissionObject = {
+    uid: uid,
+    eid: submission.eid,
+    iid: submission.iid,
+    _id: submission._id,
+    needName: submission.needName,
+    content: submission.content,
+    timestamp: submission.timestamp,
+    lat: submission.lat,
+    lng: submission.lng
+  };
+
+  Meteor.call('updateSubmission', submissionObject);
+  //notify participant of reaction
+  Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
+   '/apicustomresults/' + submission.iid + '/', submission.iid);
+
+  /*
+  notify([submission.uid], submission.iid, '${name} reacted to your cheers!',
+  '', '/apicustomresults/' + submission.iid + '/' + sub.eid);
+  */
+};
+
 Template.bumpedThreeResults.helpers({
   content() {
     const {submissions, images, users} = this;
@@ -170,9 +294,8 @@ Template.bumpedThreeResults.helpers({
     const myImage = images.find(i => i._id === mySub.content.proof);
     const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
     const friendNames = otherSubs.map(s => users.find(u => u._id === s.uid));
-  
     results = {};
-    Object.assign(results, 
+    Object.assign(results,
       friendNames[0] && {friendOneName: friendNames[0].username},
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
@@ -185,7 +308,7 @@ Template.bumpedThreeResults.helpers({
 
     return results;
   }
-})
+});
 
 /**
  * Returns an array with arrays of the given size.
