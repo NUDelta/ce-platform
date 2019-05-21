@@ -51,6 +51,10 @@ Schema.NeedType = new SimpleSchema({
     type: String,
     optional: true,
   },
+  participateTemplate: {
+    type: String,
+    optional: true,
+  },
   situation: {
     type: Schema.SituationDescription
   },
@@ -115,6 +119,7 @@ Schema.Experience = new SimpleSchema({
   },
   participateTemplate: {
     type: String,
+    optional: true
   },
   resultsTemplate: {
     type: String,

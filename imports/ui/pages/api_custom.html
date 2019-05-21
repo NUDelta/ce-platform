@@ -1,5 +1,7 @@
 <template name="api_custom">
     {{> Template.dynamic template=data.experience.participateTemplate data=data}}
+    {{> Template.dynamic template=getTemplate data=data}}
+
 </template>
 
 <template name="uploadPhoto">
@@ -30,6 +32,21 @@
 </template>
 
 <template name="cn">
+    <div class="past-messages">
+            {{> Template.dynamic template="chat" data="proof"}}
+    </div>
+    <form class="col col-xs-12" id="participate">
+        <div class="message">
+                {{> Template.dynamic template="message" data="proof"}}
+        </div>
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+                Submit
+        </button>
+    </form>
+</template>
+
+<template name="murderMysteryChat">
     <div class="past-messages">
             {{> Template.dynamic template="chat" data="proof"}}
     </div>

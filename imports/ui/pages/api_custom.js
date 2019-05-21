@@ -39,6 +39,11 @@ Template.api_custom.helpers({
     return this;
   },
 
+  getTemplate() {
+    if (this.participateTemplate) {
+      return this.participateTemplate
+    }
+  }
 });
 
 Template.storyPage.helpers({

@@ -91,6 +91,12 @@ let DETECTORS = {
     ],
     rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
   },
+  busy: {
+    _id: 'saxQsfSaBiHHoSEZX',
+    description: 'user reports to be busy',
+    variables: ['var busy;'],
+    rules: ['busy;']
+  },
   train: {
     _id: '2wH5bFr77ceho5BgF',
     description: 'trains',
@@ -189,10 +195,43 @@ const createMurderMystery = function() {
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
-    
+
+    console.log("in callback")
+
+    experience = Experiences.update({
+      "_id": sub.eid
+    }, {
+      "$set": {
+        "participateTemplate": "murderMysteryChat"
+      }
+    })
+
+    console.log(experience.participateTemplate)
+
+    let max = submissions[0]
+
+    for (let i = 0; i < submissions.length; i++) {
+
+      if (submissions[i].content.busy >= max.content.busy) {
+        max = submissions[i]
+      }
+    }
+
     let participants = submissions.map((submission) => { return submission.uid; });
     
+
+
+    console.log("added affordances to user")
+
+    const staticAffordances = ['busy'];
+    const places = [
+      ["busy", "at a busy coffee shop", "You've been cast as the murderer!"],
+    ];
+
+
+    
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
     
   }
   
@@ -200,10 +239,15 @@ const createMurderMystery = function() {
     name: 'Murder Mystery',
     participateTemplate: 'murderMysteryInitial',
     resultsTemplate: 'murderMysteryResults',
-    contributionTypes: [],
+    contributionTypes: [
+    ],
     description: "You've been invited to participate in a murder mystery!",
     notificationText: "You've been invited to participate in a murder mystery!",
-    callbacks: []
+    callbacks: [{
+        trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 1)',
+        // substitute any variables used outside of the callback function scope
+        function: eval('`' + MurderMysteryCallback.toString() + '`'),
+      }]
   };
 
 
@@ -240,6 +284,7 @@ const createMurderMystery = function() {
             detector: getDetectorId(DETECTORS[detectorName]),
             number: 3
           },
+          participateTemplate: 'murderMysteryInitial',
           toPass: {
             situationDescription: `Having a good time ${situationDescription}?`,
             instruction: `${instruction}`,
@@ -269,6 +314,7 @@ const createMurderMystery = function() {
  * @param detectorKey
  * @returns newDetectorKey
  */
+
 const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
   let newVars = JSON.parse(JSON.stringify(DETECTORS[detectorKey]['variables']));
   newVars.push(`var ${staticAffordance};`);
