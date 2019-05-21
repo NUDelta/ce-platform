@@ -21,15 +21,9 @@ def followPath(path, uid):
 	    time.sleep(1)
 
 def setLocation(location, uid):
-<<<<<<< HEAD
-	host = "http://localhost:3000" 
+	host = "http://localhost:3000"
 	# host = "https://ce-platform.herokuapp.com"
 	# host = "https://staging-ce-platform.herokuapp.com"
-=======
-        host = "http://localhost:3000"
-        # host = "https://ce-platform.herokuapp.com"
-        # host = "https://staging-ce-platform.herokuapp.com"
->>>>>>> cheers-three
 	r = requests.post(host + "/api/geolocation", json={
 	            "userId": uid,
 	            "location": {

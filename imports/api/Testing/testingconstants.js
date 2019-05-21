@@ -1197,13 +1197,13 @@ const createBumpedThree = function() {
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
-    
+
     let participants = submissions.map((submission) => { return submission.uid; });
-    
+
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-    
+
   }
-  
+
   let experience = {
     name: 'Group Bumped',
     participateTemplate: 'bumpedThree',
@@ -1217,8 +1217,6 @@ const createBumpedThree = function() {
     }]
   };
 
-<<<<<<< HEAD
-=======
   const bumpedThreeCallback = function (sub) {
     console.log("A bumpedThree experience completed!");
 
@@ -1232,14 +1230,13 @@ const createBumpedThree = function() {
     notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
   };
->>>>>>> cheers-three
 
   const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
   const places = [
     ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
     ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
   ];
-  
+
   // const needs = places.map(place => {
   //   const [detectorName, situationDescription, instruction] = place;
   //   return {
@@ -1256,10 +1253,10 @@ const createBumpedThree = function() {
   //     // notificationDelay: 90 uncomment for testing
   //   }
   // });
-  
-  
+
+
   staticAffordances.forEach(triad => {
-    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) => 
+    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) =>
       places.map(place => {
         const [detectorName, situationDescription, instruction] = place;
         return {
@@ -1278,7 +1275,7 @@ const createBumpedThree = function() {
       })
     )(places))];
   });
-  
+
   return experience;
 }
 
@@ -1299,7 +1296,7 @@ const createBumpedThree = function() {
 //   scenarions.forEach((scenario) => {
 //     // create detectors
 //   });
-  
+
 //   let experience = {
 //     name: 'The Imitation Game',
 //     participateTemplate: 'imitationGame',
@@ -1319,7 +1316,7 @@ const createBumpedThree = function() {
 //   };
 
 //   experience.contributionTypes.push(creator_detector);
-  
+
 //   let contribution = {
 //     needName: 'imitation_creator',
 //     situation: {
@@ -1333,7 +1330,7 @@ const createBumpedThree = function() {
 //     numberNeeded: 1,
 //     // notificationDelay: 90 uncomment for testing
 //   }
-  
+
 
 //   const  sendNotification = function (sub) {
 
