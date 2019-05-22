@@ -205,12 +205,24 @@ const createMurderMystery = function() {
         "participateTemplate": "murderMysteryChat"
       }
     })
+
+    Meteor.users.update({
+      "_id": sub.eid
+    }, {
+      "$set": {
+        "profile.staticAffordances": affordances
+      }
+    })
+
+
     //which way to find participants and set this.toPass.characterName?
     // let participants = submissions.map((submission) => { return submission.uid; });
 
-    // let participants = Users.find({
+    let participant = Meteor.users.findOne({
+      "_id": sub.uid,
+    })
 
-    // }).fetch();
+    participant.profile.firstName
 
     console.log(experience.participateTemplate)
 

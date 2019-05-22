@@ -73,18 +73,25 @@ Template.chat.events({
     
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
-    const $setChar = $el.find('.character');
-    const $chapter = $el.find('.chapter');
+    // const $setChar = $el.find('.character');
+    // const $chapter = $el.find('.chapter');
     
     const data = { message: $input.val() };
-    const userName = $setChar.text();
-    const chapterID = $chapter.text();
+
+    //const userName = $setChar.text();
+
+    const uid = Meteor.userId();
+    let participant = Meteor.users.findOne({
+      "_id": uid,
+    })
+    //const chapterID = $chapter.text();
     console.log("data: " + data);
-    console.log("name: " + userName);
-    console.log("chapter: " + chapterID);
+    console.log("first name: " + participant.profile.firstName);
+    //console.log("chapter: " + chapterID);
     
-    data.name = userName;
-    data.chapterID = chapterID;
+    data.name = uid;
+    //data.role = ;
+    //data.chapterID = chapterID;
     
     Meteor.call("sendMessage", data, (error, response) => {
       if (error) {

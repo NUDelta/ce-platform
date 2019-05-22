@@ -11,19 +11,25 @@ Meteor.methods({
 		check(data, {
 			message: String, //the message to send
       name: Match.Optional(String), //if the user already has a name
-      chapterID: String
 		});
     
     if (data.message=="") {
       throw new Meteor.Error("message-empty", "Your message is empty");
     }
 
+    let participant = Meteor.users.findOne({
+      "_id": data.name,
+    })
+
     // if (data.name=="") {
     //   throw new Meteor.Error("no name");
     // }
+    console.log(participant.profile.firstName)
     
-    let userName = (data.name && data.name!="") ? data.name : "Anonymous";
-    let chapterID = data.chapterID;
+    let userName = data.name ? participant.profile.firstName : "Anonymous";
+    //let role = data.role
+
+    console.log(userName)
     
     const matchName = data.message.match(/^My name is (.*)/i);
     
@@ -31,10 +37,9 @@ Meteor.methods({
       userName = matchName[1];
       Messages.insert({
         name: "Chat Bot",
-        message: "Hey everyone, " + userName + " is here!",
+        //message: "Hey " + userName + ", you are " + role,
         createdAt: new Date(),
         announcement: true,
-        chapterID:  chapterID
       });
     } else {
       Messages.insert({
@@ -42,7 +47,6 @@ Meteor.methods({
         message: data.message,
         createdAt: new Date(),
         announcement: false,
-        chapterID:  chapterID
         //chapter: "1"
       });
     }
