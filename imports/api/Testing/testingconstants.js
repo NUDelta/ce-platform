@@ -205,6 +205,12 @@ const createMurderMystery = function() {
         "participateTemplate": "murderMysteryChat"
       }
     })
+    //which way to find participants and set this.toPass.characterName?
+    // let participants = submissions.map((submission) => { return submission.uid; });
+
+    // let participants = Users.find({
+
+    // }).fetch();
 
     console.log(experience.participateTemplate)
 
@@ -216,9 +222,6 @@ const createMurderMystery = function() {
         max = submissions[i]
       }
     }
-
-    let participants = submissions.map((submission) => { return submission.uid; });
-    
 
 
     console.log("added affordances to user")
@@ -238,7 +241,7 @@ const createMurderMystery = function() {
   let experience = {
     name: 'Murder Mystery',
     participateTemplate: 'murderMysteryInitial',
-    resultsTemplate: 'murderMysteryResults',
+    resultsTemplate: 'murderMysteryChat',
     contributionTypes: [
     ],
     description: "You've been invited to participate in a murder mystery!",
