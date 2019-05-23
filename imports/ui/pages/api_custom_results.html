@@ -169,68 +169,54 @@
   <div id="results" class="centered">
     <h4>{{this.experience.name}}</h4>
     <div class="caption">Check out the drinks everyone's having and what they’re cheersing to!</div>
-    {{#let images=(sortImages this.images)}}
-    {{#let names=(sortNames this.images this.users)}}
-    {{#let captions=(sortSubs this.submissions)}}
-    <div class="img_container">
-      <div class="img0">{{elementAtIndex names 0}}{{> Template.dynamic template="displayImage" data=(elementAtIndex images 0)}}</div>
 
-      {{#if (elementAtIndex images 1)}}
-      <div class="img1">{{elementAtIndex names 1}}{{> Template.dynamic template="displayImage" data=(elementAtIndex images 1)}}</div>
-      {{else}}
-      <div class="img1">Waiting for this user!<div class="pending_img">?</div></div>
-      {{/if}}
+    {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
+    {{#each needGroup in needGroups}}
+        {{#let needImages = needGroup.imagesGroupedByTriad}}
+        {{#let needSubs = needGroup.needSubs}}
+        {{#let names = needGroup.names}}
+        {{#let captions = needGroup.captions}}
+        <h5>{{needGroup.needName}}</h5>
 
-      {{#if (elementAtIndex images 2)}}
-      <div class="img2">{{elementAtIndex names 2}}{{> Template.dynamic template="displayImage" data=(elementAtIndex images 2)}}</div>
-      {{else}}
-      <div class="img2">Waiting for this user!<div class="pending_img">?</div></div>
-      {{/if}}
+            <div class="img_container">
+              {{#each image in needImages}}
+            {{#if (elementAtIndex needImages @index)}}
+            <div class="img{{@index}}">{{elementAtIndex names @index}}{{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}</div>
+            {{else}}
+            <div class="img{{@index}}">Waiting for this user!<div class="pending_img">?</div></div>
+            {{/if}}
+            {{/each}}
+            </div>
 
-    </div>
-    <div class="caption_container">
-      <div class="caption"><b>{{elementAtIndex names 0}}:</b> "{{elementAtIndex captions 0}}"</div>
-      <div class="reacts">
-        {{#let reacts0 =(createReacts this.submissions this.users 0)}}{{reacts0}}{{/let}}
-      </div>
-      <div class="buttons">
-        <button class="reactWow" type="button" data-val="0"><span>😮</span></button>
-        <button class="reactHeart" type="button" data-val="0"><span>😍</span></button>
-        <button class="reactLaugh" type="button" data-val="0"><span>😂</span></button>
-      </div>
-
-      {{#if (elementAtIndex captions 1)}}
-      <div class="caption"><b>{{elementAtIndex names 1}}:</b> "{{elementAtIndex captions 1}}"</div>
-      <div class="reacts">
-        {{#let reacts1=(createReacts this.submissions this.users 1)}}{{reacts1}}{{/let}}
-      </div>
-      <div class="buttons">
-        <button class="reactWow" type="button" data-val="1"><span>😮</span></button>
-        <button class="reactHeart" type="button" data-val="1"><span>😍</span></button>
-        <button class="reactLaugh" type="button" data-val="1"><span>😂</span></button>
-      </div>
-      {{else}}
-      <div class="caption">We're still waiting on this caption. Hang tight!</div>
-      {{/if}}
-
-      {{#if (elementAtIndex captions 2)}}
-      <div class="caption"><b>{{elementAtIndex names 2}}:</b> "{{elementAtIndex captions 2}}"</div>
-      <div class="reacts">
-      {{#let reacts2 =(createReacts this.submissions this.users 2)}}{{reacts2}}{{/let}}
-      </div>
-      <div class="buttons">
-        <button class="reactWow" type="button" data-val="2"><span>😮</span></button>
-        <button class="reactHeart" type="button" data-val="2"><span>😍</span></button>
-        <button class="reactLaugh" type="button" data-val="2"><span>😂</span></button>
-      </div>
-      {{else}}
-      <div class="caption">We're still waiting on this caption. Hang tight!</div>
-      {{/if}}
-
-    </div>
-  {{/let}}
-  {{/let}}
-  {{/let}}
+            <div class="caption_container">
+            {{#each name in names}}
+            {{#if (elementAtIndex names @index)}}
+                <div class="caption"><b>{{elementAtIndex names @index}}:</b> "{{elementAtIndex captions @index}}"</div>
+                <div class="reacts">
+                  {{#let reacts=(createReacts needSubs this.users @index)}}{{reacts}}{{/let}}
+                </div>
+                <div class="buttons">
+                  <button class="reactWow" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😮</span>
+                  </button>
+                  <button class="reactHeart" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😍</span>
+                  </button>
+                  <button class="reactLaugh" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😂</span>
+                  </button>
+                </div>
+            {{else}}
+                <div class="caption">We're still waiting on this caption. Hang tight!</div>
+            {{/if}}
+            {{/each}}
+            </div>
+        {{/let}}
+        {{/let}}
+        {{/let}}
+        {{/let}}
+    {{/each}}
+    {{/let}}
   </div>
 </template>
 

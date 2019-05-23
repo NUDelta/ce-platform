@@ -253,15 +253,16 @@
       <div id="tcameraOverlay" class="camera-overlay">
         {{> loadingOverlay}}
 
-          {{#if (lengthEqual this.images 2) }}
+          {{#let needImages = (mostRecentImageTriadForNeed this.images this.needName)}}
+          {{#if (lengthEqual needImages 2) }}
             <div id="topLTri" class="topLTri trisquare">
               <div class="content">
-                {{> Template.dynamic template="displayFullImage" data=(firstElement this.images) }}
+                {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
               </div>
             </div>
             <div id="topRTri" class="topRTri trisquare">
               <div class="content">
-                {{> Template.dynamic template="displayFullImage" data=(secondElement this.images) }}
+                {{> Template.dynamic template="displayFullImage" data=(secondElement needImages) }}
               </div>
             </div>
             <div id="bottomTri" class="bottomTri trisquare">
@@ -269,10 +270,10 @@
             </div>
           {{/if}}
 
-          {{#if (lengthEqual this.images 1) }}
+          {{#if (lengthEqual needImages 1) }}
             <div id="topLTri" class="topLTri trisquare">
               <div class="content">
-                {{> Template.dynamic template="displayFullImage" data=(firstElement this.images) }}
+                {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
               </div>
             </div>
             <div id="topRTri" class="topRTri trisquare">
@@ -281,7 +282,7 @@
             <div id="bottomTri" class="bottomTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
           {{/if}}
 
-          {{#if (lengthEqual this.images 0)}}
+          {{#if (lengthEqual needImages 0)}}
             <div id="topLTri" class="topLTri trisquare">
               <div class="content">
               {{> Template.dynamic template="halfhalfCamera" data="topLTriPreview"}}
@@ -290,6 +291,7 @@
             <div id="topRTri" class="topRTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
             <div id="bottomTri" class="bottomTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
           {{/if}}
+        {{/let}}
         </div>
 
         <div class="camera-controls">

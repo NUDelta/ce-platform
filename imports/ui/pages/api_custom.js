@@ -108,12 +108,19 @@ Template.groupCheers.helpers({
       return x.needName === needName;
     });
     let imagesGroupedByTriad = chunkArray(needImages, 3);
-    return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    console.log(imagesGroupedByTriad);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
   },
   lengthEqual(array, number) {
     console.log(array);
     console.log(array.length);
     console.log(number);
+    console.log(array.length === number)
     return array.length === number;
   },
   firstElement(array) {

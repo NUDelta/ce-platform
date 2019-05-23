@@ -166,30 +166,55 @@ Template.bumpedResults.events({
 
 
 Template.groupCheersResults.helpers({
-  sortImages(images){
-    let newImages = this.images;
-    //sort images by time
-    //need to filter through needName as well
-    let sortedImages = newImages.sort(function(x, y) {
-      return x.uploadedAt - y.uploadedAt;
+  resultsGroupedByNeedAndTriad() {
+
+    let mySubs = this.submissions.filter(function(x){
+      return x.uid === Meteor.userId();
     });
-    return sortedImages;
-  },
-  sortNames(images, users){
-    let names = images.map(i => getUserById(users, i.uid));
-    return names;
-  },
-  sortSubs(submissions){
-    //sort submissions by timestamp
-    let newSubs = submissions;
-    let sortedSubs = newSubs.sort(function(x, y) {
-      return x.uploadedAt - y.uploadedAt;
+
+    let users = this.users;
+    let subs = this.submissions;
+    let images = this.images;
+
+    let myNeedNames = mySubs.map(function(x){
+      return x.needName;
     });
-    let captions = sortedSubs.map(s => s.content.sentence);
-    return captions;
+    // only show examples where the need names are unique
+    myNeedNames = [... new Set(myNeedNames)];
+
+    const needGroups = myNeedNames.map((needName) => {
+      // images already filtered by activeIncident. Now get them for each need
+      let needImages = images.filter(function(img){
+        return img.needName == needName;
+      });
+
+      //grab username from img uid
+      let names = needImages.map(function(img){
+        return getUserById(users, img.uid);
+      });
+
+      let needSubs = subs.filter(function(sub){
+        return sub.needName == needName;
+      });
+      let captions = needSubs.map(function(sub){
+        return sub.content.sentence;
+      });
+
+      return {needName: needName,
+        needSubs: needSubs,
+        imagesGroupedByTriad: needImages,
+        captions: captions,
+        names: names};
+    });
+
+    console.log(needGroups);
+    return(needGroups);
   },
   elementAtIndex(arr, index){
     return arr[index];
+  },
+  lengthEqual(arr, number) {
+    return arr.length === number;
   },
   createReacts(submissions, users, idx){
     return createReactString(submissions, users, idx);
@@ -199,18 +224,30 @@ Template.groupCheersResults.helpers({
 Template.groupCheersResults.events({
      'click .reactWow'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
+      let needName = event.target.parentNode.dataset.needname;
+      let needSubs = this.submissions.filter(function(sub){
+        return sub.needName == needName;
+      });
       react = event.target.textContent;
-      reactSubmission(react, this.users, this.submissions[idx]);
+      reactSubmission(react, this.users, needSubs[idx]);
     },
     'click .reactHeart'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
+      let needName = event.target.parentNode.dataset.needname;
+      let needSubs = this.submissions.filter(function(sub){
+        return sub.needName == needName;
+      });
       react = event.target.textContent;
-      reactSubmission(react, this.users, this.submissions[idx]);
+      reactSubmission(react, this.users, needSubs[idx]);
     },
     'click .reactLaugh'(event, template){
       let idx = parseInt(event.target.parentNode.dataset.val);
+      let needName = event.target.parentNode.dataset.needname;
+      let needSubs = this.submissions.filter(function(sub){
+        return sub.needName == needName;
+      });
       react = event.target.textContent;
-      reactSubmission(react, this.users, this.submissions[idx]);
+      reactSubmission(react, this.users, needSubs[idx]);
     }
 });
 
@@ -228,6 +265,8 @@ export const getUserById = (users_arr, uid) => {
 export const createReactString = (submissions, users, idx) => {
   reactionString = "";
 
+  //grab correct submission
+
   if (submissions[idx].content["react"]){
     for (i=0; i<submissions[idx].content["react"].length;i++){
       let username = getUserById(users, submissions[idx].content["reactUser"][i]);
@@ -242,7 +281,6 @@ export const reactSubmission = (react, users, submission) => {
   let notification = true;
   const uid = Meteor.userId();
   const name = getUserById(users, uid);
-
   //use uid
   if (!submission.content["react"]){
     submission.content["react"] = [react];
@@ -274,13 +312,10 @@ export const reactSubmission = (react, users, submission) => {
 
   Meteor.call('updateSubmission', submissionObject);
   //notify participant of reaction
-  Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
-   '/apicustomresults/' + submission.iid + '/', submission.iid);
-
-  /*
-  notify([submission.uid], submission.iid, '${name} reacted to your cheers!',
-  '', '/apicustomresults/' + submission.iid + '/' + sub.eid);
-  */
+  if (notification){
+    Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
+     '/apicustomresults/' + submission.iid + '/', submission.iid);
+ }
 };
 
 Template.bumpedThreeResults.helpers({
