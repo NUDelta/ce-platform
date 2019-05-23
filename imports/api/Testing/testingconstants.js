@@ -1166,7 +1166,7 @@ const createGroupCheers = function() {
     participateTemplate: 'groupCheers',
     resultsTemplate: 'groupCheersResults',
     contributionTypes: [{
-      needName: 'Group Cheers',
+      needName: 'Group Cheers 1',
       situation: {
         detector: DETECTORS.bar._id,
         number: 3
@@ -1183,7 +1183,7 @@ const createGroupCheers = function() {
     notificationText: 'Share your accomplishments with your friend and their friend!',
     callbacks: [{
       trigger: `cb.numberOfSubmissions() === 3`,
-      function: callbackStub.toString()
+      function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
     }]
   };
 
