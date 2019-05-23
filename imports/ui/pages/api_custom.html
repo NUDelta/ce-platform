@@ -47,6 +47,9 @@
 </template>
 
 <template name="murderMysteryChat">
+    <div>
+        {{{this.toPass.role}}}
+    </div>
     <div class="past-messages">
             {{> Template.dynamic template="chat" data="proof"}}
     </div>

@@ -193,10 +193,12 @@ const createMurderMystery = function() {
   const MurderMysteryCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
-      needName: sub.needName
+      needName: sub.needName,
+      uid: sub.uid
     }).fetch();
 
     console.log("in callback")
+    console.log(submissions[0].content.busy)
 
     experience = Experiences.update({
       "_id": sub.eid
@@ -206,13 +208,21 @@ const createMurderMystery = function() {
       }
     })
 
-    Meteor.users.update({
-      "_id": sub.eid
-    }, {
-      "$set": {
-        "profile.staticAffordances": affordances
-      }
-    })
+    for (let i = 0; i < submissions.length; i++) {
+      console.log("busyness: " + submissions[i].content.busy)
+      var key = submissions[i].content.busy;
+      var affordances = {}
+      affordances[key] = true
+      Meteor.users.update({
+        "_id": sub.uid
+      }, {
+        "$set": {
+          "profile.staticAffordances": affordances
+        }
+      })
+    }
+
+    console.log("added affordances to user")
 
 
     //which way to find participants and set this.toPass.characterName?
@@ -222,26 +232,22 @@ const createMurderMystery = function() {
       "_id": sub.uid,
     })
 
-    participant.profile.firstName
-
-    console.log(experience.participateTemplate)
-
-    let max = submissions[0]
-
-    for (let i = 0; i < submissions.length; i++) {
-
-      if (submissions[i].content.busy >= max.content.busy) {
-        max = submissions[i]
-      }
-    }
+    //participant.profile.firstName
 
 
-    console.log("added affordances to user")
+    // let max = submissions[0]
 
-    const staticAffordances = ['busy'];
-    const places = [
-      ["busy", "at a busy coffee shop", "You've been cast as the murderer!"],
-    ];
+    // for (let i = 0; i < submissions.length; i++) {
+
+    //   if (submissions[i].content.busy >= max.content.busy) {
+    //     max = submissions[i]
+    //   }
+    // }
+
+    // const staticAffordances = ['busy'];
+    // const places = [
+    //   ["busy", "at a busy coffee shop", "You've been cast as the murderer!"],
+    // ];
 
 
     
