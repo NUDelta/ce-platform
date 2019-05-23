@@ -179,11 +179,13 @@
         <h5>{{needGroup.needName}}</h5>
 
             <div class="img_container">
-              {{#each image in needImages}}
+            {{#each image in needImages}}
             {{#if (elementAtIndex needImages @index)}}
-            <div class="img{{@index}}">{{elementAtIndex names @index}}{{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}</div>
+                <div class="img{{@index}}">{{elementAtIndex names @index}}
+                  {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+                </div>
             {{else}}
-            <div class="img{{@index}}">Waiting for this user!<div class="pending_img">?</div></div>
+                <div class="img{{@index}}">Waiting for this user!<div class="pending_img">?</div></div>
             {{/if}}
             {{/each}}
             </div>
@@ -191,10 +193,14 @@
             <div class="caption_container">
             {{#each name in names}}
             {{#if (elementAtIndex names @index)}}
-                <div class="caption"><b>{{elementAtIndex names @index}}:</b> "{{elementAtIndex captions @index}}"</div>
+                <div class="caption">
+                  <b>{{elementAtIndex names @index}}:</b> "{{elementAtIndex captions @index}}"
+                </div>
+
                 <div class="reacts">
                   {{#let reacts=(createReacts needSubs this.users @index)}}{{reacts}}{{/let}}
                 </div>
+
                 <div class="buttons">
                   <button class="reactWow" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
                     <span>😮</span>
