@@ -100,9 +100,23 @@ Template.chat.events({
         //Cookie.set("name", response.name);
         $input.val("");
       }
-    });
-    
+    }); 
   },
+
+  //send prompt function
+  /*
+  let uid = //however we get the user's id 
+  data = //info we get from uid 
+  Meteor.call("sendPrompt", data, (error, response) => {
+
+    if (error) {
+        alert(error.reason);
+      } else {
+        //Cookie.set("name", response.name);
+        $input.val("");
+      }
+  });
+ */
   
   //hide hint in the top right corner
   

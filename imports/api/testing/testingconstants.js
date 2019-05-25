@@ -175,7 +175,7 @@ const createMurderMystery = function() {
     'a little busy',
     'somewhat busy',
     'pretty busy',
-    'very busy'
+    'busy'
   ];
   /*
   let questions = [
@@ -208,6 +208,8 @@ const createMurderMystery = function() {
       }
     })
 
+
+
     for (let i = 0; i < submissions.length; i++) {
       console.log("busyness: " + submissions[i].content.busy)
       var key = submissions[i].content.busy;
@@ -220,19 +222,42 @@ const createMurderMystery = function() {
           "profile.staticAffordances": affordances
         }
       })
+
+      //find instance of CN that the submission came from
+      let instance = Incidents.findOne(submissions[i].iid);
+      console.log("detector ID: " + instance.contributionTypes[0].situation.detector)
+      let detector_id = instance.contributionTypes[0].situation.detector
+      console.log("detector rules: " + Detectors.findOne(detector_id).rules)
+      let rules = Detectors.findOne(detector_id).rules;
+
+      let participant = Meteor.users.findOne(submissions[i].uid);
+      console.log("participants: " + participant);
+
+      //need to figure out a way to get other users in same experience
+      let others = ""
+
+      //check to see how busy the user is
+      if (participant.profile.staticAffordances.busy) {
+        console.log("casting a murderer")
+        const character = [rules, "murderer", "murderMysteryChat", "Try to avoid being caught and weasel your way out of the clues!", participant.profile.staticAffordances.firstName, others]
+      } else {
+        console.log("casting an innocent")
+        const character = [rules, "innocent", "murderMysteryChat", "Try to prove your innocence and find the real murderer!", participant.profile.staticAffordances.firstName, others]
+      }
+
+
+
+
+
     }
-
-    console.log("added affordances to user")
-
 
     //which way to find participants and set this.toPass.characterName?
     // let participants = submissions.map((submission) => { return submission.uid; });
 
-    let participant = Meteor.users.findOne({
-      "_id": sub.uid,
-    })
+    // let participant = Meteor.users.findOne({
+    //   "_id": sub.uid,
+    // })
 
-    //participant.profile.firstName
 
 
     // let max = submissions[0]
@@ -244,14 +269,6 @@ const createMurderMystery = function() {
     //   }
     // }
 
-    // const staticAffordances = ['busy'];
-    // const places = [
-    //   ["busy", "at a busy coffee shop", "You've been cast as the murderer!"],
-    // ];
-
-
-    
-    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 
     
   }

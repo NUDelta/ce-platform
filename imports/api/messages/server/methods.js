@@ -36,8 +36,8 @@ Meteor.methods({
     if (matchName && matchName[1]!="") {
       userName = matchName[1];
       Messages.insert({
-        name: "Chat Bot",
-        //message: "Hey " + userName + ", you are " + role,
+        name: "Narrator",
+        message: "The murderer is at a " + info,
         createdAt: new Date(),
         announcement: true,
       });
@@ -56,5 +56,15 @@ Meteor.methods({
     };
 		
 	}
+  /*
+  sendPrompt: function (data) {
+    Messages.insert({
+        name: "Narrator",
+        message: "The murderer is at a " + info,
+        createdAt: new Date(),
+        announcement: true,
+      });
+  }
+  */
   
 });
