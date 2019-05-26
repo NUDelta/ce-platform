@@ -109,6 +109,12 @@ Schema.Experience = new SimpleSchema({
     type: String,
     label: 'Experience name',
   },
+  group: {
+    type: String,
+    // `name` and `group` can be identifiers in the case we are deploying similar OCEs to different groups'
+    label: 'Social Group this OCE will be deployed to',
+    optional: true
+  },
   participateTemplate: {
     type: String,
   },

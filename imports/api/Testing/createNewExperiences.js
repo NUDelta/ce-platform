@@ -43,7 +43,10 @@ Meteor.methods({
     }
 
     let exp = CONSTANTS.EXPERIENCES[name];
-    let old_exp = Experiences.findOne({name: exp.name});
+    let old_exp = Experiences.findOne({
+      name: exp.name,
+      group: exp.group  // optional param; if exp.group is null, finds experiences where group is not specified
+    });
     if (!old_exp) {
       throw new Meteor.Error('updateOCE.experiencenotfound',
         `Experience with name '${exp.name}' was not found in Experiences collection`);
