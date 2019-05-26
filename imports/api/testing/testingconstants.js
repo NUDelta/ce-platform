@@ -283,7 +283,12 @@ const createMurderMystery = function() {
           participateTemplate: template,
           toPass: {
             role: role,
-            instruction: instruction
+            instruction: instruction,
+            user: user,
+            dropdownChoices: {
+              name: others,
+              options: others
+            }
           },
           numberNeeded: 3
         };
@@ -318,13 +323,13 @@ const createMurderMystery = function() {
   let experience = {
     name: 'Murder Mystery',
     participateTemplate: 'murderMysteryInitial',
-    resultsTemplate: 'murderMysteryChat',
+    resultsTemplate: 'murderMysteryResult',
     contributionTypes: [
     ],
     description: "You've been invited to participate in a murder mystery!",
     notificationText: "You've been invited to participate in a murder mystery!",
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 2)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 3)',
         // substitute any variables used outside of the callback function scope
         function: eval('`' + MurderMysteryCallback.toString() + '`'),
       }]
