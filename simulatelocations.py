@@ -309,6 +309,6 @@ if __name__ == "__main__":
     # single user movement
     # setLocation(burgers, sys.argv[1])
     # allUsersGrocery()
-    #garrettAndMegBump()
+    # garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()

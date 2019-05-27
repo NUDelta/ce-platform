@@ -159,7 +159,7 @@ Template.bumpedResults.events({
 });
 
 
-Template.bumpedThreeResults.helpers({
+Template.groupBumpedResults.helpers({
   content() {
     const {submissions, images, users} = this;
 
@@ -169,23 +169,70 @@ Template.bumpedThreeResults.helpers({
 
     const myImage = images.find(i => i._id === mySub.content.proof);
     const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
-    const friendNames = otherSubs.map(s => users.find(u => u._id === s.uid));
+    const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
   
     results = {};
     Object.assign(results, 
-      friendNames[0] && {friendOneName: friendNames[0].username},
+      friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
       {myImage: myImage},
       mySub && {myCaption: mySub.content.sentence},
       {imageTwo: otherImages[1]},
-      friendNames[1] && {friendTwoName: friendNames[1].username},
+      friends[1] && {friendTwoName: `${friends[1].profile.firstName} ${friends[1].profile.lastName}`},
       otherSubs[1] && {captionTwo: otherSubs[1].content.sentence}
     )
 
     return results;
   }
-})
+});
+
+Template.imitationGameResults.helpers({
+  content() {
+    console.log('imitationGame results context', this);
+  },
+  content() {
+    let currentUser = this.users.find(x => x._id === Meteor.userId());
+
+    let triad;
+    if(currentUser.profile.staticAffordances.triadOne) {
+      triad = 'triadOne';
+    } else if(currentUser.profile.staticAffordances.triadTwo) {
+      triad = 'triadTwo';
+    }
+    let originalImage, creatorSub, descriptorSub, recreatorSub;
+    let creatorName, descriptorName, recreatorName;
+    
+    this.submissions.filter(s => {
+      let tokenizedNeed = s.needName.split('_');
+      if(tokenizedNeed[2] == triad) {
+        if(tokenizedNeed[0] == 'creator') {
+          creatorSub = this.images.find(i => i._id === s.content.proof);
+          let creatorUser = this.users.find(u => u._id == s.uid);
+          creatorName = `${creatorUser.profile.firstName} ${creatorUser.profile.lastName}`
+          originalImage = this.experience.contributionTypes.find(need => need.needName == s.needName).toPass.example_image;
+        } else if (tokenizedNeed[0] == 'descriptor') {
+          descriptorSub = s.content.sentence;
+          if(descriptorSub) {
+            let descriptorUser = this.users.find(u => u._id == s.uid);
+            descriptorName = `${descriptorUser.profile.firstName} ${descriptorUser.profile.lastName}`
+          }
+        } else if (tokenizedNeed[0] == 'recreator') {
+          recreatorSub = this.images.find(i => i._id === s.content.proof);
+          if(recreatorSub) {
+            let recreatorUser = this.users.find(u => u._id == s.uid);
+            recreatorName = `${recreatorUser.profile.firstName} ${recreatorUser.profile.lastName}`
+          }
+        }
+      }
+    });
+    console.log(creatorName);
+    console.log(descriptorName);
+    console.log(recreatorName);
+    
+    return {originalImage, creatorSub, descriptorSub, recreatorSub, creatorName, descriptorName, recreatorName};
+  }
+});
 
 /**
  * Returns an array with arrays of the given size.

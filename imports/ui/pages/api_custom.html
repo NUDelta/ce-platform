@@ -164,7 +164,7 @@
     {{/if}}
 </template>
 
-<template name="bumpedThree">
+<template name="groupBumped">
     <head>
         <style>
             .instruction {
@@ -182,7 +182,7 @@
         <div class="instruction">
           <span>{{this.toPass.situationDescription}}</span>
             <span>
-                You just bumped into some friends at a coffee shop. {{instruction}}
+                You just bumped into some friends! {{this.toPass.instruction}}
             </span>
         </div>
         <form class="col col-xs-12" id="participate">
@@ -199,6 +199,91 @@
             </button>
         </form>
     {{/if}}
+</template>
+
+<template name="imitationGame">
+  <head>
+    <style>
+      .instruction {
+        padding-top: 4%;
+        padding-bottom: 4%;
+      }
+      img {
+        width: 100%;
+        margin-bottom: 10px
+      }
+      .camera-upload {
+        padding-bottom: 1%;
+      }
+    </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+    <div class="instruction">
+      <p>
+        You’re playing <b>“The Imitation Game”</b>.
+        In this game, you will be communicating with the other players to try to accurately translate an image into a drawing.
+      </p>
+      <p>
+        There are 3 steps to this game.
+      </p>
+      <p>
+        1) The <b>creator</b> will see the initial image, recreate it with items around them, and then send a photo to the second player.
+      </p>
+      <p>
+        2) The <b>descriptor</b> will then see only the recreated image, and they will try to describe it using text.
+      </p> 
+      <p>
+        3) The <b>recreator</b> will see only the text and then try to draw the image from this description.
+      </p>
+      {{#if this.toPass.role.creator}}
+        <img src="{{this.toPass.example_image}}"/>
+        <p>
+          You have the role of the <b>creator</b>. Here is the initial image!
+          Try to recreate it with items around you and send a photo of your image for the next player.
+        </p>
+        <form class="col col-xs-12" id="participate">
+          <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
+          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+        </form>
+      {{else if this.toPass.role.descriptor}}
+        <p>
+          You have the role of the <b>descriptor</b>.
+        </p>
+        {{#let user=(getUserById users this.toPass.previousSub.uid)}}
+         {{> displayLeftToRight_FullName_Avatar prependText="The creator," appendText=", created this image:" user=user avatar=(userAvatarImg avatars user) }}
+        {{/let}}
+        {{#let creatorImage=getPreviousImageSub}}
+          {{> Template.dynamic template="displayImage" data=(creatorImage) }}
+        {{/let}}
+        <p>
+          Describe it as best you can to send to the next player.
+        </p>
+        <form class="col col-xs-12" id="participate">
+          <div>{{> Template.dynamic template="text" data="sentence"}}</div>
+          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+        </form>
+      {{else if this.toPass.role.recreator}}
+        <p>
+          You have the role of the <b>recreator</b>. Here’s the description that _ sent you.
+        </p>
+        <p>
+            "{{this.toPass.previousSub.content.sentence}}"
+            <div class>
+              {{#let user=(getUserById users this.toPass.previousSub.uid)}}
+                {{> displayLeftToRight_FullName_Avatar prependText="- " user=user avatar=(userAvatarImg avatars user) }}
+              {{/let}}
+            </div>
+        </p>
+        <p>
+          Try drawing a picture based on this description and take a picture of it to complete the game!
+        </p>
+        <form class="col col-xs-12" id="participate">
+            <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
+            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+          </form>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>
 
 <template name="cheers">

@@ -742,11 +742,8 @@ let DETECTORS = {
 export const getDetectorId = (detector) => {
   let db_detector = Detectors.findOne({description: detector.description});
   if (db_detector) {
-    console.log('getting db detector for', detector.description, 'which is', db_detector._id);
-    console.log(db_detector)
     return db_detector._id;
   } else {
-    console.log('getting detector for', detector.description, 'which is', detector._id);
 
     return detector._id;
   }
@@ -1160,9 +1157,8 @@ const createHalfHalf = function(
   return experience;
 };
 
-const createBumpedThree = function() {
-  // console.log(DETECTORS);
-  const bumpedThreeCallback = function (sub) {
+const createDrinksTalk = function() {
+  const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -1170,134 +1166,331 @@ const createBumpedThree = function() {
     
     let participants = submissions.map((submission) => { return submission.uid; });
     
-    notify(participants, sub.iid, 'See images from your group bumped experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-    
+    notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
-  
+
+  const drinksTalkNewSubCallback = function (sub) {
+    console.log('drinksTalkNewSubCallback', sub);
+    
+      Meteor.users.update({
+        _id: sub.uid
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInDrinksTalk']: true
+        }
+      });
+  }
+
+  DETECTORS['beverage_triadOne'] = {
+    _id: Random.id(),
+    description: `beverage triadOne`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var triadOne;',
+      'var participatedInDrinksTalk;',
+    ],
+    rules: ['triadOne && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
+  }
+
+  DETECTORS['beverage_triadTwo'] = {
+    _id: Random.id(),
+    description: `beverage triadOne`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var triadTwo;',
+      'var participatedInDrinksTalk;',
+    ],
+    rules: ['triadTwo && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
+  }
+
   let experience = {
-    name: 'Group Bumped',
-    participateTemplate: 'bumpedThree',
-    resultsTemplate: 'bumpedThreeResults',
-    contributionTypes: [],
+    name: 'Group Bumped - Drinks Talk',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "beverage_triadOne",
+        situation : {
+          detector : DETECTORS['beverage_triadOne']._id,
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Having a good time at a coffee shop or a restaurant?",
+          instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
+        },
+        numberNeeded : 3,
+        notificationDelay : 0,
+        allowRepeatContributions : false
+      },
+      {
+        needName : "beverage_triadTwo",
+        situation : {
+          detector : DETECTORS['beverage_triadTwo']._id,
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Having a good time at a coffee shop or a restaurant?",
+          instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
+        },
+        numberNeeded : 3,
+        notificationDelay : 0,
+        allowRepeatContributions : false
+      },
+    ],
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-      trigger: `cb.numberOfSubmissions() === 3`,
-      function: bumpedThreeCallback.toString(),
-    }]
+        trigger: `cb.numberOfSubmissions() === 3`,
+        function: drinksTalkCompleteCallback.toString(),
+      }, {
+        trigger: `cb.newSubmission()`,
+        function: drinksTalkNewSubCallback.toString(),
+      }
+    ]
   };
 
-
-  const staticAffordances = ['triadOne', 'triadTwo', 'triadThree'];
-  const places = [
-    ["coffee", "at a coffee shop", "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)"],
-    ["daytime", "today", "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."],
-  ];
-  
-  // const needs = places.map(place => {
-  //   const [detectorName, situationDescription, instruction] = place;
-  //   return {
-  //     needName: `Bumped Three ${detectorName}`,
-  //     situation: {
-  //       detector: getDetectorId(DETECTORS[detectorName]),
-  //       number: '1'
-  //     },
-  //     toPass: {
-  //       situationDescription: `Having a good time ${situationDescription}?`,
-  //       instruction: `${instruction}`
-  //     },
-  //     numberNeeded: 3,
-  //     // notificationDelay: 90 uncomment for testing
-  //   }
-  // });
-  
-  
-  staticAffordances.forEach(triad => {
-    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(triad, ((places) => 
-      places.map(place => {
-        const [detectorName, situationDescription, instruction] = place;
-        return {
-          needName: `Bumped Three ${detectorName}`,
-          situation: {
-            detector: getDetectorId(DETECTORS[detectorName]),
-            number: 1
-          },
-          toPass: {
-            situationDescription: `Having a good time ${situationDescription}?`,
-            instruction: `${instruction}`
-          },
-          numberNeeded: 3,
-          // notificationDelay: 90 uncomment for testing
-        }
-      })
-    )(places))];
-  });
-  
   return experience;
 }
 
-// const createImitationGame = function () {
-//   // everyone gets participate template with different roles specified
-//   // creator, descriptor, recreator
-//   // callbacks triggered to send updates to each participant, also have callback when experience completes
-//   // -trigger based on the number of submissions
+const createMoodMeteorology = function () {
+  const moodMeteorologyCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+    
+    let participants = submissions.map((submission) => { return submission.uid; });
+    
+    notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  }
 
-//   const scenarions = [
-//     {
-//       name: 'food art',
-//       detector: 'dinning_hall',
-//       image_url: 'insert'
-//     }
-//   ]
+  const moodMeteorologyNewSubCallback = function (sub) {
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $set: {
+        ['profile.staticAffordances.participatedInMoodMeteorology']: true
+      }
+    });
+  }
 
-//   scenarions.forEach((scenario) => {
-//     // create detectors
-//   });
+
+  DETECTORS['daytime_triadOne'] = {
+    _id: Random.id(),
+    description: `daytime triadOne`,
+    variables: ['var daytime;', 'var triadOne;', 'var participatedInMoodMeteorology;',],
+    rules: ['triadOne && !participatedInMoodMeteorology && daytime;']
+  }
+
+  DETECTORS['daytime_triadTwo'] = {
+    _id: Random.id(),
+    description: `daytime triadTwo`,
+    variables: ['var daytime;', 'var triadTwo;', 'var participatedInMoodMeteorology;'],
+    rules: ['triadTwo && !participatedInMoodMeteorology && daytime;']
+  }
+
+  let experience = {
+    name: 'Group Bumped - Mood Meteorology',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "daytime_triadOne",
+        situation : {
+          detector : DETECTORS['daytime_triadOne']._id,
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Having a good time today?",
+          instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
+        },
+        numberNeeded : 3,
+        notificationDelay : 0,
+        allowRepeatContributions : false
+      },
+      {
+        needName : "daytime_triadTwo",
+        situation : {
+          detector : DETECTORS['daytime_triadTwo']._id,
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Having a good time today?",
+          instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
+        },
+        numberNeeded : 3,
+        notificationDelay : 0,
+        allowRepeatContributions : false
+      },
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `cb.numberOfSubmissions() === 3`,
+        function: moodMeteorologyCallback.toString(),
+      }, {
+        trigger: `cb.newSubmission()`,
+        function: moodMeteorologyNewSubCallback.toString(),
+      }
+    ]
+  };
+
+  return experience;
+}
+
+const createImitationGame = function () {
   
-//   let experience = {
-//     name: 'The Imitation Game',
-//     participateTemplate: 'imitationGame',
-//     resultsTemplate: 'imitationGameResults',
-//     contributionTypes: [],
-//     description: 'Share your experience with your friend and their friend!',
-//     notificationText: 'Share your experience with your friend and their friend!',
-//     callbacks: []
-//   };
+  const sendNotification = function (sub) {
+    const triad = sub.needName.split('_')[2]
+    let uids;
+    if(triad == "triadOne") {
+      uids = Meteor.users.find({"profile.staticAffordances.triadOne": true}).fetch().map(x => x._id);
+    } else if (triad == "triadTwo") {
+      uids = Meteor.users.find({"profile.staticAffordances.triadTwo": true}).fetch().map(x => x._id);
+    }
 
-//   //modify to add triad variable
-//   let creator_detector = {
-//     '_id': Random.id(),
-//     'description': `dinning_hall imitation_game creator`,
-//     'variables': `${DETECTORS['dinning_hall'].variables} var imitatio`,
-//     'rules': ``
-//   };
-
-//   experience.contributionTypes.push(creator_detector);
+    notify(uids, sub.iid, 'The game is finally complete. Click here to check it out!',
+    '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  };
   
-//   let contribution = {
-//     needName: 'imitation_creator',
-//     situation: {
-//       detector: ,
-//       number: '1'
-//     },
-//     toPass: {
-//       instruction: ,
+  const imitationGameCallback = function (sub) {
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $set: {
+        ['profile.staticAffordances.participatedInImitationGame']: true
+      }
+    });
 
-//     },
-//     numberNeeded: 1,
-//     // notificationDelay: 90 uncomment for testing
-//   }
+    const triad = sub.needName.split('_')[2]
+
+    let detectorId;
+
+    if(triad == 'triadOne') {
+      detectorId = "imitationGame_triadOne"
+    } else if (triad == 'triadTwo') {
+      detectorId = "imitationGame_triadTwo"
+    }
+
+    let newContribution = {
+      needName: `ImitationGame`,
+      situation: {
+        detector: detectorId,
+        number: 1
+      },
+      toPass: {
+        role: {
+          creator: false,
+          descriptor: false,
+          recreator: false
+        },
+        previousSub: sub,
+      },
+      numberNeeded: 1,
+      // notificationDelay: 90 uncomment for testing
+    };
+    
+    if (cb.numberOfSubmissions() % 3 === 1) {
+      newContribution.needName = `descriptor_${newContribution.needName}_${triad}`;
+      newContribution.toPass.role.descriptor = true;
+      addContribution(sub.iid, newContribution);
+    }
+    else if (cb.numberOfSubmissions() % 3 === 2) {
+      newContribution.needName = `recreator_${newContribution.needName}_${triad}`;
+      newContribution.toPass.role.recreator = true;
+      addContribution(sub.iid, newContribution);
+    }
+  };
+
+  DETECTORS['imitationGame_triadOne'] = {
+    '_id': Random.id(),
+    'description': `imitation_game`,
+    'variables': [
+      'var daytime;',
+      'var participatedInImitationGame;',
+      'var triadOne;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInDrinksTalk;'],
+    // 'rules': '!participatedInImitationGame && triadOne; && ', // use this to debug at night
+    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadOne);',
+  }
   
+  DETECTORS['imitationGame_triadTwo'] = {
+    '_id': Random.id(),
+    'description': `imitation_game`,
+    'variables': [
+      'var daytime;',
+      'var participatedInImitationGame;',
+      'var triadTwo;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInDrinksTalk;'],
+    // 'rules': '!participatedInImitationGame && triadTwo;', //use this to debug at night
+    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadTwo);',
+  }
+  
+  let experience = {
+    name: 'The Imitation Game',
+    participateTemplate: 'imitationGame',
+    resultsTemplate: 'imitationGameResults',
+    contributionTypes: [{
+      needName: `creator_ImitationGame_triadOne`,
+      situation: {
+        detector: DETECTORS['imitationGame_triadOne']._id,
+        number: 1
+      },
+      toPass: {
+        role: {
+          creator: true,
+          descriptor: false,
+          recreator: false
+        },
+        example_image: 'https://i.imgur.com/xf20VKa.jpg'
+      },
+      numberNeeded: 1,
+      // notificationDelay: 90 uncomment for testing
+    }, {
+      needName: `creator_ImitationGame_triadTwo`,
+      situation: {
+        detector: DETECTORS['imitationGame_triadTwo']._id,
+        number: 1
+      },
+      toPass: {
+        role: {
+          creator: true,
+          descriptor: false,
+          recreator: false
+        },
+        example_image: 'https://i.imgur.com/xf20VKa.jpg'
+      },
+      numberNeeded: 1,
+      // notificationDelay: 90 uncomment for testing
+    }],
+    description: 'Let\'s play an imitation game!',
+    notificationText: 'Let\'s play an imitation game!',
+    callbacks: [{
+        trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() % 3 != 0)',
+        function: imitationGameCallback.toString()
+          .replace('imitationGame_triadOne', DETECTORS['imitationGame_triadOne']._id)
+          .replace('imitationGame_triadTwo', DETECTORS['imitationGame_triadTwo']._id)
+      }, {
+        trigger: 'cb.numberOfSubmissions() % 3 == 0',
+        function: sendNotification.toString()
+    }],
+    allowRepeatContributions: false,
+  };
 
-//   const  sendNotification = function (sub) {
-
-//   };
-
-//   const imitationGameCallback = function (sub) {
-//     // if one submission, notify second participant
-//     // if two submissions, notify third participant
-//   };
-// }
+  experience.callbacks.push();
+  
+  return experience;
+}
 
 /**
  *
@@ -1751,7 +1944,6 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
       'rules': newRules
     };
   }
-  console.log( DETECTORS[newDetectorKey].description,  DETECTORS[newDetectorKey]._id);
   return newDetectorKey;
 };
 
@@ -1773,8 +1965,7 @@ const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes)
     // WILL THROW ERROR if we don't find the matching detector id
 
     let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    need.situation.detector = DETECTORS[newDetectorKey]._id;
-    console.log('adding to need', newDetectorKey, DETECTORS[newDetectorKey]._id);
+    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
     return need;
   });
 };
@@ -1884,13 +2075,8 @@ const sendNotificationTwoHalvesCompleted = function(sub) {
     '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
-let TRIADIC_EXPERIENCES = {
-  bumpedThree: createBumpedThree(),
-}
-
 let EXPERIENCES = {
   bumped: createBumped(),
-  bumpedThree: createBumpedThree(),
   storyTime: createStorytime(0),
   storyTime1: createStorytime(1),
   storyTime2: createStorytime(2),
@@ -1900,12 +2086,12 @@ let EXPERIENCES = {
   // storyTime6: createStorytime(6),
   // storyTime7: createStorytime(7),
   // independentStorybook: createIndependentStorybook(),
-  // sunset: {
-  //   _id: Random.id(),
-  //   name: 'Sunset',
-  //   participateTemplate: 'uploadPhoto',
-  //   resultsTemplate: 'sunset',
-  //   contributionTypes: [{
+  // sunset: { 
+    //   _id: Random.id(),
+    //   name: 'Sunset',
+    //   participateTemplate: 'uploadPhoto',
+    //   resultsTemplate: 'sunset',
+    //   contributionTypes: [{
   //     needName: 'sunset',
   //     situation: {
   //       detector: DETECTORS.sunset._id,
@@ -3106,13 +3292,18 @@ let EXPERIENCES = {
   // }
 };
 
+let TRIADIC_EXPERIENCES = {
+  drinksTalk: createDrinksTalk(),
+  moodMeteorology: createMoodMeteorology(),
+  imitationGame: createImitationGame(),
+}
+
 export const CONSTANTS = {
   'LOCATIONS': LOCATIONS,
   'USERS': USERS,
   // Comment out if you would like to only test specific experiences
   // 'EXPERIENCES': (({ halfhalfEmbodiedMimicry }) => ({ halfhalfEmbodiedMimicry }))(EXPERIENCES),
-  'EXPERIENCES': EXPERIENCES,
-  // 'EXPERIENCES': TRIADIC_EXPERIENCES,
+  'EXPERIENCES': TRIADIC_EXPERIENCES,
   'DETECTORS': DETECTORS
 };
 

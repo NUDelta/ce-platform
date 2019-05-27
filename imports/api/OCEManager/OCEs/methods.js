@@ -414,6 +414,7 @@ export const createIncidentFromExperience = (experience) => {
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
+    allowRepeatContributions: experience.allowRepeatContributions
   };
 
   Incidents.insert(incident, (err) => {

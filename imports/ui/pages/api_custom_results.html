@@ -106,7 +106,7 @@
 
 </template>
 
-<template name="bumpedThreeResults">
+<template name="groupBumpedResults">
   <head>
     <style>
       .sub_container {
@@ -142,24 +142,83 @@
       </div>
       <div class="sub_container">
         {{#if imageOne}}
-          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
+         <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
           <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageOne)}}</div> 
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>
-          {{/if}}
-        </div>
-        <div class="sub_container">
-          {{#if imageTwo}}
+        {{/if}}
+      </div>
+      <div class="sub_container">
+        {{#if imageTwo}}
           <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageTwo)}}</div> 
           <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
-          {{else}}
+        {{else}}
           <div class="pending_img">?</div>
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
         {{/if}}
-      </div>
+        </div>
     </div>
   {{/with}}
+</template>
+
+<template name="imitationGameResults">
+  <head>
+    <style>
+      .main-header {
+        font-size: 1.2em;
+        padding-top: 1em;
+        text-align: center;
+      }
+      .content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .arrow {
+        font-size: 2em;
+      }
+      .submission-text {
+        align-self: flex-start;
+      }
+    </style>
+  </head>
+  <p class="main-header"><b>Check out the results from "The Imitation Game":</b></p>
+  <div class="content-container">
+    {{#with content}}
+    <div class="submission-container">
+      <div class="submission-text">Original Image</div>
+      <img src="{{originalImage}}" />
+    </div>
+    <div class="arrow">↓</div>
+    <div class="submission-container">
+      {{#if creatorSub}}
+        <div class="submission-text">The creator, <b>{{creatorName}}</b>, created this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=(creatorSub)}}</div>
+      {{else}}
+        <div class="caption">We're still waiting on the creator's submission. Hang tight!</div>
+      {{/if}}
+    </div>
+    <div class="arrow">↓</div>
+    <div class="submission-container">
+      {{#if descriptorSub}}
+        <div class="submission-text">The descriptor, <b>{{descriptorName}}</b>, said</div>
+        <div>"{{descriptorSub}}"</div>
+      {{else}}
+        <div class="caption">We're still waiting on the descriptor's submission. Hang tight!</div>
+      {{/if}}
+    </div>
+    <div class="arrow">↓</div>
+    <div class="submission-container">
+      {{#if recreatorSub}}
+        <div class="submission-text">The recreator, <b>{{recreatorName}}</b>, drew this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=(recreatorSub)}}</div>
+      {{else}}
+        <div class="caption">We're still waiting on the recreator's submission. Hang tight!</div>
+      {{/if}}
+    </div>
+    {{/with}}
+  </div>
 </template>
 
 <template name="halfhalfResults">

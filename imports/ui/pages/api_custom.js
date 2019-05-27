@@ -76,7 +76,8 @@ Template.bumped.helpers({
   }
 });
 
-Template.bumpedThree.helpers({
+Template.groupBumped.helpers({
+  // @TODO - determine if we won't need this then delete
   friendNames() {
     const friends = this.users.filter(friend => {
       return this.notification_log.filter(notif => friend._id == notif.uid && friend._id !== Meteor.userId()).length > 0;
@@ -86,6 +87,21 @@ Template.bumpedThree.helpers({
       friendOne: friends[0].username,
       friendTwo: friends[1].username
     }
+  }
+});
+
+Template.imitationGame.helpers({
+  getUserById(users, uid) {
+    let user = users.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+  getPreviousImageSub() {
+    return this.images.find(i => i.uid === this.toPass.previousSub.uid);
+  },
+  getPreviousDescription() {
+    console.log('getPreviousDescription', this);
   }
 });
 
@@ -450,6 +466,8 @@ Template.api_custom.events({
     event.preventDefault();
 
     //this makes the loading circle show up
+    console.log(event.target.getElementsByClassName('overlay'));
+    
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 

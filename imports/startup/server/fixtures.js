@@ -56,9 +56,16 @@ Meteor.methods({
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
-  startBumpedThree(){
-    console.log("starting bumped three");
-    let value = CONSTANTS.EXPERIENCES.bumpedThree;
+  startDrinksTalk(){
+    console.log("starting drinks talk");
+    let value = CONSTANTS.EXPERIENCES.drinksTalk;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startImitationGame() {
+    console.log("starting imitation game");
+    let value = CONSTANTS.EXPERIENCES.imitationGame;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
@@ -135,6 +142,7 @@ function createTestData(){
   let uid3 = findUserByUsername('meg')._id;
   let uid4 = findUserByUsername('megs_sister')._id;
   let uid5 = findUserByUsername('josh')._id;
+  let uid6 = findUserByUsername('nagy')._id;
 
   let olinuid1 = findUserByUsername('nagy')._id;
   let olinuid2 = findUserByUsername('bonnie')._id;
@@ -187,12 +195,20 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid1, uid2, uid3, uid4, uid5]}
+    _id: {$in: [uid1, uid2, uid3]}
   }, {
-    $set: { 'profile.staticAffordances': { "triadOne": true} }
+    $set: { 'profile.staticAffordances': { "triadOne": true, "daytime": true} },
   }, {
     multi: true
   });
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
+  Meteor.users.update({
+    _id: {$in: [uid4, uid5, uid6]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triadTwo": true, "daytime": true} }
+  }, {
+    multi: true
+  });
+
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
 }
