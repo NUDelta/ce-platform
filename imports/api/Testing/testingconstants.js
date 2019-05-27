@@ -1259,8 +1259,6 @@ const createDrinksTalk = function() {
   }
 
   const drinksTalkNewSubCallback = function (sub) {
-    console.log('drinksTalkNewSubCallback', sub);
-    
       Meteor.users.update({
         _id: sub.uid
       }, {
@@ -1485,7 +1483,7 @@ const createImitationGame = function () {
         previousSub: sub,
       },
       numberNeeded: 1,
-      // notificationDelay: 90 uncomment for testing
+      // notificationDelay: 90 //uncomment for testing
     };
     
     if (cb.numberOfSubmissions() % 3 === 1) {

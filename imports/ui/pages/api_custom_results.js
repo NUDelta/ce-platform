@@ -346,9 +346,6 @@ export const reactSubmission = (react, users, submission) => {
 
 Template.imitationGameResults.helpers({
   content() {
-    console.log('imitationGame results context', this);
-  },
-  content() {
     let currentUser = this.users.find(x => x._id === Meteor.userId());
 
     let triad;

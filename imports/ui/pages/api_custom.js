@@ -94,9 +94,6 @@ Template.imitationGame.helpers({
   getPreviousImageSub() {
     return this.images.find(i => i.uid === this.toPass.previousSub.uid);
   },
-  getPreviousDescription() {
-    console.log('getPreviousDescription', this);
-  }
 });
 
 Template.groupCheers.helpers({
@@ -104,7 +101,6 @@ Template.groupCheers.helpers({
     let user = users.find(function(x) {
       return x._id === uid;
     });
-    console.log(user);
     return user;
   },
 
@@ -117,7 +113,6 @@ Template.groupCheers.helpers({
       return x.needName === needName;
     });
     let imagesGroupedByTriad = chunkArray(needImages, 3);
-    console.log(imagesGroupedByTriad);
     if(imagesGroupedByTriad.length == 0){
       return [];
     }
@@ -126,10 +121,6 @@ Template.groupCheers.helpers({
     }
   },
   lengthEqual(array, number) {
-    console.log(array);
-    console.log(array.length);
-    console.log(number);
-    console.log(array.length === number)
     return array.length === number;
   },
   firstElement(array) {
@@ -160,7 +151,6 @@ Template.groupCheers.onDestroyed(() => {
 //see halfhalf_participate.events
 Template.groupCheers.events({
   'click #takePhoto'(event, template){
-    console.log(template);
     if (typeof CameraPreview !== 'undefined') {
       toggleCameraControls('takePhotoInProgress');
       CameraPreview.takePicture({

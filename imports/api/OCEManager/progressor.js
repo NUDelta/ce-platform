@@ -130,23 +130,11 @@ class CallbackManager {
   //trigger used in callbacks: returns number of submission for the need
   numberOfSubmissions(needName) {
     if (needName === undefined) {
-      console.log('checking number of submissions for', needName, 'which is,', Submissions.find({
-        iid: this.submission.iid,
-        needName: needName,
-        uid: { $ne: null }
-      }).count());
-      
       return Submissions.find({
         iid: this.submission.iid,
         uid: { $ne: null }
       }).count();
     } else {
-      console.log('checking number of submissions for', needName, 'which is,', Submissions.find({
-        iid: this.submission.iid,
-        needName: needName,
-        uid: { $ne: null }
-      }).count());
-    
       return Submissions.find({
         iid: this.submission.iid,
         needName: needName,
