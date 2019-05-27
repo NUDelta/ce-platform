@@ -126,32 +126,25 @@ export const numberSubmissionsRemaining = (iid, needName) => {
 
 export const needIsAvailableToParticipateNow = (incident, needName) => {
   if (!incident) {
-    console.log(`Error in needAggregator: incident is null\n ${JSON.stringify(incident)}`);
+    console.error(`Error in needIsAvailableToParticipateNow: incident is null`);
     return;
   }
   if (!needName) {
-    console.log(`Error in needAggregator: needName is null`);
+    console.error(`Error in needIsAvailableToParticipateNow: needName is null`);
     return;
   }
   if (!incident.contributionTypes) {
-    console.log(`Error in needAggregator: incident does not have contribution types\n ${JSON.stringify(incident)}`);
+    console.error(`Error in needIsAvailableToParticipateNow: incident does not have contribution types\n ${JSON.stringify(incident)}`);
     return;
   }
   const needObject = incident.contributionTypes.find(need => need.needName == needName);
-  const numberNeeded = numberSubmissionsRemaining(incident._id, needName);
   const semaphoreMax = needObject.numberAllowedToParticipateAtSameTime ?
-    needObject.numberAllowedToParticipateAtSameTime : numberNeeded;
-  const resourcesStillAvailable = numberUsersParticipatingNow(incident._id, needName) < semaphoreMax;
+    needObject.numberAllowedToParticipateAtSameTime : numberSubmissionsRemaining(incident._id, needName);
+  const resourcesStillAvailable = usersParticipatingNow(incident._id, needName).length < semaphoreMax;
   return resourcesStillAvailable;
 };
 
-/**
- * numberUsersParticipatingNow
- *
- * @param iid
- * @param needName
- */
-export const numberUsersParticipatingNow = (iid, needName) => {
+export const usersParticipatingNow = (iid, needName) => {
   let participatingNowInIncident = ParticipatingNow.findOne({_id: iid});
   if (!participatingNowInIncident) {
     console.error(`Error in numberUsersParticipatingNow: no doc in ParticipatingNow found for iid ${iid}`);
@@ -166,6 +159,6 @@ export const numberUsersParticipatingNow = (iid, needName) => {
     console.error(`Error in numUsersParticipatingNow: needMap.users is not an array`);
     return;
   }
-  return needMap.users.length;
+  return needMap.users;
 };
 

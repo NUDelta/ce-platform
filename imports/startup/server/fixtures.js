@@ -108,7 +108,7 @@ function createTestData(){
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
   // add detectors
-  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+  Object.values(CONSTANTS.DETECTORS).forEach(function (value){
     Detectors.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
@@ -149,7 +149,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesGarrett": true } }
+    $set: { 'profile.staticAffordances': {"lovesGarrett": true, "knowsDTR": true} }
   }, {
     multi: true
   });
