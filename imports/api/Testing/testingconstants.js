@@ -1158,15 +1158,73 @@ const createHalfHalf = function(
 };
 
 const createGroupCheers = function() {
+
+  DETECTORS['cheers_triadOne'] = {
+    _id: Random.id(),
+    description: `cheers triadOne`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+      'var triadOne;',
+      'var participatedInDrinksTalk;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInImitationGame;',
+    ],
+    rules: ['(triadOne && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }
+
+  DETECTORS['cheers_triadTwo'] = {
+    _id: Random.id(),
+    description: `cheers triadTwo`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+      'var triadTwo;',
+      'var participatedInDrinksTalk;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInImitationGame;',
+    ],
+    rules: ['(triadTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }
+
   let experience = {
     name: 'Group Cheers',
     participateTemplate: 'groupCheers',
     resultsTemplate: 'groupCheersResults',
     contributionTypes: [{
-      needName: 'Group Cheers 1',
+      needName: 'groupCheers triadOne',
       situation: {
-        detector: DETECTORS.bar._id,
-        number: 3
+        detector: DETECTORS['cheers_triadOne']._id,
+        number: 1
+      },
+    toPass: {
+      instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+      //change example image to be on s3 server
+      exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+    },
+    numberNeeded: 3,
+    notificationDelay: 1
+    }, {
+      needName: 'groupCheers triadTwo',
+      situation: {
+        detector: DETECTORS['cheers_triadTwo']._id,
+        number: 1
       },
     toPass: {
       instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
@@ -1181,7 +1239,8 @@ const createGroupCheers = function() {
     callbacks: [{
       trigger: `cb.numberOfSubmissions() === 3`,
       function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
-    }]
+    }],
+    allowRepeatContributions: false,
   };
 
   return experience;
@@ -1226,9 +1285,8 @@ const createDrinksTalk = function() {
       'var food_court;',
       'var bars;',
       'var triadOne;',
-      'var participatedInDrinksTalk;',
     ],
-    rules: ['triadOne && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes || diners || restaurants || cafeteria || food_court || bars);']
+    rules: ['(triadOne && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   }
 
   DETECTORS['beverage_triadTwo'] = {
@@ -1246,9 +1304,8 @@ const createDrinksTalk = function() {
       'var food_court;',
       'var bars;',
       'var triadTwo;',
-      'var participatedInDrinksTalk;',
     ],
-    rules: ['triadTwo && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes || diners || restaurants || cafeteria || food_court || bars);']
+    rules: ['(triadTwo && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   }
 
   let experience = {
@@ -1294,7 +1351,8 @@ const createDrinksTalk = function() {
         trigger: `cb.newSubmission()`,
         function: drinksTalkNewSubCallback.toString(),
       }
-    ]
+    ],
+    allowRepeatContributions: false,
   };
 
   return experience;
@@ -1319,15 +1377,15 @@ const createMoodMeteorology = function () {
   DETECTORS['daytime_triadOne'] = {
     _id: Random.id(),
     description: `daytime triadOne`,
-    variables: ['var daytime;', 'var triadOne;', 'var participatedInMoodMeteorology;',],
-    rules: ['triadOne && !participatedInMoodMeteorology && daytime;']
+    variables: ['var daytime;', 'var triadOne;',],
+    rules: ['(triadOne && daytime);']
   }
 
   DETECTORS['daytime_triadTwo'] = {
     _id: Random.id(),
     description: `daytime triadTwo`,
-    variables: ['var daytime;', 'var triadTwo;', 'var participatedInMoodMeteorology;'],
-    rules: ['triadTwo && !participatedInMoodMeteorology && daytime;']
+    variables: ['var daytime;', 'var triadTwo;',],
+    rules: ['(triadTwo && daytime);']
   }
 
   let experience = {
@@ -1373,7 +1431,8 @@ const createMoodMeteorology = function () {
         trigger: `cb.newSubmission()`,
         function: moodMeteorologyNewSubCallback.toString(),
       }
-    ]
+    ],
+    allowRepeatContributions: false,
   };
 
   return experience;
@@ -1450,7 +1509,7 @@ const createImitationGame = function () {
       'var triadOne;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadOne);',
+    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && triadOne);',
   }
   
   DETECTORS['imitationGame_triadTwo'] = {
@@ -1462,7 +1521,7 @@ const createImitationGame = function () {
       'var triadTwo;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadTwo);',
+    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && triadTwo);',
   }
   
   let experience = {
