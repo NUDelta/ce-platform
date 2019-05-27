@@ -1220,25 +1220,35 @@ const createDrinksTalk = function() {
       'var cafes;',
       'var coffeeshops;',
       'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
       'var triadOne;',
       'var participatedInDrinksTalk;',
     ],
-    rules: ['triadOne && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
+    rules: ['triadOne && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes || diners || restaurants || cafeteria || food_court || bars);']
   }
 
   DETECTORS['beverage_triadTwo'] = {
     _id: Random.id(),
-    description: `beverage triadOne`,
+    description: `beverage triadTwo`,
     variables: [
       'var coffeeroasteries;',
       'var coffee;',
       'var cafes;',
       'var coffeeshops;',
       'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
       'var triadTwo;',
       'var participatedInDrinksTalk;',
     ],
-    rules: ['triadTwo && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
+    rules: ['triadTwo && !participatedInDrinksTalk && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes || diners || restaurants || cafeteria || food_court || bars);']
   }
 
   let experience = {
@@ -3319,6 +3329,7 @@ let TRIADIC_EXPERIENCES = {
   drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
   imitationGame: createImitationGame(),
+  groupCheers: createGroupCheers(),
 }
 
 export const CONSTANTS = {

@@ -303,8 +303,8 @@ def allUsersCoffee():
 
 if __name__ == "__main__":
     # allUsersGrocery()
-	#allUsersCoffee()
-	allUsersAtBars()
+	allUsersCoffee()
+	# allUsersAtBars()
 	#allUsersAtPark()
     # garrettAndMegBump()
     # single user movement
