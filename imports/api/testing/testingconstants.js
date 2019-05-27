@@ -89,7 +89,7 @@ let DETECTORS = {
     'var coffeeshops;',
     'var coffeeteasupplies;'
     ],
-    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes);']
+    rules: ['(coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes)']
   },
   busy: {
     _id: 'saxQsfSaBiHHoSEZX',
@@ -213,14 +213,16 @@ const createMurderMystery = function() {
       console.log("busyness: " + submissions[i].content.busy)
       var key = submissions[i].content.busy;
       var affordances = {}
-      affordances[key] = true
+      affordances[key] = true;
+      console.log("staticAffordances: " + affordances.key)
       Meteor.users.update({
-        "_id": sub.uid
+        _id: submissions[i].uid
       }, {
-        "$set": {
-          "profile.staticAffordances": affordances
+        $set: {
+          ['profile.staticAffordances.' + key]: true
+          
         }
-      })
+      });
 
       //find instance of CN that the submission came from
       let instance = Incidents.findOne(submissions[i].iid);
@@ -259,9 +261,15 @@ const createMurderMystery = function() {
       let character = []
       if (participant.profile.staticAffordances.busy) {
         console.log("casting a murderer")
+        rules = submissions[i].content.busy + " && " + rules
+        //rules += " && " + submissions[i].content.busy + ";"
+        //rules = addStaticAffordanceToDetector(submissions[i].content.busy, instance.contributionTypes[0].situation.detector)
         character.push([rules, "murderer", "murderMysteryChat", "Try to avoid being caught and weasel your way out of the clues!", participant.profile.firstName, other_participants])
       } else {
         console.log("casting an innocent")
+        rules = submissions[i].content.busy + " && " + rules
+        //rules += " && " + submissions[i].content.busy + ";"
+        //rules = addStaticAffordanceToDetector(submissions[i].content.busy, instance.contributionTypes[0].situation.detector)
         character.push([rules, "innocent", "murderMysteryChat", "Try to prove your innocence and find the real murderer!", participant.profile.firstName, other_participants])
       }
 
@@ -278,7 +286,7 @@ const createMurderMystery = function() {
         var need = {
           needName: "Murder Mystery" + role,
           situation: {
-            detector: sub.content.affordance,
+            detector: detectorName,
             number: 2
           },
           participateTemplate: template,
@@ -291,7 +299,7 @@ const createMurderMystery = function() {
               options: others
             }
           },
-          numberNeeded: 3
+          numberNeeded: 2
         };
         //next_experience.contributionTypes.push(need)
         addContribution(sub.iid, need);
@@ -331,7 +339,7 @@ const createMurderMystery = function() {
     description: "You've been invited to participate in a murder mystery!",
     notificationText: "You've been invited to participate in a murder mystery!",
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 2)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 3)',
         // substitute any variables used outside of the callback function scope
         function: eval('`' + MurderMysteryCallback.toString() + '`'),
       }]
@@ -369,7 +377,7 @@ staticAffordances.forEach(affordance => {
         needName: `Murder Mystery ${detectorName}`,
         situation: {
           detector: getDetectorId(DETECTORS[detectorName]),
-          number: 2
+          number: 3
         },
         participateTemplate: 'murderMysteryInitial',
         toPass: {
@@ -383,7 +391,7 @@ staticAffordances.forEach(affordance => {
             options: DROPDOWN_OPTIONS
           }
         },
-        numberNeeded: 2,
+        numberNeeded: 3,
           // notificationDelay: 90 uncomment for testing
         }
       })

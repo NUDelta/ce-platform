@@ -47,7 +47,16 @@
 </template>
 
 <template name="murderMysteryChat">
+    {{#if this.toPass.role}}
+      <div>
+        <h5>Your role is </h5>
+        <h5>{{this.toPass.role}}</h5>
+      </div>
+      {{else}}
+          <p> Waiting for your role to be assigned </p>
+    {{/if}}
     <div>
+        {{> Template.dynamic template="rolecall" data="proof"}}
         {{{this.toPass.role}}}
     </div>
     <div class="past-messages">
