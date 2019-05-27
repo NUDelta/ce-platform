@@ -193,12 +193,11 @@ const createMurderMystery = function() {
   const MurderMysteryCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
-      needName: sub.needName,
-      uid: sub.uid
+      needName: sub.needName
     }).fetch();
 
     console.log("in callback")
-    console.log(submissions[0].content.busy)
+    console.log(submissions.length)
 
     experience = Experiences.update({
       "_id": sub.eid
@@ -242,6 +241,8 @@ const createMurderMystery = function() {
 
       for (let i = 0; i < others.length; i++) {
         let other = others[i]
+        console.log("other: " + other.profile.firstName)
+        console.log("participant: " + participant.profile.firstName)
         //in the future, need to account for when participants have the same first name (use UID instead)
         if (other.profile.firstName != participant.profile.firstName) {
           other_participants.push(other.profile.firstName)
@@ -292,6 +293,7 @@ const createMurderMystery = function() {
           },
           numberNeeded: 3
         };
+        //next_experience.contributionTypes.push(need)
         addContribution(sub.iid, need);
         console.log("more needs" + instance.contributionTypes.length)
       });
@@ -323,13 +325,13 @@ const createMurderMystery = function() {
   let experience = {
     name: 'Murder Mystery',
     participateTemplate: 'murderMysteryInitial',
-    resultsTemplate: 'murderMysteryResult',
+    resultsTemplate: 'murderMysteryChat',
     contributionTypes: [
     ],
     description: "You've been invited to participate in a murder mystery!",
     notificationText: "You've been invited to participate in a murder mystery!",
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 3)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 2)',
         // substitute any variables used outside of the callback function scope
         function: eval('`' + MurderMysteryCallback.toString() + '`'),
       }]
@@ -367,7 +369,7 @@ staticAffordances.forEach(affordance => {
         needName: `Murder Mystery ${detectorName}`,
         situation: {
           detector: getDetectorId(DETECTORS[detectorName]),
-          number: 3
+          number: 2
         },
         participateTemplate: 'murderMysteryInitial',
         toPass: {
@@ -381,7 +383,7 @@ staticAffordances.forEach(affordance => {
             options: DROPDOWN_OPTIONS
           }
         },
-        numberNeeded: 3,
+        numberNeeded: 2,
           // notificationDelay: 90 uncomment for testing
         }
       })

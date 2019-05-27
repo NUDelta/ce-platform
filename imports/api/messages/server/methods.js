@@ -33,38 +33,47 @@ Meteor.methods({
     
     const matchName = data.message.match(/^My name is (.*)/i);
     
-    if (matchName && matchName[1]!="") {
-      userName = matchName[1];
-      Messages.insert({
-        name: "Narrator",
-        message: "The murderer is at a " + info,
-        createdAt: new Date(),
-        announcement: true,
-      });
-    } else {
+    // if (matchName && matchName[1]!="") {
+    //   userName = matchName[1];
+    //   Messages.insert({
+    //     name: "Narrator",
+    //     message: "The murderer is at a " + info,
+    //     createdAt: new Date(),
+    //     recipient: "all",
+    //   });
+    // } else {
       Messages.insert({
         name: userName,
         message: data.message,
         createdAt: new Date(),
-        announcement: false,
+        recipient: "all",
         //chapter: "1"
       });
-    }
+    //}
     
     return {
       name: userName
     };
 		
-	}
-  /*
+	},
+  
+  sendWhisper: function (data) {
+    Messages.insert({
+        name: "Narrator",
+        message: "Welcome! You've been cast in the " + data.role + " role",
+        createdAt: new Date(),
+        recipient: data.uid,
+      });
+  },
+
   sendPrompt: function (data) {
     Messages.insert({
         name: "Narrator",
         message: "The murderer is at a " + info,
         createdAt: new Date(),
-        announcement: true,
+        recipient: "all",
       });
   }
-  */
+  
   
 });

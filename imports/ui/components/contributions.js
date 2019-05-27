@@ -6,8 +6,8 @@
  import moment from 'moment';
  import './contributions.html';
 
-Template.message.helpers({
-  
+ Template.message.helpers({
+
   timestamp() {
     const sentTime = moment(this.createdAt);
     //if today, just show time, else if some other day, show date and time
@@ -20,14 +20,14 @@ Template.message.helpers({
 });
 
 
-Template.chat.onCreated(function bodyOnCreated() {
-  
+ Template.chat.onCreated(function bodyOnCreated() {
+
   this.messagesSub = this.subscribe("messages"); //get messages
   
 });
 
-Template.chat.onRendered(function bodyOnRendered() {
-  
+ Template.chat.onRendered(function bodyOnRendered() {
+
   const $messagesScroll = this.$('.messages-scroll');
   
   //this is used to auto-scroll to new messages whenever they come in
@@ -51,8 +51,8 @@ Template.chat.onRendered(function bodyOnRendered() {
   
 });
 
-Template.chat.helpers({
-  
+ Template.chat.helpers({
+
   messages() {
     return Messages.find({}, { sort: { createdAt: 1 } }); //most recent at the bottom
   },
@@ -63,12 +63,12 @@ Template.chat.helpers({
   
 });
 
-Template.chat.events({
-  
+ Template.chat.events({
+
   //send message
   
   'submit #message'(event, instance) {
-    
+
     event.preventDefault();
     
     const $el = $(event.currentTarget);
@@ -103,25 +103,42 @@ Template.chat.events({
     }); 
   },
 
-  //send prompt function
-  /*
-  let uid = //however we get the user's id 
-  data = //info we get from uid 
-  Meteor.call("sendPrompt", data, (error, response) => {
+  /*playing with idea of having time passed be an event
+  'time passed'(event, instance) {
+    event.preventDefault();
 
-    if (error) {
+
+
+    data.order = order
+    Meteor.call("sendPrompt", data, (error, response) => {
+      if (error) {
         alert(error.reason);
       } else {
         //Cookie.set("name", response.name);
         $input.val("");
       }
-  });
- */
+    });
+
+  },
+  */
+
+  //send prompt function
+  /*
+  let uid = //however we get the user's id 
+  data = //info we get from uid 
+  
+  */
   
   //hide hint in the top right corner
+
+  'click .ready-button'(event, instance) {
+    event.preventDefault();
+    
+    const $el = $(event.currentTarget);
+  },
   
   'click .hide-hint-button'(event, instance) {
-    
+
     //cookies only understand strings
     Cookie.set("hideHint", (Cookie.get("hideHint")=="true") ? "false" : "true");
     
