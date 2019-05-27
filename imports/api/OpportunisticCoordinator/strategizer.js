@@ -126,15 +126,15 @@ export const numberSubmissionsRemaining = (iid, needName) => {
 
 export const needIsAvailableToParticipateNow = (incident, needName) => {
   if (!incident) {
-    console.log(`Error in needAggregator: incident is null\n ${JSON.stringify(incident)}`);
+    console.error(`Error in needIsAvailableToParticipateNow: incident is null\n ${JSON.stringify(incident)}`);
     return;
   }
   if (!needName) {
-    console.log(`Error in needAggregator: needName is null`);
+    console.error(`Error in needIsAvailableToParticipateNow: needName is null`);
     return;
   }
   if (!incident.contributionTypes) {
-    console.log(`Error in needAggregator: incident does not have contribution types\n ${JSON.stringify(incident)}`);
+    console.error(`Error in needIsAvailableToParticipateNow: incident does not have contribution types\n ${JSON.stringify(incident)}`);
     return;
   }
   const needObject = incident.contributionTypes.find(need => need.needName == needName);
