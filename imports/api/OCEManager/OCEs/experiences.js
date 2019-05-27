@@ -64,6 +64,7 @@ Schema.NeedType = new SimpleSchema({
     type: Number,
     optional: true
     // defaults to numberNeeded, like a semaphore.
+    // see needIsAvailableToParticipateNow in strategizer.js
   },
   notificationDelay: {
     type: Number,

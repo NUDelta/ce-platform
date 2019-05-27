@@ -14,6 +14,7 @@ import {log, serverLog} from "../../logs";
 import {flattenAffordanceDict} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
+import {ParticipatingNow_log} from "../../Logging/participating_now_log";
 
 
 export const getNeedObject = (iid, needName) => {
@@ -431,13 +432,22 @@ export const pushUserIntoParticipatingNow = (iid, needName, uid) => {
     },
     {
       $push: {
-        // note: this object is different than {"uid": uid, "place": place, "distance": distance}
-        "needUserMaps.$.users": {
-          "uid": uid
-        }
+        "needUserMaps.$.users": {"uid": uid }
       }
     }
   );
+
+  ParticipatingNow_log.insert({
+    uid: uid,
+    action: 'push',
+    timestamp: Date.now(),
+    iid: iid,
+    needName: needName
+  }, (err) => {
+    if (err) {
+      log.error(`Failed to insert to ParticipatingNow_log when pushing user to ParticipateNow: ${err}`);
+    }
+  });
 };
 
 
@@ -460,6 +470,18 @@ export const pullUserFromParticipatingNow = (iid, needName, uid) => {
       $pull: { "needUserMaps.$.users": {"uid" : uid } }
     }
   );
+
+  ParticipatingNow_log.insert({
+    uid: uid,
+    action: 'pull',
+    timestamp: Date.now(),
+    iid: iid,
+    needName: needName
+  }, (err) => {
+    if (err) {
+      log.error(`Failed to insert to ParticipatingNow_log when pulling user from ParticipateNow: ${err}`);
+    }
+  });
 };
 
 
