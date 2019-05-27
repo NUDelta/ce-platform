@@ -106,6 +106,127 @@
 
 </template>
 
+<template name="groupCheersResults">
+  <head>
+  <style>
+    .img0 {
+      grid-column: 1 / span 2;
+      grid-row: 1 / span 1;
+      width: 45vw;
+    }
+
+    .img1 {
+      grid-column:  3/ span 2;
+      grid-row: 1 / span 1;
+      width: 45vw;
+    }
+
+    .img2 {
+      grid-column:  2/ span 2;
+      grid-row: 2 / span 1;
+      width: 45vw;
+      place-self:center;
+    }
+
+    .img_container {
+      align-items: end;
+      display: grid;
+      grid-gap: 5px;
+      margin: 20px 0px 20px 0px;
+    }
+
+    .pending_img {
+      background-color: #c1c1c1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45vw;
+      min-width: 45vw;
+    }
+
+    .reacts {
+      text-align:right;
+      padding-bottom: 10px;
+    }
+
+    .caption_container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+
+    .buttons{
+      text-align:right
+    }
+
+    .caption{
+      text-align: left;
+    }
+  </style>
+  </head>
+
+  <div id="results" class="centered">
+    <h4>{{this.experience.name}}</h4>
+    <div class="caption">Check out the drinks everyone's having and what they’re cheersing to!</div>
+
+    {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
+    {{#each needGroup in needGroups}}
+        {{#let needImages = needGroup.imagesGroupedByTriad}}
+        {{#let needSubs = needGroup.needSubs}}
+        {{#let names = needGroup.names}}
+        {{#let captions = needGroup.captions}}
+        <h5>{{needGroup.needName}}</h5>
+
+            <div class="img_container">
+            {{#each image in needImages}}
+            {{#if (elementAtIndex needImages @index)}}
+                <div class="img{{@index}}">{{elementAtIndex names @index}}
+                  {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+                </div>
+            {{else}}
+                <div class="img{{@index}}">Waiting for this user!<div class="pending_img">?</div></div>
+            {{/if}}
+            {{/each}}
+            </div>
+
+            <div class="caption_container">
+            {{#each name in names}}
+            {{#if (elementAtIndex names @index)}}
+                <div class="caption">
+                  <b>{{elementAtIndex names @index}}:</b> "{{elementAtIndex captions @index}}"
+                </div>
+
+                <div class="reacts">
+                  {{#let reacts=(createReacts needSubs this.users @index)}}{{reacts}}{{/let}}
+                </div>
+
+                <div class="buttons">
+                  <button class="reactWow" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😮</span>
+                  </button>
+                  <button class="reactHeart" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😍</span>
+                  </button>
+                  <button class="reactLaugh" type="button" data-val="{{@index}}" data-needname="{{needGroup.needName}}">
+                    <span>😂</span>
+                  </button>
+                </div>
+            {{else}}
+                <div class="caption">We're still waiting on this caption. Hang tight!</div>
+            {{/if}}
+            {{/each}}
+            </div>
+        {{/let}}
+        {{/let}}
+        {{/let}}
+        {{/let}}
+    {{/each}}
+    {{/let}}
+  </div>
+</template>
+
+
 <template name="groupBumpedResults">
   <head>
     <style>
@@ -137,7 +258,7 @@
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
       <div class="caption">Check out what everyone is up to!</div>
       <div class="sub_container">
-        <div class="img_container">{{> Template.dynamic template="displayImage" data=(myImage)}}</div> 
+        <div class="img_container">{{> Template.dynamic template="displayImage" data=(myImage)}}</div>
         <div class="caption">"{{myCaption}}" -You</div>
       </div>
       <div class="sub_container">

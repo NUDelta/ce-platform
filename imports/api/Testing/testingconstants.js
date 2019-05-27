@@ -1157,13 +1157,43 @@ const createHalfHalf = function(
   return experience;
 };
 
+const createGroupCheers = function() {
+  let experience = {
+    name: 'Group Cheers',
+    participateTemplate: 'groupCheers',
+    resultsTemplate: 'groupCheersResults',
+    contributionTypes: [{
+      needName: 'Group Cheers 1',
+      situation: {
+        detector: DETECTORS.bar._id,
+        number: 3
+      },
+    toPass: {
+      instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+      //change example image to be on s3 server
+      exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+    },
+    numberNeeded: 3,
+    notificationDelay: 1
+    }],
+    description: 'Share your accomplishments with your friend and their friend!',
+    notificationText: 'Share your accomplishments with your friend and their friend!',
+    callbacks: [{
+      trigger: `cb.numberOfSubmissions() === 3`,
+      function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
+    }]
+  };
+
+  return experience;
+};
+
 const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
-    
+
     let participants = submissions.map((submission) => { return submission.uid; });
     
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
@@ -1262,13 +1292,7 @@ const createDrinksTalk = function() {
 
 const createMoodMeteorology = function () {
   const moodMeteorologyCallback = function (sub) {
-    let submissions = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName
-    }).fetch();
-    
-    let participants = submissions.map((submission) => { return submission.uid; });
-    
+    let participants = submissions.map((submission) => { return submission.uid; });    
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -1281,7 +1305,6 @@ const createMoodMeteorology = function () {
       }
     });
   }
-
 
   DETECTORS['daytime_triadOne'] = {
     _id: Random.id(),
@@ -1347,7 +1370,6 @@ const createMoodMeteorology = function () {
 }
 
 const createImitationGame = function () {
-  
   const sendNotification = function (sub) {
     const triad = sub.needName.split('_')[2]
     let uids;
@@ -1371,7 +1393,6 @@ const createImitationGame = function () {
     });
 
     const triad = sub.needName.split('_')[2]
-
     let detectorId;
 
     if(triad == 'triadOne') {
@@ -1419,7 +1440,6 @@ const createImitationGame = function () {
       'var triadOne;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    // 'rules': '!participatedInImitationGame && triadOne; && ', // use this to debug at night
     'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadOne);',
   }
   
@@ -1432,7 +1452,6 @@ const createImitationGame = function () {
       'var triadTwo;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    // 'rules': '!participatedInImitationGame && triadTwo;', //use this to debug at night
     'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame && triadTwo);',
   }
   
@@ -2026,6 +2045,10 @@ const halfhalfRespawnAndNotify = function(subject, text) {
     notify(participants, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
   return eval('`'+functionTemplate.toString()+'`');
+};
+
+const callbackStub = function(sub) {
+  console.log("experience complete");
 };
 
 const sendNotificationNew24HourPhotoAlbumSub = function(sub) {
