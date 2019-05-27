@@ -12,11 +12,13 @@ import { Router } from 'meteor/iron:router';
 
 import { Users } from '../../api/UserMonitor/users/users.js';
 import { Images } from '../../api/ImageUpload/images.js';
-import { Incidents } from "../../api/OCEManager/OCEs/experiences";
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
+import {checkParticipatingNow, stateUpdatePullUserFromParticipatingNow} from "./participating_now_status";
+import {Incidents} from "../../api/OCEManager/OCEs/experiences";
+import {ParticipatingNow} from "../../api/OpportunisticCoordinator/databaseHelpers";
 import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
 
 
@@ -35,6 +37,10 @@ Template.api_custom.helpers({
 
     return this;
   },
+
+  renderWaiting() {
+    return Session.get('renderWaiting')
+  }
 
 });
 Template.storyPage.helpers({
@@ -548,52 +554,26 @@ const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, 
   };
 };
 
-Template.api_custom.onCreated(() => {
-  this.state = new ReactiveDict();
+Template.api_custom.onCreated(function() {
+  Session.set('renderWaiting', false);
 
   if (!Meteor.userId()) {
     Router.go('home');
     return;
   }
 
-  const params = Router.current().params;
-  this.state.set('iid', params.iid);
-  this.state.set('needName', params.needName);
+  checkParticipatingNow();
 
-  const incident = Incidents.findOne({_id: params.iid});
-  if (!needIsAvailableToParticipateNow(incident, params.needName)) {
-    // TODO: redirect to an apology page
-    Router.go('home');
-    return;
-  }
-
-  Meteor.call('pushUserIntoParticipatingNow', {
-    iid: params.iid, needName: params.needName, uid: Meteor.userId()
-  });
 });
 
 Template.api_custom.onDestroyed(() => {
   // Called when loading another route, and the template is gracefully destroyed
-  if (Meteor.userId() && this.state) {
-    Meteor.call('pullUserFromParticipatingNow', {
-      iid: this.state.get('iid'),
-      needName: this.state.get('needName'),
-      uid: Meteor.userId()
-    });
-    this.state.destroy();
-  }
+  stateUpdatePullUserFromParticipatingNow();
 });
 
 window.onbeforeunload = function() {
   // Called when user closes the browser window; onDestroyed is not called in this instance
-  if (Meteor.userId() && this.state) {
-    Meteor.call('pullUserFromParticipatingNow', {
-      iid: this.state.get('iid'),
-      needName: this.state.get('needName'),
-      uid: Meteor.userId()
-    });
-    this.state.destroy();
-  }
+  stateUpdatePullUserFromParticipatingNow();
 };
 
 Template.api_custom.events({

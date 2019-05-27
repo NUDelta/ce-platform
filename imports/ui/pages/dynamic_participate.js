@@ -60,6 +60,7 @@ Template.dynamicParticipate.onCreated(function() {
         return numberSubmissionsRemaining(this.iid, needB) - numberSubmissionsRemaining(this.iid, needA);
       };
       potentialNeedNames.sort(prioritizeHalfCompletedNeeds); // mutates
+      console.log('calling needIsAvailableToParticipateNow from dynamicParticipate.onCreated');
       potentialNeedNames = potentialNeedNames.filter(needName => needIsAvailableToParticipateNow(this.incident, needName));
 
       if (!potentialNeedNames.length) {
