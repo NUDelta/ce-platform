@@ -4,7 +4,7 @@ import time
 
 path1 = [(43, -87), (32, -120)]
 
-park =  (42.056838, -87.675940)
+park =  (42.056838, -87.675940) 
 burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 grocery2 = (42.039818,-87.680088)
@@ -25,15 +25,15 @@ def setLocation(location, uid):
 	# host = "https://ce-platform.herokuapp.com"
 	# host = "https://staging-ce-platform.herokuapp.com"
 	r = requests.post(host + "/api/geolocation", json={
-	            "userId": uid,
-	            "location": {
-	                "coords": {
-                        "latitude": location[0],
-                        "longitude": location[1]
-	                },
-	                "activity": {"type": "unknown", "confidence": 100}
-                }
-	        })
+		"userId": uid,
+		"location": {
+			"coords": {
+				"latitude": location[0],
+				"longitude": location[1]
+			},
+			"activity": {"type": "unknown", "confidence": 100}
+		}
+	})
     #print(uid + "at location " + str(location[0]) + " " + str(location[1]))
 
 
@@ -311,5 +311,9 @@ if __name__ == "__main__":
     # setLocation(burgers, sys.argv[1])
     # allUsersGrocery()
     # garrettAndMegBump()
+    # single user movement
+    # setLocation(burgers, sys.argv[1])
+    # allUsersGrocery()
+    #garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()

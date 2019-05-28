@@ -1212,27 +1212,29 @@ const createGroupCheers = function() {
       situation: {
         detector: DETECTORS['cheers_triadOne']._id,
         number: 1
+        },
+      toPass: {
+        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+        //change example image to be on s3 server
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
-    toPass: {
-      instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
-      //change example image to be on s3 server
-      exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-    },
-    numberNeeded: 3,
-    notificationDelay: 90
+      numberNeeded: 3,
+      notificationDelay: 90,
+      numberAllowedToParticipateAtSameTime: 3,
     }, {
       needName: 'groupCheers triadTwo',
       situation: {
         detector: DETECTORS['cheers_triadTwo']._id,
         number: 1
       },
-    toPass: {
-      instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
-      //change example image to be on s3 server
-      exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-    },
-    numberNeeded: 3,
-    notificationDelay: 90
+      toPass: {
+        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+        //change example image to be on s3 server
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 3,
+      notificationDelay: 90,
+      numberAllowedToParticipateAtSameTime: 3,
     }],
     description: 'Share your accomplishments with your friend and their friend!',
     notificationText: 'Share your accomplishments with your friend and their friend!',
@@ -1323,6 +1325,7 @@ const createDrinksTalk = function() {
         },
         numberNeeded : 3,
         notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
       {
@@ -1337,6 +1340,7 @@ const createDrinksTalk = function() {
         },
         numberNeeded : 3,
         notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
     ],
@@ -1408,6 +1412,7 @@ const createMoodMeteorology = function () {
         },
         numberNeeded : 3,
         notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
       {
@@ -1421,6 +1426,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
+        numberAllowedToParticipateAtSameTime: 3,
         notificationDelay : 90,
         allowRepeatContributions : false
       },
@@ -1488,7 +1494,6 @@ const createImitationGame = function () {
         previousSub: sub,
       },
       numberNeeded: 1,
-      notificationDelay: 90
     };
     
     if (cb.numberOfSubmissions() % 3 === 1) {
@@ -1546,7 +1551,6 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
-      notificationDelay: 90,
     }, {
       needName: `creator_ImitationGame_triadTwo`,
       situation: {
@@ -1562,7 +1566,6 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
-      notificationDelay: 90,
     }],
     description: 'Let\'s play an imitation game!',
     notificationText: 'Let\'s play an imitation game!',
@@ -2047,15 +2050,11 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    let detectorKey;
-    _.forEach(_.keys(DETECTORS), (key) => {
-      if (DETECTORS[key]._id === need.situation.detector) {
-        detectorKey = key;
-      }
-    });
-    // WILL THROW ERROR if we don't find the matching detector id
-
-    let newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
+    const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
+    if (!detectorKey) {
+      throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
+    }
+    const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
     need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
     return need;
   });
@@ -2407,7 +2406,7 @@ let EXPERIENCES = {
   //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-itadakimasu.jpg'
   //     },
   //     numberNeeded: 2,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //   }]),
   //   description: 'While eating Japanese Food, create a half half photo.',
   //   notificationText: 'View this and other available experiences',
@@ -2549,7 +2548,7 @@ let EXPERIENCES = {
   //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-hand-circles-flower.jpg'
   //     },
   //     numberNeeded: 2,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //   }]),
   //   description: 'While in the park, create a half half photo.',
   //   notificationText: 'View this and other available experiences',
@@ -2659,7 +2658,7 @@ let EXPERIENCES = {
   //       exampleImage: 'https://s3.us-east-2.amazonaws.com/ce-platform/oce-example-images/half-half-embodied-mimicry-pizza-slice.jpg'
   //     },
   //     numberNeeded: 2,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //   }]),
   //   description: 'While eating pizza, create a half half photo.',
   //   notificationText: 'View this and other available experiences',
@@ -2801,7 +2800,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you <span style="color: #0351ff">shopping for groceries?</span> Share a photo of what you are buying or looking at.'
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
@@ -2826,7 +2825,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you <span style="color: #0351ff">at a cafe?</span> Share a photo of yourself with what you purchased, or what you are doing.'
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
@@ -2851,7 +2850,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you out <span style="color: #0351ff">drinking at the bar?</span> Share a photo of yourself at this bar.',
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
@@ -2876,7 +2875,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you eating <span style="color: #0351ff">Japanese food?</span> Share a photo of yourself dining at this restaurant.'
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
@@ -2951,7 +2950,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you <span style="color: #0351ff">eating at an asian restaurant?</span> Share a photo of yourself dining out right now.'
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
@@ -2976,7 +2975,7 @@ let EXPERIENCES = {
   //       instruction: 'Are you spending part of the day <span style="color: #0351ff">reading?</span> Share a photo of what you are doing.'
   //     },
   //     numberNeeded: 50,
-  //     notificationDelay: 90,
+      // notificationDelay: 90,
   //     allowRepeatContributions: true,
   //   }]),
   //   description: 'Appreciate the small moments with others who are doing the same',
