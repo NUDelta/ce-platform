@@ -1219,7 +1219,7 @@ const createGroupCheers = function() {
       exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
     },
     numberNeeded: 3,
-    notificationDelay: 1
+    notificationDelay: 90
     }, {
       needName: 'groupCheers triadTwo',
       situation: {
@@ -1232,7 +1232,7 @@ const createGroupCheers = function() {
       exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
     },
     numberNeeded: 3,
-    notificationDelay: 1
+    notificationDelay: 90
     }],
     description: 'Share your accomplishments with your friend and their friend!',
     notificationText: 'Share your accomplishments with your friend and their friend!',
@@ -1322,7 +1322,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         allowRepeatContributions : false
       },
       {
@@ -1336,7 +1336,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         allowRepeatContributions : false
       },
     ],
@@ -1358,6 +1358,11 @@ const createDrinksTalk = function() {
 
 const createMoodMeteorology = function () {
   const moodMeteorologyCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
     let participants = submissions.map((submission) => { return submission.uid; });    
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
@@ -1402,7 +1407,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         allowRepeatContributions : false
       },
       {
@@ -1416,7 +1421,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         allowRepeatContributions : false
       },
     ],
@@ -1483,7 +1488,7 @@ const createImitationGame = function () {
         previousSub: sub,
       },
       numberNeeded: 1,
-      // notificationDelay: 90 //uncomment for testing
+      notificationDelay: 90
     };
     
     if (cb.numberOfSubmissions() % 3 === 1) {
@@ -1541,7 +1546,7 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
-      // notificationDelay: 90 uncomment for testing
+      notificationDelay: 90,
     }, {
       needName: `creator_ImitationGame_triadTwo`,
       situation: {
@@ -1557,7 +1562,7 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
-      // notificationDelay: 90 uncomment for testing
+      notificationDelay: 90,
     }],
     description: 'Let\'s play an imitation game!',
     notificationText: 'Let\'s play an imitation game!',
