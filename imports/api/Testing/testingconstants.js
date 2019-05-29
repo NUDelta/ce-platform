@@ -1165,7 +1165,7 @@ const createDrinksTalk = function() {
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
-    
+
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -1233,7 +1233,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 90,
+        notificationDelay : 0,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1248,7 +1248,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 90,
+        notificationDelay : 0,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1276,7 +1276,7 @@ const createMoodMeteorology = function () {
       needName: sub.needName
     }).fetch();
 
-    let participants = submissions.map((submission) => { return submission.uid; });    
+    let participants = submissions.map((submission) => { return submission.uid; });
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -1320,7 +1320,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 90,
+        notificationDelay : 0,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1335,7 +1335,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 90,
+        notificationDelay : 0,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1343,7 +1343,7 @@ const createMoodMeteorology = function () {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.newSubmission('beverage_triadOne') && cb.needFinished('beverage_triadOne')) || (cb.newSubmission('beverage_triadTwo') && cb.needFinished('beverage_triadTwo'))`,
+        trigger: `(cb.newSubmission('daytime_triadOne') && cb.needFinished('daytime_triadOne')) || (cb.newSubmission('daytime_triadTwo') && cb.needFinished('daytime_triadTwo'))`,
         function: moodMeteorologyCompleteCallback.toString(),
       }, {
         trigger: `cb.newSubmission()`,
@@ -1358,7 +1358,15 @@ const createMoodMeteorology = function () {
 
 const createImitationGame = function () {
   const sendNotification = function (sub) {
-    const triad = sub.needName.split('_')[2]
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $set: {
+        ['profile.staticAffordances.participatedInImitationGame']: true
+      }
+    });
+
+    const triad = sub.needName.split('_')[2];
     let uids;
     if(triad == "triadOne") {
       uids = Meteor.users.find({"profile.staticAffordances.triadOne": true}).fetch().map(x => x._id);
@@ -1369,7 +1377,7 @@ const createImitationGame = function () {
     notify(uids, sub.iid, 'The game is finally complete. Click here to check it out!',
     '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   };
-  
+
   const imitationGameCallback = function (sub) {
     Meteor.users.update({
       _id: sub.uid
@@ -1381,13 +1389,13 @@ const createImitationGame = function () {
 
     const triad = sub.needName.split('_')[2]
     let detectorId;
-    
+
     if(triad == 'triadOne') {
       detectorId = "imitationGame_triadOne"
     } else if (triad == 'triadTwo') {
       detectorId = "imitationGame_triadTwo"
     }
-    
+
     let newContribution = {
       needName: `ImitationGame`,
       situation: {
@@ -1404,7 +1412,7 @@ const createImitationGame = function () {
       },
       numberNeeded: 1,
     };
-    
+
     const previousRole = sub.needName.split('_')[0];
     if (previousRole == 'creator') {
       newContribution.needName = `descriptor_${newContribution.needName}_${triad}`;
@@ -1427,9 +1435,9 @@ const createImitationGame = function () {
       'var triadOne;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && triadOne && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) && 
+    'rules': '(daytime && triadOne && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) &&
   }
-  
+
   DETECTORS['imitationGame_triadTwo'] = {
     '_id': Random.id(),
     'description': `imitation_game`,
@@ -1439,9 +1447,9 @@ const createImitationGame = function () {
       'var triadTwo;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && triadTwo && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) && 
+    'rules': '(daytime && triadTwo && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) &&
   }
-  
+
   let experience = {
     name: 'The Imitation Game',
     participateTemplate: 'imitationGame',
@@ -1494,13 +1502,22 @@ const createImitationGame = function () {
   };
 
   experience.callbacks.push();
-  
+
   return experience;
 }
 
 
 
 const createGroupCheers = function() {
+  const groupCheersCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    notify(participants, sub.iid, 'Check out your group\'s cheers!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  }
 
   DETECTORS['cheers_triadOne'] = {
     _id: Random.id(),
@@ -1547,11 +1564,13 @@ const createGroupCheers = function() {
   }
 
   let experience = {
+
+
     name: 'Group Cheers',
     participateTemplate: 'groupCheers',
     resultsTemplate: 'groupCheersResults',
     contributionTypes: [{
-      needName: 'groupCheers triadOne',
+      needName: 'groupCheers_triadOne',
       situation: {
         detector: DETECTORS['cheers_triadOne']._id,
         number: 1
@@ -1562,10 +1581,10 @@ const createGroupCheers = function() {
         exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
       numberNeeded: 3,
-      notificationDelay: 90,
+      notificationDelay: 0,
       numberAllowedToParticipateAtSameTime: 3,
     }, {
-      needName: 'groupCheers triadTwo',
+      needName: 'groupCheers_triadTwo',
       situation: {
         detector: DETECTORS['cheers_triadTwo']._id,
         number: 1
@@ -1576,14 +1595,14 @@ const createGroupCheers = function() {
         exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
       numberNeeded: 3,
-      notificationDelay: 90,
+      notificationDelay: 0,
       numberAllowedToParticipateAtSameTime: 3,
     }],
     description: 'Share your accomplishments with your friend and their friend!',
     notificationText: 'Share your accomplishments with your friend and their friend!',
     callbacks: [{
-      trigger: `cb.numberOfSubmissions() === 3`,
-      function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
+      trigger: `(cb.newSubmission('groupCheers_triadOne') && cb.needFinished('groupCheers_triadOne')) || (cb.newSubmission('groupCheers_triadTwo') && cb.needFinished('groupCheers_triadTwo'))`,
+      function: groupCheersCallback.toString(),
     }],
     allowRepeatContributions: false,
   };
@@ -2185,7 +2204,7 @@ let EXPERIENCES = {
   // storyTime6: createStorytime(6),
   // storyTime7: createStorytime(7),
   // independentStorybook: createIndependentStorybook(),
-  // sunset: { 
+  // sunset: {
     //   _id: Random.id(),
     //   name: 'Sunset',
     //   participateTemplate: 'uploadPhoto',
