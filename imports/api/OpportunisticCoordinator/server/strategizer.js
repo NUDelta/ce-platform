@@ -4,11 +4,16 @@
 import {Submissions} from "../../OCEManager/currentNeeds";
 import {Assignments} from "../databaseHelpers";
 import {getNeedObject} from "./identifier";
-import {Experiences} from "../../OCEManager/OCEs/experiences";
+import {Experiences, Incidents} from "../../OCEManager/OCEs/experiences";
 import {createIncidentFromExperience, startRunningIncident} from "../../OCEManager/OCEs/methods";
 import {CONSTANTS} from "../../Testing/testingconstants";
 import {Meteor} from "meteor/meteor";
-import {numberSubmissionsRemaining, usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
+import {
+  numberSubmissionsRemaining,
+  usersAlreadyAssignedToNeed,
+  usersAlreadySubmittedToIncident,
+  usersAlreadySubmittedToNeed
+} from "../strategizer";
 
 const util = require('util');
 
@@ -55,26 +60,31 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
     let assignment = Assignments.findOne(incidentMapping._id);
     // console.log('assignment: ', util.inspect(assignment, false, null));
 
-
     incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
       // get need object for current iid/current need and number of people
 
       let iid = incidentMapping._id;
       let needName = needUserMap.needName;
-      //get need object
+      let eid = Incidents.findOne({_id: iid}, {fields: {eid: true}}).eid;
 
+      const exp = Experiences.findOne({_id: eid});
       let need = getNeedObject(iid, needName);
       // console.log('need: ', util.inspect(need, false, null));
+
+      let uidsWhoSubToIncident = (exp.repeatContributionsToExperienceAfterN < 0 ?
+        usersAlreadySubmittedToIncident(iid) : usersAlreadySubmittedToIncident(iid, exp.repe))
+
 
       let usersInNeed = usersAlreadyAssignedToNeed(iid, needName);
       // console.log('usersInNeed : ', util.inspect(usersInIncident, false, null));
 
-      let previousUids = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
-      // console.log('previousUids: ', util.inspect(previousUids, false, null));
+      let uidsWhoSubToNeed = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
+
 
       let usersNotInIncident = needUserMap.users.filter(function(user) {
-        return !usersInNeed.find(x => x.uid === user.uid) && !previousUids.find(uid => uid === user.uid);
+        return (!usersInNeed.find(x => x.uid === user.uid) &&
+          !uidsWhoSubToNeed.find(uid => uid === user.uid));
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
