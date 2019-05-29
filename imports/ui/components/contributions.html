@@ -18,7 +18,7 @@
 
 <template name="text">
     <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
-          placeholder="Write here" required></textarea>
+          value="Write here" required></textarea>
 </template>
 
 <!-->
@@ -72,7 +72,7 @@
 
 <template name="message">
   
-    <p class="messages">{{name}} <span class="timestamp">{{timestamp}}</span>: {{message}}</p>
+    <p class="messages"><span class="timestamp" style="font-size: 10px;">{{timestamp}}</span><br><b>{{name}}: </b>{{message}}</p>
   
 </template>
 
@@ -81,7 +81,7 @@
 
     <body>  
       
-      <!-- orevious lines of dialogue -->
+      <!-- previous lines of dialogue -->
       <div class="messages-box">
         <div class="messages-scroll">
           <div class="messages">

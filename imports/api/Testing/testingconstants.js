@@ -9,6 +9,7 @@ import {Incidents} from "../OCEManager/OCEs/experiences";
 import {Schema} from "../schema";
 import {serverLog} from "../logs";
 import { log } from "util";
+import { Messages } from '../../api/messages/messages.js';
 
 let LOCATIONS = {
   'park': {
@@ -304,6 +305,15 @@ const createMurderMystery = function() {
         //next_experience.contributionTypes.push(need)
         addContribution(sub.iid, need);
         console.log("more needs" + instance.contributionTypes.length)
+
+        Meteor.call("sendWhisper", role, user, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })
       });
 
     }

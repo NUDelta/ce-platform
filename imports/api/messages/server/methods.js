@@ -57,12 +57,12 @@ Meteor.methods({
 		
 	},
   
-  sendWhisper: function (data) {
+  sendWhisper: function (role, user) {
     Messages.insert({
         name: "Narrator",
-        message: "Welcome! You've been cast in the " + data.role + " role",
+        message: "Welcome! You've been cast in the " + role + " role",
         createdAt: new Date(),
-        recipient: data.uid,
+        recipient: user,
       });
   },
 
