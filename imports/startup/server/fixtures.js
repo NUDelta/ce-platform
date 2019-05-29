@@ -201,21 +201,21 @@ function createTestData(){
     multi: true
   });
 
-  // Meteor.users.update({
-  //   _id: {$in: [uid1, uid2, uid3]}
-  // }, {
-  //   $set: { 'profile.staticAffordances': { "triadOne": true, "daytime": true} },
-  // }, {
-  //   multi: true
-  // });
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, uid3]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triadOne": true } },
+  }, {
+    multi: true
+  });
 
-  // Meteor.users.update({
-  //   _id: {$in: [uid4, uid5, uid6]}
-  // }, {
-  //   $set: { 'profile.staticAffordances': { "triadTwo": true, "daytime": true } }
-  // }, {
-  //   multi: true
-  // });
+  Meteor.users.update({
+    _id: {$in: [uid4, uid5, uid6]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triadTwo": true } }
+  }, {
+    multi: true
+  });
 
   log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
 }

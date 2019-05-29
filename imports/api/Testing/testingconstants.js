@@ -1157,97 +1157,6 @@ const createHalfHalf = function(
   return experience;
 };
 
-const createGroupCheers = function() {
-
-  DETECTORS['cheers_triadOne'] = {
-    _id: Random.id(),
-    description: `cheers triadOne`,
-    variables: [
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
-      'var diners;',
-      'var restaurants;',
-      'var cafeteria;',
-      'var food_court;',
-      'var bars;',
-      'var triadOne;',
-      'var participatedInDrinksTalk;',
-      'var participatedInMoodMeteorology;',
-      'var participatedInImitationGame;',
-    ],
-    rules: ['(triadOne && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
-  }
-
-  DETECTORS['cheers_triadTwo'] = {
-    _id: Random.id(),
-    description: `cheers triadTwo`,
-    variables: [
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
-      'var diners;',
-      'var restaurants;',
-      'var cafeteria;',
-      'var food_court;',
-      'var bars;',
-      'var triadTwo;',
-      'var participatedInDrinksTalk;',
-      'var participatedInMoodMeteorology;',
-      'var participatedInImitationGame;',
-    ],
-    rules: ['(triadTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
-  }
-
-  let experience = {
-    name: 'Group Cheers',
-    participateTemplate: 'groupCheers',
-    resultsTemplate: 'groupCheersResults',
-    contributionTypes: [{
-      needName: 'groupCheers triadOne',
-      situation: {
-        detector: DETECTORS['cheers_triadOne']._id,
-        number: 1
-        },
-      toPass: {
-        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
-        //change example image to be on s3 server
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-      },
-      numberNeeded: 3,
-      notificationDelay: 90,
-      numberAllowedToParticipateAtSameTime: 3,
-    }, {
-      needName: 'groupCheers triadTwo',
-      situation: {
-        detector: DETECTORS['cheers_triadTwo']._id,
-        number: 1
-      },
-      toPass: {
-        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
-        //change example image to be on s3 server
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-      },
-      numberNeeded: 3,
-      notificationDelay: 90,
-      numberAllowedToParticipateAtSameTime: 3,
-    }],
-    description: 'Share your accomplishments with your friend and their friend!',
-    notificationText: 'Share your accomplishments with your friend and their friend!',
-    callbacks: [{
-      trigger: `cb.numberOfSubmissions() === 3`,
-      function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
-    }],
-    allowRepeatContributions: false,
-  };
-
-  return experience;
-};
-
 const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -1347,11 +1256,11 @@ const createDrinksTalk = function() {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `cb.numberOfSubmissions() === 3`,
-        function: drinksTalkCompleteCallback.toString(),
-      }, {
         trigger: `cb.newSubmission()`,
         function: drinksTalkNewSubCallback.toString(),
+      }, {
+        trigger: `(cb.newSubmission('beverage_triadOne') && cb.needFinished('beverage_triadOne')) || (cb.newSubmission('beverage_triadTwo') && cb.needFinished('beverage_triadTwo'))`,
+        function: drinksTalkCompleteCallback.toString(),
       }
     ],
     allowRepeatContributions: false,
@@ -1361,7 +1270,7 @@ const createDrinksTalk = function() {
 }
 
 const createMoodMeteorology = function () {
-  const moodMeteorologyCallback = function (sub) {
+  const moodMeteorologyCompleteCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -1426,16 +1335,16 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        numberAllowedToParticipateAtSameTime: 3,
         notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
     ],
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `cb.numberOfSubmissions() === 3`,
-        function: moodMeteorologyCallback.toString(),
+        trigger: `(cb.newSubmission('beverage_triadOne') && cb.needFinished('beverage_triadOne')) || (cb.newSubmission('beverage_triadTwo') && cb.needFinished('beverage_triadTwo'))`,
+        function: moodMeteorologyCompleteCallback.toString(),
       }, {
         trigger: `cb.newSubmission()`,
         function: moodMeteorologyNewSubCallback.toString(),
@@ -1472,13 +1381,13 @@ const createImitationGame = function () {
 
     const triad = sub.needName.split('_')[2]
     let detectorId;
-
+    
     if(triad == 'triadOne') {
       detectorId = "imitationGame_triadOne"
     } else if (triad == 'triadTwo') {
       detectorId = "imitationGame_triadTwo"
     }
-
+    
     let newContribution = {
       needName: `ImitationGame`,
       situation: {
@@ -1496,12 +1405,13 @@ const createImitationGame = function () {
       numberNeeded: 1,
     };
     
-    if (cb.numberOfSubmissions() % 3 === 1) {
+    const previousRole = sub.needName.split('_')[0];
+    if (previousRole == 'creator') {
       newContribution.needName = `descriptor_${newContribution.needName}_${triad}`;
       newContribution.toPass.role.descriptor = true;
       addContribution(sub.iid, newContribution);
     }
-    else if (cb.numberOfSubmissions() % 3 === 2) {
+    else if (previousRole == 'descriptor') {
       newContribution.needName = `recreator_${newContribution.needName}_${triad}`;
       newContribution.toPass.role.recreator = true;
       addContribution(sub.iid, newContribution);
@@ -1517,7 +1427,7 @@ const createImitationGame = function () {
       'var triadOne;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && triadOne);',
+    'rules': '(daytime && triadOne && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) && 
   }
   
   DETECTORS['imitationGame_triadTwo'] = {
@@ -1529,7 +1439,7 @@ const createImitationGame = function () {
       'var triadTwo;',
       'var participatedInMoodMeteorology;',
       'var participatedInDrinksTalk;'],
-    'rules': '(daytime && (participatedInMoodMeteorology || participatedInDrinksTalk) && triadTwo);',
+    'rules': '(daytime && triadTwo && (participatedInMoodMeteorology || participatedInDrinksTalk) && !participatedInImitationGame);', // (participatedInMoodMeteorology || participatedInDrinksTalk) && 
   }
   
   let experience = {
@@ -1551,6 +1461,7 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
+      numberAllowedToParticipateAtSameTime: 1,
     }, {
       needName: `creator_ImitationGame_triadTwo`,
       situation: {
@@ -1566,16 +1477,17 @@ const createImitationGame = function () {
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
       numberNeeded: 1,
+      numberAllowedToParticipateAtSameTime: 1,
     }],
     description: 'Let\'s play an imitation game!',
     notificationText: 'Let\'s play an imitation game!',
     callbacks: [{
-        trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() % 3 != 0)',
+        trigger: `(cb.newSubmission('creator_ImitationGame_triadOne') || cb.newSubmission('creator_ImitationGame_triadTwo') || cb.newSubmission('descriptor_ImitationGame_triadOne') || cb.newSubmission('descriptor_ImitationGame_triadTwo'))`,
         function: imitationGameCallback.toString()
           .replace('imitationGame_triadOne', DETECTORS['imitationGame_triadOne']._id)
           .replace('imitationGame_triadTwo', DETECTORS['imitationGame_triadTwo']._id)
       }, {
-        trigger: 'cb.numberOfSubmissions() % 3 == 0',
+        trigger: `(cb.newSubmission('recreator_ImitationGame_triadOne') || cb.newSubmission('recreator_ImitationGame_triadTwo'))`,
         function: sendNotification.toString()
     }],
     allowRepeatContributions: false,
@@ -1585,6 +1497,99 @@ const createImitationGame = function () {
   
   return experience;
 }
+
+
+
+const createGroupCheers = function() {
+
+  DETECTORS['cheers_triadOne'] = {
+    _id: Random.id(),
+    description: `cheers triadOne`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+      'var triadOne;',
+      'var participatedInDrinksTalk;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInImitationGame;',
+    ],
+    rules: ['(triadOne && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }
+
+  DETECTORS['cheers_triadTwo'] = {
+    _id: Random.id(),
+    description: `cheers triadTwo`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+      'var triadTwo;',
+      'var participatedInDrinksTalk;',
+      'var participatedInMoodMeteorology;',
+      'var participatedInImitationGame;',
+    ],
+    rules: ['(triadTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }
+
+  let experience = {
+    name: 'Group Cheers',
+    participateTemplate: 'groupCheers',
+    resultsTemplate: 'groupCheersResults',
+    contributionTypes: [{
+      needName: 'groupCheers triadOne',
+      situation: {
+        detector: DETECTORS['cheers_triadOne']._id,
+        number: 1
+        },
+      toPass: {
+        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+        //change example image to be on s3 server
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 3,
+      notificationDelay: 90,
+      numberAllowedToParticipateAtSameTime: 3,
+    }, {
+      needName: 'groupCheers triadTwo',
+      situation: {
+        detector: DETECTORS['cheers_triadTwo']._id,
+        number: 1
+      },
+      toPass: {
+        instruction: 'What are you <span style="color: #0351ff">cheersing</span> to? Take a photo of your drink based on the portion of the image you’re assigned to. Enter a caption describing what you’re <span style="color: #0351ff">cheersing</span> to! (This can be something you’re proud of, something you’re happy about, etc.)',
+        //change example image to be on s3 server
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 3,
+      notificationDelay: 90,
+      numberAllowedToParticipateAtSameTime: 3,
+    }],
+    description: 'Share your accomplishments with your friend and their friend!',
+    notificationText: 'Share your accomplishments with your friend and their friend!',
+    callbacks: [{
+      trigger: `cb.numberOfSubmissions() === 3`,
+      function: halfhalfRespawnAndNotify('Group Cheers experience complete', 'See the cheers here!')
+    }],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+};
 
 /**
  *
