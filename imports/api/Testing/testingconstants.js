@@ -265,13 +265,13 @@ const createMurderMystery = function() {
         rules = submissions[i].content.busy + " && " + rules
         //rules += " && " + submissions[i].content.busy + ";"
         //rules = addStaticAffordanceToDetector(submissions[i].content.busy, instance.contributionTypes[0].situation.detector)
-        character.push([rules, "murderer", "murderMysteryChat", "Try to avoid being caught and weasel your way out of the clues!", participant.profile.firstName, other_participants])
+        character.push([rules, "murderer", "murderMysteryChat", "Try to avoid being caught and weasel your way out of the clues!", participant._id, other_participants])
       } else {
         console.log("casting an innocent")
         rules = submissions[i].content.busy + " && " + rules
         //rules += " && " + submissions[i].content.busy + ";"
         //rules = addStaticAffordanceToDetector(submissions[i].content.busy, instance.contributionTypes[0].situation.detector)
-        character.push([rules, "innocent", "murderMysteryChat", "Try to prove your innocence and find the real murderer!", participant.profile.firstName, other_participants])
+        character.push([rules, "innocent", "murderMysteryChat", "Try to prove your innocence and find the real murderer!", participant._id, other_participants])
       }
 
       console.log("character length" + character.length)

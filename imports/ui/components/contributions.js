@@ -36,7 +36,7 @@
   
   this.autorun(() => {
     if (this.messagesSub.ready()) {
-      Messages.find({}, { fields: { _id: 1 } }).fetch();
+      Messages.find({recipient: "all"}, { fields: { _id: 1 } }).fetch();
       Tracker.afterFlush(() => {
         //only auto-scroll if near the bottom already
         if (!initialized || Math.abs($messagesScroll[0].scrollHeight - $messagesScroll.scrollTop() - $messagesScroll.outerHeight()) < 200) {
@@ -52,9 +52,15 @@
 });
 
  Template.chat.helpers({
-
+  //get messages from database that have a recipient of either all or uid
   messages() {
-    return Messages.find({}, { sort: { createdAt: 1 } }); //most recent at the bottom
+    const uid = Meteor.userId();
+    console.log("uid: " + uid)
+    // let m = async function() {return Messages.find({name: "Josh"}, { sort: { createdAt: 1 } })};
+    // m.then((doc) => {});
+    // return m
+    return Messages.find({ recipient: { $in: ["all", uid] } }, { sort: { createdAt: 1 } }); //most recent at the bottom
+    //return Messages.find({}, { sort: { createdAt: 1 } });
   },
   
   hideHint() {
