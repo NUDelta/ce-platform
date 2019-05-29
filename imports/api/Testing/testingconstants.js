@@ -1657,7 +1657,7 @@ const notifCbForMultiNeeds = function(contributionTypes, triggerTemplate, sendNo
  * @return {any} A function
  */
 const halfhalfRespawnAndNotify = function(subject, text) {
-  functionTemplate = function (sub) {
+  const functionTemplate = function (sub) {
     let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
     let need = contributionTypes.find((x) => {
       return x.needName === sub.needName;

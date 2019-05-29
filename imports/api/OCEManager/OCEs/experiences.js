@@ -142,6 +142,14 @@ Schema.Experience = new SimpleSchema({
     label: 'Experience image url',
     optional: true
   },
+  repeatContributionsToExperienceAfterN: {
+    type: Number,
+    label: ('Repeat Contributions to Experience After N (others have contributed); ' +
+      '0 means dont wait, person can repeat whenever; 1 means no back to back repeat contributions; ' +
+      '-1 means dont ever allow repeat contributions; N mean wait for N people to participate before going again'),
+    optional: true,
+    defaultValue: 0,
+  }
 });
 
 Experiences.attachSchema(Schema.Experience);
