@@ -1233,7 +1233,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1248,7 +1248,7 @@ const createDrinksTalk = function() {
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1320,7 +1320,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1335,7 +1335,7 @@ const createMoodMeteorology = function () {
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
         numberNeeded : 3,
-        notificationDelay : 0,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       },
@@ -1581,7 +1581,7 @@ const createGroupCheers = function() {
         exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
       numberNeeded: 3,
-      notificationDelay: 0,
+      notificationDelay: 90,
       numberAllowedToParticipateAtSameTime: 3,
     }, {
       needName: 'groupCheers_triadTwo',
@@ -1595,7 +1595,7 @@ const createGroupCheers = function() {
         exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
       numberNeeded: 3,
-      notificationDelay: 0,
+      notificationDelay: 90,
       numberAllowedToParticipateAtSameTime: 3,
     }],
     description: 'Share your accomplishments with your friend and their friend!',
