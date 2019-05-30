@@ -73,11 +73,10 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       // console.log('need: ', util.inspect(need, false, null));
 
       let uidsWhoSubToIncident = (exp.repeatContributionsToExperienceAfterN < 0 ?
-        usersAlreadySubmittedToIncident(iid) : usersAlreadySubmittedToIncident(iid, exp.repe))
-
+        usersAlreadySubmittedToIncident(iid) : usersAlreadySubmittedToIncident(iid, exp.repeatContributionsToExperienceAfterN))
 
       let usersInNeed = usersAlreadyAssignedToNeed(iid, needName);
-      // console.log('usersInNeed : ', util.inspect(usersInIncident, false, null));
+      // console.log('usersInNeed : ', util.inspect(usersInNeed, false, null));
 
       let uidsWhoSubToNeed = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
 
@@ -88,19 +87,23 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
-      let assignmentNeed = assignment.needUserMaps.find(function(x) {
-        return x.needName === needName;
-      });
-
       // check for synchronous needs (need.situation.number >= 2)
       if (usersNotInIncident.length >= need.situation.number) {
+        incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersNotInIncident;
+
+        /* TODO(rlouie): Should revisit on being judicious about who we assign/notify; for now, let the dynamic participate
+            manage the semaphore count of how many users can take which needs
+        let assignmentNeed = assignment.needUserMaps.find(function(x) {
+          return x.needName === needName;
+        });
         let newChosenUsers = chooseUsers(
           usersNotInIncident,
           iid,
           assignmentNeed
         );
-        // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+        console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
         incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;
+         */
       }
     });
   });

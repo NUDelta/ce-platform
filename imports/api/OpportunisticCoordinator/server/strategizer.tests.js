@@ -4,6 +4,7 @@ import {Submissions} from "../../OCEManager/currentNeeds";
 import {Assignments, Availability} from "../databaseHelpers";
 import {checkIfThreshold} from "./strategizer";
 import {needAggregator} from "../strategizer";
+import {updateSubmission} from "../../OCEManager/progressor";
 
 describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributions: false', () => {
 
@@ -289,7 +290,7 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
     }
   ];
 
-  beforeEach(() => {
+  before(() => {
     resetDatabase();
 
     let halfhalfNeed1 = JSON.parse(JSON.stringify(halfhalfNeedTemplate));
@@ -383,33 +384,33 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
     chai.assert(foundUserForNeed2, `incidentsWithUsersToRun, ${needName2}, should contain userB`);
   });
 
-  // it('user ALSO SHOULD be allowed to participate twice', () => {
-  //   // But user has already participated in the past
-  //   Submissions.insert({
-  //     _id: Random.id(),
-  //     eid : Random.id(),
-  //     iid : incident_id,
-  //     needName : NEEDNAME,
-  //     uid : userA,
-  //     content : {
-  //       "this": "is a previous submission"
-  //     }
-  //   });
-  //
-  //   let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
-  //
-  //   // should look something like this
-  //   // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
-  //   chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
-  //   chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
-  //   chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][NEEDNAME], 'incidentsWithUsersToRun should contain needName');
-  //   let users_for_need = incidentsWithUsersToRun[incident_id][NEEDNAME];
-  //   let foundUser = users_for_need.find((userMeta) => userMeta.uid === userA);
-  //   chai.assert(foundUser, 'incidentsWithUsersToRun should contain userA');
-  // });
+  it('should, after one submission remaining, allow userB to still be assigned', () => {
+    const dummySub = {
+      eid: eid,
+      iid: incident_id,
+      needName: needName1,
+      uid: Random.id(),
+      content: { leftHalfPreview: Random.id() },
+      timestamp: Date.now(),
+      lat: 42.054902,
+      lng: -87.670197,
+    };
+    updateSubmission(dummySub);
 
+    let incidentsWithUsersToRun = checkIfThreshold(updatedIncidentsAndNeeds);
+
+    // should look something like this
+    // { vPnAsWkhjv8EN6n9p: { 'Coffee Time': [ 'tDm59tFq2XBBKQZm5' ] } }
+    chai.assert.isNotNull(incidentsWithUsersToRun, 'incidentsWithUsersToRun should not be empty');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id], 'incidentsWithUsersToRun should contain incident');
+    chai.assert.isNotNull(incidentsWithUsersToRun[incident_id][needName1], `incidentsWithUsersToRun should contain ${needName1}`);
+    let users_for_need1 = incidentsWithUsersToRun[incident_id][needName1];
+    let foundUserForNeed1 = users_for_need1.find((userMeta) => userMeta.uid === userB);
+    chai.assert(foundUserForNeed1, `incidentsWithUsersToRun, ${needName1}, should contain userB`);
+  });
 });
 
+// TODO(rlouie): if someone wants synchronous experiences, someone should write some test cases for the different scenarios
 
 describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
 
