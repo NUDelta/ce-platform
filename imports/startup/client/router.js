@@ -219,7 +219,7 @@ Router.route('results.backdoor', {
   },
   data: function () {
     return {
-      submissions: Submissions.find({}).fetch(),
+      submissions: Submissions.find({}, {sort: {timestamp: -1}}).fetch(),
       experiences: Experiences.find({}).fetch()
     }
   }
