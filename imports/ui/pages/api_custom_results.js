@@ -336,12 +336,12 @@ export const reactSubmission = (react, users, submission) => {
     lng: submission.lng
   };
 
-  Meteor.call('updateSubmission', submissionObject);
-  //notify participant of reaction
-  if (notification){
-    Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
-     '/apicustomresults/' + submission.iid + '/', submission.iid);
- }
+//   Meteor.call('updateSubmission', submissionObject);
+//   //notify participant of reaction
+//   if (notification){
+//     Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
+//      '/apicustomresults/' + submission.iid + '/', submission.eid);
+//  }
 };
 
 Template.imitationGameResults.helpers({
