@@ -21,6 +21,18 @@ Template.resultsBackdoor.helpers({
     });
     return expMatch.name;
   },
+  objectAttribute_name(obj) {
+    return obj.name;
+  },
+  objectAttribute_link(obj) {
+    return obj.link;
+  },
+  pairsKey(pairsObj) {
+    return pairsObj[0]
+  },
+  pairsValue(pairsObj) {
+    return pairsObj[1]
+  },
   apiCustomResultsAdminLinks() {
     let completedSubmissions = this.submissions.filter((sub) => {
       return sub.uid != null;
@@ -37,5 +49,27 @@ Template.resultsBackdoor.helpers({
     });
 
     return [... new Set(links)];
+  },
+  groupLinksBySocialGroup(uniqueLinks) {
+    let groupToLinkObj = {};
+
+    uniqueLinks.forEach(link => {
+      let [tmp1, tmp2, iid, eid, tmp3] = link.split('/');
+      exp = Experiences.findOne({_id: eid});
+      let key;
+      if (exp.group) {
+        key = exp.group;
+      } else {
+        key = "nullGroup";
+      }
+      if (key in groupToLinkObj) {
+        groupToLinkObj[key].push({name: exp.name, group: exp.group, link: link});
+      } else {
+        groupToLinkObj[key] = [{name: exp.name, group: exp.group, link: link}]
+      }
+    });
+
+    return _.pairs(groupToLinkObj);
   }
+
 });
