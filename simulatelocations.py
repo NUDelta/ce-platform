@@ -9,7 +9,8 @@ burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 grocery2 = (42.039818,-87.680088)
 coffee = (42.046881, -87.679555)
-beer = (42.047105, -87.682006)
+# beer = (42.047105, -87.682006)
+bars = (42.046251, -87.680547)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
@@ -216,11 +217,11 @@ def allUsersAtGrocery():
     print("all users at grocery")
 
 def allUsersAtBars():
-    setLocation((42.046251, -87.680547), sys.argv[1])
-    setLocation((42.046251, -87.680547), sys.argv[2])
-    setLocation((42.046251, -87.680547), sys.argv[3])
-    setLocation((42.046251, -87.680547), sys.argv[4])
-    setLocation((42.046251, -87.680547), sys.argv[5])
+    setLocation(bars, sys.argv[1])
+    setLocation(bars, sys.argv[2])
+    setLocation(bars, sys.argv[3])
+    setLocation(bars, sys.argv[4])
+    setLocation(bars, sys.argv[5])
 
     print("all users at bar")
 
@@ -300,7 +301,10 @@ if __name__ == "__main__":
     # single user movement
     # setLocation(burgers, sys.argv[1])
     # allUsersGrocery()
-    # setLocation(library, "TKS3kFCMZTZZa9S82")
+    # allUsersAtBars()
+    setLocation(bars, "TKS3kFCMZTZZa9S82") # mary
+    setLocation(bars, "9NnJBZ5rxTQKp5L5B") # ryan
+    # setLocation(bars, "wJWwTgTm8Nr5QkAzM") # kapil
     #garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()

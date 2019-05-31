@@ -73,17 +73,20 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       // console.log('need: ', util.inspect(need, false, null));
 
       let uidsWhoSubToIncident = (exp.repeatContributionsToExperienceAfterN < 0 ?
-        usersAlreadySubmittedToIncident(iid) : usersAlreadySubmittedToIncident(iid, exp.repeatContributionsToExperienceAfterN))
+        usersAlreadySubmittedToIncident(iid, null) :
+        usersAlreadySubmittedToIncident(iid, exp.repeatContributionsToExperienceAfterN));
+      // console.log('uidsWhoSubToIncident: ', util.inspect(uidsWhoSubToIncident, false, null));
 
-      let usersInNeed = usersAlreadyAssignedToNeed(iid, needName);
-      // console.log('usersInNeed : ', util.inspect(usersInNeed, false, null));
+      let uidsInNeed = usersAlreadyAssignedToNeed(iid, needName);
+      // console.log('uidsInNeed: ', util.inspect(uidsInNeed, false, null));
 
       let uidsWhoSubToNeed = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
-
+      // console.log('uidsWhoSubToNeed : ', util.inspect(uidsWhoSubToNeed, false, null));
 
       let usersNotInIncident = needUserMap.users.filter(function(user) {
-        return (!usersInNeed.find(x => x.uid === user.uid) &&
-          !uidsWhoSubToNeed.find(uid => uid === user.uid));
+        return (!uidsInNeed.find(uid => uid === user.uid) &&
+          !uidsWhoSubToNeed.find(uid => uid === user.uid) &&
+          !uidsWhoSubToIncident.find(uid => uid === user.uid));
       });
       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
