@@ -1537,8 +1537,9 @@ const createGroupCheers = function() {
       'var participatedInDrinksTalk;',
       'var participatedInMoodMeteorology;',
       'var participatedInImitationGame;',
+      'var stageTwo;',
     ],
-    rules: ['(triadOne && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+    rules: ['(triadOne && stageTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   }
 
   DETECTORS['cheers_triadTwo'] = {
@@ -1559,8 +1560,9 @@ const createGroupCheers = function() {
       'var participatedInDrinksTalk;',
       'var participatedInMoodMeteorology;',
       'var participatedInImitationGame;',
+      'var stageTwo;',
     ],
-    rules: ['(triadTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+    rules: ['(triadTwo && stageTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   }
 
   let experience = {
