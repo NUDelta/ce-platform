@@ -18,7 +18,7 @@ export const usersAlreadyAssignedToNeed = (iid, needName) => {
   let assignmentNeedMap = assignment.needUserMaps.find(function (x) {
     return x.needName === needName;
   });
-  return assignmentNeedMap.users;
+  return assignmentNeedMap.users.map( x => x.uid );
 };
 
 
@@ -72,7 +72,7 @@ export const needAggregator = (incident) => {
  * @param limit
  * @return {null|*}
  */
-export const usersAlreadySubmittedToIncident = ({iid, limit = null} = {}) => {
+export const usersAlreadySubmittedToIncident = (iid, limit) => {
   let previousUids;
   if (limit) {
     if (!Number.isInteger(limit) || limit < 0) {

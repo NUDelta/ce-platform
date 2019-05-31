@@ -410,6 +410,14 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
   });
 });
 
+/**
+ * TODO(rlouie): OCE where contributions build off of each other (e.g., Storytime)
+ *
+ * You could have a chain of needs (page1, page2, page3) each requiring only one person to fill them.
+ * You might want a person to only be able to participate once in this incident i.e. contribute to one page only
+ * You might want a person to be able to participate again, after N people have participated before them
+ */
+
 // TODO(rlouie): if someone wants synchronous experiences, someone should write some test cases for the different scenarios
 
 describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
