@@ -2,9 +2,11 @@
  import { Cookies } from 'meteor/mrt:cookies';
  import { Meteor } from 'meteor/meteor';
  import { Messages } from '../../api/messages/messages.js';
+
  //import '../../api/messages/server/methods.js';
  import moment from 'moment';
  import './contributions.html';
+
 
  Template.message.helpers({
 
@@ -82,44 +84,31 @@
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
 
-    // const $setChar = $el.find('.character');
-    // const $chapter = $el.find('.chapter');
-    
-    const data = { message: $input.val() };
-
-    //const userName = $setChar.text();
-
-    const uid = Meteor.userId();
-    let participant = Meteor.users.findOne({
-      "_id": uid,
-    })
-    //const chapterID = $chapter.text();
-    console.log("data: " + data);
-    console.log("first name: " + participant.profile.firstName);
-    //console.log("chapter: " + chapterID);
-    
-    data.name = uid;
-    //data.role = ;
-    //data.chapterID = chapterID;
-    
-    Meteor.call("sendMessage", data, (error, response) => {
-      if (error) {
-        alert(error.reason);
-      } else {
-        //Cookie.set("name", response.name);
-        $input.val("");
-      }
-    }); 
-  },
-
-
-      //find the fileinput element?
-      //need to account for when the image doesn't exist
-      const $images = $el.find('.fileinput');
+    //find the fileinput element?
+    const $images = $el.find('.fileinput');
     //find the first and only picture that's been added
-    let picture = event.target.photo.files[0]
+    let picture;
+      if (event.target.photo) { // form has input[name=photo]
+        // imageFile
+        picture = event.target.photo.files[0]
+      } else {
+        let ImageURL = $('.fileinput-preview').attr('src');
+        // Split the base64 string in data and contentType
+        let block = ImageURL.split(";");
+        // Get the content type
+        let contentType = block[0].split(":")[1];
+        // get the real base64 content of the file
+        let realData = block[1].split(",")[1];
+
+        picture = b64toBlob(realData, contentType);
+      }
 
     const location = this.location ? this.location : {lat: null, lng: null};
+    const iid = Router.current().params.iid;
+    const needName = Router.current().params.needName;
+    const uid = Meteor.userId();
+    const user = Meteor.user().username;
+    const timestamp = Date.now()
 
 
     const imageFile = Images.insert(picture, (err, imageFile) => {
@@ -131,11 +120,11 @@
           //add more info about the photo
           Images.update({ _id: imageFile._id }, {
             $set: {
-              iid: Router.current().params.iid,
-              uid: Meteor.userId(),
+              iid: iid,
+              uid: uid,
               lat: location.lat,
               lng: location.lng,
-              needName: Router.current().params.needName,
+              needName: needName,
             }
           }, (err, docs) => {
             if (err) {
@@ -158,6 +147,37 @@
       });
 
 
+
+    // const $setChar = $el.find('.character');
+    // const $chapter = $el.find('.chapter');
+    
+    const data = { message: $input.val() };
+
+    //const userName = $setChar.text();
+
+    let participant = Meteor.users.findOne({
+      "_id": uid,
+    })
+    //const chapterID = $chapter.text();
+    console.log("data: " + data);
+    console.log("first name: " + participant.profile.firstName);
+    //console.log("chapter: " + chapterID);
+    
+    data.name = uid;
+    data.image = imageFile._id;
+    console.log("image file id: " + imageFile._id)
+    //data.role = ;
+    //data.chapterID = chapterID;
+    
+    Meteor.call("sendMessage", data, (error, response) => {
+      if (error) {
+        alert(error.reason);
+      } else {
+        //Cookie.set("name", response.name);
+        $input.val("");
+      }
+    }); 
+  },
 
   /*playing with idea of having time passed be an event
   'time passed'(event, instance) {

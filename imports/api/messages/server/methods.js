@@ -11,11 +11,8 @@ Meteor.methods({
 		check(data, {
 			message: String, //the message to send
       name: Match.Optional(String), //if the user already has a name
+      image: String,
 		});
-    
-    if (data.message=="") {
-      throw new Meteor.Error("message-empty", "Your message is empty");
-    }
 
     let participant = Meteor.users.findOne({
       "_id": data.name,
@@ -32,6 +29,15 @@ Meteor.methods({
     console.log(userName)
     
     const matchName = data.message.match(/^My name is (.*)/i);
+    let img;
+
+    if (data.image != "") {
+      img = data.image
+    } else {
+      img = ""
+    }
+
+    console.log("img: " + img)
     
     // if (matchName && matchName[1]!="") {
     //   userName = matchName[1];
@@ -47,6 +53,7 @@ Meteor.methods({
         message: data.message,
         createdAt: new Date(),
         recipient: "all",
+        imageID: img,
         //chapter: "1"
       });
     //}
@@ -69,7 +76,7 @@ Meteor.methods({
   sendPrompt: function (data) {
     Messages.insert({
         name: "Narrator",
-        message: "The murderer is at a " + info,
+        message: data,
         createdAt: new Date(),
         recipient: "all",
       });
