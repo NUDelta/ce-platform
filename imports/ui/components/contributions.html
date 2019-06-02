@@ -102,6 +102,9 @@
           <form id="message">
             <h2 class="character">{{this.toPass.characterName}}</h2>
             <h2 class="chapter">{{this.toPass.chapterName}}</h2>
+            <div>
+                {{> Template.dynamic template="camera" data="proof"}}
+            </div>
             <input type="text" class="message-input" placeholder="Type your message here..."><button type="submit">Send</button>
           </form>
       </div>

@@ -7,78 +7,78 @@
 <template name="uploadPhoto">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
     <div class="instruction">
       {{{this.toPass.instruction}}}
+  </div>
+  <form class="col col-xs-12" id="participate">
+    <div class="camera-upload">
+        {{> Template.dynamic template="camera" data="proof"}}
     </div>
-    <form class="col col-xs-12" id="participate">
-        <div class="camera-upload">
-            {{> Template.dynamic template="camera" data="proof"}}
-        </div>
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-            Submit
-        </button>
-    </form>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+    Submit
+</button>
+</form>
 </template>
 
 <template name="cn">
     <div class="past-messages">
-            {{> Template.dynamic template="chat" data="proof"}}
+        {{> Template.dynamic template="chat" data="proof"}}
     </div>
     <form class="col col-xs-12" id="participate">
         <div class="message">
-                {{> Template.dynamic template="message" data="proof"}}
+            {{> Template.dynamic template="message" data="proof"}}
         </div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-        </button>
-    </form>
+        style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+    </button>
+</form>
 </template>
 
 <template name="murderMysteryChat">
     {{#if this.toPass.role}}
-      <div>
+    <div>
         <h5>Your role is </h5>
         <h5>{{this.toPass.role}}</h5>
-      </div>
-      {{else}}
-          <p> Waiting for your role to be assigned </p>
+    </div>
+    {{else}}
+    <p> Waiting for your role to be assigned </p>
     {{/if}}
     <div>
         {{> Template.dynamic template="rolecall" data="proof"}}
         {{{this.toPass.role}}}
     </div>
     <div class="past-messages">
-            {{> Template.dynamic template="chat" data="proof"}}
+        {{> Template.dynamic template="chat" data="proof"}}
     </div>
     <form class="col col-xs-12" id="participate">
-    <div>
-        {{{this.toPass.instruction}}}
-    </div>
+        <div>
+            {{{this.toPass.instruction}}}
+        </div>
         <!-- <div class="message">
                 {{> Template.dynamic template="message" data="proof"}}
-        </div> -->
+            </div> -->
        <!--  <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
-        </button> -->
-    </form>
-</template>
+            </button> -->
+        </form>
+    </template>
 
-<template name="murderMysteryInitial">
-    <head>
-        <style>
+    <template name="murderMysteryInitial">
+        <head>
+            <style>
             .instruction {
                 padding-top: 4%;
                 padding-bottom: 4%;
@@ -87,262 +87,262 @@
             .camera-upload {
                 padding-bottom: 1%;
             }
-        </style>
-    </head>
+            </style>
+        </head>
 
-    {{#if Template.subscriptionsReady}}
+        {{#if Template.subscriptionsReady}}
         <div class="instruction">
           <span>{{this.toPass.situationDescription}}</span>
-            <span>
-                {{this.toPass.instruction}}
-            </span>
+          <span>
+            {{this.toPass.instruction}}
+        </span>
+    </div>
+    <form class="col col-xs-12" id="participate">
+        <span>
+            {{this.toPass.question1}}
+        </span>
+        <div>
+            {{> Template.dynamic template="cn-dropdown" data=this.toPass.dropdownChoices}}
         </div>
-        <form class="col col-xs-12" id="participate">
-            <span>
-                {{this.toPass.question1}}
-            </span>
-            <div>
-                {{> Template.dynamic template="cn-dropdown" data=this.toPass.dropdownChoices}}
-            </div>
-            <span>
-                {{this.toPass.question2}}
-            </span>
-            <div>
-              {{> Template.dynamic template="text" data="menu"}}
-            </div>
-            <span>
-                {{this.toPass.question3}}
-            </span>
-            <div>
-              {{> Template.dynamic template="text" data="order"}}
-            </div>
+        <span>
+            {{this.toPass.question2}}
+        </span>
+        <div>
+          {{> Template.dynamic template="text" data="menu"}}
+      </div>
+      <span>
+        {{this.toPass.question3}}
+    </span>
+    <div>
+      {{> Template.dynamic template="text" data="order"}}
+  </div>
 
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-            </button>
-        </form>
-    {{/if}}
+  <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+  style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+  Submit
+</button>
+</form>
+{{/if}}
 </template>
 
 
 <template name="halfhalfParticipate">
   <head>
     <style>
-      .instruction {
+    .instruction {
         padding-top: 4%;
         padding-bottom: 4%;
-      }
+    }
 
-      .glyphicon-medium {
+    .glyphicon-medium {
         font-size: 24px;
-      }
+    }
 
-      .glyphicon-large {
+    .glyphicon-large {
         font-size: 32px;
-      }
+    }
 
-      .right-align {
+    .right-align {
         float: right;
-      }
+    }
 
-      .navigation-buttons {
+    .navigation-buttons {
         margin-bottom: 10px;
-      }
+    }
 
     </style>
-  </head>
+</head>
 
-  <div id="instruction" class="instruction">
+<div id="instruction" class="instruction">
     <h4>{{this.experience.name}}</h4>
     <div>
       {{{this.toPass.instruction}}}
       {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
-        {{#if (lengthEqual needImages 1) }}
-          {{#let image=(firstElement needImages) }}
-            {{#let user=(getUserById users image.uid) }}
-              {{> displayTopToBottom_Avatar_FullName appendText="framed the left half. You can align the right half with theirs." user=user avatar=(userAvatarImg avatars user) }}
-            {{/let}}
-          {{/let}}
-        {{else}}
-          Frame the left half. Then somebody will frame the right half.
-        {{/if}}
+      {{#if (lengthEqual needImages 1) }}
+      {{#let image=(firstElement needImages) }}
+      {{#let user=(getUserById users image.uid) }}
+      {{> displayTopToBottom_Avatar_FullName appendText="framed the left half. You can align the right half with theirs." user=user avatar=(userAvatarImg avatars user) }}
       {{/let}}
-    </div>
-    {{#if this.toPass.exampleImage}}
-      <div>
-        <h5>Example to try</h5>
-        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
-      </div>
-    {{/if}}
-    <button id="goToParticipate" class="btn btn-primary right-align">
-      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
-    </button>
+      {{/let}}
+      {{else}}
+      Frame the left half. Then somebody will frame the right half.
+      {{/if}}
+      {{/let}}
   </div>
-  <form id="participate" style="display: none">
+  {{#if this.toPass.exampleImage}}
+  <div>
+    <h5>Example to try</h5>
+    <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+</div>
+{{/if}}
+<button id="goToParticipate" class="btn btn-primary right-align">
+  <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+</button>
+</div>
+<form id="participate" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
-    </button>
-    <div id="cameraOverlay" class="camera-overlay">
+  </button>
+  <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
       {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
-        {{#if (lengthEqual needImages 1) }}
-          <div id="leftHalf" class="lefthalf halfsquare">
-            <div class="content">
-              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
-            </div>
-          </div>
-          <div id="rightHalf" class="righthalf halfsquare">
-            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
-          </div>
-        {{else}}
-          <div id="leftHalf" class="lefthalf halfsquare">
-            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
-          </div>
-          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
-        {{/if}}
-      {{/let}}
-    </div>
+      {{#if (lengthEqual needImages 1) }}
+      <div id="leftHalf" class="lefthalf halfsquare">
+        <div class="content">
+          {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+      </div>
+  </div>
+  <div id="rightHalf" class="righthalf halfsquare">
+    {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+</div>
+{{else}}
+<div id="leftHalf" class="lefthalf halfsquare">
+    {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+</div>
+<div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
+{{/if}}
+{{/let}}
+</div>
 
-    <div class="camera-controls">
-      <!-- LEAVE testImage button commented out!!! -->
-      <!--<button type="button" id="testImage" class="left-control">Test</button>-->
-      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
-        <span class="fa fa-spinner glyphicon-large"></span>
-      </button>
-      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
-        <span class="glyphicon glyphicon-record glyphicon-large"></span>
-      </button>
-      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
-        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
-      </button>
-      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
-        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
-      </button>
-    </div>
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-      Submit
-    </button>
-  </form>
+<div class="camera-controls">
+  <!-- LEAVE testImage button commented out!!! -->
+  <!--<button type="button" id="testImage" class="left-control">Test</button>-->
+  <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+    <span class="fa fa-spinner glyphicon-large"></span>
+</button>
+<button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+    <span class="glyphicon glyphicon-record glyphicon-large"></span>
+</button>
+<button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+    <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+</button>
+<button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+    <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+</button>
+</div>
+<button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+Submit
+</button>
+</form>
 </template>
 
 <template name="bumped">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
 
     {{#if Template.subscriptionsReady}}
-        <div class="instruction">
-            {{this.toPass.instruction}} user: {{nameOfFriend}}! You just bumped into them virtually--send them a selfie or a picture of what you're doing to say hi!
+    <div class="instruction">
+        {{this.toPass.instruction}} user: {{nameOfFriend}}! You just bumped into them virtually--send them a selfie or a picture of what you're doing to say hi!
+    </div>
+    <form class="col col-xs-12" id="participate">
+        <div class="camera-upload">
+            {{> Template.dynamic template="camera" data="proof"}}
         </div>
-        <form class="col col-xs-12" id="participate">
-            <div class="camera-upload">
-                {{> Template.dynamic template="camera" data="proof"}}
-            </div>
 
-            {{> Template.dynamic template="value" data=friendInfo}}
+        {{> Template.dynamic template="value" data=friendInfo}}
 
 
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-            </button>
-        </form>
-    {{/if}}
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+        style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+    </button>
+</form>
+{{/if}}
 </template>
 
 <template name="bumpedThree">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
 
     {{#if Template.subscriptionsReady}}
-        <div class="instruction">
-          <span>{{this.toPass.situationDescription}}</span>
-            <span>
-                You just bumped into some friends at a coffee shop. {{instruction}}
-            </span>
-        </div>
-        <form class="col col-xs-12" id="participate">
-            <div class="camera-upload">
-                {{> Template.dynamic template="camera" data="proof"}}
-            </div>
-            <div>
-              {{> Template.dynamic template="text" data="sentence"}}
-            </div>
+    <div class="instruction">
+      <span>{{this.toPass.situationDescription}}</span>
+      <span>
+        You just bumped into some friends at a coffee shop. {{instruction}}
+    </span>
+</div>
+<form class="col col-xs-12" id="participate">
+    <div class="camera-upload">
+        {{> Template.dynamic template="camera" data="proof"}}
+    </div>
+    <div>
+      {{> Template.dynamic template="text" data="sentence"}}
+  </div>
 
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-            </button>
-        </form>
-    {{/if}}
+  <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+  style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+  Submit
+</button>
+</form>
+{{/if}}
 </template>
 
 <template name="cheers">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
 
     {{#if Template.subscriptionsReady}}
-        <div class="instruction">
-            You and {{nameOfFriend}} are having a drink at a bar at the same time! Send them a photo of what you're drinking.
+    <div class="instruction">
+        You and {{nameOfFriend}} are having a drink at a bar at the same time! Send them a photo of what you're drinking.
+    </div>
+    <form class="col col-xs-12" id="participate">
+        <div class="camera-upload">
+            {{> Template.dynamic template="camera" data="proof"}}
         </div>
-        <form class="col col-xs-12" id="participate">
-            <div class="camera-upload">
-                {{> Template.dynamic template="camera" data="proof"}}
-            </div>
 
-            {{> Template.dynamic template="value" data=friendInfo}}
+        {{> Template.dynamic template="value" data=friendInfo}}
 
 
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-            </button>
-        </form>
-    {{/if}}
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+        style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+    </button>
+</form>
+{{/if}}
 </template>
 
 <template name="scavengerHuntParticipate">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
     <div class="instruction">
@@ -355,23 +355,23 @@
             {{> Template.dynamic template="camera" data="proof"}}
         </div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-            Submit
-        </button>
-    </form>
+        style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+    </button>
+</form>
 </template>
 
 <template name="submitText">
     <head>
         <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
+        .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+        }
 
-            .camera-upload {
-                padding-bottom: 1%;
-            }
+        .camera-upload {
+            padding-bottom: 1%;
+        }
         </style>
     </head>
     <div class="instruction">
@@ -383,27 +383,27 @@
         {{> Template.dynamic template="text" data="food"}}
 
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-            Submit
-        </button>
-    </form>
+        style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+    </button>
+</form>
 </template>
 
 <template name="narrativeLine">
     <head>
         <style>
-            #prevSentence {
-                padding-right: 8%;
-                padding-left: 8%;
-                padding-top: 3%;
-                text-align: center;
-                font-weight: 900;
-            }
+        #prevSentence {
+            padding-right: 8%;
+            padding-left: 8%;
+            padding-top: 3%;
+            text-align: center;
+            font-weight: 900;
+        }
 
-            #participate {
-                margin-left: -3%;
-                padding-top: 1%;
-            }
+        #participate {
+            margin-left: -3%;
+            padding-top: 1%;
+        }
         </style>
     </head>
     <!--<h4>Help us write a Harry Potter spin-off story</h4>-->
@@ -424,99 +424,99 @@
         {{/if}}
         -
         <p id="prevSentence">"{{this.toPass.instruction}}"</p>
-        -->
+    -->
 
-        {{#if notLast}}
-            Speak up when you want to, OR choose an action from the options below.
+    {{#if notLast}}
+    Speak up when you want to, OR choose an action from the options below.
           <!-- old pre summer
           {{> Template.dynamic template="dropdown" data="dropdownData"}}<br><br>
-        -->
-            {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
-            {{> Template.dynamic template="text" data="sentence"}}
-        {{/if}}
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
-        </button>
-    </form>
+      -->
+      {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
+      {{> Template.dynamic template="text" data="sentence"}}
+      {{/if}}
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+      style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
+  </button>
+</form>
 </template>
 
 
 <template name="storyPage">
     <head>
         <style>
-            #prevSentence {
-                padding-right: 8%;
-                padding-left: 8%;
-                padding-top: 3%;
-                text-align: center;
-                font-weight: 900;
-            }
+        #prevSentence {
+            padding-right: 8%;
+            padding-left: 8%;
+            padding-top: 3%;
+            text-align: center;
+            font-weight: 900;
+        }
 
-            #participate {
-                margin-left: -3%;
-                padding-top: 1%;
-            }
+        #participate {
+            margin-left: -3%;
+            padding-top: 1%;
+        }
         </style>
     </head>
     <!--<h4>Help us write a Harry Potter spin-off story</h4>-->
     <h4>Help write {{this.experience.name}}</h4>
     Your situation makes you available to illustrate <span style="color: #0351ff">{{this.toPass.situation}}</span>.
     {{#if pageOne}}
-      Continue the story by adding onto the first sentence.
+    Continue the story by adding onto the first sentence.
     {{else}}
-      Continue the story by adding onto the past sentence.
+    Continue the story by adding onto the past sentence.
     {{/if}}
     <form class="col col-xs-12" id="participate">
         <h4>Step 1</h4>
         {{#if pageOne}}
-          The story starts with the following sentence:
+        The story starts with the following sentence:
         {{else}}
-          {{#let user=(getUserById users this.toPass.previousUserId)}}
-            <div class="centered">
-              {{> displayTopToBottom_Avatar_FullName appendText="wrote:" user=user avatar=(userAvatarImg avatars user) }}
-            </div>
-          {{/let}}
-        {{/if}}
-        <p id="prevSentence">"{{this.toPass.instruction}}"</p>
-        Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
-        {{> Template.dynamic template="camera" data="illustration"}}
+        {{#let user=(getUserById users this.toPass.previousUserId)}}
+        <div class="centered">
+          {{> displayTopToBottom_Avatar_FullName appendText="wrote:" user=user avatar=(userAvatarImg avatars user) }}
+      </div>
+      {{/let}}
+      {{/if}}
+      <p id="prevSentence">"{{this.toPass.instruction}}"</p>
+      Illustrate the sentence by taking a photo of something in your surroundings that represents the sentence.
+      {{> Template.dynamic template="camera" data="illustration"}}
 
-        {{#if notLast}}
-            <h4>Step 2</h4>
-            Choose one of the following phrases and use it to write the next sentence: <br>
+      {{#if notLast}}
+      <h4>Step 2</h4>
+      Choose one of the following phrases and use it to write the next sentence: <br>
           <!-- old pre summer
           {{> Template.dynamic template="dropdown" data="dropdownData"}}<br><br>
-        -->
-            {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
-            {{> Template.dynamic template="text" data="sentence"}}
-        {{/if}}
-        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
-        </button>
-    </form>
+      -->
+      {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
+      {{> Template.dynamic template="text" data="sentence"}}
+      {{/if}}
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+      style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
+  </button>
+</form>
 </template>
 
 <template name="storyPage_noInterdependence">
   <head>
     <style>
-      #prevSentence {
+    #prevSentence {
         padding-right: 8%;
         padding-left: 8%;
         padding-top: 3%;
         text-align: center;
         font-weight: 900;
-      }
+    }
 
-      #participate {
+    #participate {
         margin-left: -3%;
         padding-top: 1%;
-      }
+    }
     </style>
-  </head>
-  <h4>Add to {{this.experience.name}}</h4>
-  Your situation makes you available to describe <span style="color: #0351ff">{{this.toPass.situation}}</span>
+</head>
+<h4>Add to {{this.experience.name}}</h4>
+Your situation makes you available to describe <span style="color: #0351ff">{{this.toPass.situation}}</span>
 
-  <form class="col col-xs-12" id="participate">
+<form class="col col-xs-12" id="participate">
     <h4>Step 1</h4>
     Use <span style="color: #0351ff">{{this.toPass.situation}}</span> in a sentence describing a scene in Harry Potter.
     {{> Template.dynamic template="text" data="sentence"}}
@@ -526,9 +526,9 @@
     {{> Template.dynamic template="camera" data="illustration"}}
 
     <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-            style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
-    </button>
-  </form>
+    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">Submit
+</button>
+</form>
 </template>
 
 <!--  TEMPLATE FOR RAINBOW COLLAGE -->
@@ -536,11 +536,11 @@
     <h4>Help build a rainbow collage</h4>
     <p>Take a picture of something <i><b>{{this.contributionTemplate.name}}</b></i> so we can
         showcase all the colors.</p>
-    <div id="participate">
-        <form class="col col-xs-12">
-            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        <div id="participate">
+            <form class="col col-xs-12">
+                {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+                <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
             </button>
         </form>
@@ -551,63 +551,63 @@
 <template name="thanksgiving">
     <h4>Let's celebrate Thanksgiving break</h4>
     {{#if isGroceryContrib this.contributionTemplate.name}}
-        <p>It looks like you're grocery shopping right now! Help us create a Thanksgiving break
-            collage and take a picture of you shopping for some delicious food.</p>
-    {{else if isShoppingContrib this.contributionTemplate.name}}
+    <p>It looks like you're grocery shopping right now! Help us create a Thanksgiving break
+        collage and take a picture of you shopping for some delicious food.</p>
+        {{else if isShoppingContrib this.contributionTemplate.name}}
         <p>It looks like you're shopping right now! Help us create a Thanksgiving break collage and
             take a picture of you shopping.</p>
-    {{else if isBarsContrib this.contributionTemplate.name}}
-        <p>It looks like you're chilling at a bar right now! Help us create a Thanksgiving break
-            collage and take a picture of you at the bar.</p>
-    {{else if isAirportContrib this.contributionTemplate.name}}
-        <p>It looks like you're chilling at the airport right now! Help us create a Thanksgiving
-            break collage and take a picture of you at the airport.</p>
-    {{else if isFeastContrib this.contributionTemplate.name}}
-        <p>It looks like you're feasting at a restaurant right now! Help us create a Thanksgiving
-            break collage and take a picture of your feast.</p>
-    {{else if isDrinksContrib this.contributionTemplate.name}}
-        <p>It looks like you're drinking something right now! Help us create a Thanksgiving break
-            collage and take a picture of your drink.</p>
-    {{else}}
-        <p>Oops something went wrong here. Ignore this experience please!</p>
-    {{/if}}
-    <div id="participate">
-        <form class="col col-xs-12">
-            {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Submit
-            </button>
-        </form>
-    </div>
-</template>
+            {{else if isBarsContrib this.contributionTemplate.name}}
+            <p>It looks like you're chilling at a bar right now! Help us create a Thanksgiving break
+                collage and take a picture of you at the bar.</p>
+                {{else if isAirportContrib this.contributionTemplate.name}}
+                <p>It looks like you're chilling at the airport right now! Help us create a Thanksgiving
+                    break collage and take a picture of you at the airport.</p>
+                    {{else if isFeastContrib this.contributionTemplate.name}}
+                    <p>It looks like you're feasting at a restaurant right now! Help us create a Thanksgiving
+                        break collage and take a picture of your feast.</p>
+                        {{else if isDrinksContrib this.contributionTemplate.name}}
+                        <p>It looks like you're drinking something right now! Help us create a Thanksgiving break
+                            collage and take a picture of your drink.</p>
+                            {{else}}
+                            <p>Oops something went wrong here. Ignore this experience please!</p>
+                            {{/if}}
+                            <div id="participate">
+                                <form class="col col-xs-12">
+                                    {{> Template.dynamic template="camera" data=(passContributionName this.situationNeedName)}}
+                                    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+                    </template>
 
-<template name="Harry_Potter_Story">
-    <head>
-        <style>
-            .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
-            }
-            .camera-upload {
-                padding-bottom: 1%;
-            }
-        </style>
-    </head>
-    <div class="instruction">
-        <h3>Welcome to Harry Potter story. You are <b>{{this.toPass.characterName}}</b>!</h3>
-        <h3 style="text-align: center"><b>{{this.toPass.instruction}}</b></h3>
-    </div>
+                    <template name="Harry_Potter_Story">
+                        <head>
+                            <style>
+                            .instruction {
+                                padding-top: 4%;
+                                padding-bottom: 4%;
+                            }
+                            .camera-upload {
+                                padding-bottom: 1%;
+                            }
+                            </style>
+                        </head>
+                        <div class="instruction">
+                            <h3>Welcome to Harry Potter story. You are <b>{{this.toPass.characterName}}</b>!</h3>
+                            <h3 style="text-align: center"><b>{{this.toPass.instruction}}</b></h3>
+                        </div>
 
-    <div id="participate">
-        <form class="col col-xs-12" id="participate">
-            <p style="text-align: center">{{> Template.dynamic template="chat" data=this}}</p>
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-                Commit an Action
-            </button>
-        </form>
-    </div>
+                        <div id="participate">
+                            <form class="col col-xs-12" id="participate">
+                                <p style="text-align: center">{{> Template.dynamic template="chat" data=this}}</p>
+                                <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                                style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+                                Commit an Action
+                            </button>
+                        </form>
+                    </div>
 
     <!-- <div id="participate">
         <form class="col col-xs-12" id="participate">

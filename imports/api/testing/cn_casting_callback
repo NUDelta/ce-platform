@@ -1,4 +1,7 @@
  	//add sub to need
+	let instance = Incidents.findOne(sub.iid);
+	console.log(instance._id)
+
     if (submissions[i].content.busy == "busy") {
       const characters = [sub., "murderer"]
     } else {
@@ -15,17 +18,17 @@
     //this function creates a need using existing context, then adds the submission info to that need
     experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(submissions[i].content.busy, ((characters) => 
       characters.map(character => {
-        const [detectorName, role, instruction] = character;
+        const [detectorName, role, template, instruction, user, others] = character;
         return {
           needName: `Murder Mystery ${role}`,
           situation: {
             detector: getDetectorId(DETECTORS[detectorName]),
             number: 3
           },
-          participateTemplate: 'murderMysteryChat',
+          participateTemplate: `${template}`,
           toPass: {
-          	role: role,
-            //instruction: `${instruction}`,
+          	role: `${role}`,
+            instruction: `${instruction}`,
             dropdownChoices: {
               name: values,
               options: DROPDOWN_OPTIONS

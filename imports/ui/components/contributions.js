@@ -76,9 +76,12 @@
   'submit #message'(event, instance) {
 
     event.preventDefault();
+
+
     
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
+
     // const $setChar = $el.find('.character');
     // const $chapter = $el.find('.chapter');
     
@@ -108,6 +111,53 @@
       }
     }); 
   },
+
+
+      //find the fileinput element?
+      //need to account for when the image doesn't exist
+      const $images = $el.find('.fileinput');
+    //find the first and only picture that's been added
+    let picture = event.target.photo.files[0]
+
+    const location = this.location ? this.location : {lat: null, lng: null};
+
+
+    const imageFile = Images.insert(picture, (err, imageFile) => {
+        //this is a callback for after the image is inserted
+        if (err) {
+          alert(err);
+        } else {
+          //success branch of callback
+          //add more info about the photo
+          Images.update({ _id: imageFile._id }, {
+            $set: {
+              iid: Router.current().params.iid,
+              uid: Meteor.userId(),
+              lat: location.lat,
+              lng: location.lng,
+              needName: Router.current().params.needName,
+            }
+          }, (err, docs) => {
+            if (err) {
+              console.log('upload error,', err);
+            } else {
+            }
+          });
+          // TODO: setTimeout for automatically moving on if upload takes too long
+
+          //watch to see when the image db has been updated, then go to results
+          const cursor = Images.find(imageFile._id).observe({
+            changed(newImage) {
+              if (newImage.isUploaded()) {
+                cursor.stop();
+                Router.go(resultsUrl);
+              }
+            }
+          });
+        }
+      });
+
+
 
   /*playing with idea of having time passed be an event
   'time passed'(event, instance) {
