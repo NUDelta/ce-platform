@@ -175,9 +175,9 @@ Template.groupBumpedResults.helpers({
     const myImage = images.find(i => i._id === mySub.content.proof);
     const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
     const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
-  
+
     results = {};
-    Object.assign(results, 
+    Object.assign(results,
       friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
@@ -336,12 +336,12 @@ export const reactSubmission = (react, users, submission) => {
     lng: submission.lng
   };
 
-//   Meteor.call('updateSubmission', submissionObject);
-//   //notify participant of reaction
-//   if (notification){
-//     Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
-//      '/apicustomresults/' + submission.iid + '/', submission.eid);
-//  }
+  Meteor.call('updateSubmission', submissionObject);
+  //notify participant of reaction
+  if (notification){
+    Meteor.call('sendNotification', [submission.uid], submission.needName, name + ' reacted to your cheers!',
+     '/apicustomresults/' + submission.iid + '/' + submission.eid);
+ }
 };
 
 Template.imitationGameResults.helpers({
@@ -356,7 +356,7 @@ Template.imitationGameResults.helpers({
     }
     let originalImage, creatorSub, descriptorSub, recreatorSub;
     let creatorName, descriptorName, recreatorName;
-    
+
     this.submissions.filter(s => {
       let tokenizedNeed = s.needName.split('_');
       if(tokenizedNeed[2] == triad) {
