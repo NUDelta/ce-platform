@@ -17,6 +17,12 @@
       return sentTime.format("h:mm a");
     }
     return sentTime.format("M/D/YY h:mm a");
+  },
+
+  getImage() {
+    const theImage = (Images.findOne(this.imageID));
+    console.log("theImage" + theImage._id);
+    return theImage;
   }
   
 });
@@ -146,12 +152,11 @@
         }
       });
 
-
-
     // const $setChar = $el.find('.character');
     // const $chapter = $el.find('.chapter');
     
     const data = { message: $input.val() };
+
 
     //const userName = $setChar.text();
 
