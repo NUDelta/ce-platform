@@ -314,6 +314,72 @@ const createMurderMystery = function() {
             $input.val("");
           }
         })
+
+        let info = "We have our first clue. The murderer is in a busy coffee shop!"
+
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })}, 3000)
+
+        let theOrder = "";
+        let theMenu = "";
+        let theUser = "";
+
+        if (submissions[i].content.busy == "busy") {
+          theOrder = submissions[i].content.order;
+          theMenu = submissions[i].content.menu;
+          theUser = Meteor.users.findOne(submissions[i].uid).profile.firstName;
+        }
+
+        let info2 = "Here's the second clue. The murderer ordered " + theOrder + "!";
+
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info2, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })}, 6000)
+
+        let info3 = "Here's the last clue. The murderer is in a coffee shop that sells " + theMenu + "!";
+
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info3, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })}, 9000)
+
+        let info4 = "Now it's time to cast your vote! Who do you think the murderer is?";
+
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info4, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })}, 12000)
+
+        let info5 = "Now that your votes are cast, let's find out who's right. The murderer is " + theUser + "!";
+
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info5, (error, response) => {
+          if (error) {
+            alert(error.reason);
+          } else {
+            //Cookie.set("name", response.name);
+            $input.val("");
+          }
+        })}, 15000)
+
       });
 
     }
@@ -349,7 +415,7 @@ const createMurderMystery = function() {
     description: "You've been invited to participate in a murder mystery!",
     notificationText: "You've been invited to participate in a murder mystery!",
     callbacks: [{
-      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 3)',
+      trigger: 'cb.newSubmission() && (cb.numberOfSubmissions() == 1)',
         // substitute any variables used outside of the callback function scope
         function: eval('`' + MurderMysteryCallback.toString() + '`'),
       }]
