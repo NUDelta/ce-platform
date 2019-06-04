@@ -55,6 +55,17 @@ Template.storyPage.helpers({
   }
 });
 
+Template.murderMysteryInitial.helpers({
+  isText(thing) { 
+    return thing == "text"
+  },
+
+  equals(a, b) {
+    return a == b;
+  },
+});
+
+
 Template.Harry_Potter_Story.helpers({
     dropdownData() {
         console.log(this.toPass.dropdownChoices);

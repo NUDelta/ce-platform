@@ -92,9 +92,7 @@
 
       {{#each q in this.toPass.questions}}
         <p>{{q.question}}</p>
-      {{/each}}
-      <!--
-          {{#if (q.responseType == "text")}}
+          {{#if isText q.responseType}}
             <div>
               {{> Template.dynamic template="text" data=q.responseData}}
             </div>
@@ -104,6 +102,7 @@
             </div>
           {{/if}}
       {{/each}}
+      <!--
               <span>
                 {{this.toPass.question1}}
               </span>

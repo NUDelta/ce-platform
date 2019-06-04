@@ -64,8 +64,8 @@
         </style>
     </head>
     <select class="dropdown" id={{this.name}}>
-        {{#each option in this.options}}
-            <option value="{{option[0]}}">{{option[0]}} </option>
+        {{#each item in this}}
+            <option value="{{item}}">{{item}} </option>
         {{/each}}
     </select>
 </template>
