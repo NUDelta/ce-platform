@@ -84,38 +84,27 @@
   'submit #message'(event, instance) {
 
     event.preventDefault();
-
-
     
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
 
     //find the fileinput element?
-    const $images = $el.find('.fileinput');
+    //const $images = $el.find('.fileinput');
     //find the first and only picture that's been added
     let picture;
-      if (event.target.photo) { // form has input[name=photo]
-        // imageFile
-        picture = event.target.photo.files[0]
-      } else {
-        let ImageURL = $('.fileinput-preview').attr('src');
-        // Split the base64 string in data and contentType
-        let block = ImageURL.split(";");
-        // Get the content type
-        let contentType = block[0].split(":")[1];
-        // get the real base64 content of the file
-        let realData = block[1].split(",")[1];
+    const uid = Meteor.userId();
+    const data = { message: $input.val() };
 
-        picture = b64toBlob(realData, contentType);
-      }
+  if (event.target.photo.files.length != 0) {
+        
+    picture = event.target.photo.files[0]
 
     const location = this.location ? this.location : {lat: null, lng: null};
     const iid = Router.current().params.iid;
     const needName = Router.current().params.needName;
-    const uid = Meteor.userId();
+
     const user = Meteor.user().username;
     const timestamp = Date.now()
-
 
     const imageFile = Images.insert(picture, (err, imageFile) => {
         //this is a callback for after the image is inserted
@@ -152,10 +141,15 @@
         }
       });
 
+    data.image = imageFile._id;
+  }
+  else {
+    data.image = "";
+  }
+
     // const $setChar = $el.find('.character');
     // const $chapter = $el.find('.chapter');
-    
-    const data = { message: $input.val() };
+  
 
 
     //const userName = $setChar.text();
@@ -169,8 +163,7 @@
     //console.log("chapter: " + chapterID);
     
     data.name = uid;
-    data.image = imageFile._id;
-    console.log("image file id: " + imageFile._id)
+
     //data.role = ;
     //data.chapterID = chapterID;
     
