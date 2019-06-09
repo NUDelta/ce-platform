@@ -336,7 +336,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
             //Cookie.set("name", response.name);
             $input.val("");
           }
-        })}, 3000)
+        })}, 3 * 1000) //this is in terms of milliseconds, so we multiply desired seconds by 1000
 
         let theOrder = "";
         let theMenu = "";
@@ -357,7 +357,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
             //Cookie.set("name", response.name);
             $input.val("");
           }
-        })}, 6000)
+        })}, 6 * 1000)
 
         let info3 = "Here's the last clue. The murderer is in a coffee shop that sells " + theMenu + "!";
 
@@ -368,7 +368,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
             //Cookie.set("name", response.name);
             $input.val("");
           }
-        })}, 9000)
+        })}, 9 * 1000)
 
         let info4 = "Now it's time to cast your vote! Who do you think the murderer is?";
 
@@ -379,7 +379,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
             //Cookie.set("name", response.name);
             $input.val("");
           }
-        })}, 12000)
+        })}, 12 * 1000)
 
         let info5 = "Now that your votes are cast, let's find out who's right. The murderer is " + theUser + "!";
 
@@ -390,7 +390,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
             //Cookie.set("name", response.name);
             $input.val("");
           }
-        })}, 15000)
+        })}, 15 * 1000)
       });
 
     }
@@ -449,7 +449,18 @@ staticAffordances.forEach(affordance => {
 return experience;
 }
 
+/**
+ * Following is the code that an author has to write to create a CN.
+ * This is the concise syntax that is then compiled into a working CN.
+ * 
+ */
+
+let title = "Murder Mystery"
+let setting = "coffee"
+let description = "You've been invited to participate in a murder mystery!"
+let notification = "Help us catch a killer!"
 let MMtemplates = ['murderMysteryInitial', 'murderMysteryChat']
+
 let question1 = {
   question: "Name an interesting option on the menu",
   responseType: "text",
@@ -464,7 +475,7 @@ let question2 = {
 
 let question3 = {
   question: "How busy is the coffee shop right now?",
-  responseType: "",
+  responseType: "dropdown",
   responseData: [
   'not busy at all',
   'a little busy',
@@ -476,8 +487,41 @@ let question3 = {
 
 let questions = [question1, question2, question3]
 
+//to be filled with the murderer's answers, once we figure out that syntax
+let theOrder = "";
+let theMenu = "";
+let theUser = "";
+
+let prompt1 = {
+  prompt: "We have our first clue. The murderer is in a busy coffee shop!",
+  timing: 3 //seconds after casting occurs
+}
+
+let prompt2 = {
+  prompt: "Here's the second clue. The murderer ordered " + theOrder + "!",
+  timing: 6
+}
+
+let prompt3 = {
+  prompt: "Here's the last clue. The murderer is in a coffee shop that sells " + theMenu + "!",
+  timing: 9
+}
+
+let prompt4 = {
+  prompt: "Now it's time to cast your vote! Who do you think the murderer is?",
+  timing: 12
+}
+
+let prompt5 = {
+  prompt: "Now that your votes are cast, let's find out who's right. The murderer is " + theUser + "!",
+  timing: 15
+}
+
+let prompts = [prompt1, prompt2, prompt3, prompt4, prompt5]
 
 /**
+ * Following are CE helper functions:
+ *
  * Side effect: Changes the global DETECTORS object, adding another detector with key "detectorKey_staticAffordance"
  *
  * @param staticAffordance
@@ -557,7 +601,7 @@ let questions = [question1, question2, question3]
 };
 
 let EXPERIENCES = {
-  murder: convertCNtoCE("Murder Mystery", "You've been invited to participate in a murder mystery!", "Help us catch a killer!", "coffee", MMtemplates, questions)
+  murder: convertCNtoCE(title, description, notification, setting, MMtemplates, questions)
 };
 
 export const CONSTANTS = {
