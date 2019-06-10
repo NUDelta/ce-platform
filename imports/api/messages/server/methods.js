@@ -73,12 +73,12 @@ Meteor.methods({
       });
   },
 
-  sendPrompt: function (info) {
+  sendPrompt: function (info, user) {
     Messages.insert({
         name: "Narrator",
         message: info,
         createdAt: new Date(),
-        recipient: "all",
+        recipient: user,
       });
   }
   

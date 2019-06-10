@@ -348,7 +348,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let info = "We have our first clue. The murderer is in a busy coffee shop!"
 
-        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info, (error, response) => {
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info, user, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
@@ -361,7 +361,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
         let theMenu = "";
         let theUser = "";
 
-        if (submissions[i].content.busy == "busy") {
+        if (submissions[i].content.busy == "very busy") {
           theOrder = submissions[i].content.order;
           theMenu = submissions[i].content.menu;
           theUser = Meteor.users.findOne(submissions[i].uid).profile.firstName;
@@ -369,7 +369,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let info2 = "Here's the second clue. The murderer ordered " + theOrder + "!";
 
-        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info2, (error, response) => {
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info2, user, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
@@ -380,7 +380,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let info3 = "Here's the last clue. The murderer is in a coffee shop that sells " + theMenu + "!";
 
-        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info3, (error, response) => {
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info3, user, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
@@ -391,7 +391,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let info4 = "Now it's time to cast your vote! Who do you think the murderer is?";
 
-        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info4, (error, response) => {
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info4, user, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
@@ -402,7 +402,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let info5 = "Now that your votes are cast, let's find out who's right. The murderer is " + theUser + "!";
 
-        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info5, (error, response) => {
+        Meteor.setTimeout(function() {Meteor.call("sendPrompt", info5, user, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
