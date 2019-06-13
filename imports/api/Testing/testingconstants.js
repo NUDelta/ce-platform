@@ -150,6 +150,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
   let questions = []
 
+  //create series of questions based on what information the author specified they wanted preStoryInfo
   for (info in preStoryInfo) {
     let temp = {};
     temp.question = info.question;
@@ -167,7 +168,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
     questions.push(temp);
   }
 
-  console.log("questions: " + questions)
+  //console.log("questions: " + questions)
 
   let values = [
   'not busy at all',
@@ -187,6 +188,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
   let DROPDOWN_OPTIONS = _.zip(dropdownText);
 
+  //callback function, occurs once the pre-story contexts have been submitted
   const MurderMysteryCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
@@ -195,9 +197,10 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
     let contribution = Incidents.findOne({ _id: sub.iid});
 
-    console.log("in callback")
-    console.log(submissions.length)
+    //console.log("in callback")
+    //console.log(submissions.length)
 
+    //update the UI to fit the one after the callback
     experience = Experiences.update({
       "_id": sub.eid
     }, {
@@ -206,6 +209,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
       }
     })
 
+    //iterate through each submission, casting a character and creating its respective detector for each one
     for (let i = 0; i < submissions.length; i++) {
       console.log("busyness: " + submissions[i].content.busy)
       var key = submissions[i].content.busy;
@@ -238,6 +242,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
       console.log("others length: " + others.length)
 
+      //find every other participant in the experience
       for (let i = 0; i < others.length; i++) {
         let other = others[i]
         console.log("other: " + other.profile.firstName)
@@ -251,13 +256,13 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
       console.log("participants: " + participant);
 
-      //need to figure out a way to get other users in same experience
-      //let others = ""
+
 
       //check to see how busy the user is
       let characterRoles = contribution.contributionTypes[0].toPass.characterRoles;
       let character = []
       let cast = false;
+      //iterate through each character role, and find the role that best fits the current submission or participant
       for (let k = 0; k < characterRoles.length; k++) {
         for (let j = 0; j < characterRoles[k].context.length; j++){
           console.log("within inner loop " + j + " " + k)
@@ -280,6 +285,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
       extraAffordances.push(submissions[i].content.busy)
 
+      //create the detector for the character
       _.forEach(character, (charac) => {
 
         let [detectorName, role, template, instruction, user, others] = charac;
@@ -317,6 +323,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
         let prompts = contribution.contributionTypes[0].toPass.prompts;
 
+        //when casting the murderer, set up the series of hints that will be sent out as verious points
         if (submissions[i].content.busy == "very busy") {
 
           for (let z = 0; z < prompts.length-1; z++) {
@@ -334,6 +341,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
           })}, prompts[z].timing * 1000)
           }
 
+          //the last prompt is the ending of the story, which will reveal who the murderer is 
           let ending = prompts[prompts.length-1].prompt + participant.profile.firstName + "!";
 
           Meteor.setTimeout(function() {Meteor.call("sendPrompt", ending, (error, response) => {
@@ -348,7 +356,8 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
       });
     }    
   }
-  
+
+  //create a general experience instance, specify how many people are needed before the story begins
   let experience = {
     name: storyName,
     participateTemplate: templates[0],
@@ -369,6 +378,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
     [generalContext, "at a coffee shop", storyNotification],
     ];
 
+//create the initial detector/contribution type for people to submit their pre-story context
 staticAffordances.forEach(affordance => {
   experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(affordance, ((places) => 
     places.map(place => {
