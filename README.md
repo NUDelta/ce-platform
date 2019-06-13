@@ -4,15 +4,26 @@
 3. Navigate to the project folder `cd ce-platform`.
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
+6. Starting the server will also generate a python script for location testing. Copy and paste this script (highlighted in green, labeled "FOR LOCATION TESTING") into a new terminal window to simulate users at specific locations.
+7. Navigate to `http://localhost:3000/` in your web browser to view the experience.
 
+### CN Testing
 
-## Collective Narrative Directions for Testing
-1. Run the python script in the folder to setup sample geolocations for the testers
-2. Look into mongoDB database to see which characters are assigned to which participants
-3. Play out the role(s) of the first character(s) assigned through typing and selecting an action
-4. Once the action has been completed, run the python script again to refresh the assignments (this is needed for testing, not during actualy deployment)
-5. Play out the role(s) of the next character(s) assigned
-6. Once the story end condition is fulfilled, the page should display the entire conversation as a script
+For testing CN, use the following account credentials when signing in:
+
+1. username `meg`, password `password`
+2. username `andrew`, password `password`
+3. username `josh`, password `password`
+
+All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Incognito mode to test the synchronous chat feature.
+
+### Author Syntax
+
+The currently testable murder mystery experience was compiled from a concise syntax designed for authors of CN. This author syntax can be viewed and modified near the bottom of `testingconstants.js`.
+
+### Notes
+
+If cloning the repo for the first time, you may need to rename the folder located at "imports" -> "api" from "Testing" to "testing".
 
 ### Windows Subsystem for Linux Specific Setup
 
