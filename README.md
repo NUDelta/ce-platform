@@ -40,7 +40,7 @@ export const cn = () => {
 ```js
 let title = 'Name of the CN'
 let description = 'Description of the CN, displayed on the Home tab of the Cerebro app'
-let notification = 'Notification sent to the user's phone when the CN appears in their app'
+let notification = "Notification sent to the user's phone when the CN appears in their app"
 let setting = ['CE detector used to trigger the CN', 'description of what user context the detector refers to']
 let templates = ['CNstart', 'CNchat']
 let questions = []
