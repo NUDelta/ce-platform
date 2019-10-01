@@ -65,7 +65,7 @@ let characterName = {
     context: ['An array containing the various user contexts, derived from question answers, that define if a participant is cast as this character']
 }
 ```
-Remember to update the `questions` array with all of your questions objects.
+Remember to update the `characters` array with all of your character objects.
 
 5. Define the prompts. These will be sent by a narrator in the group chat to all participants. They are crucial for building the narrative and guiding participants. They are also objects with three fields:
 ```js
@@ -75,7 +75,7 @@ let promptName = {
     timing: integer, representing the number of seconds after casting occurs, used to time when the prompt is sent
 }
 ```
-Remember to update the `questions` array with all of your questions objects.
+Remember to update the `prompts` array with all of your prompt objects.
 
 6. At the end of your function, return an array containing all of the parameters:
 ```js
