@@ -57,7 +57,7 @@ let questionName = {
 ```
 Remember to update the `questions` array with all of your questions objects.
 
-4. Define the characters that participants will be cast as. These are also objects with three fields:
+4. Define the characters that participants will be cast as. Currently, they'll define what kind of instruction the participant receives at the beginning of the synchronous chat. These are also objects with three fields:
 ```js
 let characterName = {
     roleName: 'name of the role',
@@ -77,7 +77,7 @@ let promptName = {
 ```
 Remember to update the `prompts` array with all of your prompt objects.
 
-6. At the end of your function, return an array containing all of the parameters:
+6. At the end of your function, return an array containing all of the parameters, in this order:
 ```js
 return [title, description, notification, setting, templates, questions, characters, prompts];
 ```
