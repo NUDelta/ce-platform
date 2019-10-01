@@ -19,7 +19,7 @@ All three users need to sign in and participate in the murder mystery pre-story 
 
 ### Author Syntax
 
-The currently testable murder mystery experience was compiled from a concise syntax designed for authors of CN. This author syntax can be viewed and modified near the bottom of `testingconstants.js`.
+The currently testable murder mystery experience was compiled from a concise syntax designed for authors of CN. This author syntax can be viewed and modified near the bottom of `testingconstants.js`, which can be found at "imports" -> "api" -> "testing"
 
 ### Notes
 
