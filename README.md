@@ -56,6 +56,7 @@ let questionName = {
 }
 ```
 Remember to update the `questions` array with all of your questions objects.
+
 4. Define the characters that participants will be cast as. These are also objects with three fields:
 ```js
 let characterName = {
@@ -65,6 +66,7 @@ let characterName = {
 }
 ```
 Remember to update the `questions` array with all of your questions objects.
+
 5. Define the prompts. These will be sent by a narrator in the group chat to all participants. They are crucial for building the narrative and guiding participants. They are also objects with three fields:
 ```js
 let promptName = {
@@ -74,7 +76,8 @@ let promptName = {
 }
 ```
 Remember to update the `questions` array with all of your questions objects.
-5. At the end of your function, return an array containing all of the parameters:
+
+6. At the end of your function, return an array containing all of the parameters:
 ```js
 return [title, description, notification, setting, templates, questions, characters, prompts];
 ```
