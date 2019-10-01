@@ -1,4 +1,8 @@
-## Setup and Local Development
+## Collective Narrative
+
+Collective Narrative is an extension of CE, allowing authors to concisely write "scripts" that are collaboratively played out and developed by participants. Currently, the repo contains "Murder Mystery," a CN script that allows three participants to engage in a murder mystery centered around their current contexts. The following instructions detail how to test the murder mystery CN, how to write your own CN script, and how to continue development of the CN project.
+
+## CN Setup and Local Development
 1. Install Meteor `curl https://install.meteor.com/ | sh`.
 2. Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`.
 3. Navigate to the project folder `cd ce-platform`.
@@ -6,24 +10,33 @@
 5. Start the server using `meteor`.
 6. Starting the server will also generate a python script for location testing. Copy and paste this script (highlighted in green, labeled "FOR LOCATION TESTING") into a new terminal window to simulate users at specific locations.
 7. Navigate to `http://localhost:3000/` in your web browser to view the experience.
+8. For editing the codebase, we recommend using VS Code.
 
-### CN Testing
+### Murder Mystery Testing
 
-For testing CN, use the following account credentials when signing in:
+For testing the murder mystery CN, use the following account credentials when signing in:
 
 1. username `meg`, password `password`
 2. username `andrew`, password `password`
 3. username `josh`, password `password`
 
-All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Incognito mode to test the synchronous chat feature.
-
-### Author Syntax
-
-The currently testable murder mystery experience was compiled from a concise syntax designed for authors of CN. This author syntax can be viewed and modified near the bottom of `testingconstants.js`, which can be found at "imports" -> "api" -> "testing"
+All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Private/Incognito mode to test the synchronous chat feature on a single computer.
 
 ### Notes
 
 If cloning the repo for the first time, you may need to rename the folder located at "imports" -> "api" from "Testing" to "testing".
+
+## CN Authoring Syntax
+
+At the core of the CN project is a concise syntax that makes authoring a CN accessible and easy. The syntax used to generate Murder Mystery can be viewed and modified in `cn.js`, which can be found at "imports" -> "api" -> "testing." Following are instructions on how to write your own CN, assuming you start with a blank `cn.js`.
+
+1. Start by declaring an export function: 
+```js
+export const cn = () => {
+}
+```
+
+## Additional CE Setup Notes
 
 ### Windows Subsystem for Linux Specific Setup
 
