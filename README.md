@@ -30,11 +30,28 @@ If cloning the repo for the first time, you may need to rename the folder locate
 
 At the core of the CN project is a concise syntax that makes authoring a CN accessible and easy. The syntax used to generate Murder Mystery can be viewed and modified in `cn.js`, which can be found at "imports" -> "api" -> "testing." Following are instructions on how to write your own CN, assuming you start with a blank `cn.js`.
 
-1. Start by declaring an export function: 
+1. Start by declaring an export function. You must use the following name and syntax for the CN to be compiled properly: 
 ```js
 export const cn = () => {
+
 }
 ```
+2. Fill in the function with the eight required parameters of a CN. The first five are defined immediately while the last three start as empty arrays. The murder mystery CN can be referenced for examples of these parameters. Copy the line for `templates` exactly, as it refers to specific HTML templates currently required for CN.
+```js
+let title = 'Name of the CN'
+let description = 'Description of the CN, displayed on the Home tab of the Cerebro app'
+let notification = 'Notification sent to the user's phone when the CN appears in their app'
+let setting = ['CE detector used to trigger the CN', 'description of what user context the detector refers to']
+let templates = ['CNstart', 'CNchat']
+let questions = []
+let characters = []
+let prompts = []
+```
+3. Define the pre-story questions
+
+### Notes
+
+- Templates currently conform to the CE concepts of participateTemplate and resultsTemplate, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. 
 
 ## Additional CE Setup Notes
 
