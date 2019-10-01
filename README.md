@@ -36,7 +36,7 @@ export const cn = () => {
 
 }
 ```
-2. Fill in the function with the eight required parameters of a CN. The first five are defined immediately while the last three start as empty arrays. The murder mystery CN can be referenced for examples of these parameters. Copy the line for `templates` exactly, as it refers to specific HTML templates currently required for CN.
+2. Fill in the function with the eight required parameters of a CN. The first five are defined immediately while the last three start as empty arrays. The murder mystery CN can be referenced for examples of these parameters. Copy the parameters for the `templates` array exactly, as it refers to specific HTML templates currently required for CN.
 ```js
 let title = 'Name of the CN'
 let description = 'Description of the CN, displayed on the Home tab of the Cerebro app'
@@ -47,11 +47,42 @@ let questions = []
 let characters = []
 let prompts = []
 ```
-3. Define the pre-story questions
+3. Define the pre-story questions. Each participant is asked these questions after they agree to participate in a CN. They can be used to further understand the contexts of each participant, allowing for a more engaging story. Each question is an object with three fields:
+```js
+let questionName = {
+    question: 'The question itself',
+    responseType: 'text or dropdown',
+    responseData: 'name of variable to store the text answer, or an array of the dropdown options'
+}
+```
+Remember to update the `questions` array with all of your questions objects.
+4. Define the characters that participants will be cast as. These are also objects with three fields:
+```js
+let characterName = {
+    roleName: 'name of the role',
+    instruction: 'Instructions given to the participant who is cast as this role. This is sent as a private message to the participant, so others cannot see it.',
+    context: ['An array containing the various user contexts, derived from question answers, that define if a participant is cast as this character']
+}
+```
+Remember to update the `questions` array with all of your questions objects.
+5. Define the prompts. These will be sent by a narrator in the group chat to all participants. They are crucial for building the narrative and guiding participants. They are also objects with three fields:
+```js
+let promptName = {
+    prompt: 'The prompt sent by the narrator',
+    info: 'Optional: the name of the responseData variable used in the prompt. It is appended to the end of the prompt.',
+    timing: integer, representing the number of seconds after casting occurs, used to time when the prompt is sent
+}
+```
+Remember to update the `questions` array with all of your questions objects.
+5. At the end of your function, return an array containing all of the parameters:
+```js
+return [title, description, notification, setting, templates, questions, characters, prompts];
+```
 
 ### Notes
 
-- Templates currently conform to the CE concepts of participateTemplate and resultsTemplate, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. 
+- Templates currently conform to the CE concepts of `participateTemplate` and `resultsTemplate`, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. But for now, exactly two templated need to be used, and only two are currently defined. The `CNstart` template allows for the pre-story questions that can further establish context before a CN. The `CNchat` template allows for synchronous storytelling experiences between participants and an author-defined narrator.
+- While experiences are currently fixed at three participants, the number will eventually be author-defined.
 
 ## Additional CE Setup Notes
 
