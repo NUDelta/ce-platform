@@ -1,4 +1,8 @@
-## Setup and Local Development
+## Collective Narrative
+
+Collective Narrative is an extension of CE, allowing authors to concisely write "scripts" that are collaboratively played out and developed by participants. Currently, the repo contains "Murder Mystery," a CN script that allows three participants to engage in a murder mystery centered around their current contexts. The following instructions detail how to test the murder mystery CN, how to write your own CN script, and how to continue development of the CN project.
+
+## CN Setup and Local Development
 1. Install Meteor `curl https://install.meteor.com/ | sh`.
 2. Clone the repository `git clone https://github.com/NUDelta/ce-platform.git`.
 3. Navigate to the project folder `cd ce-platform`.
@@ -6,24 +10,84 @@
 5. Start the server using `meteor`.
 6. Starting the server will also generate a python script for location testing. Copy and paste this script (highlighted in green, labeled "FOR LOCATION TESTING") into a new terminal window to simulate users at specific locations.
 7. Navigate to `http://localhost:3000/` in your web browser to view the experience.
+8. For editing the codebase, we recommend using VS Code.
 
-### CN Testing
+### Murder Mystery Testing
 
-For testing CN, use the following account credentials when signing in:
+For testing the murder mystery CN, use the following account credentials when signing in:
 
 1. username `meg`, password `password`
 2. username `andrew`, password `password`
 3. username `josh`, password `password`
 
-All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Incognito mode to test the synchronous chat feature.
-
-### Author Syntax
-
-The currently testable murder mystery experience was compiled from a concise syntax designed for authors of CN. This author syntax can be viewed and modified near the bottom of `testingconstants.js`.
+All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Private/Incognito mode to test the synchronous chat feature on a single computer.
 
 ### Notes
 
 If cloning the repo for the first time, you may need to rename the folder located at "imports" -> "api" from "Testing" to "testing".
+
+## CN Authoring Syntax
+
+At the core of the CN project is a concise syntax that makes authoring a CN accessible and easy. The syntax used to generate Murder Mystery can be viewed and modified in `cn.js`, which can be found at "imports" -> "api" -> "testing." Following are instructions on how to write your own CN, assuming you start with a blank `cn.js`.
+
+1. Start by declaring an export function. You must use the following name and syntax for the CN to be compiled properly: 
+```js
+export const cn = () => {
+
+}
+```
+2. Fill in the function with the eight required parameters of a CN. The first five are defined immediately while the last three start as empty arrays. The murder mystery CN can be referenced for examples of these parameters. Copy the parameters for the `templates` array exactly, as it refers to specific HTML templates currently required for CN.
+```js
+let title = 'Name of the CN'
+let description = 'Description of the CN, displayed on the Home tab of the Cerebro app'
+let notification = "Notification sent to the user's phone when the CN appears in their app"
+let setting = ['CE detector used to trigger the CN', 'description of what user context the detector refers to']
+let templates = ['CNstart', 'CNchat']
+let questions = []
+let characters = []
+let prompts = []
+```
+3. Define the pre-story questions. Each participant is asked these questions after they agree to participate in a CN. They can be used to further understand the contexts of each participant, allowing for a more engaging story. Each question is an object with three fields:
+```js
+let questionName = {
+    question: 'The question itself',
+    responseType: 'text or dropdown',
+    responseData: 'name of variable to store the text answer, or an array of the dropdown options'
+}
+```
+Remember to update the `questions` array with all of your questions objects.
+
+4. Define the characters that participants will be cast as. Currently, they'll define what kind of instruction the participant receives at the beginning of the synchronous chat. These are also objects with three fields:
+```js
+let characterName = {
+    roleName: 'name of the role',
+    instruction: 'Instructions given to the participant who is cast as this role. This is sent as a private message to the participant, so others cannot see it.',
+    context: ['An array containing the various user contexts, derived from question answers, that define if a participant is cast as this character']
+}
+```
+Remember to update the `characters` array with all of your character objects.
+
+5. Define the prompts. These will be sent by a narrator in the group chat to all participants. They are crucial for building the narrative and guiding participants. They are also objects with three fields:
+```js
+let promptName = {
+    prompt: 'The prompt sent by the narrator',
+    info: 'Optional: the name of the responseData variable used in the prompt. It is appended to the end of the prompt.',
+    timing: integer, representing the number of seconds after casting occurs, used to time when the prompt is sent
+}
+```
+Remember to update the `prompts` array with all of your prompt objects.
+
+6. At the end of your function, return an array containing all of the parameters, in this order:
+```js
+return [title, description, notification, setting, templates, questions, characters, prompts];
+```
+
+### Notes
+
+- Templates currently conform to the CE concepts of `participateTemplate` and `resultsTemplate`, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. But for now, exactly two templated need to be used, and only two are currently defined. The `CNstart` template allows for the pre-story questions that can further establish context before a CN. The `CNchat` template allows for synchronous storytelling experiences between participants and an author-defined narrator.
+- While experiences are currently fixed at three participants, the number will eventually be author-defined.
+
+## Additional CE Setup Notes
 
 ### Windows Subsystem for Linux Specific Setup
 
