@@ -55,7 +55,7 @@ Template.storyPage.helpers({
   }
 });
 
-Template.murderMysteryInitial.helpers({
+Template.CNstart.helpers({
   isText(thing) { 
     return thing == "text"
   },

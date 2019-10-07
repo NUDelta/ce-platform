@@ -1,15 +1,9 @@
 import { Meteor } from "meteor/meteor";
-
 import { Submissions } from "../OCEManager/currentNeeds";
-
 import { addContribution } from '../OCEManager/OCEs/methods';
-import {Detectors} from "../UserMonitor/detectors/detectors";
-import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
-import {Incidents} from "../OCEManager/OCEs/experiences";
-import {Schema} from "../schema";
-import {serverLog} from "../logs";
-import { log } from "util";
-import { Messages } from '../../api/messages/messages.js';
+import { Detectors } from "../UserMonitor/detectors/detectors";
+import { Incidents } from "../OCEManager/OCEs/experiences";
+import { cn } from "./cn";
 
 let LOCATIONS = {
   'park': {
@@ -145,9 +139,16 @@ Meteor.methods({
 });
 
 //the CN compiler; takes in author-defined syntax
-const convertCNtoCE = function(storyName, storyDescription, storyNotification, generalContext, templates, preStoryInfo, characterRoles, prompts) {
-  console.log(templates)
-
+const convertCNtoCE = function(script) {
+  
+  let storyName = script[0]
+  let storyDescription = script[1]
+  let storyNotification = script[2]
+  let generalContext = script[3]
+  let templates = script[4]
+  let preStoryInfo = script[5]
+  let characterRoles = script[6]
+  let prompts = script[7]
   let questions = []
 
   //create series of questions based on what information the author specified they wanted preStoryInfo
@@ -375,7 +376,7 @@ const convertCNtoCE = function(storyName, storyDescription, storyNotification, g
 
     const staticAffordances = ['cn'];
     const places = [
-    [generalContext, "at a coffee shop", storyNotification],
+    [generalContext[0], generalContext[1], storyNotification],
     ];
 
 //create the initial detector/contribution type for people to submit their pre-story context
@@ -417,77 +418,7 @@ return experience;
  * 
  */
 
-let title = "Murder Mystery"
-let setting = "coffee"
-let description = "You've been invited to participate in a murder mystery!"
-let notification = "Help us catch a killer!"
-let MMtemplates = ['murderMysteryInitial', 'murderMysteryChat']
 
-let question1 = {
-  question: "Name an interesting option on the menu",
-  responseType: "text",
-  responseData: "menu"
-}
-
-let question2 = {
-  question: "What did you order?",
-  responseType: "text",
-  responseData: "order"
-}
-
-let question3 = {
-  question: "How busy is the coffee shop right now?",
-  responseType: "dropdown",
-  responseData: ['not busy at all', 'a little busy', 'somewhat busy', 'pretty busy', 'very busy']
-}
-
-let questions = [question1, question2, question3]
-
-let prompt1 = {
-  prompt: "We have our first clue. The murderer is in a busy coffee shop!",
-  info: "",
-  timing: 3 //seconds after casting occurs
-}
-
-let prompt2 = {
-  prompt: "Here's the second clue. The murderer ordered ",
-  info: "order",
-  timing: 6
-}
-
-let prompt3 = {
-  prompt: "Here's the last clue. The murderer is in a coffee shop that sells ",
-  info: "menu",
-  timing: 9,  
-}
-
-let prompt4 = {
-  prompt: "Now it's time to cast your vote! Who do you think the murderer is?",
-  info: "",
-  timing: 12
-}
-
-let prompt5 = {
-  prompt: "Now that your votes are cast, let's find out who's right. The murderer is ",
-  info: "user",
-  timing: 15
-}
-
-let prompts = [prompt1, prompt2, prompt3, prompt4, prompt5]
-
-let char1 = {
-  roleName: "murderer",
-  instruction: "Try to avoid being caught and weasel your way out of the clues!",
-  context: ['very busy']
-}
-
-let char2 = {
-  roleName: "innocent",
-  instruction: "Try to prove your innocence and find the real murderer!",
-  context: ['not busy at all', 'a little busy', 'somewhat busy', 'pretty busy']
-}
-
-let characters = [char1, char2]
 
 /**
  * Following are CE helper functions:
@@ -570,7 +501,7 @@ let characters = [char1, char2]
 };
 
 let EXPERIENCES = {
-  murder: convertCNtoCE(title, description, notification, setting, MMtemplates, questions, characters, prompts)
+  cn: convertCNtoCE(cn())
 };
 
 export const CONSTANTS = {
