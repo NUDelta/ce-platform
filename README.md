@@ -8,7 +8,7 @@ Collective Narrative is an extension of CE, allowing authors to concisely write 
 3. Navigate to the project folder `cd ce-platform`.
 4. Run `meteor npm install` to install local dependencies.
 5. Start the server using `meteor`.
-6. Starting the server will also generate a python script for location testing. Copy and paste this script (highlighted in green, labeled "FOR LOCATION TESTING") into a new terminal window to simulate users at specific locations.
+6. Starting the server will also generate a python script for location testing. Copy and paste this script (labeled `FOR LOCATION TESTING RUN >>>>`) into a new terminal window to simulate users at specific locations.
 7. Navigate to `http://localhost:3000/` in your web browser to view the experience.
 8. For editing the codebase, we recommend using VS Code.
 
