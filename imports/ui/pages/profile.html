@@ -1,16 +1,16 @@
 <template name="profile">
     {{#if currentUser}}
-        <h4>Results from experiences</h4>
+        <h4 style="margin-top: 25px;">Current Stories</h4>
         <div class="list-group">
           {{#if noIncidents}}
-            <div style="color:#888">You haven't participated in any experiences yet. Once you participate, the experiences will appear here.</div>
+            <div style="color:#888">You haven't participated in any stories yet. Once you participate, the stories will appear here.</div>
           {{/if}}
             {{#each incident in this.incidents}}
                 {{> resultLink (infoForLink incident)}}
             {{/each}}
         </div>
     {{else}}
-        <h3>Welcome to CE 👋</h3>
-        <h4>Sign in to see available experiences!</h4>
+        <h3>Welcome to CN 👋</h3>
+        <h4>Sign in to see your stories!</h4>
     {{/if}}
 </template>

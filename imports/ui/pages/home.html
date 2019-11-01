@@ -27,15 +27,14 @@
         {{#if Template.subscriptionsReady}}
             {{#if noActiveIncidents}}
                 <div id="empty-state">
-                    <h1 id="emoji">🏃‍🤔✌️</h1>
-                    <h4 id="title">There are no experiences near you.</h4>
+                    <h1 id="emoji">📖</h1>
+                    <h4 id="title">There are no new stories near you.</h4>
                     <p id="empty-state-text">Walk around to see if any pop up. If you were notified
-                        for an experience that's no longer here, that means you took too long to
-                        participate. Participate faster next time!</p>
+                        for a story that's no longer here, that means it has expired.</p>
                 </div>
             {{else}}
                 <div class="title-chunk">
-                    <h4 class="title-text hi">Available experiences</h4>
+                    <h4 class="title-text hi" style="margin-top: 25px;">Available Stories</h4>
                 </div>
                 <div class="list-group">
                     {{#each info in activeUserAssigment}}
@@ -54,7 +53,7 @@
           </div>
         {{/if}}
     {{else}}
-        <h3>Welcome to CE 👋</h3>
-        <h4>Sign in to participate in experiences!</h4>
+        <h3>Welcome to Collective Narrative 👋</h3>
+        <h4>Sign in to participate in collaborative stories!</h4>
     {{/if}}
 </template>

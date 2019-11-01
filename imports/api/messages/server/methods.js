@@ -64,10 +64,10 @@ Meteor.methods({
 		
 	},
   
-  sendWhisper: function (role, user) {
+  sendWhisper: function (role, user, instruction) {
     Messages.insert({
-        name: "Narrator",
-        message: "Welcome! You've been cast in the " + role + " role!",
+        name: "Narrator (whispers to you)",
+        message: "Welcome! You've been cast in the " + role + " role! " + instruction + "",
         createdAt: new Date(),
         recipient: user,
       });

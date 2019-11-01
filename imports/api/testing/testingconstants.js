@@ -313,12 +313,12 @@ const convertCNtoCE = function(script) {
         addContribution(sub.iid, need);
         console.log("more needs" + instance.contributionTypes.length)
 
-        Meteor.call("sendWhisper", role, user, (error, response) => {
+        Meteor.call("sendWhisper", role, user, instruction, (error, response) => {
           if (error) {
             alert(error.reason);
           } else {
             //Cookie.set("name", response.name);
-            $input.val("");
+            //$input.val("");
           }
         })
 
@@ -337,7 +337,7 @@ const convertCNtoCE = function(script) {
               alert(error.reason);
             } else {
               //Cookie.set("name", response.name);
-              $input.val("");
+              //$input.val("");
             }
           })}, prompts[z].timing * 1000)
           }
@@ -350,7 +350,7 @@ const convertCNtoCE = function(script) {
               alert(error.reason);
             } else {
               //Cookie.set("name", response.name);
-              $input.val("");
+              //$input.val("");
             }
             })}, prompts[prompts.length-1].timing * 1000)  
         }

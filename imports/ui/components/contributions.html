@@ -18,7 +18,7 @@
 
 <template name="text">
     <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
-          value="Write here" required></textarea>
+          placeholder="Write here" required></textarea>
 </template>
 
 <!-->
@@ -87,6 +87,7 @@
       <!-- previous lines of dialogue -->
       <div class="messages-box">
         <div class="messages-scroll">
+          <p>Hang tight while we wait for the other participants!</p>
           <div class="messages">
             {{#if Template.subscriptionsReady}}
               {{#each messages}}

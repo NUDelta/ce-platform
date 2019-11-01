@@ -54,7 +54,7 @@ ddp-server@2.3.0
 deps@1.0.12
 diff-sequence@1.1.1
 dynamic-import@0.5.1
-ecmascript@0.12.4
+ecmascript@0.12.7
 ecmascript-runtime@0.7.0
 ecmascript-runtime-client@0.8.0
 ecmascript-runtime-server@0.7.1
@@ -159,7 +159,7 @@ url@1.2.0
 useraccounts:bootstrap@1.14.2
 useraccounts:core@1.14.2
 useraccounts:iron-routing@1.14.2
-webapp@1.7.3
+webapp@1.7.4-issue-10516.0
 webapp-hashing@1.0.9
 xolvio:cleaner@0.3.3
 zodiase:function-bind@0.0.1
