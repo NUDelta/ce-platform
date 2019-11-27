@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Schema } from '../../api/schema.js';
-import {Meteor} from "meteor/meteor";
+// import {Meteor} from "meteor/meteor";
 
 Template.activeExperience.onCreated(function () {
   this.autorun(() => {

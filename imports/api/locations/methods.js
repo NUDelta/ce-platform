@@ -9,7 +9,7 @@ import { updateAssignmentDbdAfterUserLocationChange } from "../coordinator/metho
 import { getAffordancesFromLocation } from "../detectors/methods";
 import { CONFIG } from "../config";
 import { Availability } from "../coordinator/availability";
-import { Meteor } from "meteor/meteor";
+// import { Meteor } from "meteor/meteor";
 import { Location_log } from "./location_log";
 import { serverLog } from "../logs";
 

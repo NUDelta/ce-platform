@@ -1,5 +1,5 @@
 import { GoogleMaps } from 'meteor/dburles:google-maps';
-import {Meteor} from "meteor/meteor";
+// import {Meteor} from "meteor/meteor";
 import {serverLog} from "../../api/logs";
 
 

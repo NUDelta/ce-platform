@@ -1,7 +1,7 @@
 import { Push } from 'meteor/raix:push';
 import { Router } from 'meteor/iron:router';
 import { log, serverLog } from '../../api/logs.js';
-import {Meteor} from "meteor/meteor";
+// import {Meteor} from "meteor/meteor";
 
 Push.Configure({
   android: {

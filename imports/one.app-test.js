@@ -1,4 +1,4 @@
-import {Meteor} from 'meteor/meteor';
+// import {Meteor} from 'meteor/meteor';
 
 
 //meteor test --full-app --driver-package practicalmeteor:mocha
