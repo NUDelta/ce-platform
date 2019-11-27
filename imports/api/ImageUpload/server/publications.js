@@ -1,4 +1,4 @@
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 import { Images, Avatars } from '../images.js';
 
 Meteor.publish('images.activeIncident', function (incidentId) {

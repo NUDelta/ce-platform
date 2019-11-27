@@ -1,7 +1,7 @@
 import './debug.js'
 
 import { Template } from 'meteor/templating';
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
 import { Locations } from '../../api/UserMonitor/locations/locations.js';

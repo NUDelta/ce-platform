@@ -1,6 +1,6 @@
 import './affordances.html';
 
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 import { Locations } from '../../api/UserMonitor/locations/locations.js';

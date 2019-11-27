@@ -1,4 +1,4 @@
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 import { Locations } from '../locations.js';
 
 Meteor.publish('locations.all', function () {

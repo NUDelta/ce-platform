@@ -1,6 +1,6 @@
  import { Template } from 'meteor/templating';
  import { Cookies } from 'meteor/mrt:cookies';
- import { Meteor } from 'meteor/meteor';
+ // import { Meteor } from 'meteor/meteor';
  import { Messages } from '../../api/messages/messages.js';
 
  //import '../../api/messages/server/methods.js';
