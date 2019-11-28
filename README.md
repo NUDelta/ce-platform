@@ -142,8 +142,8 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 ```xml
 <key>provisioningProfiles</key>
 <dict>
-    <key>edu.northwestern.delta.A</key>
-    <string>Delta Lab A</string>
+    <key>edu.northwestern.delta.D</key>
+    <string>Delta Lab D</string>
 </dict>
 ```
 ```xml
@@ -155,7 +155,7 @@ Push notifications are currently configured to work with the Enterprise A certif
 
 #### Export
 1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`. 
-2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`). 
+2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.D`). 
 3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
 4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
 
