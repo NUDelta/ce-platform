@@ -12,11 +12,11 @@
       "_id": sub.uid,
     })
 
-    DROPDOWN_OPTIONS = 
+    DROPDOWN_OPTIONS =
 
 
     //this function creates a need using existing context, then adds the submission info to that need
-    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(submissions[i].content.busy, ((characters) => 
+    experience.contributionTypes = [...experience.contributionTypes, ...addStaticAffordanceToNeeds(submissions[i].content.busy, ((characters) =>
       characters.map(character => {
         const [detectorName, role, template, instruction, user, others] = character;
         return {
