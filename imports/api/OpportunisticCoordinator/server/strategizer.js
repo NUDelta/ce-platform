@@ -6,7 +6,6 @@ import {Assignments} from "../databaseHelpers";
 import {getNeedObject} from "./identifier";
 import {Experiences} from "../../OCEManager/OCEs/experiences";
 import {createIncidentFromExperience, startRunningIncident} from "../../OCEManager/OCEs/methods";
-import {CONSTANTS} from "../../testing/testingconstants";
 // import {Meteor} from "meteor/meteor";
 import {numberSubmissionsRemaining, usersAlreadyAssignedToNeed, usersAlreadySubmittedToNeed} from "../strategizer";
 

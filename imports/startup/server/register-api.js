@@ -15,6 +15,6 @@ import '../../api/OpportunisticCoordinator/server/publications.js';
 import '../../api/OCEManager/progressorHelper.js';
 import '../../api/OCEManager/server/publications.js';
 import '../../api/OpportunisticCoordinator/server/noticationMethods.js';
-import '../../api/testing/createNewExperiences.js';
+import '../../api/Testing/createNewExperiences.js';
 import '../../api/Logging/page_log/methods.js';
 import '../../api/Logging/groundtruth_log/methods.js';
