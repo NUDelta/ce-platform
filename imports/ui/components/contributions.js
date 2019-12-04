@@ -2,6 +2,7 @@
  import { Cookies } from 'meteor/mrt:cookies';
  // import { Meteor } from 'meteor/meteor';
  import { Messages } from '../../api/messages/messages.js';
+ import { Images } from '../../api/ImageUpload/images.js';
 
  //import '../../api/messages/server/methods.js';
  import moment from 'moment';
