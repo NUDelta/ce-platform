@@ -175,7 +175,10 @@
         //Cookie.set("name", response.name);
         $input.val("");
       }
-    }); 
+    });
+    
+    document.forms[0].elements[0].value = '';
+
   },
 
   /*playing with idea of having time passed be an event

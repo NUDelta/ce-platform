@@ -151,7 +151,7 @@ const convertCNtoCE = function(script) {
   let prompts = script[7]
   let questions = []
 
-  //create series of questions based on what information the author specified they wanted preStoryInfo
+  //(createPreStoryQuestions) create series of questions based on what information the author specified they wanted preStoryInfo
   for (info in preStoryInfo) {
     let temp = {};
     temp.question = info.question;
@@ -210,13 +210,16 @@ const convertCNtoCE = function(script) {
       }
     })
 
+    let casted = false;
+    let maxCast = [0, 0]; //todo: make array dynamic, so array size = number of author-defined characters. this is used for enforcing author-defined max # for each character
+
     //iterate through each submission, casting a character and creating its respective detector for each one
     for (let i = 0; i < submissions.length; i++) {
       console.log("busyness: " + submissions[i].content.busy)
       var key = submissions[i].content.busy;
       var affordances = {}
       affordances[key] = true;
-      console.log("staticAffordances: " + affordances.key)
+      //console.log("staticAffordances: " + affordances.key)
       Meteor.users.update({
         _id: submissions[i].uid
       }, {
@@ -228,9 +231,9 @@ const convertCNtoCE = function(script) {
 
       //find instance of CN that the submission came from
       let instance = Incidents.findOne(submissions[i].iid);
-      console.log("detector ID: " + instance.contributionTypes[0].situation.detector)
+      //console.log("detector ID: " + instance.contributionTypes[0].situation.detector)
       let detector_id = instance.contributionTypes[0].situation.detector
-      console.log("detector rules: " + Detectors.findOne(detector_id).rules)
+      //console.log("detector rules: " + Detectors.findOne(detector_id).rules)
       let rules = Detectors.findOne(detector_id).rules;
 
       let participant = Meteor.users.findOne(submissions[i].uid);
@@ -241,38 +244,41 @@ const convertCNtoCE = function(script) {
 
       let other_participants = []
 
-      console.log("others length: " + others.length)
+      //console.log("others length: " + others.length)
 
       //find every other participant in the experience
       for (let i = 0; i < others.length; i++) {
         let other = others[i]
-        console.log("other: " + other.profile.firstName)
-        console.log("participant: " + participant.profile.firstName)
+        //console.log("other: " + other.profile.firstName)
+        //console.log("participant: " + participant.profile.firstName)
         //in the future, need to account for when participants have the same first name (use UID instead)
         if (other.profile.firstName != participant.profile.firstName) {
           other_participants.push(other.profile.firstName)
-          console.log("other: " + other.profile.firstName + " " + other_participants.length)
+          //console.log("other: " + other.profile.firstName + " " + other_participants.length)
         }
       }
-
-      console.log("participants: " + participant);
-
-
+      //console.log("participants: " + participant);
 
       //check to see how busy the user is
       let characterRoles = contribution.contributionTypes[0].toPass.characterRoles;
       let character = []
       let cast = false;
-      //iterate through each character role, and find the role that best fits the current submission or participant
+      //iterate through each character role, and find the role that best fits the current submission or participant, while also respecting max number of characters
       for (let k = 0; k < characterRoles.length; k++) {
         for (let j = 0; j < characterRoles[k].context.length; j++){
-          console.log("within inner loop " + j + " " + k)
-          if (participant.profile.staticAffordances[characterRoles[k].context[j]]) {
-            console.log("Casting a " + characterRoles[k].roleName);
+          //console.log("within inner loop " + j + " " + k)
+          if (participant.profile.staticAffordances[characterRoles[k].context[j]] && maxCast[k] < characterRoles[k].max) {
+            maxCast[k]++;
+            console.log("Casting " + participant.profile.firstName + " as a " + characterRoles[k].roleName);
             rules = submissions[i].content.busy + " && " + rules;
             character.push([rules, characterRoles[k].roleName, contribution.contributionTypes[0].toPass.template, characterRoles[k].instruction, participant._id, other_participants])
             cast = true;
             break;
+          }
+          else if (maxCast[k] == characterRoles[k].max) {
+            character.push([rules, characterRoles[1].roleName, contribution.contributionTypes[0].toPass.template, characterRoles[1].instruction, participant._id, other_participants])
+            console.log("Casting " + participant.profile.firstName + " as a " + characterRoles[1].roleName);
+            cast = true;
           }
         }
         if (cast) {
@@ -280,7 +286,7 @@ const convertCNtoCE = function(script) {
         };
       }
 
-      console.log("character length" + character.length)
+      //console.log("character length" + character.length)
 
       let extraAffordances = []
 
@@ -311,7 +317,7 @@ const convertCNtoCE = function(script) {
         };
         //next_experience.contributionTypes.push(need)
         addContribution(sub.iid, need);
-        console.log("more needs" + instance.contributionTypes.length)
+        //console.log("Finished participant number " + instance.contributionTypes.length)
 
         Meteor.call("sendWhisper", role, user, instruction, (error, response) => {
           if (error) {
@@ -324,8 +330,10 @@ const convertCNtoCE = function(script) {
 
         let prompts = contribution.contributionTypes[0].toPass.prompts;
 
-        //when casting the murderer, set up the series of hints that will be sent out as verious points
-        if (submissions[i].content.busy == "very busy") {
+        //when casting the murderer, set up the series of hints that will be sent out at various points
+        if (submissions[i].content.busy == "very busy" && casted == false) {
+
+          casted = true;
 
           for (let z = 0; z < prompts.length-1; z++) {
             if (prompts[z].info != "") {
@@ -388,7 +396,7 @@ staticAffordances.forEach(affordance => {
         needName: `${experience.name} ${detectorName}`,
         situation: {
           detector: getDetectorId(DETECTORS[detectorName]),
-          number: 3
+          number: 3 //to send notifications for the questions template
         },
         participateTemplate: templates[0],
         toPass: {
@@ -403,7 +411,7 @@ staticAffordances.forEach(affordance => {
             options: DROPDOWN_OPTIONS
           }
         },
-        numberNeeded: 3,
+        numberNeeded: 3, //to start the experience chat (CNchat template)
           // notificationDelay: 90 uncomment for testing
         }
       })

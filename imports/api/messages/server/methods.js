@@ -6,7 +6,7 @@ import { Messages } from '../messages.js';
 Meteor.methods({
 	
 	sendMessage: function (data) {
-    console.log("sending Message")
+    //console.log("sending Message")
 
 		check(data, {
 			message: String, //the message to send
@@ -21,23 +21,24 @@ Meteor.methods({
     // if (data.name=="") {
     //   throw new Meteor.Error("no name");
     // }
-    console.log(participant.profile.firstName)
+    console.log(participant.profile.firstName + ": " + data.message);
     
     let userName = data.name ? participant.profile.firstName : "Anonymous";
     //let role = data.role
 
-    console.log(userName)
+    //console.log(userName)
     
     const matchName = data.message.match(/^My name is (.*)/i);
     let img;
 
     if (data.image != "") {
       img = data.image
+      console.log("image sent")
     } else {
       img = ""
     }
 
-    console.log("img: " + img)
+    //console.log("img: " + img)
     
     // if (matchName && matchName[1]!="") {
     //   userName = matchName[1];
@@ -65,6 +66,7 @@ Meteor.methods({
 	},
   
   sendWhisper: function (role, user, instruction) {
+    console.log("Welcome! You've been cast in the " + role + " role! " + instruction + "");
     Messages.insert({
         name: "Narrator (whispers to you)",
         message: "Welcome! You've been cast in the " + role + " role! " + instruction + "",
@@ -74,6 +76,7 @@ Meteor.methods({
   },
 
   sendPrompt: function (info) {
+    console.log(info);
     Messages.insert({
         name: "Narrator",
         message: info,
