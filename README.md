@@ -41,7 +41,7 @@ Then, log in to [mhub.com](mhub.com) using the CE account credentials and naviga
 
 Lastly, run `python simulatelocations.py`, adding the `_id` values at the end. For example, `python simulatelocations.py ZrCZFhtfDStrXBGF2 K9ruF6p3uyrs7joR9 R7qfjYMJvyao8W2gN`.
 
-##### Notes
+##### In-App Testing Notes
 
 If you've made changes to the code, you'll need to commit them and then run `git push staging collective-narrative:master` within the `ce-platform`directory to deploy these lastest changes to Heroku.
 
