@@ -35,7 +35,11 @@ Then, go to [https://staging-ce-platform.herokuapp.com](https://staging-ce-platf
 1. `Meteor.call(“freshDatabase")`
 2. `Meteor.call("createTestUsers")`
 
-Ensure `host = "https://staging-ce-platform.herokuapp.com"` is uncommented in `simulatelocations.py`, and the other `host` definitions are commented. Then, log in to [mhub.com](mhub.com) using the CE account credentials and navigate to the `users` collection within the `staging-ce-platform` database. Record the three `_id` values created for each test user. Lastly, run `python simulatelocations.py`, adding the `_id` values at the end. For example, `python simulatelocations.py ZrCZFhtfDStrXBGF2 K9ruF6p3uyrs7joR9 R7qfjYMJvyao8W2gN`.
+Next, ensure `host = "https://staging-ce-platform.herokuapp.com"` is uncommented in `simulatelocations.py`, and the other `host` definitions are commented.
+
+Then, log in to [mhub.com](mhub.com) using the CE account credentials and navigate to the `users` collection within the `staging-ce-platform` database. Record the three `_id` values created for each test user.
+
+Lastly, run `python simulatelocations.py`, adding the `_id` values at the end. For example, `python simulatelocations.py ZrCZFhtfDStrXBGF2 K9ruF6p3uyrs7joR9 R7qfjYMJvyao8W2gN`.
 
 ##### Notes
 
@@ -79,7 +83,8 @@ Remember to update the `questions` array with all of your questions objects.
 let characterName = {
     roleName: 'name of the role',
     instruction: 'Instructions given to the participant who is cast as this role. This is sent as a private message to the participant, so others cannot see it.',
-    context: ['An array containing the various user contexts, derived from question answers, that define if a participant is cast as this character']
+    context: ['An array containing the various user contexts, derived from question answers, that define if a participant is cast as this character'],
+    max: integer, defining how many people should be cast as this character
 }
 ```
 Remember to update the `characters` array with all of your character objects.
@@ -101,7 +106,7 @@ return [title, description, notification, setting, templates, questions, charact
 
 ### Notes
 
-- Templates currently conform to the CE concepts of `participateTemplate` and `resultsTemplate`, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. But for now, exactly two templated need to be used, and only two are currently defined. The `CNstart` template allows for the pre-story questions that can further establish context before a CN. The `CNchat` template allows for synchronous storytelling experiences between participants and an author-defined narrator.
+- Templates currently conform to the CE concepts of `participateTemplate` and `resultsTemplate`, which are the HTML templates used to structure experiences in the Cerebro app. The goal is to have many different templates that satisfy different aspects of storytelling, allowing the author to use as many as they want to construct a story. But for now, exactly two templates need to be used, and only two are currently defined. The `CNstart` template allows for the pre-story questions that can further establish context before a CN. The `CNchat` template allows for synchronous storytelling experiences between participants and an author-defined narrator.
 - While experiences are currently fixed at three participants, the number will eventually be author-defined.
 
 ## Additional CE Setup Notes
