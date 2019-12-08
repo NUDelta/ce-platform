@@ -1,6 +1,6 @@
 ## Collective Narrative
 
-Collective Narrative is an extension of CE, allowing authors to concisely write "scripts" that are collaboratively played out and developed by participants. Currently, the repo contains "Murder Mystery," a CN script that allows three participants to engage in a murder mystery centered around their current contexts. The following instructions detail how to test the murder mystery CN, how to write your own CN script, and how to continue development of the CN project.
+Collective Narrative is an extension of CE focused on collaborative storytelling. It allows authors to concisely write story "scripts" that are collaboratively played out and developed by participants. Currently, the repo contains "Murder Mystery," a CN script that allows three participants in different coffee shops to engage in a murder mystery centered around their current contexts. The following instructions detail how to test the murder mystery CN, how to write your own CN script, and how to continue development of the CN project.
 
 ## CN Setup and Local Development
 1. Install Meteor `curl https://install.meteor.com/ | sh`.
@@ -14,17 +14,34 @@ Collective Narrative is an extension of CE, allowing authors to concisely write 
 
 ### Murder Mystery Testing
 
-For testing the murder mystery CN, use the following account credentials when signing in:
+#### Local Testing
+
+For testing the murder mystery CN locally, use the following account credentials when signing in:
 
 1. username `meg`, password `password`
 2. username `andrew`, password `password`
 3. username `josh`, password `password`
 
-All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Private/Incognito mode to test the synchronous chat feature on a single computer.
+All three users need to sign in and participate in the murder mystery pre-story questionnaire before casting will begin. You can use different browsers or Private/Incognito mode to test the synchronous chat feature on a single computer. These default users can be modified in `testingconstants.js`.
 
-### Notes
+To test locally, you also need to ensure `host = "http://localhost:3000"` is uncommented in `simulatelocations.py`, and the other `host` definitions are commented.
 
-If cloning the repo for the first time, you may need to rename the folder located at "imports" -> "api" from "Testing" to "testing".
+#### In-App Testing
+
+For the final Fall 2019 app, download the .ipa file [https://drive.google.com/file/d/13PUh_mMo_p1OhoEN-pidSyQtap5UC_ei/view?usp=sharing](here), then upload it to [diawi.com](www.diawi.com) to download it onto your iPhone.
+
+Then, go to [https://staging-ce-platform.herokuapp.com](https://staging-ce-platform.herokuapp.com) and open the browser console. From here, run the following commands:
+
+1. `Meteor.call(“freshDatabase")`
+2. `Meteor.call("createTestUsers")`
+
+Ensure `host = "https://staging-ce-platform.herokuapp.com"` is uncommented in `simulatelocations.py`, and the other `host` definitions are commented. Then, log in to [mhub.com](mhub.com) using the CE account credentials and navigate to the `users` collection within the `staging-ce-platform` database. Record the three `_id` values created for each test user. Lastly, run `python simulatelocations.py`, adding the `_id` values at the end. For example, `python simulatelocations.py ZrCZFhtfDStrXBGF2 K9ruF6p3uyrs7joR9 R7qfjYMJvyao8W2gN`.
+
+##### Notes
+
+If you've made changes to the code, you'll need to commit them and then run `git push staging collective-narrative:master` within the `ce-platform`directory to deploy these lastest changes to Heroku.
+
+Also, the .ipa link above should work even after you make changes to the CN-specific codebase, so don't worry about compiling a new iOS app every time you modify CN. If you do need to re-compile, follow the CE instructions copied in-part at the bottom of this readme.
 
 ## CN Authoring Syntax
 
