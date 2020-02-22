@@ -727,13 +727,7 @@ let DETECTORS = {
 };
 
 export const getDetectorId = (detector) => {
-  let db_detector = Detectors.findOne({description: detector.description});
-  if (db_detector) {
-    console.log(JSON.stringify(db_detector));
-    return db_detector._id;
-  } else {
-    return detector._id;
-  }
+  return detector.description;
 };
 
 Meteor.methods({
@@ -1827,7 +1821,7 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    const detectorKey = _.keys(DETECTORS).find(key => DETECTORS[key]._id === need.situation.detector);
+    const detectorKey = _.keys(DETECTORS).find(key => getDetectorId(DETECTORS[key]) === need.situation.detector);
     if (!detectorKey) {
       throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
     }
@@ -2904,7 +2898,7 @@ let EXPERIENCES = {
     contributionTypes: [{
       needName: 'beer',
       situation: {
-        detector: DETECTORS.beer._id,
+        detector: getDetectorId(DETECTORS.beer),
         number: '1'
       },
       toPass: {
@@ -2915,7 +2909,7 @@ let EXPERIENCES = {
     }, {
       needName: 'greenProduce',
       situation: {
-        detector: DETECTORS.produce._id,
+        detector: getDetectorId(DETECTORS.produce),
         number: '1'
       },
       toPass: {
@@ -2927,7 +2921,7 @@ let EXPERIENCES = {
     }, {
       needName: 'coins',
       situation: {
-        detector: DETECTORS.drugstore._id,
+        detector: getDetectorId(DETECTORS.drugstore),
         number: '1'
       },
       toPass: {
@@ -2938,7 +2932,7 @@ let EXPERIENCES = {
     }, {
       needName: 'leprechaun',
       situation: {
-        detector: DETECTORS.costume_store._id,
+        detector: getDetectorId(DETECTORS.costume_store),
         number: '1'
       },
       toPass: {
@@ -2949,7 +2943,7 @@ let EXPERIENCES = {
     }, {
       needName: 'irishSign',
       situation: {
-        detector: DETECTORS.irish._id,
+        detector: getDetectorId(DETECTORS.irish),
         number: '1'
       },
       toPass: {
@@ -2960,7 +2954,7 @@ let EXPERIENCES = {
     }, {
       needName: 'trimmings',
       situation: {
-        detector: DETECTORS.hair_salon._id,
+        detector: getDetectorId(DETECTORS.hair_salon),
         number: '1'
       },
       toPass: {
@@ -2971,7 +2965,7 @@ let EXPERIENCES = {
     }, {
       needName: 'liquidGold',
       situation: {
-        detector: DETECTORS.gas_station._id,
+        detector: getDetectorId(DETECTORS.gas_station),
         number: '1'
       },
       toPass: {
@@ -2982,7 +2976,7 @@ let EXPERIENCES = {
     }, {
       needName: 'potOfGold',
       situation: {
-        detector: DETECTORS.bank._id,
+        detector: getDetectorId(DETECTORS.bank),
         number: '1'
       },
       toPass: {
@@ -2993,7 +2987,7 @@ let EXPERIENCES = {
     }, {
       needName: 'rainbow',
       situation: {
-        detector: DETECTORS.rainbow._id,
+        detector: getDetectorId(DETECTORS.rainbow),
         number: '1'
       },
       toPass: {
