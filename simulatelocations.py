@@ -22,19 +22,19 @@ def followPath(path, uid):
         time.sleep(1)
 
 def setLocation(location, uid):
-    host = "http://localhost:3000"
+    host = "http://localhost:3000" 
     # host = "https://ce-platform.herokuapp.com"
     # host = "https://staging-ce-platform.herokuapp.com"
     r = requests.post(host + "/api/geolocation", json={
-                "userId": uid,
-                "location": {
-                    "coords": {
-                        "latitude": location[0],
-                        "longitude": location[1]
-                    },
-                    "activity": {"type": "unknown", "confidence": 100}
-                }
-            })
+        "userId": uid,
+        "location": {
+            "coords": {
+                "latitude": location[0],
+                "longitude": location[1]
+            },
+            "activity": {"type": "unknown", "confidence": 100}
+        }
+    })
     #print(uid + "at location " + str(location[0]) + " " + str(location[1]))
 
 
@@ -222,7 +222,6 @@ def allUsersAtBars():
     setLocation(bars, sys.argv[3])
     setLocation(bars, sys.argv[4])
     setLocation(bars, sys.argv[5])
-
     print("all users at bar")
 
 def allUsersAtTrain():
