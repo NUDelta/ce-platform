@@ -1,17 +1,14 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import {
-  matchAffordancesWithDetector,
-  matchLocationWithDetector
-}
-  from './methods';
 import { Detectors } from './detectors';
 import { getPlaceKeys, onePlaceNotThesePlacesSets,
-         placeSubsetAffordances, flattenAffordanceDict} from './methods'
+         placeSubsetAffordances, flattenAffordanceDict, 
+         matchAffordancesWithDetector, getDetectorId
+       } from './methods'
 import { CONSTANTS } from "../../Testing/testingconstants";
 
 
 describe('Small Detector Tests', function () {
-  let detectorId = CONSTANTS.DETECTORS.produce._id;
+  let detectorId = getDetectorId(CONSTANTS.DETECTORS.produce);
 
   beforeEach(function () {
     resetDatabase();
@@ -83,9 +80,9 @@ describe('Detectors in testingcontants.js are valid', function() {
 
     _.forEach(allDetectors, (detector) => {
       try {
-        matchAffordancesWithDetector(affordances, detector._id);
+        matchAffordancesWithDetector(affordances, getDetectorId(detector));
       } catch(err) {
-        console.error(`Detector failed to compile with id (${detector._id}) and description (${detector.description})`)
+        console.error(`Detector failed to compile detector with identifying description (${detector.description})`);
         throw(err);
       }
     });
