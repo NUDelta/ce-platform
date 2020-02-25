@@ -15,12 +15,12 @@ describe('Executor - Half Half Need when User is Assigned to "Need 1" and "Need 
   const distance = null;
   const needName1 = 'Rainy 1';
   const needName2 = 'Rainy 2';
-  const detectorId = Random.id();
+  const detectorUniqueKey = Random.id();
   const numberNeeded = 2;
   const halfhalfNeedTemplate = {
     needName: null,
     situation: {
-      detector: detectorId,
+      detector: detectorUniqueKey,
       number: 1
     },
     numberNeeded: numberNeeded,

@@ -19,7 +19,7 @@ Template.dynamicParticipate.onCreated(function() {
     return;
   }
   this.iid = Router.current().params.iid;
-  this.detectorId = Router.current().params.detectorId;
+  this.detectorUniqueKey = Router.current().params.detectorUniqueKey;
   const handles = [
     this.subscribe('incidents.single', this.iid),
     this.subscribe('assignments.single', this.iid),
@@ -44,7 +44,7 @@ Template.dynamicParticipate.onCreated(function() {
       this.assignment = Assignments.findOne();
       let needNamesBinnedByDetector = needAggregator(this.incident);
 
-      let potentialNeedNames = needNamesBinnedByDetector[this.detectorId];
+      let potentialNeedNames = needNamesBinnedByDetector[this.detectorUniqueKey];
 
       // TODO: filter additionally by only the needs in which this user is assigned to
       /**

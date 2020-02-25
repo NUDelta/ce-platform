@@ -1,14 +1,14 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Detectors } from './detectors';
 import { getPlaceKeys, onePlaceNotThesePlacesSets,
-         placeSubsetAffordances, flattenAffordanceDict, 
-         matchAffordancesWithDetector, getDetectorId
+         placeSubsetAffordances, flattenAffordanceDict,
+         matchAffordancesWithDetector, getDetectorUniqueKey
        } from './methods'
 import { CONSTANTS } from "../../Testing/testingconstants";
 
 
 describe('Small Detector Tests', function () {
-  let detectorId = getDetectorId(CONSTANTS.DETECTORS.produce);
+  let detectorUniqueKey = getDetectorUniqueKey(CONSTANTS.DETECTORS.produce);
 
   beforeEach(function () {
     resetDatabase();
@@ -21,7 +21,7 @@ describe('Small Detector Tests', function () {
       'grocery': true
     };
 
-    if (!matchAffordancesWithDetector(affordances, detectorId)) {
+    if (!matchAffordancesWithDetector(affordances, detectorUniqueKey)) {
       chai.assert(false);
     }
   });
@@ -31,7 +31,7 @@ describe('Small Detector Tests', function () {
       'coffee': true
     };
 
-    if (matchAffordancesWithDetector(affordances, detectorId)) {
+    if (matchAffordancesWithDetector(affordances, detectorUniqueKey)) {
       chai.assert(false);
     }
   });
@@ -41,7 +41,7 @@ describe('Small Detector Tests', function () {
   //   let lat = 42.047621;
   //   let lng = -87.679488;
   //
-  //   matchLocationWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+  //   matchLocationWithDetector(lat, lng, detectorUniqueKey, function(doesUserMatchSituation) {
   //     if (!doesUserMatchSituation) {
   //       chai.assert(false);
   //     }
@@ -53,7 +53,7 @@ describe('Small Detector Tests', function () {
   //   let lat = 42.056838;
   //   let lng = -87.675940;
   //
-  //   matchLocationWithDetector(lat, lng, detectorId, function(doesUserMatchSituation) {
+  //   matchLocationWithDetector(lat, lng, detectorUniqueKey, function(doesUserMatchSituation) {
   //     if (doesUserMatchSituation) {
   //       chai.assert(false);
   //     }
@@ -80,7 +80,7 @@ describe('Detectors in testingcontants.js are valid', function() {
 
     _.forEach(allDetectors, (detector) => {
       try {
-        matchAffordancesWithDetector(affordances, getDetectorId(detector));
+        matchAffordancesWithDetector(affordances, getDetectorUniqueKey(detector));
       } catch(err) {
         console.error(`Detector failed to compile detector with identifying description (${detector.description})`);
         throw(err);
