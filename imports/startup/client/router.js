@@ -72,7 +72,7 @@ Router.route('affordances', {
 });
 
 Router.route('api.custom.dynamic', {
-  path: '/apicustomdynamic/:iid/:detectorId',
+  path: '/apicustomdynamic/:iid/:detectorUniqueKey',
   template: 'dynamicParticipate',
   before: function() {
     this.next();

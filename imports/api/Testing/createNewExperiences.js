@@ -146,7 +146,7 @@ function createNewSpookyStorytime() {
   };
 
   let places = ["night", "niceish_day", "restaurant", "sunset", "coffee"];
-  let detectorIds = [
+  let detectorUniqueKeys = [
     "Dw9z8eTBvvF6EeqaR",
     "eqsBY5BBRZsFWfsS4",
     "Hewrfn8R87Z9EfjKh",
@@ -162,7 +162,7 @@ function createNewSpookyStorytime() {
     newVars.push("var participatedInSpookyStorytime;");
 
     let det = {
-      _id: detectorIds[i],
+      _id: detectorUniqueKeys[i],
       description: CONSTANTS.DETECTORS[place].description + "_SpookyStorytime",
       variables: newVars,
       rules: [
@@ -289,7 +289,7 @@ function createNewSpookyNevilleStorytime() {
   };
 
   let places = ["night", "niceish_day", "restaurant", "coffee"];
-  let detectorIds = [
+  let detectorUniqueKeys = [
     "F8YqP3AEbyguQMJ9i",
     "ueBZrF5mCRrcFBc8g",
     "yxQP8QrCdAWakjMaY",
@@ -303,7 +303,7 @@ function createNewSpookyNevilleStorytime() {
     newVars.push("var participatedInSpookyHarryStorytime;");
 
     let det = {
-      _id: detectorIds[i],
+      _id: detectorUniqueKeys[i],
       description:
         CONSTANTS.DETECTORS[place].description + "_SpookyHarryStorytime",
       variables: newVars,

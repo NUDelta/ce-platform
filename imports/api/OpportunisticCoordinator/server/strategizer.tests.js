@@ -254,12 +254,12 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
   const distance = null;
   const needName1 = 'Rainy 1';
   const needName2 = 'Rainy 2';
-  const detectorId = Random.id();
+  const detectorUniqueKey = Random.id();
   const numberNeeded = 2;
   const halfhalfNeedTemplate = {
       needName: null,
       situation: {
-        detector: detectorId,
+        detector: detectorUniqueKey,
         number: 1
       },
       numberNeeded: numberNeeded,
@@ -426,12 +426,12 @@ describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
   const eid = Random.id();  // doesn't really matter
   const needName1 = 'Rainy 1';
   const needName2 = 'Rainy 2';
-  const detectorId = Random.id();
+  const detectorUniqueKey = Random.id();
   const numberNeeded = 2;
   const halfhalfNeedTemplate = {
     needName: null,
     situation: {
-      detector: detectorId,
+      detector: detectorUniqueKey,
       number: 1
     },
     numberNeeded: numberNeeded,
@@ -464,7 +464,7 @@ describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
 
     chai.assert(JSON.stringify(res),
                 JSON.stringify({
-                  [detectorId]: [needName1, needName2]
+                  [detectorUniqueKey]: [needName1, needName2]
                 }))
   });
 });

@@ -3,7 +3,7 @@ import { Meteor } from "meteor/meteor";
 import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
-import {getDetectorId} from "../UserMonitor/detectors/methods";
+import {getDetectorUniqueKey} from "../UserMonitor/detectors/methods";
 import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
 import {Incidents} from "../OCEManager/OCEs/experiences";
 
@@ -733,7 +733,7 @@ let DETECTORS = {
 function createStorytime(version) {
   // setup places and detectors for storytime
   let places = ["niceish_day", "beer", "train", "forest", "dinning_hall", "castle", "field", "gym"];
-  let detectorIds = places.map((x) => { return Random.id(); });
+  let detectorUniqueKeys = places.map((x) => { return Random.id(); });
   let detectorNames = [];
   let dropdownText = [
     'Swirling Clouds',
@@ -767,16 +767,16 @@ function createStorytime(version) {
     detectorNames.push(detectorName);
 
     DETECTORS[detectorName] = {
-      '_id': detectorIds[i],
+      '_id': detectorUniqueKeys[i],
       'description': `${DETECTORS[place].description} storytime${version} mechanismRich`,
       'variables': newVars,
       'rules': newRules
     };
   });
 
-  // Don't assume the Random detectorIds we created actually exist
-  detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
-  let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorIds);
+  // Don't assume the Random detectorUniqueKeys we created actually exist
+  detectorUniqueKeys = detectorNames.map((name) => { return getDetectorUniqueKey(DETECTORS[name]); });
+  let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorUniqueKeys);
   // create story starting point
   let sentences = [
     'Ron looked up at the clouds swirling above him.',
@@ -824,7 +824,7 @@ function createStorytime(version) {
     // HACKY TEMPLATE DYNAMIC CODE GENERATION
     let options = eval('${JSON.stringify(DROPDOWN_OPTIONS)}');
 
-    let [situation, detectorId] = options.find(function(x) {
+    let [situation, detectorUniqueKey] = options.find(function(x) {
       return x[1] === affordance;
     });
 
@@ -919,7 +919,7 @@ const createStorytimeImproved = (group, version) => {
 
   // setup places and detectors for storytime
   let places = ["niceish_day", "bar", "train", "forest", "restaurant", "gym"];
-  let detectorIds = places.map((x) => { return Random.id(); });
+  let detectorUniqueKeys = places.map((x) => { return Random.id(); });
   let detectorNames = [];
   let dropdownText = [
     'Swirling Clouds',
@@ -967,18 +967,18 @@ const createStorytimeImproved = (group, version) => {
     detectorNames.push(detectorName);
 
     DETECTORS[detectorName] = {
-      '_id': detectorIds[i],
+      '_id': detectorUniqueKeys[i],
       'description': `${DETECTORS[place].description} storytime ${knowsGroup}`,
       'variables': newVars,
       'rules': newRules
     };
   });
 
-  // Don't assume the Random detectorIds we created actually exist
-  detectorIds = detectorNames.map((name) => { return getDetectorId(DETECTORS[name]); });
-  let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorIds);
-  let NOTIF_SUBJECT_OPTIONS = _.zip(notificationSubjects, detectorIds);
-  let NOTIF_TEXT_OPTIONS = _.zip(notificationTexts, detectorIds);
+  // Don't assume the Random detectorUniqueKeys we created actually exist
+  detectorUniqueKeys = detectorNames.map((name) => { return getDetectorUniqueKey(DETECTORS[name]); });
+  let DROPDOWN_OPTIONS = _.zip(dropdownText, detectorUniqueKeys);
+  let NOTIF_SUBJECT_OPTIONS = _.zip(notificationSubjects, detectorUniqueKeys);
+  let NOTIF_TEXT_OPTIONS = _.zip(notificationTexts, detectorUniqueKeys);
 
   // create story starting point
   let sentences = [
@@ -1023,7 +1023,7 @@ const createStorytimeImproved = (group, version) => {
     let notification_subject_options = eval('${JSON.stringify(NOTIF_SUBJECT_OPTIONS)}');
     let notification_text_options = eval('${JSON.stringify(NOTIF_TEXT_OPTIONS)}');
 
-    let [situation, detectorId] = options.find(function(x) {
+    let [situation, detectorUniqueKey] = options.find(function(x) {
       return x[1] === affordance;
     });
     let [notificationSubject, _1] = notification_subject_options.find(function(x) {
@@ -1142,7 +1142,7 @@ const createIndependentStorybook = () => {
         return {
           needName: situation,
           situation: {
-            detector: getDetectorId(DETECTORS[place]),
+            detector: getDetectorUniqueKey(DETECTORS[place]),
             number: '1',
           },
           toPass: {
@@ -1234,7 +1234,7 @@ function createBumped() {
         let need = {
           needName: place[0] + relationship + i,
           situation: {
-            detector: getDetectorId(detector),
+            detector: getDetectorUniqueKey(detector),
             number: '2'
           },
           toPass: {
@@ -1798,12 +1798,12 @@ const addStaticAffordanceToDetector = function(staticAffordance, detectorKey) {
  */
 const addStaticAffordanceToNeeds = function(staticAffordance, contributionTypes) {
   return _.map(contributionTypes, (need) => {
-    const detectorKey = _.keys(DETECTORS).find(key => getDetectorId(DETECTORS[key]) === need.situation.detector);
+    const detectorKey = _.keys(DETECTORS).find(key => getDetectorUniqueKey(DETECTORS[key]) === need.situation.detector);
     if (!detectorKey) {
       throw `Exception in addStaticAffordanceToNeeds: could not find corresponding detector for ${JSON.stringify(need)}`
     }
     const newDetectorKey = addStaticAffordanceToDetector(staticAffordance, detectorKey);
-    need.situation.detector = getDetectorId(DETECTORS[newDetectorKey]);
+    need.situation.detector = getDetectorUniqueKey(DETECTORS[newDetectorKey]);
     return need;
   });
 };
@@ -2029,7 +2029,7 @@ let EXPERIENCES = {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
-        detector: getDetectorId(DETECTORS.sunny),
+        detector: getDetectorUniqueKey(DETECTORS.sunny),
         number: '1'
       },
       toPass: {
@@ -2058,7 +2058,7 @@ let EXPERIENCES = {
       notificationSubject: 'Inside a grocery store?',
       notificationText: 'Share an experience with others who are also grocery shopping',
       situation: {
-        detector: getDetectorId(DETECTORS.grocery),
+        detector: getDetectorUniqueKey(DETECTORS.grocery),
         number: '1'
       },
       toPass: {
@@ -2087,7 +2087,7 @@ let EXPERIENCES = {
       notificationSubject: 'Inside a coffee shop?',
       notificationText: 'Share an experience with others who are also at a coffee shop',
       situation: {
-        detector: getDetectorId(DETECTORS.coffee),
+        detector: getDetectorUniqueKey(DETECTORS.coffee),
         number: '1'
       },
       toPass: {
@@ -2115,7 +2115,7 @@ let EXPERIENCES = {
       notificationSubject: 'Drinking at a bar?',
       notificationText: 'Share an experience with others who are also drinking at a bar',
       situation: {
-        detector: getDetectorId(DETECTORS.bar),
+        detector: getDetectorUniqueKey(DETECTORS.bar),
         number: '1'
       },
       toPass: {
@@ -2142,7 +2142,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: 'Itadakimasu 1',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.eating_japanese),
+  //       detector: getDetectorUniqueKey(DETECTORS.eating_japanese),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2170,7 +2170,7 @@ let EXPERIENCES = {
       notificationSubject: 'Visiting a place of worship?',
       notificationText: 'Share an experience with others who are also visiting a place of worship',
       situation: {
-        detector: getDetectorId(DETECTORS.castle),
+        detector: getDetectorUniqueKey(DETECTORS.castle),
         number: '1'
       },
       toPass: {
@@ -2199,7 +2199,7 @@ let EXPERIENCES = {
       notificationSubject: 'Can you see the sunset?',
       notificationText: 'Share an experience with others who are also watching the sunset',
       situation: {
-        detector: getDetectorId(DETECTORS.sunset),
+        detector: getDetectorUniqueKey(DETECTORS.sunset),
         number: '1'
       },
       toPass: {
@@ -2228,7 +2228,7 @@ let EXPERIENCES = {
       notificationSubject: 'Eating at an asian restaurant?',
       notificationText: 'Share an experience with others who are also eating asian food',
       situation: {
-        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
+        detector: getDetectorUniqueKey(DETECTORS.eating_with_chopsticks),
         number: '1'
       },
       toPass: {
@@ -2257,7 +2257,7 @@ let EXPERIENCES = {
       notificationSubject: 'Are you at a library?',
       notificationText: 'Share an experience with others who are also at the library',
       situation: {
-        detector: getDetectorId(DETECTORS.library),
+        detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'
       },
       toPass: {
@@ -2284,7 +2284,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: 'Hold a plant 1',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.forest),
+  //       detector: getDetectorUniqueKey(DETECTORS.forest),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2310,7 +2310,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: 'Feet to the trees 1',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.forest),
+  //       detector: getDetectorUniqueKey(DETECTORS.forest),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2338,7 +2338,7 @@ let EXPERIENCES = {
       notificationSubject: 'Are you at a park?',
       notificationText: 'Share an experience with others who are also at a park',
       situation: {
-        detector: getDetectorId(DETECTORS.forest),
+        detector: getDetectorUniqueKey(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -2367,7 +2367,7 @@ let EXPERIENCES = {
       notificationSubject: 'Are you outside while its raining?',
       notificationText: 'Share an experience with others who are enjoying or enduring the rain',
       situation: {
-        detector: getDetectorId(DETECTORS.rainy),
+        detector: getDetectorUniqueKey(DETECTORS.rainy),
         number: '1'
       },
       toPass: {
@@ -2394,7 +2394,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: "Slice of 'Za 1",
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.eating_pizza),
+  //       detector: getDetectorUniqueKey(DETECTORS.eating_pizza),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2420,7 +2420,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: "Want cream with that 1",
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
+  //       detector: getDetectorUniqueKey(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
   //       number: '1'
   //     },
   //     toPass: {
@@ -2446,7 +2446,7 @@ let EXPERIENCES = {
   //     // needName MUST have structure "My Need Name XYZ"
   //     needName: "Share a plate 1", // bowl? Plate?  (basically all restaurants)
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.restaurant),
+  //       detector: getDetectorUniqueKey(DETECTORS.restaurant),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2473,7 +2473,7 @@ let EXPERIENCES = {
       notificationSubject: 'Eating at a restaurant?',
       notificationText: 'Share an experience with others who are enjoying big bites of their meal',
       situation: {
-        detector: getDetectorId(DETECTORS.big_bite_restaurant),
+        detector: getDetectorUniqueKey(DETECTORS.big_bite_restaurant),
         number: '1'
       },
       toPass: {
@@ -2512,7 +2512,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Sunny Days',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.sunny),
+  //       detector: getDetectorUniqueKey(DETECTORS.sunny),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2537,7 +2537,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Feed yourself',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.grocery),
+  //       detector: getDetectorUniqueKey(DETECTORS.grocery),
   //       number: 1
   //     },
   //     toPass: {
@@ -2562,7 +2562,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Cafe Days',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.coffee),
+  //       detector: getDetectorUniqueKey(DETECTORS.coffee),
   //       number: 1
   //     },
   //     toPass: {
@@ -2587,7 +2587,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Hit the Bars',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.bar),
+  //       detector: getDetectorUniqueKey(DETECTORS.bar),
   //       number: 1
   //     },
   //     toPass: {
@@ -2612,7 +2612,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Eating Japanese Food',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.eating_japanese),
+  //       detector: getDetectorUniqueKey(DETECTORS.eating_japanese),
   //       number: 1
   //     },
   //     toPass: {
@@ -2637,7 +2637,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Religious Worship',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.castle),
+  //       detector: getDetectorUniqueKey(DETECTORS.castle),
   //       number: 1
   //     },
   //     toPass: {
@@ -2662,7 +2662,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Catch the sunset',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.sunset),
+  //       detector: getDetectorUniqueKey(DETECTORS.sunset),
   //       number: 1
   //     },
   //     toPass: {
@@ -2687,7 +2687,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Eating Asian Food',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.eating_with_chopsticks),
+  //       detector: getDetectorUniqueKey(DETECTORS.eating_with_chopsticks),
   //       number: 1
   //     },
   //     toPass: {
@@ -2712,7 +2712,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Reading a book',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.library),
+  //       detector: getDetectorUniqueKey(DETECTORS.library),
   //       number: 1
   //     },
   //     toPass: {
@@ -2737,7 +2737,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'I love parks',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.forest),
+  //       detector: getDetectorUniqueKey(DETECTORS.forest),
   //       number: 1
   //     },
   //     toPass: {
@@ -2762,7 +2762,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: 'Rainy Day',
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.rainy),
+  //       detector: getDetectorUniqueKey(DETECTORS.rainy),
   //       number: 1
   //     },
   //     toPass: {
@@ -2787,7 +2787,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: "Eating some 'Za",
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.eating_pizza),
+  //       detector: getDetectorUniqueKey(DETECTORS.eating_pizza),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2812,7 +2812,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: "Eating out",
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.restaurant),
+  //       detector: getDetectorUniqueKey(DETECTORS.restaurant),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2837,7 +2837,7 @@ let EXPERIENCES = {
   //   contributionTypes: addStaticAffordanceToNeeds('mechanismPoor', [{
   //     needName: "Eating Big Bites",
   //     situation: {
-  //       detector: getDetectorId(DETECTORS.big_bite_restaurant),
+  //       detector: getDetectorUniqueKey(DETECTORS.big_bite_restaurant),
   //       number: '1'
   //     },
   //     toPass: {
@@ -2875,7 +2875,7 @@ let EXPERIENCES = {
     contributionTypes: [{
       needName: 'beer',
       situation: {
-        detector: getDetectorId(DETECTORS.beer),
+        detector: getDetectorUniqueKey(DETECTORS.beer),
         number: '1'
       },
       toPass: {
@@ -2886,7 +2886,7 @@ let EXPERIENCES = {
     }, {
       needName: 'greenProduce',
       situation: {
-        detector: getDetectorId(DETECTORS.produce),
+        detector: getDetectorUniqueKey(DETECTORS.produce),
         number: '1'
       },
       toPass: {
@@ -2898,7 +2898,7 @@ let EXPERIENCES = {
     }, {
       needName: 'coins',
       situation: {
-        detector: getDetectorId(DETECTORS.drugstore),
+        detector: getDetectorUniqueKey(DETECTORS.drugstore),
         number: '1'
       },
       toPass: {
@@ -2909,7 +2909,7 @@ let EXPERIENCES = {
     }, {
       needName: 'leprechaun',
       situation: {
-        detector: getDetectorId(DETECTORS.costume_store),
+        detector: getDetectorUniqueKey(DETECTORS.costume_store),
         number: '1'
       },
       toPass: {
@@ -2920,7 +2920,7 @@ let EXPERIENCES = {
     }, {
       needName: 'irishSign',
       situation: {
-        detector: getDetectorId(DETECTORS.irish),
+        detector: getDetectorUniqueKey(DETECTORS.irish),
         number: '1'
       },
       toPass: {
@@ -2931,7 +2931,7 @@ let EXPERIENCES = {
     }, {
       needName: 'trimmings',
       situation: {
-        detector: getDetectorId(DETECTORS.hair_salon),
+        detector: getDetectorUniqueKey(DETECTORS.hair_salon),
         number: '1'
       },
       toPass: {
@@ -2942,7 +2942,7 @@ let EXPERIENCES = {
     }, {
       needName: 'liquidGold',
       situation: {
-        detector: getDetectorId(DETECTORS.gas_station),
+        detector: getDetectorUniqueKey(DETECTORS.gas_station),
         number: '1'
       },
       toPass: {
@@ -2953,7 +2953,7 @@ let EXPERIENCES = {
     }, {
       needName: 'potOfGold',
       situation: {
-        detector: getDetectorId(DETECTORS.bank),
+        detector: getDetectorUniqueKey(DETECTORS.bank),
         number: '1'
       },
       toPass: {
@@ -2964,7 +2964,7 @@ let EXPERIENCES = {
     }, {
       needName: 'rainbow',
       situation: {
-        detector: getDetectorId(DETECTORS.rainbow),
+        detector: getDetectorUniqueKey(DETECTORS.rainbow),
         number: '1'
       },
       toPass: {
@@ -3142,7 +3142,7 @@ let CHI20_DTR_EXPERIENCES =  {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
-        detector: getDetectorId(DETECTORS.sunny),
+        detector: getDetectorUniqueKey(DETECTORS.sunny),
         number: '1'
       },
       toPass: {
@@ -3172,7 +3172,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Inside a grocery store?',
       notificationText: 'Share an experience with others who are also grocery shopping',
       situation: {
-        detector: getDetectorId(DETECTORS.grocery),
+        detector: getDetectorUniqueKey(DETECTORS.grocery),
         number: '1'
       },
       toPass: {
@@ -3202,7 +3202,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Drinking at a bar?',
       notificationText: 'Share an experience with others who are also drinking at a bar',
       situation: {
-        detector: getDetectorId(DETECTORS.bar),
+        detector: getDetectorUniqueKey(DETECTORS.bar),
         number: '1'
       },
       toPass: {
@@ -3232,7 +3232,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Visiting a place of worship?',
       notificationText: 'Share an experience with others who are also visiting a place of worship',
       situation: {
-        detector: getDetectorId(DETECTORS.castle),
+        detector: getDetectorUniqueKey(DETECTORS.castle),
         number: '1'
       },
       toPass: {
@@ -3262,7 +3262,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Can you see the sunset?',
       notificationText: 'Share an experience with others who are also watching the sunset',
       situation: {
-        detector: getDetectorId(DETECTORS.sunset),
+        detector: getDetectorUniqueKey(DETECTORS.sunset),
         number: '1'
       },
       toPass: {
@@ -3292,7 +3292,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Eating at an asian restaurant?',
       notificationText: 'Share an experience with others who are also eating asian food',
       situation: {
-        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
+        detector: getDetectorUniqueKey(DETECTORS.eating_with_chopsticks),
         number: '1'
       },
       toPass: {
@@ -3322,7 +3322,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Are you at a library?',
       notificationText: 'Share an experience with others who are also at the library',
       situation: {
-        detector: getDetectorId(DETECTORS.library),
+        detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'
       },
       toPass: {
@@ -3352,7 +3352,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Are you at a park?',
       notificationText: 'Share an experience with others who are also at a park',
       situation: {
-        detector: getDetectorId(DETECTORS.forest),
+        detector: getDetectorUniqueKey(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -3382,7 +3382,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Are you outside while its raining?',
       notificationText: 'Share an experience with others who are enjoying or enduring the rain',
       situation: {
-        detector: getDetectorId(DETECTORS.rainy),
+        detector: getDetectorUniqueKey(DETECTORS.rainy),
         number: '1'
       },
       toPass: {
@@ -3412,7 +3412,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Inside a coffee shop?',
       notificationText: 'Share an experience with others who are also at a coffee shop',
       situation: {
-        detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
+        detector: getDetectorUniqueKey(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
         number: '1'
       },
       toPass: {
@@ -3440,7 +3440,7 @@ let CHI20_DTR_EXPERIENCES =  {
       notificationSubject: 'Eating at a restaurant?',
       notificationText: 'Share an experience with others who are enjoying big bites of their meal',
       situation: {
-        detector: getDetectorId(DETECTORS.big_bite_restaurant),
+        detector: getDetectorUniqueKey(DETECTORS.big_bite_restaurant),
         number: '1'
       },
       toPass: {
@@ -3472,7 +3472,7 @@ let CHI20_Olin_EXPERIENCES =  {
       // needName MUST have structure "My Need Name XYZ"
       needName: 'Hand Silhouette 1',
       situation: {
-        detector: getDetectorId(DETECTORS.sunny),
+        detector: getDetectorUniqueKey(DETECTORS.sunny),
         number: '1'
       },
       toPass: {
@@ -3502,7 +3502,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Inside a grocery store?',
       notificationText: 'Share an experience with others who are also grocery shopping',
       situation: {
-        detector: getDetectorId(DETECTORS.grocery),
+        detector: getDetectorUniqueKey(DETECTORS.grocery),
         number: '1'
       },
       toPass: {
@@ -3532,7 +3532,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Drinking at a bar?',
       notificationText: 'Share an experience with others who are also drinking at a bar',
       situation: {
-        detector: getDetectorId(DETECTORS.bar),
+        detector: getDetectorUniqueKey(DETECTORS.bar),
         number: '1'
       },
       toPass: {
@@ -3562,7 +3562,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Visiting a place of worship?',
       notificationText: 'Share an experience with others who are also visiting a place of worship',
       situation: {
-        detector: getDetectorId(DETECTORS.castle),
+        detector: getDetectorUniqueKey(DETECTORS.castle),
         number: '1'
       },
       toPass: {
@@ -3592,7 +3592,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Can you see the sunset?',
       notificationText: 'Share an experience with others who are also watching the sunset',
       situation: {
-        detector: getDetectorId(DETECTORS.sunset),
+        detector: getDetectorUniqueKey(DETECTORS.sunset),
         number: '1'
       },
       toPass: {
@@ -3622,7 +3622,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Eating at an asian restaurant?',
       notificationText: 'Share an experience with others who are also eating asian food',
       situation: {
-        detector: getDetectorId(DETECTORS.eating_with_chopsticks),
+        detector: getDetectorUniqueKey(DETECTORS.eating_with_chopsticks),
         number: '1'
       },
       toPass: {
@@ -3652,7 +3652,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Are you at a library?',
       notificationText: 'Share an experience with others who are also at the library',
       situation: {
-        detector: getDetectorId(DETECTORS.library),
+        detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'
       },
       toPass: {
@@ -3682,7 +3682,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Are you at a park?',
       notificationText: 'Share an experience with others who are also at a park',
       situation: {
-        detector: getDetectorId(DETECTORS.forest),
+        detector: getDetectorUniqueKey(DETECTORS.forest),
         number: '1'
       },
       toPass: {
@@ -3712,7 +3712,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Are you outside while its raining?',
       notificationText: 'Share an experience with others who are enjoying or enduring the rain',
       situation: {
-        detector: getDetectorId(DETECTORS.rainy),
+        detector: getDetectorUniqueKey(DETECTORS.rainy),
         number: '1'
       },
       toPass: {
@@ -3742,7 +3742,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Inside a coffee shop?',
       notificationText: 'Share an experience with others who are also at a coffee shop',
       situation: {
-        detector: getDetectorId(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
+        detector: getDetectorUniqueKey(DETECTORS.coffee), // any place that has cups (cafes + bars + restaurants)
         number: '1'
       },
       toPass: {
@@ -3770,7 +3770,7 @@ let CHI20_Olin_EXPERIENCES =  {
       notificationSubject: 'Eating at a restaurant?',
       notificationText: 'Share an experience with others who are enjoying big bites of their meal',
       situation: {
-        detector: getDetectorId(DETECTORS.big_bite_restaurant),
+        detector: getDetectorUniqueKey(DETECTORS.big_bite_restaurant),
         number: '1'
       },
       toPass: {
