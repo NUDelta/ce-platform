@@ -3,11 +3,9 @@ import { Meteor } from "meteor/meteor";
 import { Submissions } from "../OCEManager/currentNeeds";
 
 import { addContribution } from '../OCEManager/OCEs/methods';
-import {Detectors} from "../UserMonitor/detectors/detectors";
+import {getDetectorId} from "../UserMonitor/detectors/methods";
 import {notify, notifyUsersInIncident, notifyUsersInNeed} from "../OpportunisticCoordinator/server/noticationMethods";
 import {Incidents} from "../OCEManager/OCEs/experiences";
-import {Schema} from "../schema";
-import {serverLog} from "../logs";
 
 let LOCATIONS = {
   'park': {
@@ -726,27 +724,6 @@ let DETECTORS = {
   }
 };
 
-export const getDetectorId = (detector) => {
-  return detector.description;
-};
-
-Meteor.methods({
-  getDetectorId({name}) {
-    new SimpleSchema({
-      name: { type: String }
-    }).validate({name});
-
-    if (!(name in CONSTANTS.DETECTORS)) {
-      throw new Meteor.Error('getDetectorId.keynotfound',
-        `Detector by the name '${name}' was not found in CONSTANTS.DETECTORS`);
-    }
-
-    console.log('CONSTANTS.DETECTORS: ' + CONSTANTS.DETECTORS[name]._id);
-    console.log('db.detectors preferably: ' + getDetectorId(CONSTANTS.DETECTORS[name]))
-
-  }
-});
-
 /**
  * Create Storytime Helper.
  *
@@ -1257,7 +1234,7 @@ function createBumped() {
         let need = {
           needName: place[0] + relationship + i,
           situation: {
-            detector: detector._id,
+            detector: getDetectorId(detector),
             number: '2'
           },
           toPass: {

@@ -7,5 +7,5 @@ Meteor.publish('detectors', function () {
 });
 
 Meteor.publish('detectors.byId', function (detectorId) {
-  return Detectors.find({ _id: detectorId });
+  return Detectors.find({ description: detectorId });
 });
