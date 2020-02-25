@@ -141,16 +141,20 @@ export const flattenAffordanceDict = function(nestedAff) {
   return flatDict;
 };
 
+export const getDetectorUniqueKey = (detector) => {
+  return detector.description;
+};
+
 /**
  * Attempts to match affordances with a detector
  * @param {Object} affordances  key value pairs of { userAffordances: values }
- * @param {String} detectorId detector to attempt matching for
+ * @param {String} detectorUniqueKey detector to attempt matching for
  * @returns {Boolean} whether affordances match detector
  */
-export const matchAffordancesWithDetector = function (affordances, detectorId) {
-  const detector = Detectors.findOne({ _id: detectorId });
+export const matchAffordancesWithDetector = function (affordances, detectorUniqueKey) {
+  const detector = Detectors.findOne({ description : detectorUniqueKey });
 
-  // check if no detector for detectorId exists, otherwise attempt to match affordances to detector
+  // check if no detector for detectorUniqueKey exists, otherwise attempt to match affordances to detector
   if (typeof detector === 'undefined') {
     return false;
   }

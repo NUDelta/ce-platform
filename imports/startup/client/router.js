@@ -72,7 +72,7 @@ Router.route('affordances', {
 });
 
 Router.route('api.custom.dynamic', {
-  path: '/apicustomdynamic/:iid/:detectorId',
+  path: '/apicustomdynamic/:iid/:detectorUniqueKey',
   template: 'dynamicParticipate',
   before: function() {
     this.next();
@@ -219,7 +219,7 @@ Router.route('results.backdoor', {
   },
   data: function () {
     return {
-      submissions: Submissions.find({}).fetch(),
+      submissions: Submissions.find({}, {sort: {timestamp: -1}}).fetch(),
       experiences: Experiences.find({}).fetch()
     }
   }

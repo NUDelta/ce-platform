@@ -6,6 +6,6 @@ Meteor.publish('detectors', function () {
   return Detectors.find();
 });
 
-Meteor.publish('detectors.byId', function (detectorId) {
-  return Detectors.find({ _id: detectorId });
+Meteor.publish('detectors.byId', function (detectorUniqueKey) {
+  return Detectors.find({ description: detectorUniqueKey });
 });

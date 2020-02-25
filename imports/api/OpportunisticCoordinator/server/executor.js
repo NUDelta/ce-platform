@@ -38,11 +38,11 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
     let incident = Incidents.findOne(iid);
     let experience = Experiences.findOne(incident.eid);
 
-    // { [detectorId]: [need1, ...], ...}
+    // { [detectorUniqueKey]: [need1, ...], ...}
     let needNamesBinnedByDetector = needAggregator(incident);
     let assignedNeedNames = Object.keys(needUserMapping);
 
-    _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorId) => {
+    _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorUniqueKey) => {
 
       // might have to distinguish what is logged done when its not half half vs not.
       // maybe use a "strategy" class model

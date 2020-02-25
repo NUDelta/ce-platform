@@ -7,9 +7,14 @@
 </template>
 
 <template name="resultsBackdoor">
-  <ul>
-    {{#each link in apiCustomResultsAdminLinks}}
-      <li><a href="{{link}}">{{experienceName link}}</a></li>
+  {{#if Template.subscriptionsReady}}
+    {{#each groupsExpLinks in (groupLinksBySocialGroup apiCustomResultsAdminLinks)}}
+      <h3>{{pairsKey groupsExpLinks}}</h3>
+      <ul>
+        {{#each expLinkObj in (pairsValue groupsExpLinks)}}
+          <li><a href="{{objectAttribute_link expLinkObj}}">{{objectAttribute_name expLinkObj}}</a></li>
+        {{/each}}
+      </ul>
     {{/each}}
-  </ul>
+  {{/if}}
 </template>

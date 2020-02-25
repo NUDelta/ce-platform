@@ -18,7 +18,7 @@ export const usersAlreadyAssignedToNeed = (iid, needName) => {
   let assignmentNeedMap = assignment.needUserMaps.find(function (x) {
     return x.needName === needName;
   });
-  return assignmentNeedMap.users;
+  return assignmentNeedMap.users.map( x => x.uid );
 };
 
 
@@ -66,6 +66,37 @@ export const needAggregator = (incident) => {
   return res;
 };
 
+/**
+ * usersAlreadySubmittedToIncident
+ * @param iid
+ * @param limit
+ * @return {null|*}
+ */
+export const usersAlreadySubmittedToIncident = (iid, limit) => {
+  let previousUids;
+  if (limit) {
+    if (!Number.isInteger(limit) || limit < 0) {
+      console.error(`Error in usersAlreadySubmittedToIncident: bad limit argument. Got ${limit}`);
+      return null;
+    }
+    if (limit === 0) {
+      // purposefully empty
+      previousUids = [];
+    }
+    else {
+      previousUids = Submissions.find({
+        iid: iid
+      }, {
+        sort: { timestamp: -1 },
+        limit: limit
+      }).map(x => x.uid);
+    }
+  }
+  else {
+    previousUids = Submissions.find({iid: iid}).map(x => x.uid);
+  }
+  return previousUids;
+};
 
 /**
  * numberSubmissionsNeeded

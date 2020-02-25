@@ -36,7 +36,7 @@ Template.home.events({
 Template.home.helpers({
   activeUserAssigment() {
     if (Template.instance().subscriptionsReady()) {
-      // create [{iid: incident_id, experience: experience, detectorId: detector_id}]
+      // create [{iid: incident_id, experience: experience, detectorUniqueKey: detector_id}]
       let activeAssignments = Assignments.find().fetch();
       let output = [];
 
@@ -55,7 +55,7 @@ Template.home.helpers({
           }
         });
 
-        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorId) => {
+        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
           let assignedNeedNamesForDetector = setIntersection(assignedNeedNames, needNamesForDetector);
           if (assignedNeedNamesForDetector.length === 0) {
             // user not assigned to any needs for this detector
@@ -69,7 +69,7 @@ Template.home.helpers({
           output.push({
             'iid': assignment._id,
             'experience': experience,
-            'detectorId': detectorId
+            'detectorUniqueKey': detectorUniqueKey
           });
 
         });

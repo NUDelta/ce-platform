@@ -117,8 +117,8 @@ export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
     serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
     return false;
   } else {
-    let detectorId = need.situation.detector;
-    return matchAffordancesWithDetector(affordances, detectorId);
+    let detectorUniqueKey = need.situation.detector;
+    return matchAffordancesWithDetector(affordances, detectorUniqueKey);
   }
 };
 

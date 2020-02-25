@@ -22,7 +22,7 @@ Template.activeExperience.events({
         params: {
           iid: this.iid,
           eid: this.experience._id,
-          needName: this.needName
+          detectorUniqueKey: this.detectorUniqueKey
         }
       };
       Meteor.call('insertLog', dic);
