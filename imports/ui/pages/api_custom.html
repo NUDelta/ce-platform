@@ -201,6 +201,79 @@
     {{/if}}
 </template>
 
+<template name="monsterCreate">
+  <head>
+    <style>
+      .instruction {
+        padding-top: 4%;
+        padding-bottom: 4%;
+      }
+      img {
+        width: 100%;
+        margin-bottom: 10px
+      }
+    </style>
+  </head>
+
+  <div id="instruction" class="instruction">
+    <h4>{{this.experience.name}}</h4>
+    <div>
+      {{{this.toPass.instruction}}}
+      {{#let numNeedImages=(numImagesAlreadySubmitted this.images this.needName) }}
+      {{#if (equal numNeedImages 0) }}
+          <span> Draw the top part of the monster! </span>
+          {{#if this.toPass.exampleImage}}{{/if}}
+
+      {{else if (equal numNeedImages 1)}}
+          <span> Draw the middle part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
+          {{#if this.toPass.exampleImage2}}{{/if}}
+
+      {{else if (lengthEqual numNeedImages 2)}}
+        <span> Draw the bottom part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
+        {{#if this.toPass.exampleImage3}}{{/if}}
+      {{/if}}
+
+      <!--
+        Change all these images to this thing
+        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+      -->
+      {{#if this.toPass.exampleFullMonster}}{{/if}}
+      {{/let}}
+    </div>
+
+  <button id="goToParticipate" class="btn btn-primary right-align">
+    <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+  </button>
+
+  </div>
+  <form id="participate" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
+    <div id="cameraOverlay" class="camera-overlay">
+      {{> loadingOverlay}}
+      {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
+        {{#if (lengthEqual needImages 1) }}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            <div class="content">
+              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+            </div>
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+          </div>
+        {{else}}
+          <div id="leftHalf" class="lefthalf halfsquare">
+            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+          </div>
+          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
+        {{/if}}
+      {{/let}}
+    </div>
+
+
+</template>
+
 <template name="imitationGame">
   <head>
     <style>

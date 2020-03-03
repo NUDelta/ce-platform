@@ -1815,6 +1815,61 @@ const createGroupCheers = function() {
   return experience;
 };
 
+const createMonster = function(){
+  const monsterCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    notify(participants, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  }
+  /* do we have to make our own detector??
+  DETECTORS['monsterCreate'] = {
+    _id: Random.id(),
+    description: `monsterCreate`,
+    variables: [
+      'var night;',
+    ],
+    rules: ['(triadOne && stageTwo && (participatedInDrinksTalk && participatedInMoodMeteorology && participatedInImitationGame) && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }
+  */
+
+  let experience = {
+    name: 'Frankenstein\'s Monster',
+    participateTemplate: 'monsterCreate',
+    resultsTemplate: 'monsterCreateResults',
+    contributionTypes: [{
+      needName: 'monsterCreate',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS['night']),
+        number: 1
+        },
+      toPass: {
+        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partners to create a monster! You and your partners will each draw a third of the monster and take a photo of your respective parts.',
+        //change example images
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleImage2: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleImage3: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 3,
+      notificationDelay: 90,
+      numberAllowedToParticipateAtSameTime: 1,
+    }],
+    description: 'Create a monster with your fellow mad scientists!',
+    notificationText: 'Create a monster with your fellow mad scientists!',
+    callbacks: [{
+      trigger: `(cb.newSubmission('monsterCreate') && cb.needFinished('monsterCreate'))`,
+      function: monsterCallback.toString(),
+    }],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+};
+
 /**
  *
  * @param numberInSituation [Number] Controls asynchronous vs synchronous. Defaults to Asynchronous.
@@ -3616,10 +3671,10 @@ let EXPERIENCES = {
 };
 
 let TRIADIC_EXPERIENCES = {
-  drinksTalk: createDrinksTalk(),
+/*   drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
   imitationGame: createImitationGame(),
-  groupCheers: createGroupCheers(),
+  groupCheers: createGroupCheers(), */
 }
 
 export const CONSTANTS = {

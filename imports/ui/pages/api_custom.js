@@ -76,6 +76,19 @@ Template.bumped.helpers({
   }
 });
 
+Template.monsterCreate.helpers({
+  numImagesAlreadySubmitted(images, needName){
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+
+    return needImages.length;
+  },
+  equal(num1, num2){
+      return num1 === num2;
+  }
+})
+
 Template.groupBumped.helpers({
   // @TODO - determine if we won't need this then delete
   friendNames() {
@@ -120,6 +133,7 @@ Template.groupCheers.helpers({
       return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
     }
   },
+
   lengthEqual(array, number) {
     return array.length === number;
   },
