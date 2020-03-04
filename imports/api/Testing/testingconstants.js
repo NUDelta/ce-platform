@@ -1843,7 +1843,7 @@ const createMonster = function(){
     contributionTypes: [{
       needName: 'monsterCreate',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS['night']),
+        detector : getDetectorUniqueKey(DETECTORS['daytime']),
         number: 1
         },
       toPass: {
@@ -1855,7 +1855,7 @@ const createMonster = function(){
         exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
       numberNeeded: 3,
-      notificationDelay: 90,
+      notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
     }],
     description: 'Create a monster with your fellow mad scientists!',
@@ -3675,6 +3675,7 @@ let TRIADIC_EXPERIENCES = {
   moodMeteorology: createMoodMeteorology(),
   imitationGame: createImitationGame(),
   groupCheers: createGroupCheers(), */
+  monsterCreate: createMonster()
 }
 
 export const CONSTANTS = {

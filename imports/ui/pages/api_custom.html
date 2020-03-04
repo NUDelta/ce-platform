@@ -208,9 +208,26 @@
         padding-top: 4%;
         padding-bottom: 4%;
       }
+
       img {
         width: 100%;
         margin-bottom: 10px
+      }
+
+      .glyphicon-medium {
+        font-size: 24px;
+      }
+
+      .glyphicon-large {
+        font-size: 32px;
+      }
+
+      .right-align {
+        float: right;
+      }
+
+      .navigation-buttons {
+        margin-bottom: 10px;
       }
     </style>
   </head>
@@ -222,56 +239,93 @@
       {{#let numNeedImages=(numImagesAlreadySubmitted this.images this.needName) }}
       {{#if (equal numNeedImages 0) }}
           <span> Draw the top part of the monster! </span>
-          {{#if this.toPass.exampleImage}}{{/if}}
+          {{#if this.toPass.exampleImage}}
+          <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+          {{/if}}
+
 
       {{else if (equal numNeedImages 1)}}
           <span> Draw the middle part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
-          {{#if this.toPass.exampleImage2}}{{/if}}
+          {{#if this.toPass.exampleImage2}}
+          <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage2}}"/>
+          {{/if}}
 
-      {{else if (lengthEqual numNeedImages 2)}}
+      {{else if (equal numNeedImages 2)}}
         <span> Draw the bottom part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
-        {{#if this.toPass.exampleImage3}}{{/if}}
+        {{#if this.toPass.exampleImage3}}
+        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage3}}"/>
+        {{/if}}
       {{/if}}
 
-      <!--
-        Change all these images to this thing
-        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
-      -->
-      {{#if this.toPass.exampleFullMonster}}{{/if}}
+      <span> The final result will look like this: </span>
+      {{#if this.toPass.exampleImage}}
+      <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleFullMonster}}"/>
+      {{/if}}
       {{/let}}
     </div>
-
   <button id="goToParticipate" class="btn btn-primary right-align">
     <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
   </button>
-
   </div>
+
   <form id="participate" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
     <div id="cameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
-      {{#let needImages=(mostRecentImageDyadForNeed this.images this.needName) }}
-        {{#if (lengthEqual needImages 1) }}
-          <div id="leftHalf" class="lefthalf halfsquare">
+      {{#let numNeedImages=(numImagesAlreadySubmitted this.images this.needName) }}
+        {{#if (equal numNeedImages 0) }}
+            <span>hi</span>
             <div class="content">
-              {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+              {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
             </div>
+            <div style="background-color: rgba(125,125,125,0.5);"></div>
+            <div style="background-color: rgba(125,125,125,0.5);"></div>
+
+        {{else if (equal numNeedImages 1)}}
+          <div class="content">
+            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
           </div>
-          <div id="rightHalf" class="righthalf halfsquare">
-            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+          <div class="content">
+            {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
           </div>
+          <div style="background-color: rgba(125,125,125,0.5);"></div>
+
         {{else}}
-          <div id="leftHalf" class="lefthalf halfsquare">
-            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+          <div style="background-color: rgba(125,125,125,0.5);"></div>
+          <div class="content">
+            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
           </div>
-          <div id="rightHalf" class="righthalf halfsquare" style="background-color: rgba(125,125,125,0.5);"></div>
+          <div class="content">
+            {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
+          </div>
         {{/if}}
       {{/let}}
     </div>
 
+    <div class="camera-controls">
+      <!-- LEAVE testImage button commented out!!! -->
+      <!--<button type="button" id="testImage" class="left-control">Test</button>-->
+      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+        <span class="fa fa-spinner glyphicon-large"></span>
+      </button>
+      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+      Submit
+    </button>
 
+  </form>
 </template>
 
 <template name="imitationGame">
@@ -304,7 +358,7 @@
       </p>
       <p>
         2) The <b>descriptor</b> will then see only the recreated image, and they will try to describe it using text.
-      </p> 
+      </p>
       <p>
         3) The <b>recreator</b> will see only the text and then try to draw the image from this description.
       </p>

@@ -87,7 +87,87 @@ Template.monsterCreate.helpers({
   equal(num1, num2){
       return num1 === num2;
   }
-})
+});
+
+Template.monsterCreate.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.monsterCreate.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.monsterCreate.events({
+'click #takePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    toggleCameraControls('takePhotoInProgress');
+    CameraPreview.takePicture({
+      width: 480, height: 640, quality: 85
+    },function(imgData){
+        let rect = getPreviewRect();
+        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+          // using an instance of jquery tied to current template scope
+          let imagePreview = template.$(".fileinput-preview");
+          imagePreview.attr('src', croppedImgUrl);
+          imagePreview.show();
+          template.imageSubmitReady.set(true);
+          CameraPreview.hide();
+          toggleCameraControls('takePhotoDone');
+        });
+    });
+  } else {
+    console.error("Could not access the CameraPreview");
+  }
+},
+'click #retakePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.show()
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+  $(".fileinput-preview").hide();
+  template.imageSubmitReady.set(false);
+  toggleCameraControls('startCamera');
+},
+'click #switchCamera'(){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.switchCamera();
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+},
+'click #goToParticipate'(event, template) {
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+
+  if (template.cameraStarted.get()) {
+    if (!template.imageSubmitReady.get()) {
+      CameraPreview.show();
+    }
+  } else {
+    Meteor.setTimeout(() => {
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
+      }
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
+    }, 300);
+  }
+},
+'click #goToInstruction'() {
+  document.getElementById('instruction').style.display = "block";
+  document.getElementById('participate').style.display = "none";
+  CameraPreview.hide();
+},
+});
+
+
+
 
 Template.groupBumped.helpers({
   // @TODO - determine if we won't need this then delete
@@ -153,6 +233,7 @@ Template.groupCheers.helpers({
   }
 });
 
+//is there a way to generalize template helpers/on create funtions?
 Template.groupCheers.onCreated(() => {
   Template.instance().imageSubmitReady = new ReactiveVar(false);
   Template.instance().cameraStarted = new ReactiveVar(false);
@@ -163,6 +244,7 @@ Template.groupCheers.onDestroyed(() => {
 });
 
 //see halfhalf_participate.events
+//how to generalize this so I don't have to reuse code?
 Template.groupCheers.events({
   'click #takePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
@@ -616,7 +698,7 @@ Template.api_custom.events({
 
     //this makes the loading circle show up
     console.log(event.target.getElementsByClassName('overlay'));
-    
+
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
