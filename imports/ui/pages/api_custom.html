@@ -6,7 +6,6 @@
     <head>
         <style>
             .instruction {
-                padding-top: 4%;
                 padding-bottom: 4%;
             }
 
@@ -205,8 +204,7 @@
   <head>
     <style>
       .instruction {
-        padding-top: 4%;
-        padding-bottom: 4%;
+        padding-bottom: 2%;
       }
 
       img {
@@ -214,10 +212,18 @@
         margin-bottom: 10px
       }
 
-      .content {
+      .innercontent {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100%;
+      }
+
+      .mask {
+        background-color: rgb(225,225,225);
+        position: absolute;
+        width: 100%;
+        height: 90%;
       }
 
       .glyphicon-medium {
@@ -233,11 +239,12 @@
       }
 
       .navigation-buttons {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
       }
     </style>
   </head>
 
+  <!-- use need images for entirety of template and change into length equal from array len --> 
   <div id="instruction" class="instruction">
     <h4>{{this.experience.name}}</h4>
     <div>
@@ -246,26 +253,26 @@
       {{#if (equal numNeedImages 0) }}
           <span> Draw the top part of the monster! </span>
           {{#if this.toPass.exampleImage}}
-          <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+          <img src="{{this.toPass.exampleImage}}"/>
           {{/if}}
 
 
       {{else if (equal numNeedImages 1)}}
           <span> Draw the middle part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
           {{#if this.toPass.exampleImage2}}
-          <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage2}}"/>
+          <img src="{{this.toPass.exampleImage2}}"/>
           {{/if}}
 
       {{else if (equal numNeedImages 2)}}
         <span> Draw the bottom part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
         {{#if this.toPass.exampleImage3}}
-        <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage3}}"/>
+        <img src="{{this.toPass.exampleImage3}}"/>
         {{/if}}
       {{/if}}
 
       <span> The final result will look like this: </span>
       {{#if this.toPass.exampleImage}}
-      <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleFullMonster}}"/>
+      <img src="{{this.toPass.exampleFullMonster}}"/>
       {{/if}}
       {{/let}}
     </div>
@@ -278,39 +285,74 @@
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
-    <div id="tcameraOverlay" class="camera-overlay">
-      {{> loadingOverlay}}
+
       {{#let numNeedImages=(numImagesAlreadySubmitted this.images this.needName) }}
-        {{#if (equal numNeedImages 0) }}
-        <div class="topThird trisquare">
-            {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
-        </div>
-        <div class="middleThird trisquare" style="background-color: rgba(125,125,125,0.5)">
-          <div class="content">
-              Waiting for submission!
+      {{#if (equal numNeedImages 0) }}
+        <div>Draw the top part of the monster!</div>
+        <div id="tcameraOverlay" class="camera-overlay">
+          {{> loadingOverlay}}
+          <div class="topThird trisquare">
+              {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
           </div>
-        </div>
-        <div class="bottomThird trisquare" style="background-color: rgba(125,125,125,0.5)">
-          <div class="content">
-            Waiting for submission!
+          <div class="middleThird trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent">
+                Waiting for submission!
+            </div>
+          </div>
+          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent">
+              Waiting for submission!
+            </div>
           </div>
         </div>
 
         {{else if (equal numNeedImages 1)}}
-          {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
-          <div class="content">
+        <div>Draw the middle part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
+        <div id="tcameraOverlay" class="camera-overlay">
+          {{> loadingOverlay}}
+          <div class="topThird trisquare">
+            <!--{{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}-->
+              <div class="content">
+              <div class="mask">
+                <div class="innercontent">A mystery from your past partner!</div>
+              </div>
+              <img style="width: 100%; height: 100%;" src="{{this.toPass.exampleFullMonster}}"/>
+              </div>
+          </div>
+          <div class="middleThird trisquare">
             {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
           </div>
-          <div style="background-color: rgba(125,125,125,0.5);"></div>
+          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent">
+              Waiting for submission!
+            </div>
+          </div>
+        </div>
 
         {{else}}
-          <div style="background-color: rgba(125,125,125,0.5);"></div>
-          {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
-          {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
-        {{/if}}
-
-      {{/let}}
-    </div>
+        <div>Draw the bottom part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
+        <div id="tcameraOverlay" class="camera-overlay">
+          {{> loadingOverlay}}
+          <div class="topThird trisquare">
+            <div class="innercontent">
+              A mystery from your past partner!
+            </div>
+          </div>
+          <div class="middleThird trisquare">
+            <div class="content">
+            <div class="mask">
+              <!--{{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}-->
+              <div class="innercontent">A mystery from your past partner!</div>
+            </div>
+            <img style="width: 100%; height: 100%;" src="{{this.toPass.exampleFullMonster}}"/>
+            </div>
+          </div>
+          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+            {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
+          </div>
+        </div>
+    {{/if}}
+    {{/let}}
 
     <div class="camera-controls">
       <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
