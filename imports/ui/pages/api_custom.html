@@ -214,6 +214,12 @@
         margin-bottom: 10px
       }
 
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       .glyphicon-medium {
         font-size: 24px;
       }
@@ -268,25 +274,30 @@
   </button>
   </div>
 
-  <form id="participate" style="display: none">
+  <form id="triparticipate" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
-    <div id="cameraOverlay" class="camera-overlay">
+    <div id="tcameraOverlay" class="camera-overlay">
       {{> loadingOverlay}}
       {{#let numNeedImages=(numImagesAlreadySubmitted this.images this.needName) }}
         {{#if (equal numNeedImages 0) }}
-            <span>hi</span>
-            <div class="content">
-              {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
-            </div>
-            <div style="background-color: rgba(125,125,125,0.5);"></div>
-            <div style="background-color: rgba(125,125,125,0.5);"></div>
+        <div class="topThird trisquare">
+            {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
+        </div>
+        <div class="middleThird trisquare" style="background-color: rgba(125,125,125,0.5)">
+          <div class="content">
+              Waiting for submission!
+          </div>
+        </div>
+        <div class="bottomThird trisquare" style="background-color: rgba(125,125,125,0.5)">
+          <div class="content">
+            Waiting for submission!
+          </div>
+        </div>
 
         {{else if (equal numNeedImages 1)}}
-          <div class="content">
-            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
-          </div>
+          {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
           <div class="content">
             {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
           </div>
@@ -294,23 +305,18 @@
 
         {{else}}
           <div style="background-color: rgba(125,125,125,0.5);"></div>
-          <div class="content">
-            {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
-          </div>
-          <div class="content">
-            {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
-          </div>
+          {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+          {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
         {{/if}}
+
       {{/let}}
     </div>
 
     <div class="camera-controls">
-      <!-- LEAVE testImage button commented out!!! -->
-      <!--<button type="button" id="testImage" class="left-control">Test</button>-->
       <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
         <span class="fa fa-spinner glyphicon-large"></span>
       </button>
-      <button type="button" id="takeHalfHalfPhoto" class="btn-borderless center-control" style="display: none">
+      <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
         <span class="glyphicon glyphicon-record glyphicon-large"></span>
       </button>
       <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
@@ -462,7 +468,7 @@
         <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
       </button>
 
-      <div id="tcameraOverlay" class="camera-overlay">
+      <div id="tcameraOverlay" class="camera-overlay gap">
         {{> loadingOverlay}}
 
           {{#let needImages = (mostRecentImageTriadForNeed this.images this.needName)}}

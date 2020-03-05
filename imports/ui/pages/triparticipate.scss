@@ -1,7 +1,5 @@
 #triparticipate {
-  // BEGIN groupCheers
-  //see participate.scss
-
+  //participate for 3-way pyramidal structure
   .topLTri {
     grid-column: 1 / span 2;
     grid-row: 1 / span 1;
@@ -17,12 +15,32 @@
     grid-row: 2 / span 1;
   }
 
+  //participate for 3, top/middle/botom
+  .topThird{
+    grid-row: 1 / span 1;
+    border: gray solid 1px;
+  }
+
+  .middleThird{
+    grid-row: 2 / span 1;
+    border: gray solid 1px;
+  }
+
+  .bottomThird{
+    grid-row: 3 / span 1;
+    border: gray solid 1px;
+  }
+
   #tcameraOverlay {
     display: grid;
-    grid-gap: 10px;
+
     margin: 0;
     padding: 0;
     height: 50vh;
+  }
+
+  .gap {
+      grid-gap: 10px;
   }
 
   .trisquare {
@@ -30,15 +48,6 @@
     box-sizing: border-box;
   }
 
-  /*
-  .trisquare::before {
-    content: '';
-    display: block;
-    /*since 100% containing div width is half the sidelength of a square,*/
-    /*200% of containing div width is the full sidelength of a square.*/
-/*    padding-top: 200%;
-  }
-*/
 
   .trisquare .content {
     position: absolute;
