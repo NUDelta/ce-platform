@@ -141,10 +141,6 @@ export const flattenAffordanceDict = function(nestedAff) {
   return flatDict;
 };
 
-export const getDetectorUniqueKey = (detector) => {
-  return detector.description;
-};
-
 /**
  * Attempts to match affordances with a detector
  * @param {Object} affordances  key value pairs of { userAffordances: values }

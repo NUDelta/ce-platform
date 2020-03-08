@@ -1,6 +1,12 @@
-import {getDetectorUniqueKey} from "../UserMonitor/detectors/methods";
+import {DETECTORS} from "./DETECTORS";
 
-import {DETECTORS} from "./DETECTORS"; 
+/**
+ *
+ * @param {*} detector [Object] detector object
+ */
+export const getDetectorUniqueKey = (detector) => {
+  return detector.description;
+};
 
 /**
  *
