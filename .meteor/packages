@@ -7,7 +7,6 @@
 meteor-base@1.4.0             # Packages every Meteor app needs to have
 mobile-experience@1.0.5       # Packages for a great mobile UX
 mongo@1.6.2                   # The database Meteor supports right now
-blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
 session@1.2.0                 # Client-side reactive dictionary for your app
 jquery@1.11.10                  # Helpful client-side library
 tracker@1.2.0                 # Meteor's client-side reactive programming library
@@ -58,3 +57,4 @@ useraccounts:bootstrap
 underscore
 fortawesome:fontawesome
 dburles:collection-helpers
+peerlibrary:blaze-components

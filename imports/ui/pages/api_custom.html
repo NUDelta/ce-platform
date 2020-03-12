@@ -1,5 +1,9 @@
 <template name="api_custom">
-    {{> Template.dynamic template=data.experience.participateTemplate data=data}}
+    {{> api_custom data}}
+</template>
+
+<template name="ApiCustom">
+  {{> Template.dynamic template=data.experience.participateTemplate data}}
 </template>
 
 <template name="uploadPhoto">
