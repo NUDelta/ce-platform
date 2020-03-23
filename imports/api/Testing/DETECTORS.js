@@ -33,6 +33,16 @@ export let DETECTORS = {
     variables: ['var daytime;'],
     rules: ['daytime;']
   },
+  anytime: {
+    _id: Random.id(),
+    description: 'all times for testing',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;'
+    ],
+    rules: [('daytime || nighttime || sunset')]
+  },
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
@@ -210,6 +220,23 @@ export let DETECTORS = {
       'var whiskeybars;'
     ],
     rules: ['((champagne_bars || cocktailbars) || ((barcrawl || pianobars) || ((tikibars || nightlife) || ((poolhalls || island_pub) || ((speakeasies || irish) || ((clubcrawl || pubs) || (gaybars || whiskeybars))))))) || ((beergardens || beertours) || ((sportsbars || bars) || ((brasseries || irish_pubs) || ((breweries || divebars) || ((poolhalls || beerbar) || ((pubs || beer_and_wine) || (distilleries || beergarden)))))));']
+  },
+  beverage: {
+    _id: Random.id(),
+    description: `beverage`,
+    variables: [
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+    ],
+    rules: ['(coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars);']
   },
   grocery: {
     _id: 'N5H9w632dbyhqHEsi',
