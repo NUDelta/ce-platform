@@ -315,9 +315,6 @@ if __name__ == "__main__":
     # setLocation(burgers, sys.argv[1])
     # allUsersGrocery()
     # allUsersAtBars()
-    #setLocation(bars, "TKS3kFCMZTZZa9S82") # mary
-    #setLocation(bars, "9NnJBZ5rxTQKp5L5B") # ryan
-    # setLocation(bars, "wJWwTgTm8Nr5QkAzM") # kapil
     #garrettAndMegBump()
     #time.sleep(2)
     #onlyGarretAtLake()
