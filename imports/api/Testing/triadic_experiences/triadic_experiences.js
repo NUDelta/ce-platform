@@ -353,10 +353,11 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  drinksTalk: createDrinksTalk(),
+  /*drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
   imitationGame: createImitationGame(),
   groupCheers: createGroupCheers(),
+  */
   monsterCreate: createMonster(),
   monsterStory: monsterStory()
 }
