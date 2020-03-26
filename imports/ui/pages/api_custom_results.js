@@ -160,10 +160,6 @@ Template.bumpedResults.helpers({
   }
 });
 
-Template.bumpedResults.events({
-
-});
-
 Template.groupBumpedResults.helpers({
   content() {
     const {submissions, images, users} = this;
@@ -245,6 +241,49 @@ Template.groupCheersResults.helpers({
   createReacts(submissions, users, idx){
     return createReactString(submissions, users, idx);
   }
+});
+
+Template.monsterCreateResults.helpers({
+  resultsGroupedByNeedAndTriad() {
+  let mySubs = this.submissions.filter(function(x){
+    return x.uid === Meteor.userId();
+  });
+
+  let users = this.users;
+  let subs = this.submissions;
+  let images = this.images;
+
+  let myNeedNames = mySubs.map(function(x){
+    return x.needName;
+  });
+
+  myNeedNames = [... new Set(myNeedNames)];
+
+  const needGroups = myNeedNames.map((needName) => {
+    let needImages = images.filter(function(img){
+      return img.needName == needName;
+    });
+
+    let names = needImages.map(function(img){
+      return getUserById(users, img.uid);
+    });
+
+    let needSubs = subs.filter(function(sub){
+      return sub.needName == needName;
+    });
+
+    return {needName: needName,
+      needSubs: needSubs,
+      imagesGroupedByTriad: needImages,
+      names: names};
+    });
+
+    return(needGroups);
+  },
+
+  elementAtIndex(arr, index){
+    return arr[index];
+  },
 });
 
 Template.groupCheersResults.events({

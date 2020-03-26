@@ -77,15 +77,27 @@ Template.bumped.helpers({
 });
 
 Template.monsterCreate.helpers({
-  numImagesAlreadySubmitted(images, needName){
+  mostRecentImageTriadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
     let needImages = images.filter(function(x) {
       return x.needName === needName;
     });
-
-    return needImages.length;
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
   },
-  equal(num1, num2){
-      return num1 === num2;
+  arrayLenEqual(array, len){
+    return array.length === len;
+  },
+  elementIndex(array, index){
+    return array[index];
   }
 });
 

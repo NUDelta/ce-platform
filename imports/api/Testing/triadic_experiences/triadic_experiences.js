@@ -282,7 +282,7 @@ export const createMonster = function(){
     name: 'Frankenstein\'s Monster',
     participateTemplate: 'monsterCreate',
     resultsTemplate: 'monsterCreateResults',
-    contributionTypes: [{
+    contributionTypes: addStaticAffordanceToNeeds('mary', [{
       needName: 'monsterCreate',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime),
@@ -299,11 +299,51 @@ export const createMonster = function(){
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-    }],
+    }]),
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Create a monster with your fellow mad scientists!',
     callbacks: [{
       trigger: `(cb.newSubmission('monsterCreate') && cb.needFinished('monsterCreate'))`,
+      function: monsterCallback.toString(),
+    }],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+};
+
+export const monsterStory = function(){
+  const monsterCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    notify(participants, sub.iid, 'The story has been updated! See what your monster has been up to.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  }
+
+  let experience = {
+    name: 'Escape from the Lab!',
+    participateTemplate: 'monsterStory',
+    resultsTemplate: 'monsterStoryResults',
+    contributionTypes: [{
+      needName: 'monsterStory',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        number: 1
+        },
+      toPass: {
+        exampleMonster: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fplastickaiju.tumblr.com%2F&psig=AOvVaw34PyvOOxW0AjKQqpOwqtaP&ust=1585241805290000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDX046MtugCFQAAAAAdAAAAABAE',
+      },
+      numberNeeded: 3,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    }],
+    description: 'Create a monster with your fellow mad scientists!',
+    notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
+    callbacks: [{
+      trigger: `(cb.newSubmission('monsterStory')`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,
@@ -317,5 +357,6 @@ export default TRIADIC_EXPERIENCES = {
   moodMeteorology: createMoodMeteorology(),
   imitationGame: createImitationGame(),
   groupCheers: createGroupCheers(),
-  monsterCreate: createMonster()
+  monsterCreate: createMonster(),
+  monsterStory: monsterStory()
 }

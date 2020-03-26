@@ -224,6 +224,39 @@
   </div>
 </template>
 
+<template name="monsterCreateResults">
+  <head>
+    <style>
+    .img {
+      padding: 0px;
+    }
+
+    .pending_img {
+      background-color: #c1c1c1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45vw;
+      min-width: 45vw;
+    }
+    </style>
+  </head>
+  {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
+  {{#each needGroup in needGroups}}
+    <div class="img_container">
+    {{#each needSub in needSubs}}
+    {{#if (elementAtIndex needImages @index)}}
+        <div class="img">{{elementAtIndex names @index}}
+          {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+        </div>
+    {{else}}
+        <div class="img">Waiting for this user!<div class="pending_img">?</div></div>
+    {{/if}}
+    {{/each}}
+    </div>
+  {{/each}}
+  {{/let}}
+</template>
 
 <template name="groupBumpedResults">
   <head>
