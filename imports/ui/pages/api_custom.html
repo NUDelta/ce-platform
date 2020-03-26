@@ -244,7 +244,6 @@
     </style>
   </head>
 
-  {{#if Template.subscriptionsReady}}
   {{#let needImages=(mostRecentImageTriadForNeed this.images this.needName) }}
   <div id="instruction" class="instruction">
     <h4>{{this.experience.name}}</h4>
@@ -275,6 +274,7 @@
       <img src="{{this.toPass.exampleFullMonster}}"/>
       {{/if}}
     </div>
+
   <button id="goToParticipate" class="btn btn-primary right-align">
     <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
   </button>
@@ -285,10 +285,10 @@
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
 
+      <div id="tcameraOverlay" class="camera-overlay">
+       {{> loadingOverlay}}
       {{#if (arrayLenEqual needImages 0) }}
         <div>Draw the top part of the monster!</div>
-        <div id="tcameraOverlay" class="camera-overlay">
-          {{> loadingOverlay}}
           <div class="topThird trisquare">
               {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
           </div>
@@ -302,12 +302,9 @@
               Waiting for submission!
             </div>
           </div>
-        </div>
 
         {{else if (arrayLenEqual numNeedImage 1)}}
         <div>Draw the middle part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
-        <div id="tcameraOverlay" class="camera-overlay">
-          {{> loadingOverlay}}
           <div class="topThird trisquare">
               <div class="content">
               <div class="mask">
@@ -324,12 +321,9 @@
               Waiting for submission!
             </div>
           </div>
-        </div>
 
         {{else}}
         <div>Draw the bottom part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
-        <div id="tcameraOverlay" class="camera-overlay">
-          {{> loadingOverlay}}
           <div class="topThird trisquare">
             <div class="innercontent">
               A mystery from your past partner!
@@ -347,8 +341,8 @@
           <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
             {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
           </div>
-        </div>
-    {{/if}}
+          {{/if}}
+      </div>
 
     <div class="camera-controls">
       <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
@@ -370,10 +364,9 @@
     </button>
   </form>
   {{/let}}
-  {{/if}}
 </template>
 <!-- if the submission is the third submission, then save the image somewhere! then in the callback
-now that the need is complete, somehow pass in the monster to the image --> 
+now that the need is complete, somehow pass in the monster to the image -->
 
 
 <template name="imitationGame">

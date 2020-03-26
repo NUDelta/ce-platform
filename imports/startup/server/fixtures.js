@@ -204,7 +204,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid2, uid3]}
   }, {
-    $set: { 'profile.staticAffordances': { "triadOne": true } },
+    $set: { 'profile.staticAffordances': { "mary": true } },
   }, {
     multi: true
   });
@@ -212,7 +212,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid4, uid5, uid6]}
   }, {
-    $set: { 'profile.staticAffordances': { "triadTwo": true } }
+    $set: { 'profile.staticAffordances': { "mary": true } }
   }, {
     multi: true
   });
