@@ -289,21 +289,22 @@
        {{> loadingOverlay}}
       {{#if (arrayLenEqual needImages 0) }}
         <div>Draw the top part of the monster!</div>
-          <div class="topThird trisquare">
-              {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
-          </div>
-          <div class="middleThird trisquare" style="background-color: rgba(225,225,225)">
-            <div class="innercontent">
-                Waiting for submission!
-            </div>
-          </div>
-          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
-            <div class="innercontent">
+        <div class="topThird trisquare">
+          {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
+        </div>
+        <div class="middleThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="innercontent">
               Waiting for submission!
-            </div>
           </div>
+        </div>
+        <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="innercontent">
+            Waiting for submission!
+          </div>
+        </div>
+      {{/if}}
 
-        {{else if (arrayLenEqual numNeedImage 1)}}
+        {{if (arrayLenEqual needImages 1)}}
         <div>Draw the middle part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
           <div class="topThird trisquare">
               <div class="content">
@@ -321,8 +322,9 @@
               Waiting for submission!
             </div>
           </div>
+        {{/if}}
 
-        {{else}}
+        {{if (arrayLenEqual needImages 2)}}
         <div>Draw the bottom part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
           <div class="topThird trisquare">
             <div class="innercontent">
@@ -334,7 +336,6 @@
             <div class="mask">
               <div class="innercontent">A mystery from your past partner!</div>
             </div>
-            <!--<img style="width: 100%; height: 100%;" src="{{this.toPass.exampleFullMonster}}"/>-->
             {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 1) }}
             </div>
           </div>

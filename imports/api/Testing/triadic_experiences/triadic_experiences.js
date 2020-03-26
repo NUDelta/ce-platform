@@ -282,7 +282,7 @@ export const createMonster = function(){
     name: 'Frankenstein\'s Monster',
     participateTemplate: 'monsterCreate',
     resultsTemplate: 'monsterCreateResults',
-    contributionTypes: addStaticAffordanceToNeeds('mary', [{
+    contributionTypes: [{
       needName: 'monsterCreate',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime),
@@ -299,7 +299,7 @@ export const createMonster = function(){
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-    }]),
+    }],
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Create a monster with your fellow mad scientists!',
     callbacks: [{
@@ -355,9 +355,8 @@ export const monsterStory = function(){
 export default TRIADIC_EXPERIENCES = {
   /*drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
-  imitationGame: createImitationGame(),
+  imitationGame: createImitationGame(),*/
   groupCheers: createGroupCheers(),
-  */
   monsterCreate: createMonster(),
   monsterStory: monsterStory()
 }

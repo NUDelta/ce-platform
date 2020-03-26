@@ -98,6 +98,14 @@ Template.monsterCreate.helpers({
   },
   elementIndex(array, index){
     return array[index];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
   }
 });
 
