@@ -496,6 +496,7 @@ Template.halfhalfParticipate.events({
  * @returns rect {DOMRect}
  */
 
+//CLEAN THIS UP
 const getPreviewRect = function() {
   let rect;
   // first one to take picture, so the left half of image will be cropped and used
@@ -506,6 +507,18 @@ const getPreviewRect = function() {
   else if (document.getElementById('rightHalfPreview') !== null) {
     let halfOverlay = document.getElementById('rightHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('topThirdPreview') !== null) {
+    let triOverlay = document.getElementById('topThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('middleThirdPreview') !== null) {
+    let triOverlay = document.getElementById('middleThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('bottomThirdPreview') !== null) {
+    let triOverlay = document.getElementById('bottomThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
   }
   else if (document.getElementById('topLTriPreview') !== null) {
     let triOverlay = document.getElementById('topLTriPreview');
