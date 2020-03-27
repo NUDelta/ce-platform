@@ -8,8 +8,6 @@ import {DETECTORS} from "../DETECTORS";
   multiple sets of experiences for multiple triads of users: for future studies
 **/
 
-
-
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -274,7 +272,19 @@ export const createMonster = function(){
       needName: sub.needName
     }).fetch();
 
-    let participants = submissions.map((submission) => { return submission.uid; });
+    let uids = submissions.map((submission) => { return submission.uid; });
+
+    uids.forEach(uid => {
+      Meteor.users.update({
+        _id: uid
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInMonsterCreate']: true
+        }
+      });
+    });
+
+    //and somehow pass in full monster to the monster story experience
     notify(participants, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -319,27 +329,27 @@ export const monsterStory = function(){
       needName: sub.needName
     }).fetch();
 
-    let participants = submissions.map((submission) => { return submission.uid; });
-    notify(participants, sub.iid, 'The story has been updated! See what your monster has been up to.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    let uids = submissions.map((submission) => { return submission.uid; });
+    notify(uids, sub.iid, 'The story has been updated! See what your monster has been up to.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
     name: 'Escape from the Lab!',
     participateTemplate: 'monsterStory',
     resultsTemplate: 'monsterStoryResults',
-    contributionTypes: [{
+    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [{
       needName: 'monsterStory',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime),
         number: 1
         },
       toPass: {
-        exampleMonster: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fplastickaiju.tumblr.com%2F&psig=AOvVaw34PyvOOxW0AjKQqpOwqtaP&ust=1585241805290000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDX046MtugCFQAAAAAdAAAAABAE',
+        exampleMonster: null,
       },
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-    }],
+    }]),
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{
