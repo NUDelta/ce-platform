@@ -33,9 +33,15 @@
 
   #tcameraOverlay {
     display: grid;
-
     margin: 0;
     padding: 0;
+  }
+
+  .long {
+    height: 60vh;
+  }
+
+  .short {
     height: 50vh;
   }
 

@@ -244,6 +244,7 @@
     </style>
   </head>
 
+  {{#if Template.subscriptionsReady}}
   {{#let needImages=(mostRecentImageTriadForNeed this.images this.needName) }}
   <div id="instruction" class="instruction">
     <h4>{{this.experience.name}}</h4>
@@ -280,15 +281,23 @@
   </button>
   </div>
 
-  <form id="triparticipate" style="display: none">
+  <form id="triparticipate" class="long" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
+    <div>
+      {{#if (arrayLenEqual needImages 0) }}
+      Draw the top part of the monster!
+      {{else if (arrayLenEqual needImages 1) }}
+      Draw the middle part of the monster! Try to align it with the previous scientist's drawing.
+      {{else if (arrayLenEqual needImages 2)}}
+      Draw the bottom part of the monster! Try to align it with the previous scientist's drawing.
+      {{/if}}
+    </div>
 
-      <div id="tcameraOverlay" class="camera-overlay">
+      <div id="tcameraOverlay" class="camera-overlay long">
        {{> loadingOverlay}}
       {{#if (arrayLenEqual needImages 0) }}
-        <div>Draw the top part of the monster!</div>
         <div class="topThird trisquare">
           {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
         </div>
@@ -305,7 +314,6 @@
       {{/if}}
 
         {{#if (arrayLenEqual needImages 1)}}
-        <div>Draw the middle part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
           <div class="topThird trisquare">
               <div class="content">
               <div class="mask">
@@ -325,7 +333,6 @@
         {{/if}}
 
         {{#if (arrayLenEqual needImages 2)}}
-        <div>Draw the bottom part of the monster! Try to align it with the bottom of the previous scientist's drawing.</div>
           <div class="topThird trisquare">
             <div class="innercontent">
               A mystery from your past partner!
@@ -365,6 +372,7 @@
     </button>
   </form>
   {{/let}}
+  {{/if}}
 </template>
 <!-- if the submission is the third submission, then save the image somewhere! then in the callback
 now that the need is complete, somehow pass in the monster to the image -->
@@ -504,7 +512,7 @@ now that the need is complete, somehow pass in the monster to the image -->
         <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
       </button>
 
-      <div id="tcameraOverlay" class="camera-overlay gap">
+      <div id="tcameraOverlay" class="camera-overlay gap short">
         {{> loadingOverlay}}
 
           {{#let needImages = (mostRecentImageTriadForNeed this.images this.needName)}}
