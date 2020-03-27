@@ -139,8 +139,6 @@ Template.bumpedResults.helpers({
       return {image: x.content.proof, friendName: myInfoDic.content.nameOfFriend, myImage: myInfoDic.content.proof};
     });
 
-    console.log("contents", contents);
-
     let images = this.images;
     contents.reverse();
 
@@ -155,7 +153,6 @@ Template.bumpedResults.helpers({
       return {friendName: x.friendName,image: img, myImage: myImg};
     });
 
-    console.log("contents2", contents);
     return contents;
   }
 });
@@ -244,46 +241,23 @@ Template.groupCheersResults.helpers({
 });
 
 Template.monsterCreateResults.helpers({
-  resultsGroupedByNeedAndTriad() {
-  let mySubs = this.submissions.filter(function(x){
-    return x.uid === Meteor.userId();
-  });
+  needsGroup() {
+    let mySub = this.submissions.find(s => s.uid === Meteor.userId());
+    let myNeedName = mySub.needName;
+    let needImages = this.images.filter(x => x.needName === myNeedName);
+    let needSubs = this.submissions.filter(x => x.needName === myNeedName);
+    let names = needImages.map(img => getUserById(this.users, img.uid));
+    needImages = needImages.sort(function(x, y) { return x.uploadedAt - y.uploadedAt; });
 
-  let users = this.users;
-  let subs = this.submissions;
-  let images = this.images;
+    return { needImages: needImages, names: names, needSubs: needSubs };
 
-  let myNeedNames = mySubs.map(function(x){
-    return x.needName;
-  });
-
-  myNeedNames = [... new Set(myNeedNames)];
-
-  const needGroups = myNeedNames.map((needName) => {
-    let needImages = images.filter(function(img){
-      return img.needName == needName;
-    });
-
-    let names = needImages.map(function(img){
-      return getUserById(users, img.uid);
-    });
-
-    let needSubs = subs.filter(function(sub){
-      return sub.needName == needName;
-    });
-
-    return {needName: needName,
-      needSubs: needSubs,
-      imagesGroupedByTriad: needImages,
-      names: names};
-    });
-
-    return(needGroups);
   },
-
   elementAtIndex(arr, index){
     return arr[index];
   },
+  arrayLenEqual(arr, len){
+    return arr.length === len;
+  }
 });
 
 Template.groupCheersResults.events({
