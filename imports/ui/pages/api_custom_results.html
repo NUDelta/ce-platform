@@ -227,7 +227,6 @@
 <template name="monsterCreateResults">
   <head>
     <style>
-
     .pending_img {
       background-color: #c1c1c1;
       display: flex;
@@ -238,26 +237,35 @@
     }
     </style>
   </head>
-  {{#let needsGroup = (needsGroup)}}
-    {{#let needImages = needGroup.imagesGroupedByTriad}}
-    {{#let needSubs = needGroup.needSubs}}
-    {{#let names = needGroup.names}}
-    <div class="img_container">
-      {{#each needSub in needSubs}}
-        {{#if (elementAtIndex needImages @index)}}
-          <div class="img">
-            <div><b>{{elementAtIndex names @index}}</b> drew:</div>
-            {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+
+  <div>
+    The monster is complete! Here are the parts each scientist contributed.
+  </div>
+
+  {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
+  {{#each needGroup in needGroups}}
+      {{#let needImages = needGroup.imagesGroupedByTriad}}
+      {{#let needSubs = needGroup.needSubs}}
+      {{#let names = needGroup.names}}
+          <div>
+          {{#each needSub in needSubs}}
+          {{#if (elementAtIndex needImages @index)}}
+              <div>{{elementAtIndex names @index}}
+                {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+              </div>
+          {{else}}
+              <div>Waiting for this user!<div class="pending_img">?</div></div>
+          {{/if}}
+          {{/each}}
           </div>
-        {{else}}
-        <div class="img">Waiting for this user!<div class="pending_img">?</div></div>
-        {{/if}}
-    {{/each}}
-    </div>
-    {{/let}}
-    {{/let}}
-    {{/let}}
-  {{/let}}
+          {{/let}}
+          {{/let}}
+          {{/let}}
+      {{/each}}
+      {{/let}}
+  <div>
+    Here is the full monster!
+  </div>
 </template>
 
 <template name="groupBumpedResults">
