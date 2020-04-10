@@ -377,6 +377,64 @@
 <!-- if the submission is the third submission, then save the image somewhere! then in the callback
 now that the need is complete, somehow pass in the monster to the image -->
 
+<!-- somehow see the story before contributing to the story?? -->
+<template name="monsterStory">
+  <head>
+    <style>
+      #bg_img {
+        z-index: 1;
+        height: 60vh;
+        background-color: rgb(225,225,225);
+      }
+
+      img {
+        height: 60vh;
+      }
+
+      #monster {
+        position: absolute;
+        z-index: 2;
+        height: 20vh;
+      }
+
+      #monster_story_upload {
+        display: none;
+      }
+
+      .camera-upload {
+        padding-bottom: 1%;
+      }
+    </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+  <div id="bg_img_upload">
+    <div>Your group's monster has escaped the lab and is wreaking havoc! What is it doing? Take a picture of your surroundings, add the monster to it, and describe what's happening!</div>
+    <form class="col col-xs-12" id="preparticipate">
+    <div class="camera-upload">
+        {{> Template.dynamic template="camera" data="proof"}}
+    </div>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Use Photo </button>
+    </form>
+  </div>
+
+  <div id="monster_story_upload">
+    <button id="back_to_bg_img_upload">Resubmit Background Photo</button>
+
+    <div>You can drag the monster around in the image. Write a caption about what it is doing!</div>
+
+    <form id="monsterParticipate">
+    <div>
+      <img id="monster" src="https://cdn2.bigcommerce.com/server4600/92e8e/products/227/images/652/SUP78058__59485.1348264300.1280.1280.jpg?c=2"/>
+      <div id="bg_img">
+        {{> Template.dynamic template="displayImage" data=(latestNeedImage this.images this.needName)}}
+      </div>
+    </div>
+    <div>{{> Template.dynamic template="text" data="sentence"}}</div>
+    <button id="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit Story </button>
+    </form>
+  </div>
+  {{/if}}
+</template>
 
 <template name="imitationGame">
   <head>

@@ -337,7 +337,7 @@ export const monsterStory = function(){
     name: 'Escape from the Lab!',
     participateTemplate: 'monsterStory',
     resultsTemplate: 'monsterStoryResults',
-    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [{
+    contributionTypes: /*addStaticAffordanceToNeeds('participatedInMonsterCreate', [{
       needName: 'monsterStory',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime),
@@ -349,7 +349,20 @@ export const monsterStory = function(){
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-    }]),
+    }])*/
+    [{
+      needName: 'monsterStory',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        number: 1
+        },
+      toPass: {
+        exampleMonster: null,
+      },
+      numberNeeded: 3,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    }],
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{
@@ -363,9 +376,9 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  /*drinksTalk: createDrinksTalk(),
+  //drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
-  imitationGame: createImitationGame(),*/
+  //imitationGame: createImitationGame(),
   groupCheers: createGroupCheers(),
   monsterCreate: createMonster(),
   monsterStory: monsterStory()

@@ -242,6 +242,10 @@ Template.groupCheersResults.helpers({
 
 Template.monsterCreateResults.helpers({
   resultsGroupedByNeedAndTriad() {
+    console.log(this);
+    console.log(this.submissions);
+    console.log(this.images);
+
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -282,6 +286,13 @@ Template.monsterCreateResults.helpers({
   },
   elementAtIndex(arr, index){
     return arr[index];
+  }
+});
+
+Template.monsterStoryResults.helpers({
+  content(){
+    console.log(this);
+    console.log(this.submissions);
   }
 });
 
