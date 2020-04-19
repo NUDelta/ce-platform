@@ -296,22 +296,45 @@ Template.monsterStory.helpers({
     });
 
     return needImages[needImages.length - 1];
-  }
+  },
+  latestMonsterImage(images, needName){
+    console.log(images);
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName == needName;
+    });
+
+    return needImages[needImages.length - 1];
+  },
+  latestBGImage(images, needName){
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName == needName;
+    });
+
+    return needImages[needImages.length - 1];
+  },
 });
 
 Template.monsterStory.events({
-  'mousedown/touchdown #monster'(event, template){
+  'mousedown/touchdown img'(event, template){
     event.preventDefault();
-    if (!template.monsterMoving.get()){
-      template.monsterMoving.set(true);
+
+    if (event.target.parentElement.id == "monster") {
+      if (!template.monsterMoving.get()){
+        template.monsterMoving.set(true);
+      }
     }
   },
   'mousemove/touchmove #monster_story_upload'(event, template){
     if (template.monsterMoving.get()){
       event.preventDefault();
-
-      let monster = template.$("#monster")[0];
-      let bg_img = document.getElementById('bg_img').children.item(0);
+      let monster = document.getElementById('monster').children.item(0);
+      let bg_img = document.getElementById('monster_bg_img').children.item(0);
       let x = event.clientX;
       let y = event.clientY;
       let top = bg_img.offsetTop;
@@ -415,7 +438,7 @@ Template.monsterStory.events({
     });
 
     bg_img = document.getElementById('bg_img').children.item(0);
-    monster = document.getElementById('monster');
+    monster = document.getElementById('monster').children.item(0);
     canvas = document.createElement('canvas');
     canvas.width = bg_img.width;
     canvas.height = bg_img.height;
@@ -429,6 +452,7 @@ Template.monsterStory.events({
       monster.offsetTop - bg_img.offsetTop );
 
     let block = canvas.toDataURL();
+    block = block.split(";");
     let contentType = block[0].split(":")[1];
     let realData = block[1].split(",")[1];
     let picture = b64toBlob(realData, contentType);
