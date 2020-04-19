@@ -250,22 +250,35 @@
           <div>
           {{#each needSub in needSubs}}
           {{#if (elementAtIndex needImages @index)}}
-              <div>{{elementAtIndex names @index}}
-                {{> Template.dynamic template="displayImage" data=(elementAtIndex needImages @index)}}
+              <div>
+                <div><b>{{elementAtIndex names @index}}</b></div>
+                {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
               </div>
           {{else}}
               <div>Waiting for this user!<div class="pending_img">?</div></div>
           {{/if}}
           {{/each}}
           </div>
-          {{/let}}
-          {{/let}}
-          {{/let}}
-      {{/each}}
+
+          {{#if (lengthEqual needImages 3)}}
+          <div>
+            Here is the full monster!
+            <div>
+            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
+            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
+            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
+            </div>
+          </div>
+          {{else}}
+          <div>
+            You'll get a notification when the monster is complete. Check back later!
+          </div>
+          {{/if}}
       {{/let}}
-  <div>
-    Here is the full monster!
-  </div>
+      {{/let}}
+      {{/let}}
+  {{/each}}
+  {{/let}}
 </template>
 
 <template name="monsterStoryResults">

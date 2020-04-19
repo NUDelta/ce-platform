@@ -242,10 +242,6 @@ Template.groupCheersResults.helpers({
 
 Template.monsterCreateResults.helpers({
   resultsGroupedByNeedAndTriad() {
-    console.log(this);
-    console.log(this.submissions);
-    console.log(this.images);
-
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -260,7 +256,7 @@ Template.monsterCreateResults.helpers({
     // only show examples where the need names are unique
     myNeedNames = [... new Set(myNeedNames)];
 
-    const needGroups = myNeedNames.map((needName) => {
+    let needGroups = myNeedNames.map((needName) => {
       // images already filtered by activeIncident. Now get them for each need
       let needImages = images.filter(function(img){
         return img.needName == needName;
@@ -278,7 +274,6 @@ Template.monsterCreateResults.helpers({
       return {needName: needName,
         needSubs: needSubs,
         imagesGroupedByTriad: needImages,
-        captions: captions,
         names: names};
     });
 
@@ -286,6 +281,9 @@ Template.monsterCreateResults.helpers({
   },
   elementAtIndex(arr, index){
     return arr[index];
+  },
+  lengthEqual(arr, len){
+    return arr.length == len;
   }
 });
 
