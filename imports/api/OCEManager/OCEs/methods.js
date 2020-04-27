@@ -262,6 +262,16 @@ Meteor.methods({
     }).validate({iid, eid, oldNeedName, newNeedName});
 
     updateSubmissionNeedName(iid, eid, oldNeedName, newNeedName);
+  },
+  changeExperienceToPass({eid, needName, toPass, field}) {
+    new SimpleSchema({
+      eid: {type: String},
+      needName: {type: String},
+      toPass: {type: String},
+      field: {type: String},
+    }).validate({eid, needName, toPass, field});
+
+    changeExperienceToPass(eid, needName, toPass, field);
   }
 });
 
@@ -290,6 +300,37 @@ export const addContribution = (iid, contribution) =>{
   },{
     $push: {needUserMaps: {needName: contribution.needName, users: []}}
   });
+};
+
+
+export const changeExperienceToPass = (eid, needName, toPass, field) => {
+    //first must find correct contributionType via needName & then update
+    //only that contributionType with new toPass
+    let experience = Experiences.findOne({
+      _id: eid,
+    });
+
+    let contributionTypeIndex = 0;
+
+    if (experience){
+      for (let i = 0; i < experience.contributionTypes.length; i++){
+        if (experience.contributionTypes[i].needName === needName){
+            contributionTypeIndex = i;
+          }
+        }
+    };
+
+    let search = `contributionTypes.${contributionTypeIndex}.toPass.${field}`;
+
+    Experiences.update(
+      {
+        _id: eid
+      }, {
+       $set: {
+          [search] : toPass
+       }
+      }
+    );
 };
 
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {

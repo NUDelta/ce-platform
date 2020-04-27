@@ -256,7 +256,7 @@ Template.monsterCreate.events({
     };
 
     Meteor.call('createInitialSubmission', submissionObject);
-    /*
+
     let imgs = this.images.sort(function(x, y) {
       return x.uploadedAt - y.uploadedAt;
     });
@@ -278,7 +278,6 @@ Template.monsterCreate.events({
       submissionObject.content["fullMonster"] = fullMonster;
       Meteor.call('updateSubmission', submissionObject);
     }
-  */
   }
 });
 

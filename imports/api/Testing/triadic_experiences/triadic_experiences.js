@@ -1,5 +1,5 @@
 import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
-
+import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
 import {DETECTORS} from "../DETECTORS";
 
 /**
@@ -20,8 +20,10 @@ export const createDrinksTalk = function() {
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
-  /*
+
   const drinksTalkNewSubCallback = function (sub) {
+
+    /*
       Meteor.users.update({
         _id: sub.uid
       }, {
@@ -29,7 +31,10 @@ export const createDrinksTalk = function() {
           ['profile.staticAffordances.participatedInDrinksTalk']: true
         }
       });
-  } */
+      */
+      //try to pass image into monsterStory
+
+  }
 
   let experience = {
     name: 'Group Bumped - Drinks Talk',
@@ -70,10 +75,10 @@ export const createDrinksTalk = function() {
     ],
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
-    callbacks: [/*{
+    callbacks: [{
         trigger: `cb.newSubmission()`,
         function: drinksTalkNewSubCallback.toString(),
-      },*/ {
+      }, {
         trigger: `(cb.newSubmission('drinksTalk') && cb.needFinished('drinksTalk'))`,
         function: drinksTalkCompleteCallback.toString(),
       }
@@ -267,6 +272,8 @@ export const createGroupCheers = function() {
 
 export const createMonster = function(){
   const monsterCallback = function (sub) {
+
+    //allow participation in MonsterCreate
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -284,8 +291,17 @@ export const createMonster = function(){
       });
     });
 
-    //and somehow pass in full monster to the monster story experience
-    notify(participants, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    //notify all participants that experience is complete
+    notify(uids, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+
+    //update monster experience so that toPass now contains monster
+    let experience = Experiences.findOne({
+      participateTemplate: "monsterStory"
+    });
+
+    let needName = sub.needName;
+
+    changeExperienceToPass(experience._id, needName, "test", "exampleMonster")
   }
 
   let experience = {
@@ -376,10 +392,10 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  //drinksTalk: createDrinksTalk(),
-  moodMeteorology: createMoodMeteorology(),
+  drinksTalk: createDrinksTalk(),
+  //moodMeteorology: createMoodMeteorology(),
   //imitationGame: createImitationGame(),
-  groupCheers: createGroupCheers(),
+  //groupCheers: createGroupCheers(),
   monsterCreate: createMonster(),
   monsterStory: monsterStory()
 }

@@ -112,7 +112,7 @@ $ mongo
 $ use meteor
 $ db.dropDatabase()
 ```
-3. Restore the data locally `mongorestore -h 127.0.0.1 $OUTPUT_DIRECTORY/$REMOTE_DB -d meteor`
+3. Restore the data locally `mongorestore -h 127.0.0.1 -d meteor $OUTPUT_DIRECTORY/$REMOTE_DB `
 
 ### Javascript
 Refer to the [Airbnb Javascript style guide](https://github.com/airbnb/javascript). We're fully into ES6, so make sure you're familiar with using `let` over `var`, `() => {}` function shorthand, and so on.
