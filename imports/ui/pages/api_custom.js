@@ -158,7 +158,7 @@ Template.monsterCreate.events({
 },
 'click #goToParticipate'(event, template) {
   document.getElementById('instruction').style.display = "none";
-  document.getElementById('triparticipate').style.display = "block";
+  document.getElementById('monsterCreateSubmit').style.display = "block";
 
   if (template.cameraStarted.get()) {
     if (!template.imageSubmitReady.get()) {
@@ -180,10 +180,10 @@ Template.monsterCreate.events({
 },
 'click #goToInstruction'() {
   document.getElementById('instruction').style.display = "block";
-  document.getElementById('triparticipate').style.display = "none";
+  document.getElementById('monsterCreateSubmit').style.display = "none";
   CameraPreview.hide();
 },
-'click #monsterCreateSubmit'(event, instance){
+'submit #monsterCreateSubmit'(event, instance){
     event.preventDefault();
 
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
@@ -255,18 +255,16 @@ Template.monsterCreate.events({
       lng: location.lng
     };
 
-    Meteor.call('createInitialSubmission', submissionObject);
-
     let imgs = this.images.sort(function(x, y) {
       return x.uploadedAt - y.uploadedAt;
     });
     let needImages = imgs.filter(function(x) {
       return x.needName === needName;
     });
-    let imagesGroupedByTriad = chunkArray(needImages, 3)
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
     needImages = imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
 
-    if (needImages.length === 3){
+    if (needImages.length === 2){
       let fullMonster = document.createElement('canvas');
       let overlay = document.getElementById('camera-overlay');
       fullMonster.width = overlay.scrollWidth;
@@ -276,8 +274,9 @@ Template.monsterCreate.events({
       ctx.drawImage(needImages[1], 0, needImages[0].height);
       ctx.drawImage(needImages[2], 0, needImages[0].height + needImages[1].height);
       submissionObject.content["fullMonster"] = fullMonster;
-      Meteor.call('updateSubmission', submissionObject);
     }
+
+    Meteor.call('createInitialSubmission', submissionObject);
   }
 });
 
@@ -1148,138 +1147,5 @@ Template.api_custom.events({
 
     Meteor.call('createInitialSubmission', submissionObject);
 
-  },
-  'submit #triparticipate'(event, instance) {
-    event.preventDefault();
-
-    //this makes the loading circle show up
-    console.log(event.target.getElementsByClassName('overlay'));
-
-    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
-
-
-    const experience = this.experience;
-    // give null values for use when testing submitted photos on the web, without location data
-    const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = Router.current().params.iid;
-    const needName = Router.current().params.needName;
-    const uid = Meteor.userId();
-    const timestamp = Date.now()
-    const submissions = {};
-    const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
-
-
-    const dropDowns = event.target.getElementsByClassName('dropdown');
-    _.forEach(dropDowns, (dropDown) => {
-      const index = dropDown.selectedIndex;
-      submissions[dropDown.id] = dropDown[index].value
-    });
-
-    const textBoxes = event.target.getElementsByClassName('textinput');
-    _.forEach(textBoxes, (textBox) => {
-      submissions[textBox.id] = textBox.value;
-    });
-
-    const images = event.target.getElementsByClassName('fileinput');
-    //no ImageUpload being uploaded so we can just go right to the results page
-    if (images.length === 0) {
-      Router.go(resultsUrl);
-    }
-
-    //otherwise, we do have ImageUpload to upload so need to hang around for that
-    _.forEach(images, (image, index) => {
-      let picture;
-      if (event.target.photo) { // form has input[name=photo]
-        // imageFile
-        picture = event.target.photo.files[index]
-      } else {
-        let ImageURL = $('.fileinput-preview').attr('src');
-        // Split the base64 string in data and contentType
-        let block = ImageURL.split(";");
-        // Get the content type
-        let contentType = block[0].split(":")[1];
-        // get the real base64 content of the file
-        let realData = block[1].split(",")[1];
-
-        picture = b64toBlob(realData, contentType);
-      }
-
-
-      // save image and get id of new document
-      const imageFile = Images.insert(picture, (err, imageFile) => {
-        //this is a callback for after the image is inserted
-        if (err) {
-          alert(err);
-        } else {
-          //success branch of callback
-          //add more info about the photo
-          Images.update({ _id: imageFile._id }, {
-            $set: {
-              iid: iid,
-              uid: uid,
-              lat: location.lat,
-              lng: location.lng,
-              needName: needName,
-            }
-          }, (err, docs) => {
-            if (err) {
-              console.log('upload error,', err);
-            } else {
-            }
-          });
-          // TODO: setTimeout for automatically moving on if upload takes too long
-
-          //watch to see when the image db has been updated, then go to results
-          const cursor = Images.find(imageFile._id).observe({
-            changed(newImage) {
-              if (newImage.isUploaded()) {
-                cursor.stop();
-                Router.go(resultsUrl);
-              }
-            }
-          });
-        }
-      });
-
-      // add the submitted image to the submissions content dictionary
-      submissions[image.id] = imageFile._id;
-    });
-
-    const submissionObject = {
-      uid: uid,
-      eid: experience._id,
-      iid: iid,
-      needName: needName,
-      content: submissions,
-      timestamp: timestamp,
-      lat: location.lat,
-      lng: location.lng
-    };
-
-    Meteor.call('createInitialSubmission', submissionObject);
-
-  },
-  'click #participate-btn'(event, instance) {
-    event.preventDefault();
-    //makes it disappear so you don't see it while image is submitting
-    document.getElementById('participate-btn').style.display = 'none';
-  },
-  'click .fileinput, touchstart .fileinput-new'(event, target) {
-    photoInput(event);
-  },
-  'click .glyphicon-remove'(event, target) {
-    // NOTE: 5/22/16: simpler methods don't seem to work here
-    // e.g. $fileInput.val('');
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    const $fileInput = $('input[name=photo]');
-    $fileInput.replaceWith($fileInput.val('').clone(true));
-
-    $('.fileinput-preview').attr('src', '#');
-    $('.fileinput-exists').hide();
-    $('.fileinput-new').show();
-  },
-  'change input[name=photo]'(event, target) {
-    photoUpload(event);
-  },
+  }
 });

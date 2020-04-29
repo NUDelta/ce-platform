@@ -122,7 +122,7 @@
         <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
       </button>
     </div>
-    <button type="button" id="monsterCreateSubmit" class="btn btn-default btn-participate btn-primary btn-block"
+    <button type="button" class="btn btn-default btn-participate btn-primary btn-block"
             style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
       Submit
     </button>
@@ -281,7 +281,7 @@
   </button>
   </div>
 
-  <form id="triparticipate" class="long" style="display: none">
+  <form id="monsterCreateSubmit" class="triparticipate long" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
@@ -333,7 +333,7 @@
         {{/if}}
 
         {{#if (arrayLenEqual needImages 2)}}
-          <div class="topThird trisquare">
+          <div class="topThird trisquare" style="background-color: rgba(225,225,225)">
             <div class="innercontent">
               A mystery from your past partner!
             </div>
@@ -346,7 +346,7 @@
             {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 1) }}
             </div>
           </div>
-          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="bottomThird trisquare">
             {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
           </div>
           {{/if}}
