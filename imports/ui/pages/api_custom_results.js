@@ -768,3 +768,35 @@ Template.sunset.onDestroyed(function() {
     timeout = null;
   });
 });
+
+Template.ColorsOfSpringResults_admin.onRendered(function() {
+  // draw canvas background
+  var canvas = document.getElementById("canvas"),
+  ctx = canvas.getContext("2d");
+
+  canvas.width = 300;
+  canvas.height = 283;
+
+  var background = new Image();
+  background.src = "http://www.bcs.hants.sch.uk/wp-content/uploads/2018/04/plant-and-soil.png"
+
+  background.onload = function(){
+    ctx.drawImage(background,0,0);
+  }
+
+  userFlower = new Image();
+  userFlower.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Crateva_religiosa.jpg/440px-Crateva_religiosa.jpg";
+
+  userFlower.onload = function() {
+    ctx.drawImage(userFlower,0,0)
+  }
+
+
+});
+Template.ColorsOfSpringResults_admin.helpers({
+
+});
+
+Template.ColorsOfSpringResults_admin.events({
+
+});

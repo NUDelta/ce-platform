@@ -34,10 +34,11 @@ Template.resultsBackdoor.helpers({
     return pairsObj[1]
   },
   apiCustomResultsAdminLinks() {
-    let completedSubmissions = this.submissions.filter((sub) => {
-      return sub.uid != null;
-    });
-    let links = completedSubmissions.map((sub) => {
+    // let completedSubmissions = this.submissions.filter((sub) => {
+      // return sub.uid != null;
+    // });
+    links = this.submissions.map((sub) => {
+    // let links = completedSubmissions.map((sub) => {
       return `/apicustomresultsadmin/${sub.iid}/${sub.eid}/`
     });
 

@@ -451,6 +451,43 @@ Template.groupCheers.events({
     CameraPreview.hide();
   },
 });
+Template.ColorsOfSpringParticipate.events({
+  'click #stitch'(event) {
+
+    const images = event.target.parentElement.getElementsByClassName('fileinput');
+    //no ImageUpload being uploaded so we can just go right to the results page
+    if (images.length === 0) {
+      Router.go(resultsUrl);
+    }
+
+    //otherwise, we do have ImageUpload to upload so need to hang around for that
+    _.forEach(images, (image, index) => {
+      let picture;
+      if (event.target.photo) { // form has input[name=photo]
+        // imageFile
+        picture = event.target.photo.files[index]
+      } else {
+        let ImageURL = $('.fileinput-preview').attr('src');
+        // Split the base64 string in data and contentType
+        let block = ImageURL.split(";");
+        // Get the content type
+        let contentType = block[0].split(":")[1];
+        // get the real base64 content of the file
+        let realData = block[1].split(",")[1];
+
+        console.log(`a single image is of size: ${realData.length}`);
+
+        let b64imagesArray = [realData, realData];
+
+        stitchImageSources(b64imagesArray, true, function(finalImg) {
+          console.log(`a stitched image is of size: ${finalImg.length}`);
+          document.getElementById("stitchedImg").src = finalImg;
+        });
+        // picture = b64toBlob(realData, contentType);
+      }
+    });
+  }
+});
 
 /**
  * Returns an array with arrays of the given size.

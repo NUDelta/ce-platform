@@ -1022,187 +1022,195 @@
 <!--</div>-->
 <!--</template>-->
 
-<!--&lt;!&ndash; TEMPLATE FOR RAINBOW COLLAGE &ndash;&gt;-->
-<!--<template name="americanFlagResults">-->
-<!--<head>-->
-<!--<style>-->
-<!--.column-multiple {-->
-<!--width: 100%;-->
-<!--overflow: hidden;-->
-<!--max-height: 800px;-->
-<!--padding: 5px 10px 5px 10px;-->
-<!--}-->
+<template name="ColorsOfSpringResults_admin">
+  <canvas id="canvas">
+    {{drawCanvasBackground}}
+  </canvas>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Crateva_religiosa.jpg/440px-Crateva_religiosa.jpg" width=100 height=100/>
+</template>
 
-<!--.column-multiple img {-->
-<!--width: 100%;-->
-<!--}-->
+<!-- TEMPLATE FOR RAINBOW COLLAGE -->
+<template name="americanFlagResults">
 
-<!--.box {-->
-<!--width: 100%;-->
-<!--height: 100px;-->
-<!--text-align: center;-->
-<!--vertical-align: middle;-->
-<!--line-height: 100px;-->
-<!--}-->
+  <head>
+    <style>
+      .column-multiple {
+        width: 100%;
+        overflow: hidden;
+        max-height: 800px;
+        padding: 5px 10px 5px 10px;
+      }
 
-<!--#container {-->
-<!--width: 100%;-->
-<!--text-align: center;-->
-<!--}-->
+      .column-multiple img {
+        width: 100%;
+      }
 
-<!--.square {-->
-<!--float: left;-->
-<!--position: relative;-->
-<!--width: 46%;-->
-<!--padding-bottom: 1%;-->
-<!--margin: 1.1% 1.66% 1.1% 1.66%;-->
-<!--}-->
-<!--</style>-->
-<!--</head>-->
-<!--<h4>Check out this rainbow collage being created by you and others</h4>-->
-<!--<div class="row" style="padding:5px">-->
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "red")}}-->
-<!--<div class="box red" style="border:1.5px solid #ed284c;">-->
-<!--We're still waiting for red photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "red")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "red")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "red")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "red")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
+      .box {
+        width: 100%;
+        height: 100px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 100px;
+      }
 
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "yellow")}}-->
-<!--<div class="box yellow" style="border:1.5px solid #f4c542;">-->
-<!--We're still waiting for yellow photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "yellow")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "yellow")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "yellow")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "yellow")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
+      #container {
+        width: 100%;
+        text-align: center;
+      }
 
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "green")}}-->
-<!--<div class="box green" style="border:1.5px solid #35a354;">-->
-<!--We're still waiting for green photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "green")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "green")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "green")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "green")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
+      .square {
+        float: left;
+        position: relative;
+        width: 46%;
+        padding-bottom: 1%;
+        margin: 1.1% 1.66% 1.1% 1.66%;
+      }
+    </style>
+  </head>
+  <h4>Check out this rainbow collage being created by you and others</h4>
+  <div class="row" style="padding:5px">
+    <div class="column-multiple">
+      {{#if (noImage "red")}}
+      <div class="box red" style="border:1.5px solid #ed284c;">
+        We're still waiting for red photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "red")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "red")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "red")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "red")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
 
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "blue")}}-->
-<!--<div class="box blue" style="border:1.5px solid #53a5e8;">-->
-<!--We're still waiting for blue photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "blue")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "blue")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "blue")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "blue")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
+    <div class="column-multiple">
+      {{#if (noImage "yellow")}}
+      <div class="box yellow" style="border:1.5px solid #f4c542;">
+        We're still waiting for yellow photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "yellow")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "yellow")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "yellow")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "yellow")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
 
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "black")}}-->
-<!--<div class="box black" style="border:1.5px solid #301f22;">-->
-<!--We're still waiting for black photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "black")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "black")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "black")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
+    <div class="column-multiple">
+      {{#if (noImage "green")}}
+      <div class="box green" style="border:1.5px solid #35a354;">
+        We're still waiting for green photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "green")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "green")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "green")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "green")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
 
-<!--<div class="column-multiple">-->
-        <!--{{#if (noImage "white")}}-->
-<!--<div class="box white" style="border:1.5px solid white;">-->
-<!--We're still waiting for white photos...-->
-<!--</div>-->
-        <!--{{else}}-->
-<!--<div id="container">-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 0 "white")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 1 "white")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 2 "white")}}-->
-<!--</div>-->
-<!--<div class="square">-->
-<!--{{ > Template.dynamic template="color" data=(getColorInfo 3 "white")}}-->
-<!--</div>-->
-<!--</div>-->
-        <!--{{/if}}-->
-<!--</div>-->
-<!--</div>-->
-<!--</template>-->
+    <div class="column-multiple">
+      {{#if (noImage "blue")}}
+      <div class="box blue" style="border:1.5px solid #53a5e8;">
+        We're still waiting for blue photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "blue")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "blue")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "blue")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "blue")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
 
-<!--<template name="color">-->
-<!--<div class="colorBlock" id="{{this.colorId}}">-->
-<!--{{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}-->
-<!--</div>-->
-<!--</template>-->
+    <div class="column-multiple">
+      {{#if (noImage "black")}}
+      <div class="box black" style="border:1.5px solid #301f22;">
+        We're still waiting for black photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "black")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "black")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "black")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "black")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
+
+    <div class="column-multiple">
+      {{#if (noImage "white")}}
+      <div class="box white" style="border:1.5px solid white;">
+        We're still waiting for white photos...
+      </div>
+      {{else}}
+      <div id="container">
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 0 "white")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 1 "white")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 2 "white")}}
+        </div>
+        <div class="square">
+          {{ > Template.dynamic template="color" data=(getColorInfo 3 "white")}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="color">
+  <div class="colorBlock" id="{{this.colorId}}">
+    {{ > Template.dynamic template="displayImage" data=(getImage this.imageId)}}
+  </div>
+</template>
