@@ -122,7 +122,7 @@
         <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
       </button>
     </div>
-    <button type="button" id="monsterCreateSubmit" class="btn btn-default btn-participate btn-primary btn-block"
+    <button type="button" class="btn btn-default btn-participate btn-primary btn-block"
             style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
       Submit
     </button>
@@ -281,7 +281,7 @@
   </button>
   </div>
 
-  <form id="triparticipate" class="long" style="display: none">
+  <form id="monsterCreateSubmit" class="triparticipate long" style="display: none">
     <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
@@ -333,12 +333,12 @@
         {{/if}}
 
         {{#if (arrayLenEqual needImages 2)}}
-          <div class="topThird trisquare">
-            <div class="innercontent">
-              A mystery from your past partner!
+          <div class="topThird trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent" id="topThird">
+              {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
             </div>
           </div>
-          <div class="middleThird trisquare">
+          <div class="middleThird trisquare" id="middleThird">
             <div class="content">
             <div class="mask">
               <div class="innercontent">A mystery from your past partner!</div>
@@ -346,7 +346,7 @@
             {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 1) }}
             </div>
           </div>
-          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="bottomThird trisquare">
             {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
           </div>
           {{/if}}
@@ -409,6 +409,13 @@ now that the need is complete, somehow pass in the monster to the image -->
   {{#if Template.subscriptionsReady}}
   <div id="bg_img_upload">
     <div>Your group's monster has escaped the lab and is wreaking havoc! What is it doing? Take a picture of your surroundings, add the monster to it, and describe what's happening!</div>
+    <div>
+      {{#let monsterParts=(monsterImageURLs this.toPass.exampleMonster0)}}
+      <img src={{this.toPass.exampleMonster0}} />
+      <img src={{this.toPass.exampleMonster1}} />
+      <img src={{this.toPass.exampleMonster2}} />
+      {{/let}}
+    </div>
     <form class="col col-xs-12" id="preparticipate">
     <div class="camera-upload">
         {{> Template.dynamic template="camera" data="bg_img"}}
@@ -425,7 +432,6 @@ now that the need is complete, somehow pass in the monster to the image -->
     <form id="monsterParticipate">
     <div>
       <div id="monster">
-          {{> Template.dynamic template="displayImage" data=(latestNeedImage this.images this.needName)}}
       </div>
       <div id="monster_bg_img">
         {{> Template.dynamic template="displayImage" data=(latestNeedImage this.images this.needName)}}

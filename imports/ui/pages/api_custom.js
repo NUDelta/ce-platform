@@ -287,6 +287,20 @@ Template.monsterStory.onCreated(() => {
 });
 
 Template.monsterStory.helpers({
+  monsterImageURLs(urls){
+    console.log(urls);
+
+    const res = [];
+    /*
+    urls.forEach(function(id) {
+      let img = Images.findOne({_id: id});
+      res.push(img.url('images'));
+    })
+    */
+    console.log(res);
+
+    return res;
+  },
   latestNeedImage(images, needName){
     images = images.sort(function(x, y) {
       return x.uploadedAt - y.uploadedAt;
@@ -318,6 +332,9 @@ Template.monsterStory.helpers({
 
     return needImages[needImages.length - 1];
   },
+  elementIndex(array, index){
+    return array[index];
+  }
 });
 
 Template.monsterStory.events({
@@ -1077,6 +1094,17 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
+    if (needName == "monsterCreate"){
+        //find images in canvas
+        stitchedCanvas = document.createElement('canvas');
+        stitchedCanvas.width = images[0].clientHeight * 3;
+        stitchedCanvas.height = images[0].clientWidth;
+        stitchedCtx = stitchedCanvas.getContext('2d');
+
+        stitchedCtx.drawImage(images[0], 0, images[0].clientHeight*2);
+        //images.push(finalImage);
+    }
+
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       let picture;
@@ -1134,6 +1162,7 @@ Template.api_custom.events({
 
       // add the submitted image to the submissions content dictionary
       submissions[image.id] = imageFile._id;
+      //submissions['imageid'] = imageFile._id;
     });
 
     const submissionObject = {
@@ -1230,6 +1259,7 @@ Template.api_custom.events({
           });
           // TODO: setTimeout for automatically moving on if upload takes too long
 
+
           //watch to see when the image db has been updated, then go to results
           const cursor = Images.find(imageFile._id).observe({
             changed(newImage) {
@@ -1244,6 +1274,7 @@ Template.api_custom.events({
 
       // add the submitted image to the submissions content dictionary
       submissions[image.id] = imageFile._id;
+
     });
 
     const submissionObject = {

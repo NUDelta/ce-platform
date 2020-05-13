@@ -1,12 +1,70 @@
 import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
-
+import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
 import {DETECTORS} from "../DETECTORS";
+import { Images } from '../../ImageUpload/images';
+
+import { gm } from 'meteor/cfs:graphicsmagick';
+import { FS } from 'meteor/cfs:base-package';
 
 /**
   To see how to change users' static affordances to create a progression
   see the Callback for DrinksTalk. Additionally, this experience has how to create
   multiple sets of experiences for multiple triads of users: for future studies
 **/
+
+/*
+const newImage = function(sub){
+  return new Promise((resolve, reject) => {
+    gm(1, 1, '#000F')
+        .setFormat('png')
+        .toBuffer( Meteor.bindEnvironment( function( error, buffer )
+        {
+            if( error ) throw error;
+
+            var file = new FS.File();
+            file.attachData( buffer, {type: 'image/png'}, function( err ){
+                if( err ) throw err;
+                file.name( 'stitchedImage.png' );
+                Images.insert( file, (err, imageFile) => {
+                  if (err) {
+                    alert(err);
+                    reject(new Error('fuck this'));
+                  } else {
+                    Images.update({ _id: imageFile._id }, {
+                      $set: {
+                        iid: sub.iid,
+                        needName: sub.needName,
+                        stitched: 'true'
+                      }
+                    });
+
+                    resolve(resolved);
+
+                    const cursor = Images.find(imageFile._id).observe({
+                      changed(newImage) {
+                        if (newImage.isUploaded()) {
+                          cursor.stop();
+                          try {
+                            let finalImage = Images.findOne({_id: imageFile._id});
+                            let finalRead = finalImage.createReadStream('images');
+                            let finalWrite = finalImage.createWriteStream('images');
+                            subImages.forEach(function (fileObj) {
+                              let fileRead = fileObj.createReadStream('images');
+                              gm(finalRead).append(fileRead).pipe(finalWrite);
+                            });
+                          } catch (error) {
+                            console.log('wtf');
+                          }
+                        }
+                      }
+                    });
+                  }
+              });
+            })
+    }));
+  })
+}
+*/
 
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
@@ -17,10 +75,97 @@ export const createDrinksTalk = function() {
 
     let participants = submissions.map((submission) => { return submission.uid; });
 
+    //temp file server side :///
+    /*
+    const fs = Npm.require('fs');
+    let subImages = Images.find({iid: sub.iid});
+    let workingDir = process.cwd();
+    let fullpath = workingDir + '/assets/app/' + 'tempstream.png';
+    var writeable;
+
+    fs.access(fullpath, fs.constants.F_OK, (err) => {
+      if (err){
+        fs.writeFile(fullpath, function() {
+            writeable = fs.createWriteStream(fullpath);
+            console.log('created a new file');
+        });
+      } else {
+        writeable = fs.createWriteStream(fullpath);
+        console.log('did not create new path');
+      };
+    });
+
+    //let index = 0;
+    let finalImage;
+
+    subImages.forEach (function(fileObj) {
+      let rs = fileObj.createReadStream();
+      rs.on('readable', () => {
+          finalImage = gm(rs, fileObj.name()).stream().pipe(writeable);
+          console.log('piping things?');
+      });
+      rs.on('error', function(err){
+        console.log(err);
+        console.log('this got fucked up');
+      });
+    });
+
+    writeable.end();
+    */
+
+    //attempt at using urls as srcs for the image
+    /*
+    let urls = submissions.map((submission) => {return submission.content.imageid});
+    let experience = Experiences.findOne({
+      participateTemplate: "monsterStory"
+    });
+
+    let needName = sub.needName;
+
+    changeExperienceToPass(experience._id,
+      needName,
+      urls,
+      "exampleMonster0");
+    */
+
+    //open readstreams for all the appropriate files after using find
+    //create a temporary document in the public(??) folder to copy readstreams into
+    //use gm to append the streams onto the file
+    //grab the file and insert it into database
+
+
+    //attempt at making a new image and then appending using urls
+    //probably have to use requests to do this
+    /*
+    gm(1, 1, '#000F').append(urls[0]).append(urls[1]).append(urls[2])
+      .setFormat('png')
+      .toBuffer( Meteor.bindEnvironment( function (error, buffer)
+      {
+          if (error) throw error;
+          let file = new FS.File();
+          file.attachData( buffer, {type: 'image/png'}, function( err ){
+              if( err ) throw err;
+              file.name( 'stitchedImage.png' );
+              Images.insert( file, (err, imageFile) => {
+                if (err) {
+                  alert(err);
+                } else {
+                  Images.update({ _id: imageFile._id }, {
+                    $set: {
+                      iid: sub.iid,
+                      needName: sub.needName,
+                      stitched: 'true'
+                    }
+                  });
+                }});
+            })
+      }));
+      */
+
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
-  /*
+
   const drinksTalkNewSubCallback = function (sub) {
       Meteor.users.update({
         _id: sub.uid
@@ -29,7 +174,48 @@ export const createDrinksTalk = function() {
           ['profile.staticAffordances.participatedInDrinksTalk']: true
         }
       });
-  } */
+
+      /*
+      let submissions = Submissions.find({
+        iid: sub.iid,
+        needName: sub.needName
+      }).fetch();
+      let urls = submissions.map((submission) => {return submission.content.imageurl});
+
+      let subImages = Images.find({
+        iid: sub.iid
+      });
+
+      subImages.forEach(function(fileObj){
+        let readStream = fileObj.createReadStream();
+        let writeStream = fileObj.createWriteStream();
+        gm(readStream).sepia().stream().pipe(writeStream);
+      });
+
+      gm()
+        .setFormat('png')
+        .toBuffer( Meteor.bindEnvironment( function (error, buffer)
+        {
+            if (error) throw error;
+            let file = new FS.File();
+            file.attachData( buffer, {type: 'image/png'}, function( err ){
+                if( err ) throw err;
+                file.name( 'stitchedImage.png' );
+                Images.insert( file, (err, imageFile) => {
+                  if (err) {
+                    alert(err);
+                  } else {
+                    Images.update({ _id: imageFile._id }, {
+                      $set: {
+                        iid: sub.iid,
+                        needName: sub.needName,
+                        stitched: 'true'
+                      }
+                    });
+                  }});
+              })
+      })); */
+  }
 
   let experience = {
     name: 'Group Bumped - Drinks Talk',
@@ -70,10 +256,10 @@ export const createDrinksTalk = function() {
     ],
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
-    callbacks: [/*{
+    callbacks: [{
         trigger: `cb.newSubmission()`,
         function: drinksTalkNewSubCallback.toString(),
-      },*/ {
+      }, {
         trigger: `(cb.newSubmission('drinksTalk') && cb.needFinished('drinksTalk'))`,
         function: drinksTalkCompleteCallback.toString(),
       }
@@ -357,7 +543,9 @@ export const monsterStory = function(){
         number: 1
         },
       toPass: {
-        exampleMonster: null,
+        exampleMonster0: null,
+        exampleMonster1: null,
+        exampleMonster2: null
       },
       numberNeeded: 3,
       notificationDelay: 1,
@@ -376,10 +564,10 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  //drinksTalk: createDrinksTalk(),
-  moodMeteorology: createMoodMeteorology(),
+  drinksTalk: createDrinksTalk(),
+  //moodMeteorology: createMoodMeteorology(),
   //imitationGame: createImitationGame(),
-  groupCheers: createGroupCheers(),
+  //groupCheers: createGroupCheers(),
   monsterCreate: createMonster(),
   monsterStory: monsterStory()
 }

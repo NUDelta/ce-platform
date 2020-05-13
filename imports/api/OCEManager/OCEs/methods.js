@@ -292,6 +292,36 @@ export const addContribution = (iid, contribution) =>{
   });
 };
 
+export const changeExperienceToPass = (eid, needName, toPass, field) => {
+    //first must find correct contributionType via needName & then update
+    //only that contributionType with new toPass
+    let experience = Experiences.findOne({
+      _id: eid,
+    });
+
+    let contributionTypeIndex = 0;
+
+    if (experience){
+      for (let i = 0; i < experience.contributionTypes.length; i++){
+        if (experience.contributionTypes[i].needName === needName){
+            contributionTypeIndex = i;
+          }
+        }
+    };
+
+    let search = `contributionTypes.${contributionTypeIndex}.toPass.${field}`;
+
+    Experiences.update(
+      {
+        _id: eid
+      }, {
+       $set: {
+          [search] : toPass
+       }
+      }
+    );
+};
+
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
   let i = 0;
   while (i < need.numberNeeded) {
