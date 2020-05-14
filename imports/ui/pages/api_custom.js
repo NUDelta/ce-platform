@@ -1226,7 +1226,7 @@ Template.api_custom.events({
         let block = ImageURL.split(";");
         let contentType = block[0].split(":")[1];
         let realData = block[1].split(",")[1];
-        let picture = b64toBlob(realData, contentType);
+        picture = b64toBlob(realData, contentType);
 
         let imageFile = Images.insert(picture, (err, imageFile) => {
           if (err) {
@@ -1244,10 +1244,11 @@ Template.api_custom.events({
               if (err) {
                 console.log('upload error,', err);
               } else {
-                submissions[fullMonster] = imageFile._id;
               }
             });
-          });
+          }});
+
+          submissions[fullMonster] = imageFile._id;
         }
     }
 
