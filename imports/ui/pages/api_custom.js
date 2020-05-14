@@ -1209,7 +1209,7 @@ Template.api_custom.events({
     //i dont want to mess around w creating different forms for different submits
     if (needName == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
-      if (Images.filter(image => image.iid == iid).length == 2)
+      if (Images.filter(image => image.iid == iid).length == 2){
         //find images in canvas
         let monster0 = document.getElementsByClassName('content')[0].children[1];
         let monster1 = document.getElementsByClassName('content')[0].children[1];
@@ -1226,7 +1226,7 @@ Template.api_custom.events({
         let block = ImageURL.split(";");
         let contentType = block[0].split(":")[1];
         let realData = block[1].split(",")[1];
-        picture = b64toBlob(realData, contentType);
+        let picture = b64toBlob(realData, contentType);
 
         let imageFile = Images.insert(picture, (err, imageFile) => {
           if (err) {
@@ -1244,11 +1244,11 @@ Template.api_custom.events({
               if (err) {
                 console.log('upload error,', err);
               } else {
+                submissions[fullMonster] = imageFile._id;
               }
             });
-          }});
-
-          submissions[fullMonster] = imageFile._id;
+          });
+        }
     }
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
