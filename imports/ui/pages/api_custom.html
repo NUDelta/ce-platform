@@ -209,13 +209,20 @@
 
       img {
         width: 100%;
-        margin-bottom: 10px
+        height: 100%;
       }
 
       .innercontent {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100%;
+      }
+
+      .fullmask {
+        background-color: rgb(225,225,225);
+        position: absolute;
+        width: 100%;
         height: 100%;
       }
 
@@ -334,9 +341,12 @@
 
         {{#if (arrayLenEqual needImages 2)}}
           <div class="topThird trisquare" style="background-color: rgba(225,225,225)">
-            <div class="innercontent" id="topThird">
-              {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
-            </div>
+              <div class="content" style="overflow:hidden">
+                <div class="fullmask">
+                  <div class="innercontent">A mystery from your past partner!</div>
+                </div>
+                {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
+              </div>
           </div>
           <div class="middleThird trisquare" id="middleThird">
             <div class="content">

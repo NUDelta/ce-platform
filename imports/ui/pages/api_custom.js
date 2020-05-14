@@ -1094,17 +1094,6 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
-    if (needName == "monsterCreate"){
-        //find images in canvas
-        stitchedCanvas = document.createElement('canvas');
-        stitchedCanvas.width = images[0].clientHeight * 3;
-        stitchedCanvas.height = images[0].clientWidth;
-        stitchedCtx = stitchedCanvas.getContext('2d');
-
-        stitchedCtx.drawImage(images[0], 0, images[0].clientHeight*2);
-        //images.push(finalImage);
-    }
-
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       let picture;
@@ -1214,6 +1203,52 @@ Template.api_custom.events({
     //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
       Router.go(resultsUrl);
+    }
+
+    //sad that there's this condition for this specific experience but :-///
+    //i dont want to mess around w creating different forms for different submits
+    if (needName == "monsterCreate"){
+      //if it is the final submission... curr number of submitted images is 2
+      if (Images.filter(image => image.iid == iid).length == 2)
+        //find images in canvas
+        let monster0 = document.getElementsByClassName('content')[0].children[1];
+        let monster1 = document.getElementsByClassName('content')[0].children[1];
+        let stitchedCanvas = document.createElement('canvas');
+        stitchedCanvas.width = monster0.clientHeight * 3;
+        stitchedCanvas.height = monster0.clientWidth;
+        //draw the monster out
+        let stitchedCtx = stitchedCanvas.getContext('2d');
+        stitchedCtx.drawImage(monster0, 0, 0);
+        stitchedCtx.drawImage(monster1, 0, monster0.clientHeight);
+        stitchedCtx.drawImage(images[0], 0, monster0.clientHeight*2);
+        let ImageURL = stitchedCanvas.toDataURL();
+
+        let block = ImageURL.split(";");
+        let contentType = block[0].split(":")[1];
+        let realData = block[1].split(",")[1];
+        picture = b64toBlob(realData, contentType);
+
+        let imageFile = Images.insert(picture, (err, imageFile) => {
+          if (err) {
+            alert(err);
+          } else {
+            Images.update({ _id: imageFile._id }, {
+              $set: {
+                iid: iid,
+                uid: uid,
+                lat: location.lat,
+                lng: location.lng,
+                needName: needName,
+              }
+            }, (err, docs) => {
+              if (err) {
+                console.log('upload error,', err);
+              } else {
+              }
+            });
+          }});
+
+          submissions[fullMonster] = imageFile._id;
     }
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
