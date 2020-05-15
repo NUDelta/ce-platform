@@ -166,6 +166,7 @@ Template.groupBumpedResults.helpers({
     const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
 
     const myImage = images.find(i => i._id === mySub.content.proof);
+    const stitchedImage = images.find(i => i.stitched == 'true');
     const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
     const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
 
@@ -173,6 +174,7 @@ Template.groupBumpedResults.helpers({
     Object.assign(results,
       friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
       {imageOne: otherImages[0]},
+      stitchedImage && {stitchedImage: stitchedImage},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
       {myImage: myImage},
       mySub && {myCaption: mySub.content.sentence},
@@ -259,7 +261,7 @@ Template.monsterCreateResults.helpers({
     let needGroups = myNeedNames.map((needName) => {
       // images already filtered by activeIncident. Now get them for each need
       let needImages = images.filter(function(img){
-        return img.needName == needName;
+        return img.needName == needName && !img.stitched;
       });
 
       //grab username from img uid
@@ -278,6 +280,10 @@ Template.monsterCreateResults.helpers({
     });
 
     return(needGroups);
+  },
+  stitchedImage(images){
+    images = images.filter(i => i.stitched == true);
+    return images[0];
   },
   elementAtIndex(arr, index){
     return arr[index];

@@ -264,9 +264,7 @@
           <div>
             Here is the full monster!
             <div>
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
+              {{> Template.dynamic template="displayFullImage" data=(stitchedImage)}}
             </div>
           </div>
           {{else}}
@@ -318,13 +316,13 @@
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
       <div class="caption">Check out what everyone is up to!</div>
       <div class="sub_container">
-        <div class="img_container">{{> Template.dynamic template="displayImage" data=(myImage)}}</div>
+        <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(myImage)}}</div>
         <div class="caption">"{{myCaption}}" -You</div>
       </div>
       <div class="sub_container">
         {{#if imageOne}}
          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
-          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageOne)}}</div>
+          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageOne)}}</div>
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>
@@ -332,13 +330,13 @@
       </div>
       <div class="sub_container">
         {{#if imageTwo}}
-          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageTwo)}}</div>
+          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageTwo)}}</div>
           <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
         {{else}}
           <div class="pending_img">?</div>
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
         {{/if}}
-        </div>
+      </div>
     </div>
   {{/with}}
 </template>

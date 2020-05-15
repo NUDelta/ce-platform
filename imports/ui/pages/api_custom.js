@@ -531,6 +531,24 @@ Template.groupBumped.helpers({
       friendOne: friends[0].username,
       friendTwo: friends[1].username
     }
+  },
+  getNeedImages(images, needName){
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
+  },
+  arrayIndex(array, index){
+    return array[index];
   }
 });
 
@@ -1209,24 +1227,25 @@ Template.api_custom.events({
     //i dont want to mess around w creating different forms for different submits
     if (needName == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
-      if (Images.filter(image => image.iid == iid).length == 2){
+      if (this.images.filter(image => image.iid == iid).length === 2){
         //find images in canvas
         let monster0 = document.getElementsByClassName('content')[0].children[1];
         let monster1 = document.getElementsByClassName('content')[0].children[1];
+        let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
         let stitchedCanvas = document.createElement('canvas');
-        stitchedCanvas.width = monster0.clientHeight * 3;
-        stitchedCanvas.height = monster0.clientWidth;
+        stitchedCanvas.height = monster0.naturalHeight * 3;
+        stitchedCanvas.width = monster0.naturalWidth;
         //draw the monster out
         let stitchedCtx = stitchedCanvas.getContext('2d');
         stitchedCtx.drawImage(monster0, 0, 0);
-        stitchedCtx.drawImage(monster1, 0, monster0.clientHeight);
-        stitchedCtx.drawImage(images[0], 0, monster0.clientHeight*2);
+        stitchedCtx.drawImage(monster1, 0, monster0.naturalHeight);
+        stitchedCtx.drawImage(monster2, 0, monster0.naturalHeight*2);
         let ImageURL = stitchedCanvas.toDataURL();
 
         let block = ImageURL.split(";");
         let contentType = block[0].split(":")[1];
         let realData = block[1].split(",")[1];
-        picture = b64toBlob(realData, contentType);
+        let picture = b64toBlob(realData, contentType);
 
         let imageFile = Images.insert(picture, (err, imageFile) => {
           if (err) {
@@ -1239,6 +1258,7 @@ Template.api_custom.events({
                 lat: location.lat,
                 lng: location.lng,
                 needName: needName,
+                stitched:'true'
               }
             }, (err, docs) => {
               if (err) {
