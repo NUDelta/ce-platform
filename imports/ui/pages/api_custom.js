@@ -1026,6 +1026,68 @@ const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, 
   };
 };
 
+/**
+ *
+ * @param sources {Array} Array of image source strings
+ * @param verticalStitch {Boolean} default true, it will stitch verti
+ * @param callback {Function} some function(stitchedImage) with first argument as stitched image
+ * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
+ * @return base64imageURL
+ */
+const stitchImageSources = function({sources, verticalStitch = true, callback}) {
+  // Recommended to load all images before drawing to canvas
+  // https://www.html5canvastutorials.com/tutorials/html5-canvas-image-loader/
+
+  // final image will contain stitchED images
+  let canvas = document.createElement('canvas');
+  let ctx = canvas.getContext('2d');
+  const loadImages = (sources, loadImagesCallback) => {
+    let images = {}
+    let loadedImages = 0;
+    let numImages = 0;
+    let stitchOffsetsX = [0];
+    let stitchOffsetsY = [0];
+    // get num of sources
+    for(let src in sources) {
+      numImages++;
+    }
+    for(let src in sources) {
+      images[src] = new Image();
+      // Must ensure canvas is not tainted, and "allow cross-origin use of images and canvas"
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+      images[src].crossOrigin = "Anonymous";
+
+      images[src].onload = function() {
+        stitchOffsetsX.push(images[src].width);
+        stitchOffsetsY.push(images[src].height);
+        if(++loadedImages >= numImages) {
+          loadImagesCallback(images, stitchOffsetsX, stitchOffsetsY);
+        }
+      };
+      images[src].src = sources[src];
+    }
+  }
+  loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
+    canvas.height = (verticalStitch) ?
+      stitchOffsetsY.reduce((a,b) => a + b) :
+      stitchOffsetsY.reduce((a,b) => Math.max(a,b));
+    canvas.width = (verticalStitch) ?
+      stitchOffsetsX.reduce((a,b) => Math.max(a,b)) :
+      stitchOffsetsX.reduce((a,b) => a + b);
+    for(let i in images) {
+      if (verticalStitch) {
+        ctx.drawImage(images[i], 0, stitchOffsetsY[i]);
+      }
+      else { // horizontalStitch
+        ctx.drawImage(iamges[i], stitchOffsetsX[i], 0);
+      }
+    }
+
+    let stitchedImage = canvas.toDataURL();
+    callback(stitchedImage);
+  });
+};
+
 Template.api_custom.onCreated(() => {
   this.state = new ReactiveDict();
 
@@ -1228,48 +1290,39 @@ Template.api_custom.events({
     if (needName == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
       if (this.images.filter(image => image.iid == iid).length === 2){
-        //find images in canvas
         let monster0 = document.getElementsByClassName('content')[0].children[1];
-        let monster1 = document.getElementsByClassName('content')[0].children[1];
+        let monster1 = document.getElementsByClassName('content')[1].children[1];
         let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
-        let stitchedCanvas = document.createElement('canvas');
-        stitchedCanvas.height = monster0.naturalHeight * 3;
-        stitchedCanvas.width = monster0.naturalWidth;
-        //draw the monster out
-        let stitchedCtx = stitchedCanvas.getContext('2d');
-        stitchedCtx.drawImage(monster0, 0, 0);
-        stitchedCtx.drawImage(monster1, 0, monster0.naturalHeight);
-        stitchedCtx.drawImage(monster2, 0, monster0.naturalHeight*2);
-        let ImageURL = stitchedCanvas.toDataURL();
+        stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
+          let block = ImageURL.split(";");
+          let contentType = block[0].split(":")[1];
+          let realData = block[1].split(",")[1];
+          let picture = b64toBlob(realData, contentType);
 
-        let block = ImageURL.split(";");
-        let contentType = block[0].split(":")[1];
-        let realData = block[1].split(",")[1];
-        let picture = b64toBlob(realData, contentType);
+          let imageFile = Images.insert(picture, (err, imageFile) => {
+            if (err) {
+              alert(err);
+            } else {
+              Images.update({ _id: imageFile._id }, {
+                $set: {
+                  iid: iid,
+                  uid: uid,
+                  lat: location.lat,
+                  lng: location.lng,
+                  needName: needName,
+                  stitched:'true'
+                }
+              }, (err) => {
+                if (err) {
+                  console.log('upload error,', err);
+                }
+              });
+            }
+          });
 
-        let imageFile = Images.insert(picture, (err, imageFile) => {
-          if (err) {
-            alert(err);
-          } else {
-            Images.update({ _id: imageFile._id }, {
-              $set: {
-                iid: iid,
-                uid: uid,
-                lat: location.lat,
-                lng: location.lng,
-                needName: needName,
-                stitched:'true'
-              }
-            }, (err, docs) => {
-              if (err) {
-                console.log('upload error,', err);
-              } else {
-              }
-            });
-          }});
-
-          submissions[fullMonster] = imageFile._id;
-        }
+          submissions['fullMonster'] = imageFile._id
+        });
+      }
     }
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that

@@ -8,6 +8,7 @@ BrowserPolicy.content.allowOriginForAll('https://*.googleapis.com');
 BrowserPolicy.content.allowOriginForAll('https://*.gstatic.com');
 BrowserPolicy.content.allowOriginForAll('*');
 BrowserPolicy.content.allowFontDataUrl();
+BrowserPolicy.content.allowImageDataUrl();
 
 WebApp.connectHandlers.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
