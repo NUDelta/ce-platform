@@ -42,8 +42,16 @@ export const createDrinksTalk = function() {
       added(stitched){
         console.log(stitched);
         let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
-        console.log(monsterEx);
-        console.log(stitched._id);
+        let monsterIncident = Incidents.findOne({eid:monsterEx._id});
+
+        //toDo change needName based on the current needName
+        //also change the results template so that the stitched image is not missing
+        //after this callback
+        Images.update({_id: stitched._id}, {
+          $set: {
+            iid: monsterIncident._id
+          }
+        });
 
         changeExperienceToPass(monsterEx._id,
           "monsterStory",
@@ -373,19 +381,32 @@ export const monsterStory = function(){
     name: 'Escape from the Lab!',
     participateTemplate: 'monsterStory',
     resultsTemplate: 'monsterStoryResults',
-    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [{
-      needName: 'monsterStory',
+    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [
+      {needName: 'monsterStory',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime),
         number: 1
         },
       toPass: {
-        exampleMonster: null,
+        exampleMonster: null
       },
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-    }]),
+      },
+      {needName: 'monsterStory2',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        number: 1
+        },
+      toPass: {
+        exampleMonster: null
+      },
+      numberNeeded: 3,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+      }]
+    ),
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{

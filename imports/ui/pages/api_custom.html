@@ -183,7 +183,7 @@
             <span>
                 You just bumped into some friends! {{this.toPass.instruction}}
             </span>
-        </div> 
+        </div>
         <form class="col col-xs-12" id="participate">
             {{#let needImages = (getNeedImages this.images this.needName)}}
               <div id="hello">
@@ -368,7 +368,7 @@
           {{/if}}
       </div>
 
-    <div class="camera-controls">
+    <div class="camera-controls"> 
       <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
         <span class="fa fa-spinner glyphicon-large"></span>
       </button>
@@ -424,15 +424,11 @@ now that the need is complete, somehow pass in the monster to the image -->
   </head>
   {{#if Template.subscriptionsReady}}
   <div id="bg_img_upload">
-    <div>Your group's monster has escaped the lab and is wreaking havoc! What is it doing? Take a picture of your surroundings, add the monster to it, and describe what's happening!</div>
-    <div>
-      {{#let monsterParts=(monsterImageURLs this.toPass.exampleMonster0)}}
-      <img src={{this.toPass.exampleMonster0}} />
-      <img src={{this.toPass.exampleMonster1}} />
-      <img src={{this.toPass.exampleMonster2}} />
-      {{/let}}
-    </div>
+    <div>Your group's monster has escaped the lab and is wreaking havoc! Where is it right now? Take a picture of the monster!</div>
+    {{#let monster = (monsterImageURL this)}}
+    {{/let}}
     <form class="col col-xs-12" id="preparticipate">
+
     <div class="camera-upload">
         {{> Template.dynamic template="camera" data="bg_img"}}
     </div>
@@ -440,6 +436,7 @@ now that the need is complete, somehow pass in the monster to the image -->
     </form>
   </div>
 
+  <!--
   <div id="monster_story_upload">
     <button id="back_to_bg_img_upload">Resubmit Background Photo</button>
 
@@ -457,6 +454,7 @@ now that the need is complete, somehow pass in the monster to the image -->
     <button id="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit Story </button>
     </form>
   </div>
+  -->
   {{/if}}
 </template>
 

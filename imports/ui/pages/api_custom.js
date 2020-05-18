@@ -190,19 +190,13 @@ Template.monsterStory.onCreated(() => {
 });
 
 Template.monsterStory.helpers({
-  monsterImageURLs(urls){
-    console.log(urls);
-
-    const res = [];
-    /*
-    urls.forEach(function(id) {
-      let img = Images.findOne({_id: id});
-      res.push(img.url('images'));
-    })
-    */
-    console.log(res);
-
-    return res;
+  monsterImageURL(imageId){
+    console.log(imageId);
+    console.log(Images.findOne({_id:imageId}));
+    console.log(Images.findOne({_id:imageId}).url);
+    console.log(Images.findOne({_id:imageId}).url());
+    console.log(Images.findOne({_id:imageId}).link);
+    console.log(Images.findOne({_id:imageId}).link());
   },
   latestNeedImage(images, needName){
     images = images.sort(function(x, y) {
