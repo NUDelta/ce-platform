@@ -264,7 +264,7 @@
           <div>
             Here is the full monster!
             <div>
-              {{> Template.dynamic template="displayFullImage" data=(stitchedImage)}}
+              {{> Template.dynamic template="displayFullImage" data=(stitchedImage this.images)}}
             </div>
           </div>
           {{else}}
@@ -335,6 +335,11 @@
         {{else}}
           <div class="pending_img">?</div>
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
+        {{/if}}
+      </div>
+      <div class="sub_container">
+        {{#if stitchedImage}}
+          {{> Template.dynamic template="displayFullImage" data=(stitchedImage)}}
         {{/if}}
       </div>
     </div>

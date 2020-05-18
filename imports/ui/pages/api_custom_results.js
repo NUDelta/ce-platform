@@ -282,7 +282,7 @@ Template.monsterCreateResults.helpers({
     return(needGroups);
   },
   stitchedImage(images){
-    images = images.filter(i => i.stitched == true);
+    images = images.filter(i => i.stitched == 'true');
     return images[0];
   },
   elementAtIndex(arr, index){

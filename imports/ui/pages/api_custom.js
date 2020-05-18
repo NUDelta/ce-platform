@@ -1034,7 +1034,7 @@ const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, 
  * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
  * @return base64imageURL
  */
-const stitchImageSources = function({sources, verticalStitch = true, callback}) {
+const stitchImageSources = function(sources, verticalStitch = true, callback) {
   // Recommended to load all images before drawing to canvas
   // https://www.html5canvastutorials.com/tutorials/html5-canvas-image-loader/
 
@@ -1051,6 +1051,7 @@ const stitchImageSources = function({sources, verticalStitch = true, callback}) 
     for(let src in sources) {
       numImages++;
     }
+
     for(let src in sources) {
       images[src] = new Image();
       // Must ensure canvas is not tainted, and "allow cross-origin use of images and canvas"
@@ -1067,6 +1068,7 @@ const stitchImageSources = function({sources, verticalStitch = true, callback}) 
       images[src].src = sources[src];
     }
   }
+
   loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
     canvas.height = (verticalStitch) ?
       stitchOffsetsY.reduce((a,b) => a + b) :
@@ -1074,12 +1076,15 @@ const stitchImageSources = function({sources, verticalStitch = true, callback}) 
     canvas.width = (verticalStitch) ?
       stitchOffsetsX.reduce((a,b) => Math.max(a,b)) :
       stitchOffsetsX.reduce((a,b) => a + b);
+    let offset = 0;
     for(let i in images) {
       if (verticalStitch) {
-        ctx.drawImage(images[i], 0, stitchOffsetsY[i]);
+        offset += stitchOffsetsY[i];
+        ctx.drawImage(images[i], 0, offset);
       }
       else { // horizontalStitch
-        ctx.drawImage(iamges[i], stitchOffsetsX[i], 0);
+        offset += stitchOffsetsX[i];
+        ctx.drawImage(images[i], offset, 0);
       }
     }
 
@@ -1172,6 +1177,45 @@ Template.api_custom.events({
     //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
       Router.go(resultsUrl);
+    }
+
+    if (needName == "drinksTalk"){
+      //if it is the final submission... curr number of submitted images is 2
+      if (this.images.filter(image => image.iid == iid).length === 2){
+        let monster0 = document.getElementById('hello').children[0];
+        let monster1 = document.getElementById('hello').children[1];
+        let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
+        console.log([monster0.src, monster1.src, monster2.src]);
+        stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
+          let block = ImageURL.split(";");
+          let contentType = block[0].split(":")[1];
+          let realData = block[1].split(",")[1];
+          let picture = b64toBlob(realData, contentType);
+
+          let imageFile = Images.insert(picture, (err, imageFile) => {
+            if (err) {
+              alert(err);
+            } else {
+              Images.update({ _id: imageFile._id }, {
+                $set: {
+                  iid: iid,
+                  uid: uid,
+                  lat: location.lat,
+                  lng: location.lng,
+                  needName: needName,
+                  stitched:'true'
+                }
+              }, (err) => {
+                if (err) {
+                  console.log('upload error,', err);
+                }
+              });
+            }
+          });
+
+          submissions['stitchedImage'] = imageFile._id
+        });
+      }
     }
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
