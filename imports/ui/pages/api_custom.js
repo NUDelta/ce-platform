@@ -182,104 +182,7 @@ Template.monsterCreate.events({
   document.getElementById('instruction').style.display = "block";
   document.getElementById('triparticipate').style.display = "none";
   CameraPreview.hide();
-},
-'click #monsterCreateSubmit'(event, instance){
-    event.preventDefault();
-
-    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
-
-    const experience = this.experience;
-    const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = Router.current().params.iid;
-    const needName = Router.current().params.needName;
-    const uid = Meteor.userId();
-    const timestamp = Date.now()
-    const submissions = {};
-    const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
-
-    const images = event.target.getElementsByClassName('fileinput');
-
-    _.forEach(images, (image, index) => {
-      let picture;
-      if (event.target.photo) {
-        picture = event.target.photo.files[index]
-      } else {
-        let ImageURL = $('.fileinput-preview').attr('src');
-        let block = ImageURL.split(";");
-        let contentType = block[0].split(":")[1];
-        let realData = block[1].split(",")[1];
-        picture = b64toBlob(realData, contentType);
-      }
-
-      const imageFile = Images.insert(picture, (err, imageFile) => {
-        if (err) {
-          alert(err);
-        } else {
-          Images.update({ _id: imageFile._id }, {
-            $set: {
-              iid: iid,
-              uid: uid,
-              lat: location.lat,
-              lng: location.lng,
-              needName: needName,
-            }
-          }, (err, docs) => {
-            if (err) {
-              console.log('upload error,', err);
-            } else {
-            }
-          });
-
-          const cursor = Images.find(imageFile._id).observe({
-            changed(newImage) {
-              if (newImage.isUploaded()) {
-                cursor.stop();
-                Router.go(resultsUrl);
-              }
-            }
-          });
-        }
-      });
-
-      submissions[image.id] = imageFile._id;
-    });
-
-    const submissionObject = {
-      uid: uid,
-      eid: experience._id,
-      iid: iid,
-      needName: needName,
-      content: submissions,
-      timestamp: timestamp,
-      lat: location.lat,
-      lng: location.lng
-    };
-
-    Meteor.call('createInitialSubmission', submissionObject);
-    /*
-    let imgs = this.images.sort(function(x, y) {
-      return x.uploadedAt - y.uploadedAt;
-    });
-    let needImages = imgs.filter(function(x) {
-      return x.needName === needName;
-    });
-    let imagesGroupedByTriad = chunkArray(needImages, 3)
-    needImages = imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
-
-    if (needImages.length === 3){
-      let fullMonster = document.createElement('canvas');
-      let overlay = document.getElementById('camera-overlay');
-      fullMonster.width = overlay.scrollWidth;
-      fullMonster.height = overlay.scrollHeight;
-      let ctx = fullMonster.getContext('2d');
-      ctx.drawImage(needImages[0], 0, 0);
-      ctx.drawImage(needImages[1], 0, needImages[0].height);
-      ctx.drawImage(needImages[2], 0, needImages[0].height + needImages[1].height);
-      submissionObject.content["fullMonster"] = fullMonster;
-      Meteor.call('updateSubmission', submissionObject);
-    }
-  */
-  }
+}
 });
 
 Template.monsterStory.onCreated(() => {
@@ -1185,35 +1088,33 @@ Template.api_custom.events({
         let monster0 = document.getElementById('hello').children[0];
         let monster1 = document.getElementById('hello').children[1];
         let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
-        console.log([monster0.src, monster1.src, monster2.src]);
         stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
           let block = ImageURL.split(";");
           let contentType = block[0].split(":")[1];
           let realData = block[1].split(",")[1];
           let picture = b64toBlob(realData, contentType);
 
-          let imageFile = Images.insert(picture, (err, imageFile) => {
-            if (err) {
-              alert(err);
-            } else {
-              Images.update({ _id: imageFile._id }, {
-                $set: {
-                  iid: iid,
-                  uid: uid,
-                  lat: location.lat,
-                  lng: location.lng,
-                  needName: needName,
-                  stitched:'true'
-                }
-              }, (err) => {
-                if (err) {
-                  console.log('upload error,', err);
-                }
-              });
-            }
-          });
-
-          submissions['stitchedImage'] = imageFile._id
+            let imageFile = Images.insert(picture, (err, imageFile) => {
+              if (err) {
+                alert(err);
+              } else {
+                Images.update({ _id: imageFile._id }, {
+                  $set: {
+                    iid: iid,
+                    uid: uid,
+                    lat: location.lat,
+                    lng: location.lng,
+                    needName: needName,
+                    stitched:'true'
+                  }
+                }, (err) => {
+                  if (err) {
+                    console.log('upload error,', err);
+                  }
+                });
+              }
+              submissions['stitchedImage'] = imageFile._id;
+            });
         });
       }
     }
