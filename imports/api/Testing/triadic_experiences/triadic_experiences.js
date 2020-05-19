@@ -40,24 +40,24 @@ export const createDrinksTalk = function() {
     const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"});
     stitchedImageCursor.observe({
       added(stitched){
-        console.log(stitched);
         let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
         let monsterIncident = Incidents.findOne({eid:monsterEx._id});
-
         //toDo change needName based on the current needName
         //also change the results template so that the stitched image is not missing
         //after this callback
         Images.update({_id: stitched._id}, {
           $set: {
-            iid: monsterIncident._id
+            iid: monsterIncident._id,
+            needName: "monsterStory"
           }
         });
-
+        /*
         changeExperienceToPass(monsterEx._id,
           "monsterStory",
           stitched._id,
           "exampleMonster");
         }
+        */
       });
 
     //notify

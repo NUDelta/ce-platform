@@ -239,7 +239,7 @@
   </head>
 
   <div>
-    The monster is complete! Here are the parts each scientist contributed.
+    Here are the parts of the monster that each scientist has contributed so far:
   </div>
 
   {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
@@ -264,7 +264,9 @@
           <div>
             Here is the full monster!
             <div>
-              {{> Template.dynamic template="displayFullImage" data=(stitchedImage this.images)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
             </div>
           </div>
           {{else}}
