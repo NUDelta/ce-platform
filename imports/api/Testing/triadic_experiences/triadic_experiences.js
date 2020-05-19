@@ -408,20 +408,7 @@ export const monsterStory = function(){
       numberNeeded: 3,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-      },
-      {needName: 'monsterStory2',
-      situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
-        number: 1
-        },
-      toPass: {
-        exampleMonster: null
-      },
-      numberNeeded: 3,
-      notificationDelay: 1,
-      numberAllowedToParticipateAtSameTime: 1,
-      }]
-    ),
+    }]),
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{

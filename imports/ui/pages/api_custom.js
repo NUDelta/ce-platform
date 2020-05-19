@@ -632,9 +632,12 @@ const getPreviewRect = function() {
     let triOverlay = document.getElementById('topRTriPreview');
     rect = triOverlay.getBoundingClientRect();
   }
-  else {
+  else if {
     let triOverlay = document.getElementById('bottomTriPreview');
     rect = triOverlay.getBoundingClientRect();
+  } else {
+    let overlay = document.getElementById('Preview');
+    rect = overlay.getBoundingClientRect();
   }
   return rect;
 };
