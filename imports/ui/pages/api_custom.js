@@ -632,7 +632,7 @@ const getPreviewRect = function() {
     let triOverlay = document.getElementById('topRTriPreview');
     rect = triOverlay.getBoundingClientRect();
   }
-  else if {
+  else if (document.getElementById('topRTriPreview') !== null){
     let triOverlay = document.getElementById('bottomTriPreview');
     rect = triOverlay.getBoundingClientRect();
   } else {
