@@ -368,7 +368,7 @@
           {{/if}}
       </div>
 
-    <div class="camera-controls"> 
+    <div class="camera-controls">
       <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
         <span class="fa fa-spinner glyphicon-large"></span>
       </button>
@@ -390,71 +390,107 @@
   {{/let}}
   {{/if}}
 </template>
-<!-- if the submission is the third submission, then save the image somewhere! then in the callback
-now that the need is complete, somehow pass in the monster to the image -->
 
 <!-- somehow see the story before contributing to the story?? -->
 <template name="monsterStory">
   <head>
     <style>
-      #bg_img {
-        z-index: 1;
-        height: 60vh;
-        background-color: rgb(225,225,225);
-      }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      position: absolute;
+      height: 50vh;
+      width: 50vh;
+    }
 
-      img {
-        height: 60vh;
-      }
+    .grid div {
+      border: 2px black solid;
+    }
 
-      #monster>img {
-        position: absolute;
-        z-index: 2;
-        height: 20vh;
-      }
+    #monster {
+      height: 16vh;
+      width: 16vh;
+      position:absolute;
+      border: none
+    }
 
-      #monster_story_upload {
-        display: none;
-      }
+    #monster img {
+      height: 100%;
+      width: 100%;
+    }
 
-      .camera-upload {
-        padding-bottom: 1%;
-      }
+    #cameraOverlay {
+      height: 50vh;
+    }
+
+    #participate .fileinput{
+      height:50vh;
+      width:50vh;
+      z-index: -1;
+    }
     </style>
   </head>
   {{#if Template.subscriptionsReady}}
-  <div id="bg_img_upload">
-    <div>Your group's monster has escaped the lab and is wreaking havoc! Where is it right now? Take a picture of the monster!</div>
-    {{#let monster = (monsterImageURL this)}}
-    {{/let}}
-    <form class="col col-xs-12" id="preparticipate">
-
-    <div class="camera-upload">
-        {{> Template.dynamic template="camera" data="bg_img"}}
-    </div>
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Use Photo </button>
-    </form>
+  <div id="instruction">
+    Remember the monster you made before? Here it is.
+    {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
+    <button id="goToParticipate" class="btn btn-primary right-align">
+      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
   </div>
 
-  <!--
-  <div id="monster_story_upload">
-    <button id="back_to_bg_img_upload">Resubmit Background Photo</button>
-
-    <div>You can drag the monster around in the image. Write a caption about what it is doing!</div>
-
-    <form id="monsterParticipate">
-    <div>
-      <div id="monster">
-      </div>
-      <div id="monster_bg_img">
-        {{> Template.dynamic template="displayImage" data=(latestNeedImage this.images this.needName)}}
-      </div>
+  <form id="participate" class="long" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
+    <div>Your group's monster has escaped the lab and is wreaking havoc! Where is it right now?
+      Take a picture of your surroundings and add a short story about what the monster is doing.
+      You can also move the monster to different places by tapping a spot in the picture of your surroundings.
     </div>
+    <div id="cameraOverlay" class="camera-overlay gap short">
+      {{> loadingOverlay}}
+        <div class="grid">
+          <div class="grid-square"></div>
+          <div class="grid-square"></div>
+          <div class="grid-square"></div>
+
+          <div class="grid-square"></div>
+          <div class="grid-square">
+            <div id="monster">
+            {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
+            </div>
+          </div>
+          <div class="grid-square"></div>
+
+          <div class="grid-square"></div>
+          <div class="grid-square"></div>
+          <div class="grid-square"></div>
+        </div>
+        {{> Template.dynamic template="halfhalfCamera" data="Preview"}}
+    </div>
+
+    <div class="camera-controls">
+      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+        <span class="fa fa-spinner glyphicon-large"></span>
+      </button>
+      <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+
     <div>{{> Template.dynamic template="text" data="sentence"}}</div>
-    <button id="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit Story </button>
-    </form>
-  </div>
-  -->
+
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+      Submit
+    </button>
+  </form>
   {{/if}}
 </template>
 

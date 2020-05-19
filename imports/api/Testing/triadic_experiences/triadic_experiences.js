@@ -19,7 +19,7 @@ export const createDrinksTalk = function() {
         _id: p
       }, {
         $set: {
-          ['profile.staticAffordances.participatedInMonsterCreate']: true
+          ['profile.staticAffordances.participatedInDrinksTalk']: true
         }
       });
     });
@@ -58,6 +58,7 @@ export const createDrinksTalk = function() {
           "exampleMonster");
         }
         */
+        }
       });
 
     //notify
@@ -316,11 +317,11 @@ export const createMonster = function(){
       needName: sub.needName
     }).fetch();
 
-    let uids = submissions.map((submission) => { return submission.uid; });
+    let participants = submissions.map((submission) => { return submission.uid; });
 
-    uids.forEach(uid => {
+    participants.forEach(function(p){
       Meteor.users.update({
-        _id: uid
+        _id: p
       }, {
         $set: {
           ['profile.staticAffordances.participatedInMonsterCreate']: true
@@ -328,8 +329,22 @@ export const createMonster = function(){
       });
     });
 
-    //and somehow pass in full monster to the monster story experience
-    notify(participants, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"});
+    stitchedImageCursor.observe({
+      added(stitched){
+        let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
+        let monsterIncident = Incidents.findOne({eid:monsterEx._id});
+
+        Images.update({_id: stitched._id}, {
+          $set: {
+            iid: monsterIncident._id,
+            needName: "monsterStory"
+          }
+        });
+        }
+      });
+
+      notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
