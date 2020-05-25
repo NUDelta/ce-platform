@@ -469,21 +469,21 @@
     <div id="cameraOverlay" class="camera-overlay gap short">
       {{> loadingOverlay}}
         <div class="grid">
-          <div class="grid-square" data-val="0"></div>
-          <div class="grid-square" data-val="1"></div>
-          <div class="grid-square" data-val="2"></div>
+          <div class="grid-square" data-location="0"></div>
+          <div class="grid-square" data-location="1"></div>
+          <div class="grid-square" data-location="2"></div>
 
-          <div class="grid-square" data-val="3"></div>
-          <div class="grid-square" data-val="4">
+          <div class="grid-square" data-location="3"></div>
+          <div class="grid-square" data-location="4">
             <div id="monster">
             {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
             </div>
           </div>
-          <div class="grid-square" data-val="5"></div>
+          <div class="grid-square" data-location="5"></div>
 
-          <div class="grid-square" data-val="6"></div>
-          <div class="grid-square" data-val="7"></div>
-          <div class="grid-square" data-val="8"></div>
+          <div class="grid-square" data-location="6"></div>
+          <div class="grid-square" data-location="7"></div>
+          <div class="grid-square" data-location="8"></div>
         </div>
         {{> Template.dynamic template="halfhalfCamera" data="Preview"}}
     </div>
