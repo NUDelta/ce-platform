@@ -281,9 +281,74 @@
   {{/let}}
 </template>
 
+<!-- so far, can filter submissions with content w needName, sort by time, and then map uid to username -->
 <template name="monsterStoryResults">
-  <div></div>
+  <head>
+    <style>
+      .monsterGrid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        position: absolute;
+      }
+      .stitched {
+        height: 15vh;
+        width: 15vh;
+        background-color:blue;
+      }
+      .reportImg {
+        height: 45vh;
+        width: 45vh;
+        margin: auto;
+      }
+      .next {
+        float: right;
+      }
 
+      .prev {
+        float: left;
+      }
+    </style>
+  </head>
+
+  {{#let monster = (stitchedMonster)}}
+  {{#let needImages = (getNeedImages)}}
+  <div id="results">
+    <h4>{{this.experience.name}}</h4>
+    Your monster has been spotted! Read the full lab report to see where you and the other scientists have seen the monster.
+    <div class="slideshow-container">
+      {{#each needImage in needImages}}
+        {{#let info = (subDetails needImage)}}
+        {{#let idx = (increment @index)}}
+        <div class="mySlides" id="img{{@index}}">
+          <div style="padding:3px; text-align: center; font-size: 16px;"><b>Report {{idx}}</b></div>
+          <div class="reportImg">
+            <div class="monsterGrid">
+              <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
+              </div>
+            </div>
+            <div class="monsterBg">
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
+            </div>
+          </div>
+          <div class="monsterCaption" style="padding-top: 7px;">
+              <b>{{info.user}}</b> reported:
+              <br>{{info.sentence}}
+          </div>
+          {{#if (notFirst @index)}}
+            <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
+          {{/if}}
+          {{#if (notLast @index)}}
+            <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
+          {{/if}}
+        </div>
+        {{/let}}
+        {{/let}}
+      {{/each}}
+    </div>
+  </div>
+  {{/let}}
+  {{/let}}
 </template>
 
 <template name="groupBumpedResults">

@@ -292,7 +292,69 @@ Template.monsterCreateResults.helpers({
 });
 
 Template.monsterStoryResults.helpers({
-  
+  stitchedMonster(){
+    let images = this.images.filter(i => i.stitched == 'true' && this.needName == i.needName);
+    return images[0];
+  },
+  getNeedImages(){
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let needName = currUserSubs[0].needName;
+    let images = this.images.filter(i => i.needName == needName);
+    return images;
+  },
+  subDetails(needImage){
+    let imageId = needImage._id;
+    let sub = this.submissions.filter(s => s.content.Preview == imageId);
+    let monsterLocation = sub[0].content.monsterLocation;
+    let row = parseInt(monsterLocation / 3) + 1
+    let col = parseInt(monsterLocation % 3) + 1
+
+    return {
+      sentence: sub[0].content.sentence,
+      monsterRow: row.toString(),
+      monsterCol: col.toString(),
+      user: getUserById(this.users, sub[0].uid)
+    };
+
+  },
+  elementAtIndex(array, index){
+    return array[index];
+  },
+  increment(num){
+    return parseInt(num)+1;
+  },
+  notFirst(index) {
+    console.log(index);
+    console.log(typeof index);
+    return index != 0;
+  },
+  notLast(index){
+    //num images == images filtered by needName -1 (bc of stitched image)
+    let images = this.images.filter(i => this.needName == i.needName).length - 1;
+    return index < this.images.length - 1;
+  },
+});
+
+Template.monsterStoryResults.events({
+  'click .prev'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let prevSlide = document.getElementById(`img${currSlideIdx-1}`);
+    slide.style.display = "none";
+    prevSlide.style.display = "block";
+
+  },
+  'click .next'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
+    console.log(currSlideIdx);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let nextSlide = document.getElementById(`img${currSlideIdx+1}`);
+    console.log(slide);
+    console.log(nextSlide);
+    slide.style.display = "none";
+    nextSlide.style.display = "block";
+  }
 });
 
 Template.groupCheersResults.events({
