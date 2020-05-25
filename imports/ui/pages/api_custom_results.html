@@ -282,9 +282,8 @@
 </template>
 
 <template name="monsterStoryResults">
-  {{#with content}}
-  <div>Here are the results!</div>
-  {{/with}}
+  <div></div>
+
 </template>
 
 <template name="groupBumpedResults">
@@ -337,11 +336,6 @@
         {{else}}
           <div class="pending_img">?</div>
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
-        {{/if}}
-      </div>
-      <div class="sub_container">
-        {{#if stitchedImage}}
-          {{> Template.dynamic template="displayFullImage" data=(stitchedImage)}}
         {{/if}}
       </div>
     </div>

@@ -937,6 +937,10 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
+    if (needName == "monsterStory"){
+      submissions["monsterLocation"] = document.getElementById('monster').parentNode.dataset.location;
+    }
+
     if (needName == "drinksTalk"){
       //if it is the final submission... curr number of submitted images is 2
       if (this.images.filter(image => image.iid == iid).length === 2){

@@ -2,8 +2,6 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
 import {DETECTORS} from "../DETECTORS";
 
-import { FS } from 'meteor/cfs:base-package';
-
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -19,47 +17,26 @@ export const createDrinksTalk = function() {
         _id: p
       }, {
         $set: {
-          ['profile.staticAffordances.participatedInDrinksTalk']: true
+          ['profile.staticAffordances.participatedInMonsterCreate']: true
         }
       });
     });
 
-    /*
-    if (Images.find({needName:sub.needName, stitched:"true"}).fetch() != []){
-      console.log("found it");
-      let stitched = Images.find({needName:sub.needName, stitched:"true"}).fetch();
-      console.log(stitched);
-      let monsterEx = Experiences.find({participateTemplate: "monsterStory"});
-      changeExperienceToPass(monsterEx._id,
-        sub.needName,
-        stitched._id,
-        "exampleMonster");
-    } else {
-      console.log('did not find it');
-    */
-    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"});
-    stitchedImageCursor.observe({
+    //there needss to be a way to check
+    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"}).observe({
       added(stitched){
         let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
         let monsterIncident = Incidents.findOne({eid:monsterEx._id});
-        //toDo change needName based on the current needName
-        //also change the results template so that the stitched image is not missing
-        //after this callback
+
         Images.update({_id: stitched._id}, {
           $set: {
             iid: monsterIncident._id,
             needName: "monsterStory"
           }
         });
-        /*
-        changeExperienceToPass(monsterEx._id,
-          "monsterStory",
-          stitched._id,
-          "exampleMonster");
+        stitchedImageCursor.stop();
         }
-        */
-        }
-      });
+    });
 
     //notify
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
