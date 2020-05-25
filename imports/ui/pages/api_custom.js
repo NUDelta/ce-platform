@@ -929,16 +929,16 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
+      if (needName == "monsterStory"){
+        alert(document.getElementById('monster').parentNode.dataset.location);
+        submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
+      }
     });
 
     const images = event.target.getElementsByClassName('fileinput');
     //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
       Router.go(resultsUrl);
-    }
-
-    if (needName == "monsterStory"){
-      submissions["monsterLocation"] = document.getElementById('monster').parentNode.dataset.location;
     }
 
     if (needName == "drinksTalk"){
