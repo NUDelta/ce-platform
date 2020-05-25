@@ -294,7 +294,6 @@
       .stitched {
         height: 15vh;
         width: 15vh;
-        background-color:blue;
       }
       .reportImg {
         height: 45vh;
@@ -325,6 +324,7 @@
           <div class="reportImg">
             <div class="monsterGrid">
               <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
+                {{> Template.dynamic template="displayFullImage" data=(monster)}}
               </div>
             </div>
             <div class="monsterBg">

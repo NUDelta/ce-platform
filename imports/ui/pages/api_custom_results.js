@@ -325,8 +325,6 @@ Template.monsterStoryResults.helpers({
     return parseInt(num)+1;
   },
   notFirst(index) {
-    console.log(index);
-    console.log(typeof index);
     return index != 0;
   },
   notLast(index){
@@ -350,8 +348,6 @@ Template.monsterStoryResults.events({
     console.log(currSlideIdx);
     let slide = document.getElementById(`img${currSlideIdx}`);
     let nextSlide = document.getElementById(`img${currSlideIdx+1}`);
-    console.log(slide);
-    console.log(nextSlide);
     slide.style.display = "none";
     nextSlide.style.display = "block";
   }
