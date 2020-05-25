@@ -929,10 +929,10 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
+      /*
       if (needName == "monsterStory"){
-        alert(document.getElementById('monster').parentNode.dataset.location);
         submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
-      }
+      }*/
     });
 
     const images = event.target.getElementsByClassName('fileinput');
@@ -941,6 +941,7 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
+    /*
     if (needName == "drinksTalk"){
       //if it is the final submission... curr number of submitted images is 2
       if (this.images.filter(image => image.iid == iid).length === 2){
@@ -976,7 +977,7 @@ Template.api_custom.events({
             });
         });
       }
-    }
+    } */
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
@@ -1081,6 +1082,9 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
+      if (needName == "monsterStory"){
+        submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
+      }
     });
 
     const images = event.target.getElementsByClassName('fileinput');
