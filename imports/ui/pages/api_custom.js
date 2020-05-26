@@ -1094,7 +1094,7 @@ Template.api_custom.events({
 
     //sad that there's this condition for this specific experience but :-///
     //i dont want to mess around w creating different forms for different submits
-    if (needName.split("_")[0] == "monsterCreate_"){
+    if (needName.split("_")[0] == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
       if (this.images.filter(image => image.iid == iid).length === 2){
         let monster0 = document.getElementsByClassName('content')[0].children[1];
