@@ -293,14 +293,17 @@ Template.monsterCreateResults.helpers({
 
 Template.monsterStoryResults.helpers({
   stitchedMonster(){
-    let images = this.images.filter(i => i.stitched == 'true' && this.needName == i.needName);
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let needName = currUserSubs[0].needName;
+    let images = this.images.filter(i => i.stitched == 'true' && needName == i.needName);
     return images[0];
   },
   getNeedImages(){
     let currUser = Meteor.userId();
     let currUserSubs = this.submissions.filter(s => s.uid == currUser);
     let needName = currUserSubs[0].needName;
-    let images = this.images.filter(i => i.needName == needName);
+    let images = this.images.filter(i => i.needName == needName && !i.stitched);
     return images;
   },
   subDetails(needImage){
@@ -329,8 +332,8 @@ Template.monsterStoryResults.helpers({
   },
   notLast(index){
     //num images == images filtered by needName -1 (bc of stitched image)
-    let images = this.images.filter(i => this.needName == i.needName).length - 1;
-    return index < this.images.length - 1;
+    let imagesLength = this.images.filter(i => this.needName == i.needName).length - 1;
+    return index < imagesLength - 1;
   },
 });
 
