@@ -899,6 +899,8 @@ window.onbeforeunload = function() {
   }
 };
 
+
+//note: needName for triparticipate often split into needName_triad#
 Template.api_custom.events({
   'submit #participate'(event, instance) {
     event.preventDefault();
@@ -929,10 +931,9 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
-      /*
-      if (needName == "monsterStory"){
+      if (needName.split("_")[0] == "monsterStory"){
         submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
-      }*/
+      }
     });
 
     const images = event.target.getElementsByClassName('fileinput');
@@ -1053,6 +1054,7 @@ Template.api_custom.events({
     Meteor.call('createInitialSubmission', submissionObject);
 
   },
+
   'submit #triparticipate'(event, instance) {
     event.preventDefault();
 
@@ -1082,9 +1084,6 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
-      if (needName == "monsterStory"){
-        submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
-      }
     });
 
     const images = event.target.getElementsByClassName('fileinput');
@@ -1095,7 +1094,7 @@ Template.api_custom.events({
 
     //sad that there's this condition for this specific experience but :-///
     //i dont want to mess around w creating different forms for different submits
-    if (needName == "monsterCreate"){
+    if (needName.split("_")[0] == "monsterCreate_"){
       //if it is the final submission... curr number of submitted images is 2
       if (this.images.filter(image => image.iid == iid).length === 2){
         let monster0 = document.getElementsByClassName('content')[0].children[1];
