@@ -368,7 +368,8 @@ export const createMonster = function(){
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Create a monster with your fellow mad scientists!',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterCreate') && cb.needFinished('monsterCreate'))`,
+      trigger: `(cb.newSubmission('monsterCreate_triad2') && cb.needFinished('monsterCreate_triad2')) ||
+      (cb.newSubmission('monsterCreate_triad1') && cb.needFinished('monsterCreate_triad1'))`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,
@@ -419,7 +420,7 @@ export const monsterStory = function(){
     description: 'Your monster has escaped the lab⁠— what is it doing?',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterStory')`,
+      trigger: `(cb.newSubmission('monsterStory_triad2')) || cb.newSubmission('monsterStory_triad1'))`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,
