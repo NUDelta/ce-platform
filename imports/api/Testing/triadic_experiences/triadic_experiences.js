@@ -23,7 +23,7 @@ export const createDrinksTalk = function() {
       });
     });
     */
-    
+
     /*
     const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"}).observe({
       added(stitched){
@@ -331,7 +331,7 @@ export const createMonster = function(){
     participateTemplate: 'monsterCreate',
     resultsTemplate: 'monsterCreateResults',
     contributionTypes: [{
-      needName: 'monsterCreate',
+      needName: 'monsterCreate_triad1',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
         number: 1
@@ -348,7 +348,7 @@ export const createMonster = function(){
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
       },{
-      needName: 'monsterCreate',
+      needName: 'monsterCreate_triad2',
       situation: {
         detector : getDetectorUniqueKey(DETECTORS.anytime_triad2),
         number: 1

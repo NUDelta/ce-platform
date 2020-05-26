@@ -185,12 +185,14 @@
             </span>
         </div>
         <form class="col col-xs-12" id="participate">
+          <!--
             {{#let needImages = (getNeedImages this.images this.needName)}}
               <div id="hello">
               {{> Template.dynamic template="displayFullImage" data=(arrayIndex needImages 0) }}
               {{> Template.dynamic template="displayFullImage" data=(arrayIndex needImages 1) }}
               </div>
             {{/let}}
+          -->
             <div class="camera-upload">
                 {{> Template.dynamic template="camera" data="proof"}}
             </div>
