@@ -221,7 +221,7 @@ Template.monsterStory.events({
             CameraPreview.hide();
             toggleCameraControls('takePhotoDone');
             document.getElementById('textbox').style.display = "block";
-            document.getElementById('submit').style.display = "block";
+            document.getElementById('submit').style.visibility = "visible";
           });
       });
     } else {
@@ -238,7 +238,7 @@ Template.monsterStory.events({
     template.imageSubmitReady.set(false);
     toggleCameraControls('startCamera');
     document.getElementById('textbox').style.display = "none";
-    document.getElementById('submit').style.display = "none";
+    document.getElementById('submit').style.visibility = "hidden";
   },
   'click #switchCamera'(){
     if (typeof CameraPreview !== 'undefined') {
