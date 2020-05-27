@@ -221,7 +221,7 @@ Template.monsterStory.events({
             CameraPreview.hide();
             toggleCameraControls('takePhotoDone');
             document.getElementById('textbox').style.display = "block";
-            document.getElementById('submit').style.display = "none";
+            document.getElementById('submit').style.display = "block";
           });
       });
     } else {

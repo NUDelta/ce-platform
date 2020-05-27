@@ -11,35 +11,6 @@ export const createDrinksTalk = function() {
 
     let participants = submissions.map((submission) => { return submission.uid; });
 
-    //make everyone available for monsterStory
-    /*
-    participants.forEach(function(p){
-      Meteor.users.update({
-        _id: p
-      }, {
-        $set: {
-          ['profile.staticAffordances.participatedInMonsterCreate']: true
-        }
-      });
-    });
-    */
-
-    /*
-    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"}).observe({
-      added(stitched){
-        let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
-        let monsterIncident = Incidents.findOne({eid:monsterEx._id});
-
-        Images.update({_id: stitched._id}, {
-          $set: {
-            iid: monsterIncident._id,
-            needName: "monsterStory"
-          }
-        });
-        stitchedImageCursor.stop();
-        }
-    });
-    */
     //notify
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
@@ -323,7 +294,7 @@ export const createMonster = function(){
         }
       });
 
-      notify(participants, sub.iid, 'The monster is complete! See the full monster here.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+      notify(participants, sub.iid, 'See the complete monster here!', 'The monster is now complete! See the complete monster here.', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
@@ -389,7 +360,7 @@ export const monsterStory = function(){
     //remove duplicates in uids
     let uids = submissions.map((submission) => { return submission.uid; });
     uids = [... new Set(uids)];
-    notify(uids, sub.iid, 'The lab report has been updated! See what your monster has been up to.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    notify(uids, sub.iid, 'See what your monster has been up to!', 'The lab report has been updated. See the complete report here!', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
