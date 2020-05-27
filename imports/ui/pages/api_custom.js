@@ -197,7 +197,6 @@ Template.monsterStory.onDestroyed(() => {
 Template.monsterStory.helpers({
   stitchedMonster(needName, images){
     images = images.filter(i => i.needName == needName && i.stitched);
-    console.log(images);
     return images[0]
   },
   //latest submission w image, caption & monster position is useful
@@ -221,6 +220,8 @@ Template.monsterStory.events({
             template.imageSubmitReady.set(true);
             CameraPreview.hide();
             toggleCameraControls('takePhotoDone');
+            document.getElementById('textbox').style.display = "block";
+            document.getElementById('submit').style.display = "none";
           });
       });
     } else {
@@ -236,6 +237,8 @@ Template.monsterStory.events({
     $(".fileinput-preview").hide();
     template.imageSubmitReady.set(false);
     toggleCameraControls('startCamera');
+    document.getElementById('textbox').style.display = "none";
+    document.getElementById('submit').style.display = "none";
   },
   'click #switchCamera'(){
     if (typeof CameraPreview !== 'undefined') {
@@ -662,21 +665,16 @@ const toggleCameraControls = function(mode) {
   if (mode === "startCamera") {
     $(".fileinput-preview").hide();
     document.getElementById('retakePhoto').style.display = "none";
-    //do check
-    //document.getElementById('takeHalfHalfPhoto').style.display = "inline";
-    //do check
     document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "inline";
   }
   else if (mode === "takePhotoInProgress") {
     document.getElementById('takePhotoInProgress').style.display = "inline";
-    //do check
-    //document.getElementById('takeHalfHalfPhoto').style.display = "none";
-    //do check
     document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "none";
   }
   else if (mode === "takePhotoDone") {
+    document.getElementById('takePhoto').style.display = "none";
     document.getElementById('takePhotoInProgress').style.display = "none";
     document.getElementById('retakePhoto').style.display = "inline";
   }
@@ -828,7 +826,6 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
   }
 
   loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
-    alert(`y offsets are ${JSON.stringify(stitchOffsetsY)}`);
     canvas.height = (verticalStitch) ?
       Object.values(stitchOffsetsY).reduce((a,b) => a + b):
       Object.values(stitchOffsetsY).reduce((a,b) => Math.max(a,b));
@@ -839,7 +836,6 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
     for(let i in images) {
       if (verticalStitch) {
         i == 0? offset = 0: offset += stitchOffsetsY[i-1];
-        alert(`offset is now ${offset}`);
         ctx.drawImage(images[i], 0, offset);
       }
       else { // horizontalStitch

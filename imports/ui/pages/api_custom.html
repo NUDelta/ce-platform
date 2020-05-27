@@ -505,9 +505,9 @@
       </button>
     </div>
 
-    <div>{{> Template.dynamic template="text" data="sentence"}}</div>
+    <div id="textbox" style="display: none">{{> Template.dynamic template="text" data="sentence"}}</div>
 
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+    <button id="submit" type="submit" class="btn btn-default btn-participate btn-primary btn-block"
             style="display: {{submitDisplayValue}}; border-radius: 3px; width: 50%; margin-top: 5px;">
       Submit
     </button>
