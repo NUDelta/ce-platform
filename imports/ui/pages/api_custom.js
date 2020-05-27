@@ -158,7 +158,7 @@ Template.monsterCreate.events({
 },
 'click #goToParticipate'(event, template) {
   document.getElementById('instruction').style.display = "none";
-  document.getElementById('monsterCreateSubmit').style.display = "block";
+  document.getElementById('triparticipate').style.display = "block";
 
   if (template.cameraStarted.get()) {
     if (!template.imageSubmitReady.get()) {
@@ -180,7 +180,7 @@ Template.monsterCreate.events({
 },
 'click #goToInstruction'() {
   document.getElementById('instruction').style.display = "block";
-  document.getElementById('monsterCreateSubmit').style.display = "none";
+  document.getElementById('triparticipate').style.display = "none";
   CameraPreview.hide();
 }
 });
