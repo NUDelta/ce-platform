@@ -837,8 +837,8 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       stitchOffsetsX.reduce((a,b) => a + b);
     let offset = 0;
     for(let i in images) {
-      if (verticalStitch) {        
-        if i == 0? offset = 0; offset += stitchOffsetsY[i-1];
+      if (verticalStitch) {
+        i == 0? offset = 0: offset += stitchOffsetsY[i-1];
         alert(`offset is now ${offset}`);
         ctx.drawImage(images[i], 0, offset);
       }
