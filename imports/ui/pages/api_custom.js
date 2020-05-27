@@ -830,11 +830,11 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
   loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
     alert(`y offsets are ${JSON.stringify(stitchOffsetsY)}`);
     canvas.height = (verticalStitch) ?
-      stitchOffsetsY.reduce((a,b) => a + b) :
-      stitchOffsetsY.reduce((a,b) => Math.max(a,b));
+      Object.values(stitchOffsetsY).reduce((a,b) => a + b):
+      Object.values(stitchOffsetsY).reduce((a,b) => Math.max(a,b));
     canvas.width = (verticalStitch) ?
-      stitchOffsetsX.reduce((a,b) => Math.max(a,b)) :
-      stitchOffsetsX.reduce((a,b) => a + b);
+      Object.values(stitchOffsetsX).reduce((a,b) => Math.max(a,b)) :
+      Object.values(stitchOffsetsX).reduce((a,b) => a + b);
     let offset = 0;
     for(let i in images) {
       if (verticalStitch) {
