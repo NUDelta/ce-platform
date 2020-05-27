@@ -259,7 +259,7 @@ Template.monsterCreateResults.helpers({
     let needGroups = myNeedNames.map((needName) => {
       // images already filtered by activeIncident. Now get them for each need
       let needImages = images.filter(function(img){
-        return img.needName == needName;
+        return img.needName == needName && !img.stitched;
       });
 
       //grab username from img uid
@@ -279,6 +279,10 @@ Template.monsterCreateResults.helpers({
 
     return(needGroups);
   },
+  stitchedImage(images){
+    images = images.filter(i => i.stitched == 'true');
+    return images[0];
+  },
   elementAtIndex(arr, index){
     return arr[index];
   },
@@ -288,9 +292,67 @@ Template.monsterCreateResults.helpers({
 });
 
 Template.monsterStoryResults.helpers({
-  content(){
-    console.log(this);
-    console.log(this.submissions);
+  stitchedMonster(){
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let needName = currUserSubs[0].needName;
+    let images = this.images.filter(i => i.stitched == 'true' && needName == i.needName);
+    return images[0];
+  },
+  getNeedImages(){
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let needName = currUserSubs[0].needName;
+    let images = this.images.filter(i => i.needName == needName && !i.stitched);
+    return images;
+  },
+  subDetails(needImage){
+    let imageId = needImage._id;
+    let sub = this.submissions.filter(s => s.content.Preview == imageId);
+    let monsterLocation = sub[0].content.monsterLocation;
+    let row = parseInt(monsterLocation / 3) + 1
+    let col = parseInt(monsterLocation % 3) + 1
+
+    return {
+      sentence: sub[0].content.sentence,
+      monsterRow: row.toString(),
+      monsterCol: col.toString(),
+      user: getUserById(this.users, sub[0].uid)
+    };
+
+  },
+  elementAtIndex(array, index){
+    return array[index];
+  },
+  increment(num){
+    return parseInt(num)+1;
+  },
+  notFirst(index) {
+    return index != 0;
+  },
+  notLast(index){
+    //num images == images filtered by needName -1 (bc of stitched image)
+    let imagesLength = this.images.filter(i => this.needName == i.needName).length - 1;
+    return index < imagesLength - 1;
+  },
+});
+
+Template.monsterStoryResults.events({
+  'click .prev'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let prevSlide = document.getElementById(`img${currSlideIdx-1}`);
+    slide.style.display = "none";
+    prevSlide.style.display = "block";
+
+  },
+  'click .next'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
+    console.log(currSlideIdx);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let nextSlide = document.getElementById(`img${currSlideIdx+1}`);
+    slide.style.display = "none";
+    nextSlide.style.display = "block";
   }
 });
 

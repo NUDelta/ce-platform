@@ -2,12 +2,6 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
 import {DETECTORS} from "../DETECTORS";
 
-/**
-  To see how to change users' static affordances to create a progression
-  see the Callback for DrinksTalk. Additionally, this experience has how to create
-  multiple sets of experiences for multiple triads of users: for future studies
-**/
-
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -17,13 +11,12 @@ export const createDrinksTalk = function() {
 
     let participants = submissions.map((submission) => { return submission.uid; });
 
+    //notify
     notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
 
   const drinksTalkNewSubCallback = function (sub) {
-
-    /*
       Meteor.users.update({
         _id: sub.uid
       }, {
@@ -31,9 +24,6 @@ export const createDrinksTalk = function() {
           ['profile.staticAffordances.participatedInDrinksTalk']: true
         }
       });
-      */
-      //try to pass image into monsterStory
-
   }
 
   let experience = {
@@ -279,11 +269,11 @@ export const createMonster = function(){
       needName: sub.needName
     }).fetch();
 
-    let uids = submissions.map((submission) => { return submission.uid; });
+    let participants = submissions.map((submission) => { return submission.uid; });
 
-    uids.forEach(uid => {
+    participants.forEach(function(p){
       Meteor.users.update({
-        _id: uid
+        _id: p
       }, {
         $set: {
           ['profile.staticAffordances.participatedInMonsterCreate']: true
@@ -291,17 +281,22 @@ export const createMonster = function(){
       });
     });
 
-    //notify all participants that experience is complete
-    notify(uids, sub.iid, 'Check out your group\'s monster!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"});
+    stitchedImageCursor.observe({
+      added(stitched){
+        let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
+        let monsterIncident = Incidents.findOne({eid:monsterEx._id});
+        let triadNum = sub.needName.split('_')[1];
+        Images.update({_id: stitched._id}, {
+          $set: {
+            iid: monsterIncident._id,
+            needName: `monsterStory_${triadNum}`
+          }
+        });
+        }
+      });
 
-    //update monster experience so that toPass now contains monster
-    let experience = Experiences.findOne({
-      participateTemplate: "monsterStory"
-    });
-
-    let needName = sub.needName;
-
-    changeExperienceToPass(experience._id, needName, "test", "exampleMonster")
+      notify(participants, sub.iid, 'See the complete monster here!', 'The monster is now complete! See the complete monster here.', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
@@ -309,9 +304,26 @@ export const createMonster = function(){
     participateTemplate: 'monsterCreate',
     resultsTemplate: 'monsterCreateResults',
     contributionTypes: [{
-      needName: 'monsterCreate',
+      needName: 'monsterCreate_triad1',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
+        number: 1
+        },
+      toPass: {
+        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partners to create a monster! You and your partners will each draw a third of the monster and take a photo of your respective parts.',
+        //change example images
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleImage2: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleImage3: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
+        exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 3,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+      },{
+      needName: 'monsterCreate_triad2',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.anytime_triad2),
         number: 1
         },
       toPass: {
@@ -329,7 +341,8 @@ export const createMonster = function(){
     description: 'Create a monster with your fellow mad scientists!',
     notificationText: 'Create a monster with your fellow mad scientists!',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterCreate') && cb.needFinished('monsterCreate'))`,
+      trigger: `(cb.newSubmission('monsterCreate_triad2') && cb.needFinished('monsterCreate_triad2')) ||
+      (cb.newSubmission('monsterCreate_triad1') && cb.needFinished('monsterCreate_triad1'))`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,
@@ -338,6 +351,7 @@ export const createMonster = function(){
   return experience;
 };
 
+
 export const monsterStory = function(){
   const monsterCallback = function (sub) {
     let submissions = Submissions.find({
@@ -345,44 +359,41 @@ export const monsterStory = function(){
       needName: sub.needName
     }).fetch();
 
+    //remove duplicates in uids
     let uids = submissions.map((submission) => { return submission.uid; });
-    notify(uids, sub.iid, 'The story has been updated! See what your monster has been up to.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    uids = [... new Set(uids)];
+    notify(uids, sub.iid, 'See what your monster has been up to!', 'The lab report has been updated. See the complete report here!', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
   let experience = {
     name: 'Escape from the Lab!',
     participateTemplate: 'monsterStory',
     resultsTemplate: 'monsterStoryResults',
-    contributionTypes: /*addStaticAffordanceToNeeds('participatedInMonsterCreate', [{
-      needName: 'monsterStory',
-      situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
-        number: 1
+    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [
+      {needName: 'monsterStory_triad1',
+        situation: {
+          detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
+          number: 1
         },
-      toPass: {
-        exampleMonster: null,
+        toPass: {},
+        numberNeeded: 5,
+        notificationDelay: 1,
+        numberAllowedToParticipateAtSameTime: 1,
       },
-      numberNeeded: 3,
-      notificationDelay: 1,
-      numberAllowedToParticipateAtSameTime: 1,
-    }])*/
-    [{
-      needName: 'monsterStory',
-      situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
-        number: 1
+      {needName: 'monsterStory_triad2',
+        situation: {
+          detector : getDetectorUniqueKey(DETECTORS.anytime_triad2),
+          number: 1
         },
-      toPass: {
-        exampleMonster: null,
-      },
-      numberNeeded: 3,
-      notificationDelay: 1,
-      numberAllowedToParticipateAtSameTime: 1,
-    }],
-    description: 'Create a monster with your fellow mad scientists!',
+        toPass: {},
+        numberNeeded: 5,
+        notificationDelay: 1,
+        numberAllowedToParticipateAtSameTime: 1,
+      }]),
+    description: 'Your monster has escaped the lab⁠— what is it doing?',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterStory')`,
+      trigger: `(cb.newSubmission('monsterStory_triad2')) || cb.newSubmission('monsterStory_triad1'))`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,

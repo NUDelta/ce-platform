@@ -43,6 +43,28 @@ export let DETECTORS = {
     ],
     rules: [('daytime || nighttime || sunset')]
   },
+  anytime_triad1: {
+    _id: Random.id(),
+    description: 'all times for testing triad1',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;',
+      'var triad1'
+    ],
+    rules: [('triad1 && (daytime || nighttime || sunset)')]
+  },
+  anytime_triad2: {
+    _id: Random.id(),
+    description: 'all times for testing triad 2',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;',
+      'var triad2'
+    ],
+    rules: [('triad2 && (daytime || nighttime || sunset)')]
+  },
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',

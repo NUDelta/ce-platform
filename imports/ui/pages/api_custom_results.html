@@ -239,7 +239,7 @@
   </head>
 
   <div>
-    The monster is complete! Here are the parts each scientist contributed.
+    Here are the parts of the monster that each scientist has contributed so far:
   </div>
 
   {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
@@ -264,9 +264,9 @@
           <div>
             Here is the full monster!
             <div>
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
-            {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
             </div>
           </div>
           {{else}}
@@ -281,10 +281,74 @@
   {{/let}}
 </template>
 
+<!-- so far, can filter submissions with content w needName, sort by time, and then map uid to username -->
 <template name="monsterStoryResults">
-  {{#with content}}
-  <div>Here are the results!</div>
-  {{/with}}
+  <head>
+    <style>
+      .monsterGrid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        position: absolute;
+      }
+      .stitched {
+        height: 15vh;
+        width: 15vh;
+      }
+      .reportImg {
+        height: 45vh;
+        width: 45vh;
+        margin: auto;
+      }
+      .next {
+        float: right;
+      }
+
+      .prev {
+        float: left;
+      }
+    </style>
+  </head>
+
+  {{#let monster = (stitchedMonster)}}
+  {{#let needImages = (getNeedImages)}}
+  <div id="results">
+    <h4>{{this.experience.name}}</h4>
+    Your monster has been spotted! Read the full lab report to see where you and the other scientists have seen the monster.
+    <div class="slideshow-container">
+      {{#each needImage in needImages}}
+        {{#let info = (subDetails needImage)}}
+        {{#let idx = (increment @index)}}
+        <div class="mySlides" id="img{{@index}}">
+          <div style="padding:3px; text-align: center; font-size: 16px;"><b>Report {{idx}}</b></div>
+          <div class="reportImg">
+            <div class="monsterGrid">
+              <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
+                {{> Template.dynamic template="displayFullImage" data=(monster)}}
+              </div>
+            </div>
+            <div class="monsterBg">
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
+            </div>
+          </div>
+          <div class="monsterCaption" style="padding-top: 7px;">
+              <b>{{info.user}}</b> reported:
+              <br>{{info.sentence}}
+          </div>
+          {{#if (notFirst @index)}}
+            <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
+          {{/if}}
+          {{#if (notLast @index)}}
+            <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
+          {{/if}}
+        </div>
+        {{/let}}
+        {{/let}}
+      {{/each}}
+    </div>
+  </div>
+  {{/let}}
+  {{/let}}
 </template>
 
 <template name="groupBumpedResults">
@@ -318,13 +382,13 @@
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
       <div class="caption">Check out what everyone is up to!</div>
       <div class="sub_container">
-        <div class="img_container">{{> Template.dynamic template="displayImage" data=(myImage)}}</div>
+        <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(myImage)}}</div>
         <div class="caption">"{{myCaption}}" -You</div>
       </div>
       <div class="sub_container">
         {{#if imageOne}}
          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
-          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageOne)}}</div>
+          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageOne)}}</div>
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>
@@ -332,13 +396,13 @@
       </div>
       <div class="sub_container">
         {{#if imageTwo}}
-          <div class="img_container">{{> Template.dynamic template="displayImage" data=(imageTwo)}}</div>
+          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageTwo)}}</div>
           <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
         {{else}}
           <div class="pending_img">?</div>
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
         {{/if}}
-        </div>
+      </div>
     </div>
   {{/with}}
 </template>
