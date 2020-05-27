@@ -803,34 +803,32 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
     let images = {}
     let loadedImages = 0;
     let numImages = 0;
-    let stitchOffsetsX = [0];
-    let stitchOffsetsY = [0];
+    let stitchOffsetsX = {};
+    let stitchOffsetsY = {};
     // get num of sources
     for(let src in sources) {
       numImages++;
     }
 
-    for(let src in sources) {
-      images[src] = new Image();
+    for(let i in sources) {
+      images[i] = new Image();
       // Must ensure canvas is not tainted, and "allow cross-origin use of images and canvas"
       // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
-      images[src].crossOrigin = "Anonymous";
+      images[i].crossOrigin = "Anonymous";
 
-      images[src].onload = function() {
-        stitchOffsetsX.push(images[src].width);
-        stitchOffsetsY.push(images[src].height);
-        alert(`img height is ${images[src].height}`);
+      images[i].onload = function() {
+        stitchOffsetsX[i] = images[i].width;
+        stitchOffsetsY[i] = images[i].height;
         if(++loadedImages >= numImages) {
           loadImagesCallback(images, stitchOffsetsX, stitchOffsetsY);
         }
       };
-      images[src].src = sources[src];
+      images[i].src = sources[i];
     }
   }
 
   loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
-    alert(stitchOffsetsY);
-    alert(images);
+    alert(`y offsets are ${JSON.stringify(stitchOffsetsY)}`);
     canvas.height = (verticalStitch) ?
       stitchOffsetsY.reduce((a,b) => a + b) :
       stitchOffsetsY.reduce((a,b) => Math.max(a,b));
@@ -839,9 +837,8 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       stitchOffsetsX.reduce((a,b) => a + b);
     let offset = 0;
     for(let i in images) {
-      alert(`i is ${i}`);
-      if (verticalStitch) {
-        offset += stitchOffsetsY[i];
+      if (verticalStitch) {        
+        if i == 0? offset = 0; offset += stitchOffsetsY[i-1];
         alert(`offset is now ${offset}`);
         ctx.drawImage(images[i], 0, offset);
       }
