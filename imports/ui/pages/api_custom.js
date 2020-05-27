@@ -819,7 +819,7 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       images[src].onload = function() {
         stitchOffsetsX.push(images[src].width);
         stitchOffsetsY.push(images[src].height);
-        alert(images[src].height);
+        alert(`img height is ${images[src].height}`);
         if(++loadedImages >= numImages) {
           loadImagesCallback(images, stitchOffsetsX, stitchOffsetsY);
         }
@@ -839,11 +839,10 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       stitchOffsetsX.reduce((a,b) => a + b);
     let offset = 0;
     for(let i in images) {
-      alert(i);
+      alert(`i is ${i}`);
       if (verticalStitch) {
         offset += stitchOffsetsY[i];
-        alert(images[i]);
-        alert(offset);
+        alert(`offset is now ${offset}`);
         ctx.drawImage(images[i], 0, offset);
       }
       else { // horizontalStitch
