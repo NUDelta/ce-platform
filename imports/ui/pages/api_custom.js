@@ -819,6 +819,7 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       images[src].onload = function() {
         stitchOffsetsX.push(images[src].width);
         stitchOffsetsY.push(images[src].height);
+        alert(images[src].height);
         if(++loadedImages >= numImages) {
           loadImagesCallback(images, stitchOffsetsX, stitchOffsetsY);
         }
@@ -828,6 +829,8 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
   }
 
   loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
+    alert(stitchOffsetsY);
+    alert(images);
     canvas.height = (verticalStitch) ?
       stitchOffsetsY.reduce((a,b) => a + b) :
       stitchOffsetsY.reduce((a,b) => Math.max(a,b));
@@ -836,8 +839,11 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
       stitchOffsetsX.reduce((a,b) => a + b);
     let offset = 0;
     for(let i in images) {
+      alert(i);
       if (verticalStitch) {
         offset += stitchOffsetsY[i];
+        alert(images[i]);
+        alert(offset);
         ctx.drawImage(images[i], 0, offset);
       }
       else { // horizontalStitch
