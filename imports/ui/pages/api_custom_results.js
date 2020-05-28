@@ -331,8 +331,10 @@ Template.monsterStoryResults.helpers({
     return index != 0;
   },
   notLast(index){
-    //num images == images filtered by needName -1 (bc of stitched image)
-    let imagesLength = this.images.filter(i => this.needName == i.needName).length - 1;
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let needName = currUserSubs[0].needName;
+    let imagesLength = this.images.filter(i => needName == i.needName).length - 1;
     return index < imagesLength - 1;
   },
 });

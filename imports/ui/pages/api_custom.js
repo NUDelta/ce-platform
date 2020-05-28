@@ -105,6 +105,14 @@ Template.monsterCreate.helpers({
     } else {
       return "none";
     }
+  },
+  otherNames(){
+    let currParticipantId = Meteor.userId();
+    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
+    let triad = Object.keys(aff).filter(k => k.find('triad') != -1)[0];
+    let otherUsers = this.users.filter(u => (u._id != currParticipantId)
+      && (triad in u.profile.staticAffordances));
+    return otherUsers.map(u => u.username);
   }
 });
 
