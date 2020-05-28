@@ -105,14 +105,6 @@ Template.monsterCreate.helpers({
     } else {
       return "none";
     }
-  },
-  otherNames(){
-    let currParticipantId = Meteor.userId();
-    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
-    let triad = Object.keys(aff).filter(k => k.find('triad') != -1)[0];
-    let otherUsers = this.users.filter(u => (u._id != currParticipantId)
-      && (triad in u.profile.staticAffordances));
-    return otherUsers.map(u => u.username);
   }
 });
 
@@ -206,6 +198,18 @@ Template.monsterStory.helpers({
   stitchedMonster(needName, images){
     images = images.filter(i => i.needName == needName && i.stitched);
     return images[0]
+  },
+  otherNames(){
+    let currParticipantId = Meteor.userId();
+    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
+    console.log(aff);
+    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+    let otherUsers = this.users.filter(u => (u._id != currParticipantId)
+      && (triad in u.profile.staticAffordances));
+    return otherUsers.map(u => u.username);
+  },
+  elementIndex(array, index){
+    return array[index];
   },
   //latest submission w image, caption & monster position is useful
   latestStorySubmissionAndImage(submissions, images, needName){
