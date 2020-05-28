@@ -448,7 +448,7 @@
     {{#let names = (otherNames)}}
     {{#let name1 = (elementIndex names 0)}}
     {{#let name2 = (elementIndex names 1)}}
-    Remember the monster you made before with the scientists {{(elementIndex names 0)}} and {{(elementIndex names 1)}}?
+    Remember the monster you made before with the scientists {{names1}} and {{names2}}?
     {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
     It has <b>escaped</b> the lab and is wreaking havoc! You just spotted it nearby you—
     Quick, take an image of it, and describe what it is doing!<br><br>
