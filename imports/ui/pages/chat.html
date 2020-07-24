@@ -1,0 +1,12 @@
+<template name="chat">
+  {{#if currentUser}}
+  <div>
+    <div class="past-messages">
+    {{> Template.dynamic template="chatComponent" data="proof"}}
+    </div>
+  </div>
+  {{else}}
+  <h3>Here is the chat 👋</h3>
+  <h4>Log in to see your messages!</h4>
+  {{/if}}
+</template>

@@ -26,6 +26,38 @@
     <textarea id={{this.key}} value={{this.value}} cols="40" rows="3" name="write" type="text" class="textinput form-control" style="display:none"></textarea>
 </template>
 
+<template name="chatComponent">
+    <div>
+      <!-- previous lines of dialogue -->
+      <div class="messages-box">
+        <div class="messages-scroll">
+          <div class="messages">
+            {{#if Template.subscriptionsReady}}
+              {{#each messages}}
+                {{> message}}
+              {{else}}
+              {{/each}}
+            {{else}}
+              {{> loader}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+
+      <!-- writing your own message -->
+      <div class="new-message-container">
+          <form id="message">
+            <h2 class="character">{{this.toPass.characterName}}</h2>
+            <h2 class="chapter">{{this.toPass.chapterName}}</h2>
+            <div>
+                {{> Template.dynamic template="camera" data="proof"}}
+            </div>
+            <input type="text" class="message-input" placeholder="Type your message here..."><button type="submit">Send</button>
+          </form>
+      </div>
+    </div>
+</template>
+
 
 <template name="dropdown">
     <head>
