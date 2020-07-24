@@ -13,6 +13,7 @@ import '../../ui/components/user_avatar_name.html';
 import '../../ui/pages/account_page.html';
 import '../../ui/pages/account_page.js';
 import '../../ui/pages/admin_locations.js';
+import '../../ui/pages/chat.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/debug.html';
 import '../../ui/pages/debug.js';
@@ -195,6 +196,23 @@ Router.route('/', {
   }
 });
 
+
+Router.route('chat', {
+  name: 'chat',
+  before: function() {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "chat",
+        params: {}
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.next();
+  }
+});
+
 Router.route('participate.backdoor', {
   path: '/participate/backdoor',
   template: 'participateBackdoor',
@@ -279,5 +297,3 @@ Router.route('profile', {
     };
   }
 });
-
-
