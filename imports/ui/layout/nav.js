@@ -15,7 +15,11 @@ Template.nav.helpers({
     }else if(pageName === 'affordances'){
       return Router.current().route.getName() === pageName;
     }else if(pageName === 'chat'){
+<<<<<<< 88ad7ab60f45257d6eadbb9e7c09c428ee7ed5a2
       return Router.current().route.getName() === pageName;
+=======
+      return Router.current().route.getName() === chat;
+>>>>>>> some chat layout stuff working thanks @gcan @sanfeng
     }
     else{
       return false;

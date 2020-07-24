@@ -201,6 +201,7 @@ Router.route('/', {
 Router.route('chat', {
   name: 'chat',
   before: function() {
+<<<<<<< 88ad7ab60f45257d6eadbb9e7c09c428ee7ed5a2
     this.subscribe('users.all').wait();
     this.subscribe('messages.user', Meteor.userId()).wait();
     this.next();
@@ -210,6 +211,18 @@ Router.route('chat', {
       users: Meteor.users.find().fetch(),
       messages: Messages.find().fetch(),
     };
+=======
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "chat",
+        params: {}
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.next();
+>>>>>>> some chat layout stuff working thanks @gcan @sanfeng
   }
 });
 

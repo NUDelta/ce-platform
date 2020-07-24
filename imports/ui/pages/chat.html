@@ -1,4 +1,5 @@
 <template name="chat">
+<<<<<<< 88ad7ab60f45257d6eadbb9e7c09c428ee7ed5a2
   <!--these styles are for the chat messages -->
   <head>
       <style>
@@ -78,5 +79,16 @@
   <h4>Log in to see your messages!</h4>
   <div id="messages"></div>
   {{/if}}
+=======
+  {{#if currentUser}}
+  <div>
+    <div class="past-messages">
+    {{> Template.dynamic template="chatComponent" data="proof"}}
+    </div>
+  </div>
+  {{else}}
+  <h3>Here is the chat 👋</h3>
+  <h4>Log in to see your messages!</h4>
+>>>>>>> some chat layout stuff working thanks @gcan @sanfeng
   {{/if}}
 </template>
