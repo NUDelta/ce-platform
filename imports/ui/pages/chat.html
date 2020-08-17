@@ -1,12 +1,82 @@
 <template name="chat">
+  <!--these styles are for the chat messages -->
+  <head>
+      <style>
+          #messages {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            width: 100%;
+            padding-right: 30px;
+            overflow: scroll;
+          }
+
+          .message {
+            padding: 4px 12px;
+            border-radius:10px;
+            margin-bottom: 4px;
+          }
+
+          .sender {
+            align-self: flex-end;
+            background: #2018b8;
+            color: white;
+          }
+
+          .recipient {
+            align-self: flex-start;
+            background: #dedede;
+          }
+
+          .system {
+            border: solid 1px darkgrey;
+            text-align: center;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .new-message-container {
+            position: fixed;
+            bottom: 52px;
+            background: white;
+            padding: 4px 0px;
+            width: 100%;
+          }
+      </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
   {{#if currentUser}}
-  <div>
-    <div class="past-messages">
-    {{> Template.dynamic template="chatComponent" data="proof"}}
+    {{#if currentUser.profile.staticAffordances.chat}}
+    <div>
+      <div>
+        <!-- previous lines of dialogue -->
+        <div id="messages" style={{scrollToBottom}}>
+            {{scroll this.messages}}
+            {{#each this.messages}}
+              {{> message}}
+            {{/each}}
+        </div>
+
+        <!-- writing your own message -->
+        <div class="new-message-container">
+            <form id="message">
+              <input type="text" class="message-input" placeholder="Type your message here...">
+              <button type="submit">Send</button>
+            </form>
+        </div>
+      </div>
     </div>
-  </div>
+    {{else}}
+    <h3>You have not unlocked the chat feature yet! 🔒</h3>
+    <h4>Participate in more experiences to unlock chatwith another Cerebro user!</h4>
+    <div id="messages"></div>
+    {{/if}}
+
   {{else}}
-  <h3>Here is the chat 👋</h3>
+  <h3>Welcome to CE 👋</h3>
   <h4>Log in to see your messages!</h4>
+  <div id="messages"></div>
+  {{/if}}
   {{/if}}
 </template>
