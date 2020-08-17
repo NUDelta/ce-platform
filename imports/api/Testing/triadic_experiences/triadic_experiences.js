@@ -2,6 +2,17 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
 import {DETECTORS} from "../DETECTORS";
 
+/*why doesn't this work?
+export const sendSystemMessage = function(message, recipients) {
+  Messages.insert({
+		uid: "",
+		recipients: recipients,
+		message: message,
+		createdAt: new Date(),
+		system: true
+	});
+}*/
+
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -10,9 +21,20 @@ export const createDrinksTalk = function() {
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
+    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-    //notify
-    notify(participants, sub.iid, 'See images from your drinks talk experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    //sendSystemMessage(message, participants);
+    Messages.insert({
+  		uid: "",
+  		recipients: participants,
+  		message: message,
+  		createdAt: new Date(),
+  		system: true,
+      route: route
+  	});
+
+    notify(participants, sub.iid, 'See images from your drinks talk experience!', '', route);
   }
 
 
