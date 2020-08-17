@@ -202,7 +202,6 @@ Template.monsterStory.helpers({
   otherNames(){
     let currParticipantId = Meteor.userId();
     let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
-    console.log(aff);
     let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
     let otherUsers = this.users.filter(u => (u._id != currParticipantId)
       && (triad in u.profile.staticAffordances));
