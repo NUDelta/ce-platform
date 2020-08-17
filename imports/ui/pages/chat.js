@@ -1,5 +1,4 @@
 import './chat.html';
-<<<<<<< 88ad7ab60f45257d6eadbb9e7c09c428ee7ed5a2
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Messages } from '../../api/Messages/messages.js';
@@ -67,5 +66,3 @@ Template.chat.helpers({
     const $el = $(event.currentTarget);
   }
 });
-=======
->>>>>>> some chat layout stuff working thanks @gcan @sanfeng
