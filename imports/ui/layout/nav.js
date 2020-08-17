@@ -15,7 +15,7 @@ Template.nav.helpers({
     }else if(pageName === 'affordances'){
       return Router.current().route.getName() === pageName;
     }else if(pageName === 'chat'){
-      return Router.current().route.getName() === chat;
+      return Router.current().route.getName() === pageName;
     }
     else{
       return false;
