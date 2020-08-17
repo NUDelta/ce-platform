@@ -2,6 +2,8 @@ import '../../api/OCEManager/OCEs/server/publications.js';
 import '../../api/OCEManager/OCEs/methods.js';
 import '../../api/ImageUpload/server/publications.js';
 import '../../api/ImageUpload/methods.js';
+import '../../api/Messages/server/publications.js'
+import '../../api/Messages/methods.js'
 import '../../api/UserMonitor/users/methods.js';
 import '../../api/UserMonitor/users/server/publications.js';
 import '../../api/UserMonitor/locations/server/publications.js';
