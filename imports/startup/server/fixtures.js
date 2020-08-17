@@ -5,6 +5,7 @@ import { Random } from 'meteor/random'
 import { CONFIG } from '../../api/config.js';
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
+import { Messages } from '../../api/Messages/messages.js';
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
 import { Images, Avatars } from '../../api/ImageUpload/images.js';
@@ -106,6 +107,7 @@ function clearDatabase () {
   Experiences.remove({});
   Submissions.remove({});
   Availability.remove({});
+  Messages.remove({});
   Assignments.remove({});
   Locations.remove({});
   Incidents.remove({});
@@ -202,17 +204,25 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid1, uid2, uid3]}
+    _id: {$in: [uid1, uid2]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad1": true } },
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger": true } },
   }, {
     multi: true
   });
 
   Meteor.users.update({
-    _id: {$in: [uid4, uid5, uid6]}
+    _id: {$in: [uid3]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad2": true } }
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "stranger": false } },
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid4, uid5]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triad2":true, "chat": true, "stranger": true } },
   }, {
     multi: true
   });
