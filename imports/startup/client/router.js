@@ -30,6 +30,7 @@ import '../../ui/pages/dynamic_participate.js';
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
 import {Avatars, Images} from "../../api/ImageUpload/images";
+import {Messages} from "../../api/Messages/messages";
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Meteor } from "meteor/meteor";
 import {Assignments, Availability} from "../../api/OpportunisticCoordinator/databaseHelpers";
@@ -200,16 +201,15 @@ Router.route('/', {
 Router.route('chat', {
   name: 'chat',
   before: function() {
-    if (Meteor.userId()) {
-      let dic = {
-        uid: Meteor.userId(),
-        timestamp: Date.now(),
-        route: "chat",
-        params: {}
-      };
-      Meteor.call('insertLog', dic);
-    }
+    this.subscribe('users.all').wait();
+    this.subscribe('messages.user', Meteor.userId()).wait();
     this.next();
+  },
+  data: function () {
+    return {
+      users: Meteor.users.find().fetch(),
+      messages: Messages.find().fetch(),
+    };
   }
 });
 
