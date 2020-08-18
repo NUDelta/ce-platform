@@ -47,7 +47,6 @@ Template.storyPage.helpers({
 });
 
 Template.bumped.helpers({
-
   nameOfFriend() {
     let needName = this.needName;
 
@@ -74,6 +73,383 @@ Template.bumped.helpers({
 
     return {key: 'nameOfFriend', value: friendName};
   }
+});
+
+Template.monsterCreate.helpers({
+  mostRecentImageTriadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
+  },
+  arrayLenEqual(array, len){
+    return array.length === len;
+  },
+  elementIndex(array, index){
+    return array[index];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
+  }
+});
+
+Template.monsterCreate.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.monsterCreate.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.monsterCreate.events({
+'click #takePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    toggleCameraControls('takePhotoInProgress');
+    CameraPreview.takePicture({
+      width: 480, height: 640, quality: 85
+    },function(imgData){
+        let rect = getPreviewRect();
+        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+          // using an instance of jquery tied to current template scope
+          let imagePreview = template.$(".fileinput-preview");
+          imagePreview.attr('src', croppedImgUrl);
+          imagePreview.show();
+          template.imageSubmitReady.set(true);
+          CameraPreview.hide();
+          toggleCameraControls('takePhotoDone');
+        });
+    });
+  } else {
+    console.error("Could not access the CameraPreview");
+  }
+},
+'click #retakePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.show()
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+  $(".fileinput-preview").hide();
+  template.imageSubmitReady.set(false);
+  toggleCameraControls('startCamera');
+},
+'click #switchCamera'(){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.switchCamera();
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+},
+'click #goToParticipate'(event, template) {
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('triparticipate').style.display = "block";
+
+  if (template.cameraStarted.get()) {
+    if (!template.imageSubmitReady.get()) {
+      CameraPreview.show();
+    }
+  } else {
+    Meteor.setTimeout(() => {
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
+      }
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
+    }, 300);
+  }
+},
+'click #goToInstruction'() {
+  document.getElementById('instruction').style.display = "block";
+  document.getElementById('triparticipate').style.display = "none";
+  CameraPreview.hide();
+}
+});
+
+Template.monsterStory.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.monsterStory.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.monsterStory.helpers({
+  stitchedMonster(needName, images){
+    images = images.filter(i => i.needName == needName && i.stitched);
+    return images[0]
+  },
+  otherNames(){
+    let currParticipantId = Meteor.userId();
+    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
+    console.log(aff);
+    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+    let otherUsers = this.users.filter(u => (u._id != currParticipantId)
+      && (triad in u.profile.staticAffordances));
+    return otherUsers.map(u => u.username);
+  },
+  elementIndex(array, index){
+    return array[index];
+  },
+  //latest submission w image, caption & monster position is useful
+  latestStorySubmissionAndImage(submissions, images, needName){
+  }
+});
+
+Template.monsterStory.events({
+  'click #takePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      toggleCameraControls('takePhotoInProgress');
+      CameraPreview.takePicture({
+        width: 480, height: 640, quality: 85
+      },function(imgData){
+          let rect = getPreviewRect();
+          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+            // using an instance of jquery tied to current template scope
+            let imagePreview = template.$(".fileinput-preview");
+            imagePreview.attr('src', croppedImgUrl);
+            imagePreview.show();
+            template.imageSubmitReady.set(true);
+            CameraPreview.hide();
+            toggleCameraControls('takePhotoDone');
+            document.getElementById('textbox').style.display = "block";
+            document.getElementById('submit').style.visibility = "visible";
+          });
+      });
+    } else {
+      console.error("Could not access the CameraPreview");
+    }
+  },
+  'click #retakePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.show()
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+    $(".fileinput-preview").hide();
+    template.imageSubmitReady.set(false);
+    toggleCameraControls('startCamera');
+    document.getElementById('textbox').style.display = "none";
+    document.getElementById('submit').style.visibility = "hidden";
+  },
+  'click #switchCamera'(){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.switchCamera();
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+  },
+  'click #goToParticipate'(event, template) {
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('participate').style.display = "block";
+
+    if (template.cameraStarted.get()) {
+      if (!template.imageSubmitReady.get()) {
+        CameraPreview.show();
+      }
+    } else {
+      Meteor.setTimeout(() => {
+        if (typeof CameraPreview !== 'undefined') {
+          startCameraAtPreviewRect();
+          template.cameraStarted.set(true);
+        } else {
+          console.error("Could not access the CameraPreview")
+        }
+        template.$(".fileinput-preview").hide();
+        template.imageSubmitReady.set(false);
+        toggleCameraControls('startCamera');
+      }, 300);
+    }
+  },
+  'click #goToInstruction'() {
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+    CameraPreview.hide();
+  },
+  'click .grid-square'(event){
+    event.stopPropagation();
+    let monster = document.getElementById("monster");
+    event.target.append(monster);
+  }
+});
+
+Template.groupBumped.helpers({
+  // @TODO - determine if we won't need this then delete
+  friendNames() {
+    const friends = this.users.filter(friend => {
+      return this.notification_log.filter(notif => friend._id == notif.uid && friend._id !== Meteor.userId()).length > 0;
+    });
+
+    return {
+      friendOne: friends[0].username,
+      friendTwo: friends[1].username
+    }
+  },
+  getNeedImages(images, needName){
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
+  },
+  arrayIndex(array, index){
+    return array[index];
+  }
+});
+
+Template.imitationGame.helpers({
+  getPreviousImageSub() {
+    return this.images.find(i => i.uid === this.toPass.previousSub.uid);
+  },
+});
+
+Template.groupCheers.helpers({
+  getUserById(users, uid) {
+    let user = users.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
+
+  mostRecentImageTriadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
+  },
+
+  lengthEqual(array, number) {
+    return array.length === number;
+  },
+  firstElement(array) {
+    return array[0];
+  },
+  secondElement(array){
+    return array[1];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
+  }
+});
+
+Template.groupCheers.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.groupCheers.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.groupCheers.events({
+  'click #takePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      toggleCameraControls('takePhotoInProgress');
+      CameraPreview.takePicture({
+        width: 480, height: 640, quality: 85
+      },function(imgData){
+          let rect = getPreviewRect();
+          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+            // using an instance of jquery tied to current template scope
+            let imagePreview = template.$(".fileinput-preview");
+            imagePreview.attr('src', croppedImgUrl);
+            imagePreview.show();
+            template.imageSubmitReady.set(true);
+            CameraPreview.hide();
+            toggleCameraControls('takePhotoDone');
+          });
+      });
+    } else {
+      console.error("Could not access the CameraPreview");
+    }
+  },
+  'click #retakePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.show()
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+    $(".fileinput-preview").hide();
+    template.imageSubmitReady.set(false);
+    toggleCameraControls('startCamera');
+  },
+  'click #switchCamera'(){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.switchCamera();
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+  },
+  'click #goToParticipate'(event, template) {
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('triparticipate').style.display = "block";
+
+    if (template.cameraStarted.get()) {
+      if (!template.imageSubmitReady.get()) {
+        CameraPreview.show();
+      }
+    } else {
+      Meteor.setTimeout(() => {
+        if (typeof CameraPreview !== 'undefined') {
+          startCameraAtPreviewRect();
+          template.cameraStarted.set(true);
+        } else {
+          console.error("Could not access the CameraPreview")
+        }
+        template.$(".fileinput-preview").hide();
+        template.imageSubmitReady.set(false);
+        toggleCameraControls('startCamera');
+      }, 300);
+    }
+  },
+  'click #goToInstruction'() {
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('triparticipate').style.display = "none";
+    CameraPreview.hide();
+  },
 });
 
 /**
@@ -231,11 +607,15 @@ Template.halfhalfParticipate.events({
   // }
 });
 
-/** Based on whether the preview window is on the left or right, this function returns the rectangle that
+/** Based on whether the preview window is on the left or right for half_half
+ * or top left, top right, bottom for triad image
+ * this function returns the rectangle that
  * contains information about the coordinates of the preview.
  *
  * @returns rect {DOMRect}
  */
+
+//CLEAN THIS UP
 const getPreviewRect = function() {
   let rect;
   // first one to take picture, so the left half of image will be cropped and used
@@ -243,12 +623,40 @@ const getPreviewRect = function() {
     let halfOverlay = document.getElementById('leftHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
-  else {
+  else if (document.getElementById('rightHalfPreview') !== null) {
     let halfOverlay = document.getElementById('rightHalfPreview');
     rect = halfOverlay.getBoundingClientRect();
   }
+  else if (document.getElementById('topThirdPreview') !== null) {
+    let triOverlay = document.getElementById('topThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('middleThirdPreview') !== null) {
+    let triOverlay = document.getElementById('middleThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('bottomThirdPreview') !== null) {
+    let triOverlay = document.getElementById('bottomThirdPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('topLTriPreview') !== null) {
+    let triOverlay = document.getElementById('topLTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('topRTriPreview') !== null) {
+    let triOverlay = document.getElementById('topRTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  }
+  else if (document.getElementById('topRTriPreview') !== null){
+    let triOverlay = document.getElementById('bottomTriPreview');
+    rect = triOverlay.getBoundingClientRect();
+  } else {
+    let overlay = document.getElementById('Preview');
+    rect = overlay.getBoundingClientRect();
+  }
   return rect;
 };
+
 
 const startCameraAtPreviewRect = function(
   {
@@ -264,19 +672,21 @@ const startCameraAtPreviewRect = function(
     camera: camera, tapPhoto: tapPhoto, previewDrag: previewDrag, toBack: toBack});
 };
 
+//changeHalfHalfPhoto to just Photo to stop break
 const toggleCameraControls = function(mode) {
   if (mode === "startCamera") {
     $(".fileinput-preview").hide();
     document.getElementById('retakePhoto').style.display = "none";
-    document.getElementById('takeHalfHalfPhoto').style.display = "inline";
+    document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "inline";
   }
   else if (mode === "takePhotoInProgress") {
     document.getElementById('takePhotoInProgress').style.display = "inline";
-    document.getElementById('takeHalfHalfPhoto').style.display = "none";
+    document.getElementById('takePhoto').style.display = "inline";
     document.getElementById('switchCamera').style.display = "none";
   }
   else if (mode === "takePhotoDone") {
+    document.getElementById('takePhoto').style.display = "none";
     document.getElementById('takePhotoInProgress').style.display = "none";
     document.getElementById('retakePhoto').style.display = "inline";
   }
@@ -384,6 +794,73 @@ const b64CropLikeCordova = function(base64PictureData, rect_width, rect_height, 
   };
 };
 
+/**
+ *
+ * @param sources {Array} Array of image source strings
+ * @param verticalStitch {Boolean} default true, it will stitch verti
+ * @param callback {Function} some function(stitchedImage) with first argument as stitched image
+ * @see http://blog.mathocr.com/2017/06/09/camera-preview-with-cordova.html
+ * @return base64imageURL
+ */
+const stitchImageSources = function(sources, verticalStitch = true, callback) {
+  // Recommended to load all images before drawing to canvas
+  // https://www.html5canvastutorials.com/tutorials/html5-canvas-image-loader/
+
+  // final image will contain stitchED images
+  let canvas = document.createElement('canvas');
+  let ctx = canvas.getContext('2d');
+  const loadImages = (sources, loadImagesCallback) => {
+    let images = {}
+    let loadedImages = 0;
+    let numImages = 0;
+    let stitchOffsetsX = {};
+    let stitchOffsetsY = {};
+    // get num of sources
+    for(let src in sources) {
+      numImages++;
+    }
+
+    for(let i in sources) {
+      images[i] = new Image();
+      // Must ensure canvas is not tainted, and "allow cross-origin use of images and canvas"
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+      images[i].crossOrigin = "Anonymous";
+
+      images[i].onload = function() {
+        stitchOffsetsX[i] = images[i].width;
+        stitchOffsetsY[i] = images[i].height;
+        if(++loadedImages >= numImages) {
+          loadImagesCallback(images, stitchOffsetsX, stitchOffsetsY);
+        }
+      };
+      images[i].src = sources[i];
+    }
+  }
+
+  loadImages(sources, function(images, stitchOffsetsX, stitchOffsetsY) {
+    canvas.height = (verticalStitch) ?
+      Object.values(stitchOffsetsY).reduce((a,b) => a + b):
+      Object.values(stitchOffsetsY).reduce((a,b) => Math.max(a,b));
+    canvas.width = (verticalStitch) ?
+      Object.values(stitchOffsetsX).reduce((a,b) => Math.max(a,b)) :
+      Object.values(stitchOffsetsX).reduce((a,b) => a + b);
+    let offset = 0;
+    for(let i in images) {
+      if (verticalStitch) {
+        i == 0? offset = 0: offset += stitchOffsetsY[i-1];
+        ctx.drawImage(images[i], 0, offset);
+      }
+      else { // horizontalStitch
+        offset += stitchOffsetsX[i];
+        ctx.drawImage(images[i], offset, 0);
+      }
+    }
+
+    let stitchedImage = canvas.toDataURL();
+    callback(stitchedImage);
+  });
+};
+
 Template.api_custom.onCreated(() => {
   this.state = new ReactiveDict();
 
@@ -399,7 +876,7 @@ Template.api_custom.onCreated(() => {
   const incident = Incidents.findOne({_id: params.iid});
   if (!needIsAvailableToParticipateNow(incident, params.needName)) {
     // TODO: redirect to an apology page
-    Router.go('home');
+    //Router.go('home');
     return;
   }
 
@@ -432,11 +909,15 @@ window.onbeforeunload = function() {
   }
 };
 
+
+//note: needName for triparticipate often split into needName_triad#
 Template.api_custom.events({
-  'submit form'(event, instance) {
+  'submit #participate'(event, instance) {
     event.preventDefault();
 
     //this makes the loading circle show up
+    console.log(event.target.getElementsByClassName('overlay'));
+
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
@@ -460,6 +941,9 @@ Template.api_custom.events({
     const textBoxes = event.target.getElementsByClassName('textinput');
     _.forEach(textBoxes, (textBox) => {
       submissions[textBox.id] = textBox.value;
+      if (needName.split("_")[0] == "monsterStory"){
+        submissions['monsterLocation'] = document.getElementById('monster').parentNode.dataset.location;
+      }
     });
 
     const images = event.target.getElementsByClassName('fileinput');
@@ -525,6 +1009,7 @@ Template.api_custom.events({
 
       // add the submitted image to the submissions content dictionary
       submissions[image.id] = imageFile._id;
+      //submissions['imageid'] = imageFile._id;
     });
 
     const submissionObject = {
@@ -538,7 +1023,160 @@ Template.api_custom.events({
       lng: location.lng
     };
 
-    Meteor.call('updateSubmission', submissionObject);
+    Meteor.call('createInitialSubmission', submissionObject);
+
+  },
+
+  'submit #triparticipate'(event, instance) {
+    event.preventDefault();
+
+    //this makes the loading circle show up
+    console.log(event.target.getElementsByClassName('overlay'));
+
+    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
+
+
+    const experience = this.experience;
+    // give null values for use when testing submitted photos on the web, without location data
+    const location = this.location ? this.location : {lat: null, lng: null};
+    const iid = Router.current().params.iid;
+    const needName = Router.current().params.needName;
+    const uid = Meteor.userId();
+    const timestamp = Date.now()
+    const submissions = {};
+    const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+
+
+    const dropDowns = event.target.getElementsByClassName('dropdown');
+    _.forEach(dropDowns, (dropDown) => {
+      const index = dropDown.selectedIndex;
+      submissions[dropDown.id] = dropDown[index].value
+    });
+
+    const textBoxes = event.target.getElementsByClassName('textinput');
+    _.forEach(textBoxes, (textBox) => {
+      submissions[textBox.id] = textBox.value;
+    });
+
+    const images = event.target.getElementsByClassName('fileinput');
+    //no ImageUpload being uploaded so we can just go right to the results page
+    if (images.length === 0) {
+      Router.go(resultsUrl);
+    }
+
+    //sad that there's this condition for this specific experience but :-///
+    //i dont want to mess around w creating different forms for different submits
+    if (needName.split("_")[0] == "monsterCreate"){
+      //if it is the final submission... curr number of submitted images is 2
+      if (this.images.filter(image => image.needName == needName).length === 2){
+        let monster0 = document.getElementsByClassName('content')[0].children[1];
+        let monster1 = document.getElementsByClassName('content')[1].children[1];
+        let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
+        stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
+          let block = ImageURL.split(";");
+          let contentType = block[0].split(":")[1];
+          let realData = block[1].split(",")[1];
+          let picture = b64toBlob(realData, contentType);
+
+          let imageFile = Images.insert(picture, (err, imageFile) => {
+            if (err) {
+              alert(err);
+            } else {
+              Images.update({ _id: imageFile._id }, {
+                $set: {
+                  iid: iid,
+                  uid: uid,
+                  lat: location.lat,
+                  lng: location.lng,
+                  needName: needName,
+                  stitched:'true'
+                }
+              }, (err) => {
+                if (err) {
+                  console.log('upload error,', err);
+                }
+              });
+            }
+          });
+
+          submissions['fullMonster'] = imageFile._id
+        });
+      }
+    }
+
+    //otherwise, we do have ImageUpload to upload so need to hang around for that
+    _.forEach(images, (image, index) => {
+      let picture;
+      if (event.target.photo) { // form has input[name=photo]
+        // imageFile
+        picture = event.target.photo.files[index]
+      } else {
+        let ImageURL = $('.fileinput-preview').attr('src');
+        // Split the base64 string in data and contentType
+        let block = ImageURL.split(";");
+        // Get the content type
+        let contentType = block[0].split(":")[1];
+        // get the real base64 content of the file
+        let realData = block[1].split(",")[1];
+
+        picture = b64toBlob(realData, contentType);
+      }
+
+
+      // save image and get id of new document
+      const imageFile = Images.insert(picture, (err, imageFile) => {
+        //this is a callback for after the image is inserted
+        if (err) {
+          alert(err);
+        } else {
+          //success branch of callback
+          //add more info about the photo
+          Images.update({ _id: imageFile._id }, {
+            $set: {
+              iid: iid,
+              uid: uid,
+              lat: location.lat,
+              lng: location.lng,
+              needName: needName,
+            }
+          }, (err, docs) => {
+            if (err) {
+              console.log('upload error,', err);
+            } else {
+            }
+          });
+          // TODO: setTimeout for automatically moving on if upload takes too long
+
+
+          //watch to see when the image db has been updated, then go to results
+          const cursor = Images.find(imageFile._id).observe({
+            changed(newImage) {
+              if (newImage.isUploaded()) {
+                cursor.stop();
+                Router.go(resultsUrl);
+              }
+            }
+          });
+        }
+      });
+
+      // add the submitted image to the submissions content dictionary
+      submissions[image.id] = imageFile._id;
+
+    });
+
+    const submissionObject = {
+      uid: uid,
+      eid: experience._id,
+      iid: iid,
+      needName: needName,
+      content: submissions,
+      timestamp: timestamp,
+      lat: location.lat,
+      lng: location.lng
+    };
+
+    Meteor.call('createInitialSubmission', submissionObject);
 
   },
   'click #participate-btn'(event, instance) {

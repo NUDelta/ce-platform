@@ -39,6 +39,7 @@ Meteor.methods({
     Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
       Detectors.insert(value);
     });
+    log.info(`${CONSTANTS.DETECTORS}`);
     log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
   startStorytime(){
@@ -51,6 +52,27 @@ Meteor.methods({
   startBumped(){
     console.log("starting bumped");
     let value = CONSTANTS.EXPERIENCES.bumped;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startDrinksTalk(){
+    console.log("starting drinks talk");
+    let value = CONSTANTS.EXPERIENCES.drinksTalk;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startImitationGame() {
+    console.log("starting imitation game");
+    let value = CONSTANTS.EXPERIENCES.imitationGame;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  },
+  startGroupCheers(){
+    console.log("starting group cheers");
+    let value = CONSTANTS.EXPERIENCES.groupCheers;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
@@ -127,6 +149,7 @@ function createTestData(){
   let uid3 = findUserByUsername('meg')._id;
   let uid4 = findUserByUsername('megs_sister')._id;
   let uid5 = findUserByUsername('josh')._id;
+  let uid6 = findUserByUsername('nagy')._id;
 
   let olinuid1 = findUserByUsername('nagy')._id;
   let olinuid2 = findUserByUsername('bonnie')._id;
@@ -165,7 +188,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1, uid3, uid5]}
   }, {
-    $set: { 'profile.staticAffordances.lovesDTR':  true}
+    $set: { 'profile.staticAffordances.lovesDTR':  true }
   }, {
     multi: true
   });
@@ -178,5 +201,21 @@ function createTestData(){
     multi: true
   });
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 );
+  Meteor.users.update({
+    _id: {$in: [uid1, uid2, uid3]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triad1": true } },
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid4, uid5, uid6]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triad2": true } }
+  }, {
+    multi: true
+  });
+
+  log.debug('FOR LOCATION TESTING RUN >>>> python simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
 }

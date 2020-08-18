@@ -7,7 +7,7 @@ import { findUserByUsername } from "../UserMonitor/users/methods";
 import { Assignments} from "../OpportunisticCoordinator/databaseHelpers";
 import { Random } from 'meteor/random'
 import { Detectors } from "../UserMonitor/detectors/detectors";
-import { updateSubmission} from "../OCEManager/progressor";
+import { createInitialSubmission} from "../OCEManager/progressor";
 import "../OCEManager/progressorHelper";
 import {insertTestUser, startTestOCE} from "../OpportunisticCoordinator/populateDatabase";
 
@@ -182,7 +182,7 @@ describe('Simple End To End', function () {
       lng: LOCATION.lng,
     };
 
-    updateSubmission(submission);
+    createInitialSubmission(submission);
 
     // Wait several seconds so the observe changes of Submissions collection can run
     Meteor.setTimeout(function () {

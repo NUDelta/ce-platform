@@ -10,10 +10,15 @@ The Collective Experience (CE) Platform facilitates the creation and operation o
 
 ### Windows Subsystem for Linux Specific Setup
 
-Follow steps 1 & 2 from above and then enter the following commands to install Mongo and start a Mongo process:
-
+Follow steps 1 & 2 from above. To install Mongo (v 3.6), follow steps 1-5 from this site: https://github.com/michaeltreat/Windows-Subsystem-For-Linux-Setup-Guide/blob/master/readmes/installs/MongoDB.md
 ```
-$ sudo apt-get install mongodb-server
+$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+$ sudo apt-get update
+$ sudo apt-get install -y mongodb-org
+```
+Then, to create where data directory & to start a Mongo process, do the following.
+```
 $ sudo mkdir -p /data/db
 $ sudo chown -R $USER /data/db
 $ mongod
@@ -27,8 +32,8 @@ $ mongo
 > db.users.find()
 ```
 
-## iOS Development Running 
-Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process. 
+## iOS Development Running
+Development build is nice to develop the mobile app, connected to a local server. Following these steps will also allow you to setup hot-code-push for local development, which makes it extra easy to make changes to the mobile app without having to go through a long build process.
 
 1. Find your ipaddress using `ifconfig |grep inet`. On northwesterns network, it sometimes looks something like `10.105.X.Y`. On a home WiFi network, it might look like `192.168.X.Y`
 2. From the ce-platform directory, run `npm run build-dev 3000 192.168.X.Y` or equivalently `meteor run ios-device -p 3000 --mobile-server=http://{ipaddress}:3000`
@@ -51,11 +56,11 @@ For a quick script that does the meteor build and sets up the xcworkspace, see t
     1. Change the server in the `scripts` section within `package.json` if you want to run with a local server (`localhost:3000`).
     2. *Note*: if this fails with an error saying that `dezalgo` module cannot be found, run `meteor npm i -g write-file-atomic path-is-inside async-some dezalgo`.
     3. *Note*: if this fails with an error saying that `EACCES: permission denied` for one of the Pods in ce-platform-ios, you should try removing or moving the folder `../Cerebro-ios` to start a fresh build.
-3. Navigate to `../Cerebro-ios/ios/project` and run `pod install` to install needed dependencies. 
+3. Navigate to `../Cerebro-ios/ios/project` and run `pod install` to install needed dependencies.
 
 ### Creating an .ipa File
 #### Setup
-Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.sh` export script and `exportOptions.plist` export options plist. The former runs the Xcode cleaning, building, and archiving stages for enterprise export and uses the latter to sign the application. 
+Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.sh` export script and `exportOptions.plist` export options plist. The former runs the Xcode cleaning, building, and archiving stages for enterprise export and uses the latter to sign the application.
 
 `exportOptions.plist` are used to specify the provisioning profile and team ID to sign the application. Configure the following to change which profile is used to perform the signing:
 ```xml
@@ -73,8 +78,8 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
 
 #### Export
-1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`. 
-2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`). 
+1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`.
+2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`).
 3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
 4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
 
@@ -98,6 +103,16 @@ For the 4 OCEs used in the CHI 19 study, I made a data dump which has several du
 4. Restore the data i.e. `mongorestore -h 127.0.0.1 --port 3001 -d meteor ce-dump-avatar-storytimerichpoor-samesituationrich/meteor`
 5. Several accounts were used to create data, like users `nagy` and `bonnie`. Their passwords are `password`
 6. If you want to create more data, do so within the app. Then use mongodump i.e. `mongodump -h 127.0.0.1 --port 3001 -d meteor`
+
+Alternatively, to dump/restore the data currently in the production or staging database (useful for debugging without iOS Development Running), do the following:
+1. Dump the data: `mongodump --uri=<URI that can be found on mLab -o $OUTPUT_DIRECTORY>`
+2. You may have to drop the database before restoring
+```
+$ mongo
+$ use meteor
+$ db.dropDatabase()
+```
+3. Restore the data locally `mongorestore -h 127.0.0.1 -d meteor $OUTPUT_DIRECTORY/$REMOTE_DB `
 
 ### Javascript
 Refer to the [Airbnb Javascript style guide](https://github.com/airbnb/javascript). We're fully into ES6, so make sure you're familiar with using `let` over `var`, `() => {}` function shorthand, and so on.
@@ -131,5 +146,3 @@ Sort all imports in this order and into these groups, omitting any groups that d
 
 ### Methods
 You'll notice that, to match what's recommended from Meteor 1.3, all of the methods in this project have been changed into exported `ValidatedMethod`s. See the [Github Repo](https://github.com/meteor/validated-method/) and the [guide page](http://guide.meteor.com/methods.html) about this, but be sure to use these.
-
-

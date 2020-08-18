@@ -50,6 +50,7 @@ export const onLocationUpdate = (uid, location, callback) => {
 
   // attempt to find a user with the given uid
   let user = Meteor.users.findOne({_id: uid});
+  serverLog.call({message: `user ${user}`});
 
   if (user) {
 
@@ -80,6 +81,7 @@ export const onLocationUpdate = (uid, location, callback) => {
       let userAffordances = user.profile.staticAffordances;
       affordances = Object.assign({}, affordances, userAffordances);
       affordances = affordances !== null ? affordances : {};
+      serverLog.call({message: `affordances ${affordances}`});
 
       // blocking, since everything in system works off of Locations collection
       updateLocationInDb(uid, bgLocationObject, affordances);
@@ -181,7 +183,8 @@ export const userParticipatedTooRecently = (user) => {
   if (CONFIG.MODE === "local") {
     waitTimeAfterParticipating = minutes * 1;
   } else {
-    waitTimeAfterParticipating = minutes * 20;
+    //change this to some larger value after testing if i want them to be available to home screen
+    waitTimeAfterParticipating = minutes * 1;
   }
   const lastParticipated = user.profile.lastParticipated;
   const now = Date.now();

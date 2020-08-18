@@ -6,7 +6,6 @@
     <head>
         <style>
             .instruction {
-                padding-top: 4%;
                 padding-bottom: 4%;
             }
 
@@ -123,7 +122,7 @@
         <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
       </button>
     </div>
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+    <button type="button" class="btn btn-default btn-participate btn-primary btn-block"
             style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
       Submit
     </button>
@@ -162,6 +161,558 @@
             </button>
         </form>
     {{/if}}
+</template>
+
+<template name="groupBumped">
+    <head>
+        <style>
+            .instruction {
+                padding-top: 4%;
+                padding-bottom: 4%;
+            }
+
+            .camera-upload {
+                padding-bottom: 1%;
+            }
+        </style>
+    </head>
+
+    {{#if Template.subscriptionsReady}}
+        <div class="instruction">
+          <span>{{this.toPass.situationDescription}}</span>
+            <span>
+                You just bumped into some friends! {{this.toPass.instruction}}
+            </span>
+        </div>
+        <form class="col col-xs-12" id="participate">
+            <div class="camera-upload">
+                {{> Template.dynamic template="camera" data="proof"}}
+            </div>
+            <div>
+              {{> Template.dynamic template="text" data="sentence"}}
+            </div>
+
+            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+                Submit
+            </button>
+        </form>
+    {{/if}}
+</template>
+
+<template name="monsterCreate">
+  <head>
+    <style>
+      .instruction {
+        padding-bottom: 2%;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .innercontent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      .fullmask {
+        background-color: rgb(225,225,225);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .mask {
+        background-color: rgb(225,225,225);
+        position: absolute;
+        width: 100%;
+        height: 90%;
+      }
+
+      .glyphicon-medium {
+        font-size: 24px;
+      }
+
+      .glyphicon-large {
+        font-size: 32px;
+      }
+
+      .right-align {
+        float: right;
+      }
+
+      .navigation-buttons {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  {{#if Template.subscriptionsReady}}
+  {{#let needImages=(mostRecentImageTriadForNeed this.images this.needName) }}
+  <div id="instruction" class="instruction">
+    <h4>{{this.experience.name}}</h4>
+    <div>
+      {{{this.toPass.instruction}}}
+      {{#if (arrayLenEqual needImages 0) }}
+          <span> Draw the top part of the monster! </span>
+          {{#if this.toPass.exampleImage}}
+          <img src="{{this.toPass.exampleImage}}"/>
+          {{/if}}
+
+
+      {{else if (arrayLenEqual needImages 1)}}
+          <span> Draw the middle part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
+          {{#if this.toPass.exampleImage2}}
+          <img src="{{this.toPass.exampleImage2}}"/>
+          {{/if}}
+
+      {{else if (arrayLenEqual needImages 2)}}
+        <span> Draw the bottom part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
+        {{#if this.toPass.exampleImage3}}
+        <img src="{{this.toPass.exampleImage3}}"/>
+        {{/if}}
+      {{/if}}
+
+      <span> The final result will look like this: </span>
+      {{#if this.toPass.exampleImage}}
+      <img src="{{this.toPass.exampleFullMonster}}"/>
+      {{/if}}
+    </div>
+
+  <button id="goToParticipate" class="btn btn-primary right-align">
+    <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+  </button>
+  </div>
+
+  <form id="triparticipate" class="long" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
+    <div>
+      {{#if (arrayLenEqual needImages 0) }}
+      Draw the top part of the monster!
+      {{else if (arrayLenEqual needImages 1) }}
+      Draw the middle part of the monster! Try to align it with the previous scientist's drawing.
+      {{else if (arrayLenEqual needImages 2)}}
+      Draw the bottom part of the monster! Try to align it with the previous scientist's drawing.
+      {{/if}}
+    </div>
+
+      <div id="tcameraOverlay" class="camera-overlay long">
+       {{> loadingOverlay}}
+      {{#if (arrayLenEqual needImages 0) }}
+        <div class="topThird trisquare">
+          {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
+        </div>
+        <div class="middleThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="innercontent">
+              Waiting for submission!
+          </div>
+        </div>
+        <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+          <div class="innercontent">
+            Waiting for submission!
+          </div>
+        </div>
+      {{/if}}
+
+        {{#if (arrayLenEqual needImages 1)}}
+          <div class="topThird trisquare">
+              <div class="content">
+              <div class="mask">
+                <div class="innercontent">A mystery from your past partner!</div>
+              </div>
+              {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
+              </div>
+          </div>
+          <div class="middleThird trisquare">
+            {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
+          </div>
+          <div class="bottomThird trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent">
+              Waiting for submission!
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if (arrayLenEqual needImages 2)}}
+          <div class="topThird trisquare" style="background-color: rgba(225,225,225)">
+              <div class="content" style="overflow:hidden">
+                <div class="fullmask">
+                  <div class="innercontent">A mystery from your past partner!</div>
+                </div>
+                {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
+              </div>
+          </div>
+          <div class="middleThird trisquare" id="middleThird">
+            <div class="content">
+            <div class="mask">
+              <div class="innercontent">A mystery from your past partner!</div>
+            </div>
+            {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 1) }}
+            </div>
+          </div>
+          <div class="bottomThird trisquare">
+            {{> Template.dynamic template="halfhalfCamera" data="bottomThirdPreview"}}
+          </div>
+          {{/if}}
+      </div>
+
+    <div class="camera-controls">
+      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+        <span class="fa fa-spinner glyphicon-large"></span>
+      </button>
+      <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+      Submit
+    </button>
+  </form>
+  {{/let}}
+  {{/if}}
+</template>
+
+<!-- somehow see the story before contributing to the story?? -->
+<template name="monsterStory">
+  <head>
+    <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      position: absolute;
+      height: 45vh;
+      width: 45vh;
+      margin: auto;
+    }
+
+    .grid div {
+      border: 1px black solid;
+    }
+
+    #monster {
+      height: 14.5vh;
+      width: 14.5vh;
+      position:absolute;
+      border: none;
+    }
+
+    #monster img {
+      height: 100%;
+      width: 100%;
+    }
+
+    #cameraOverlay {
+      height: 45vh;
+      margin-top: 5px;
+    }
+
+    #participate .camera-overlay  {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #participate .fileinput{
+      height:45vh;
+      width:45vh;
+      z-index: -1;
+      margin-bottom: 0px;
+    }
+
+    #goToInstruction {
+      padding: 0px;
+    }
+
+    #participate .camera-controls {
+      margin-bottom: 40px;
+    }
+    </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+  <div id="instruction">
+    <div>
+    {{#let names = (otherNames)}}
+    {{#let name1 = (elementIndex names 0)}}
+    {{#let name2 = (elementIndex names 1)}}
+    Remember the monster you made before with the scientists {{name1}} and {{name2}}?
+    {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
+    It has <b>escaped</b> the lab and is wreaking havoc! You just spotted it nearby you—
+    Quick, take an image of it, and describe what it is doing!<br><br>
+    You can move the monster to different places in the image by tapping different spots in the image.
+    {{/let}}
+    {{/let}}
+    {{/let}}
+    </div>
+    <button id="goToParticipate" class="btn btn-primary right-align" style="margin-top: 10px">
+      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
+  </div>
+
+  <form id="participate" class="long" style="display: none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons" style="width: 120px">
+      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+    </button>
+    <div id="cameraOverlay" class="camera-overlay gap short">
+      {{> loadingOverlay}}
+        <div class="grid">
+          <div class="grid-square" data-location="0"></div>
+          <div class="grid-square" data-location="1"></div>
+          <div class="grid-square" data-location="2"></div>
+
+          <div class="grid-square" data-location="3"></div>
+          <div class="grid-square" data-location="4">
+            <div id="monster">
+            {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
+            </div>
+          </div>
+          <div class="grid-square" data-location="5"></div>
+
+          <div class="grid-square" data-location="6"></div>
+          <div class="grid-square" data-location="7"></div>
+          <div class="grid-square" data-location="8"></div>
+        </div>
+        {{> Template.dynamic template="halfhalfCamera" data="Preview"}}
+    </div>
+
+    <div class="camera-controls">
+      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+        <span class="fa fa-spinner glyphicon-large"></span>
+      </button>
+      <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
+        <span class="glyphicon glyphicon-record glyphicon-large"></span>
+      </button>
+      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      </button>
+      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+      </button>
+    </div>
+
+    <div id="textbox" style="display: none">{{> Template.dynamic template="text" data="sentence"}}</div>
+
+    <button id="submit" type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+            style="display: {{submitDisplayValue}}; border-radius: 3px; width: 50%; margin-top: 5px;">
+      Submit
+    </button>
+  </form>
+  {{/if}}
+</template>
+
+<template name="imitationGame">
+  <head>
+    <style>
+      .instruction {
+        padding-top: 4%;
+        padding-bottom: 4%;
+      }
+      img {
+        width: 100%;
+        margin-bottom: 10px
+      }
+      .camera-upload {
+        padding-bottom: 1%;
+      }
+    </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+    <div class="instruction">
+      <p>
+        You’re playing <b>“The Imitation Game”</b>.
+        In this game, you will be communicating with the other players to try to accurately translate an image into a drawing.
+      </p>
+      <p>
+        There are 3 steps to this game.
+      </p>
+      <p>
+        1) The <b>creator</b> will see the initial image, recreate it with items around them, and then send a photo to the second player.
+      </p>
+      <p>
+        2) The <b>descriptor</b> will then see only the recreated image, and they will try to describe it using text.
+      </p>
+      <p>
+        3) The <b>recreator</b> will see only the text and then try to draw the image from this description.
+      </p>
+      {{#if this.toPass.role.creator}}
+        <img src="{{this.toPass.example_image}}"/>
+        <p>
+          You have the role of the <b>creator</b>. Here is the initial image!
+          Try to recreate it with items around you and send a photo of your image for the next player.
+        </p>
+        <form class="col col-xs-12" id="participate">
+          <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
+          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+        </form>
+      {{else if this.toPass.role.descriptor}}
+        <p>
+          You have the role of the <b>descriptor</b>.
+        </p>
+        {{#let user=(getUserById users this.toPass.previousSub.uid)}}
+         {{> displayLeftToRight_FullName_Avatar prependText="The creator," appendText=", created this image:" user=user avatar=(userAvatarImg avatars user) }}
+        {{/let}}
+        {{#let creatorImage=getPreviousImageSub}}
+          {{> Template.dynamic template="displayImage" data=(creatorImage) }}
+        {{/let}}
+        <p>
+          Describe it as best you can to send to the next player.
+        </p>
+        <form class="col col-xs-12" id="participate">
+          <div>{{> Template.dynamic template="text" data="sentence"}}</div>
+          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+        </form>
+      {{else if this.toPass.role.recreator}}
+        <p>
+          You have the role of the <b>recreator</b>. Here’s the description of the previous image:
+        </p>
+        <p>
+            "{{this.toPass.previousSub.content.sentence}}"
+            <div class>
+              {{#let user=(getUserById users this.toPass.previousSub.uid)}}
+                {{> displayLeftToRight_FullName_Avatar prependText="- " user=user avatar=(userAvatarImg avatars user) }}
+              {{/let}}
+            </div>
+        </p>
+        <p>
+          Try drawing a picture based on this description and take a picture of it to complete the game!
+        </p>
+        <form class="col col-xs-12" id="participate">
+            <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
+            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+          </form>
+      {{/if}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="groupCheers">
+    <head>
+        <style>
+          .instruction {
+            padding-top: 4%;
+            padding-bottom: 4%;
+          }
+          .glyphicon-medium {
+            font-size: 24px;
+          }
+
+          .glyphicon-large {
+            font-size: 32px;
+          }
+          .right-align {
+            float: right;
+          }
+          .navigation-buttons {
+            margin-bottom: 10px;
+          }
+
+          #triparticipate{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+        </style>
+    </head>
+
+    <div id="instruction" class="instruction">
+      <h4>{{this.experience.name}}</h4>
+      <div>
+        {{{this.toPass.instruction}}}
+      </div>
+      <div>
+          <h5>Example to try</h5>
+          <img style="width: 100%; margin-bottom: 10px" src="{{this.toPass.exampleImage}}"/>
+      </div>
+      <button id="goToParticipate" class="btn btn-primary right-align">
+        <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
+      </button>
+    </div>
+
+    <form id="triparticipate" style="display: none">
+      <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+        <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+      </button>
+
+      <div id="tcameraOverlay" class="camera-overlay gap short">
+        {{> loadingOverlay}}
+
+          {{#let needImages = (mostRecentImageTriadForNeed this.images this.needName)}}
+          {{#if (lengthEqual needImages 2) }}
+            <div id="topLTri" class="topLTri trisquare">
+              <div class="content">
+                {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+              </div>
+            </div>
+            <div id="topRTri" class="topRTri trisquare">
+              <div class="content">
+                {{> Template.dynamic template="displayFullImage" data=(secondElement needImages) }}
+              </div>
+            </div>
+            <div id="bottomTri" class="bottomTri trisquare">
+              {{> Template.dynamic template="halfhalfCamera" data="bottomTriPreview"}}
+            </div>
+          {{/if}}
+
+          {{#if (lengthEqual needImages 1) }}
+            <div id="topLTri" class="topLTri trisquare">
+              <div class="content">
+                {{> Template.dynamic template="displayFullImage" data=(firstElement needImages) }}
+              </div>
+            </div>
+            <div id="topRTri" class="topRTri trisquare">
+                {{> Template.dynamic template="halfhalfCamera" data="topRTriPreview"}}
+            </div>
+            <div id="bottomTri" class="bottomTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
+          {{/if}}
+
+          {{#if (lengthEqual needImages 0)}}
+            <div id="topLTri" class="topLTri trisquare">
+              <div class="content">
+              {{> Template.dynamic template="halfhalfCamera" data="topLTriPreview"}}
+              </div>
+            </div>
+            <div id="topRTri" class="topRTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
+            <div id="bottomTri" class="bottomTri trisquare" style="background-color: rgba(125,125,125,0.5);"></div>
+          {{/if}}
+        {{/let}}
+        </div>
+
+        <div class="camera-controls">
+          <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+            <span class="fa fa-spinner glyphicon-large"></span>
+          </button>
+          <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
+            <span class="glyphicon glyphicon-record glyphicon-large"></span>
+          </button>
+          <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+            <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+          </button>
+          <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+            <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+          </button>
+        </div>
+        <div>
+          {{> Template.dynamic template="text" data="sentence"}}
+        </div>
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+          Submit
+        </button>
+      </form>
 </template>
 
 <template name="cheers">

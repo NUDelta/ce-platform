@@ -1,5 +1,5 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import {numUnfinishedNeeds, runCallbacks, updateSubmission} from "./progressor";
+import {numUnfinishedNeeds, runCallbacks, createInitialSubmission} from "./progressor";
 import {createIncidentFromExperience, startRunningIncident} from "./OCEs/methods";
 import {CONSTANTS} from "../Testing/testingconstants";
 import {Experiences, Incidents} from "./OCEs/experiences";
@@ -59,7 +59,7 @@ describe('Progressor Tests - Single Submission', function() {
       lat: null, // not important in this test
       lng: null, // not important in this test
     };
-    updateSubmission(submissionObject);
+    createInitialSubmission(submissionObject);
     // Wait for several seconds so the observe changes of Submissions collection can run
     Meteor.setTimeout(function() { done(); }, 5 * 1000);
   });
@@ -177,7 +177,7 @@ describe('Progressor Tests - Two Submissions for Half Half Need Respawn', functi
       lat: null, // not important in this test
       lng: null, // not important in this test
     };
-    updateSubmission(submissionObject);
+    createInitialSubmission(submissionObject);
 
     // Wait several seconds before second user participates
     Meteor.setTimeout(() => {
@@ -199,7 +199,7 @@ describe('Progressor Tests - Two Submissions for Half Half Need Respawn', functi
         lat: null, // not important in this test
         lng: null, // not important in this test
       };
-      updateSubmission(submissionObject);
+      createInitialSubmission(submissionObject);
 
       // Wait for several seconds so the observe changes of Submissions collection can run
       Meteor.setTimeout(function() { done(); }, 5 * 1000);

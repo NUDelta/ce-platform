@@ -142,13 +142,10 @@ Schema.Experience = new SimpleSchema({
     label: 'Experience image url',
     optional: true
   },
-  repeatContributionsToExperienceAfterN: {
-    type: Number,
-    label: ('Repeat Contributions to Experience After N (others have contributed); ' +
-      '0 means dont wait, person can repeat whenever; 1 means no back to back repeat contributions; ' +
-      '-1 means dont ever allow repeat contributions; N mean wait for N people to participate before going again'),
+  allowRepeatContributions: {
+    type: Boolean,
     optional: true,
-    defaultValue: 0,
+    defaultValue: true //default to true to avoid breaking changes
   }
 });
 
@@ -179,6 +176,11 @@ Schema.Incident = new SimpleSchema({
     blackbox: true
     //TODO: i think somehow its not finding the schema bc in experiences where its define no problem, but here need blackbox true
   },
+  allowRepeatContributions: {
+    type: Boolean,
+    optional: true,
+    defaultValue: true
+  }
 });
 
 Incidents.attachSchema(Schema.Incident);
