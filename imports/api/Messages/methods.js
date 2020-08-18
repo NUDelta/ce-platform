@@ -14,7 +14,6 @@ Meteor.methods({
 	}
 });
 
-/* why does this not work
 export const sendSystemMessage = (message, recipients, route) => {
 	Messages.insert({
 		uid: "",
@@ -25,4 +24,3 @@ export const sendSystemMessage = (message, recipients, route) => {
 		route: route,
 	});
 };
-*/

@@ -6,6 +6,7 @@ import {adminUpdates} from "./progressorHelper";
 // needed because a callback uses `notify`
 import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 import {addContribution, changeExperienceToPass} from "./OCEs/methods";
+import { sendSystemMessage } from '../Messages/methods';
 
 const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
