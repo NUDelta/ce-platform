@@ -5,9 +5,18 @@ import { Messages } from '../../api/Messages/messages.js';
 
 import '../components/contributions.js';
 
-//the settimeout is an EXTREMELY bad hack to wait for newest messages to come in
+//the settimeout is a bad hack to wait for newest messages to come in
 //would recommend that you use tracker autorun instead (look at the collective narrative branch)
 export const scrollToBottom = function(container){
+  if (container == null) {return}
+  if (container.scrollHeight - container.clientHeight - container.scrollTop > 200) {return}
+  setTimeout(() => {
+    container.scrollTop = container.scrollHeight - container.clientHeight;
+  }, 200);
+}
+
+export const scrollToBottomAbs = function(container){
+  if (container == null) {return}
   setTimeout(() => {
     container.scrollTop = container.scrollHeight - container.clientHeight;
   }, 200);
@@ -16,7 +25,7 @@ export const scrollToBottom = function(container){
 Template.chat.onRendered(function () {
   const messageContainer = document.getElementById('messages');
   messageContainer.style.height = `${window.innerHeight - 52 - 35 - 66}px`;
-  scrollToBottom(messageContainer);
+  scrollToBottomAbs(messageContainer);
 });
 
 Template.chat.helpers({
@@ -49,20 +58,21 @@ Template.chat.helpers({
     );
     otherStranger = otherStranger.map(u => u._id)
     data.recipients = data.recipients.concat(otherStranger)
+    let currrentUsername = Meteor.users.findOne(Meteor.userId()).username;
 
     Meteor.call("sendMessage", data, (error, response) => {
       if (error) {
         console.log(error)
       } else {
         $input.val("");
+        //always scroll to bottom after sending a message
+        const messageContainer = document.getElementById('messages');
+        scrollToBottomAbs(messageContainer);
       }
     });
 
-  },
-
-
-  'click .ready-button'(event, instance) {
-    event.preventDefault();
-    const $el = $(event.currentTarget);
+    //send notification to the recipient for every message
+    Meteor.call('sendNotification', otherStranger, `${currrentUsername}: ${data.message}`,
+     '/chat');
   }
 });
