@@ -66,8 +66,8 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 ```xml
 <key>provisioningProfiles</key>
 <dict>
-    <key>edu.northwestern.delta.A</key>
-    <string>Delta Lab A</string>
+    <key>edu.northwestern.delta.D</key>
+    <string>Delta Lab D</string>
 </dict>
 ```
 ```xml

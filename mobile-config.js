@@ -1,6 +1,6 @@
 App.info({
   // id: "edu.northwestern.delta.ce-platform",
-  id: "edu.northwestern.delta.A",
+  id: "edu.northwestern.delta.D",
   name: "Cerebro"
 });
 
