@@ -108,6 +108,94 @@ Template.monsterCreate.helpers({
   }
 });
 
+
+Template.nightTimeSpooks.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.nightTimeSpooks.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.nightTimeSpooks.events({
+'click #takePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    toggleCameraControls('takePhotoInProgress');
+    CameraPreview.takePicture({
+      width: 480, height: 640, quality: 85
+    },function(imgData){
+        let rect = getPreviewRect();
+        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+          // using an instance of jquery tied to current template scope
+          let imagePreview = template.$(".fileinput-preview");
+          imagePreview.attr('src', croppedImgUrl);
+          imagePreview.show();
+          template.imageSubmitReady.set(true);
+          CameraPreview.hide();
+          toggleCameraControls('takePhotoDone');
+        });
+    });
+  } else {
+    console.error("Could not access the CameraPreview");
+  }
+},
+'click #retakePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.show()
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+  $(".fileinput-preview").hide();
+  template.imageSubmitReady.set(false);
+  toggleCameraControls('startCamera');
+},
+'click #switchCamera'(){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.switchCamera();
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+},
+
+'click #goToParticipate'(event, template) {
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('triparticipate').style.display = "block";
+
+  if (template.cameraStarted.get()) {
+    if (!template.imageSubmitReady.get()) {
+      CameraPreview.show();
+    }
+  } else {
+    Meteor.setTimeout(() => {
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
+      }
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
+    }, 300);
+  }
+},
+
+'click #goToInstruction2'() {
+  document.getElementById('instruction').style.display = "block";
+  document.getElementById('triparticipate').style.display = "none";
+  CameraPreview.hide();
+},
+'click #goToInstruction1'() {
+  document.getElementById('instruction').style.display = "block";
+  document.getElementById('triparticipate').style.display = "none";
+}
+});
+
+
+
+
+
 Template.monsterCreate.onCreated(() => {
   Template.instance().imageSubmitReady = new ReactiveVar(false);
   Template.instance().cameraStarted = new ReactiveVar(false);

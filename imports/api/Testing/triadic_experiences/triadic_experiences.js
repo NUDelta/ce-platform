@@ -274,6 +274,90 @@ export const createGroupCheers = function() {
   return experience;
 };
 
+export const createNightTimeSpooks = function(){
+  //add static affordance to user so that they can now do the ridikulus part of this experience
+  const nightTimeSpooksCallback = function (sub) {
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $set: {
+        ['profile.staticAffordances.participatedInNightTimeSpooks']: true
+      }
+    });
+  }
+
+  ridikulusCallback = function(sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    let message = 'Hooray! You two have completed the Night Time Spooks experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'Check out the results of your Night Time Spooks!', '', route);
+  }
+
+  let experience = {
+    name: 'Night Time Spooks',
+    participateTemplate: 'nightTimeSpooks',
+    resultsTemplate: 'nightTimeSpooksResults',
+    contributionTypes: [{
+      needName: 'nightTimeSpooks',
+      situation: {
+        //replace with night time detector
+        detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
+        number: 1
+        },
+      toPass: {
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 2,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    },{
+      needName: 'ridikulusStranger1',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.ridikulusStranger1),
+        number: 1
+        },
+      toPass: {
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    },{
+      needName: 'ridikulusStranger2',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.ridikulusStranger2),
+        number: 1
+        },
+      toPass: {
+        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+      },
+      numberNeeded: 1,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    }],
+    description: 'Share a spooky nighttime secret with your friend!',
+    notificationText: 'Share a spooky nighttime secret with your friend!',
+    callbacks: [{
+      trigger: `(cb.newSubmission('nightTimeSpooks'))`,
+      function: nightTimeSpooksCallback.toString(),
+    },{
+      //check this trigger
+      trigger: `(((cb.newSubmission('ridikulusStranger1') && cb.needFinished('ridikulusStranger2')) ||
+      ((cb.newSubmission('ridikulusStranger2') && cb.needFinished('ridikulusStranger1')))`,
+      function: ridikulusCallback.toString(),
+    }],
+    allowRepeatContributions: true,
+  };
+  return experience;
+}
+
 export const createMonster = function(){
   const monsterCallback = function (sub) {
 
@@ -417,10 +501,11 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  drinksTalk: createDrinksTalk(),
+  //drinksTalk: createDrinksTalk(),
   //moodMeteorology: createMoodMeteorology(),
   //imitationGame: createImitationGame(),
   //groupCheers: createGroupCheers(),
-  monsterCreate: createMonster(),
-  monsterStory: monsterStory()
+  //monsterCreate: createMonster(),
+  //monsterStory: monsterStory(),
+  nightTimeSpooks: createNightTimeSpooks()
 }

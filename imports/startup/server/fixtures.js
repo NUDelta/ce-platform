@@ -172,41 +172,17 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid1, uid2]}
+    _id: {$in: [uid1]}
   }, {
-    $set: { 'profile.staticAffordances': {"lovesGarrett": true } }
-  }, {
-    multi: true
-  });
-
-  Meteor.users.update({
-    _id: {$in: [uid3, uid4]}
-  }, {
-    $set: { 'profile.staticAffordances': {"lovesMeg": true, "mechanismPoor": true} }
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger1": true} },
   }, {
     multi: true
   });
 
   Meteor.users.update({
-    _id: {$in: [uid1, uid3, uid5]}
+    _id: {$in: [uid2]}
   }, {
-    $set: { 'profile.staticAffordances.lovesDTR':  true }
-  }, {
-    multi: true
-  });
-
-  Meteor.users.update({
-    _id: {$in: [uid1, uid2, olinuid1, olinuid2]}
-  }, {
-    $set: { 'profile.staticAffordances': { "mechanismRich": true} }
-  }, {
-    multi: true
-  });
-
-  Meteor.users.update({
-    _id: {$in: [uid1, uid2]}
-  }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger": true } },
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger2": true} },
   }, {
     multi: true
   });
@@ -214,7 +190,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid3]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "stranger": false } },
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "friend": true } },
   }, {
     multi: true
   });

@@ -54,7 +54,7 @@ Template.chat.helpers({
     let otherStranger = this.users.filter(
       u => (u._id != uid)
       && (triad in u.profile.staticAffordances)
-      && ('stranger' in u.profile.staticAffordances)
+      && !('friend' in u.profile.staticAffordances)
     );
     otherStranger = otherStranger.map(u => u._id)
     data.recipients = data.recipients.concat(otherStranger)

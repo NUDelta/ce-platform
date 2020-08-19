@@ -65,6 +65,24 @@ export let DETECTORS = {
     ],
     rules: [('triad2 && (daytime || nighttime || sunset)')]
   },
+  ridikulusStranger1: {
+    _id: Random.id(),
+    description: 'Ridikulus for first stranger',
+    variables: [
+      'var participatedInNightTimeSpooks',
+      'var stranger1'
+    ],
+    rules: [('participatedInNightTimeSpooks && stranger1')]
+  },
+  ridikulusStranger2: {
+    _id: Random.id(),
+    description: 'Ridikulus for second stranger',
+    variables: [
+      'var participatedInNightTimeSpooks',
+      'var stranger2'
+    ],
+    rules: [('participatedInNightTimeSpooks && stranger2')]
+  },
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
