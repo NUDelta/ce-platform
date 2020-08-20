@@ -275,7 +275,7 @@ export const createGroupCheers = function() {
 };
 
 export const createNightTimeSpooks = function(){
-  //add static affordance to user so that they can now do the ridikulus part of this experience
+  //add static affordance to user so that they can now do the riddikulus part of this experience
   const nightTimeSpooksCallback = function (sub) {
     Meteor.users.update({
       _id: sub.uid
@@ -286,7 +286,26 @@ export const createNightTimeSpooks = function(){
     });
   }
 
-  ridikulusCallback = function(sub) {
+  const completeNightTimeSpooksCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.completedNightTimeSpooks']: true
+        }
+      });
+    });
+  }
+
+  riddikulusCallback = function(sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -312,33 +331,21 @@ export const createNightTimeSpooks = function(){
         number: 1
         },
       toPass: {
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+        exampleImage: 'https://vignette.wikia.nocookie.net/clifford/images/6/6e/Art_clifford_standing.png/revision/latest?cb=20150221004122',
+        exampleCaption: 'I\'m scared of big dogs so Clifford is my biggest fear'
       },
       numberNeeded: 2,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
     },{
-      needName: 'ridikulusStranger1',
+      needName: 'riddikulus',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.ridikulusStranger1),
+        detector : getDetectorUniqueKey(DETECTORS.riddikulus),
         number: 1
         },
       toPass: {
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
-      numberNeeded: 1,
-      notificationDelay: 1,
-      numberAllowedToParticipateAtSameTime: 1,
-    },{
-      needName: 'ridikulusStranger2',
-      situation: {
-        detector : getDetectorUniqueKey(DETECTORS.ridikulusStranger2),
-        number: 1
-        },
-      toPass: {
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-      },
-      numberNeeded: 1,
+      numberNeeded: 2,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
     }],
@@ -348,10 +355,13 @@ export const createNightTimeSpooks = function(){
       trigger: `(cb.newSubmission('nightTimeSpooks'))`,
       function: nightTimeSpooksCallback.toString(),
     },{
+      trigger: `(cb.needFinished('nightTimeSpooks'))`,
+      function: completeNightTimeSpooksCallback.toString(),
+    },{
       //check this trigger
-      trigger: `(((cb.newSubmission('ridikulusStranger1') && cb.needFinished('ridikulusStranger2')) ||
-      ((cb.newSubmission('ridikulusStranger2') && cb.needFinished('ridikulusStranger1')))`,
-      function: ridikulusCallback.toString(),
+      trigger: `(((cb.newSubmission('riddikulusStranger1') && cb.needFinished('riddikulusStranger2')) ||
+      ((cb.newSubmission('riddikulusStranger2') && cb.needFinished('riddikulusStranger1')))`,
+      function: riddikulusCallback.toString(),
     }],
     allowRepeatContributions: true,
   };
