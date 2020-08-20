@@ -118,6 +118,36 @@ Template.nightTimeSpooks.onDestroyed(() => {
   CameraPreview.stopCamera();
 });
 
+Template.nightTimeSpooks.helpers({
+  getInstruction1(){
+    //get current user & then find static affordances
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0];
+    //show instruction1 if user hasn't done the first part yet
+    if (currentUser.profile.staticAffordances.participatedInNightTimeSpooks){
+      return "none";
+    } else {
+      return "block";
+    }
+  },
+  getInstruction2(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0];
+    //show instruction2 if user has done the first part
+    if (currentUser.profile.staticAffordances.participatedInNightTimeSpooks){
+      return "block";
+    } else {
+      return "none";
+    }
+  },
+  getPartnerImage(){
+
+  },
+  getPartnerCaption(){
+
+  }
+})
+
 Template.nightTimeSpooks.events({
 'click #takePhoto'(event, template){
   if (typeof CameraPreview !== 'undefined') {
@@ -158,7 +188,7 @@ Template.nightTimeSpooks.events({
   }
 },
 
-'click #goToParticipate'(event, template) {
+'click #goToParticipate2'(event, template) {
   document.getElementById('instruction').style.display = "none";
   document.getElementById('triparticipate').style.display = "block";
 
@@ -180,15 +210,18 @@ Template.nightTimeSpooks.events({
     }, 300);
   }
 },
-
-'click #goToInstruction2'() {
-  document.getElementById('instruction').style.display = "block";
-  document.getElementById('triparticipate').style.display = "none";
-  CameraPreview.hide();
+'click #goToParticipate1'() {
+  document.getElementById('instruction1').style.display = "none";
+  document.getElementById('participate').style.display = "block";
 },
 'click #goToInstruction1'() {
-  document.getElementById('instruction').style.display = "block";
+  document.getElementById('instruction1').style.display = "block";
+  document.getElementById('participate').style.display = "none";
+},
+'click #goToInstruction2'() {
+  document.getElementById('instruction2').style.display = "block";
   document.getElementById('triparticipate').style.display = "none";
+  CameraPreview.hide();
 }
 });
 

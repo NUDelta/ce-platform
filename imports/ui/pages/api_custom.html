@@ -178,37 +178,48 @@
     </head>
 
     {{#if Template.subscriptionsReady}}
-        <div id="instruction1" class="instruction">
-            <span>
-              It's <span style="color:blue;">nighttime</span> and things are getting <span style="color:blue;">spooky</span>!
-              Draw something that you fear to your friend and explain why it's scary for you.
-              We'll send it to your friend so they face a <span style="color:blue;">spooky</span> surprise.
-            </span>
-            {{#if this.toPass.exampleImage1}}
-              <img src="{{this.toPass.exampleImage}}"/>
-            {{/if}}
-            {{#if this.toPass.exampleCaption1}}
-              {{this.toPass.exampleCaption1}}
-            {{/if}}
+    <div id="instruction1" class="instruction" style="display:{{getInstruction1}}">
+        <h4>Night Time Spooks</h4>
+        <span>
+          It's <span style="color:blue;">nighttime</span> and things are getting <span style="color:blue;">spooky</span>!
+          Draw something that you fear to your friend and explain why it's scary for you.
+          We'll send it to your friend so they face a <span style="color:blue;">spooky</span> surprise!
+        </span>
+        {{#if this.toPass.exampleImage}}
+          <img src="{{this.toPass.exampleImage}}"/>
+        {{/if}}
+        {{#if this.toPass.exampleCaption}} 
+          {{this.toPass.exampleCaption}}
+        {{/if}}
 
-            <button id="goToParticipate1" class="btn btn-primary right-align">
-              <span></span><span class="glyphicon glyphicon-menu-right"></span>
-            </button>
-        </div>
+        <button id="goToParticipate1" class="btn btn-primary right-align">
+          <span>Participate</span><span class="glyphicon glyphicon-menu-right"></span>
+        </button>
+    </div>
 
-        <div id="instruction2" class="instruction">
-            <span>
-            </span>
-            {{#if this.toPass.exampleImage}}
-              <img src="{{this.toPass.exampleImage}}"/>
+        <div id="instruction2" class="instruction" style="display:{{getInstruction2}}">
+            <h4>Riddikulus!</h4>
+            <div>
+              Your friend sent you a drawing and caption of something that scares them.
+              In Harry Potter, a monster called the Boggart takes the form of your worst fear,
+              but the <span style="color:blue;">Riddikulus</span> spell turns it into something funny!
+              Let's do Riddikulus on your friend's fear.
+            </div>
+            {{#if getPartnerImage}}
+              {{> Template.dynamic template="displayImage" data=(getPartnerImage)}}
             {{/if}}
-
+            {{#if getPartnerCaption}}
+              {{getPartnerCaption}}
+            {{/if}}
+            <div>
+              Put your friend's fear in a funny situation and caption that will make your friend laugh!
+            </div>
             <button id="goToParticipate2" class="btn btn-primary right-align">
-              <span></span><span class="glyphicon glyphicon-menu-right"></span>
+              <span>Participate</span><span class="glyphicon glyphicon-menu-right"></span>
             </button>
         </div>
 
-        <form id="participate">
+        <form id="participate" style="display:none;">
           <button id="goToInstruction1" type="button" class="btn btn-primary navigation-buttons">
             <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
           </button>
@@ -225,7 +236,7 @@
             </button>
         </form>
 
-        <form>
+        <form id="triparticipate" style="display:none;">
           <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
             <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
           </button>
