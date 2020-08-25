@@ -284,16 +284,13 @@
 <template name="nightTimeSpooksResults">
   <head>
     <style>
-      .monsterGrid{
+      .grid{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
         position: absolute;
       }
-      .stitched {
-        height: 15vh;
-        width: 15vh;
-      }
+
       .reportImg {
         height: 45vh;
         width: 45vh;
@@ -309,52 +306,42 @@
     </style>
   </head>
 
-  {{#let monster = (stitchedMonster)}}
-  {{#let needImages = (getNeedImages)}}
+  {{#let subs = filterSubs}}
+  {{#let images = (filterImages subs)}}
   <div id="results">
     <h4>{{this.experience.name}}</h4>
-    Your monster has been spotted! Read the full lab report to see where you and the other scientists have seen the monster.
-    <div class="slideshow-container">
-      {{#each needImage in needImages}}
-        {{#let info = (subDetails needImage)}}
-        {{#let idx = (increment @index)}}
-        <div class="mySlides" id="img{{@index}}">
-          <div style="padding:3px; text-align: center; font-size: 16px;"><b>Report {{idx}}</b></div>
-          <div class="reportImg">
-            <div class="monsterGrid">
-              <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
-                {{> Template.dynamic template="displayFullImage" data=(monster)}}
-              </div>
-            </div>
-            <div class="monsterBg">
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
-            </div>
+    {{#each sub in subs}}
+      <div id="img{{@index}}" style="display:{{getFirst @index}}">
+      <div>
+        {{#if (isEqual sub.needName "nightTimeSpooks")}}
+          <div>Here are the images of <span style="color:blue">scary</span> things that you and your partner drew!
+          You'll get a notification when the experience is finished!</div>
+          <div style="border: solid 1px black; padding: 10px; margin: 12px 0px;">
+          {{> Template.dynamic template="displayFullImage" data=(elementAtIndex images @index)}}
+          <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
           </div>
-          <div class="monsterCaption" style="padding-top: 7px;">
-              <b>{{info.user}}</b> reported:
-              <br>{{info.sentence}}
-          </div>
-          {{#if (notFirst @index)}}
-            <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
-          {{/if}}
-          {{#if (notLast @index)}}
-            <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
-          {{/if}}
-        </div>
-        {{/let}}
-        {{/let}}
-      {{/each}}
-    </div>
+        {{/if}}
+        {{#if (isEqual sub.needName "riddikulus")}}
+            <div>Here are the <span style="color: blue">riddikulus</span>
+              images of that you and your partner took of each other's fear!</div>
+          <!-- get correct image & partner image -->
+          <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+        {{/if}}
+      </div>
+
+      {{#if (notFirst @index)}}
+        <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
+      {{/if}}
+      {{#if (notLast subs @index)}}
+        <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
+      {{/if}}
+      </div>
+    {{/each}}
   </div>
   {{/let}}
   {{/let}}
 </template>
 
-
-
-
-
-<!-- so far, can filter submissions with content w needName, sort by time, and then map uid to username -->
 <template name="monsterStoryResults">
   <head>
     <style>

@@ -350,6 +350,63 @@ Template.monsterStoryResults.events({
   },
   'click .next'(event, template){
     let currSlideIdx = parseInt(event.target.dataset.currslide);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let nextSlide = document.getElementById(`img${currSlideIdx+1}`);
+    slide.style.display = "none";
+    nextSlide.style.display = "block";
+  }
+});
+
+Template.nightTimeSpooksResults.helpers({
+  elementAtIndex(array, index){
+    return array[index];
+  },
+  isEqual(x, y){
+    return x === y;
+  },
+  getUsername(users, sub){
+    let user = users.filter(u => sub.uid == u._id)[0];
+    return user.username;
+  },
+  filterImages(subs){
+    let images = subs.map(s => this.images.filter(i => s.content.proof == i._id)[0])
+    console.log(images);
+    return images;
+  },
+  filterSubs(){
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let uniqueNeedNames = [...new Set(currUserSubs.map(s => s.needName))];
+    //only get subs that are already filled
+    let subs = this.submissions.filter(
+      s => uniqueNeedNames.includes(s.needName)
+      && s.uid);
+    return subs;
+  },
+  getFirst(index){
+    let result;
+    index == 0? result = "block": result = "none";
+    return result;
+  },
+  notFirst(index) {
+    return index != 0;
+  },
+  notLast(subs, index){
+    return index < (subs.length-1);
+  }
+});
+
+Template.nightTimeSpooksResults.events({
+  'click .prev'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
+    let slide = document.getElementById(`img${currSlideIdx}`);
+    let prevSlide = document.getElementById(`img${currSlideIdx-1}`);
+    slide.style.display = "none";
+    prevSlide.style.display = "block";
+
+  },
+  'click .next'(event, template){
+    let currSlideIdx = parseInt(event.target.dataset.currslide);
     console.log(currSlideIdx);
     let slide = document.getElementById(`img${currSlideIdx}`);
     let nextSlide = document.getElementById(`img${currSlideIdx+1}`);

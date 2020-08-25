@@ -140,13 +140,43 @@ Template.nightTimeSpooks.helpers({
       return "none";
     }
   },
+  getPartnerUsername(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    return partner.username;
+  },
   getPartnerImage(){
-
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let partnerImage = this.images.filter(
+      s => s.uid == partner._id
+      && s.needName=="nightTimeSpooks")[0]
+    return partnerImage;
   },
   getPartnerCaption(){
-
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let partnerSub = this.submissions.filter(
+      s => s.uid == partner._id
+      && s.needName=="nightTimeSpooks")[0];
+    return partnerSub.content.sentence;
   }
-})
+});
+
+//helper functions for finding the other users
+export const getPartner = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
+  let partner = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      tag in u.profile.staticAffordances
+  )[0];
+  return partner;
+}
 
 Template.nightTimeSpooks.events({
 'click #takePhoto'(event, template){
@@ -189,7 +219,7 @@ Template.nightTimeSpooks.events({
 },
 
 'click #goToParticipate2'(event, template) {
-  document.getElementById('instruction').style.display = "none";
+  document.getElementById('instruction2').style.display = "none";
   document.getElementById('triparticipate').style.display = "block";
 
   if (template.cameraStarted.get()) {
