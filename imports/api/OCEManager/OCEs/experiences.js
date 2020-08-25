@@ -74,7 +74,7 @@ Schema.NeedType = new SimpleSchema({
     type: Boolean,
     optional: true,
     defaultValue: false
-  }
+  },
 });
 
 export const NeedType = new Mongo.Collection('needtype');
@@ -146,6 +146,11 @@ Schema.Experience = new SimpleSchema({
     type: Boolean,
     optional: true,
     defaultValue: true //default to true to avoid breaking changes
+  },
+  repeatContributionsToExperienceAfterN: {
+    type: Number,
+    optional: true,
+    defaultValue: 0
   }
 });
 

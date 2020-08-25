@@ -83,11 +83,23 @@ const util = require('util');
        let uidsWhoSubToNeed = (need.allowRepeatContributions ? [] : usersAlreadySubmittedToNeed(iid, needName));
        // console.log('uidsWhoSubToNeed : ', util.inspect(uidsWhoSubToNeed, false, null));
 
-       let usersNotInIncident = needUserMap.users.filter(function(user) {
+       //what should really be done here is change the usersAlreadySubmittedToIncident
+       //to allow the second part of the conditional to work at all times
+       //but i am doing a quick hack
+       let usersNotInIncident;
+       if (exp.allowRepeatContributions){
+       usersNotInIncident = needUserMap.users.filter(function(user) {
          return (!uidsInNeed.find(uid => uid === user.uid) &&
-           !uidsWhoSubToNeed.find(uid => uid === user.uid) &&
-           !uidsWhoSubToIncident.find(uid => uid === user.uid));
-       });
+           !uidsWhoSubToNeed.find(uid => uid === user.uid));
+         });
+       } else {
+         usersNotInIncident = needUserMap.users.filter(function(user) {
+           return (!uidsInNeed.find(uid => uid === user.uid) &&
+             !uidsWhoSubToNeed.find(uid => uid === user.uid) &&
+             !uidsWhoSubToIncident.find(uid => uid === user.uid));
+         });
+       }
+
        // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
        // check for synchronous needs (need.situation.number >= 2)
