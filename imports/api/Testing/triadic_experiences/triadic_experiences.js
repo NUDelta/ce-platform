@@ -277,6 +277,8 @@ export const createGroupCheers = function() {
 export const createNightTimeSpooks = function(){
   //add static affordance to user so that they can now do the riddikulus part of this experience
   const nightTimeSpooksCallback = function (sub) {
+    console.log('is this being run');
+
     Meteor.users.update({
       _id: sub.uid
     }, {
@@ -327,7 +329,7 @@ export const createNightTimeSpooks = function(){
       needName: 'nightTimeSpooks',
       situation: {
         //replace with night time detector
-        detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
+        detector : getDetectorUniqueKey(DETECTORS.nightTimeSpooks),
         number: 1
         },
       toPass: {
@@ -352,18 +354,17 @@ export const createNightTimeSpooks = function(){
     description: 'Share a spooky nighttime secret with your friend!',
     notificationText: 'Share a spooky nighttime secret with your friend!',
     callbacks: [{
-      trigger: `(cb.newSubmission('nightTimeSpooks'))`,
+      trigger: `cb.newSubmission('nightTimeSpooks')`,
       function: nightTimeSpooksCallback.toString(),
     },{
-      trigger: `(cb.needFinished('nightTimeSpooks'))`,
+      trigger: `cb.needFinished('nightTimeSpooks')`,
       function: completeNightTimeSpooksCallback.toString(),
     },{
-      //check this trigger
-      trigger: `(((cb.newSubmission('riddikulusStranger1') && cb.needFinished('riddikulusStranger2')) ||
-      ((cb.newSubmission('riddikulusStranger2') && cb.needFinished('riddikulusStranger1')))`,
-      function: riddikulusCallback.toString(),
+      trigger: `(cb.newSubmission('riddikulus') && cb.needFinished('riddikulus'))`,
+      function: riddikulusCallback.toString()
     }],
     allowRepeatContributions: true,
+    repeatContributionsToExperienceAfterN: 0,
   };
   return experience;
 }
@@ -511,7 +512,7 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  //drinksTalk: createDrinksTalk(),
+  drinksTalk: createDrinksTalk(),
   //moodMeteorology: createMoodMeteorology(),
   //imitationGame: createImitationGame(),
   //groupCheers: createGroupCheers(),

@@ -65,6 +65,16 @@ export let DETECTORS = {
     ],
     rules: [('triad2 && (daytime || nighttime || sunset)')]
   },
+  nightTimeSpooks: {
+    _id: Random.id(),
+    description: 'Night Time Spooks Time',
+    variables: [
+      'var stranger1',
+      'var stranger2',
+      'var triad1'
+    ],
+    rules: [('(stranger1 || stranger2) && triad1')]
+  },
   riddikulus: {
     _id: Random.id(),
     description: 'Riddikulus',
