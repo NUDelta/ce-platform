@@ -109,6 +109,7 @@ Router.route('api.custom', {
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
     this.subscribe('avatars.all').wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
 
     this.next();
   },
@@ -120,7 +121,8 @@ Router.route('api.custom', {
       notification_log: Notification_log.find().fetch(),
       images: Images.find({}).fetch(),
       avatars: Avatars.find({}).fetch(),
-      users: Meteor.users.find().fetch()
+      users: Meteor.users.find().fetch(),
+      submissions: Submissions.find().fetch(),
     };
   }
 });
