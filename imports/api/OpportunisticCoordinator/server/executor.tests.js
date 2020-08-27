@@ -112,6 +112,4 @@ describe('Executor - Half Half Need when User is Assigned to "Need 1" and "Need 
     }
 
   });
-
-  it()
 });

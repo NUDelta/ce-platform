@@ -2,8 +2,9 @@ import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Detectors } from './detectors';
 import { getPlaceKeys, onePlaceNotThesePlacesSets,
          placeSubsetAffordances, flattenAffordanceDict,
-         matchAffordancesWithDetector, getDetectorUniqueKey
+         matchAffordancesWithDetector
        } from './methods'
+import {getDetectorUniqueKey} from '../../Testing/oce_api_helpers'
 import { CONSTANTS } from "../../Testing/testingconstants";
 
 
