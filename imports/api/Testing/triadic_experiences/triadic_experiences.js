@@ -356,6 +356,68 @@ export const createNightTimeSpooks = function(){
   return experience;
 }
 
+export const createLifeJourneyMap = function(){
+  //add static affordance to user so that they can now do the riddikulus part of this experience
+  const lifeJourneyMapCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    //get just the other participant
+    let participants = submissions.map((submission) => { return submission.uid; });
+    let message = 'Someone just added to their life journey map! Tap here to see their updates.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    notify(participants, sub.iid, message, '', route);
+  }
+
+  const lifeJourneyMapCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    let message = 'Hooray! You two have completed the Life Journey Map experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'Check out the results of the Life Journey Maps!', '', route);
+  }
+
+  let experience = {
+    name: 'Life Journey Map',
+    participateTemplate: 'lifeJourneyMap',
+    resultsTemplate: 'lifeJourneyMapResults',
+    contributionTypes: [{
+      needName: 'lifeJourneyMap',
+      situation: {
+        //replace with train station detectors
+        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        number: 1
+        },
+      toPass: {
+      },
+      numberNeeded: 6,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+    }],
+    description: 'Chart a map of your life\'s journey with a friend!',
+    notificationText: 'Map out your life\'s journey with a friend!',
+    callbacks: [{
+      trigger: `cb.newSubmission('nightTimeSpooks')`,
+      function: lifeJourneyMapCallback.toString(),
+    },{
+      trigger: `cb.needFinished('lifeJourneyMap')`,
+      function: lifeJourneyMapCompleteCallback.toString(),
+    }],
+    allowRepeatContributions: true,
+    repeatContributionsToExperienceAfterN: 0,
+  };
+  return experience;
+}
+
 export const createMonster = function(){
   const monsterCallback = function (sub) {
 
@@ -505,5 +567,6 @@ export default TRIADIC_EXPERIENCES = {
   //groupCheers: createGroupCheers(),
   //monsterCreate: createMonster(),
   //monsterStory: monsterStory(),
-  nightTimeSpooks: createNightTimeSpooks()
+  //nightTimeSpooks: createNightTimeSpooks(),
+  lifeJourneyMap: createLifeJourneyMap()
 }
