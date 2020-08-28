@@ -291,6 +291,11 @@
         position: absolute;
       }
 
+      .fearImage {
+        height: 15vh;
+        width: 15vh;
+      }
+
       .reportImg {
         height: 45vh;
         width: 45vh;
@@ -318,14 +323,29 @@
           You'll get a notification when the experience is finished!</div>
           <div style="border: solid 1px black; padding: 10px; margin: 12px 0px;">
           {{> Template.dynamic template="displayFullImage" data=(elementAtIndex images @index)}}
-          <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+          <div style="border-top: darkgrey 1px solid; padding-top: 6px; margin-top: 10px;">
+            <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+          </div>
           </div>
         {{/if}}
         {{#if (isEqual sub.needName "riddikulus")}}
             <div>Here are the <span style="color: blue">riddikulus</span>
-              images of that you and your partner took of each other's fear!</div>
-          <!-- get correct image & partner image -->
-          <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+              spells that you casted on each other's fears!</div>
+            <div style="border: solid 1px black; padding: 10px; margin: 12px 0px;">
+              <div class="reportImg">
+                <div class="grid">
+                  <div class="fearImage" style="grid-column:2; grid-row:2">
+                      {{> Template.dynamic template="displayFullImage" data=(getPartnerImage images @index)}}
+                  </div>
+                </div>
+                <div class="bgImg">
+                  {{> Template.dynamic template="displayFullImage" data=(elementAtIndex images @index)}}
+                </div>
+              </div>
+            <div style="border-top: darkgrey 1px solid; padding-top: 6px; margin-top: 10px;">
+              <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+            </div>
+          </div>
         {{/if}}
       </div>
 

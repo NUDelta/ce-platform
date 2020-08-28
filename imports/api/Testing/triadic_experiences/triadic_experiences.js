@@ -3,17 +3,6 @@ import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/m
 import { sendSystemMessage } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
-/*why doesn't this work?
-export const sendSystemMessage = function(message, recipients) {
-  Messages.insert({
-		uid: "",
-		recipients: recipients,
-		message: message,
-		createdAt: new Date(),
-		system: true
-	});
-}*/
-
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -277,8 +266,6 @@ export const createGroupCheers = function() {
 export const createNightTimeSpooks = function(){
   //add static affordance to user so that they can now do the riddikulus part of this experience
   const nightTimeSpooksCallback = function (sub) {
-    console.log('is this being run');
-
     Meteor.users.update({
       _id: sub.uid
     }, {

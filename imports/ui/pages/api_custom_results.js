@@ -369,9 +369,17 @@ Template.nightTimeSpooksResults.helpers({
     return user.username;
   },
   filterImages(subs){
-    let images = subs.map(s => this.images.filter(i => s.content.proof == i._id)[0])
-    console.log(images);
+    let images = subs.map(s => this.images.filter(i =>
+      s.content.proof == i._id ||
+      s.content.Preview == i._id)[0])
     return images;
+  },
+  getPartnerImage(images, index){
+    let imageUser = images[index].uid
+    let partnerImage = images.filter(i =>
+      i.uid != imageUser &&
+      i.needName.search('nightTimeSpooks') != -1)[0];
+    return partnerImage;
   },
   filterSubs(){
     let currUser = Meteor.userId();

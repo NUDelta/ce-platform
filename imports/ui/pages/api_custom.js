@@ -194,6 +194,8 @@ Template.nightTimeSpooks.events({
           template.imageSubmitReady.set(true);
           CameraPreview.hide();
           toggleCameraControls('takePhotoDone');
+          document.getElementById('textbox').style.display = "block";
+          document.getElementById('submit').style.visibility = "visible";
         });
     });
   } else {
@@ -209,6 +211,8 @@ Template.nightTimeSpooks.events({
   $(".fileinput-preview").hide();
   template.imageSubmitReady.set(false);
   toggleCameraControls('startCamera');
+  document.getElementById('textbox').style.display = "none";
+  document.getElementById('submit').style.visibility = "hidden";
 },
 'click #switchCamera'(){
   if (typeof CameraPreview !== 'undefined') {
