@@ -12,12 +12,15 @@ I didn't explain the more obvious ones. Also it's probably better to ask Ryan th
 - `participateTemplate` and `resultsTemplate`: which template is used to render the experience,
 make sure to match the template name exactly
 - `contributionTypes.needName`: used for callback triggers
-- `contributionTypes.situation.number`: honestly idk
+- `contributionTypes.situation.number`: number of participants needed to be in the situation at the same time. in asynchronous experiences, this will be 1. if you need two people in real time participating, it will be 2
 - `contributionTypes.situation.toPass`: anything you might want to pass into the participation template; helpful if you're recycling templates for different experiences
-- `contributionTypes.numberNeeded`: number of submissions that need to be completed to trigger this contribution being completed
+- `contributionTypes.numberNeeded`: number of submissions that need to be completed to trigger this contribution being completed (maybe should be replaced with `numberNeededToComplete`)
+- `contributionTypes.numberAllowedToParticipateAtSameTime`: upper limit to how many people can participate at the same time-- different from `number` because some experiences are dependent on past contributions (see half half) while others can have as many people contributing as possible
 - `contributionTypes.notificationDelay`: how long the user needs to be in a situation before they receive a notification to contribute to this need
 
-2. Why can't I import a method in my testing constants file???
+2. I still don't understand how to create an experience...
+
+3. Why can't I import a method in my testing constants file???
 
 If you are trying to use the imported method in the callback, the
 callbacks are actually executed using the `imports/api/OCEManager/progressor.js` file, and so you actually have to import the method into that file. See `import {notify} from "../OpportunisticCoordinator/server/noticationMethods";` and how `notify` is used in most of the experience callbacks.
@@ -29,13 +32,13 @@ callbacks are actually executed using the `imports/api/OCEManager/progressor.js`
 
 If you're modifying (or creating) a page, import the component's js to the page's js file.
 
-2. I'm so sick of using the same functions for every template.
+2. Please Explain the Half Half Camera to Me.
+
+What I do is copy & paste all the camera stuff from one template to another: Use `{{> Template.dynamic template="halfhalfCamera" data="Preview"}}` in an `id=participate` or `id=triparticipate` form (and make sure to include the `cameraOverlay`). Copy & paste all the  `Template.<template_name>.onCreated` & `Template.<template_name>.onDestroyed` & `Template.<template_name>.events`. If you change what the data name in the dynamic camera template is, add it to the `getPreviewRect` function. Make sure to note that the page with the camera should not be scrollable- otherwise you'll get some weird UI bugs (so fit all your elements to the page). This may mean having to show a text input box only when a picture is already taken (so that the camera is now replaced with the file-input preview image).
+
+3. I'm so sick of using the same functions for every template (especially the half half camera).
 
 See Issue 123 on the repo.
-
-3. Please Explain the Half Half Camera to Me
-
-Lol gg
 
 ### Creating a new Mongo Collection
 This might be most helpful for Collective Narrative
