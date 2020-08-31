@@ -164,6 +164,54 @@
 </template>
 
 <template name="lifeJourneyMap">
+  <head>
+    <style>
+      .margin {
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+
+  <div id="instruction">
+    <h4>Life Journey Map</h4>
+    <div style="display:{{isFirstStyle}}">
+      You might be at a gas station, train stop, or in public transportation!
+      If you are, we hope that you're enjoying your <span style="color:blue;">journey</span>.
+      In this experience, draw a map of your life's journey, and we will share it with a friend!
+    </div>
+    <div style="display:{{isFirstStyle}}" class="margin">
+      <b>Example</b>
+      <img src={{this.toPass.exampleImage}}>
+    </div>
+    <div style="display:{{notIsFirstStyle}}">
+      Are you still <span style="color:blue;">journeying</span>?
+      Continue the life journey map that you previously made by updating the map with any recent life events.
+    </div>
+    <div style="display:{{notIsFirstStyle}}" class="margin">
+      <b>Previous Map(s)</b>
+      {{#each map in maps}}
+        {{> Template.dynamic template="displayFullImage" data=map}}
+      {{/each}}
+    </div>
+    <button id="goToParticipate" class="btn btn-primary right-align"
+    style="float: right;">
+      <span>Participate</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
+  </div>
+
+  <form class="col col-xs-12" id="participate" style="display:none">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span> Instructions</span>
+    </button>
+      <div class="camera-upload margin">
+          {{> Template.dynamic template="camera" data="proof"}}
+      </div>
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+              style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+          Submit
+      </button>
+  </form>
 </template>
 
 <template name="nightTimeSpooks">

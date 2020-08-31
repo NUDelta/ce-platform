@@ -357,6 +357,44 @@ Template.monsterStoryResults.events({
   }
 });
 
+Template.lifeJourneyMapResults.events({
+  'click .journeyMapButton'(event, template){
+    let username = event.target.dataset.username;
+    document.querySelectorAll('.userMap').forEach(userMap => userMap.style.display = "none");
+    let userMapDOMel = document.querySelectorAll(`[data-user=${username}]`);
+    userMapDOMel.forEach(el => el.style.display = 'block');
+  }
+})
+
+Template.lifeJourneyMapResults.helpers({
+  needUsers(){
+    let currUserSub = this.submissions.filter(s => s.uid == Meteor.userId())[0];
+    let needName = currUserSub.needName;
+    let needSubs = this.submissions.filter(s => s.needName == needName);
+    let needUsers = [...new Set(needSubs.map(s => s.uid))];
+    return needUsers;
+  },
+  getUsername(uid){
+    let user = this.users.filter(u => uid == u._id)[0];
+    return user.username;
+  },
+  getUid(userMap){
+    return userMap[0].uid;
+  },
+  userMaps(){
+    let currUserSub = this.submissions.filter(s => s.uid == Meteor.userId())[0];
+    let needName = currUserSub.needName;
+    let needSubs = this.submissions.filter(s => s.needName == needName);
+    let needUsers = [...new Set(needSubs.map(s => s.uid))];
+    let userMaps;
+    userMaps = needUsers.map(needUser =>
+      this.images.filter(s => s.uid == needUser)
+    )
+    console.log(userMaps);
+    return userMaps;
+  }
+})
+
 Template.nightTimeSpooksResults.helpers({
   elementAtIndex(array, index){
     return array[index];

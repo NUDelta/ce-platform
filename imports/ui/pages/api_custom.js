@@ -260,7 +260,34 @@ Template.nightTimeSpooks.events({
 });
 
 
+Template.lifeJourneyMap.helpers({
+  isFirstStyle(){
+    let currUserId = Meteor.userId();
+    let currUserImagesLen = this.images.filter(i => i.uid == currUserId).length;
+    return currUserImagesLen == 0? 'block' : 'none';
+  },
+  notIsFirstStyle(){
+    let currUserId = Meteor.userId();
+    let currUserImagesLen = this.images.filter(i => i.uid == currUserId).length;
+    return currUserImagesLen == 0? 'none' : 'block';
+  },
+  maps(){
+    let currUserId = Meteor.userId();
+    let currUserImages = this.images.filter(i => i.uid == currUserId);
+    return currUserImages;
+  }
+})
 
+Template.lifeJourneyMap.events({
+'click #goToParticipate'(event, template){
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+})
 
 
 Template.monsterCreate.onCreated(() => {
