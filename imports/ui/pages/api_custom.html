@@ -163,6 +163,31 @@
     {{/if}}
 </template>
 
+<template name="appreciationStation">
+  <div id="instruction">
+    <h4>Appreciation Station</h4>
+    <div>
+      You and a friend are both friends with a mutual friend!
+      Let's do a kind thing today and make an appreciation station for the mutual friend.
+    </div>
+  </div>
+
+  <form class="col col-xs-12" id="participate" style="display:none">
+      <div class="camera-upload margin">
+          {{> Template.dynamic template="camera" data="proof"}}
+      </div>
+      <div>
+        {{> Template.dynamic template="text" data="sentence"}}
+      </div>
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+              style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+          Submit
+      </button>
+  </form>
+</template>
+
+
+
 <template name="lifeJourneyMap">
   <head>
     <style>

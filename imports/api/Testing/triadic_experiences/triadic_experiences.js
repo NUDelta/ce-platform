@@ -419,6 +419,50 @@ export const createLifeJourneyMap = function(){
   return experience;
 }
 
+export const createAppreciationStation = function(){
+  const appreciationStationCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    let messageStrangers = 'Hooray! You helped to complete the Appreciation Station for your friend! Tap here to see your results.';
+    let messageMutual = 'Your friends made an Appreciation Station for you! Tap here to see what they said!'
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    //add static affordance to move onto next set of experiences
+
+    notify(participants, sub.iid, 'Check out the results of the Life Journey Maps!', '', route);
+  }
+
+  let experience = {
+    name: 'appreciation Station',
+    participateTemplate: 'appreciationStation',
+    resultsTemplate: 'appreciationStationResults',
+    contributionTypes: [{
+      needName: 'appreciationStation',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        number: 1
+        },
+      toPass: {
+      },
+      numberNeeded: 4,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 1,
+      allowRepeatContributions: true
+    }],
+    description: 'Show some appreciation for your friend!',
+    notificationText: 'Show some appreciation for your friend!',
+    callbacks: [{
+      trigger: `cb.needFinished('appreciationStation')`,
+      function: appreciationStationCompleteCallback.toString(),
+    }],
+  };
+  return experience;
+}
+
 export const createMonster = function(){
   const monsterCallback = function (sub) {
 
@@ -569,5 +613,6 @@ export default TRIADIC_EXPERIENCES = {
   //monsterCreate: createMonster(),
   //monsterStory: monsterStory(),
   //nightTimeSpooks: createNightTimeSpooks(),
-  lifeJourneyMap: createLifeJourneyMap()
+  //lifeJourneyMap: createLifeJourneyMap()
+  appreciationStation: createAppreciationStation()
 }
