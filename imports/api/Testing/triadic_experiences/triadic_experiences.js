@@ -357,20 +357,20 @@ export const createNightTimeSpooks = function(){
 }
 
 export const createLifeJourneyMap = function(){
-  //add static affordance to user so that they can now do the riddikulus part of this experience
   const lifeJourneyMapCallback = function (sub) {
-    /*
+    //only get other participant
     let submissions = Submissions.find({
       iid: sub.iid,
-      needName: sub.needName
+      needName: sub.needName,
+      uid: {$ne: sub.uid}
     }).fetch();
 
-    //get just the other participant
-    let participants = submissions.map((submission) => { return submission.uid; });
+    let otherParticipants = submissions.map((submission) => { return submission.uid; });
+    console.log(otherParticipants);
     let message = 'Someone just added to their life journey map! Tap here to see their updates.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-    notify(participants, sub.iid, message, '', route);*/
+    notify(otherParticipants, sub.iid, message, '', route);
   }
 
   const lifeJourneyMapCompleteCallback = function (sub) {
