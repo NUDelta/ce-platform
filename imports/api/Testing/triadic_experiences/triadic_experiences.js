@@ -359,6 +359,7 @@ export const createNightTimeSpooks = function(){
 export const createLifeJourneyMap = function(){
   //add static affordance to user so that they can now do the riddikulus part of this experience
   const lifeJourneyMapCallback = function (sub) {
+    /*
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -369,7 +370,7 @@ export const createLifeJourneyMap = function(){
     let message = 'Someone just added to their life journey map! Tap here to see their updates.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-    notify(participants, sub.iid, message, '', route);
+    notify(participants, sub.iid, message, '', route);*/
   }
 
   const lifeJourneyMapCompleteCallback = function (sub) {
@@ -398,22 +399,22 @@ export const createLifeJourneyMap = function(){
         number: 1
         },
       toPass: {
+        exampleImage: "http://45.76.227.174/assets/img/cta-map.jpg"
       },
       numberNeeded: 6,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
+      allowRepeatContributions: true
     }],
     description: 'Chart a map of your life\'s journey with a friend!',
     notificationText: 'Map out your life\'s journey with a friend!',
     callbacks: [{
-      trigger: `cb.newSubmission('nightTimeSpooks')`,
+      trigger: `cb.newSubmission('lifeJourneyMap')`,
       function: lifeJourneyMapCallback.toString(),
     },{
       trigger: `cb.needFinished('lifeJourneyMap')`,
       function: lifeJourneyMapCompleteCallback.toString(),
     }],
-    allowRepeatContributions: true,
-    repeatContributionsToExperienceAfterN: 0,
   };
   return experience;
 }
@@ -561,7 +562,7 @@ export const monsterStory = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  drinksTalk: createDrinksTalk(),
+  //drinksTalk: createDrinksTalk(),
   //moodMeteorology: createMoodMeteorology(),
   //imitationGame: createImitationGame(),
   //groupCheers: createGroupCheers(),
