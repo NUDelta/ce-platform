@@ -357,6 +357,99 @@ Template.monsterStoryResults.events({
   }
 });
 
+export const getPartner = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
+  let partner = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      tag in u.profile.staticAffordances
+  )[0];
+  return partner;
+}
+
+export const getMutualFriend = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let friend = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      'friend' in u.profile.staticAffordances
+  )[0];
+  return friend;
+}
+
+Template.appreciationStationResults.helpers({
+  isMutualFriend(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    if ('friend' in currentUser.profile.staticAffordances){
+      return true;
+    } else {
+      return false;
+    }
+  },
+  getNames(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    //if is mutual friend
+    if ('friend' in currentUser.profile.staticAffordances){
+      let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+
+      let others = users.filter(u =>
+          u._id != currentUser._id &&
+          triad in u.profile.staticAffordances
+      );
+
+      return {
+        mutualFriend: currentUser.username,
+        otherStranger: others[0].username,
+        otherOtherStranger: others[1].username,
+      }
+    } else {
+      let partner = getPartner(currentUser, this.users);
+      let friend = getMutualFriend(currentUser, this.users);
+
+      return  {
+        otherStranger: partner.username,
+        otherOtherStranger: currentUser.username,
+        mutualFriend: friend.username,
+      }
+    }
+  },
+  getImagesAndSubs(){
+    let needName;
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+
+    if ('friend' in currentUser.profile.staticAffordances){
+      let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+      let others = users.filter(u =>
+          u._id != currentUser._id &&
+          triad in u.profile.staticAffordances
+      );
+      needName = this.submissions.filter(s => s.uid == others[0]._id)[0].needName;
+    } else {
+      needName = this.submissions.filter(s => s.uid == currentUser._id)[0].needName;
+    }
+
+    let needImages = this.images.filter(i => i.needName == needName);
+    let needCaptions = needImages.map(needImage =>
+      this.submissions.filter(s => s.content.proof == needImage._id)[0].content.sentence
+    )
+
+    let results = [];
+    for (let i = 0; i < needImages.length; i++){
+      results[i] = {
+        user: getUserById(this.users, needImages[i].uid),
+        needImage: needImages[i],
+        needCaption: needCaptions[i]
+      }
+    }
+
+    return results;
+  }
+});
+
 Template.lifeJourneyMapResults.events({
   'click .journeyMapButton'(event, template){
     let username = event.target.dataset.username;
@@ -364,7 +457,7 @@ Template.lifeJourneyMapResults.events({
     let userMapDOMel = document.querySelectorAll(`[data-user=${username}]`);
     userMapDOMel.forEach(el => el.style.display = 'block');
   }
-})
+});
 
 Template.lifeJourneyMapResults.helpers({
   needUsers(){

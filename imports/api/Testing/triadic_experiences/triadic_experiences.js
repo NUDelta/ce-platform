@@ -437,7 +437,7 @@ export const createAppreciationStation = function(){
   }
 
   let experience = {
-    name: 'appreciation Station',
+    name: 'Appreciation Station',
     participateTemplate: 'appreciationStation',
     resultsTemplate: 'appreciationStationResults',
     contributionTypes: [{

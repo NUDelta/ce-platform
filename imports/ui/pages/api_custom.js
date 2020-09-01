@@ -166,18 +166,6 @@ Template.nightTimeSpooks.helpers({
   }
 });
 
-//helper functions for finding the other users
-export const getPartner = (currentUser, users) => {
-  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
-  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
-  let partner = users.filter(u =>
-      u._id != currentUser._id &&
-      triad in u.profile.staticAffordances &&
-      tag in u.profile.staticAffordances
-  )[0];
-  return partner;
-}
-
 Template.nightTimeSpooks.events({
 'click #takePhoto'(event, template){
   if (typeof CameraPreview !== 'undefined') {
@@ -259,6 +247,58 @@ Template.nightTimeSpooks.events({
 }
 });
 
+//helper functions for finding the other users
+export const getPartner = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
+  let partner = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      tag in u.profile.staticAffordances
+  )[0];
+  return partner;
+}
+
+export const getMutualFriend = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let friend = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      'friend' in u.profile.staticAffordances
+  )[0];
+  return friend;
+}
+
+export const getUsernameFromUid = (uid, users) => {
+  let user = users.filter(u => uid == u._id)[0];
+  return user.username;
+}
+
+Template.appreciationStation.helpers({
+  getNames(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let friend = getMutualFriend(currentUser, this.users);
+
+    return  {
+      otherStranger: partner.username,
+      mutualFriend: friend.username
+    }
+  }
+})
+
+
+Template.appreciationStation.events({
+'click #goToParticipate'(event, template){
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+})
 
 Template.lifeJourneyMap.helpers({
   isFirstStyle(){

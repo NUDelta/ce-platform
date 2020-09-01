@@ -164,16 +164,52 @@
 </template>
 
 <template name="appreciationStation">
+  <head>
+    <style>
+      .example {
+        border: solid 1px black;
+        padding: 10px;
+        margin: 10px 0px;
+      }
+
+      .camera-upload{
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  {{#if Template.subscriptionsReady}}
+  {{#let names = (getNames)}}
   <div id="instruction">
     <h4>Appreciation Station</h4>
     <div>
-      You and a friend are both friends with a mutual friend!
-      Let's do a kind thing today and make an appreciation station for the mutual friend.
+      You and <span style="color:blue;">{{names.otherStranger}}</span> are both friends with
+      <span style="color:blue">{{names.mutualFriend}}</span>!
+      Let's do a kind thing today and make an appreciation station for <span style="color:blue">{{names.mutualFriend}}</span>.
     </div>
+    <div style="margin-top: 10px;">
+      Take a picture of something that you think <span style="color:blue">{{names.mutualFriend}}</span> would like and add a caption to it.
+      When we finish collecting appreciations from you and <span style="color:blue;">{{names.otherStranger}}</span>,
+      we'll show <span style="color:blue">{{names.mutualFriend}}</span> all the appreciations!
+    </div>
+    <div class="example">
+      <b>Example:</b>
+      <img src="https://images.immediate.co.uk/production/volatile/sites/4/2020/03/GettyImages-1058304880-c-0b54061-scaled.jpg?webp=true&quality=90&resize=940%2C399">
+      <div style="border-top: 1px solid darkgrey; padding-top: 6px; margin-top: 6px;">
+        <b>Mary: </b>
+        I saw this and thought of you bc I know you love derpy animals :)
+      </div>
+    </div>
+    <button id="goToParticipate" class="btn btn-primary right-align"
+    style="float: right;">
+      <span>Participate</span><span class="glyphicon glyphicon-menu-right"></span>
+    </button>
   </div>
 
   <form class="col col-xs-12" id="participate" style="display:none">
-      <div class="camera-upload margin">
+    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
+      <span class="glyphicon glyphicon-menu-left"></span><span> Instructions</span>
+    </button>
+      <div class="camera-upload">
           {{> Template.dynamic template="camera" data="proof"}}
       </div>
       <div>
@@ -184,6 +220,8 @@
           Submit
       </button>
   </form>
+  {{/let}}
+  {{/if}}
 </template>
 
 

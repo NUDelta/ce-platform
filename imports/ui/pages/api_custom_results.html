@@ -282,10 +282,39 @@
 </template>
 
 <template name="appreciationStationResults">
+  <head>
+    <style>
+      .results {
+        border: solid black 1px;
+        padding: 10px;
+        margin: 12px 0px;
+      }
+    </style>
+  </head>
+  {{#let names = getNames}}
   <h4>Appreciation Station</h4>
+
   <div>
-    Here are some kind things that you said to your friend!
+    {{#if isMutualFriend}}
+      Your friends {{names.otherStranger}} and {{names.otherOtherStranger}} want to show their
+      appreciation towards you! Here are some images that they took with you in mind.
+    {{else}}
+      Good job on appreciating your friend, <span style="color: blue;">{{names.mutualFriend}}</span>!
+      Here are all the appreciations that you and <span style="color: blue;">{{names.otherStranger}}</span>
+      have made so far.
+    {{/if}}
   </div>
+
+  <div class="results">
+    {{#each result in getImagesAndSubs}}
+      <div style="margin-bottom: 6px 0px">
+        <b>{{result.user}}:</b>
+        {{result.needCaption}}
+      </div>
+      {{> Template.dynamic template="displayFullImage" data=result.needImage}}
+    {{/each}}
+  </div>
+  {{/let}}
 </template>
 
 
