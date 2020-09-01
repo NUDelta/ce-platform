@@ -9,7 +9,6 @@ export const createDrinksTalk = function() {
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
-
     let participants = submissions.map((submission) => { return submission.uid; });
     let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
@@ -420,20 +419,41 @@ export const createLifeJourneyMap = function(){
 }
 
 export const createAppreciationStation = function(){
+  const appreciationStationCallback = function(sub){
+  }
   const appreciationStationCompleteCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
 
+    //get strangers
     let participants = submissions.map((submission) => { return submission.uid; });
+    //get mutual friend
+    let aff = Meteor.users.findOne(sub.uid).profile.staticAffordances;
+    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+    let mutualFriend = Meteor.users.find({
+      [`profile.staticAffordances.${triad}`] : true,
+      [`profile.staticAffordances.friend`] : true,
+    }).fetch();
+    mutualFriend = [mutualFriend[0]]
+
     let messageStrangers = 'Hooray! You helped to complete the Appreciation Station for your friend! Tap here to see your results.';
     let messageMutual = 'Your friends made an Appreciation Station for you! Tap here to see what they said!'
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-    //add static affordance to move onto next set of experiences
+    //notify both strangers and mutual friends + no system message bc chat is not open yet
+    notify(participants, sub.iid, messageStrangers, '', route);
+    notify(mutualFriend, sub.iid, messageMutual, '', route);
 
-    notify(participants, sub.iid, 'Check out the results of the Life Journey Maps!', '', route);
+    //add incident to mutual friends pastincidents so they can access the experience
+    Meteor.users.update({
+      _id: mutualFriend[0]._id
+    }, {
+      $addToSet: {
+        'profile.pastIncidents': sub.iid
+      }
+    });
   }
 
   let experience = {
@@ -448,7 +468,7 @@ export const createAppreciationStation = function(){
         },
       toPass: {
       },
-      numberNeeded: 4,
+      numberNeeded: 1,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
       allowRepeatContributions: true
@@ -458,6 +478,9 @@ export const createAppreciationStation = function(){
     callbacks: [{
       trigger: `cb.needFinished('appreciationStation')`,
       function: appreciationStationCompleteCallback.toString(),
+    },{
+      trigger: `cb.newSubmission('appreciationStation')`,
+      function: appreciationStationCallback.toString(),
     }],
   };
   return experience;

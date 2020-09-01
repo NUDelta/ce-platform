@@ -395,7 +395,7 @@ Template.appreciationStationResults.helpers({
     if ('friend' in currentUser.profile.staticAffordances){
       let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
 
-      let others = users.filter(u =>
+      let others = this.users.filter(u =>
           u._id != currentUser._id &&
           triad in u.profile.staticAffordances
       );
@@ -423,7 +423,7 @@ Template.appreciationStationResults.helpers({
 
     if ('friend' in currentUser.profile.staticAffordances){
       let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
-      let others = users.filter(u =>
+      let others = this.users.filter(u =>
           u._id != currentUser._id &&
           triad in u.profile.staticAffordances
       );
