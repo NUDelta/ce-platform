@@ -302,6 +302,37 @@ export const addContribution = (iid, contribution) =>{
   });
 };
 
+//uhhhh this is too specific to imitation game
+export const changeIncidentToPass = (iid, needName, field1, field2) => {
+  let incident = Incidents.findOne({
+    _id: iid,
+  });
+
+  let contributionTypeIndex = 0;
+
+  if (incident){
+    for (let i = 0; i < incident.contributionTypes.length; i++){
+      if (incident.contributionTypes[i].needName === needName){
+          contributionTypeIndex = i;
+        }
+      }
+  };
+
+  let search1 = `contributionTypes.${contributionTypeIndex}.toPass.${field1}`;
+  let search2 = `contributionTypes.${contributionTypeIndex}.toPass.${field2}`
+  console.log(search1)
+  console.log(search2)
+  Incidents.update({
+    _id: iid
+  }, {
+   $set: {
+     [search1] : false,
+     [search2] : true
+   }
+  });
+}
+
+
 export const changeExperienceToPass = (eid, needName, toPass, field) => {
     //first must find correct contributionType via needName & then update
     //only that contributionType with new toPass

@@ -654,40 +654,29 @@ export const reactSubmission = (react, users, submission) => {
 Template.imitationGameResults.helpers({
   content() {
     let currentUser = this.users.find(x => x._id === Meteor.userId());
+    let userSub = this.submissions.find(s => s.uid === currentUser._id);
+    let needName = userSub.needName;
+    let subs = this.submissions.filter(s => s.needName == needName);
 
-    let triad;
-    if(currentUser.profile.staticAffordances.triadOne) {
-      triad = 'triadOne';
-    } else if(currentUser.profile.staticAffordances.triadTwo) {
-      triad = 'triadTwo';
-    }
-    let originalImage, creatorSub, descriptorSub, recreatorSub;
-    let creatorName, descriptorName, recreatorName;
-
-    this.submissions.filter(s => {
-      let tokenizedNeed = s.needName.split('_');
-      if(tokenizedNeed[2] == triad) {
-        if(tokenizedNeed[0] == 'creator') {
-          creatorSub = this.images.find(i => i._id === s.content.proof);
-          let creatorUser = this.users.find(u => u._id == s.uid);
-          creatorName = `${creatorUser.profile.firstName} ${creatorUser.profile.lastName}`
-          originalImage = this.experience.contributionTypes.find(need => need.needName == s.needName).toPass.example_image;
-        } else if (tokenizedNeed[0] == 'descriptor') {
-          descriptorSub = s.content.sentence;
-          if(descriptorSub) {
-            let descriptorUser = this.users.find(u => u._id == s.uid);
-            descriptorName = `${descriptorUser.profile.firstName} ${descriptorUser.profile.lastName}`
-          }
-        } else if (tokenizedNeed[0] == 'recreator') {
-          recreatorSub = this.images.find(i => i._id === s.content.proof);
-          if(recreatorSub) {
-            let recreatorUser = this.users.find(u => u._id == s.uid);
-            recreatorName = `${recreatorUser.profile.firstName} ${recreatorUser.profile.lastName}`
-          }
-        }
+    let results = subs.map((s) => {
+      let map = {}
+      map.name = getUserById(this.users, s.uid)
+      if (s.content.proof){
+        map.content = this.images.find(i => i._id == s.content.proof);
+      } else {
+        map.content = s.content.sentence;
       }
+      return map;
     });
-    return {originalImage, creatorSub, descriptorSub, recreatorSub, creatorName, descriptorName, recreatorName};
+
+    console.log(results);
+    return results;
+  },
+  elementAtIndex(index, array){
+    return array[index]
+  },
+  lengthLessOrEq(upperBound, array){
+    return array.length >= upperBound
   }
 });
 

@@ -546,10 +546,28 @@ Template.groupBumped.helpers({
   }
 });
 
+Template.imitationGame.events({
+  'click #goToParticipate'(event, template){
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+});
+
+
 Template.imitationGame.helpers({
   getPreviousImageSub() {
-    return this.images.find(i => i.uid === this.toPass.previousSub.uid);
+    let imageSub = this.sbmissions.find(s => s.needName == this.needName && s.content.proof)
+    return this.images.find(i => i._id === imageSub.content.proof);
   },
+  getPreviousTextSub(){
+    console.log(this)
+    let textSub = this.submissions.find(i => i.needName == this.needName && i.content.sentence)
+    return textSub.content.sentence;
+  }
 });
 
 Template.groupCheers.helpers({

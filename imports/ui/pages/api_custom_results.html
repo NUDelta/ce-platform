@@ -600,46 +600,56 @@
       .arrow {
         font-size: 2em;
       }
+      .submission-container {
+        text-align: center;
+      }
       .submission-text {
-        align-self: flex-start;
+        text-align:center;
+        margin-bottom: 10px;
       }
     </style>
   </head>
-  <p class="main-header"><b>Check out the results from "The Imitation Game":</b></p>
+  <p class="main-header"><b>Check out the results from <br>"The Imitation Game":</b></p>
   <div class="content-container">
-    {{#with content}}
+    {{#let content = content}}
     <div class="submission-container">
       <div class="submission-text">Original Image</div>
-      <img src="{{originalImage}}" />
+      <img src="https://i.imgur.com/xf20VKa.jpg" />
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if creatorSub}}
-        <div class="submission-text">The creator, <b>{{creatorName}}</b>, created this image:</div>
-        <div>{{> Template.dynamic template="displayImage" data=(creatorSub)}}</div>
+      {{#if (lengthLessOrEq 1 content)}}
+        {{#let creator = (elementAtIndex 0 content)}}
+        <div class="submission-text">The creator, <b>{{creator.name}}</b>, created this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=creator.content}}</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the creator's submission. Hang tight!</div>
       {{/if}}
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if descriptorSub}}
-        <div class="submission-text">The descriptor, <b>{{descriptorName}}</b>, said</div>
-        <div>"{{descriptorSub}}"</div>
+      {{#if (lengthLessOrEq 2 content)}}
+        {{#let descriptor = (elementAtIndex 1 content)}}
+        <div class="submission-text">The descriptor, <b>{{descriptor.name}}</b>, said</div>
+        <div>"{{descriptor.content}}"</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the descriptor's submission. Hang tight!</div>
       {{/if}}
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if recreatorSub}}
-        <div class="submission-text">The recreator, <b>{{recreatorName}}</b>, drew this image:</div>
-        <div>{{> Template.dynamic template="displayImage" data=(recreatorSub)}}</div>
+      {{#if (lengthLessOrEq 3 content)}}
+        {{#let recreator = (elementAtIndex 2 content)}}
+        <div class="submission-text">The recreator, <b>{{recreator.name}}</b>, drew this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=recreator.content}}</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the recreator's submission. Hang tight!</div>
       {{/if}}
     </div>
-    {{/with}}
+    {{/let}}
   </div>
 </template>
 

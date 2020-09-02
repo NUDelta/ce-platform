@@ -65,6 +65,14 @@ export let DETECTORS = {
     ],
     rules: [('triad2 && (daytime || nighttime || sunset)')]
   },
+  imitation_game:{
+    _id: Random.id(),
+    description: 'Imitation Game',
+    variables: [
+      'var imitationGameFlag'
+    ],
+    rules: ['imitationGameFlag']
+  },
   nightTimeSpooks: {
     _id: Random.id(),
     description: 'Night Time Spooks Time',

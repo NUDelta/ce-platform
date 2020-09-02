@@ -125,57 +125,64 @@ export const createMoodMeteorology = function () {
   return experience;
 }
 
-//fix this
 export const createImitationGame = function () {
-  const sendNotification = function (sub) {
-    /*
-    const triad = sub.needName.split('_')[2];
-    let uids;
-    if(triad == "triadOne") {
-      uids = Meteor.users.find({"profile.staticAffordances.triadOne": true}).fetch().map(x => x._id);
-    } else if (triad == "triadTwo") {
-      uids = Meteor.users.find({"profile.staticAffordances.triadTwo": true}).fetch().map(x => x._id);
-    }*/
-
-    let submissions = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName
-    }).fetch();
-
-    let uids = submissions.map((submission) => { return submission.uid; });
-
-    notify(uids, sub.iid, 'The game is finally complete. Click here to check it out!',
-    '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-  };
-
   const imitationGameCallback = function (sub) {
-    let newContribution = {
-      needName: `ImitationGame`,
-      situation: {
-        detector: detectorId,
-        number: 1
-      },
-      toPass: {
-        role: {
-          creator: false,
-          descriptor: false,
-          recreator: false
-        },
-        previousSub: sub,
-      },
-      numberNeeded: 1,
-    };
+    //remove flag from current user
+    Meteor.users.update({
+      _id: sub.uid
+    }, {
+      $unset: {
+        'profile.staticAffordances.imitationGameFlag': ""
+      }
+    });
 
-    const previousRole = sub.needName.split('_')[0];
-    if (previousRole == 'creator') {
-      newContribution.needName = `descriptor_${newContribution.needName}`;
-      newContribution.toPass.role.descriptor = true;
-      addContribution(sub.iid, newContribution);
-    }
-    else if (previousRole == 'descriptor') {
-      newContribution.needName = `recreator_${newContribution.needName}`;
-      newContribution.toPass.role.recreator = true;
-      addContribution(sub.iid, newContribution);
+    let incident = Incidents.findOne(sub.iid);
+    let role = incident.contributionTypes.find(c => c.needName == sub.needName).toPass.role;
+    if (role.creator){
+      //change To Pass for the descriptor
+      changeIncidentToPass(sub.iid, sub.needName, 'role.creator', 'role.descriptor')
+      //next participant is mutual friend
+      let aff = Meteor.users.findOne(sub.uid).profile.staticAffordances;
+      let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+      let mutualFriend = Meteor.users.find({
+        [`profile.staticAffordances.${triad}`] : true,
+        [`profile.staticAffordances.friend`] : true,
+      }).fetch()[0];
+      //give mutual friend the imitation game flag to participate
+      Meteor.users.update({
+        _id: mutualFriend._id
+      }, {
+        $set: {
+          'profile.staticAffordances.imitationGameFlag': true
+        }
+      });
+    } else if (role.descriptor) {
+      changeIncidentToPass(sub.iid, sub.needName, 'role.descriptor', 'role.recreator')
+      //next participant other stranger
+      let aff = Meteor.users.findOne(sub.uid).profile.staticAffordances;
+      let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+      let otherStranger = Meteor.users.find({
+        [`profile.staticAffordances.${triad}`] : true,
+        [`profile.staticAffordances.stranger2`] : true,
+      }).fetch()[0];
+      //give other stranger the imitation game flag to participate
+      Meteor.users.update({
+        _id: otherStranger._id
+      }, {
+        $set: {
+          'profile.staticAffordances.imitationGameFlag': true
+        }
+      });
+    } else if (role.recreator) {
+      //send notification
+      let message = 'Hooray! The Imitation Game is finished! Tap here to see the results.';
+      let route = `/apicustomresults/${sub.iid}/${sub.eid}`
+      let submissions = Submissions.find({
+        iid: sub.iid,
+        needName: sub.needName
+      }).fetch();
+      let participants = submissions.map(s => s.uid );
+      notify(participants, sub.iid, message, '', route);
     }
   };
 
@@ -184,10 +191,10 @@ export const createImitationGame = function () {
     participateTemplate: 'imitationGame',
     resultsTemplate: 'imitationGameResults',
     contributionTypes: [{
-      needName: `creator_ImitationGame`,
+      needName: `imitation_game`,
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.daytime),
-        number: 1
+        detector : getDetectorUniqueKey(DETECTORS.imitation_game),
+        number: 1,
       },
       toPass: {
         role: {
@@ -197,23 +204,17 @@ export const createImitationGame = function () {
         },
         example_image: 'https://i.imgur.com/xf20VKa.jpg'
       },
-      numberNeeded: 1,
+      numberNeeded: 3,
       numberAllowedToParticipateAtSameTime: 1,
     }],
     description: 'Let\'s play an imitation game!',
     notificationText: 'Let\'s play an imitation game!',
     callbacks: [{
-        trigger: `(cb.newSubmission('creator_ImitationGame_triadOne') || cb.newSubmission('creator_ImitationGame_triadTwo') || cb.newSubmission('descriptor_ImitationGame_triadOne') || cb.newSubmission('descriptor_ImitationGame_triadTwo'))`,
+        trigger: `(cb.newSubmission('imitation_game'))`,
         function: imitationGameCallback.toString()
-          .replace('imitationGame_triadOne', DETECTORS['daytime']._id)
-      }, {
-        trigger: `(cb.newSubmission('recreator_ImitationGame_triadOne') || cb.newSubmission('recreator_ImitationGame_triadTwo'))`,
-        function: sendNotification.toString()
     }],
     allowRepeatContributions: false,
   };
-
-  experience.callbacks.push();
 
   return experience;
 }
@@ -436,7 +437,6 @@ export const createAppreciationStation = function(){
       [`profile.staticAffordances.${triad}`] : true,
       [`profile.staticAffordances.friend`] : true,
     }).fetch();
-    mutualFriend = [mutualFriend[0]]
 
     let messageStrangers = 'Hooray! You helped to complete the Appreciation Station for your friend! Tap here to see your results.';
     let messageMutual = 'Your friends made an Appreciation Station for you! Tap here to see what they said!'
@@ -631,11 +631,11 @@ export const monsterStory = function(){
 export default TRIADIC_EXPERIENCES = {
   //drinksTalk: createDrinksTalk(),
   //moodMeteorology: createMoodMeteorology(),
-  //imitationGame: createImitationGame(),
+  imitationGame: createImitationGame()
   //groupCheers: createGroupCheers(),
   //monsterCreate: createMonster(),
   //monsterStory: monsterStory(),
   //nightTimeSpooks: createNightTimeSpooks(),
   //lifeJourneyMap: createLifeJourneyMap()
-  appreciationStation: createAppreciationStation()
+  //appreciationStation: createAppreciationStation()
 }

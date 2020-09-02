@@ -823,74 +823,76 @@
       .camera-upload {
         padding-bottom: 1%;
       }
+      .description {
+        border-bottom: solid 1px darkgrey;
+        border-top: solid 1px darkgrey;
+        padding: 6px;
+        margin: 10px 0px;
+      }
+      .list {
+        padding-inline-start: 15px;
+        margin: 10px 0px;
+      }
     </style>
   </head>
   {{#if Template.subscriptionsReady}}
-    <div class="instruction">
-      <p>
+    <div id="instruction">
+        <h4>Imitation Game</h4>
         You’re playing <b>“The Imitation Game”</b>.
         In this game, you will be communicating with the other players to try to accurately translate an image into a drawing.
-      </p>
-      <p>
-        There are 3 steps to this game.
-      </p>
-      <p>
-        1) The <b>creator</b> will see the initial image, recreate it with items around them, and then send a photo to the second player.
-      </p>
-      <p>
-        2) The <b>descriptor</b> will then see only the recreated image, and they will try to describe it using text.
-      </p>
-      <p>
-        3) The <b>recreator</b> will see only the text and then try to draw the image from this description.
-      </p>
-      {{#if this.toPass.role.creator}}
-        <img src="{{this.toPass.example_image}}"/>
-        <p>
-          You have the role of the <b>creator</b>. Here is the initial image!
-          Try to recreate it with items around you and send a photo of your image for the next player.
-        </p>
-        <form class="col col-xs-12" id="participate">
-          <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
-          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
-        </form>
-      {{else if this.toPass.role.descriptor}}
-        <p>
+        There are 3 steps to this game:
+        <ol class="list">
+          <li>The <b>creator</b> will see the initial image, recreate it with items around them, and then send a photo to the second player.</li>
+          <li>The <b>descriptor</b> will then see only the recreated image, and they will try to describe it using text.</li>
+          <li>The <b>recreator</b> will see only the text and then try to draw the image from this description.</li>
+        </ol>
+        <img src="https://res.cloudinary.com/dftvewldz/image/upload/v1599076737/dtr/orange.jpg">
+        {{#if this.toPass.role.creator}}
+            You have the role of the <b>creator</b>.
+        {{else if this.toPass.role.descriptor}}
           You have the role of the <b>descriptor</b>.
-        </p>
-        {{#let user=(getUserById users this.toPass.previousSub.uid)}}
-         {{> displayLeftToRight_FullName_Avatar prependText="The creator," appendText=", created this image:" user=user avatar=(userAvatarImg avatars user) }}
-        {{/let}}
-        {{#let creatorImage=getPreviousImageSub}}
-          {{> Template.dynamic template="displayImage" data=(creatorImage) }}
-        {{/let}}
-        <p>
-          Describe it as best you can to send to the next player.
-        </p>
-        <form class="col col-xs-12" id="participate">
-          <div>{{> Template.dynamic template="text" data="sentence"}}</div>
-          <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
-        </form>
-      {{else if this.toPass.role.recreator}}
-        <p>
-          You have the role of the <b>recreator</b>. Here’s the description of the previous image:
-        </p>
-        <p>
-            "{{this.toPass.previousSub.content.sentence}}"
-            <div class>
-              {{#let user=(getUserById users this.toPass.previousSub.uid)}}
-                {{> displayLeftToRight_FullName_Avatar prependText="- " user=user avatar=(userAvatarImg avatars user) }}
-              {{/let}}
+        {{else if this.toPass.role.recreator}}
+          You have the role of the <b>recreator</b>.
+        {{/if}}
+        <button id="goToParticipate" class="btn btn-primary right-align"
+        style="float: right; margin-top: 12px;">
+          <span>Play Imitation Game</span><span class="glyphicon glyphicon-menu-right"></span>
+        </button>
+      </div>
+
+      <form class="col col-xs-12" id="participate" style="display:none">
+        <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons"
+        style="margin-bottom: 10px;">
+          <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+        </button>
+        <div>
+        {{#if this.toPass.role.creator}}
+            You have the role of the <b>creator</b>.
+            Try to make create this image using the objects around you!
+            <img src={{this.toPass.example_image}}>
+            <div class="camera-upload">
+              {{> Template.dynamic template="camera" data="proof"}}
             </div>
-        </p>
-        <p>
-          Try drawing a picture based on this description and take a picture of it to complete the game!
-        </p>
-        <form class="col col-xs-12" id="participate">
-            <div class="camera-upload"> {{> Template.dynamic template="camera" data="proof"}} </div>
-            <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
-          </form>
-      {{/if}}
-    </div>
+        {{else if this.toPass.role.descriptor}}
+          You have the role of the <b>descriptor</b>.
+          Here is the images that the previous participant made:
+          {{> Template.dynamic template="displayFullImage" data=getPreviousImageSub }}
+          Try to describe it for the next player!
+          <div style="margin:12px 0px">{{> Template.dynamic template="text" data="sentence"}}</div>
+        {{else if this.toPass.role.recreator}}
+          You have the role of the <b>recreator</b>.
+          This is how the previous player described the image:
+          <div class="description">
+          <b>{{getPreviousTextSub}}</b>
+          </div>
+          Draw what the previous player described and submit it to finish the game!
+          <div class="camera-upload">
+            {{> Template.dynamic template="camera" data="proof"}}
+          </div>
+        {{/if}}
+        </div>
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"> Submit </button>
+      </form>
   {{/if}}
 </template>
 

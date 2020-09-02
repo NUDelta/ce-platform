@@ -174,7 +174,12 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid1]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger1": true} },
+    $set: { 'profile.staticAffordances': {
+      "triad1":true,
+      "chat": true,
+      "stranger1": true,
+      "imitationGameFlag": true
+    } },
   }, {
     multi: true
   });
