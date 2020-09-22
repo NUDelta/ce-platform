@@ -631,7 +631,7 @@
     <div class="submission-container">
       {{#if (lengthLessOrEq 2 content)}}
         {{#let descriptor = (elementAtIndex 1 content)}}
-        <div class="submission-text">The descriptor, <b>{{descriptor.name}}</b>, said</div>
+        <div class="submission-text">The descriptor, <b>{{descriptor.name}}</b>, described the previous image as</div>
         <div>"{{descriptor.content}}"</div>
         {{/let}}
       {{else}}

@@ -560,7 +560,7 @@ Template.imitationGame.events({
 
 Template.imitationGame.helpers({
   getPreviousImageSub() {
-    let imageSub = this.sbmissions.find(s => s.needName == this.needName && s.content.proof)
+    let imageSub = this.submissions.find(s => s.needName == this.needName && s.content.proof)
     return this.images.find(i => i._id === imageSub.content.proof);
   },
   getPreviousTextSub(){

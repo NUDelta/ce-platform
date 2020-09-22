@@ -656,11 +656,12 @@ Template.imitationGameResults.helpers({
     let currentUser = this.users.find(x => x._id === Meteor.userId());
     let userSub = this.submissions.find(s => s.uid === currentUser._id);
     let needName = userSub.needName;
-    let subs = this.submissions.filter(s => s.needName == needName);
+    let subs = this.submissions.filter(s => s.needName == needName && s.uid != null);
 
     let results = subs.map((s) => {
       let map = {}
       map.name = getUserById(this.users, s.uid)
+
       if (s.content.proof){
         map.content = this.images.find(i => i._id == s.content.proof);
       } else {
