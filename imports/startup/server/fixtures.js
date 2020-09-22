@@ -187,7 +187,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid2]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": true, "stranger2": true} },
+    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "stranger2": true} },
   }, {
     multi: true
   });
@@ -203,7 +203,7 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid4, uid5]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad2":true, "chat": true, "stranger": true } },
+    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "stranger": true } },
   }, {
     multi: true
   });

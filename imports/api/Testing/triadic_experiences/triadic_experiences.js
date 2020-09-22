@@ -44,9 +44,9 @@ export const createDrinksTalk = function() {
           situationDescription : "Having a good time at a coffee shop or a restaurant?",
           instruction : "Send a picture of your drink and add some caption about it! (Why you ordered it, why you like it, etc.)."
         },
-        numberNeeded : 3,
+        numberNeeded : 2,
         notificationDelay : 1,
-        numberAllowedToParticipateAtSameTime: 3,
+        numberAllowedToParticipateAtSameTime: 2,
         allowRepeatContributions : false
       },
       /*{
@@ -88,6 +88,17 @@ export const createMoodMeteorology = function () {
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.completedMoodMeteorology']: true
+        }
+      });
+    });
+
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -182,6 +193,15 @@ export const createImitationGame = function () {
         needName: sub.needName
       }).fetch();
       let participants = submissions.map(s => s.uid );
+      participants.forEach(function(p){
+        Meteor.users.update({
+          _id: p
+        }, {
+          $set: {
+            ['profile.staticAffordances.participatedInImitationGame']: true
+          }
+        });
+      });
       notify(participants, sub.iid, message, '', route);
     }
   };
@@ -193,7 +213,7 @@ export const createImitationGame = function () {
     contributionTypes: [{
       needName: `imitation_game`,
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.imitation_game),
+        detector : getDetectorUniqueKey(DETECTORS.imitation_game_triad1),
         number: 1,
       },
       toPass: {
@@ -229,6 +249,15 @@ export const createGroupCheers = function() {
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
+
+    //find just the strangers
+    Meteor.users.find({
+      [`profile.staticAffordances.${triad}`] : sub.iid,
+      [`profile.staticAffordances.friend`] : true,
+    }).fetch();
+
+    //notify(strangers, , 'You have now done enough experiences to unlock the chat feature!', '', '/chat/');
+
     notify(participants, sub.iid, 'Check out your group\'s cheers!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -239,7 +268,7 @@ export const createGroupCheers = function() {
     contributionTypes: [{
       needName: 'groupCheers',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.beverage),
+        detector : getDetectorUniqueKey(DETECTORS.group_cheers_triad1),
         number: 1
         },
       toPass: {
@@ -420,8 +449,6 @@ export const createLifeJourneyMap = function(){
 }
 
 export const createAppreciationStation = function(){
-  const appreciationStationCallback = function(sub){
-  }
   const appreciationStationCompleteCallback = function (sub) {
     let submissions = Submissions.find({
       iid: sub.iid,
@@ -446,12 +473,25 @@ export const createAppreciationStation = function(){
     notify(participants, sub.iid, messageStrangers, '', route);
     notify(mutualFriend, sub.iid, messageMutual, '', route);
 
+    participants.forEach(p => {
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInAppreciationStation']: true
+        }
+      });
+    })
+
     //add incident to mutual friends pastincidents so they can access the experience
     Meteor.users.update({
       _id: mutualFriend[0]._id
     }, {
       $addToSet: {
         'profile.pastIncidents': sub.iid
+      },
+      $set: {
+        ['profile.staticAffordances.participatedInAppreciationStation']: true
       }
     });
   }
@@ -463,24 +503,22 @@ export const createAppreciationStation = function(){
     contributionTypes: [{
       needName: 'appreciationStation',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        detector : getDetectorUniqueKey(DETECTORS.strangers_triad1),
         number: 1
         },
       toPass: {
       },
-      numberNeeded: 1,
+      numberNeeded: 4,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
       allowRepeatContributions: true
     }],
+    allowRepeatContributions: true,
     description: 'Show some appreciation for your friend!',
     notificationText: 'Show some appreciation for your friend!',
     callbacks: [{
       trigger: `cb.needFinished('appreciationStation')`,
       function: appreciationStationCompleteCallback.toString(),
-    },{
-      trigger: `cb.newSubmission('appreciationStation')`,
-      function: appreciationStationCallback.toString(),
     }],
   };
   return experience;
@@ -631,11 +669,11 @@ export const monsterStory = function(){
 export default TRIADIC_EXPERIENCES = {
   //drinksTalk: createDrinksTalk(),
   //moodMeteorology: createMoodMeteorology(),
-  imitationGame: createImitationGame()
-  //groupCheers: createGroupCheers(),
+  appreciationStation: createAppreciationStation(),
+  imitationGame: createImitationGame(),
+  groupCheers: createGroupCheers(),
   //monsterCreate: createMonster(),
   //monsterStory: monsterStory(),
   //nightTimeSpooks: createNightTimeSpooks(),
   //lifeJourneyMap: createLifeJourneyMap()
-  //appreciationStation: createAppreciationStation()
 }

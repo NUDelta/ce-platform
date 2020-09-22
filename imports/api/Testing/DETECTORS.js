@@ -43,17 +43,6 @@ export let DETECTORS = {
     ],
     rules: [('daytime || nighttime || sunset')]
   },
-  anytime_triad1: {
-    _id: Random.id(),
-    description: 'all times for testing triad1',
-    variables: [
-      'var daytime;',
-      'var nighttime;',
-      'var sunset;',
-      'var triad1'
-    ],
-    rules: [('triad1 && (daytime || nighttime || sunset)')]
-  },
   anytime_triad2: {
     _id: Random.id(),
     description: 'all times for testing triad 2',
@@ -65,13 +54,56 @@ export let DETECTORS = {
     ],
     rules: [('triad2 && (daytime || nighttime || sunset)')]
   },
-  imitation_game:{
+  /*progression of triad 1 experience*/
+  anytime_triad1: {
+    _id: Random.id(),
+    description: 'all times for testing triad1',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;',
+      'var triad1'
+    ],
+    rules: [('triad1 && (daytime || nighttime || sunset)')]
+  },
+  strangers_triad1: {
+    _id: Random.id(),
+    description: 'strangers from triad1',
+    variables: [
+      'var stranger1',
+      'var stranger2',
+      'var triad1'
+    ],
+    rules: [('triad1 && (stranger1 || stranger2)')]
+  },
+  imitation_game_triad1:{
     _id: Random.id(),
     description: 'Imitation Game',
     variables: [
-      'var imitationGameFlag'
+      'var imitationGameFlag',
+      'var triad1',
+      'var participatedInAppreciationStation'
     ],
-    rules: ['imitationGameFlag']
+    rules: [('participatedInAppreciationStation && imitationGameFlag && triad1')]
+  },
+  group_cheers_triad1:{
+    _id: Random.id(),
+    description: 'Group Cheers',
+    variables: [
+      'var participatedInImitationGame',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+    ],
+    rules: ['(participatedInImitationGame && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
   nightTimeSpooks: {
     _id: Random.id(),
