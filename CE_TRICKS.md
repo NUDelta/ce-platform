@@ -6,7 +6,7 @@ There are a few things that are not obvious in this codebase, so I figured I wou
 ### Triadic Experiences Specific Things
 1. Starting Static Affordances for the users
 
-In a triad, the mutual friend should have the static affordances `{friend: true, triad$number: true, chat:false}`. One of the strangers in the triad should be stranger1 and the other one should be stranger2. Stranger1 should have the static affordances `{stranger1: true, triad$number: true, chat:false, imitationGameFlag: false}`, and the other stranger should have the static affordances: `{stranger2: true, triad$number: true, chat:false}`
+In a triad, the mutual friend should have the starting static affordances `{friend: true, triad$number: true, chat:false}`. One of the strangers in the triad should be stranger1 and the other one should be stranger2. Stranger1 should have the starting static affordances `{stranger1: true, triad$number: true, chat:false, imitationGameFlag: false}`, and the other stranger should have the starting static affordances: `{stranger2: true, triad$number: true, chat:false}`
 
 2. Progression of Experiences
 
@@ -18,7 +18,7 @@ participatedInDrinksTalk && participatedInMoodMeteorology
 
 3. Detectors
 
-Detectors are necessary to prevent users from participating out of order. The static affordances users gain from experiences limit them doing an experience later in the progression. 
+Detectors are necessary to prevent users from participating out of order. The static affordances users gain from experiences limit them doing an experience later in the progression.
 
 ### The Testing Constants File(s)
 1. I don't understand what the different fields are in an experience object...

@@ -176,7 +176,7 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': {
       "triad1":true,
-      "chat": true,
+      "chat": false,
       "stranger1": true,
       "imitationGameFlag": true
     } },

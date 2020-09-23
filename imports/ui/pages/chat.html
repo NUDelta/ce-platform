@@ -47,30 +47,36 @@
   </head>
   {{#if Template.subscriptionsReady}}
   {{#if currentUser}}
-    {{#if currentUser.profile.staticAffordances.chat}}
-    <div>
+    {{#if currentUser.profile.staticAffordances.friend}}
+      <h3>Error 😢</h3>
+      <h4>The chat feature is not available for you. Sorry!</h4>
+      <div id="messages"></div>
+    {{else}}
+      {{#if currentUser.profile.staticAffordances.chat}}
       <div>
-        <!-- previous lines of dialogue -->
-        <div id="messages" style={{scrollToBottom}}>
-            {{scroll this.messages}}
-            {{#each this.messages}}
-              {{> message}}
-            {{/each}}
-        </div>
+        <div>
+          <!-- previous lines of dialogue -->
+          <div id="messages" style={{scrollToBottom}}>
+              {{scroll this.messages}}
+              {{#each this.messages}}
+                {{> message}}
+              {{/each}}
+          </div>
 
-        <!-- writing your own message -->
-        <div class="new-message-container">
-            <form id="message">
-              <input type="text" class="message-input" placeholder="Type your message here...">
-              <button type="submit">Send</button>
-            </form>
+          <!-- writing your own message -->
+          <div class="new-message-container">
+              <form id="message">
+                <input type="text" class="message-input" placeholder="Type your message here...">
+                <button type="submit">Send</button>
+              </form>
+          </div>
         </div>
       </div>
-    </div>
-    {{else}}
-    <h3>You have not unlocked the chat feature yet! 🔒</h3>
-    <h4>Participate in more experiences to unlock chat with another Cerebro user!</h4>
-    <div id="messages"></div>
+      {{else}}
+      <h3>You have not unlocked the chat feature yet! 🔒</h3>
+      <h4>Participate in more experiences to unlock chat with another Cerebro user!</h4>
+      <div id="messages"></div>
+      {{/if}}
     {{/if}}
 
   {{else}}

@@ -9,23 +9,24 @@ export const createDrinksTalk = function() {
       iid: sub.iid,
       needName: sub.needName
     }).fetch();
+
     let participants = submissions.map((submission) => { return submission.uid; });
-    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
-    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-    sendSystemMessage(message, participants, route);
-    notify(participants, sub.iid, 'See images from your drinks talk experience!', '', route);
-  }
-
-
-  const drinksTalkNewSubCallback = function (sub) {
+    participants.forEach(p => {
       Meteor.users.update({
-        _id: sub.uid
+        _id: p
       }, {
         $set: {
           ['profile.staticAffordances.participatedInDrinksTalk']: true
         }
       });
+    })
+
+    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your drinks talk experience!', '', route);
   }
 
   let experience = {
@@ -36,7 +37,7 @@ export const createDrinksTalk = function() {
       {
         needName : "drinksTalk",
         situation : {
-          detector : getDetectorUniqueKey(DETECTORS.beverage),
+          detector : getDetectorUniqueKey(DETECTORS.drinksTalk_triad1),
           //DETECTORS['beverage_triadOne']._id,
           number : 1
         },
@@ -68,10 +69,7 @@ export const createDrinksTalk = function() {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `cb.newSubmission()`,
-        function: drinksTalkNewSubCallback.toString(),
-      }, {
-        trigger: `(cb.newSubmission('drinksTalk') && cb.needFinished('drinksTalk'))`,
+        trigger: `(cb.needFinished('drinksTalk'))`,
         function: drinksTalkCompleteCallback.toString(),
       }
     ],
@@ -99,7 +97,11 @@ export const createMoodMeteorology = function () {
       });
     });
 
-    notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', route);
   }
 
   let experience = {
@@ -110,14 +112,14 @@ export const createMoodMeteorology = function () {
       {
         needName : "moodMeteorology",
         situation : {
-          detector : getDetectorUniqueKey(DETECTORS.daytime),
+          detector : getDetectorUniqueKey(DETECTORS.moodMeteorology_triad1),
           number : 1
         },
         toPass : {
           situationDescription : "Having a good time today?",
           instruction : "Sometimes, the weather affects our mood! Take a picture showing the weather and add a caption about how it makes you feel."
         },
-        numberNeeded : 3,
+        numberNeeded : 2,
         notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
@@ -126,7 +128,7 @@ export const createMoodMeteorology = function () {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.newSubmission('moodMeteorology') && cb.needFinished('moodMeteorology')))`,
+        trigger: `(cb.needFinished('moodMeteorology'))`,
         function: moodMeteorologyCompleteCallback.toString(),
       }
     ],
@@ -193,6 +195,7 @@ export const createImitationGame = function () {
         needName: sub.needName
       }).fetch();
       let participants = submissions.map(s => s.uid );
+
       participants.forEach(function(p){
         Meteor.users.update({
           _id: p
@@ -202,6 +205,8 @@ export const createImitationGame = function () {
           }
         });
       });
+
+
       notify(participants, sub.iid, message, '', route);
     }
   };
@@ -250,14 +255,26 @@ export const createGroupCheers = function() {
 
     let participants = submissions.map((submission) => { return submission.uid; });
 
-    //find just the strangers
-    Meteor.users.find({
-      [`profile.staticAffordances.${triad}`] : sub.iid,
-      [`profile.staticAffordances.friend`] : true,
+    //get only strangers in the triad
+    let aff = Meteor.users.findOne(sub.uid).profile.staticAffordances;
+    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+    let strangers = Meteor.users.find({
+      [`profile.staticAffordances.${triad}`] : true,
+      [`profile.staticAffordances.friend`]: { $exists: false }
     }).fetch();
 
-    //notify(strangers, , 'You have now done enough experiences to unlock the chat feature!', '', '/chat/');
+    strangers.forEach(s => {
+      Meteor.users.update({
+        _id: s._id
+      }, {
+        $set: {
+          ['profile.staticAffordances.chat']: true
+        }
+      });
+    })
+    let strangersId = strangers.map(s => s._id);
 
+    notify(strangersId, '', 'You have now finished enough experiences to open the chat!', '','/chat/');
     notify(participants, sub.iid, 'Check out your group\'s cheers!', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
   }
 
@@ -345,7 +362,7 @@ export const createNightTimeSpooks = function(){
       needName: 'nightTimeSpooks',
       situation: {
         //replace with night time detector
-        detector : getDetectorUniqueKey(DETECTORS.nightTimeSpooks),
+        detector : getDetectorUniqueKey(DETECTORS.nightTimeSpooks_triad1),
         number: 1
         },
       toPass: {
@@ -358,7 +375,7 @@ export const createNightTimeSpooks = function(){
     },{
       needName: 'riddikulus',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.riddikulus),
+        detector : getDetectorUniqueKey(DETECTORS.riddikulus_triad1),
         number: 1
         },
       toPass: {
@@ -376,7 +393,7 @@ export const createNightTimeSpooks = function(){
       trigger: `cb.needFinished('nightTimeSpooks')`,
       function: completeNightTimeSpooksCallback.toString(),
     },{
-      trigger: `(cb.newSubmission('riddikulus') && cb.needFinished('riddikulus'))`,
+      trigger: `(cb.needFinished('riddikulus'))`,
       function: riddikulusCallback.toString()
     }],
     allowRepeatContributions: true,
@@ -395,7 +412,6 @@ export const createLifeJourneyMap = function(){
     }).fetch();
 
     let otherParticipants = submissions.map((submission) => { return submission.uid; });
-    console.log(otherParticipants);
     let message = 'Someone just added to their life journey map! Tap here to see their updates.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
@@ -423,10 +439,9 @@ export const createLifeJourneyMap = function(){
     contributionTypes: [{
       needName: 'lifeJourneyMap',
       situation: {
-        //replace with train station detectors
-        detector : getDetectorUniqueKey(DETECTORS.anytime),
+        detector : getDetectorUniqueKey(DETECTORS.lifeJourneyMap_triad1),
         number: 1
-        },
+      },
       toPass: {
         exampleImage: "http://45.76.227.174/assets/img/cta-map.jpg"
       },
@@ -570,7 +585,7 @@ export const createMonster = function(){
     contributionTypes: [{
       needName: 'monsterCreate_triad1',
       situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
+        detector : getDetectorUniqueKey(DETECTORS.monsterCreate_triad1),
         number: 1
         },
       toPass: {
@@ -623,7 +638,6 @@ export const monsterStory = function(){
       needName: sub.needName
     }).fetch();
 
-    //remove duplicates in uids
     let uids = submissions.map((submission) => { return submission.uid; });
     uids = [... new Set(uids)];
     notify(uids, sub.iid, 'See what your monster has been up to!', 'The lab report has been updated. See the complete report here!', '/apicustomresults/' + sub.iid + '/' + sub.eid);
@@ -636,17 +650,7 @@ export const monsterStory = function(){
     contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [
       {needName: 'monsterStory_triad1',
         situation: {
-          detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
-          number: 1
-        },
-        toPass: {},
-        numberNeeded: 5,
-        notificationDelay: 1,
-        numberAllowedToParticipateAtSameTime: 1,
-      },
-      {needName: 'monsterStory_triad2',
-        situation: {
-          detector : getDetectorUniqueKey(DETECTORS.anytime_triad2),
+          detector : getDetectorUniqueKey(DETECTORS.monsterCreate_triad1),
           number: 1
         },
         toPass: {},
@@ -657,23 +661,23 @@ export const monsterStory = function(){
     description: 'Your monster has escaped the lab⁠— what is it doing?',
     notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterStory_triad2')) || cb.newSubmission('monsterStory_triad1'))`,
+      trigger: `(cb.newSubmission('monsterStory_triad1'))`,
       function: monsterCallback.toString(),
     }],
-    allowRepeatContributions: false,
+    allowRepeatContributions: true,
   };
 
   return experience;
 };
 
 export default TRIADIC_EXPERIENCES = {
-  //drinksTalk: createDrinksTalk(),
-  //moodMeteorology: createMoodMeteorology(),
   appreciationStation: createAppreciationStation(),
   imitationGame: createImitationGame(),
   groupCheers: createGroupCheers(),
-  //monsterCreate: createMonster(),
-  //monsterStory: monsterStory(),
-  //nightTimeSpooks: createNightTimeSpooks(),
-  //lifeJourneyMap: createLifeJourneyMap()
+  drinksTalk: createDrinksTalk(),
+  moodMeteorology: createMoodMeteorology(),
+  monsterCreate: createMonster(),
+  monsterStory: monsterStory(),
+  nightTimeSpooks: createNightTimeSpooks(),
+  lifeJourneyMap: createLifeJourneyMap()
 }

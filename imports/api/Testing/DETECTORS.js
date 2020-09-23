@@ -54,7 +54,6 @@ export let DETECTORS = {
     ],
     rules: [('triad2 && (daytime || nighttime || sunset)')]
   },
-  /*progression of triad 1 experience*/
   anytime_triad1: {
     _id: Random.id(),
     description: 'all times for testing triad1',
@@ -66,6 +65,7 @@ export let DETECTORS = {
     ],
     rules: [('triad1 && (daytime || nighttime || sunset)')]
   },
+  /*progression of triad 1 experience*/
   strangers_triad1: {
     _id: Random.id(),
     description: 'strangers from triad1',
@@ -88,7 +88,7 @@ export let DETECTORS = {
   },
   group_cheers_triad1:{
     _id: Random.id(),
-    description: 'Group Cheers',
+    description: 'Group Cheers triad 1',
     variables: [
       'var participatedInImitationGame',
       'var triad1',
@@ -105,25 +105,81 @@ export let DETECTORS = {
     ],
     rules: ['(participatedInImitationGame && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
-  nightTimeSpooks: {
+  drinksTalk_triad1:{
     _id: Random.id(),
-    description: 'Night Time Spooks Time',
+    description: 'Drinks Talk Triad 1',
     variables: [
-      'var stranger1',
-      'var stranger2',
-      'var triad1'
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
     ],
-    rules: [('(stranger1 || stranger2) && triad1')]
+    rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
-  riddikulus: {
+  moodMeteorology_triad1:{
     _id: Random.id(),
-    description: 'Riddikulus',
+    description: 'Moode Meteorology Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(participatedInGroupCheers && triad1 && daytime)']
+  },
+  nightTimeSpooks_triad1: {
+    _id: Random.id(),
+    description: 'Night Time Spooks Time Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var nighttime;'
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
+  },
+  riddikulus_triad1: {
+    _id: Random.id(),
+    description: 'Riddikulus Triad 1',
     variables: [
       'var participatedInNightTimeSpooks',
-      'var completedNightTimeSpooks'
+      'var completedNightTimeSpooks',
+      'triad1;'
     ],
-    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks')]
+    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks && triad1')]
   },
+  lifeJourneyMap_triad1: {
+    _id: Random.id(),
+    description: 'Life Journey Map Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var publictransport;',
+      'var trainstations;',
+      'var trains;',
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && (publictransport || trainstations || trains)')]
+  },
+  monsterCreate_triad1: {
+    _id: Random.id(),
+    description: 'Monster Create Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'triad1',
+      'nighttime;'
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
+  },
+  /*end of progression triad 1*/
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
