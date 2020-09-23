@@ -82,7 +82,7 @@ export let DETECTORS = {
     variables: [
       'var imitationGameFlag',
       'var triad1',
-      'var participatedInAppreciationStation'
+      'var participatedInAppreciationStation;'
     ],
     rules: [('participatedInAppreciationStation && imitationGameFlag && triad1')]
   },
@@ -134,27 +134,6 @@ export let DETECTORS = {
     ],
     rules: ['(participatedInGroupCheers && triad1 && daytime)']
   },
-  nightTimeSpooks_triad1: {
-    _id: Random.id(),
-    description: 'Night Time Spooks Time Triad 1',
-    variables: [
-      'var participatedInMoodMeteorology',
-      'var participatedInDrinksTalk',
-      'var triad1',
-      'var nighttime;'
-    ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
-  },
-  riddikulus_triad1: {
-    _id: Random.id(),
-    description: 'Riddikulus Triad 1',
-    variables: [
-      'var participatedInNightTimeSpooks',
-      'var completedNightTimeSpooks',
-      'triad1;'
-    ],
-    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks && triad1')]
-  },
   lifeJourneyMap_triad1: {
     _id: Random.id(),
     description: 'Life Journey Map Triad 1',
@@ -174,10 +153,31 @@ export let DETECTORS = {
     variables: [
       'var participatedInMoodMeteorology',
       'var participatedInDrinksTalk',
-      'triad1',
-      'nighttime;'
+      'var triad1',
+      'var daytime;'
     ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && daytime')]
+  },
+  nightTimeSpooks_triad1: {
+    _id: Random.id(),
+    description: 'Night Time Spooks Time Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && daytime')]
+  },
+  riddikulus_triad1: {
+    _id: Random.id(),
+    description: 'Riddikulus Triad 1',
+    variables: [
+      'var participatedInNightTimeSpooks',
+      'var completedNightTimeSpooks',
+      'var triad1;'
+    ],
+    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks && triad1')]
   },
   /*end of progression triad 1*/
   library: {

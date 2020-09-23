@@ -22,6 +22,7 @@ export const createDrinksTalk = function() {
       });
     })
 
+
     let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
@@ -92,13 +93,13 @@ export const createMoodMeteorology = function () {
         _id: p
       }, {
         $set: {
-          ['profile.staticAffordances.completedMoodMeteorology']: true
+          ['profile.staticAffordances.participatedInMoodMeteorology']: true
         }
       });
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
+    let message = 'Hooray! You two have completed the Mood Meteorology experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', route);
@@ -268,7 +269,8 @@ export const createGroupCheers = function() {
         _id: s._id
       }, {
         $set: {
-          ['profile.staticAffordances.chat']: true
+          ['profile.staticAffordances.chat']: true,
+          ['profile.staticAffordances.participatedInGroupCheers']: true
         }
       });
     })
@@ -300,7 +302,7 @@ export const createGroupCheers = function() {
     description: 'Share your accomplishments with your friend and their friend!',
     notificationText: 'Share your accomplishments with your friend and their friend!',
     callbacks: [{
-      trigger: `(cb.newSubmission('groupCheers_triadOne') && cb.needFinished('groupCheers_triadOne')) || (cb.newSubmission('groupCheers_triadTwo') && cb.needFinished('groupCheers_triadTwo'))`,
+      trigger: `(cb.needFinished('groupCheers'))`,
       function: groupCheersCallback.toString(),
     }],
     allowRepeatContributions: false,
@@ -486,7 +488,7 @@ export const createAppreciationStation = function(){
 
     //notify both strangers and mutual friends + no system message bc chat is not open yet
     notify(participants, sub.iid, messageStrangers, '', route);
-    notify(mutualFriend, sub.iid, messageMutual, '', route);
+    notify([mutualFriend[0]._id], sub.iid, messageMutual, '', route);
 
     participants.forEach(p => {
       Meteor.users.update({
@@ -542,7 +544,7 @@ export const createAppreciationStation = function(){
 export const createMonster = function(){
   const monsterCallback = function (sub) {
 
-    //allow participation in MonsterCreate
+    //allow participation in MonsterStory
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -589,39 +591,20 @@ export const createMonster = function(){
         number: 1
         },
       toPass: {
-        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partners to create a monster! You and your partners will each draw a third of the monster and take a photo of your respective parts.',
+        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partner to create a monster! You and your partner will each draw half of the monster and take a photo of your respective parts.',
         //change example images
         exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
         exampleImage2: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleImage3: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
         exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
       },
-      numberNeeded: 3,
+      numberNeeded: 2,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-      },{
-      needName: 'monsterCreate_triad2',
-      situation: {
-        detector : getDetectorUniqueKey(DETECTORS.anytime_triad2),
-        number: 1
-        },
-      toPass: {
-        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partners to create a monster! You and your partners will each draw a third of the monster and take a photo of your respective parts.',
-        //change example images
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleImage2: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleImage3: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
-      },
-      numberNeeded: 3,
-      notificationDelay: 1,
-      numberAllowedToParticipateAtSameTime: 1,
-    }],
-    description: 'Create a monster with your fellow mad scientists!',
-    notificationText: 'Create a monster with your fellow mad scientists!',
+      }],
+    description: 'Create a monster with your fellow mad scientist!',
+    notificationText: 'Create a monster with your fellow mad scientist!',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterCreate_triad2') && cb.needFinished('monsterCreate_triad2')) ||
-      (cb.newSubmission('monsterCreate_triad1') && cb.needFinished('monsterCreate_triad1'))`,
+      trigger: `cb.needFinished('monsterCreate_triad1'))`,
       function: monsterCallback.toString(),
     }],
     allowRepeatContributions: false,
@@ -650,7 +633,7 @@ export const monsterStory = function(){
     contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [
       {needName: 'monsterStory_triad1',
         situation: {
-          detector : getDetectorUniqueKey(DETECTORS.monsterCreate_triad1),
+          detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
           number: 1
         },
         toPass: {},

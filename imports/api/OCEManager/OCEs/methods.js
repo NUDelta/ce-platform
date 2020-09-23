@@ -320,8 +320,7 @@ export const changeIncidentToPass = (iid, needName, field1, field2) => {
 
   let search1 = `contributionTypes.${contributionTypeIndex}.toPass.${field1}`;
   let search2 = `contributionTypes.${contributionTypeIndex}.toPass.${field2}`
-  console.log(search1)
-  console.log(search2)
+
   Incidents.update({
     _id: iid
   }, {

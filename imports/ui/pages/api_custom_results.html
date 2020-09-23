@@ -238,6 +238,7 @@
     </style>
   </head>
 
+  <h4>Frankenstein's Monster Results</h4>
   <div>
     Here are the parts of the monster that each scientist has contributed so far:
   </div>
@@ -251,7 +252,7 @@
           {{#each needSub in needSubs}}
           {{#if (elementAtIndex needImages @index)}}
               <div>
-                <div><b>{{elementAtIndex names @index}}</b></div>
+                <div style="text-align:center;"><b>{{elementAtIndex names @index}}</b></div>
                 {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
               </div>
           {{else}}
@@ -260,13 +261,14 @@
           {{/each}}
           </div>
 
-          {{#if (lengthEqual needImages 3)}}
+          {{#if (lengthEqual needImages 2)}}
           <div>
-            Here is the full monster!
+            <div style="padding:10px; font-size: 16px; text-align:center;">
+              <b>Here is the full monster!</b>
+            </div>
             <div>
               {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
               {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
             </div>
           </div>
           {{else}}
@@ -308,11 +310,13 @@
 
   <div class="results">
     {{#each result in getImagesAndSubs}}
-      <div style="margin-bottom: 6px 0px">
+      <div style="margin-bottom: 6px">
         <b>{{result.user}}:</b>
         {{result.needCaption}}
       </div>
+      <div style="margin-bottom: 20px">
       {{> Template.dynamic template="displayFullImage" data=result.needImage}}
+      </div>
     {{/each}}
   </div>
   {{/let}}
@@ -432,7 +436,7 @@
               <div class="reportImg">
                 <div class="grid">
                   <div class="fearImage" style="grid-column:2; grid-row:2">
-                      {{> Template.dynamic template="displayFullImage" data=(getPartnerImage images @index)}}
+                      {{> Template.dynamic template="displayImage" data=(getPartnerImage images @index)}}
                   </div>
                 </div>
                 <div class="bgImg">
@@ -569,15 +573,6 @@
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>
-        {{/if}}
-      </div>
-      <div class="sub_container">
-        {{#if imageTwo}}
-          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageTwo)}}</div>
-          <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
-        {{else}}
-          <div class="pending_img">?</div>
-          <div class="caption">We're still waiting on this submission. Hang tight!</div>
         {{/if}}
       </div>
     </div>

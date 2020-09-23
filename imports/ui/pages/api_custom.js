@@ -886,7 +886,7 @@ const getPreviewRect = function() {
     let triOverlay = document.getElementById('topRTriPreview');
     rect = triOverlay.getBoundingClientRect();
   }
-  else if (document.getElementById('topRTriPreview') !== null){
+  else if (document.getElementById('bottomTriPreview') !== null){
     let triOverlay = document.getElementById('bottomTriPreview');
     rect = triOverlay.getBoundingClientRect();
   } else {
@@ -1307,11 +1307,10 @@ Template.api_custom.events({
     //i dont want to mess around w creating different forms for different submits
     if (needName.split("_")[0] == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
-      if (this.images.filter(image => image.needName == needName).length === 2){
+      if (this.images.filter(image => image.needName == needName).length === 1){
         let monster0 = document.getElementsByClassName('content')[0].children[1];
         let monster1 = document.getElementsByClassName('content')[1].children[1];
-        let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
-        stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
+        stitchImageSources([monster0.src, monster1.src], true, function(ImageURL){
           let block = ImageURL.split(";");
           let contentType = block[0].split(":")[1];
           let realData = block[1].split(",")[1];

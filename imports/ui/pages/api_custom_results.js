@@ -175,10 +175,7 @@ Template.groupBumpedResults.helpers({
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
       {myImage: myImage},
-      mySub && {myCaption: mySub.content.sentence},
-      {imageTwo: otherImages[1]},
-      friends[1] && {friendTwoName: `${friends[1].profile.firstName} ${friends[1].profile.lastName}`},
-      otherSubs[1] && {captionTwo: otherSubs[1].content.sentence}
+      mySub && {myCaption: mySub.content.sentence}
     )
 
     return results;
