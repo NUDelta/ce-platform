@@ -227,60 +227,124 @@
 <template name="monsterCreateResults">
   <head>
     <style>
-    .pending_img {
-      background-color: #c1c1c1;
+    .monsterGrid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      position: absolute;
+    }
+    .stitched {
+      height: 15vh;
+      width: 15vh;
+    }
+
+    .report {
+      border-bottom: solid 1px darkgrey;
+      border-top: solid 1px darkgrey;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 45vw;
-      min-width: 45vw;
+      padding: 10px 0px;
+    }
+
+    .reportImg {
+      height: 45vh;
+      width: 45vh;
+      margin: auto;
+    }
+
+    .selected{
+      padding: 3px 8px;
+      background: #5178b7;
+      color: white;
+      border: solid 1px #73a5f5;
+      border-radius: 8px;
+    }
+
+    .unselected{
+      padding: 3px 8px;
+      background: #274d8a;
+      color: white;
+      border: solid 1px #73a5f5;
+      border-radius: 8px;
     }
     </style>
   </head>
 
   <h4>Frankenstein's Monster Results</h4>
-  <div>
-    Here are the parts of the monster that each scientist has contributed so far:
+  <div style="display:flex; justify-content: space-around; margin-bottom: 10px;">
+    <button id="seeFullMonster" class="selected">See Full Monster</button>
+    <button id="seeMonsterStory" class="unselected">See the Monster Report</button>
   </div>
 
-  {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
-  {{#each needGroup in needGroups}}
-      {{#let needImages = needGroup.imagesGroupedByTriad}}
-      {{#let needSubs = needGroup.needSubs}}
-      {{#let names = needGroup.names}}
-          <div>
-          {{#each needSub in needSubs}}
-          {{#if (elementAtIndex needImages @index)}}
-              <div>
-                <div style="text-align:center;"><b>{{elementAtIndex names @index}}</b></div>
-                {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
-              </div>
-          {{else}}
-              <div>Waiting for this user!<div class="pending_img">?</div></div>
-          {{/if}}
-          {{/each}}
-          </div>
+  {{#let needGroups = (needGroups)}}
+  <div id="fullMonster">
+    <div>
+      Here are the parts of the monster that each scientist has contributed so far:
+    </div>
 
-          {{#if (lengthEqual needImages 2)}}
-          <div>
-            <div style="padding:10px; font-size: 16px; text-align:center;">
-              <b>Here is the full monster!</b>
-            </div>
-            <div>
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
-            </div>
+    {{#let monsterCreate = (elementAtIndex needGroups 0)}}
+    {{#each monsterPiece in monsterCreate.needImages}}
+      {{elementAtIndex monsterCreate.needUsers @index}}:
+      {{> Template.dynamic template="displayFullImage" data=(monsterPiece)}}
+    {{/each}}
+
+    {{#if (lengthEqual monsterCreate.needImages 2)}}
+    <div>
+      <div style="padding:10px; font-size: 16px; text-align:center;">
+        <b>Here is the full monster!</b>
+      </div>
+      <div>
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 0)}}
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 1)}}
+      </div>
+    </div>
+    {{else}}
+    <div>
+      You'll get a notification when the monster is complete. Check back later!
+    </div>
+    {{/if}}
+
+    {{/let}}
+  </div>
+
+  <div id="monsterStory" style="display:none">
+    <div style="margin-bottom: 12px;">
+      Here are the reports that you two have gathered on the monster!
+    </div>
+
+
+    {{#let monsterStory = (elementAtIndex needGroups 1)}}
+    {{#let monsterCreate = (elementAtIndex needGroups 0)}}
+    {{#each i in monsterStory.needImages}}
+      <div class="report">
+      <div><b>Report {{getDescendingIndex monsterStory.needImages @index}}</b></div>
+      <div style="margin-bottom: 10px;"><b>{{elementAtIndex monsterStory.needUsers @index}}</b>:
+      {{elementAtIndex monsterStory.sentences @index}}</div>
+      {{#let l = (elementAtIndex monsterStory.monsterLocations @index)}}
+      {{#let location = (monsterLocation l)}}
+      <div class="reportImg">
+        <div class="monsterGrid">
+          <div class="stitched" style="grid-column:{{location.col}}; grid-row:{{location.row}}">
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 0)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 1)}}
           </div>
-          {{else}}
-          <div>
-            You'll get a notification when the monster is complete. Check back later!
-          </div>
-          {{/if}}
+        </div>
+        <div class="monsterBg">
+          {{> Template.dynamic template="displayFullImage" data=(i)}}
+        </div>
+      </div>
       {{/let}}
       {{/let}}
-      {{/let}}
-  {{/each}}
+    </div>
+
+    {{/each}}
+    {{/let}}
+    {{/let}}
+
+  </div>
   {{/let}}
+
 </template>
 
 <template name="appreciationStationResults">
@@ -458,75 +522,6 @@
       {{/if}}
       </div>
     {{/each}}
-  </div>
-  {{/let}}
-  {{/let}}
-</template>
-
-<template name="monsterStoryResults">
-  <head>
-    <style>
-      .monsterGrid{
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        position: absolute;
-      }
-      .stitched {
-        height: 15vh;
-        width: 15vh;
-      }
-      .reportImg {
-        height: 45vh;
-        width: 45vh;
-        margin: auto;
-      }
-      .next {
-        float: right;
-      }
-
-      .prev {
-        float: left;
-      }
-    </style>
-  </head>
-
-  {{#let monster = (stitchedMonster)}}
-  {{#let needImages = (getNeedImages)}}
-  <div id="results">
-    <h4>{{this.experience.name}}</h4>
-    Your monster has been spotted! Read the full lab report to see where you and the other scientists have seen the monster.
-    <div class="slideshow-container">
-      {{#each needImage in needImages}}
-        {{#let info = (subDetails needImage)}}
-        {{#let idx = (increment @index)}}
-        <div class="mySlides" id="img{{@index}}">
-          <div style="padding:3px; text-align: center; font-size: 16px;"><b>Report {{idx}}</b></div>
-          <div class="reportImg">
-            <div class="monsterGrid">
-              <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
-                {{> Template.dynamic template="displayFullImage" data=(monster)}}
-              </div>
-            </div>
-            <div class="monsterBg">
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
-            </div>
-          </div>
-          <div class="monsterCaption" style="padding-top: 7px;">
-              <b>{{info.user}}</b> reported:
-              <br>{{info.sentence}}
-          </div>
-          {{#if (notFirst @index)}}
-            <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
-          {{/if}}
-          {{#if (notLast @index)}}
-            <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
-          {{/if}}
-        </div>
-        {{/let}}
-        {{/let}}
-      {{/each}}
-    </div>
   </div>
   {{/let}}
   {{/let}}

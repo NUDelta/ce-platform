@@ -1,32 +1,33 @@
 export let USERS = {
+  //remember to restore these!! it's garrett, barrett & meg
   garrett: {
-    username: 'garrett',
-    email: 'garret@email.com',
+    username: 'ryan',
+    email: 'ryan@email.com',
     password: 'password',
     profile: {
-      firstName: 'Garrett',
-      lastName: 'Hedman',
+      firstName: 'Ryan',
+      lastName: 'Louie',
       staticAffordances: {
         mechanismRich: true
       }
     }
   },
   garretts_brother: {
-    username: 'garretts_brother',
-    email: 'garretts_brother@email.com',
+    username: 'mason',
+    email: 'mason@email.com',
     password: 'password',
     profile: {
-      firstName: 'Barrett', // theres an inside joke to this one
-      lastName: 'Hedman'
+      firstName: 'Mason', // theres an inside joke to this one
+      lastName: 'Lin'
     }
   },
   meg: {
-    username: 'meg',
-    email: 'meg@email.com',
+    username: 'zach',
+    email: 'zach@email.com',
     password: 'password',
     profile: {
-      firstName: 'Meg',
-      lastName: 'Grasse'
+      firstName: 'Zach',
+      lastName: 'Cmiel'
     }
   },
   megs_sister: {

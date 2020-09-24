@@ -154,9 +154,18 @@ export let DETECTORS = {
       'var participatedInMoodMeteorology',
       'var participatedInDrinksTalk',
       'var triad1',
-      'var daytime;'
+      'var nighttime;'
     ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && daytime')]
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
+  },
+  monsterStory_triad1: {
+    _id: Random.id(),
+    description: 'Monster Story Triad 1',
+    variables: [
+      'var participatedInMonsterCreate',
+      'var triad1',
+    ],
+    rules: [('participatedInMonsterCreate && triad1')]
   },
   nightTimeSpooks_triad1: {
     _id: Random.id(),

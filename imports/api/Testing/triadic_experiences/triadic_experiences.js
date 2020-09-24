@@ -23,7 +23,7 @@ export const createDrinksTalk = function() {
     })
 
 
-    let message = 'Hooray! You two have completed the Drinks Talk experience! Tap here to see your results.';
+    let message = 'Yippee! You two have completed the Drinks Talk experience! Tap here to see your results.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
     sendSystemMessage(message, participants, route);
@@ -99,7 +99,7 @@ export const createMoodMeteorology = function () {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Hooray! You two have completed the Mood Meteorology experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Mood Meteorology experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from your mood meteorology experience!', '', route);
@@ -330,6 +330,7 @@ export const createNightTimeSpooks = function(){
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
+    participants = [... new Set(participants)]
 
     participants.forEach(function(p){
       Meteor.users.update({
@@ -349,7 +350,8 @@ export const createNightTimeSpooks = function(){
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
-    let message = 'Hooray! You two have completed the Night Time Spooks experience! Tap here to see your results.';
+    participants = [... new Set(participants)]
+    let message = 'Hip hip hoo-ray! You two have completed the Night Time Spooks experience! Tap here to see your results.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
     sendSystemMessage(message, participants, route);
@@ -368,8 +370,8 @@ export const createNightTimeSpooks = function(){
         number: 1
         },
       toPass: {
-        exampleImage: 'https://vignette.wikia.nocookie.net/clifford/images/6/6e/Art_clifford_standing.png/revision/latest?cb=20150221004122',
-        exampleCaption: 'I\'m scared of big dogs so Clifford is my biggest fear'
+        exampleImage: 'https://res.cloudinary.com/dftvewldz/image/upload/v1600977519/dtr/IMG_4036.jpg',
+        exampleCaption: 'I\'m scared of seeing something other than myself in the mirror at night!! I wonder how much my name influenced this fear...'
       },
       numberNeeded: 2,
       notificationDelay: 1,
@@ -427,7 +429,8 @@ export const createLifeJourneyMap = function(){
     }).fetch();
 
     let participants = submissions.map((submission) => { return submission.uid; });
-    let message = 'Hooray! You two have completed the Life Journey Map experience! Tap here to see your results.';
+    participants = [... new Set(participants)]
+    let message = 'Wowee! You two have completed the Life Journey Map experience! Tap here to see your results.';
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
     sendSystemMessage(message, participants, route);
@@ -445,7 +448,7 @@ export const createLifeJourneyMap = function(){
         number: 1
       },
       toPass: {
-        exampleImage: "http://45.76.227.174/assets/img/cta-map.jpg"
+        exampleImage: "https://res.cloudinary.com/dftvewldz/image/upload/v1600977161/dtr/lifejourneymap.png"
       },
       numberNeeded: 6,
       notificationDelay: 1,
@@ -474,6 +477,7 @@ export const createAppreciationStation = function(){
 
     //get strangers
     let participants = submissions.map((submission) => { return submission.uid; });
+    participants = [... new Set(participants)]
     //get mutual friend
     let aff = Meteor.users.findOne(sub.uid).profile.staticAffordances;
     let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
@@ -543,8 +547,6 @@ export const createAppreciationStation = function(){
 
 export const createMonster = function(){
   const monsterCallback = function (sub) {
-
-    //allow participation in MonsterStory
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
@@ -562,22 +564,52 @@ export const createMonster = function(){
       });
     });
 
-    const stitchedImageCursor = Images.find({needName:sub.needName, stitched:"true"});
-    stitchedImageCursor.observe({
-      added(stitched){
-        let monsterEx = Experiences.findOne({participateTemplate: "monsterStory"});
-        let monsterIncident = Incidents.findOne({eid:monsterEx._id});
-        let triadNum = sub.needName.split('_')[1];
-        Images.update({_id: stitched._id}, {
-          $set: {
-            iid: monsterIncident._id,
-            needName: `monsterStory_${triadNum}`
-          }
-        });
-        }
-      });
+    let systemMessage = 'Woot! You two have made a monstrous creation! Tap here to see your results.';
+    let notificationMessage = 'The monster is complete! Tap here to see the result.'
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
 
-      notify(participants, sub.iid, 'See the complete monster here!', 'The monster is now complete! See the complete monster here.', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    sendSystemMessage(systemMessage, participants, route);
+    notify(participants, sub.iid, notificationMessage, '', route);
+  }
+
+  const monsterStoryCallback = function (sub) {
+
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+    let participants = submissions.map(s => s.uid);
+    participants = [... new Set(participants)];
+
+    let otherSubmissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName,
+      uid: {$ne: sub.uid}
+    }).fetch();
+    let otherParticipants = otherSubmissions.map((s) => { return s.uid; });
+
+    let message = 'The report on the monster has been updated! Tap here to see its latest adventures.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+
+    sendSystemMessage(message, participants, route);
+    notify(otherParticipants, sub.iid, message, '', route);
+  }
+
+  const monsterCompleteStoryCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+    participants = [... new Set(participants)];
+
+    let route = '/apicustomresults/' + sub.iid + '/' + sub.eid;
+    let notificationMessage = "The monster\'s adventures are complete! Tap here to see the result.";
+    let systemMessage = "The monster has finally been captured! Tap here to see the final report of its hectic adventures!";
+
+    sendSystemMessage(participants, systemMessage, route);
+    notify(participants, sub.iid, notificationMessage, '', route);
   }
 
   let experience = {
@@ -591,63 +623,39 @@ export const createMonster = function(){
         number: 1
         },
       toPass: {
-        instruction: 'You are a <span style="color: #0351ff"> mad scientist</span> who is working with your partner to create a monster! You and your partner will each draw half of the monster and take a photo of your respective parts.',
-        //change example images
-        exampleImage: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleImage2: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png',
-        exampleFullMonster: 'http://res.cloudinary.com/dftvewldz/image/upload/a_180/v1557216496/dtr/cheers.png'
+        title: "Frankenstein\'s Monster",
+        exampleFullMonster: 'https://res.cloudinary.com/dftvewldz/image/upload/v1600977155/dtr/monsterex.jpg'
       },
       numberNeeded: 2,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-      }],
-    description: 'Create a monster with your fellow mad scientist!',
-    notificationText: 'Create a monster with your fellow mad scientist!',
-    callbacks: [{
-      trigger: `cb.needFinished('monsterCreate_triad1'))`,
-      function: monsterCallback.toString(),
+    },{
+      needName: 'monsterStory_triad1',
+      situation: {
+        detector : getDetectorUniqueKey(DETECTORS.monsterStory_triad1),
+        number: 1
+      },
+      toPass: {
+        title: "Escape from the Lab!"
+      },
+      numberNeeded: 5,
+      notificationDelay: 1,
+      numberAllowedToParticipateAtSameTime: 3,
+      allowRepeatContributions: true
     }],
-    allowRepeatContributions: false,
-  };
-
-  return experience;
-};
-
-
-export const monsterStory = function(){
-  const monsterCallback = function (sub) {
-    let submissions = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName
-    }).fetch();
-
-    let uids = submissions.map((submission) => { return submission.uid; });
-    uids = [... new Set(uids)];
-    notify(uids, sub.iid, 'See what your monster has been up to!', 'The lab report has been updated. See the complete report here!', '/apicustomresults/' + sub.iid + '/' + sub.eid);
-  }
-
-  let experience = {
-    name: 'Escape from the Lab!',
-    participateTemplate: 'monsterStory',
-    resultsTemplate: 'monsterStoryResults',
-    contributionTypes: addStaticAffordanceToNeeds('participatedInMonsterCreate', [
-      {needName: 'monsterStory_triad1',
-        situation: {
-          detector : getDetectorUniqueKey(DETECTORS.anytime_triad1),
-          number: 1
-        },
-        toPass: {},
-        numberNeeded: 5,
-        notificationDelay: 1,
-        numberAllowedToParticipateAtSameTime: 1,
-      }]),
-    description: 'Your monster has escaped the lab⁠— what is it doing?',
-    notificationText: 'Your monster has escaped the lab⁠— what is it doing?',
+    description: 'Create a monster with your fellow mad scientist & see what it does!',
+    notificationText: 'Create a monster with your fellow mad scientist & see what it does!',
     callbacks: [{
-      trigger: `(cb.newSubmission('monsterStory_triad1'))`,
+      trigger: `cb.needFinished('monsterCreate_triad1')`,
       function: monsterCallback.toString(),
+    },{
+      trigger: `cb.newSubmission('monsterStory_triad1') && !cb.needFinished('monsterStory_triad1')`,
+      function: monsterStoryCallback.toString(),
+    },{
+      trigger: `cb.needFinished('monsterStory_triad1')`,
+      function: monsterCompleteStoryCallback.toString(),
     }],
-    allowRepeatContributions: true,
+    allowRepeatContributions: true
   };
 
   return experience;
@@ -660,7 +668,6 @@ export default TRIADIC_EXPERIENCES = {
   drinksTalk: createDrinksTalk(),
   moodMeteorology: createMoodMeteorology(),
   monsterCreate: createMonster(),
-  monsterStory: monsterStory(),
   nightTimeSpooks: createNightTimeSpooks(),
   lifeJourneyMap: createLifeJourneyMap()
 }

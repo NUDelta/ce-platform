@@ -238,7 +238,7 @@ Template.groupCheersResults.helpers({
 });
 
 Template.monsterCreateResults.helpers({
-  resultsGroupedByNeedAndTriad() {
+  needGroups() {
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -247,111 +247,81 @@ Template.monsterCreateResults.helpers({
     let subs = this.submissions;
     let images = this.images;
 
-    let myNeedNames = mySubs.map(function(x){
-      return x.needName;
-    });
+    let myNeedNames = mySubs.map(function(x){ return x.needName;});
     // only show examples where the need names are unique
     myNeedNames = [... new Set(myNeedNames)];
+    let monsterCreateNeedName = myNeedNames.find(n => n.search('monsterCreate') != -1);
+    let monsterStoryNeedName = myNeedNames.find(n => n.search('monsterStory') != -1);
 
     let needGroups = myNeedNames.map((needName) => {
-      // images already filtered by activeIncident. Now get them for each need
-      let needImages = images.filter(function(img){
-        return img.needName == needName && !img.stitched;
-      });
+      if (needName == monsterCreateNeedName) {
+        let needImages = images.filter(function(img){return img.needName == needName;});
+        let needUsers = needImages.map(function(img){return getUserById(users, img.uid);});
 
-      //grab username from img uid
-      let names = needImages.map(function(img){
-        return getUserById(users, img.uid);
-      });
+        return {
+          needName: needName,
+          needImages: needImages,
+          needUsers: needUsers
+        };
+      } else if (needName == monsterStoryNeedName) {
+        let needSubs = subs.filter(s => s.needName == needName && s.uid != null);
+        needSubs = needSubs.reverse();
+        let needImages = needSubs.map(s => images.find(i => i._id == s.content.Preview));
+        let needUsers = needSubs.map(s => getUserById(users, s.uid));
+        let sentences = needSubs.map(s => s.content.sentence)
+        let monsterLocations = needSubs.map(s => s.content.monsterLocation)
 
-      let needSubs = subs.filter(function(sub){
-        return sub.needName == needName;
-      });
-
-      return {needName: needName,
-        needSubs: needSubs,
-        imagesGroupedByTriad: needImages,
-        names: names};
+        return {
+          needName: needName,
+          needImages: needImages,
+          needUsers: needUsers,
+          sentences: sentences,
+          monsterLocations: monsterLocations
+        }
+      }
     });
 
     return(needGroups);
-  },
-  stitchedImage(images){
-    images = images.filter(i => i.stitched == 'true');
-    return images[0];
   },
   elementAtIndex(arr, index){
     return arr[index];
   },
   lengthEqual(arr, len){
     return arr.length == len;
-  }
-});
-
-Template.monsterStoryResults.helpers({
-  stitchedMonster(){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let images = this.images.filter(i => i.stitched == 'true' && needName == i.needName);
-    return images[0];
   },
-  getNeedImages(){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let images = this.images.filter(i => i.needName == needName && !i.stitched);
-    return images;
+  getDescendingIndex(images, idx){
+    return (images.length - idx)
   },
-  subDetails(needImage){
-    let imageId = needImage._id;
-    let sub = this.submissions.filter(s => s.content.Preview == imageId);
-    let monsterLocation = sub[0].content.monsterLocation;
+  monsterLocation(monsterLocation){
     let row = parseInt(monsterLocation / 3) + 1
     let col = parseInt(monsterLocation % 3) + 1
 
     return {
-      sentence: sub[0].content.sentence,
-      monsterRow: row.toString(),
-      monsterCol: col.toString(),
-      user: getUserById(this.users, sub[0].uid)
+      row: row.toString(),
+      col: col.toString(),
     };
-
-  },
-  elementAtIndex(array, index){
-    return array[index];
-  },
-  increment(num){
-    return parseInt(num)+1;
-  },
-  notFirst(index) {
-    return index != 0;
-  },
-  notLast(index){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let imagesLength = this.images.filter(i => needName == i.needName).length - 1;
-    return index < imagesLength - 1;
-  },
+  }
 });
 
-Template.monsterStoryResults.events({
-  'click .prev'(event, template){
-    let currSlideIdx = parseInt(event.target.dataset.currslide);
-    let slide = document.getElementById(`img${currSlideIdx}`);
-    let prevSlide = document.getElementById(`img${currSlideIdx-1}`);
-    slide.style.display = "none";
-    prevSlide.style.display = "block";
-
+Template.monsterCreateResults.events({
+  'click #seeFullMonster'(event, template){
+    event.target.classList.remove('unselected');
+    event.target.classList.add('selected');
+    let otherButton = document.getElementById("seeMonsterStory");
+    otherButton.classList.add('unselected');
+    otherButton.classList.remove('selected');
+    document.getElementById('fullMonster').style.display = "block";
+    document.getElementById('monsterStory').style.display = "none";
   },
-  'click .next'(event, template){
-    let currSlideIdx = parseInt(event.target.dataset.currslide);
-    let slide = document.getElementById(`img${currSlideIdx}`);
-    let nextSlide = document.getElementById(`img${currSlideIdx+1}`);
-    slide.style.display = "none";
-    nextSlide.style.display = "block";
-  }
+  'click #seeMonsterStory'(event, template){
+    event.target.classList.remove('unselected');
+    event.target.classList.add('selected');
+    let otherButton = document.getElementById("seeFullMonster");
+    otherButton.classList.add('unselected');
+    otherButton.classList.remove('selected');
+    document.getElementById('fullMonster').style.display = "none";
+    document.getElementById('monsterStory').style.display = "block";
+  },
 });
 
 export const getPartner = (currentUser, users) => {

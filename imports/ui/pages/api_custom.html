@@ -496,6 +496,8 @@
     {{/if}}
 </template>
 
+<!-- this one is a doozy of a template :-/// -->
+
 <template name="monsterCreate">
   <head>
     <style>
@@ -544,181 +546,190 @@
       .navigation-buttons {
         margin-bottom: 5px;
       }
+
+
+
+
+
+
+
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        position: absolute;
+        height: 45vh;
+        width: 45vh;
+        margin: auto;
+      }
+
+      .grid div {
+        border: 1px black solid;
+      }
+
+      #monster {
+        height: 15vh;
+        width: 15vh;
+        position:absolute;
+        border: none;
+      }
+
+      #monster img {
+        height:50%;
+        width: 100%;
+      }
+
+      #cameraOverlay {
+        height: 45vh;
+        margin-top: 5px;
+      }
+
+      #participate .camera-overlay  {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #participate .fileinput{
+        height:45vh;
+        width:45vh;
+        z-index: -1;
+        margin-bottom: 0px;
+      }
+
+      #goToInstruction {
+        padding: 0px;
+      }
+
+      #participate .camera-controls {
+        margin-bottom: 56px;
+      }
     </style>
   </head>
 
   {{#if Template.subscriptionsReady}}
-  {{#let needImages=(mostRecentImageTriadForNeed this.images this.needName) }}
-  <div id="instruction" class="instruction">
-    <h4>{{this.experience.name}}</h4>
-    <div>
-      {{{this.toPass.instruction}}}
-      {{#if (arrayLenEqual needImages 0) }}
-          <span> Draw the top part of the monster! </span>
-          {{#if this.toPass.exampleImage}}
-          <img src="{{this.toPass.exampleImage}}"/>
-          {{/if}}
 
-      {{else}}
-          <span> Draw the bottom part of the monster! Try to align it with the bottom of the previous mad scientist's drawing. </span>
-          {{#if this.toPass.exampleImage2}}
-          <img src="{{this.toPass.exampleImage2}}"/>
-          {{/if}}
-      {{/if}}
-
-      <span> The final result will look like this: </span>
-      {{#if this.toPass.exampleImage}}
-      <img src="{{this.toPass.exampleFullMonster}}"/>
-      {{/if}}
-    </div>
-
-  <button id="goToParticipate" class="btn btn-primary right-align">
-    <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
-  </button>
-  </div>
-
-  <form id="triparticipate" class="long" style="display: none">
-    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons">
-      <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
-    </button>
-    <div>
-      {{#if (arrayLenEqual needImages 0) }}
-      Draw the top part of the monster!
-      {{else }}
-      Draw the bottom part of the monster! Try to align it with the previous scientist's drawing.
-      {{/if}}
-    </div>
-
-      <div id="tcameraOverlay" class="camera-overlay long">
-       {{> loadingOverlay}}
-      {{#if (arrayLenEqual needImages 0) }}
-        <div class="topHalf trisquare">
-          {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
+  {{#if (isMonsterCreate this.needName)}}
+    <!-- monster create template -->
+    {{#let needImages=(mostRecentImageTriadForNeed this.images this.needName) }}
+    <div id="instruction1" class="instruction">
+      <h4>{{this.toPass.title}}</h4>
+      <div>
+        <div style="margin-bottom: 12px;">
+          You are a mad scientist working with <span style="color:blue;">{{otherName}}</span>
+          to build a monstrous creation on this eerie <span style="color:blue;">night</span>!
         </div>
-        <div class="bottomHalf trisquare" style="background-color: rgba(225,225,225)">
-          <div class="innercontent">
-            Waiting for submission!
-          </div>
-        </div>
-      {{/if}}
+        {{#if (arrayLenEqual needImages 0) }}
+            <div style="margin-bottom: 12px;"> You have the responsibility of drawing the top part of the monster!
+              <span style="color:blue;">{{otherName}}</span> will draw the bottom part.
+            </div>
 
-        {{#if (arrayLenEqual needImages 1)}}
-          <div class="topHalf trisquare">
-              <div class="content">
-              <div class="mask">
-                <div class="innercontent">A mystery from your past partner!</div>
-              </div>
-              {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
-              </div>
-          </div>
-          <div class="bottomHalf trisquare">
-            {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
-          </div>
+        {{else}}
+            <div style="margin-bottom: 12px;"> You have the responsibility of drawing the bottom part of the monster!
+              Unfortunately, a sheet is covering the top half, so you can
+              only see part of the monster. Try to align your drawing with the bottom of <span style="color:blue;">{{otherName}}</span>'s drawing.
+            </div>
+        {{/if}}
+
+        <span> The final result will look something like this: </span>
+        {{#if this.toPass.exampleFullMonster}}
+        <img src="{{this.toPass.exampleFullMonster}}"/>
         {{/if}}
       </div>
 
-    <div class="camera-controls">
-      <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
-        <span class="fa fa-spinner glyphicon-large"></span>
-      </button>
-      <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
-        <span class="glyphicon glyphicon-record glyphicon-large"></span>
-      </button>
-      <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
-        <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
-      </button>
-      <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
-        <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
-      </button>
-    </div>
-    <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
-            style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
-      Submit
+    <button id="goToParticipate1" class="btn btn-primary right-align">
+      <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
     </button>
-  </form>
-  {{/let}}
-  {{/if}}
-</template>
+    </div>
 
-<!-- somehow see the story before contributing to the story?? -->
-<template name="monsterStory">
-  <head>
-    <style>
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      position: absolute;
-      height: 45vh;
-      width: 45vh;
-      margin: auto;
-    }
+    <form id="triparticipate" class="long" style="display: none">
+      <button id="goToInstruction1" type="button" class="btn btn-primary navigation-buttons">
+        <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
+      </button>
+      <div>
+        {{#if (arrayLenEqual needImages 0) }}
+        Draw the top part of the monster!
+        {{else }}
+        Draw the bottom part of the monster! Try to align it with the previous scientist's drawing.
+        {{/if}}
+      </div>
 
-    .grid div {
-      border: 1px black solid;
-    }
+        <div id="tcameraOverlay" class="camera-overlay long">
+         {{> loadingOverlay}}
+        {{#if (arrayLenEqual needImages 0) }}
+          <div class="topHalf trisquare">
+            {{> Template.dynamic template="halfhalfCamera" data="topThirdPreview"}}
+          </div>
+          <div class="bottomHalf trisquare" style="background-color: rgba(225,225,225)">
+            <div class="innercontent">
+              Waiting for submission!
+            </div>
+          </div>
+        {{/if}}
 
-    #monster {
-      height: 14.5vh;
-      width: 14.5vh;
-      position:absolute;
-      border: none;
-    }
+          {{#if (arrayLenEqual needImages 1)}}
+            <div class="topHalf trisquare">
+                <div class="content">
+                <div class="mask">
+                  <div class="innercontent">A mystery from your past partner!</div>
+                </div>
+                {{> Template.dynamic template="displayFullImage" data=(elementIndex needImages 0) }}
+                </div>
+            </div>
+            <div class="bottomHalf trisquare">
+              {{> Template.dynamic template="halfhalfCamera" data="middleThirdPreview"}}
+            </div>
+          {{/if}}
+        </div>
 
-    #monster img {
-      height: 100%;
-      width: 100%;
-    }
-
-    #cameraOverlay {
-      height: 45vh;
-      margin-top: 5px;
-    }
-
-    #participate .camera-overlay  {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #participate .fileinput{
-      height:45vh;
-      width:45vh;
-      z-index: -1;
-      margin-bottom: 0px;
-    }
-
-    #goToInstruction {
-      padding: 0px;
-    }
-
-    #participate .camera-controls {
-      margin-bottom: 40px;
-    }
-    </style>
-  </head>
-  {{#if Template.subscriptionsReady}}
-  <div id="instruction">
+      <div class="camera-controls">
+        <button type="button" id="takePhotoInProgress" class="btn-borderless center-control" style="display: none">
+          <span class="fa fa-spinner glyphicon-large"></span>
+        </button>
+        <button type="button" id="takePhoto" class="btn-borderless center-control" style="display: none">
+          <span class="glyphicon glyphicon-record glyphicon-large"></span>
+        </button>
+        <button type="button" id="retakePhoto" class="btn-borderless right-control" style="display: none">
+          <span class="glyphicon glyphicon-trash glyphicon-medium"></span>
+        </button>
+        <button type="button" id="switchCamera" class="btn-borderless right-control" style="display: none">
+          <span class="glyphicon glyphicon-refresh glyphicon-medium"></span>
+        </button>
+      </div>
+      <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+              style="display: {{submitDisplayValue}}; border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+        Submit
+      </button>
+    </form>
+    {{/let}}
+  {{else}}
+  <!-- monster story template -->
+  <div id="instruction2">
+    <h4>{{this.toPass.title}}</h4>
     <div>
-    {{#let names = (otherNames)}}
-    {{#let name1 = (elementIndex names 0)}}
-    {{#let name2 = (elementIndex names 1)}}
-    Remember the monster you made before with the scientists {{name1}} and {{name2}}?
-    {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
-    It has <b>escaped</b> the lab and is wreaking havoc! You just spotted it nearby you—
-    Quick, take an image of it, and describe what it is doing!<br><br>
-    You can move the monster to different places in the image by tapping different spots in the image.
-    {{/let}}
-    {{/let}}
+    Remember the monster you made before with the scientists <span style="color:blue;">{{otherName}}</span>?
+
+    <div style="margin: 12px 0px;">
+    {{#let xmonster = (stitchedMonster this.needName)}}
+    {{#each monsterPiece in xmonster}}
+      {{> Template.dynamic template="displayFullImage" data=monsterPiece }}
+    {{/each}}
     {{/let}}
     </div>
-    <button id="goToParticipate" class="btn btn-primary right-align" style="margin-top: 10px">
+
+    It has <b>escaped</b> the lab and is wreaking havoc!
+    Quick, take an image of it, and describe what it is doing!<br><br>
+
+    You can move the monster to different places in the image by tapping different spots in the image.
+    </div>
+    <button id="goToParticipate2" class="btn btn-primary right-align" style="margin-top: 10px">
       <span>Open Camera</span><span class="glyphicon glyphicon-menu-right"></span>
     </button>
   </div>
 
   <form id="participate" class="long" style="display: none">
-    <button id="goToInstruction" type="button" class="btn btn-primary navigation-buttons" style="width: 120px">
+    <button id="goToInstruction2" type="button" class="btn btn-primary navigation-buttons" style="width: 120px">
       <span class="glyphicon glyphicon-menu-left"></span><span>Instructions</span>
     </button>
     <div id="cameraOverlay" class="camera-overlay gap short">
@@ -731,7 +742,11 @@
           <div class="grid-square" data-location="3"></div>
           <div class="grid-square" data-location="4">
             <div id="monster">
-            {{> Template.dynamic template="displayFullImage" data=(stitchedMonster this.needName this.images) }}
+              {{#let monster = (stitchedMonster this.needName)}}
+              {{#each monsterPiece in monster}}
+                {{> Template.dynamic template="displayFullImage" data=monsterPiece }}
+              {{/each}}
+              {{/let}}
             </div>
           </div>
           <div class="grid-square" data-location="5"></div>
@@ -758,13 +773,15 @@
       </button>
     </div>
 
-    <div id="textbox" style="display: none">{{> Template.dynamic template="text" data="sentence"}}</div>
+    <div id="textbox">{{> Template.dynamic template="text" data="sentence"}}</div>
 
     <button id="submit" type="submit" class="btn btn-default btn-participate btn-primary btn-block"
             style="display: {{submitDisplayValue}}; border-radius: 3px; width: 50%; margin-top: 5px;">
       Submit
     </button>
   </form>
+  {{/if}}
+
   {{/if}}
 </template>
 
