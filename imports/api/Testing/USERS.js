@@ -13,21 +13,21 @@ export let USERS = {
     }
   },
   garretts_brother: {
-    username: 'mason',
-    email: 'mason@email.com',
-    password: 'password',
-    profile: {
-      firstName: 'Mason', // theres an inside joke to this one
-      lastName: 'Lin'
-    }
-  },
-  meg: {
     username: 'zach',
     email: 'zach@email.com',
     password: 'password',
     profile: {
-      firstName: 'Zach',
+      firstName: 'Zach', // theres an inside joke to this one
       lastName: 'Cmiel'
+    }
+  },
+  meg: {
+    username: 'mason',
+    email: 'mason@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Mason',
+      lastName: 'Lin'
     }
   },
   megs_sister: {
