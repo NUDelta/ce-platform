@@ -17,6 +17,9 @@ App.appendToConfig(`<platform name="ios">
     <config-file platform="ios" target="*-Info.plist" parent="NSCameraUsageDescription">
       <string>Collective Experiences needs camera access to allow you to take photos for Experiences.</string>
     </config-file>
+    <config-file platform="ios" target="*-Info.plist" parent="NSMotionUsageDescription">
+      <string>Collective Experiences needs motion access.</string>
+    </config-file>
   </platform>`);
 
 App.configurePlugin('phonegap-plugin-push', {
