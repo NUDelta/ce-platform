@@ -58,3 +58,4 @@ useraccounts:bootstrap
 underscore@1.0.10
 fortawesome:fontawesome
 dburles:collection-helpers
+meanware:gridfs
