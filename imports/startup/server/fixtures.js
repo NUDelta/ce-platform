@@ -99,6 +99,13 @@ Meteor.methods({
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
   },
+  startSeniorFinals(){
+    console.log("staring senior finals");
+    let value = CONSTANTS.EXPERIENCES.seniorFinals;
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  }
 });
 
 function clearDatabase () {
