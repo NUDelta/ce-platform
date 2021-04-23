@@ -74,5 +74,65 @@ export let USERS = {
       firstName: 'Bonnie',
       lastName: 'Ishiguro'
     }
+  },
+
+  sig1_mentee1: {
+    username: 'sig1_mentee1',
+    email: 'sig1_mentee1@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig1_mentee1',
+      lastName: 'sig1_mentee1'
+    }
+  },
+
+  sig1_mentor: {
+    username: 'sig1_mentor',
+    email: 'sig1_mentor@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig1_mentor',
+      lastName: 'sig1_mentor'
+    }
+  },
+
+  sig1_mentee2: {
+    username: 'sig1_mentee2',
+    email: 'sig1_mentee2@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig1_mentee2',
+      lastName: 'sig1_mentee2'
+    }
+  },
+
+  sig2_mentee1: {
+    username: 'sig2_mentee1',
+    email: 'sig2_mentee1@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig2_mentee1',
+      lastName: 'sig2_mentee1'
+    }
+  },
+
+  sig2_mentor: {
+    username: 'sig2_mentor',
+    email: 'sig2_mentor@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig2_mentor',
+      lastName: 'sig2_mentor'
+    }
+  },
+
+  sig2_mentee2: {
+    username: 'sig2_mentee2',
+    email: 'sig2_mentee2@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'sig2_mentee2',
+      lastName: 'sig2_mentee2'
+    }
   }
 };

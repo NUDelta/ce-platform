@@ -27,6 +27,9 @@ Meteor.startup(() => {
   }
 });
 
+// In chrome browser console...
+// Meteor.call('freshDatabase')
+// Meteor.call('createTestUsers')
 Meteor.methods({
   createTestUsers(){
     createTestData();
@@ -146,12 +149,19 @@ function createTestData(){
   createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
-  let uid1 = findUserByUsername('zach')._id;
-  let uid2 = findUserByUsername('ryan')._id;
-  let uid3 = findUserByUsername('mason')._id;
-  let uid4 = findUserByUsername('megs_sister')._id;
-  let uid5 = findUserByUsername('josh')._id;
-  let uid6 = findUserByUsername('nagy')._id;
+  // let uid1 = findUserByUsername('zach')._id;
+  // let uid2 = findUserByUsername('ryan')._id;
+  // let uid3 = findUserByUsername('mason')._id;
+  // let uid4 = findUserByUsername('megs_sister')._id;
+  // let uid5 = findUserByUsername('josh')._id;
+  // let uid6 = findUserByUsername('nagy')._id;
+
+  let uid1 = findUserByUsername('sig1_mentee1')._id;
+  let uid2 = findUserByUsername('sig1_mentor')._id;
+  let uid3 = findUserByUsername('sig1_mentee2')._id;
+  let uid4 = findUserByUsername('sig2_mentee1')._id;
+  let uid5 = findUserByUsername('sig2_mentor')._id;
+  let uid6 = findUserByUsername('sig2_mentee2')._id;
 
   let olinuid1 = findUserByUsername('nagy')._id;
   let olinuid2 = findUserByUsername('bonnie')._id;
@@ -185,7 +195,7 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid2]}
+    _id: {$in: [uid3]}
   }, {
     $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "stranger2": true} },
   }, {
@@ -193,7 +203,7 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid3]}
+    _id: {$in: [uid2]}
   }, {
     $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "friend": true } },
   }, {
@@ -201,9 +211,25 @@ function createTestData(){
   });
 
   Meteor.users.update({
-    _id: {$in: [uid4, uid5]}
+    _id: {$in: [uid4]}
   }, {
     $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "stranger": true } },
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid6]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "stranger2": true} },
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid5]}
+  }, {
+    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "friend": true } },
   }, {
     multi: true
   });
