@@ -9,12 +9,12 @@ burgers = (42.046131, -87.681559)
 grocery = (42.047621, -87.679488)
 grocery2 = (42.039818,-87.680088)
 coffee = (42.046881, -87.679555)
-# beer = (42.047105, -87.682006)
+beer = (42.047105, -87.682006)
 bars = (42.046251, -87.680547)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
-library = (42.058141, -87.674490)
+library = (42.048468377293354, -87.68011573000601)
 
 def followPath(path, uid):
     for stop in path:
@@ -301,9 +301,19 @@ def allUsersCoffee():
 		setLocation(coffee, i)
 	print("all users at coffee")
 
+def testingSeniorFinals():
+    setLocation(coffee, sys.argv[1])
+    setLocation(library, sys.argv[2])
+    setLocation(grocery, sys.argv[3])
+    setLocation(grocery, sys.argv[4])
+    setLocation(grocery, sys.argv[5])
+
+    print("finished setting up user location")
+
 if __name__ == "__main__":
     # allUsersGrocery()
-	allUsersCoffee()
+	# allUsersCoffee()
+    testingSeniorFinals()
 	# allUsersAtBars()
 	#allUsersAtPark()
     # garrettAndMegBump()

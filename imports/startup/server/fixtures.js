@@ -100,8 +100,8 @@ Meteor.methods({
     startRunningIncident(incident);
   },
   startSeniorFinals(){
-    console.log("staring senior finals");
-    let value = CONSTANTS.EXPERIENCES.seniorFinals;
+    console.log("starting senior finals");
+    let value = CONSTANTS.EXPERIENCES.surviveOrThrive;
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
