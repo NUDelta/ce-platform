@@ -6,7 +6,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "@babel/runtime": "^7.11.2",
+    "@babel/runtime": "^7.13.17",
     "bcrypt": "^5.0.0",
     "buffer-shims": "^1.0.0",
     "cordova-custom-config": "^5.0.2",

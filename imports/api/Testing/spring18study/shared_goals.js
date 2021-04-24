@@ -11,119 +11,119 @@ let sendNotificationScavenger = function (sub) {
 };
 
 export default SHARED_GOALS = {
-  scavengerHunt: {
-    _id: Random.id(),
-    name: 'St. Patrick\'s Day Scavenger Hunt',
-    participateTemplate: 'scavengerHuntParticipate',
-    resultsTemplate: 'scavengerHunt',
-    contributionTypes: [{
-      needName: 'beer',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.beer),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of beer?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 30, // 30 seconds for debugging
-    }, {
-      needName: 'greenProduce',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.produce),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
-      },
-      numberAllowedToParticipateAtSameTime: 1, // for testing
-      numberNeeded: 5, // for testing
-      notificationDelay: 20, // 20 seconds for debugging
-    }, {
-      needName: 'coins',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.drugstore),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of chocolate gold coins on display?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'leprechaun',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.costume_store),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of a Leprechaun costume?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 15, // 15 seconds for debugging
-    }, {
-      needName: 'irishSign',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.irish),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of an Irish sign?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 1, // 1 seconds for debugging (passing by)
-    }, {
-      needName: 'trimmings',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.hair_salon),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of some Leprechaun beard trimmings?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'liquidGold',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.gas_station),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'potOfGold',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.bank),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }, {
-      needName: 'rainbow',
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS.rainbow),
-        number: '1'
-      },
-      toPass: {
-        instruction: 'Can you take a photo of a rainbow flag?'
-      },
-      numberNeeded: 1,
-      notificationDelay: 10, // 10 seconds for debugging
-    }],
-    description: 'Find an item for a scavenger hunt',
-    notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationScavenger.toString()
-    }]
-  },
+  // scavengerHunt: {
+  //   _id: Random.id(),
+  //   name: 'St. Patrick\'s Day Scavenger Hunt',
+  //   participateTemplate: 'scavengerHuntParticipate',
+  //   resultsTemplate: 'scavengerHunt',
+  //   contributionTypes: [{
+  //     needName: 'beer',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.beer),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of beer?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 30, // 30 seconds for debugging
+  //   }, {
+  //     needName: 'greenProduce',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.produce),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of green vegetables? #leprechaunfood'
+  //     },
+  //     numberAllowedToParticipateAtSameTime: 1, // for testing
+  //     numberNeeded: 5, // for testing
+  //     notificationDelay: 20, // 20 seconds for debugging
+  //   }, {
+  //     needName: 'coins',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.drugstore),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of chocolate gold coins on display?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'leprechaun',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.costume_store),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of a Leprechaun costume?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 15, // 15 seconds for debugging
+  //   }, {
+  //     needName: 'irishSign',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.irish),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of an Irish sign?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 1, // 1 seconds for debugging (passing by)
+  //   }, {
+  //     needName: 'trimmings',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.hair_salon),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of some Leprechaun beard trimmings?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'liquidGold',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.gas_station),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of liquid gold that Leprechauns use to power their vehicles?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'potOfGold',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.bank),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of a bank where Leprechauns hide their pots of gold?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }, {
+  //     needName: 'rainbow',
+  //     situation: {
+  //       detector: getDetectorUniqueKey(DETECTORS.rainbow),
+  //       number: '1'
+  //     },
+  //     toPass: {
+  //       instruction: 'Can you take a photo of a rainbow flag?'
+  //     },
+  //     numberNeeded: 1,
+  //     notificationDelay: 10, // 10 seconds for debugging
+  //   }],
+  //   description: 'Find an item for a scavenger hunt',
+  //   notificationText: 'Help us complete a St. Patrick\'s day scavenger hunt',
+  //   callbacks: [{
+  //     trigger: 'cb.incidentFinished()',
+  //     function: sendNotificationScavenger.toString()
+  //   }]
+  // },
   natureHunt: {
     _id: Random.id(),
     name: 'Nature Scavenger Hunt',
