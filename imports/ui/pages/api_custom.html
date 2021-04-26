@@ -749,6 +749,7 @@
     {{/if}}
 </template>
 
+<!-- KEVIN & NINA'S COLLECTIVE NARRATIVE -->
 <template name="scavengerHuntParticipate">
     <head>
         <style>
@@ -770,6 +771,10 @@
     <form class="col col-xs-12" id="participate">
         <div class="camera-upload">
             {{> Template.dynamic template="camera" data="proof"}}
+        </div>
+        <div>
+          <p>What are you thinking?</p>
+          {{> Template.dynamic template="text" data="sentence"}}
         </div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                 style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
