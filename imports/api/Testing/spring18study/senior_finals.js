@@ -17,7 +17,7 @@ export default SHARED_GOALS = {
     participateTemplate: 'scavengerHuntParticipate',
     resultsTemplate: 'scavengerHunt',
     contributionTypes: [{
-      needName: 'relaxing',
+      needName: 'Relaxing',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.coffee),
         number: '1'
@@ -28,7 +28,7 @@ export default SHARED_GOALS = {
       numberNeeded: 1,
       notificationDelay: 1, // 1 seconds for debugging
     }, {
-      needName: 'studying',
+      needName: 'Studying',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'

@@ -50,6 +50,9 @@ img.logo {
 
 .navbar-header {
   float: left;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
 
 .navbar-nav {
