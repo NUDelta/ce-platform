@@ -10,13 +10,14 @@ import SUMMER18_BETA from "./summer18beta/beta_experiences";
 import SUMMER18_EXPERIENCES from "./summer18study/summer18experiences";
 import TRIADIC_EXPERIENCES from "./triadic_experiences/triadic_experiences.js"
 import SENIOR_FINALS from "./spring18study/senior_finals.js";
+// import ST from "./spring18study/senior_finals.js";
 
 let EXPERIENCES = Object.assign({},
   //CHI20_DTR_EXPERIENCES,
   //CHI20_Olin_EXPERIENCES,
   //SPRING18_EXPERIENCES,
   //SUMMER18_BETA,
-  //SUMMER18_EXPERIENCES,
+  // SUMMER18_EXPERIENCES,
   //TRIADIC_EXPERIENCES
   SENIOR_FINALS
   //SCAVENGER_HUNT

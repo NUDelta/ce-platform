@@ -630,6 +630,63 @@ Template.scavengerHunt.helpers({
   }
 });
 
+// KEVIN AND NINA COLLECTIVE NARRATIVE
+Template.survivingThriving.helpers({
+  categories() {
+    let needNames = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    let categoriesSet = new Set(needNames);
+    return [...categoriesSet];
+  },
+  imagesByCategory(category){
+
+    let specific = this.images.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  },
+  getNeed(image){
+    return image.needName
+  },
+  uncompletedNeeds(){
+    let needs = this.experience.contributionTypes.map(function(x){
+      return x.needName;
+    });
+    completedNeeds = [];
+    for (i=0; i<this.images.length; i++){
+      completedNeeds.push(this.images[i].needName);
+    }
+    let unfinished = needs.filter(x => !completedNeeds.includes(x))
+    return unfinished
+  },
+  numTasksRemaining(){
+    return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
+  },
+  onlySubmission(){
+    if (this.images.length<=1){
+      return true;
+    }
+  },
+  getSentence(image){
+    // console.log("HI" + image);
+    // const instance = Template.instance();
+    // let s = instance.data.submissions[index];
+    // for (i=0; i<image.content.length; i++) {
+    //   console.log(image.content[i].sentence);
+    // }
+    // let key = "sentence";
+    // let value = image.content.proof;
+    console.log("BYE " + image);
+    // if (image.hasOwnProperty("content")) {
+    //   console.log("BYE" + image.content);
+    // }
+    let s = image.uid;
+    return s;
+  }
+});
+
 Template.storyBook_noInterdependence.helpers({
   notFirst(index) {
     return index !== 0;

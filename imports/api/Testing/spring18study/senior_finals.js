@@ -14,8 +14,8 @@ export default SHARED_GOALS = {
   surviveOrThrive: {
     _id: Random.id(),
     name: 'Surviving or Thriving?',
-    participateTemplate: 'scavengerHuntParticipate',
-    resultsTemplate: 'scavengerHunt',
+    participateTemplate: 'survivingThrivingParticipate',
+    resultsTemplate: 'survivingThriving',
     contributionTypes: [{
       needName: 'Relaxing',
       situation: {
