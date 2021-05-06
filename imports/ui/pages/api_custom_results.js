@@ -640,6 +640,7 @@ Template.survivingThriving.helpers({
     return [...categoriesSet];
   },
   imagesByCategory(category){
+    //submissions by category --> all thriving submission
 
     let specific = this.images.filter(function(x){
       return x.needName === category;
@@ -649,6 +650,7 @@ Template.survivingThriving.helpers({
   },
   getNeed(image){
     return image.needName
+    //this.submissions.
   },
   uncompletedNeeds(){
     let needs = this.experience.contributionTypes.map(function(x){
@@ -669,7 +671,16 @@ Template.survivingThriving.helpers({
       return true;
     }
   },
-  getSentence(image){
+  subByCategory(category){
+    //submissions by category --> all thriving submission
+
+    let specific = this.submissions.filter(function(x){
+      return x.needName === category;
+    });
+
+    return specific;
+  },
+  getSentence(sub){
     // console.log("HI" + image);
     // const instance = Template.instance();
     // let s = instance.data.submissions[index];
@@ -677,12 +688,12 @@ Template.survivingThriving.helpers({
     //   console.log(image.content[i].sentence);
     // }
     // let key = "sentence";
-    // let value = image.content.proof;
-    console.log("BYE " + image);
+    // let value = ima  ge.content.proof;
+    console.log("BYE " + sub.content.sentence);
     // if (image.hasOwnProperty("content")) {
     //   console.log("BYE" + image.content);
     // }
-    let s = image.uid;
+    let s = sub.content.sentence;
     return s;
   }
 });
