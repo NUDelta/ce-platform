@@ -677,8 +677,30 @@ Template.survivingThriving.helpers({
     let specific = this.submissions.filter(function(x){
       return x.needName === category;
     });
-    console.log("Hi " + category.length);
+    // console.log("Hi " + category.length);
     return specific;
+  },
+  testByCategory(category){
+    //submissions by category --> all thriving submission
+
+    let specific = this.filter(function(x){
+      return x.needName === category;
+    });
+    console.log("Hi " + specific);
+    return specific;
+  },
+  getImage(sub) {
+    // console.log("Hi " + sub.content.proof);
+    return sub.content.proof;
+  },
+  getImageSub(sub) {
+    // console.log("Hi " + sub.content.proof);
+    // debugger;
+    creatorSub = this.images.find(i => i._id === sub.content.proof);
+    // console.log("Hi " + creatorSub);
+    let i = creatorSub.original.name;
+    console.log("Hi " + creatorSub);
+    return creatorSub;
   },
   getSentence(sub){
     // console.log("HI" + image);
