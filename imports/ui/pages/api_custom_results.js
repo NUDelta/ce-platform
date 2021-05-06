@@ -677,7 +677,7 @@ Template.survivingThriving.helpers({
     let specific = this.submissions.filter(function(x){
       return x.needName === category;
     });
-
+    console.log("Hi " + category.length);
     return specific;
   },
   getSentence(sub){
