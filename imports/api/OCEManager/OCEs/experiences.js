@@ -115,6 +115,9 @@ Schema.Experience = new SimpleSchema({
     label: 'Social Group this OCE will be deployed to',
     optional: true
   },
+  prestoryTemplate:{
+    type: String,
+  },
   participateTemplate: {
     type: String,
   },

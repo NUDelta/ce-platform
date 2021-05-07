@@ -14,6 +14,7 @@ export default SHARED_GOALS = {
   surviveOrThrive: {
     _id: Random.id(),
     name: 'Surviving or Thriving?',
+    prestoryTemplate: 'seniorFinalsPrestory',
     participateTemplate: 'survivingThrivingParticipate',
     resultsTemplate: 'survivingThriving',
     contributionTypes: [{
@@ -23,7 +24,12 @@ export default SHARED_GOALS = {
         number: '1'
       },
       toPass: {
-        instruction: 'Can you take a photo of your coffee?'
+        instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'When drinking your coffee, do you feel thriving or surviving?',
+        dropdownChoices: {
+          name: 'mental state',
+          options: ['surviving','thriving']
+        }
       },
       numberNeeded: 1,
       notificationDelay: 1, // 1 seconds for debugging
@@ -34,7 +40,12 @@ export default SHARED_GOALS = {
         number: '1'
       },
       toPass: {
-        instruction: 'Can you take a photo of the library?'
+        instruction: 'Can you take a photo of the library?',
+        prestoryQuestion: 'When studying at the library, do you feel thriving or surviving?',
+        dropdownChoices: {
+          name: 'mental state',
+          options: ['surviving','thriving']
+        }
       },
       numberNeeded: 1,
       notificationDelay: 1, // 1 seconds for debugging

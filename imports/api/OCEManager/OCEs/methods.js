@@ -198,6 +198,9 @@ export const createExperience = new ValidatedMethod({
       label: 'Experience image url',
       optional: true
     },
+    prestoryTemplate: {
+      type: String
+    },
     participateTemplate: {
       type: String
     },
@@ -215,7 +218,7 @@ export const createExperience = new ValidatedMethod({
     },
   }).validator(),
   run({
-        name, description, image, participateTemplate, resultsTemplate, contributionGroups,
+        name, description, image, prestoryTemplate, resultsTemplate, contributionGroups,
         notificationStrategy, notificationText, callbackPair
       }) {
     //console.log('validated');
@@ -224,6 +227,7 @@ export const createExperience = new ValidatedMethod({
       name: name,
       description: description,
       image: image,
+      prestoryTemplate:prestoryTemplate,
       participateTemplate: participateTemplate,
       resultsTemplate: resultsTemplate,
       contributionGroups: contributionGroups,
