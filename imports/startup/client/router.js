@@ -25,6 +25,8 @@ import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
 import '../../ui/pages/dynamic_participate.html';
 import '../../ui/pages/dynamic_participate.js';
+import '../../ui/pages/api_custom_prestory';
+import '../../ui/pages/api_custom_prestory';
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -79,8 +81,52 @@ Router.route('api.custom.dynamic', {
   },
 });
 
+Router.route('api.custom.prestory', {
+  path: '/apicustomprestory/:iid/:eid/:needName',
+  template: 'api_custom_prestory',
+  before: function () {
+    if (!Meteor.userId()) {
+      Router.go('home');
+    }
+    let dic = {
+      uid: Meteor.userId(),
+      timestamp: Date.now(),
+      route: "customPrestory",
+      params: {
+        iid: this.params.iid,
+        eid: this.params.eid,
+        needName: this.params.needName
+      }
+    };
+    Meteor.call('insertLog', dic);
+
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('incidents.single', this.params.iid).wait();
+    this.subscribe('locations.activeUser').wait();
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('notification_log.activeIncident', this.params.iid).wait();
+    this.subscribe('participating.now.activeIncident', this.params.iid).wait();
+    // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
+    this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
+
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      incident: Incidents.findOne(),
+      location: Locations.findOne(),
+      notification_log: Notification_log.find().fetch(),
+      images: Images.find({}).fetch(),
+      avatars: Avatars.find({}).fetch(),
+      users: Meteor.users.find().fetch()
+    };
+  }
+});
+
 Router.route('api.custom', {
-  path: '/apicustom/:iid/:eid/:needName',
+  path: '/apicustom/:iid/:eid/:needName/:castCategory',
   template: 'api_custom',
   before: function () {
     if (!Meteor.userId()) {
@@ -93,7 +139,8 @@ Router.route('api.custom', {
       params: {
         iid: this.params.iid,
         eid: this.params.eid,
-        needName: this.params.needName
+        needName: this.params.needName,
+        castCategory: this.params.castCategory
       }
     };
     Meteor.call('insertLog', dic);

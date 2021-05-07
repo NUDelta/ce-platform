@@ -71,7 +71,8 @@ Template.dynamicParticipate.onCreated(function() {
 
       // choose the top-1, then dynamically redirect to that participate
       const chosenNeedName = potentialNeedNames[0];
-      Router.go(`/apicustom/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
+      //Router.go(`/apicustom/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
+      Router.go(`/apicustomprestory/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
     }
   });
 });
