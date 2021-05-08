@@ -37,7 +37,7 @@ Template.api_custom_prestory.helpers({
 
 //note: needName for triparticipate often split into needName_triad#
 Template.api_custom_prestory.events({
-  'submit #participate'(event, instance) {
+  'submit #cn-participate'(event, instance) {
     event.preventDefault();
 
     //this makes the loading circle show up
@@ -54,16 +54,9 @@ Template.api_custom_prestory.events({
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
-    //currently default to thriving
     const castCategory = 'thriving';
     // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName + '/' + castCategory;
-
-    const dropDowns = event.target.getElementsByClassName('dropdown');
-    _.forEach(dropDowns, (dropDown) => {
-      const index = dropDown.selectedIndex;
-      submissions[dropDown.id] = dropDown[index].value
-    });
 
     Router.go(participateUrl);
 
@@ -75,10 +68,10 @@ Template.api_custom_prestory.events({
       content: submissions,
       timestamp: timestamp,
       lat: location.lat,
-      lng: location.lng
+      lng: location.lng,
+      castCategory: castCategory
     };
-
+    
     Meteor.call('createInitialSubmission', submissionObject);
-
   },
 });

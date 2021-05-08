@@ -61,10 +61,11 @@ export const createInitialSubmission = function(submission) {
     {
       $set: {
         uid: submission.uid,
-        content: submission.content,
+        //content: submission.content,
         timestamp: submission.timestamp,
         lat: submission.lat,
-        lng: submission.lng
+        lng: submission.lng,
+        castCategory: submission.castCategory
       }
     },
     (err) => {

@@ -49,6 +49,10 @@ Schema.Submission = new SimpleSchema({
   failed: {
     type: Boolean,
     optional: true
+  },
+  castCategory: {
+    type: String,
+    optional: true,
   }
 });
 
