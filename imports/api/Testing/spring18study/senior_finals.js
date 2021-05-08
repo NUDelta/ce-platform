@@ -25,7 +25,7 @@ export default SHARED_GOALS = {
       toPass: {
         instruction: 'Can you take a photo of your coffee?'
       },
-      numberNeeded: 1,
+      numberNeeded: 2,
       notificationDelay: 1, // 1 seconds for debugging
     }, {
       needName: 'Studying',

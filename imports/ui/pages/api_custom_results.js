@@ -631,12 +631,14 @@ Template.scavengerHunt.helpers({
 });
 
 // KEVIN AND NINA COLLECTIVE NARRATIVE
+
 Template.survivingThriving.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
       return x.needName;
     });
     let categoriesSet = new Set(needNames);
+    // console.log("Hi " + categoriesSet);
     return [...categoriesSet];
   },
   imagesByCategory(category){
@@ -664,6 +666,7 @@ Template.survivingThriving.helpers({
     return unfinished
   },
   numTasksRemaining(){
+    // console.log("Hi " + this.experience.contributionTypes);
     return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
   },
   onlySubmission(){
@@ -671,13 +674,64 @@ Template.survivingThriving.helpers({
       return true;
     }
   },
+  // subByCategory(category){
+  //   let specific = this.submissions.filter(function(x){
+  //     console.log("Hi " + x.needName);
+  //     return x.needName === category;
+  //   });
+  //   return specific;
+  // },
   subByCategory(category){
-    //submissions by category --> all thriving submission
-
+    // let s;
+    let categories = [];
+    // let subSet = [];
+    console.log(category);
     let specific = this.submissions.filter(function(x){
-      return x.needName === category;
+      // console.log("Cheng " + category);
+      if (x.needName === category) {
+        // if (categories.length == 0) {
+        //     console.log("empty");
+        //     // s = category;
+        //     categories.push(x.needName);
+        //     return x.needName;
+        // }
+        // else {
+        //   // console.log("Hi " + categories.length);
+        //     for (i=0; i<categories.length; i++) {
+        //         console.log("unique");
+        //         if (categories[i] === x.needName) {
+        //           console.log("exists");
+        //           // s = x.needName;
+        //         } 
+        //         else {
+        //             categories.push(x.needName);
+        //             return x.needName;
+        //         }
+        //     }
+        // }
+        // console.log(categories);
+        if (categories.includes(x.needName)) {
+          console.log("includes");
+        }
+        else {
+          categories.push(x.needName);
+          console.log(categories.length);
+          return x.needName;
+          
+        }
+
+      }
+      // return s;
     });
-    // console.log("Hi " + category.length);
+    return specific;
+  },
+  conByCategory(sub){
+    console.log("sub " + sub.needName);
+    let specific = this.submissions.filter(function(x){
+      console.log("Hi " + x.needName === sub);
+      return x.needName === sub.needName;
+    });
+    console.log("specific " + specific);
     return specific;
   },
   testByCategory(category){
@@ -686,23 +740,23 @@ Template.survivingThriving.helpers({
     let specific = this.filter(function(x){
       return x.needName === category;
     });
-    console.log("Hi " + specific);
+    // console.log("Hi " + specific);
     return specific;
   },
   getImage(sub) {
     // console.log("Hi " + sub.content.proof);
     return sub.content.proof;
   },
-  getImageSub(sub) {
+  getImageSub(con) {
     // console.log("Hi " + sub.content.proof);
     // debugger;
-    creatorSub = this.images.find(i => i._id === sub.content.proof);
+    creatorSub = this.images.find(i => i._id === con.content.proof);
     // console.log("Hi " + creatorSub);
-    let i = creatorSub.original.name;
-    console.log("Hi " + creatorSub);
+    // let i = creatorSub.original.name;
+    // console.log("Hi " + creatorSub);
     return creatorSub;
   },
-  getSentence(sub){
+  getSentence(con){
     // console.log("HI" + image);
     // const instance = Template.instance();
     // let s = instance.data.submissions[index];
@@ -711,11 +765,11 @@ Template.survivingThriving.helpers({
     // }
     // let key = "sentence";
     // let value = ima  ge.content.proof;
-    console.log("BYE " + sub.content.sentence);
+    console.log("BYE " + con.content.sentence);
     // if (image.hasOwnProperty("content")) {
     //   console.log("BYE" + image.content);
     // }
-    let s = sub.content.sentence;
+    let s = con.content.sentence;
     return s;
   }
 });
