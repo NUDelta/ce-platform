@@ -31,7 +31,7 @@ export default SHARED_GOALS = {
           options: ['surviving','thriving']
         }
       },
-      numberNeeded: 1,
+      numberNeeded: 2,
       notificationDelay: 1, // 1 seconds for debugging
     }, {
       needName: 'Studying',

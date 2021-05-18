@@ -304,9 +304,9 @@ def allUsersCoffee():
 def testingSeniorFinals():
     setLocation(coffee, sys.argv[1])
     setLocation(library, sys.argv[2])
-    setLocation(grocery, sys.argv[3])
-    setLocation(grocery, sys.argv[4])
-    setLocation(grocery, sys.argv[5])
+    setLocation(coffee, sys.argv[3])
+    setLocation(coffee, sys.argv[4])
+    setLocation(library, sys.argv[5])
 
     print("finished setting up user location")
 

@@ -719,10 +719,18 @@
       .item {
         display: inline-block;
       }
+      .item-row {
+        display: flex;
+        flex-flow: row;
+        margin-top: 15px;
+      }
       .item-text{
         width: 100%;
         /* padding-left: 5%; */
         /* margin: 0; */
+      }
+      .item-img {
+        width: 100%;
       }
       .items-remaining {
         padding-top: 2%;
@@ -755,11 +763,25 @@
       </div>
       {{/each}} -->
 
+      <!-- {{#each sub in (subByCategory cat)}}
+      <div class="img-text">
+          <div class="item-text center">{{getNeed sub}}</div>
+          <div class="item-row">
+              <div class="item-text">{{getSentence sub}}</div>
+              <div class="item-img">{{> Template.dynamic template="displayImage" data=(getImageSub sub)}}</div>
+          </div>
+      </div>
+      {{/each}} -->
+
       {{#each sub in (subByCategory cat)}}
       <div class="img-text">
           <div class="item-text center">{{getNeed sub}}</div>
-          <div class="item-img">{{> Template.dynamic template="displayImage" data=sub}}</div>
-          <div class="item-text">{{getSentence sub}}</div>
+          {{#each con in (conByCategory sub)}}
+            <div class="item-row">
+                <div class="item-text">{{getSentence con}}</div>
+                <div class="item-img">{{> Template.dynamic template="displayImage" data=(getImageSub con)}}</div>
+            </div>
+          {{/each}}
       </div>
       {{/each}}
   {{/each}}
