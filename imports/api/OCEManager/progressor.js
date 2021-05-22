@@ -35,7 +35,8 @@ export const updateSubmission = function(submission) {
       eid: submission.eid,
       iid: submission.iid,
       needName: submission.needName,
-      _id: submission._id,
+      uid: submission.uid,
+      //_id: submission._id,
     },
     {
       $set: {

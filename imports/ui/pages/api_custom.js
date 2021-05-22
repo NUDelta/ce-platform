@@ -1020,10 +1020,10 @@ Template.api_custom.events({
       content: submissions,
       timestamp: timestamp,
       lat: location.lat,
-      lng: location.lng
+      lng: location.lng,
     };
-
-    Meteor.call('createInitialSubmission', submissionObject);
+    Meteor.call('updateSubmission', submissionObject);
+    //Meteor.call('createInitialSubmission', submissionObject);
 
   },
 
