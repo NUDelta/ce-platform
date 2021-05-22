@@ -793,9 +793,17 @@
         </style>
     </head>
     <div class="instruction">
-        Help us complete a {{this.experience.name}}.
-        We think you can help us find an item.
-        {{this.toPass.instruction}}
+        Help us complete a collective narrative on {{this.experience.name}} <br><br>
+        Could you share more about your experience? You can share whatever you want and these are just some inspirational questions to start you off: <br><br>
+        [Nina]: this is the context-dependent question👇 <br>
+        {{this.toPass.contextDepQuestion}}<br><br>
+        
+        [Nina]: this is the casting-dependent question👇<br>
+        {{#if isThriving}}
+          {{this.toPass.castingDepQuestion.thriving}}
+        {{else}}
+          {{this.toPass.castingDepQuestion.surviving}} 
+        {{/if}}<br>
     </div>
     <form class="col col-xs-12" id="participate">
         <div class="camera-upload">
