@@ -54,10 +54,14 @@ Template.api_custom_prestory.events({
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
-    const castCategory = 'thriving';
     // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
-    const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName + '/' + castCategory;
-
+    const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
+    
+    //castCategory
+    const castDropDown = document.getElementById('casting question');
+    const index = castDropDown.selectedIndex;
+    const castCategory = castDropDown[index].value;
+        
     Router.go(participateUrl);
 
     const submissionObject = {

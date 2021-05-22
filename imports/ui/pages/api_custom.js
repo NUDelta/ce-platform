@@ -331,6 +331,12 @@ Template.imitationGame.helpers({
   },
 });
 
+Template.survivingThrivingParticipate.helpers({
+  isThriving(){
+    return this.castCategory == "thriving";
+  }
+});
+
 Template.groupCheers.helpers({
   getUserById(users, uid) {
     let user = users.find(function(x) {
