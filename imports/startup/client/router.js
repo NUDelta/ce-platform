@@ -126,7 +126,7 @@ Router.route('api.custom.prestory', {
 });
 
 Router.route('api.custom', {
-  path: '/apicustom/:iid/:eid/:needName/:castCategory',
+  path: '/apicustom/:iid/:eid/:needName',
   template: 'api_custom',
   before: function () {
     if (!Meteor.userId()) {
