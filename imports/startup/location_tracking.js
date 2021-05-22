@@ -41,7 +41,7 @@ if (Meteor.isCordova) {
       logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
 
       // HTTP / SQLite config
-      url: `${ Meteor.absoluteUrl({secure: false}) }api/geolocation`, // submit location updates to backend route
+      url: `${ Meteor.absoluteUrl({secure: true}) }api/geolocation`, // submit location updates to backend route
       method: "POST", // submission method
       params: {
         userId: Meteor.userId()
@@ -170,7 +170,7 @@ if (Meteor.isCordova) {
         logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
 
         // HTTP / SQLite config
-        url: `${ Meteor.absoluteUrl({secure: false}) }api/geolocation`, // submit location updates to backend route
+        url: `${ Meteor.absoluteUrl({secure: true}) }api/geolocation`, // submit location updates to backend route
         method: "POST", // submission method
         params: {
           userId: Meteor.userId()
