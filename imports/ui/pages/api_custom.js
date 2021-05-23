@@ -331,9 +331,12 @@ Template.imitationGame.helpers({
   },
 });
 
+// Nina and Kevin's CN
 Template.survivingThrivingParticipate.helpers({
   isThriving(){
-    return this.castCategory == "thriving";
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "thriving";
   }
 });
 
