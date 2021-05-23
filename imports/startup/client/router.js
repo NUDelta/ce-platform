@@ -151,6 +151,7 @@ Router.route('api.custom', {
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('notification_log.activeIncident', this.params.iid).wait();
     this.subscribe('participating.now.activeIncident', this.params.iid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
     this.subscribe('avatars.all').wait();
@@ -165,7 +166,8 @@ Router.route('api.custom', {
       notification_log: Notification_log.find().fetch(),
       images: Images.find({}).fetch(),
       avatars: Avatars.find({}).fetch(),
-      users: Meteor.users.find().fetch()
+      users: Meteor.users.find().fetch(),
+      submissions: Submissions.find({}).fetch()
     };
   }
 });

@@ -32,7 +32,7 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: 'What are you currently working on in the library?',
         castingDepQuestion: {
-          thriving: 'Yayyy!You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
+          thriving: 'Yayyy! You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
           surviving: "Oh I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOO, why does studying at the library make you feel that way?"
         },
       },
@@ -53,7 +53,7 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: 'What are you currently working on in the library?',
         castingDepQuestion: {
-          thriving: 'Yayyy!You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
+          thriving: 'Yayyy! You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
           surviving: "Oh I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOO, why does studying at the library make you feel that way?"
         },
       },
