@@ -57,7 +57,7 @@ export default SHARED_GOALS = {
           surviving: "Oh I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOO, why does studying at the library make you feel that way?"
         },
       },
-      numberNeeded: 1,
+      numberNeeded: 2,
       notificationDelay: 1, // 1 seconds for debugging
 
     }],
