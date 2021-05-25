@@ -2,12 +2,12 @@ import {getDetectorUniqueKey} from "../oce_api_helpers";
 import {DETECTORS} from "../DETECTORS";
 
 
-let sendNotificationScavenger = function (sub) {
+let sendNotificationCN = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
 
-  notify(uids, sub.iid, 'Wooh! All the scavenger hunt items were found. Click here to see all of them.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  notify(uids, sub.iid, 'Wooh! The collective narrative is completed! Click here to view.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 export default SHARED_GOALS = {
@@ -19,6 +19,8 @@ export default SHARED_GOALS = {
     resultsTemplate: 'survivingThriving',
     contributionTypes: [{
       needName: 'Coffee',
+      notificationSubject: 'How many cups of coffee have you got this week?',
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.coffee),
         number: '1'
@@ -40,6 +42,8 @@ export default SHARED_GOALS = {
       notificationDelay: 1, // 1 seconds for debugging
     }, {
       needName: 'Library',
+      notificationSubject: 'Inside a library?',
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'
@@ -61,11 +65,12 @@ export default SHARED_GOALS = {
       notificationDelay: 1, // 1 seconds for debugging
 
     }],
+    //overwritten
     description: 'Share your experience & feelings about the finals',
     notificationText: 'Tell a collective narrative with fellow seniors!',
     callbacks: [{
       trigger: 'cb.incidentFinished()',
-      function: sendNotificationScavenger.toString()
+      function: sendNotificationCN.toString()
     }]
   },
 }
