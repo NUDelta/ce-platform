@@ -635,10 +635,11 @@ Template.scavengerHunt.helpers({
 Template.survivingThriving.helpers({
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
+      console.log("x ", x);
       return x.needName;
     });
     let categoriesSet = new Set(needNames);
-    // console.log("Hi " + categoriesSet);
+    console.log("Hi ", categoriesSet);
     return [...categoriesSet];
   },
   imagesByCategory(category){
@@ -681,95 +682,45 @@ Template.survivingThriving.helpers({
   //   });
   //   return specific;
   // },
-  subByCategory(category){
-    // let s;
-    let categories = [];
-    // let subSet = [];
-    console.log(category);
-    let specific = this.submissions.filter(function(x){
-      // console.log("Cheng " + category);
-      if (x.needName === category) {
-        // if (categories.length == 0) {
-        //     console.log("empty");
-        //     // s = category;
-        //     categories.push(x.needName);
-        //     return x.needName;
-        // }
-        // else {
-        //   // console.log("Hi " + categories.length);
-        //     for (i=0; i<categories.length; i++) {
-        //         console.log("unique");
-        //         if (categories[i] === x.needName) {
-        //           console.log("exists");
-        //           // s = x.needName;
-        //         } 
-        //         else {
-        //             categories.push(x.needName);
-        //             return x.needName;
-        //         }
-        //     }
-        // }
-        // console.log(categories);
-        if (categories.includes(x.needName)) {
-          console.log("includes");
-        }
-        else {
-          categories.push(x.needName);
-          console.log(categories.length);
-          return x.needName;
-          
-        }
+  
+  castCategories(){
+    //To-do: access castCategories
+    let castCategories = ['thriving', 'surviving'];
+    return castCategories;
+  },
 
-      }
-      // return s;
-    });
-    return specific;
-  },
-  conByCategory(sub){
-    console.log("sub " + sub.needName);
-    let specific = this.submissions.filter(function(x){
-      console.log("Hi " + x.needName === sub);
-      return x.needName === sub.needName;
-    });
-    console.log("specific " + specific);
-    return specific;
-  },
-  testByCategory(category){
+  subByCastCategory(cat){
     //submissions by category --> all thriving submission
-
-    let specific = this.filter(function(x){
-      return x.needName === category;
+    //let castCategories = ['thriving', 'surviving'];
+    // console.log("this", this.submissions);
+    let subsByCat = this.submissions.filter(function(sub){
+      
+      if (sub.castCategory === cat) {
+        return sub;
+      }
     });
-    // console.log("Hi " + specific);
-    return specific;
+
+    return subsByCat;
   },
-  getImage(sub) {
-    // console.log("Hi " + sub.content.proof);
-    return sub.content.proof;
+  getCast(cast) {
+    let capitalizedCast = cast[0].toUpperCase()+cast.slice(1);
+    return capitalizedCast;
   },
-  getImageSub(con) {
+  getImageSub(sub) {
     // console.log("Hi " + sub.content.proof);
     // debugger;
-    creatorSub = this.images.find(i => i._id === con.content.proof);
+    creatorSub = this.images.find(i => i._id === sub.content.proof);
     // console.log("Hi " + creatorSub);
     // let i = creatorSub.original.name;
     // console.log("Hi " + creatorSub);
     return creatorSub;
   },
-  getSentence(con){
-    // console.log("HI" + image);
-    // const instance = Template.instance();
-    // let s = instance.data.submissions[index];
-    // for (i=0; i<image.content.length; i++) {
-    //   console.log(image.content[i].sentence);
-    // }
-    // let key = "sentence";
-    // let value = ima  ge.content.proof;
-    console.log("BYE " + con.content.sentence);
+  getSentence(sub){
+    console.log("BYE " + sub.content.sentence);
     // if (image.hasOwnProperty("content")) {
     //   console.log("BYE" + image.content);
     // }
-    let s = con.content.sentence;
+    let s = sub.content.sentence;
     return s;
   }
 });
