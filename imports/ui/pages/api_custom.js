@@ -940,6 +940,11 @@ Template.api_custom.events({
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
 
+    //submission id
+    const userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    const mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    const subId = userSubs.length === 0 ? null : mostRecentSub._id;
+
 
     const dropDowns = event.target.getElementsByClassName('dropdown');
     _.forEach(dropDowns, (dropDown) => {
@@ -1030,10 +1035,14 @@ Template.api_custom.events({
       timestamp: timestamp,
       lat: location.lat,
       lng: location.lng,
+      _id: subId
     };
-    Meteor.call('updateSubmission', submissionObject);
-    //Meteor.call('createInitialSubmission', submissionObject);
-
+    
+    if (subId) {
+      Meteor.call('updateSubmission', submissionObject);
+    } else {
+      Meteor.call('createInitialSubmission', submissionObject);
+    }
   },
 
   'submit #triparticipate'(event, instance) {
