@@ -703,8 +703,11 @@
 <template name="survivingThriving">
   <head>
     <style>
-      img {
+      /* img {
         height: 150px;
+      } */
+      .theme-img {
+        width: 100%;
       }
       .item-cat {
         width: 100%;
@@ -719,15 +722,24 @@
       .item {
         display: inline-block;
       }
-      .item-row {
+      .item-contribution {
+        margin-top: 15px;
+      }
+      .contribution-detail {
+        text-align: right;
+        margin: 0;
+        color: #6C6C6C;
+        font-size: 11px;
+      }
+      .item-content {
         display: flex;
         flex-flow: row;
-        margin-top: 15px;
+        /* margin-top: 15px; */
       }
       .item-text{
         width: 100%;
         /* padding-left: 5%; */
-        /* margin: 0; */
+        margin: 0;
       }
       .item-img {
         width: 100%;
@@ -741,16 +753,21 @@
       .center {
         text-align: center;
       }
+      .bold {
+        font-weight: bold;
+      }
     </style>
   </head>
-  <h4>Surviving or Thriving {{numTasksRemaining}}</h4>
+  <h4 class="bold">Thriving or Surviving? Northwestern Seniors in Finals</h4>
+  <img class="theme-img" src="https://i.ibb.co/CJFMzZC/Campfire-camping-story-telling-concept-Cheerful-people-sitting-at-fire-telling-scary-stories-having.jpg" alt="fireside talk">
   <div id="text">
-    Thanks for participating! We'll notify you again when we think you can help us find another item.
+    <!-- Thanks for participating! We'll notify you again when we think you can help us find another item.
     {{#if onlySubmission}}
       Come back later to see if more items have been found.
     {{else}}
       In the meantime, check out the items others have found.
-    {{/if}}
+    {{/if}} -->
+    Hey fellow seniors! Your second-to-last quarter at Northwestern is wrapping up. How are you feeling? COVID-19 has brought a lot of changes to our senior year and we can no longer spend our senior year in person together. Check out in the narrative below what other community members are doing during this special time!
   </div>
   <!-- <b style="background-color:#273147;padding:6px;color:white;">Items found</b> -->
   <div class="item-cat">
@@ -771,11 +788,15 @@
 
   {{#each cat in castCategories}}
     <div class="img-text">
-      <div class="item-text center">{{getCast cat}}</div>
+      <div class="item-text center bold">{{getCast cat}}</div>
       {{#each sub in (subByCastCategory cat)}}
-        <div class="item-row">
-          <div class="item-text">{{getSentence sub}}</div>
-          <div class="item-img">{{> Template.dynamic template="displayImage" data=(getImageSub sub)}}</div>
+        <div class="item-contribution">
+          <p class="contribution-detail">{{getUsername sub}}</p>
+          <p class="contribution-detail">{{getTimeStamp sub}}</p>
+          <div class="item-content">
+            <p class="item-text">{{getSentence sub}}</p>
+            <div class="item-img">{{> Template.dynamic template="displayImage" data=(getImageSub sub)}}</div>
+          </div>
         </div>
       {{/each}}
     </div>

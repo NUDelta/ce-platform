@@ -699,7 +699,7 @@ Template.survivingThriving.helpers({
         return sub;
       }
     });
-
+    // console.log("sub ", subsByCat);
     return subsByCat;
   },
   getCast(cast) {
@@ -715,13 +715,38 @@ Template.survivingThriving.helpers({
     // console.log("Hi " + creatorSub);
     return creatorSub;
   },
-  getSentence(sub){
-    console.log("BYE " + sub.content.sentence);
+  getUsername(sub){
+    // console.log("USER ", sub);
+    // console.log("this ", this.submissions);
+    let fullname = this.users.filter(function(user){
+
+      // console.log("user ", user);
+
+      if (user._id === sub.uid) {
+        return user;
+      }
+    });
+    // console.log("USERNAME ", fullname);
+    // for (i = 0; i < fullname.length; i++) {
+    //   console.log("USERNAME ", fullname[i]);
+    // }
+    return fullname[0].profile.firstName + " " + fullname[0].profile.lastName;
+  },
+  getTimeStamp(sub){
+    console.log("stamp ", sub);
     // if (image.hasOwnProperty("content")) {
     //   console.log("BYE" + image.content);
     // }
-    let s = sub.content.sentence;
-    return s;
+    // let s = sub.content.sentence;
+    return sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  },
+  getSentence(sub){
+    // console.log("SENT ", sub);
+    // if (image.hasOwnProperty("content")) {
+    //   console.log("BYE" + image.content);
+    // }
+    // let s = sub.content.sentence;
+    return "\"" + sub.content.sentence + "\"";
   }
 });
 
