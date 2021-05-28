@@ -633,6 +633,7 @@ Template.scavengerHunt.helpers({
 // KEVIN AND NINA COLLECTIVE NARRATIVE
 
 Template.survivingThriving.helpers({
+  // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   categories() {
     let needNames = this.experience.contributionTypes.map(function(x){
       console.log("x ", x);
@@ -686,21 +687,36 @@ Template.survivingThriving.helpers({
   castCategories(){
     //To-do: access castCategories
     let castCategories = ['thriving', 'surviving'];
+    // console.log("Time " + Date.now());
     return castCategories;
   },
-
-  subByCastCategory(cat){
+  timeBlocks(){
+    // let timeBlocks = ['12 AM', '2 AM', '4 AM', '6 AM', '8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', 'End of Day'];
+    // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    let timeBlocks = [0, 1, 2, 3, 4, 5, 6];
+    // console.log("cat ", cat);
+    return timeBlocks;
+  },
+  subByCastCategory(cat, block){
+    // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     //submissions by category --> all thriving submission
-    //let castCategories = ['thriving', 'surviving'];
-    // console.log("this", this.submissions);
+    // console.log("block ", block);
     let subsByCat = this.submissions.filter(function(sub){
       
-      if (sub.castCategory === cat) {
+      // let day = block.substr(0, 3);
+      console.log("day ", block);
+      console.log("sub ", sub.timestamp);
+      // && (sub.timestamp === day)
+      if ((sub.castCategory === cat) && (sub.timestamp.getDay() === block)) {
         return sub;
       }
     });
     // console.log("sub ", subsByCat);
     return subsByCat;
+  },
+  getTimeBlock(block) {
+    let timeBlocks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return timeBlocks[block];
   },
   getCast(cast) {
     let capitalizedCast = cast[0].toUpperCase()+cast.slice(1);
@@ -733,7 +749,7 @@ Template.survivingThriving.helpers({
     return fullname[0].profile.firstName + " " + fullname[0].profile.lastName;
   },
   getTimeStamp(sub){
-    console.log("stamp ", sub);
+    // console.log("stamp ", sub.timestamp);
     // if (image.hasOwnProperty("content")) {
     //   console.log("BYE" + image.content);
     // }
