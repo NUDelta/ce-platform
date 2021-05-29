@@ -25,8 +25,10 @@ import '../../ui/pages/participate_backdoor.html';
 import '../../ui/pages/participate_backdoor.js';
 import '../../ui/pages/dynamic_participate.html';
 import '../../ui/pages/dynamic_participate.js';
-import '../../ui/pages/api_custom_prestory';
-import '../../ui/pages/api_custom_prestory';
+import '../../ui/pages/api_custom_prestory.html';
+import '../../ui/pages/api_custom_prestory.js';
+import '../../ui/pages/api_custom_results_expand.html';
+import '../../ui/pages/api_custom_results_expand.js';
 
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
@@ -205,6 +207,42 @@ Router.route('api.customresults', {
     };
   }
 });
+
+Router.route('api.customresults.expand', {
+  path: '/apicustomresults/:iid/:eid/:sid',
+  template: 'api_custom_results_expand',
+  before: function () {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "customresults",
+        params: {
+          iid: this.params.iid,
+          eid: this.params.eid,
+          sid: this.params.sid
+        }
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    };
+  }
+});
+
 
 Router.route('api.customresults.admin', {
   path: '/apicustomresultsadmin/:iid/:eid',

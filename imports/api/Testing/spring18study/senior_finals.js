@@ -17,6 +17,7 @@ export default SHARED_GOALS = {
     prestoryTemplate: 'seniorFinalsPrestory',
     participateTemplate: 'survivingThrivingParticipate',
     resultsTemplate: 'survivingThriving',
+    expandTemplate: 'seniorFinalsExpand',
     contributionTypes: [{
       needName: 'Coffee',
       notificationSubject: 'How many cups of coffee have you got this week?',

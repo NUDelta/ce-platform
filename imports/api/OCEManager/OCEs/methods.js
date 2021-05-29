@@ -199,13 +199,18 @@ export const createExperience = new ValidatedMethod({
       optional: true
     },
     prestoryTemplate: {
-      type: String
+      type: String,
+      optional: true
     },
     participateTemplate: {
       type: String
     },
     resultsTemplate: {
       type: String
+    },
+    expandTemplate:{
+      type: String,
+      optional: true
     },
     notificationText: {
       type: String
@@ -218,7 +223,7 @@ export const createExperience = new ValidatedMethod({
     },
   }).validator(),
   run({
-        name, description, image, prestoryTemplate, resultsTemplate, contributionGroups,
+        name, description, image, prestoryTemplate, resultsTemplate, expandTemplate, contributionGroups,
         notificationStrategy, notificationText, callbackPair
       }) {
     //console.log('validated');
@@ -230,6 +235,7 @@ export const createExperience = new ValidatedMethod({
       prestoryTemplate:prestoryTemplate,
       participateTemplate: participateTemplate,
       resultsTemplate: resultsTemplate,
+      expandTemplate:expandTemplate,
       contributionGroups: contributionGroups,
       notificationStrategy: notificationStrategy,
       notificationText: notificationText,

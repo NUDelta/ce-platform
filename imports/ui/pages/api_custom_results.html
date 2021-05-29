@@ -848,7 +848,7 @@
       {{#each cat in castCategories}}
         <div class="img-text">
           {{#each sub in (subByCastCategory cat block)}}
-            <div class="item-contribution">
+            <div class="item-contribution" id="{{sub._id}}">
               <p class="contribution-detail bold">{{getUsername sub}}</p>
               <p class="contribution-detail">{{getTimeStamp sub}}</p>
               <p class="contribution-text">{{getSentence sub}}</p>

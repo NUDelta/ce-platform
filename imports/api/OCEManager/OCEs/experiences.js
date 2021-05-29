@@ -117,12 +117,17 @@ Schema.Experience = new SimpleSchema({
   },
   prestoryTemplate:{
     type: String,
+    optional:true
   },
   participateTemplate: {
     type: String,
   },
   resultsTemplate: {
     type: String,
+  },
+  expandTemplate:{
+    type: String,
+    optional:true
   },
   contributionTypes: {
     type: [Schema.NeedType],

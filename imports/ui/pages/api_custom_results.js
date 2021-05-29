@@ -2,6 +2,8 @@ import './api_custom_results.html';
 
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Router } from 'meteor/iron:router';
+
 
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
@@ -676,14 +678,6 @@ Template.survivingThriving.helpers({
       return true;
     }
   },
-  // subByCategory(category){
-  //   let specific = this.submissions.filter(function(x){
-  //     console.log("Hi " + x.needName);
-  //     return x.needName === category;
-  //   });
-  //   return specific;
-  // },
-  
   castCategories(){
     //To-do: access castCategories
     let castCategories = ['thriving', 'surviving'];
@@ -694,7 +688,6 @@ Template.survivingThriving.helpers({
     // let timeBlocks = ['12 AM', '2 AM', '4 AM', '6 AM', '8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', 'End of Day'];
     // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     let timeBlocks = [0, 1, 2, 3, 4, 5, 6];
-    // console.log("cat ", cat);
     return timeBlocks;
   },
   subByCastCategory(cat, block){
@@ -704,8 +697,8 @@ Template.survivingThriving.helpers({
     let subsByCat = this.submissions.filter(function(sub){
       
       // let day = block.substr(0, 3);
-      console.log("day ", block);
-      console.log("sub ", sub.timestamp);
+      //console.log("day ", block);
+      //console.log("sub ", sub.timestamp);
       // && (sub.timestamp === day)
       if ((sub.castCategory === cat) && (sub.timestamp.getDay() === block)) {
         return sub;
@@ -732,36 +725,18 @@ Template.survivingThriving.helpers({
     return creatorSub;
   },
   getUsername(sub){
-    // console.log("USER ", sub);
-    // console.log("this ", this.submissions);
     let fullname = this.users.filter(function(user){
-
-      // console.log("user ", user);
-
       if (user._id === sub.uid) {
         return user;
       }
     });
-    // console.log("USERNAME ", fullname);
-    // for (i = 0; i < fullname.length; i++) {
-    //   console.log("USERNAME ", fullname[i]);
-    // }
+
     return fullname[0].profile.firstName + " " + fullname[0].profile.lastName;
   },
   getTimeStamp(sub){
-    // console.log("stamp ", sub.timestamp);
-    // if (image.hasOwnProperty("content")) {
-    //   console.log("BYE" + image.content);
-    // }
-    // let s = sub.content.sentence;
     return sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   },
   getSentence(sub){
-    // console.log("SENT ", sub);
-    // if (image.hasOwnProperty("content")) {
-    //   console.log("BYE" + image.content);
-    // }
-    // let s = sub.content.sentence;
     return "\"" + sub.content.sentence + "\"";
   }
 });
@@ -903,4 +878,14 @@ Template.sunset.onDestroyed(function() {
     Meteor.clearTimeout(timeout)
     timeout = null;
   });
+});
+
+Template.api_custom_results.events({
+  "click .item-contribution"(event, target){
+    //getting submission id of this item
+    //because in html, item-contribution uses sub id as id
+    const sid = event.currentTarget.id;
+    const expandUrl = Iron.Location.get().path + '/'+sid;
+    Router.go(expandUrl);
+  }
 });
