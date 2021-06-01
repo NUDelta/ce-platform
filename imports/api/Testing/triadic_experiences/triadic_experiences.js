@@ -4,126 +4,126 @@ import { sendSystemMessage } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
 // new experiences ///////////////////////////////////////////////////////
-// export const createWalk = function () {
-//   const walkCompleteCallback = function (sub) {
-//     let submissions = Submissions.find({
-//       iid: sub.iid,
-//       needName: sub.needName
-//     }).fetch();
+export const createWalk = function () {
+  const walkCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
 
-//     let participants = submissions.map((submission) => { return submission.uid; });
+    let participants = submissions.map((submission) => { return submission.uid; });
 
-//     participants.forEach(function(p){
-//       Meteor.users.update({
-//         _id: p
-//       }, {
-//         $set: {
-//           ['profile.staticAffordances.participatedInWalk']: true
-//         }
-//       });
-//     });
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInWalk']: true
+        }
+      });
+    });
 
-//     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-//     let message = 'Woo-hoo! You two have completed the Walk experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Walk experience! Tap here to see your results.';
 
-//     sendSystemMessage(message, participants, route);
-//     notify(participants, sub.iid, 'See images from your walk experience!', '', route);
-//   }
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your walk experience!', '', route);
+  }
 
-//   let experience = {
-//     name: 'Group Bumped - Walk',
-//     participateTemplate: 'groupBumped',
-//     resultsTemplate: 'groupBumpedResults',
-//     contributionTypes: [
-//       {
-//         needName : "Walk",
-//         situation : {
-//           detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
-//           number : 1
-//         },
-//         toPass : {
-//           situationDescription : "Enjoying your walk today?",
-//           instruction : "Pick out and take a picture of a piece of nature around you that makes you happy! Caption your picture with what about it sparks joy"
-//         },
-//         numberNeeded : 2,
-//         notificationDelay : 1,
-//         numberAllowedToParticipateAtSameTime: 3,
-//         allowRepeatContributions : false
-//       }
-//     ],
-//     description: 'Share your experience with your friend and their friend!',
-//     notificationText: 'Share your experience with your friend and their friend!',
-//     callbacks: [{
-//         trigger: `(cb.needFinished('walk'))`,
-//         function: walkCompleteCallback.toString(),
-//       }
-//     ],
-//     allowRepeatContributions: false,
-//   };
+  let experience = {
+    name: 'Group Bumped - Walk',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Walk",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your walk today?",
+          instruction : "Pick out and take a picture of a piece of nature around you that makes you happy! Caption your picture with what about it sparks joy"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('walk'))`,
+        function: walkCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
 
-//   return experience;
-// }
+  return experience;
+}
 
 
-// export const createLibraryExp = function () {
-//   const libraryExpCompleteCallback = function (sub) {
-//     let submissions = Submissions.find({
-//       iid: sub.iid,
-//       needName: sub.needName
-//     }).fetch();
+export const createLibraryExp = function () {
+  const libraryExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
 
-//     let participants = submissions.map((submission) => { return submission.uid; });
+    let participants = submissions.map((submission) => { return submission.uid; });
 
-//     participants.forEach(function(p){
-//       Meteor.users.update({
-//         _id: p
-//       }, {
-//         $set: {
-//           ['profile.staticAffordances.participatedInLibraryExp']: true
-//         }
-//       });
-//     });
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInLibraryExp']: true
+        }
+      });
+    });
 
-//     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-//     let message = 'Woo-hoo! You two have completed the Library experience! Tap here to see your results.';
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Library experience! Tap here to see your results.';
 
-//     sendSystemMessage(message, participants, route);
-//     notify(participants, sub.iid, 'See images from your library experience!', '', route);
-//   }
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your library experience!', '', route);
+  }
 
-//   let experience = {
-//     name: 'Group Bumped - Library',
-//     participateTemplate: 'groupBumped',
-//     resultsTemplate: 'groupBumpedResults',
-//     contributionTypes: [
-//       {
-//         needName : "Library",
-//         situation : {
-//           detector : getDetectorUniqueKey(DETECTORS.library_triad1),
-//           number : 1
-//         },
-//         toPass : {
-//           situationDescription : "Enjoying your study time today?",
-//           instruction : "..."
-//         },
-//         numberNeeded : 2,
-//         notificationDelay : 1,
-//         numberAllowedToParticipateAtSameTime: 3,
-//         allowRepeatContributions : false
-//       }
-//     ],
-//     description: 'Share your experience with your friend and their friend!',
-//     notificationText: 'Share your experience with your friend and their friend!',
-//     callbacks: [{
-//         trigger: `(cb.needFinished('library'))`,
-//         function: libraryExpCompleteCallback.toString(),
-//       }
-//     ],
-//     allowRepeatContributions: false,
-//   };
+  let experience = {
+    name: 'Group Bumped - Library',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Library",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.library_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your study time today?",
+          instruction : "..."
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('library'))`,
+        function: libraryExpCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
 
-//   return experience;
-// }
+  return experience;
+}
 
 export const createGroceriesExp = function () {
   const groceriesExpCompleteCallback = function (sub) {
@@ -915,5 +915,8 @@ export default TRIADIC_EXPERIENCES = {
   nightTimeSpooks: createNightTimeSpooks(),
   lifeJourneyMap: createLifeJourneyMap(),
   walkExperience: createWalk(),
-  libraryExperience: createLibraryExp()
+  libraryExperience: createLibraryExp(),
+  groceriesExperience: createGroceriesExp(),
+  restaurantExperience: createRestaurantExp()
+
 }
