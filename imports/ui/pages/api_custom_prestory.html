@@ -6,7 +6,7 @@
     <head>
         <style>
             .questions {
-                padding-bottom: 4%;
+                /* padding-bottom: 4%; */
             }
 
             .instruction {
@@ -16,10 +16,14 @@
             .camera-upload {
                 padding-bottom: 1%;
             }
+            .bold {
+                font-weight: bold;
+            }
         </style>
     </head>
+    <h4 class="bold">Let's get started!</h4>
     <div class="questions">
-      {{{this.toPass.prestoryQuestion}}}<br>
+      <p>{{{this.toPass.prestoryQuestion}}}</p>
     </div>
     <div class="choices">
       {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
