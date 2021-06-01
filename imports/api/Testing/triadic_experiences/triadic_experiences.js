@@ -532,7 +532,7 @@ export const createAppreciationStation = function(){
       numberNeeded: 4,
       notificationDelay: 1,
       numberAllowedToParticipateAtSameTime: 1,
-      allowRepeatContributions: true
+      allowRepeatContributions: false
     }],
     allowRepeatContributions: true,
     description: 'Show some appreciation for your friend!',
