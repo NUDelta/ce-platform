@@ -19,50 +19,73 @@ export default SHARED_GOALS = {
     resultsTemplate: 'survivingThriving',
     expandTemplate: 'seniorFinalsExpand',
     contributionTypes: [{
+      needName: '12AM',
+      notificationSubject: "Good evening! Or should I say good morning?",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.hour0),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling staying up at 12AM during finals?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What are you doing tonight?', 'How is your night going?', 'Why are you staying up tonight?'],
+        castingDepQuestion: {
+          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
+          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    }, {
       needName: 'Coffee',
-      notificationSubject: 'How many cups of coffee have you got this week?',
-      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals',
+      notificationSubject: 'They say coffee is the key to your soul.',
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.coffee),
         number: '1'
       },
       toPass: {
         //instruction: 'Can you take a photo of your coffee?',
-        prestoryQuestion: 'When drinking your coffee, do you feel thriving or surviving?',
+        prestoryQuestion: 'How are you feeling getting coffee during finals?',
         dropdownChoices: {
           name: 'casting question',
-          options: ['surviving','thriving']
+          options: ['WOOOO 🥳','BOOOO 👎']
         },
-        contextDepQuestion: 'What are you currently working on in the library?',
+        contextDepQuestion: ['What are you doing at the coffee shop?', 'What did you get?', 'Why did you go to this coffee shop?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
-          surviving: "Oh I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOO, why does studying at the library make you feel that way?"
+          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to the coffee shop make you feel this way?', 
+          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to the coffee shop make you feel this way?"
         },
       },
-      numberNeeded: 2,
-      notificationDelay: 1, // 1 seconds for debugging
+      numberNeeded: 10,
+      notificationDelay: 180, // 1 seconds for debugging
     }, {
       needName: 'Library',
       notificationSubject: 'Inside a library?',
-      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals',
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
       situation: {
         detector: getDetectorUniqueKey(DETECTORS.library),
         number: '1'
       },
       toPass: {
         //To do: change them to arrays to allow more flexibility
-        prestoryQuestion: 'Would you describe your current feeling towards the finals as WOOO or BOOO?',
+        prestoryQuestion: 'How are you feeling going to a library during finals?',
         dropdownChoices: {
           name: 'casting question',
-          options: ['surviving','thriving']
+          options: ['WOOOO 🥳','BOOOO 👎']
         },
-        contextDepQuestion: 'What are you currently working on in the library?',
+        contextDepQuestion: ['Why did you go to the library?', 'What are you doing at the library?', 'How long will you be staying at the library?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOO, why does studying at the library make you feel that way?', 
-          surviving: "Oh I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOO, why does studying at the library make you feel that way?"
+          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to the library make you feel this way?', 
+          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to the library make you feel this way?"
         },
       },
-      numberNeeded: 2,
+      numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
 
     }],
