@@ -54,7 +54,7 @@ export const createWalk = function () {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('moodMeteorology'))`,
+        trigger: `(cb.needFinished('walk'))`,
         function: walkCompleteCallback.toString(),
       }
     ],
@@ -115,8 +115,128 @@ export const createLibraryExp = function () {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('moodMeteorology'))`,
+        trigger: `(cb.needFinished('library'))`,
         function: libraryExpCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createGroceriesExp = function () {
+  const groceriesExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInGroceriesExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Groceries experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your groceries experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Groceries',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Groceries",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.groceries_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your grocery shopping today?",
+          instruction : "What is your game plan for shopping for food? Show us what ingredients you’re using! Caption your picture with your plan!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('groceries'))`,
+        function: groceriesExpCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createRestaurantExp = function () {
+  const restaurantExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInRestaurantExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Restaurant experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your restaurant experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Restaurant',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Restaurant",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.restaurant_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your food and ambience of the restaurant?",
+          instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('restaurant'))`,
+        function: restaurantExpCompleteCallback.toString(),
       }
     ],
     allowRepeatContributions: false,
