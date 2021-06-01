@@ -3,6 +3,68 @@ import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/m
 import { sendSystemMessage } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
+// new experiences ///////////////////////////////////////////////////////
+export const createWalk = function () {
+  const walkCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInWalk']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Walk experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your walk experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Walk',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Walk",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.moodMeteorology_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your walk today?",
+          instruction : "Pick out and take a picture of a piece of nature around you that makes you happy! Caption your picture with what about it sparks joy"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('moodMeteorology'))`,
+        function: walkCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+// new experiences ///////////////////////////////////////////////////////
+
 export const createDrinksTalk = function() {
   const drinksTalkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -669,5 +731,6 @@ export default TRIADIC_EXPERIENCES = {
   moodMeteorology: createMoodMeteorology(),
   monsterCreate: createMonster(),
   nightTimeSpooks: createNightTimeSpooks(),
-  lifeJourneyMap: createLifeJourneyMap()
+  lifeJourneyMap: createLifeJourneyMap(),
+  walkExperience: createWalk()
 }
