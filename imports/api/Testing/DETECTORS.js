@@ -84,7 +84,7 @@ export let DETECTORS = {
       'var triad1',
       'var participatedInAppreciationStation;'
     ],
-    rules: [('participatedInAppreciationStation && imitationGameFlag && triad1')]
+    rules: [('imitationGameFlag && triad1')]
   },
   group_cheers_triad1:{
     _id: Random.id(),
