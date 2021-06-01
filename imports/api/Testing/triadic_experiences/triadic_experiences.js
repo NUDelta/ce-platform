@@ -38,7 +38,7 @@ export const createWalk = function () {
       {
         needName : "Walk",
         situation : {
-          detector : getDetectorUniqueKey(DETECTORS.moodMeteorology_triad1),
+          detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
           number : 1
         },
         toPass : {
@@ -63,6 +63,68 @@ export const createWalk = function () {
 
   return experience;
 }
+
+
+export const createLibraryExp = function () {
+  const libraryExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInLibraryExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Library experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your library experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Library',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "Walk",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoying your study time today?",
+          instruction : "..."
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('moodMeteorology'))`,
+        function: libraryExpCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
 // new experiences ///////////////////////////////////////////////////////
 
 export const createDrinksTalk = function() {
@@ -732,5 +794,6 @@ export default TRIADIC_EXPERIENCES = {
   monsterCreate: createMonster(),
   nightTimeSpooks: createNightTimeSpooks(),
   lifeJourneyMap: createLifeJourneyMap(),
-  walkExperience: createWalk()
+  walkExperience: createWalk(),
+  libraryExperience: createLibraryExp()
 }

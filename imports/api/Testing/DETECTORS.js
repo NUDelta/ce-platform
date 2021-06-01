@@ -124,7 +124,7 @@ export let DETECTORS = {
     ],
     rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
-  
+
   // new detector for walk /////////////////////////////////////
   walk_triad1:{
     _id: Random.id(),
@@ -137,7 +137,18 @@ export let DETECTORS = {
     rules: ['(triad1 && daytime)']
   },
 
+  library_triad1:{
+    _id: Random.id(),
+    description: 'Library Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
   //  /////////////////////////////////////////////////////////
+  
   moodMeteorology_triad1:{
     _id: Random.id(),
     description: 'Moode Meteorology Triad 1',
