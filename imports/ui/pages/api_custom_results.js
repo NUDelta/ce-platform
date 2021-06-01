@@ -633,7 +633,6 @@ Template.scavengerHunt.helpers({
 });
 
 // KEVIN AND NINA COLLECTIVE NARRATIVE
-
 Template.survivingThriving.helpers({
   // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   categories() {
@@ -694,12 +693,19 @@ Template.survivingThriving.helpers({
     // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     //submissions by category --> all thriving submission
     // console.log("block ", block);
+    if (cat === "thriving") {
+      cat = "WOOOO 🥳";
+    }
+    else if (cat === "surviving") {
+      cat = "BOOOO 👎";
+    }
     let subsByCat = this.submissions.filter(function(sub){
       
       // let day = block.substr(0, 3);
-      //console.log("day ", block);
-      //console.log("sub ", sub.timestamp);
+      // console.log("cat ", cat);
+      // console.log("sub ", sub.castCategory);
       // && (sub.timestamp === day)
+
       if ((sub.castCategory === cat) && (sub.timestamp.getDay() === block)) {
         return sub;
       }
@@ -712,6 +718,7 @@ Template.survivingThriving.helpers({
     return timeBlocks[block];
   },
   getCast(cast) {
+    // console.log("CAST ", cast);
     let capitalizedCast = cast[0].toUpperCase()+cast.slice(1);
     return capitalizedCast;
   },
