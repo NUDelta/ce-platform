@@ -331,12 +331,20 @@ Template.imitationGame.helpers({
   },
 });
 
-// Nina and Kevin's CN
+// KEVIN AND NINA COLLECTIVE NARRATIVE
 Template.survivingThrivingParticipate.helpers({
   isThriving(){
     let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
     let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
-    return mostRecentSub.castCategory == "thriving";
+    return mostRecentSub.castCategory == "WOOOO 🥳";
+  },
+  getContextQuestions() {
+    // console.log('questions ', this.toPass.contextDepQuestion);
+    return this.toPass.contextDepQuestion;
+  },
+  getQuestion(cont) {
+    return cont;
+    // console.log('questions ', this.toPass.contextDepQuestion);
   }
 });
 

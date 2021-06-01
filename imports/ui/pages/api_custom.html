@@ -783,35 +783,49 @@
     <head>
         <style>
             .instruction {
-                padding-top: 4%;
-                padding-bottom: 4%;
+                /* padding-top: 4%; */
+              padding-bottom: 5px;
             }
 
             .camera-upload {
-                padding-bottom: 1%;
+              padding-top: 15px;
+              padding-bottom: 5px;
+            }
+            .bold {
+              font-weight: bold;
             }
         </style>
     </head>
     <div class="instruction">
-        Help us complete a collective narrative on {{this.experience.name}} <br><br>
-        Could you share more about your experience? You can share whatever you want and these are just some inspirational questions to start you off: <br><br>
-        [Nina]: this is the context-dependent question👇 <br>
-        {{this.toPass.contextDepQuestion}}<br><br>
-        
-        [Nina]: this is the casting-dependent question👇<br>
+      <h4 class="bold">Share your experience!</h4>
+
+      <!-- [Nina]: this is the casting-dependent question👇<br> -->
+      <p>
         {{#if isThriving}}
           {{this.toPass.castingDepQuestion.thriving}}
         {{else}}
           {{this.toPass.castingDepQuestion.surviving}} 
-        {{/if}}<br>
+        {{/if}}
+      </p>
+
+      <p>You can share whatever you want and these are just some inspirational questions to start you off:</p>
+
+      <!-- [Nina]: this is the context-dependent question👇 <br> -->
+      <ul>
+        {{#each cont in getContextQuestions}}
+        <li>{{getQuestion cont}}</li>
+        {{/each}}
+      </ul>
+        
     </div>
-    <form class="col col-xs-12" id="participate">
-        <div class="camera-upload">
-            {{> Template.dynamic template="camera" data="proof"}}
-        </div>
+    <form id="participate">
         <div>
-          <p>What are you thinking?</p>
+          <!-- <p>What are you thinking?</p> -->
           {{> Template.dynamic template="text" data="sentence"}}
+        </div>
+        <div class="camera-upload">
+          <p>Share a photo that shows what you're experiencing!</p>
+          {{> Template.dynamic template="camera" data="proof"}}
         </div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                 style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
