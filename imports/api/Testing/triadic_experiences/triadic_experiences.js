@@ -97,9 +97,9 @@ export const createLibraryExp = function () {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Walk",
+        needName : "Library",
         situation : {
-          detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
+          detector : getDetectorUniqueKey(DETECTORS.library_triad1),
           number : 1
         },
         toPass : {
