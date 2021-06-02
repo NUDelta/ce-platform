@@ -161,7 +161,13 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
 
   }
 
-  Push.send(notification);
+  // attempt to send a push notification
+  try {
+    Push.send(notification);
+    console.log(`Push notification sent successfully`);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 //
