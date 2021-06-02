@@ -27,9 +27,11 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
+  // important - repopulates the database with the experiences that you defined
   createTestUsers(){
     createTestData();
   },
+  // important - clear the database, deletes users, experiences and all that
   freshDatabase() {
     clearDatabase();
   },

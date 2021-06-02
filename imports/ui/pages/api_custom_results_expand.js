@@ -51,6 +51,20 @@ Template.seniorFinalsExpand.helpers({
     creatorSub = this.images.find(i => i._id === sub.content.proof);
     return creatorSub;
   },
+  getAvatarImg(sub) {
+    // console.log("sub ", sub);
+    // console.log("this ", this);
+    // console.log("user ", this.avatars[0].username);
+    let avatarImg = this.users.filter(function(user) {
+      if (user._id === sub.uid) {
+        return user;
+      }
+    });
+    creatorAvatar = this.avatars.find(i => i.username === avatarImg[0].username);
+    // console.log("avatarImg ", avatarImg[0].username);
+    // console.log("creator ", creatorSub);
+    return creatorAvatar;
+  },
   getUsername(sub){
     let fullname = this.users.filter(function(user){
       if (user._id === sub.uid) {
