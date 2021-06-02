@@ -5,8 +5,8 @@ Push.Configure({
     production: true,
     keyData: Assets.getText("ios/pp.pem"),
     certData: Assets.getText("ios/cc.pem"),
-    pfx: Assets.getText("ios/edu.northwestern.delta.D.p12"),
-    passphrase: "password",
+    // pfx: Assets.absoluteFilePath("ios/edu.northwestern.delta.D.p12"),
+    // passphrase: "password",
     gateway: "gateway.push.apple.com"
   }
 });
