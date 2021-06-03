@@ -124,6 +124,54 @@ export let DETECTORS = {
     ],
     rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
+
+  // new detector for walk /////////////////////////////////////
+  walk_triad1:{
+    _id: Random.id(),
+    description: 'Walk Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
+
+  library_triad1:{
+    _id: Random.id(),
+    description: 'Library Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
+
+  groceries_triad1:{
+    _id: Random.id(),
+    description: 'Groceries Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
+
+  restaurant_triad1:{
+    _id: Random.id(),
+    description: 'Restaurant Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
+
+  //  /////////////////////////////////////////////////////////
+  
   moodMeteorology_triad1:{
     _id: Random.id(),
     description: 'Moode Meteorology Triad 1',
