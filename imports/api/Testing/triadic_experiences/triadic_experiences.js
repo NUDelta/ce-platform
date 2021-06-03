@@ -104,7 +104,7 @@ export const createLibraryExp = function () {
         },
         toPass : {
           situationDescription : "Enjoying your study session today?",
-          instruction : "Show us something cool (or motivating) around your study space that is keeping you going (or focused)?"
+          instruction : "Working on something outside home? Show us something cool (or motivating) around your study space that is keeping you going (or focused)? Caption it with why it motivates you!"
         },
         numberNeeded : 2,
         notificationDelay : 1,
