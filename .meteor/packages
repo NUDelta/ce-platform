@@ -28,7 +28,6 @@ cfs:filesystem
 cfs:standard-packages
 ejson@1.1.1
 aldeed:collection2
-raix:push
 browser-policy@1.1.0
 sergeyt:typeahead
 dburles:google-maps
@@ -58,3 +57,4 @@ underscore@1.0.10
 fortawesome:fontawesome
 dburles:collection-helpers
 meanware:gridfs
+nudelta2015:push
