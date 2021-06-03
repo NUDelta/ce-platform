@@ -21,7 +21,9 @@ import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinato
 Template.api_custom_prestory.helpers({
 
   data() {
-
+    let navbar = document.querySelector(".nav-footer");
+    navbar.style.display = "none";
+    console.log(navbar);
     let currentNeed = this.incident.contributionTypes.find(function (x) {
       return x.needName === Router.current().params.needName;
     });

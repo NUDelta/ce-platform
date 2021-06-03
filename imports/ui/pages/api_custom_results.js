@@ -17,6 +17,9 @@ Template.api_custom_results.onCreated(() => {
 
 Template.api_custom_results.helpers({
   data() {
+    let navbar = document.querySelector(".nav-footer");
+    navbar.style.display = "block";
+    console.log(navbar);
     this.submissions.sort(function compare(a, b) {
       if (a.timestamp === undefined) {
         return 1;
