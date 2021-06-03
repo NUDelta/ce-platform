@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Push } from 'meteor/raix:push';
+import { Push } from 'meteor/nudelta2015:push';
 import { log } from '../../logs.js';
 import { CONFIG } from '../../config.js';
 import {Submissions} from "../../OCEManager/currentNeeds";
