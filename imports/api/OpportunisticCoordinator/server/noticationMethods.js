@@ -97,6 +97,7 @@ export const notifyUsersInNeed = function(subject, text) {
   return eval('`'+functionTemplate.toString()+'`');
 };
 
+// Meteor.call('sendNotification', ['6enTAPJMPSH9X4ya6'], 'Are you awake?', 'If you are, open the app to participate.', '/')
 Meteor.methods({
   sendNotification(uids, subject, text, route) {
     log.cerebro('Sending manual push notifications to ' + uids);
@@ -145,7 +146,7 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
   }
 
   let notification = {
-    from: 'push',
+    from: CONFIG.BUNDLE_IDENTIFIER,
     title: subject,
     text: text,
     badge: 0,
