@@ -103,8 +103,8 @@ export const createLibraryExp = function () {
           number : 1
         },
         toPass : {
-          situationDescription : "Enjoying your study time today?",
-          instruction : "..."
+          situationDescription : "Enjoying your study session today?",
+          instruction : "Show us something cool (or motivating) around your study space that is keeping you going (or focused)?"
         },
         numberNeeded : 2,
         notificationDelay : 1,
