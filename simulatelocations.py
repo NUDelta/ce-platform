@@ -15,6 +15,10 @@ sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
 library = (42.048468377293354, -87.68011573000601)
+secret_base = (42.04329086478451, -87.68102300188055)
+sargent = (42.058813, -87.675602)
+norris = (42.05340447417977, -87.67268330208677)
+lakefill = (42.05526993946647, -87.67085351697622)
 
 def followPath(path, uid):
     for stop in path:
@@ -22,9 +26,9 @@ def followPath(path, uid):
         time.sleep(1)
 
 def setLocation(location, uid):
-    host = "http://localhost:3000"
+    #host = "http://localhost:3000"
     # host = "https://ce-platform.herokuapp.com" 
-    # host = "https://staging-ce-platform.herokuapp.com"
+    host = "https://staging-ce-platform.herokuapp.com"
     r = requests.post(host + "/api/geolocation", json={
         "userId": uid,
         "location": {
@@ -302,17 +306,18 @@ def allUsersCoffee():
 	print("all users at coffee")
 
 def testingSeniorFinals():
-    setLocation(coffee, sys.argv[1])
-    setLocation(library, sys.argv[2])
-    setLocation(coffee, sys.argv[3])
-    setLocation(coffee, sys.argv[4])
-    setLocation(library, sys.argv[5])
-
+    # setLocation(coffee, sys.argv[1])
+    # setLocation(library, sys.argv[2])
+    # setLocation(coffee, sys.argv[3])
+    # setLocation(coffee, sys.argv[4])
+    # setLocation(library, sys.argv[5])
+    for i in sys.argv:
+        setLocation(secret_base, i)
     print("finished setting up user location")
 
 if __name__ == "__main__":
     # allUsersGrocery()
-	# allUsersCoffee()
+	#allUsersCoffee()
     testingSeniorFinals()
 	# allUsersAtBars()
 	#allUsersAtPark()

@@ -305,6 +305,30 @@ export let DETECTORS = {
     variables: ['var clouds;', 'var daytime;'],
     rules: ['(clouds && daytime);']
   },
+  secretbase: {
+    _id: Random.id(),
+    description: 'secret base for testing',
+    variables: ['var secret_base;'],
+    rules: ['(secret_base);']
+  },
+  lakefill: {
+    _id: Random.id(),
+    description: 'lakefill',
+    variables: ['var lakefill;'],
+    rules: ['(lakefill);']
+  },
+  norris: {
+    _id: Random.id(),
+    description: 'norris university center',
+    variables: ['var norris;'],
+    rules: ['(norris);']
+  },
+  thearch: {
+    _id: Random.id(),
+    description: 'Weber Arch',
+    variables: ['var thearch;'],
+    rules: ['(thearch);']
+  },
   restaurant: {
     _id: 'tR4e2c7PPjWACwX87',
     description: 'eating restaurant',
