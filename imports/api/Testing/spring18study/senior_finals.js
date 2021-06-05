@@ -6,8 +6,8 @@ let sendNotificationCN = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
     return x.uid;
   });
-
-  notify(uids, sub.iid, 'Wooh! The collective narrative is completed! Click here to view.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  
+  notify(uids, sub.iid, 'Wooh! There have been new posts added to the collective narrative! Click here to view.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 export default SHARED_GOALS = {
@@ -39,7 +39,7 @@ export default SHARED_GOALS = {
           surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
         },
       },
-      numberNeeded: 10,
+      numberNeeded: 15,
       notificationDelay: 1, // 1 seconds for debugging
     }, {
       needName: 'Coffee',
@@ -134,7 +134,7 @@ export default SHARED_GOALS = {
         },
       },
       numberNeeded: 10,
-      notificationDelay: 1, // 1 seconds for debugging
+      notificationDelay: 300, // 1 seconds for debugging
 
     }, {
       needName: 'Weber Arch',
@@ -165,7 +165,16 @@ export default SHARED_GOALS = {
     description: 'Share your experience & feelings about the finals',
     notificationText: 'Tell a collective narrative with fellow seniors!',
     callbacks: [{
-      trigger: 'cb.incidentFinished()',
+      trigger: 'cb.numberOfSubmissions() === 5',
+      function: sendNotificationCN.toString()
+    },{
+      trigger: 'cb.numberOfSubmissions() === 10',
+      function: sendNotificationCN.toString()
+    },{
+      trigger: 'cb.numberOfSubmissions() === 15',
+      function: sendNotificationCN.toString()
+    },{
+      trigger: 'cb.numberOfSubmissions() === 20',
       function: sendNotificationCN.toString()
     }]
   },

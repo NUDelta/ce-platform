@@ -204,7 +204,7 @@ export const userNotifiedTooRecently = (user) => {
   if (CONFIG.MODE === "local") {
     waitTimeAfterNotified = minutes * 1;
   } else {
-    waitTimeAfterNotified = minutes * 10;
+    waitTimeAfterNotified = minutes * 180;
   }
   const lastNotified = user.profile.lastNotified;
   const now = Date.now();
