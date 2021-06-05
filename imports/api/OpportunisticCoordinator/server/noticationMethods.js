@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Push } from 'meteor/raix:push';
+import { Push } from 'meteor/nudelta2015:push';
 import { log } from '../../logs.js';
 import { CONFIG } from '../../config.js';
 import {Submissions} from "../../OCEManager/currentNeeds";
@@ -97,6 +97,7 @@ export const notifyUsersInNeed = function(subject, text) {
   return eval('`'+functionTemplate.toString()+'`');
 };
 
+// Meteor.call('sendNotification', ['6enTAPJMPSH9X4ya6'], 'Are you awake?', 'If you are, open the app to participate.', '/')
 Meteor.methods({
   sendNotification(uids, subject, text, route) {
     log.cerebro('Sending manual push notifications to ' + uids);
@@ -145,7 +146,7 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
   }
 
   let notification = {
-    from: 'push',
+    from: CONFIG.BUNDLE_IDENTIFIER,
     title: subject,
     text: text,
     badge: 0,
@@ -161,7 +162,13 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
 
   }
 
-  Push.send(notification);
+  // attempt to send a push notification
+  try {
+    Push.send(notification);
+    console.log(`Push notification sent successfully`);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 //

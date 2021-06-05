@@ -1,4 +1,4 @@
-import { Push } from 'meteor/raix:push';
+import { Push } from 'meteor/nudelta2015:push';
 import { Router } from 'meteor/iron:router';
 import { log, serverLog } from '../../api/logs.js';
 import {Meteor} from "meteor/meteor";
