@@ -802,9 +802,9 @@
       <!-- [Nina]: this is the casting-dependent question👇<br> -->
       <p>
         {{#if isThriving}}
-          {{this.toPass.castingDepQuestion.thriving}}
+          Yayy! Let's celebrate!
         {{else}}
-          {{this.toPass.castingDepQuestion.surviving}} 
+          Aw, I'm sorry to hear that (send virtual hug)!
         {{/if}}
       </p>
 
@@ -815,6 +815,13 @@
         {{#each cont in getContextQuestions}}
         <li>{{getQuestion cont}}</li>
         {{/each}}
+        <li>
+          {{#if isThriving}}
+            {{this.toPass.castingDepQuestion.thriving}}
+          {{else}}
+            {{this.toPass.castingDepQuestion.surviving}} 
+          {{/if}} 
+        </li>
       </ul>
         
     </div>

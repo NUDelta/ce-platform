@@ -22,8 +22,7 @@ Template.api_custom_prestory.helpers({
 
   data() {
     let navbar = document.querySelector(".nav-footer");
-    navbar.style.display = "none";
-    console.log(navbar);
+    navbar.style.display = "block";
     let currentNeed = this.incident.contributionTypes.find(function (x) {
       return x.needName === Router.current().params.needName;
     });
@@ -80,4 +79,10 @@ Template.api_custom_prestory.events({
     
     Meteor.call('createInitialSubmission', submissionObject);
   },
+
+  'click #back-btn': function(event, instance) {
+    // console.log('back');
+    // event.preventDefault();
+    Router.go('home');
+  }
 });

@@ -35,8 +35,8 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: ['What are you doing tonight?', 'How is your night going?', 'Why are you staying up tonight?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
-          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
         },
       },
       numberNeeded: 10,
@@ -58,8 +58,8 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: ['What are you doing at the coffee shop?', 'What did you get?', 'Why did you go to this coffee shop?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to the coffee shop make you feel this way?', 
-          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to the coffee shop make you feel this way?"
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why does going to the coffee shop make you feel this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why does going to the coffee shop make you feel this way?"
         },
       },
       numberNeeded: 10,
@@ -81,8 +81,8 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: ['Why did you go to the library?', 'What are you doing at the library?', 'How long will you be staying at the library?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to the library make you feel this way?', 
-          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to the library make you feel this way?"
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why does going to the library make you feel this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why does going to the library make you feel this way?"
         },
       },
       numberNeeded: 10,
@@ -93,7 +93,7 @@ export default SHARED_GOALS = {
       notificationSubject: 'Must be a good day to walk on the Lakefill.',
       notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.library), //
+        detector: getDetectorUniqueKey(DETECTORS.lakefill), //
         number: '1'
       },
       toPass: {
@@ -105,8 +105,8 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: ['What are you doing at the Lakefill?', 'How’s the crowd today at the Lakefill?', 'What does the lake look like today? Can you see the Chicago skyline?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to the Lakefill make you feel this way?', 
-          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to the Lakefill make you feel this way?"
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why does going to the Lakefill make you feel this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why does going to the Lakefill make you feel this way?"
         },
       },
       numberNeeded: 10,
@@ -117,7 +117,7 @@ export default SHARED_GOALS = {
       notificationSubject: 'Hanging out at Norris?',
       notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.library), //
+        detector: getDetectorUniqueKey(DETECTORS.norris), //
         number: '1'
       },
       toPass: {
@@ -129,12 +129,36 @@ export default SHARED_GOALS = {
         },
         contextDepQuestion: ['What are you doing at Norris?', 'Did you get anything to eat or drink?', 'Who did you go to Norris with?'],
         castingDepQuestion: {
-          thriving: 'Yayyy! You describe your feeling towards the final as WOOOO 🥳, why does going to Norris make you feel this way?', 
-          surviving: "Aw, I'm sorry to hear that (send virtual hug)! You describe your feeling towards the final as BOOOO 👎, why does going to Norris make you feel this way?"
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why does going to Norris make you feel this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why does going to Norris make you feel this way?"
         },
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+
+    }, {
+      needName: 'Weber Arch',
+      notificationSubject: 'We love the Arch!',
+      notificationText: '',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.thearch), //
+        number: '1'
+      },
+      toPass: {
+        //To do: change them to arrays to allow more flexibility
+        prestoryQuestion: 'How are you feeling about your last week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['You have stayed near the Arch for the past 5 minutes. What are you doing?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards this week as WOOOO 🥳, why do you feel this way?', 
+          surviving: "You describe your feeling towards this week as BOOOO 👎, why do you feel this way?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 300, // 1 seconds for debugging
 
     }],
     //overwritten
