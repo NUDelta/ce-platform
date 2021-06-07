@@ -124,6 +124,76 @@ export let DETECTORS = {
     ],
     rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
+
+  // new detector for walk /////////////////////////////////////
+  walk_triad1:{
+    _id: Random.id(),
+    description: 'Walk Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(triad1 && daytime)']
+  },
+
+  library_triad1:{
+    _id: Random.id(),
+    description: 'Library Triad 1',
+    variables: [
+      'var libraries;',
+      'var usedbooks;',
+      'var bookstores;'
+    ],
+    rules: ['(libraries || bookstores);']
+  },
+
+  groceries_triad1:{
+    _id: Random.id(),
+    description: 'Groceries Triad 1',
+    variables: [
+      'var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var wholesalers;',
+      'var pharmacy;',
+      'var grocery;',
+      'var farmersmarket;',
+      'var convenience;',
+      'var importedfood;',
+      'var herbsandspices;',
+      'var drugstores;',
+      'var seafoodmarkets;',
+      'var marketstalls;',
+      'var organic_stores;',
+      'var publicmarkets;'
+    ],
+    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
+  },
+
+  restaurant_triad1:{
+    _id: Random.id(),
+    description: 'Restaurant Triad 1',
+    variables: [
+      'var triad1',
+      'var daytime;',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+    ],
+    rules: ['(triad1 && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  },
+
+  //  /////////////////////////////////////////////////////////
+  
   moodMeteorology_triad1:{
     _id: Random.id(),
     description: 'Moode Meteorology Triad 1',
