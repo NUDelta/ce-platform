@@ -255,6 +255,17 @@ Meteor.methods({
     let experience = Experiences.findOne(eid);
     startRunningIncident(createIncidentFromExperience(experience));
   },
+  addEmptySubmissionsForNeed({iid, needName}) {
+    new SimpleSchema({
+      iid: {type: String},
+      needName: {type: String},
+    }).validate({iid, needName});
+
+    let incidentObj = Incidents.findOne(iid);
+    need = incidentObj.contributionTypes.find((need) => need.needName == needName);
+
+    addEmptySubmissionsForNeed(iid, incidentObj.eid, need);
+  },
   addNeed({iid, need}) {
     new SimpleSchema({
       iid: {type: String},
