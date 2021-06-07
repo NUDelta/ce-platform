@@ -143,9 +143,14 @@ export let DETECTORS = {
     variables: [
       'var libraries;',
       'var usedbooks;',
-      'var bookstores;'
+      'var bookstores;',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;'
     ],
-    rules: ['(libraries || bookstores);']
+    rules: ['(libraries || bookstores || usedbooks || coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies);']
   },
 
   groceries_triad1:{
@@ -178,18 +183,13 @@ export let DETECTORS = {
       'var triad1',
       'var daytime;',
       'var triad1',
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
       'var diners;',
       'var restaurants;',
       'var cafeteria;',
       'var food_court;',
       'var bars;',
     ],
-    rules: ['(triad1 && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+    rules: ['(triad1 && daytime && (diners || restaurants || cafeteria || food_court || bars));']
   },
 
   //  /////////////////////////////////////////////////////////
