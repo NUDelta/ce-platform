@@ -906,14 +906,14 @@ export const createMonster = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  appreciationStation: createAppreciationStation(),
-  imitationGame: createImitationGame(),
-  groupCheers: createGroupCheers(),
-  drinksTalk: createDrinksTalk(),
-  moodMeteorology: createMoodMeteorology(),
-  monsterCreate: createMonster(),
-  nightTimeSpooks: createNightTimeSpooks(),
-  lifeJourneyMap: createLifeJourneyMap(),
+  // appreciationStation: createAppreciationStation(),
+  // imitationGame: createImitationGame(),
+  // groupCheers: createGroupCheers(),
+  // drinksTalk: createDrinksTalk(),
+  // moodMeteorology: createMoodMeteorology(),
+  // monsterCreate: createMonster(),
+  // nightTimeSpooks: createNightTimeSpooks(),
+  // lifeJourneyMap: createLifeJourneyMap(),
   walkExperience: createWalk(),
   libraryExperience: createLibraryExp(),
   groceriesExperience: createGroceriesExp(),
