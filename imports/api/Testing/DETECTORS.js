@@ -150,7 +150,7 @@ export let DETECTORS = {
       'var coffeeshops;',
       'var coffeeteasupplies;'
     ],
-    rules: ['(libraries || bookstores || usedbooks || coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies);']
+    rules: ['(triad1 && libraries || bookstores || usedbooks || coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies);']
   },
 
   groceries_triad1:{
@@ -173,7 +173,7 @@ export let DETECTORS = {
       'var organic_stores;',
       'var publicmarkets;'
     ],
-    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
+    rules: ['triad1 && (intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
   },
 
   restaurant_triad1:{
@@ -189,7 +189,7 @@ export let DETECTORS = {
       'var food_court;',
       'var bars;',
     ],
-    rules: ['(triad1 && daytime && (diners || restaurants || cafeteria || food_court || bars));']
+    rules: ['(triad1 && (diners || restaurants || cafeteria || food_court || bars));']
   },
 
   //  /////////////////////////////////////////////////////////
