@@ -77,32 +77,32 @@ export let USERS = {
   },
 
   sig1_mentee1: {
-    username: 'sig1_mentee1',
+    username: 'Ayin',
     email: 'sig1_mentee1@email.com',
     password: 'password',
     profile: {
-      firstName: 'sig1_mentee1',
-      lastName: 'sig1_mentee1'
+      firstName: 'Ayin',
+      lastName: ' '
     }
   },
 
   sig1_mentor: {
-    username: 'sig1_mentor',
+    username: 'Ruramai',
     email: 'sig1_mentor@email.com',
     password: 'password',
     profile: {
-      firstName: 'sig1_mentor',
-      lastName: 'sig1_mentor'
+      firstName: 'Ruramai',
+      lastName: ' '
     }
   },
 
   sig1_mentee2: {
-    username: 'sig1_mentee2',
+    username: 'Narmeen',
     email: 'sig1_mentee2@email.com',
     password: 'password',
     profile: {
-      firstName: 'sig1_mentee2',
-      lastName: 'sig1_mentee2'
+      firstName: 'Narmeen',
+      lastName: ' '
     }
   },
 
