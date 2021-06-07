@@ -141,33 +141,55 @@ export let DETECTORS = {
     _id: Random.id(),
     description: 'Library Triad 1',
     variables: [
-      'var participatedInGroupCheers',
-      'var triad1',
-      'var daytime;'
+      'var libraries;',
+      'var usedbooks;',
+      'var bookstores;'
     ],
-    rules: ['(triad1 && daytime)']
+    rules: ['(libraries || bookstores);']
   },
 
   groceries_triad1:{
     _id: Random.id(),
     description: 'Groceries Triad 1',
     variables: [
-      'var participatedInGroupCheers',
-      'var triad1',
-      'var daytime;'
+      'var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var wholesalers;',
+      'var pharmacy;',
+      'var grocery;',
+      'var farmersmarket;',
+      'var convenience;',
+      'var importedfood;',
+      'var herbsandspices;',
+      'var drugstores;',
+      'var seafoodmarkets;',
+      'var marketstalls;',
+      'var organic_stores;',
+      'var publicmarkets;'
     ],
-    rules: ['(triad1 && daytime)']
+    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
   },
 
   restaurant_triad1:{
     _id: Random.id(),
     description: 'Restaurant Triad 1',
     variables: [
-      'var participatedInGroupCheers',
       'var triad1',
-      'var daytime;'
+      'var daytime;',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
     ],
-    rules: ['(triad1 && daytime)']
+    rules: ['(triad1 && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
   },
 
   //  /////////////////////////////////////////////////////////
