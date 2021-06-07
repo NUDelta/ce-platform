@@ -204,6 +204,29 @@ export default SHARED_GOALS = {
       notificationDelay: 1, // 1 seconds for debugging
 
     }, {
+      needName: 'Noon',
+      notificationSubject: "What are you having for lunch?",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.hour12),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling about your final week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What are you doing right now?', 'What are you having for lunch?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way today?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way today?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    },{
       needName: 'Lakefill',
       notificationSubject: 'Must be a good day to walk on the Lakefill.',
       notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',

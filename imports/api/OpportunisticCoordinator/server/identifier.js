@@ -188,7 +188,9 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
 
       if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {
         // note: decommissionDelay == notificationDelay
-        let delay = getNeedDelay(assignment._id, needUserMap.needName);
+        //let delay = getNeedDelay(assignment._id, needUserMap.needName);
+        
+        let delay = 20 * 60; //giving user 20 minutes before they are decommissioned
 
         Meteor.setTimeout(
           decommissionIfSustained.bind(null, uid, assignment._id, needUserMap.needName, delay),
