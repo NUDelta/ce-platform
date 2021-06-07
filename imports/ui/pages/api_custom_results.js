@@ -747,7 +747,21 @@ Template.survivingThriving.helpers({
     return sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   },
   getSentence(sub){
-    return "\"" + sub.content.sentence + "\"";
+    console.log('in get sentence')
+    if (sub.content.sentence === undefined){
+      console.log('in if')
+      let fullname = this.users.filter(function(user){
+        if (user._id === sub.uid) {
+          return user;
+        }
+      });
+      let placeholder = fullname[0].profile.firstName  + " is feeling " + sub.castCategory + " .";
+      return placeholder;
+    }
+    else{
+      console.log('in else')
+      return "\"" + sub.content.sentence + "\"";
+    }  
   }
 });
 

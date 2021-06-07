@@ -42,6 +42,121 @@ export default SHARED_GOALS = {
       numberNeeded: 15,
       notificationDelay: 1, // 1 seconds for debugging
     }, {
+      needName: 'Bar',
+      notificationSubject: "Enjoying your favorite drink?",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.bar),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling about your final week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What\'s the occasion?', 'How is your night going?', 'What\'s the best drink of tonight?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    },{
+      needName: 'Excercising',
+      notificationSubject: "Excercising? We love healthy lifestyles during finals!",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.exercising),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling about your final week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['Show us what you are doing!', 'Why did you choose this time and place to excercise?', 'How\'s the work out going so far?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    }, {
+      needName: '6AM',
+      notificationSubject: "Early bird... night owl...or both?",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.hour6),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling being awake at 6AM during finals?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What are you doing now?', 'Why are you up early?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    },{
+      needName: 'Sunset',
+      notificationSubject: "It's sunset time! Can you see it?",
+      notificationText: 'Tell your fellow seniors about your day in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.sunset),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling about your final week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What are you doing now?', 'Did you have any finals today?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 1, // 1 seconds for debugging
+    },{
+      needName: 'Restaurant',
+      notificationSubject: "Eating at a restaurant? Yum 😍",
+      notificationText: 'Share your food & life with fellow NU seniors in a collective narrative about finals!',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.bar),
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How are you feeling about your final week of college?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['WOOOO 🥳','BOOOO 👎']
+        },
+        contextDepQuestion: ['What is the occasion?', 'What was the dish on the menu that caught your eye?', 'Are you eating with anyone?', 'Would you recommend this place to other people?'],
+        castingDepQuestion: {
+          thriving: 'You describe your feeling towards the final as WOOOO 🥳, why are you feeling this way tonight?', 
+          surviving: "You describe your feeling towards the final as BOOOO 👎, why are you feeling this way tonight?"
+        },
+      },
+      numberNeeded: 10,
+      notificationDelay: 120, // 1 seconds for debugging
+    },{
       needName: 'Coffee',
       notificationSubject: 'They say coffee is the key to your soul.',
       notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
@@ -63,7 +178,7 @@ export default SHARED_GOALS = {
         },
       },
       numberNeeded: 10,
-      notificationDelay: 180, // 1 seconds for debugging
+      notificationDelay: 20, // 1 seconds for debugging
     }, {
       needName: 'Library',
       notificationSubject: 'Inside a library?',
