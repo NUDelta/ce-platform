@@ -76,7 +76,7 @@ export let USERS = {
     }
   },
 
-  sig1_mentee1: {
+  Ayin: {
     username: 'Ayin',
     email: 'sig1_mentee1@email.com',
     password: 'password',
@@ -86,7 +86,7 @@ export let USERS = {
     }
   },
 
-  sig1_mentor: {
+  Ruramai: {
     username: 'Ruramai',
     email: 'sig1_mentor@email.com',
     password: 'password',
@@ -96,7 +96,7 @@ export let USERS = {
     }
   },
 
-  sig1_mentee2: {
+  Narmeen: {
     username: 'Narmeen',
     email: 'sig1_mentee2@email.com',
     password: 'password',
