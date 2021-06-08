@@ -85,10 +85,15 @@ const util = require('util');
 
        let usersNotInIncident = needUserMap.users.filter(function(user) {
          return (!uidsInNeed.find(uid => uid === user.uid) &&
-           !uidsWhoSubToNeed.find(uid => uid === user.uid) &&
-           !uidsWhoSubToIncident.find(uid => uid === user.uid));
+           !uidsWhoSubToNeed.find(uid => uid === user.uid));
        });
-       // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
+
+      //  let usersNotInIncident = needUserMap.users.filter(function(user) {
+      //    return (!uidsInNeed.find(uid => uid === user.uid) &&
+      //      !uidsWhoSubToNeed.find(uid => uid === user.uid) &&
+      //      !uidsWhoSubToIncident.find(uid => uid === user.uid));
+      //  });
+      // console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
 
        // check for synchronous needs (need.situation.number >= 2)
        if (usersNotInIncident.length >= need.situation.number) {

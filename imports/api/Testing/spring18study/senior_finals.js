@@ -18,6 +18,7 @@ export default SHARED_GOALS = {
     participateTemplate: 'survivingThrivingParticipate',
     resultsTemplate: 'survivingThriving',
     expandTemplate: 'seniorFinalsExpand',
+    repeatContributionsToExperienceAfterN: 0, // always allow a repeat contribution to needs
     contributionTypes: [{
       needName: '12AM',
       notificationSubject: "Good evening! Or should I say good morning?",
@@ -280,7 +281,7 @@ export default SHARED_GOALS = {
         },
       },
       numberNeeded: 10,
-      notificationDelay: 300, // 1 seconds for debugging
+      notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
     }, {
       needName: 'Weber Arch',

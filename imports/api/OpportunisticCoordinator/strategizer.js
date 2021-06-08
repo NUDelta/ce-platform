@@ -95,7 +95,7 @@ export const usersAlreadySubmittedToIncident = (iid, limit) => {
   else {
     previousUids = Submissions.find({iid: iid}).map(x => x.uid);
   }
-  return previousUids;
+  return previousUids.filter((uid) => uid != null );
 };
 
 /**
