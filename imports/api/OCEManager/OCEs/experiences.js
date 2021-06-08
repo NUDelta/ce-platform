@@ -73,7 +73,7 @@ Schema.NeedType = new SimpleSchema({
   allowRepeatContributions: {
     type: Boolean,
     optional: true,
-    defaultValue: false
+    defaultValue: true
   }
 });
 

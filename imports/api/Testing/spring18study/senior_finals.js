@@ -41,6 +41,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 15,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     }, {
       needName: 'Bar',
       notificationSubject: "Enjoying your favorite drink?",
@@ -64,6 +65,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     },{
       needName: 'Excercising',
       notificationSubject: "Excercising? We love healthy lifestyles during finals!",
@@ -87,6 +89,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     }, {
       needName: '6AM',
       notificationSubject: "Early bird... night owl...or both?",
@@ -110,6 +113,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     },{
       needName: 'Sunset',
       notificationSubject: "It's sunset time! Can you see it?",
@@ -133,6 +137,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     },{
       needName: 'Restaurant',
       notificationSubject: "Eating at a restaurant? Yum 😍",
@@ -156,6 +161,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 120, // 1 seconds for debugging
+      allowRepeatContributions : true
     },{
       needName: 'Coffee',
       notificationSubject: 'They say coffee is the key to your soul.',
@@ -179,6 +185,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 20, // 1 seconds for debugging
+      allowRepeatContributions : true
     }, {
       needName: 'Library',
       notificationSubject: 'Inside a library?',
@@ -202,7 +209,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
-
+      allowRepeatContributions : true
     }, {
       needName: 'Noon',
       notificationSubject: "What are you having for lunch?",
@@ -226,6 +233,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
     },{
       needName: 'Lakefill',
       notificationSubject: 'Must be a good day to walk on the Lakefill.',
@@ -249,7 +257,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
-
+      allowRepeatContributions : true
     }, {
       needName: 'Norris',
       notificationSubject: 'Hanging out at Norris?',
@@ -273,7 +281,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 300, // 1 seconds for debugging
-
+      allowRepeatContributions : true
     }, {
       needName: 'Weber Arch',
       notificationSubject: 'We love the Arch!',
@@ -297,7 +305,7 @@ export default SHARED_GOALS = {
       },
       numberNeeded: 10,
       notificationDelay: 300, // 1 seconds for debugging
-
+      allowRepeatContributions : true
     }],
     //overwritten
     description: 'Share your experience & feelings about the finals',
