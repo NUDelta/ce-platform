@@ -82,7 +82,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig1_mentee1',
-      lastName: 'sig1_mentee1'
+      lastName: 'sig1_mentee1',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
 
@@ -92,7 +95,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig1_mentor',
-      lastName: 'sig1_mentor'
+      lastName: 'sig1_mentor',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
 
@@ -102,7 +108,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig1_mentee2',
-      lastName: 'sig1_mentee2'
+      lastName: 'sig1_mentee2',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
 
@@ -112,7 +121,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig2_mentee1',
-      lastName: 'sig2_mentee1'
+      lastName: 'sig2_mentee1',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
 
@@ -122,7 +134,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig2_mentor',
-      lastName: 'sig2_mentor'
+      lastName: 'sig2_mentor',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
 
@@ -132,7 +147,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'sig2_mentee2',
-      lastName: 'sig2_mentee2'
+      lastName: 'sig2_mentee2',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   }
 };

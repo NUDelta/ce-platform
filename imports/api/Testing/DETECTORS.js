@@ -134,7 +134,8 @@ export let DETECTORS = {
       'var triad1',
       'var daytime;'
     ],
-    rules: ['(triad1 && daytime)']
+    // rules: ['(triad1 && daytime)']
+    rules: ['(triad1)']
   },
 
   library_triad1:{
@@ -147,6 +148,18 @@ export let DETECTORS = {
     ],
     rules: ['(libraries || bookstores);']
   },
+
+  // library_triad2:{
+  //   _id: Random.id(),
+  //   description: 'Library Triad 2',
+  //   variables: [
+  //     'var libraries;',
+  //     'var usedbooks;',
+  //     'var bookstores;'
+  //   ],
+  //   rules: ['(triad2) && (libraries || bookstores);']
+  // },
+
 
   groceries_triad1:{
     _id: Random.id(),
