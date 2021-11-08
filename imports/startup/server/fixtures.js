@@ -149,19 +149,19 @@ function createTestData(){
   createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
-  // let uid1 = findUserByUsername('zach')._id;
-  // let uid2 = findUserByUsername('ryan')._id;
-  // let uid3 = findUserByUsername('mason')._id;
-  // let uid4 = findUserByUsername('megs_sister')._id;
-  // let uid5 = findUserByUsername('josh')._id;
-  // let uid6 = findUserByUsername('nagy')._id;
+  let uid1 = findUserByUsername('zach')._id;
+  let uid2 = findUserByUsername('ryan')._id;
+  let uid3 = findUserByUsername('mason')._id;
+  let uid4 = findUserByUsername('andrew')._id;
+  let uid5 = findUserByUsername('josh')._id;
+  let uid6 = findUserByUsername('nagy')._id;
 
-  let uid1 = findUserByUsername('sig1_mentee1')._id;
-  let uid2 = findUserByUsername('sig1_mentor')._id;
-  let uid3 = findUserByUsername('sig1_mentee2')._id;
-  let uid4 = findUserByUsername('sig2_mentee1')._id;
-  let uid5 = findUserByUsername('sig2_mentor')._id;
-  let uid6 = findUserByUsername('sig2_mentee2')._id;
+  // let uid1 = findUserByUsername('sig1_mentee1')._id;
+  // let uid2 = findUserByUsername('sig1_mentor')._id;
+  // let uid3 = findUserByUsername('sig1_mentee2')._id;
+  // let uid4 = findUserByUsername('sig2_mentee1')._id;
+  // let uid5 = findUserByUsername('sig2_mentor')._id;
+  // let uid6 = findUserByUsername('sig2_mentee2')._id;
 
   let olinuid1 = findUserByUsername('nagy')._id;
   let olinuid2 = findUserByUsername('bonnie')._id;
@@ -187,8 +187,20 @@ function createTestData(){
     $set: { 'profile.staticAffordances': {
       "triad1":true,
       "chat": false,
-      "stranger1": true,
-      "imitationGameFlag": true
+      "stranger1": true
+      // "imitationGameFlag": true
+    } },
+  }, {
+    multi: true
+  });
+
+  Meteor.users.update({
+    _id: {$in: [uid2]}
+  }, {
+    $set: { 'profile.staticAffordances': { 
+      "triad1":true, 
+      "chat": false, 
+      // "friend": true 
     } },
   }, {
     multi: true
@@ -197,31 +209,24 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid3]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "stranger2": true} },
+    $set: { 'profile.staticAffordances': { 
+      "triad2":true, 
+      "chat": false, 
+    // "stranger2": true
+  } },
   }, {
     multi: true
   });
 
-  Meteor.users.update({
-    _id: {$in: [uid2]}
-  }, {
-    $set: { 'profile.staticAffordances': { "triad1":true, "chat": false, "friend": true } },
-  }, {
-    multi: true
-  });
 
   Meteor.users.update({
     _id: {$in: [uid4]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "stranger": true } },
-  }, {
-    multi: true
-  });
-
-  Meteor.users.update({
-    _id: {$in: [uid6]}
-  }, {
-    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "stranger2": true} },
+    $set: { 'profile.staticAffordances': { 
+      "triad2":true, 
+      "chat": false, 
+      // "stranger": true 
+    } },
   }, {
     multi: true
   });
@@ -229,10 +234,27 @@ function createTestData(){
   Meteor.users.update({
     _id: {$in: [uid5]}
   }, {
-    $set: { 'profile.staticAffordances': { "triad2":true, "chat": false, "friend": true } },
+    $set: { 'profile.staticAffordances': { 
+      "triad3":true, 
+      "chat": false, 
+      // "friend": true 
+    } },
   }, {
     multi: true
   });
+
+  Meteor.users.update({
+    _id: {$in: [uid6]}
+  }, {
+    $set: { 'profile.staticAffordances': { 
+      "triad3":true, 
+      "chat": false, 
+      // "stranger2": true
+    } },
+  }, {
+    multi: true
+  });
+
 
   log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
 }

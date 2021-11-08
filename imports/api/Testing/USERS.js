@@ -8,7 +8,8 @@ export let USERS = {
       firstName: 'Ryan',
       lastName: 'Louie',
       staticAffordances: {
-        mechanismRich: true
+        mechanismRich: true,
+        // participatedInWalk: true
       }
     }
   },
@@ -18,7 +19,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'Zach', // theres an inside joke to this one
-      lastName: 'Cmiel'
+      lastName: 'Cmiel',
+      staticAffordances: {
+        // participatedInWalk: true
+      }
     }
   },
   meg: {
@@ -27,25 +31,32 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'Mason',
-      lastName: 'Lin'
+      lastName: 'Lin',
+      staticAffordances: {
+        // participatedInLibraryExp: true
+      }
     }
   },
-  megs_sister: {
-    username: 'megs_sister',
-    email: 'megs_sister@email.com',
-    password: 'password',
-    profile: {
-      firstName: 'Sister of Meg',
-      lastName: 'Grasse'
-    }
-  },
+  // megs_sister: {
+  //   username: 'megs_sister',
+  //   email: 'megs_sister@email.com',
+  //   password: 'password',
+  //   profile: {
+  //     firstName: 'Sister of Meg',
+  //     lastName: 'Grasse',
+      
+  //   }
+  // },
   andrew: {
     username: 'andrew',
     email: 'andrew@email.com',
     password: 'password',
     profile: {
       firstName: 'Andrew',
-      lastName: 'Finke'
+      lastName: 'Finke',
+      staticAffordances: {
+        // participatedInLibraryExp: true
+      }
     }
   },
   josh: {
@@ -54,7 +65,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'Josh',
-      lastName: 'Shi'
+      lastName: 'Shi',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
   nagy: {
@@ -63,7 +77,10 @@ export let USERS = {
     password: 'password',
     profile: {
       firstName: 'Nagy',
-      lastName: 'Hakim'
+      lastName: 'Hakim',
+      staticAffordances: {
+        participatedInWalk: true
+      }
     }
   },
   bonnie: {

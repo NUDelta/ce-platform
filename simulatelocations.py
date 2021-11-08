@@ -6,7 +6,8 @@ path1 = [(43, -87), (32, -120)]
 
 park =  (42.056838, -87.675940)
 burgers = (42.046131, -87.681559)
-grocery = (42.047621, -87.679488)
+# grocery = (42.047621, -87.679488)
+grocery = (42.047604700619246, -87.6791521822815) 
 grocery2 = (42.039818,-87.680088)
 coffee = (42.046881, -87.679555)
 # beer = (42.047105, -87.682006)
@@ -14,7 +15,8 @@ bars = (42.046251, -87.680547)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
-library = (42.058141, -87.674490)
+# library = (42.058141, -87.674490) 
+library = (42.04858188609233, -87.68016938860654)
 
 def followPath(path, uid):
     for stop in path:
@@ -185,12 +187,24 @@ def test5():
         time.sleep(15)
 
 def allUsersAtPark():
+    print(sys.argv)
     setLocation(park, sys.argv[1])
     setLocation(park, sys.argv[2])
     setLocation(park, sys.argv[3])
     setLocation(park, sys.argv[4])
     setLocation(park, sys.argv[5])
+    setLocation(park, sys.argv[6])
     print("all usrs at parks")
+
+def pairsAtParkLibraryGrocery():
+    print(sys.argv)
+    setLocation(park, sys.argv[1])
+    setLocation(park, sys.argv[2])
+    setLocation(library, sys.argv[3]) 
+    setLocation(library, sys.argv[4])
+    setLocation(grocery, sys.argv[5]) 
+    setLocation(grocery, sys.argv[6])
+    print("users at park, library, and grocery")
 
 def allUsersAtCastle():
     setLocation((42.050538,-87.677355), sys.argv[1])
@@ -222,6 +236,7 @@ def allUsersAtBars():
     setLocation(bars, sys.argv[3])
     setLocation(bars, sys.argv[4])
     setLocation(bars, sys.argv[5])
+    setLocation(bars, sys.argv[6])
     print("all users at bar")
 
 def allUsersAtTrain():
@@ -313,7 +328,7 @@ if __name__ == "__main__":
 	# allUsersCoffee()
     #allUsersAtTrain()
 	# allUsersAtBars()
-	allUsersAtPark()
+	pairsAtParkLibraryGrocery()
     # usersParkAndLibrary()
     # garrettAndMegBump()
     # single user movement

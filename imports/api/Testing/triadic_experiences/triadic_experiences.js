@@ -39,7 +39,7 @@ export const createWalk = function () {
         needName : "Walk",
         situation : {
           detector : getDetectorUniqueKey(DETECTORS.walk_triad1),
-          number : 1
+          number : 1 //what's this number?
         },
         toPass : {
           situationDescription : "Enjoying your walk today?",

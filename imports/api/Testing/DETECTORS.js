@@ -134,8 +134,8 @@ export let DETECTORS = {
       'var triad1',
       'var daytime;'
     ],
-    // rules: ['(triad1 && daytime)']
-    rules: ['(triad1)']
+    rules: ['(triad1 && daytime)']
+    // rules: ['(triad1)']
   },
 
   library_triad1:{
@@ -144,9 +144,11 @@ export let DETECTORS = {
     variables: [
       'var libraries;',
       'var usedbooks;',
-      'var bookstores;'
+      'var bookstores;',
+      'var triad2'
     ],
     rules: ['(libraries || bookstores);']
+    // rules: ['(triad2)']
   },
 
   // library_triad2:{
@@ -179,9 +181,11 @@ export let DETECTORS = {
       'var seafoodmarkets;',
       'var marketstalls;',
       'var organic_stores;',
-      'var publicmarkets;'
+      'var publicmarkets;',
+      'var triad3'
     ],
-    rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
+    // rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
+    rules: ['(triad3)']
   },
 
   restaurant_triad1:{
