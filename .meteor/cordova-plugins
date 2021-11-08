@@ -1,6 +1,6 @@
-cordova-background-geolocation-lt@4.0.1
+cordova-background-geolocation-lt@4.3.0
 cordova-custom-config@5.1.0
-cordova-plugin-background-fetch@7.0.0
+cordova-plugin-background-fetch@7.0.1
 cordova-plugin-camera-preview@https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview.git#1f9a5dfdc026255f9ecaf21ef4af32ed46eb1bb0
 cordova-plugin-device@2.0.2
 cordova-plugin-flashlight@3.2.0
