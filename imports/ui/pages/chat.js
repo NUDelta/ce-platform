@@ -48,14 +48,14 @@ Template.chat.helpers({
     data.uid = uid;
     data.recipients = [uid]
 
-    //find the other chat recipient: will be in same triad && have stranger static affordance
+    //find the other chat recipient: will be in same pair && have stranger static affordance
     let aff = this.users.filter(u => u._id == uid)[0].profile.staticAffordances;
     console.log("affordance: " + aff)
-    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
-    console.log("triad: " + triad)
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+    console.log("pair: " + pair)
     let otherStranger = this.users.filter(
       u => (u._id != uid)
-      && (triad in u.profile.staticAffordances)
+      && (pair in u.profile.staticAffordances)
       // && !('friend' in u.profile.staticAffordances)
     );
     otherStranger = otherStranger.map(u => u._id)

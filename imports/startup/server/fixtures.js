@@ -40,69 +40,16 @@ Meteor.methods({
   startTestExperiences(){
     createTestExperiences();
 
-    Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
-      Detectors.insert(value);
-    });
+    Object.values(CONSTANTS.DETECTORS).forEach(function(pair) {
+      pair.forEach(function (value) {
+        Detectors.insert(value);
+      });
+    })
+    
     log.info(`${CONSTANTS.DETECTORS}`);
     log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
-  startStorytime(){
-    console.log("starting storytime");
-    let value = CONSTANTS.EXPERIENCES.storyTime;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startBumped(){
-    console.log("starting bumped");
-    let value = CONSTANTS.EXPERIENCES.bumped;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startDrinksTalk(){
-    console.log("starting drinks talk");
-    let value = CONSTANTS.EXPERIENCES.drinksTalk;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startImitationGame() {
-    console.log("starting imitation game");
-    let value = CONSTANTS.EXPERIENCES.imitationGame;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startGroupCheers(){
-    console.log("starting group cheers");
-    let value = CONSTANTS.EXPERIENCES.groupCheers;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startScavengerHunt(){
-    console.log("starting scavenger");
 
-    let value = CONSTANTS.EXPERIENCES.scavengerHunt;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startSunset(){
-    console.log("starting sunset");
-    let value = CONSTANTS.EXPERIENCES.sunset;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
-  startNature(){
-    console.log("starting nature");
-    let value = CONSTANTS.EXPERIENCES.natureHunt;
-    Experiences.insert(value);
-    let incident = createIncidentFromExperience(value);
-    startRunningIncident(incident);
-  },
 });
 
 function clearDatabase () {
@@ -120,7 +67,19 @@ function clearDatabase () {
 }
 
 function createTestExperiences(){
-  Object.values(CONSTANTS.EXPERIENCES).forEach(function (value) {
+  log.info(`${CONSTANTS.DETECTORS.pair1}`);
+  // log.info(`${JSON.stringify(CONSTANTS.EXPERIENCES.TRIADIC_EXPERIENCES)}`);
+  Object.values(CONSTANTS.EXPERIENCES.TRIADIC_EXPERIENCES.pair1).forEach(function (value) {
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  });
+  Object.values(CONSTANTS.EXPERIENCES.TRIADIC_EXPERIENCES.pair2).forEach(function (value) {
+    Experiences.insert(value);
+    let incident = createIncidentFromExperience(value);
+    startRunningIncident(incident);
+  });
+  Object.values(CONSTANTS.EXPERIENCES.TRIADIC_EXPERIENCES.pair3).forEach(function (value) {
     Experiences.insert(value);
     let incident = createIncidentFromExperience(value);
     startRunningIncident(incident);
@@ -135,7 +94,13 @@ function createTestData(){
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
 
   // add detectors
-  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+  Object.values(CONSTANTS.DETECTORS.pair1).forEach(function (value) {
+    Detectors.insert(value);
+  });
+  Object.values(CONSTANTS.DETECTORS.pair2).forEach(function (value) {
+    Detectors.insert(value);
+  });
+  Object.values(CONSTANTS.DETECTORS.pair3).forEach(function (value) {
     Detectors.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
@@ -185,9 +150,8 @@ function createTestData(){
     _id: {$in: [uid1]}
   }, {
     $set: { 'profile.staticAffordances': {
-      "triad1":true,
+      "pair1":true,
       "chat": false,
-      "stranger1": true
       // "imitationGameFlag": true
     } },
   }, {
@@ -198,7 +162,7 @@ function createTestData(){
     _id: {$in: [uid2]}
   }, {
     $set: { 'profile.staticAffordances': { 
-      "triad1":true, 
+      "pair1":true, 
       "chat": false, 
       // "friend": true 
     } },
@@ -210,7 +174,7 @@ function createTestData(){
     _id: {$in: [uid3]}
   }, {
     $set: { 'profile.staticAffordances': { 
-      "triad2":true, 
+      "pair2":true, 
       "chat": false, 
     // "stranger2": true
   } },
@@ -223,7 +187,7 @@ function createTestData(){
     _id: {$in: [uid4]}
   }, {
     $set: { 'profile.staticAffordances': { 
-      "triad2":true, 
+      "pair2":true, 
       "chat": false, 
       // "stranger": true 
     } },
@@ -235,7 +199,7 @@ function createTestData(){
     _id: {$in: [uid5]}
   }, {
     $set: { 'profile.staticAffordances': { 
-      "triad3":true, 
+      "pair3":true, 
       "chat": false, 
       // "friend": true 
     } },
@@ -247,7 +211,7 @@ function createTestData(){
     _id: {$in: [uid6]}
   }, {
     $set: { 'profile.staticAffordances': { 
-      "triad3":true, 
+      "pair3":true, 
       "chat": false, 
       // "stranger2": true
     } },

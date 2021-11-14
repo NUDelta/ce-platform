@@ -31,4 +31,6 @@ Schema.Detectors = new SimpleSchema({
     }
 });
 
+
+
 Detectors.attachSchema(Schema.Detectors);
