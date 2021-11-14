@@ -123,7 +123,7 @@ export let DETECTORS = {
       'var bars;',
     ],
     rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
-  },
+  }, // should be !participatedInGroupCheers
 
   // new detector for walk /////////////////////////////////////
   walk_triad1:{
@@ -207,6 +207,14 @@ export let DETECTORS = {
       'var bars;',
     ],
     rules: ['(triad1 && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  },
+
+  gym_triad1: {
+    _id: '3XqHN8A4EpCZRpegS',
+    description: ' gym',
+    variables: ['var  gyms;',
+  'var triad1'],
+    rules: [' gyms && triad1;']
   },
 
   //  /////////////////////////////////////////////////////////

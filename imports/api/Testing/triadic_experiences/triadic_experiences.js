@@ -245,6 +245,66 @@ export const createRestaurantExp = function () {
   return experience;
 }
 
+export const createGymExp = function () {
+  const gymExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInGymExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Gym experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your gym experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - gym',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "gym",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.gym_triad1),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Enjoy your workout session at the gym today?",
+          instruction : "Where did you do today? Why? Take a picture of your place and tell us your reason!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('gym'))`,
+        function: gymExpCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
 // new experiences ///////////////////////////////////////////////////////
 
 export const createDrinksTalk = function() {
@@ -906,14 +966,14 @@ export const createMonster = function(){
 };
 
 export default TRIADIC_EXPERIENCES = {
-  appreciationStation: createAppreciationStation(),
-  imitationGame: createImitationGame(),
-  groupCheers: createGroupCheers(),
-  drinksTalk: createDrinksTalk(),
-  moodMeteorology: createMoodMeteorology(),
-  monsterCreate: createMonster(),
-  nightTimeSpooks: createNightTimeSpooks(),
-  lifeJourneyMap: createLifeJourneyMap(),
+  // appreciationStation: createAppreciationStation(),
+  // imitationGame: createImitationGame(),
+  // groupCheers: createGroupCheers(),
+  // drinksTalk: createDrinksTalk(),
+  // moodMeteorology: createMoodMeteorology(),
+  // monsterCreate: createMonster(),
+  // nightTimeSpooks: createNightTimeSpooks(),
+  // lifeJourneyMap: createLifeJourneyMap(),
   walkExperience: createWalk(),
   libraryExperience: createLibraryExp(),
   groceriesExperience: createGroceriesExp(),
