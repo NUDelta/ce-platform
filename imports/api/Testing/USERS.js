@@ -9,6 +9,7 @@ export let USERS = {
       lastName: 'Louie',
       staticAffordances: {
         mechanismRich: true,
+        // pair1: true,
         // participatedInWalk: true
       }
     }
@@ -21,6 +22,7 @@ export let USERS = {
       firstName: 'Zach', // theres an inside joke to this one
       lastName: 'Cmiel',
       staticAffordances: {
+        // pair1: true,
         // participatedInWalk: true
       }
     }
@@ -32,7 +34,8 @@ export let USERS = {
     profile: {
       firstName: 'Mason',
       lastName: 'Lin',
-      staticAffordances: {
+      staticAffordances: { 
+        // pair2: true,
         // participatedInLibraryExp: true
       }
     }
@@ -55,6 +58,7 @@ export let USERS = {
       firstName: 'Andrew',
       lastName: 'Finke',
       staticAffordances: {
+        // pair2: true
         // participatedInLibraryExp: true
       }
     }
@@ -67,7 +71,8 @@ export let USERS = {
       firstName: 'Josh',
       lastName: 'Shi',
       staticAffordances: {
-        participatedInWalk: true
+        // pair3: true,
+        // participatedInWalk: true
       }
     }
   },
@@ -79,7 +84,8 @@ export let USERS = {
       firstName: 'Nagy',
       lastName: 'Hakim',
       staticAffordances: {
-        participatedInWalk: true
+        // pair3: true,
+        // participatedInWalk: true
       }
     }
   },

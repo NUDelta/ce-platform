@@ -1,153 +1,27 @@
-export let DETECTORS = {
-  field: {
-    _id: 'XeepEbMjjW8yPzSAo',
-    description: 'fields',
-    variables: ['var stadiumsarenas;',
-      'var baseballfields;',
-      'var parks;',
-      'var playgrounds;'
-    ],
-    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields);']
-  },
-  niceish_day: {
-    _id: 'x7EgLErQx3qmiemqt',
-    description: 'niceish_day',
-    variables: ['var clouds;', 'var clear;', 'var daytime;'],
-    rules: ['daytime && (clouds || clear);']
-  },
-  night: {
-    _id: 'Wth3TB9Lcf6me6vgy',
-    description: 'places where it\'s nighttime,',
-    variables: ['var nighttime;'],
-    rules: ['(nighttime);']
-  },
-  sunset: {
-    _id: '44EXNzHS7oD2rbF68',
-    description: 'places where it\'s sunset,',
-    variables: ['var sunset;'],
-    rules: ['(sunset);']
-  },
-  daytime: {
-    _id: 'tyZMZvPKkkSPR4FpG',
-    description: 'places where it\'s daytime,',
-    variables: ['var daytime;'],
-    rules: ['daytime;']
-  },
-  anytime: {
-    _id: Random.id(),
-    description: 'all times for testing',
-    variables: [
-      'var daytime;',
-      'var nighttime;',
-      'var sunset;'
-    ],
-    rules: [('daytime || nighttime || sunset')]
-  },
-  anytime_triad2: {
-    _id: Random.id(),
-    description: 'all times for testing triad 2',
-    variables: [
-      'var daytime;',
-      'var nighttime;',
-      'var sunset;',
-      'var triad2'
-    ],
-    rules: [('triad2 && (daytime || nighttime || sunset)')]
-  },
-  anytime_triad1: {
-    _id: Random.id(),
-    description: 'all times for testing triad1',
-    variables: [
-      'var daytime;',
-      'var nighttime;',
-      'var sunset;',
-      'var triad1'
-    ],
-    rules: [('triad1 && (daytime || nighttime || sunset)')]
-  },
-  /*progression of triad 1 experience*/
-  strangers_triad1: {
-    _id: Random.id(),
-    description: 'strangers from triad1',
-    variables: [
-      'var stranger1',
-      'var stranger2',
-      'var triad1'
-    ],
-    rules: [('triad1 && (stranger1 || stranger2)')]
-  },
-  imitation_game_triad1:{
-    _id: Random.id(),
-    description: 'Imitation Game',
-    variables: [
-      'var imitationGameFlag',
-      'var triad1',
-      'var participatedInAppreciationStation;'
-    ],
-    rules: [('imitationGameFlag && triad1')]
-  },
-  group_cheers_triad1:{
-    _id: Random.id(),
-    description: 'Group Cheers triad 1',
-    variables: [
-      'var participatedInImitationGame',
-      'var triad1',
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
-      'var diners;',
-      'var restaurants;',
-      'var cafeteria;',
-      'var food_court;',
-      'var bars;',
-    ],
-    rules: ['(participatedInImitationGame && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
-  },
-  drinksTalk_triad1:{
-    _id: Random.id(),
-    description: 'Drinks Talk Triad 1',
-    variables: [
-      'var participatedInGroupCheers',
-      'var triad1',
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
-      'var diners;',
-      'var restaurants;',
-      'var cafeteria;',
-      'var food_court;',
-      'var bars;',
-    ],
-    rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
-  }, // should be !participatedInGroupCheers
-
+const createDetectors = function (pairNum) {
+  return {
   // new detector for walk /////////////////////////////////////
-  walk_triad1:{
+  walkExp:{
     _id: Random.id(),
-    description: 'Walk Triad 1',
+    description: 'Walk ' + pairNum,
     variables: [
-      'var participatedInGroupCheers',
-      'var triad1',
+      `var ${pairNum}`,
       'var daytime;'
     ],
-    rules: ['(triad1 && daytime)']
+    rules: [`(${pairNum} && daytime)`]
     // rules: ['(triad1)']
   },
 
-  library_triad1:{
+  libraryExp:{
     _id: Random.id(),
-    description: 'Library Triad 1',
+    description: 'Library ' + pairNum,
     variables: [
       'var libraries;',
       'var usedbooks;',
       'var bookstores;',
-      'var triad2'
+      `var ${pairNum}`
     ],
-    rules: ['(libraries || bookstores);']
+    rules: [`${pairNum} && (libraries || bookstores);`]
     // rules: ['(triad2)']
   },
 
@@ -163,9 +37,9 @@ export let DETECTORS = {
   // },
 
 
-  groceries_triad1:{
+  groceriesExp:{
     _id: Random.id(),
-    description: 'Groceries Triad 1',
+    description: 'Groceries ' + pairNum,
     variables: [
       'var intlgrocery;',
       'var ethicgrocery;',
@@ -182,17 +56,19 @@ export let DETECTORS = {
       'var marketstalls;',
       'var organic_stores;',
       'var publicmarkets;',
-      'var triad3'
+      `var ${pairNum}`
     ],
-    // rules: ['(intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || ((organic_stores || publicmarkets) || marketstalls))))));']
-    rules: ['(triad3)']
+    rules: [`(${pairNum} && (intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || \
+    ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || \
+    ((organic_stores || publicmarkets) || marketstalls)))))));`]
+    // rules: ['(triad3)']
   },
 
-  restaurant_triad1:{
+  restaurantExp:{
     _id: Random.id(),
-    description: 'Restaurant Triad 1',
+    description: 'Restaurant ' + pairNum,
     variables: [
-      'var triad1',
+      `var ${pairNum}`,
       'var daytime;',
       'var triad1',
       'var coffeeroasteries;',
@@ -206,84 +82,23 @@ export let DETECTORS = {
       'var food_court;',
       'var bars;',
     ],
-    rules: ['(triad1 && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+    rules: [`(${pairNum} && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));`]
   },
 
-  gym_triad1: {
-    _id: '3XqHN8A4EpCZRpegS',
-    description: ' gym',
-    variables: ['var  gyms;',
-  'var triad1'],
-    rules: [' gyms && triad1;']
+  gymExp: {
+    _id: Random.id(),
+    description: 'Gym ' + pairNum,
+    variables: [
+      'var  gyms;',
+      `var ${pairNum}`
+    ],
+    rules: [`gyms && ${pairNum};`]
   },
 
   //  /////////////////////////////////////////////////////////
   
-  moodMeteorology_triad1:{
-    _id: Random.id(),
-    description: 'Moode Meteorology Triad 1',
-    variables: [
-      'var participatedInGroupCheers',
-      'var triad1',
-      'var daytime;'
-    ],
-    rules: ['(participatedInGroupCheers && triad1 && daytime)']
-  },
-  lifeJourneyMap_triad1: {
-    _id: Random.id(),
-    description: 'Life Journey Map Triad 1',
-    variables: [
-      'var participatedInMoodMeteorology',
-      'var participatedInDrinksTalk',
-      'var triad1',
-      'var publictransport;',
-      'var trainstations;',
-      'var trains;',
-    ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && (publictransport || trainstations || trains)')]
-  },
-  monsterCreate_triad1: {
-    _id: Random.id(),
-    description: 'Monster Create Triad 1',
-    variables: [
-      'var participatedInMoodMeteorology',
-      'var participatedInDrinksTalk',
-      'var triad1',
-      'var nighttime;'
-    ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
-  },
-  monsterStory_triad1: {
-    _id: Random.id(),
-    description: 'Monster Story Triad 1',
-    variables: [
-      'var participatedInMonsterCreate',
-      'var triad1',
-    ],
-    rules: [('participatedInMonsterCreate && triad1')]
-  },
-  nightTimeSpooks_triad1: {
-    _id: Random.id(),
-    description: 'Night Time Spooks Time Triad 1',
-    variables: [
-      'var participatedInMoodMeteorology',
-      'var participatedInDrinksTalk',
-      'var triad1',
-      'var daytime;'
-    ],
-    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && daytime')]
-  },
-  riddikulus_triad1: {
-    _id: Random.id(),
-    description: 'Riddikulus Triad 1',
-    variables: [
-      'var participatedInNightTimeSpooks',
-      'var completedNightTimeSpooks',
-      'var triad1;'
-    ],
-    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks && triad1')]
-  },
   /*end of progression triad 1*/
+  /*
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
@@ -694,6 +509,246 @@ export let DETECTORS = {
       "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
     ]
   },
+  eating_pizza: {
+    _id: "D5QSW6S4mNUsxZPq7",
+    description: "eating pizza",
+    variables: ["var pizza;"],
+    rules: ["(pizza);"]
+  },
+  big_bite_restaurant: {
+    _id : "kJQ8sCFbWddhMviMX",
+    description : "hand-held meals eaten with big bites",
+    variables : [
+      "var mexican;",
+      "var foodstands;",
+      "var cafes;",
+      "var delicatessen;",
+      "var driveintheater;",
+      "var cheesesteaks;",
+      "var hotdog;",
+      "var salvadoran;",
+      "var colombian;",
+      "var delis;",
+      "var wraps;",
+      "var hotdogs;",
+      "var burgers;",
+      "var tacos;",
+      "var tex_mex;",
+      "var newmexican;",
+      "var foodtrucks;",
+      "var bagels;",
+      "var comfortfood;",
+      "var sandwiches;",
+      "var argentine;",
+      "var bakeries;",
+      "var cuban;"
+    ],
+    rules : [
+      "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
+    ]
+  } */
+}
+};
+
+export const DETECTORS = {
+  pair1: createDetectors("pair1"),
+  pair2: createDetectors("pair2"),
+  pair3: createDetectors("pair3"),
+}
+
+
+/* graveyard
+  moodMeteorology_triad1:{
+    _id: Random.id(),
+    description: 'Moode Meteorology Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: ['(participatedInGroupCheers && triad1 && daytime)']
+  },
+  lifeJourneyMap_triad1: {
+    _id: Random.id(),
+    description: 'Life Journey Map Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var publictransport;',
+      'var trainstations;',
+      'var trains;',
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && (publictransport || trainstations || trains)')]
+  },
+  monsterCreate_triad1: {
+    _id: Random.id(),
+    description: 'Monster Create Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var nighttime;'
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && nighttime')]
+  },
+  monsterStory_triad1: {
+    _id: Random.id(),
+    description: 'Monster Story Triad 1',
+    variables: [
+      'var participatedInMonsterCreate',
+      'var triad1',
+    ],
+    rules: [('participatedInMonsterCreate && triad1')]
+  },
+  nightTimeSpooks_triad1: {
+    _id: Random.id(),
+    description: 'Night Time Spooks Time Triad 1',
+    variables: [
+      'var participatedInMoodMeteorology',
+      'var participatedInDrinksTalk',
+      'var triad1',
+      'var daytime;'
+    ],
+    rules: [('participatedInMoodMeteorology && participatedInDrinksTalk && triad1 && daytime')]
+  },
+  riddikulus_triad1: {
+    _id: Random.id(),
+    description: 'Riddikulus Triad 1',
+    variables: [
+      'var participatedInNightTimeSpooks',
+      'var completedNightTimeSpooks',
+      'var triad1;'
+    ],
+    rules: [('participatedInNightTimeSpooks && completedNightTimeSpooks && triad1')]
+  },
+  field: {
+    _id: 'XeepEbMjjW8yPzSAo',
+    description: 'fields',
+    variables: ['var stadiumsarenas;',
+      'var baseballfields;',
+      'var parks;',
+      'var playgrounds;'
+    ],
+    rules: ['stadiumsarenas || ((parks || playgrounds) || baseballfields);']
+  },
+  niceish_day: {
+    _id: 'x7EgLErQx3qmiemqt',
+    description: 'niceish_day',
+    variables: ['var clouds;', 'var clear;', 'var daytime;'],
+    rules: ['daytime && (clouds || clear);']
+  },
+  night: {
+    _id: 'Wth3TB9Lcf6me6vgy',
+    description: 'places where it\'s nighttime,',
+    variables: ['var nighttime;'],
+    rules: ['(nighttime);']
+  },
+  sunset: {
+    _id: '44EXNzHS7oD2rbF68',
+    description: 'places where it\'s sunset,',
+    variables: ['var sunset;'],
+    rules: ['(sunset);']
+  },
+  daytime: {
+    _id: 'tyZMZvPKkkSPR4FpG',
+    description: 'places where it\'s daytime,',
+    variables: ['var daytime;'],
+    rules: ['daytime;']
+  },
+  anytime: {
+    _id: Random.id(),
+    description: 'all times for testing',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;'
+    ],
+    rules: [('daytime || nighttime || sunset')]
+  },
+  anytime_triad2: {
+    _id: Random.id(),
+    description: 'all times for testing triad 2',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;',
+      'var triad2'
+    ],
+    rules: [('triad2 && (daytime || nighttime || sunset)')]
+  },
+  anytime_triad1: {
+    _id: Random.id(),
+    description: 'all times for testing triad1',
+    variables: [
+      'var daytime;',
+      'var nighttime;',
+      'var sunset;',
+      'var triad1'
+    ],
+    rules: [('triad1 && (daytime || nighttime || sunset)')]
+  },
+  //progression of triad 1 experience
+  strangers_triad1: {
+    _id: Random.id(),
+    description: 'strangers from triad1',
+    variables: [
+      'var stranger1',
+      'var stranger2',
+      'var triad1'
+    ],
+    rules: [('triad1 && (stranger1 || stranger2)')]
+  },
+  imitation_game_triad1:{
+    _id: Random.id(),
+    description: 'Imitation Game',
+    variables: [
+      'var imitationGameFlag',
+      'var triad1',
+      'var participatedInAppreciationStation;'
+    ],
+    rules: [('imitationGameFlag && triad1')]
+  },
+  group_cheers_triad1:{
+    _id: Random.id(),
+    description: 'Group Cheers triad 1',
+    variables: [
+      'var participatedInImitationGame',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+    ],
+    rules: ['(participatedInImitationGame && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  },
+  drinksTalk_triad1:{
+    _id: Random.id(),
+    description: 'Drinks Talk Triad 1',
+    variables: [
+      'var participatedInGroupCheers',
+      'var triad1',
+      'var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var cafeteria;',
+      'var food_court;',
+      'var bars;',
+    ],
+    rules: ['(participatedInGroupCheers && triad1 && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));']
+  }, // should be !participatedInGroupCheers
+
+
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
     description: "during 00:00",
@@ -838,42 +893,5 @@ export let DETECTORS = {
     variables: ["var hour;"],
     rules: ["hour == 23"]
   },
-  eating_pizza: {
-    _id: "D5QSW6S4mNUsxZPq7",
-    description: "eating pizza",
-    variables: ["var pizza;"],
-    rules: ["(pizza);"]
-  },
-  big_bite_restaurant: {
-    _id : "kJQ8sCFbWddhMviMX",
-    description : "hand-held meals eaten with big bites",
-    variables : [
-      "var mexican;",
-      "var foodstands;",
-      "var cafes;",
-      "var delicatessen;",
-      "var driveintheater;",
-      "var cheesesteaks;",
-      "var hotdog;",
-      "var salvadoran;",
-      "var colombian;",
-      "var delis;",
-      "var wraps;",
-      "var hotdogs;",
-      "var burgers;",
-      "var tacos;",
-      "var tex_mex;",
-      "var newmexican;",
-      "var foodtrucks;",
-      "var bagels;",
-      "var comfortfood;",
-      "var sandwiches;",
-      "var argentine;",
-      "var bakeries;",
-      "var cuban;"
-    ],
-    rules : [
-      "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
-    ]
-  }
-};
+
+*/

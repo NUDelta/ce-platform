@@ -323,12 +323,23 @@ def usersParkAndLibrary():
     setLocation(library, sys.argv[4])
     setLocation(library, sys.argv[5])
 
+def allUsersAtLibrary():
+    print(sys.argv)
+    setLocation(library, sys.argv[1])
+    setLocation(library, sys.argv[2])
+    setLocation(library, sys.argv[3]) 
+    setLocation(library, sys.argv[4])
+    setLocation(library, sys.argv[5]) 
+    setLocation(library, sys.argv[6])
+    print("users at library")
+
 if __name__ == "__main__":
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
 	# allUsersAtBars()
-	pairsAtParkLibraryGrocery()
+	# pairsAtParkLibraryGrocery()
+    allUsersAtLibrary()
     # usersParkAndLibrary()
     # garrettAndMegBump()
     # single user movement
