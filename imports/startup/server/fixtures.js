@@ -22,9 +22,11 @@ Meteor.startup(() => {
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
       clearDatabase();
-      createTestData();
+      // createTestData();
     }
   }
+
+  createTestData();
 });
 
 // In chrome browser console...
