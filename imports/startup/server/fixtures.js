@@ -81,10 +81,13 @@ function createTestExperiences(){
 
 function createTestData(){
   // add test users
-  Object.values(CONSTANTS.USERS).forEach(function (value) {
-    Accounts.createUser(value)
-  });
-  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+  if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
+    Object.values(CONSTANTS.USERS).forEach(function (value) {
+      Accounts.createUser(value)
+    });
+    log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+  }
+  
 
   // add detectors
   for (let i = 1; i < 4; i++){
