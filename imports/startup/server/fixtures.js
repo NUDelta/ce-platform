@@ -26,7 +26,12 @@ Meteor.startup(() => {
     }
   }
 
-  createTestData();
+  if(process.env.MODE === "PROD"){
+    clearDatabaseProd();
+    createTestData();
+  }
+
+  
 });
 
 // In chrome browser console...
@@ -65,6 +70,20 @@ function clearDatabase () {
   Detectors.remove({});
   Images.remove({});
   Avatars.remove({});
+}
+
+function clearDatabaseProd () {
+  // Meteor.users.remove({});
+  Experiences.remove({});
+  // Submissions.remove({});
+  // Availability.remove({});
+  // Messages.remove({});
+  Assignments.remove({});
+  // Locations.remove({});
+  Incidents.remove({});
+  Detectors.remove({});
+  // Images.remove({});
+  // Avatars.remove({});
 }
 
 function createTestExperiences(){
