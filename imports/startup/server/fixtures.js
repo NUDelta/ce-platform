@@ -26,7 +26,7 @@ Meteor.startup(() => {
     }
   }
 
-  // createTestData();
+  createTestData();
 });
 
 // In chrome browser console...
