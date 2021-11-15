@@ -25,6 +25,20 @@ const createDetectors = function (pairNum) {
     // rules: ['(triad2)']
   },
 
+  //second library exp detector if they
+  libraryExp2:{
+    _id: Random.id(),
+    description: 'Library2 ' + pairNum,
+    variables: [
+      'var participatedInLibraryExp',
+      'var libraries;',
+      'var usedbooks;',
+      'var bookstores;',
+      `var ${pairNum}`
+    ],
+    rules: [`${pairNum} && participatedInLibraryExp && (libraries || bookstores);`]
+  },
+
   // library_triad2:{
   //   _id: Random.id(),
   //   description: 'Library Triad 2',
@@ -70,7 +84,6 @@ const createDetectors = function (pairNum) {
     variables: [
       `var ${pairNum}`,
       'var daytime;',
-      'var triad1',
       'var coffeeroasteries;',
       'var coffee;',
       'var cafes;',

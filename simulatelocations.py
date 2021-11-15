@@ -333,13 +333,30 @@ def allUsersAtLibrary():
     setLocation(library, sys.argv[6])
     print("users at library")
 
+def halfUsersAtLibrary():
+    print(sys.argv)
+    setLocation(library, sys.argv[1])
+    setLocation(grocery, sys.argv[2])
+    setLocation(library, sys.argv[3]) 
+    setLocation(grocery, sys.argv[4])
+    setLocation(library, sys.argv[5]) 
+    setLocation(grocery, sys.argv[6])
+    print("half users at library, other half at grocery")
+
+def testLibraryExpInProd():
+    setLocation(library, "4TjybAcfzc6Rob4YX")  # user: mason
+    print("user at library")
+
+
 if __name__ == "__main__":
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
 	# allUsersAtBars()
 	# pairsAtParkLibraryGrocery()
-    allUsersAtLibrary()
+    # allUsersAtLibrary()
+    testLibraryExpInProd()
+    # halfUsersAtLibrary()
     # usersParkAndLibrary()
     # garrettAndMegBump()
     # single user movement

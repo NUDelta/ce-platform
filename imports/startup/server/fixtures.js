@@ -22,11 +22,11 @@ Meteor.startup(() => {
   if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
     if(CONFIG.DEBUG){
       clearDatabase();
-      // createTestData();
+      createTestData();
     }
   }
 
-  createTestData();
+  // createTestData();
 });
 
 // In chrome browser console...
@@ -81,12 +81,13 @@ function createTestExperiences(){
 
 function createTestData(){
   // add test users
-  if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
-    Object.values(CONSTANTS.USERS).forEach(function (value) {
+  Object.values(CONSTANTS.USERS).forEach(function (value) {
+    if (!Meteor.users.findOne({username: value.username})){
+      log.info(`username: ${value.username} not found, creating new account...`)
       Accounts.createUser(value)
-    });
-    log.info(`Populated ${ Meteor.users.find().count() } accounts`);
-  }
+    }
+  });
+  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
   
 
   // add detectors
@@ -112,10 +113,10 @@ function createTestData(){
   createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
-  let uid1 = findUserByUsername('zach')._id;
-  let uid2 = findUserByUsername('ryan')._id;
+  let uid1 = findUserByUsername('ryan')._id;
+  let uid2 = findUserByUsername('jenny')._id;
   let uid3 = findUserByUsername('mason')._id;
-  let uid4 = findUserByUsername('andrew')._id;
+  let uid4 = findUserByUsername('cindy')._id;
   let uid5 = findUserByUsername('josh')._id;
   let uid6 = findUserByUsername('nagy')._id;
 
@@ -126,8 +127,8 @@ function createTestData(){
   // let uid5 = findUserByUsername('sig2_mentor')._id;
   // let uid6 = findUserByUsername('sig2_mentee2')._id;
 
-  let olinuid1 = findUserByUsername('nagy')._id;
-  let olinuid2 = findUserByUsername('bonnie')._id;
+  // let olinuid1 = findUserByUsername('nagy')._id;
+  // let olinuid2 = findUserByUsername('bonnie')._id;
 
   Meteor.users.update({
     // everyone
@@ -149,9 +150,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': {
       "pair1":true,
-      "chat": false,
-      "stranger1": true
-      // "imitationGameFlag": true
     } },
   }, {
     multi: true
@@ -162,8 +160,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': { 
       "pair1":true, 
-      "chat": false, 
-      // "friend": true 
     } },
   }, {
     multi: true
@@ -174,8 +170,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': { 
       "pair2":true, 
-      "chat": false, 
-    // "stranger2": true
   } },
   }, {
     multi: true
@@ -187,7 +181,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': { 
       "pair2":true, 
-      "chat": false, 
       // "stranger": true 
     } },
   }, {
@@ -199,7 +192,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': { 
       "pair3":true, 
-      "chat": false, 
       // "friend": true 
     } },
   }, {
@@ -211,7 +203,6 @@ function createTestData(){
   }, {
     $set: { 'profile.staticAffordances': { 
       "pair3":true, 
-      "chat": false, 
       // "stranger2": true
     } },
   }, {
