@@ -5,6 +5,68 @@ import {DETECTORS} from "../DETECTORS";
 
 
 // new experiences ///////////////////////////////////////////////////////
+
+export const createSelfIntro = function (pairNum) {
+  const selfIntroCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInSelfIntro']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You have completed the self intro! Tap here to see your results.'; //how do I change this so that it doesn't show up until both people finish?
+
+    sendSystemMessage(message, participants, route); 
+    notify(participants, sub.iid, 'See images from your self intro!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Self Introduction',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : "SelfIntro",
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS[pairNum].selfIntroExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Welcome to collective experience study!",
+          instruction : "Say hello to your partner for the next 4 days! \
+          Share a picture of yourself or something that's representative of you, and tell your partner about yourself!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your new friend!',
+    notificationText: 'Share your experience with your new friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('SelfIntro'))`,
+        function: selfIntroCompleteCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
 export const createWalk = function (pairNum) {
   const walkCompleteCallback = function (sub) {
     let submissions = Submissions.find({
@@ -47,15 +109,15 @@ export const createWalk = function (pairNum) {
           instruction : "Pick out and take a picture of a piece of nature around you that makes you happy! Caption your picture with what about it sparks joy"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
-        numberAllowedToParticipateAtSameTime: 3,
+        notificationDelay : 60,
+        numberAllowedToParticipateAtSameTime: 1,
         allowRepeatContributions : false
       }
     ],
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('walk'))`,
+        trigger: `(cb.needFinished('Walk'))`,
         function: walkCompleteCallback.toString(),
       }
     ],
@@ -108,7 +170,7 @@ export const createLibraryExp = function (pairNum) {
           instruction : "Working on something outside home? Show us something cool (or motivating) around your study space that is keeping you going (or focused)? Caption it with why it motivates you!"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -116,7 +178,7 @@ export const createLibraryExp = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('library'))`,
+        trigger: `(cb.needFinished('Library'))`,
         function: libraryExpCompleteCallback.toString(),
       }
     ],
@@ -168,7 +230,7 @@ export const createGroceriesExp = function (pairNum) {
           instruction : "What is your game plan for shopping for food? Show us what ingredients you’re using! Caption your picture with your plan!"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -228,7 +290,7 @@ export const createRestaurantExp = function (pairNum) {
           instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -273,7 +335,7 @@ export const createGymExp = function (pairNum) {
   }
 
   let experience = {
-    name: 'Group Bumped - gym',
+    name: 'Group Bumped - Gym',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -288,7 +350,7 @@ export const createGymExp = function (pairNum) {
           instruction : "How was your workout session today? What keeps you motivated to workout and why? Take a picture of the gym or your motivation and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -348,7 +410,7 @@ export const createLibraryExp2 = function (pairNum) {
           instruction : "Coming to the library again? Do you prefer to study at the library or somewhere else? Take a picture of your seat and share your favorite study spot with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 1,
+        notificationDelay : 90,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -370,6 +432,7 @@ export const createLibraryExp2 = function (pairNum) {
 
 const creatPairExperience = function(pairNum) {
   return {
+    selfIntroExperience: createSelfIntro(pairNum),
     walkExperience: createWalk(pairNum),
     libraryExperience: createLibraryExp(pairNum),
     groceriesExperience: createGroceriesExp(pairNum),
@@ -380,7 +443,10 @@ const creatPairExperience = function(pairNum) {
 export default PAIR_EXPERIENCES = {
   pair1: creatPairExperience("pair1"),
   pair2: creatPairExperience("pair2"),
-  pair3: creatPairExperience("pair3")
+  pair3: creatPairExperience("pair3"),
+  pair4: creatPairExperience("pair4"),
+  pair5: creatPairExperience("pair5"),
+  pair6: creatPairExperience("pair6")
 }
 
 

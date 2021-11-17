@@ -1,6 +1,17 @@
 const createDetectors = function (pairNum) {
   return {
   // new detector for walk /////////////////////////////////////
+  selfIntroExp:{
+    _id: Random.id(),
+    description: 'SelfIntro ' + pairNum,
+    variables: [
+      `var ${pairNum}`,
+      'var participatedInSelfIntro'
+    ],
+    rules: [`${pairNum} && !participatedInSelfIntro`]
+    // rules: ['(triad1)']
+  },
+
   walkExp:{
     _id: Random.id(),
     description: 'Walk ' + pairNum,
@@ -567,6 +578,9 @@ export const DETECTORS = {
   pair1: createDetectors("pair1"),
   pair2: createDetectors("pair2"),
   pair3: createDetectors("pair3"),
+  pair4: createDetectors("pair4"),
+  pair5: createDetectors("pair5"),
+  pair6: createDetectors("pair6")
 }
 
 

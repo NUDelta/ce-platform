@@ -44,31 +44,93 @@ export let USERS = {
       }
     }
   },
-  josh: {
-    username: 'josh',
-    email: 'josh@email.com',
+  garret: {
+    username: 'garret',
+    email: 'garret@email.com',
     password: 'password',
     profile: {
-      firstName: 'Josh',
-      lastName: 'Shi',
+      firstName: 'Garret',
+      lastName: 'Hedman',
       staticAffordances: {
-        // pair3: true,
-        // participatedInWalk: true
       }
     }
   },
-  nagy: {
-    username: 'nagy',
-    email: 'nagy@email.com',
+  fardeem: {
+    username: 'fardeem',
+    email: 'fardeem@email.com',
     password: 'password',
     profile: {
-      firstName: 'Nagy',
-      lastName: 'Hakim',
+      firstName: 'Fardeem',
+      lastName: 'Munir',
       staticAffordances: {
-        // pair3: true,
-        // participatedInWalk: true
       }
     }
   },
+  connie: {
+    username: 'connie',
+    email: 'connie@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Connie',
+      lastName: 'Chau',
+      staticAffordances: {
+      }
+    }
+  },
+  DTR2: {
+    username: 'DTR2',
+    email: 'dtr2@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Jonathan',
+      lastName: 'Liu',
+      staticAffordances: {
+      }
+    }
+  },
+  shubhanshi: {
+    username: 'shubhanshi',
+    email: 'shubhanshi@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Shubhanshi',
+      lastName: 'Gaudani',
+      staticAffordances: {
+      }
+    }
+  },
+  jonathan: {
+    username: 'jonathan',
+    email: 'jonathan@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Jonathan',
+      lastName: 'Liu',
+      staticAffordances: {
+      }
+    }
+  },
+  evey: {
+    username: 'evey',
+    email: 'evey@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Evey',
+      lastName: 'Huang',
+      staticAffordances: {
+      }
+    }
+  },
+  DTR4: {
+    username: 'DTR4',
+    email: 'dtr4@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Jonathan',
+      lastName: 'Liu',
+      staticAffordances: {
+      }
+    }
+  }
 
 };
