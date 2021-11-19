@@ -9,6 +9,7 @@ burgers = (42.046131, -87.681559)
 # grocery = (42.047621, -87.679488)
 grocery = (42.047604700619246, -87.6791521822815) 
 grocery2 = (42.039818,-87.680088)
+grocery_dnd = (42.058715179924675, -87.68319437996105)
 coffee = (42.046881, -87.679555)
 # beer = (42.047105, -87.682006)
 bars = (42.046251, -87.680547)
@@ -218,6 +219,9 @@ def allUsersAtRestaurant():
     setLocation(burgers, sys.argv[1])
     setLocation(burgers, sys.argv[2])
     setLocation(burgers, sys.argv[3])
+    setLocation(burgers, sys.argv[4])
+    setLocation(burgers, sys.argv[5])
+    setLocation(burgers, sys.argv[6])
     print("all users at burgers")
 
 
@@ -333,6 +337,16 @@ def allUsersAtLibrary():
     setLocation(library, sys.argv[6])
     print("users at library")
 
+def allUsersAtDnD():
+    print(sys.argv)
+    setLocation(grocery_dnd, sys.argv[1])
+    setLocation(grocery_dnd, sys.argv[2])
+    setLocation(grocery_dnd, sys.argv[3]) 
+    setLocation(grocery_dnd, sys.argv[4])
+    setLocation(grocery_dnd, sys.argv[5]) 
+    setLocation(grocery_dnd, sys.argv[6])
+    print("users at DnD")
+
 def halfUsersAtLibrary():
     print(sys.argv)
     setLocation(library, sys.argv[1])
@@ -354,7 +368,8 @@ if __name__ == "__main__":
     #allUsersAtTrain()
 	# allUsersAtBars()
 	# pairsAtParkLibraryGrocery()
-    allUsersAtLibrary()
+    # allUsersAtLibrary()
+    allUsersAtDnD()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()
     # usersParkAndLibrary()

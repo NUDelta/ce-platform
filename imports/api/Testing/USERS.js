@@ -45,67 +45,67 @@ export let USERS = {
     }
   },
   garret: {
-    username: 'garret',
-    email: 'garret@email.com',
+    username: 'chris',
+    email: 'chris@email.com',
     password: 'password',
     profile: {
-      firstName: 'Garret',
-      lastName: 'Hedman',
+      firstName: 'Chris', //Garret
+      lastName: 'Song', //hedman
       staticAffordances: {
       }
     }
   },
   fardeem: {
-    username: 'fardeem',
-    email: 'fardeem@email.com',
+    username: 'richard',
+    email: 'richard@email.com',
     password: 'password',
     profile: {
-      firstName: 'Fardeem',
-      lastName: 'Munir',
+      firstName: 'Richard', //fardeem
+      lastName: 'Lam', //munir
       staticAffordances: {
       }
     }
   },
   connie: {
-    username: 'connie',
-    email: 'connie@email.com',
+    username: 'amy',
+    email: 'amy@email.com',
     password: 'password',
     profile: {
-      firstName: 'Connie',
-      lastName: 'Chau',
+      firstName: 'Amy', //connie
+      lastName: 'Guo', //chau
       staticAffordances: {
       }
     }
   },
   DTR2: {
-    username: 'DTR2',
-    email: 'dtr2@email.com',
+    username: 'chase',
+    email: 'chase@email.com',
     password: 'password',
     profile: {
-      firstName: 'Jonathan',
-      lastName: 'Liu',
+      firstName: 'Chase',
+      lastName: 'Duvall',
       staticAffordances: {
       }
     }
   },
   shubhanshi: {
-    username: 'shubhanshi',
-    email: 'shubhanshi@email.com',
+    username: 'will',
+    email: 'will@email.com',
     password: 'password',
     profile: {
-      firstName: 'Shubhanshi',
-      lastName: 'Gaudani',
+      firstName: 'Will',
+      lastName: 'Hoffmann',
       staticAffordances: {
       }
     }
   },
   jonathan: {
-    username: 'jonathan',
-    email: 'jonathan@email.com',
+    username: 'eric',
+    email: 'eric@email.com',
     password: 'password',
     profile: {
-      firstName: 'Jonathan',
-      lastName: 'Liu',
+      firstName: 'Eric',
+      lastName: 'Ma',
       staticAffordances: {
       }
     }
@@ -126,8 +126,8 @@ export let USERS = {
     email: 'dtr4@email.com',
     password: 'password',
     profile: {
-      firstName: 'Jonathan',
-      lastName: 'Liu',
+      firstName: 'DTR',
+      lastName: '4',
       staticAffordances: {
       }
     }

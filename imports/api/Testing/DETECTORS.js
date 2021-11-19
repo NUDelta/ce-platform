@@ -50,6 +50,18 @@ const createDetectors = function (pairNum) {
     rules: [`${pairNum} && participatedInLibraryExp && (libraries || bookstores);`]
   },
 
+  publicTransportExp: {
+    _id: Random.id(),
+    description: 'Public Transport ' + pairNum,
+    variables: [
+      'var publictransport;', 
+      'var trainstations;', 
+      'var trains;',
+      `var ${pairNum}`
+    ],
+    rules: [`${pairNum} && (trainstations || trains || publictransport);`]
+  },
+
   // library_triad2:{
   //   _id: Random.id(),
   //   description: 'Library Triad 2',
@@ -83,9 +95,9 @@ const createDetectors = function (pairNum) {
       'var publicmarkets;',
       `var ${pairNum}`
     ],
-    rules: [`(${pairNum} && (intlgrocery || ethicgrocery) || ((markets || wholesalers) || ((pharmacy || grocery) || \
-    ((farmersmarket || convenience) || ((importedfood || herbsandspices) || ((drugstores || seafoodmarkets) || \
-    ((organic_stores || publicmarkets) || marketstalls)))))));`]
+    rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
+    farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
+    organic_stores || publicmarkets || marketstalls));`]
     // rules: ['(triad3)']
   },
 
@@ -94,7 +106,7 @@ const createDetectors = function (pairNum) {
     description: 'Restaurant ' + pairNum,
     variables: [
       `var ${pairNum}`,
-      'var daytime;',
+      // 'var daytime;',
       'var coffeeroasteries;',
       'var coffee;',
       'var cafes;',
@@ -105,8 +117,9 @@ const createDetectors = function (pairNum) {
       'var cafeteria;',
       'var food_court;',
       'var bars;',
+      'var cocktailbars;'
     ],
-    rules: [`(${pairNum} && daytime && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars));`]
+    rules: [`(${pairNum} && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
   },
 
   gymExp: {

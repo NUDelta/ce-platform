@@ -38,7 +38,7 @@ export const createSelfIntro = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "SelfIntro",
+        needName : `SelfIntro_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].selfIntroExp),
           number : 1 
@@ -57,7 +57,7 @@ export const createSelfIntro = function (pairNum) {
     description: 'Share your experience with your new friend!',
     notificationText: 'Share your experience with your new friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('SelfIntro'))`,
+        trigger: `(cb.needFinished('SelfIntro_${pairNum}'))`,
         function: selfIntroCompleteCallback.toString(),
       }
     ],
@@ -99,7 +99,7 @@ export const createWalk = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Walk",
+        needName : `Walk_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].walkExp),
           number : 1 
@@ -117,7 +117,7 @@ export const createWalk = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('Walk'))`,
+        trigger: `(cb.needFinished('Walk_${pairNum}'))`,
         function: walkCompleteCallback.toString(),
       }
     ],
@@ -160,7 +160,7 @@ export const createLibraryExp = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Library",
+        needName : `Library_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].libraryExp),
           number : 1
@@ -178,7 +178,7 @@ export const createLibraryExp = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('Library'))`,
+        trigger: `(cb.needFinished('Library_${pairNum}'))`,
         function: libraryExpCompleteCallback.toString(),
       }
     ],
@@ -220,7 +220,7 @@ export const createGroceriesExp = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Groceries",
+        needName : `Groceries_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].groceriesExp),
           number : 1
@@ -238,7 +238,7 @@ export const createGroceriesExp = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('groceries'))`,
+        trigger: `(cb.needFinished('Groceries_${pairNum}'))`,
         function: groceriesExpCompleteCallback.toString(),
       }
     ],
@@ -280,7 +280,7 @@ export const createRestaurantExp = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Restaurant",
+        needName : `Restaurant_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].restaurantExp),
           number : 1
@@ -298,7 +298,7 @@ export const createRestaurantExp = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('restaurant'))`,
+        trigger: `(cb.needFinished('Restaurant_${pairNum}'))`,
         function: restaurantExpCompleteCallback.toString(),
       }
     ],
@@ -340,7 +340,7 @@ export const createGymExp = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "gym",
+        needName : `Gym_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].gymExp),
           number : 1
@@ -358,7 +358,7 @@ export const createGymExp = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('gym'))`,
+        trigger: `(cb.needFinished('Gym_${pairNum}'))`,
         function: gymExpCompleteCallback.toString(),
       }
     ],
@@ -400,7 +400,7 @@ export const createLibraryExp2 = function (pairNum) {
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : "Library",
+        needName : `Library2_${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].libraryExp2),
           number : 1
@@ -418,8 +418,68 @@ export const createLibraryExp2 = function (pairNum) {
     description: 'Share your experience with your friend and their friend!',
     notificationText: 'Share your experience with your friend and their friend!',
     callbacks: [{
-        trigger: `(cb.needFinished('library'))`,
+        trigger: `(cb.needFinished('Library2_${pairNum}'))`,
         function: libraryExpCompleteCallback2.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createPublicTransportExp = function (pairNum) {
+  const publicTransportExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInPublicTransportExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Public Transportation experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from your public transportation experience!', '', route);
+  }
+
+  let experience = {
+    name: 'Group Bumped - Public Transportation',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `PublicTransport_${pairNum}`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS[pairNum].publicTransportExp),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Where are you going?",
+          instruction : "Take a picture of the view outside the window and share where you are heading to today! What do you do to pass time on public transportation and why?"
+        },
+        numberNeeded : 2,
+        notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your experience with your friend and their friend!',
+    notificationText: 'Share your experience with your friend and their friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('PublicTransport_${pairNum}'))`,
+        function: publicTransportExpCompleteCallback.toString(),
       }
     ],
     allowRepeatContributions: false,
@@ -436,7 +496,8 @@ const creatPairExperience = function(pairNum) {
     walkExperience: createWalk(pairNum),
     libraryExperience: createLibraryExp(pairNum),
     groceriesExperience: createGroceriesExp(pairNum),
-    restaurantExperience: createRestaurantExp(pairNum)
+    restaurantExperience: createRestaurantExp(pairNum),
+    publicTransportExperience: createPublicTransportExp(pairNum)
   }
 }
 
