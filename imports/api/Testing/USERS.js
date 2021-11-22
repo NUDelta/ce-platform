@@ -78,12 +78,12 @@ export let USERS = {
     }
   },
   DTR2: {
-    username: 'dtr2',
+    username: 'DTR2',
     email: 'dtr2@email.com',
     password: 'password',
     profile: {
-      firstName: 'dtr2',
-      lastName: 'dtr2',
+      firstName: 'DTR',
+      lastName: '2',
       staticAffordances: {
       }
     }
