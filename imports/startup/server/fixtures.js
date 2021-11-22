@@ -7,7 +7,7 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Messages } from '../../api/Messages/messages.js';
 import { Submissions } from "../../api/OCEManager/currentNeeds";
-import { Assignments, Availability } from "../../api/OpportunisticCoordinator/databaseHelpers";
+import { Assignments, Availability, ParticipatingNow } from "../../api/OpportunisticCoordinator/databaseHelpers";
 import { Images, Avatars } from '../../api/ImageUpload/images.js';
 import { log } from '../../api/logs.js';
 
@@ -70,6 +70,7 @@ function clearDatabase () {
   Detectors.remove({});
   Images.remove({});
   Avatars.remove({});
+  ParticipatingNow.remove({});
 }
 
 function clearDatabaseProd () {
@@ -90,6 +91,21 @@ function createTestExperiences(){
   for (let i = 1; i < 7; i++){
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
+      let need = value.contributionTypes[0].needName;
+      console.log("need before: "+ need)
+      need = need.replace("1", "Z");
+      need = need.replace("I", "Z");
+      need = need.replace("O", "Z");
+      need = need.replace("U", "Z");
+      need = need.replace("V", "Z");
+      need = need.replace("l", "Z");
+      for (let i = need.length; i < 17; i++){
+        need = need + "e";
+        // need.append("e");SelfIntropair1eeee
+        //b6rKibtKGvm9FRD67
+      }
+      console.log("need after: "+ need);
+      value._id = need;
         Experiences.insert(value);
         let incident = createIncidentFromExperience(value);
         startRunningIncident(incident);

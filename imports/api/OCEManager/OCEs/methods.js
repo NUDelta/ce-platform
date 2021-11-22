@@ -480,7 +480,20 @@ export const updateRunningIncident = (incident) => {
  * @param experience {object} of the created incident
  */
 export const createIncidentFromExperience = (experience) => {
+  let need = experience.contributionTypes[0].needName;
+      console.log("incident need before: "+ need)
+      need = need.replace("1", "Z");
+      need = need.replace("I", "Z");
+      need = need.replace("O", "Z");
+      need = need.replace("U", "Z");
+      need = need.replace("V", "Z");
+      need = need.replace("l", "Z");
+      for (let i = need.length; i < 17; i++){
+        need = need + "i";
+      }
+      console.log("incident need after: "+ need);
   let incident = {
+    _id: need,
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
