@@ -77,7 +77,7 @@ function clearDatabaseProd () {
   // Meteor.users.remove({});
   Experiences.remove({});
   // Submissions.remove({});
-  // Availability.remove({});
+  Availability.remove({});
   // Messages.remove({});
   Assignments.remove({});
   // Locations.remove({});
@@ -92,7 +92,7 @@ function createTestExperiences(){
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
       let need = value.contributionTypes[0].needName;
-      console.log("need before: "+ need)
+      // console.log("need before: "+ need)
       need = need.replace("1", "Z");
       need = need.replace("I", "Z");
       need = need.replace("O", "Z");
@@ -104,7 +104,7 @@ function createTestExperiences(){
         // need.append("e");SelfIntropair1eeee
         //b6rKibtKGvm9FRD67
       }
-      console.log("need after: "+ need);
+      // console.log("need after: "+ need);
       value._id = need;
         Experiences.insert(value);
         let incident = createIncidentFromExperience(value);
@@ -155,11 +155,11 @@ function createTestData(){
   let uid5 = findUserByUsername('garret')._id;
   let uid6 = findUserByUsername('fardeem')._id;
   let uid7 = findUserByUsername('connie')._id;
-  let uid8 = findUserByUsername('DTR2')._id;
+  let uid8 = findUserByUsername('dtr2')._id;
   let uid9 = findUserByUsername('shubhanshi')._id;
   let uid10 = findUserByUsername('jonathan')._id;
   let uid11 = findUserByUsername('evey')._id;
-  let uid12 = findUserByUsername('DTR4')._id;
+  let uid12 = findUserByUsername('dtr4')._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
   // let uid2 = findUserByUsername('sig1_mentor')._id;

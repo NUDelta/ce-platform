@@ -114,7 +114,7 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
   let need = getNeedFromIncidentId(iid, needName);
   if (!need) {
-    serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
+    // serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
     return false;
   } else {
     let detectorUniqueKey = need.situation.detector;
@@ -481,7 +481,7 @@ export const updateRunningIncident = (incident) => {
  */
 export const createIncidentFromExperience = (experience) => {
   let need = experience.contributionTypes[0].needName;
-      console.log("incident need before: "+ need)
+      // console.log("incident need before: "+ need)
       need = need.replace("1", "Z");
       need = need.replace("I", "Z");
       need = need.replace("O", "Z");
@@ -491,7 +491,7 @@ export const createIncidentFromExperience = (experience) => {
       for (let i = need.length; i < 17; i++){
         need = need + "i";
       }
-      console.log("incident need after: "+ need);
+      // console.log("incident need after: "+ need);
   let incident = {
     _id: need,
     eid: experience._id,
