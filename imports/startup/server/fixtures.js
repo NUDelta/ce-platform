@@ -155,11 +155,11 @@ function createTestData(){
   let uid5 = findUserByUsername('garret')._id;
   let uid6 = findUserByUsername('fardeem')._id;
   let uid7 = findUserByUsername('connie')._id;
-  let uid8 = findUserByUsername('dtr2')._id;
+  let uid8 = findUserByUsername('DTR2')._id;
   let uid9 = findUserByUsername('shubhanshi')._id;
   let uid10 = findUserByUsername('jonathan')._id;
   let uid11 = findUserByUsername('evey')._id;
-  let uid12 = findUserByUsername('dtr4')._id;
+  let uid12 = findUserByUsername('DTR4')._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
   // let uid2 = findUserByUsername('sig1_mentor')._id;
