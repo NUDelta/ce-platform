@@ -116,11 +116,6 @@ function createTestData(){
       Detectors.insert(value);
     });
   }
-  // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-  //   pair.forEach(function (value) {
-  //     Detectors.insert(value);
-  //   });
-  // })
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 
 
