@@ -85,6 +85,7 @@ function clearDatabaseProd () {
   Detectors.remove({});
   // Images.remove({});
   // Avatars.remove({});
+  ParticipatingNow.remove({});
 }
 
 function createTestExperiences(){
