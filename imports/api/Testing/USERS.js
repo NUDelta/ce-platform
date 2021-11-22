@@ -45,67 +45,67 @@ export let USERS = {
     }
   },
   garret: {
-    username: 'chris',
-    email: 'chris@email.com',
+    username: 'garret',
+    email: 'garret@email.com',
     password: 'password',
     profile: {
-      firstName: 'Chris', //Garret
-      lastName: 'Song', //hedman
+      firstName: 'Garret', //Garret
+      lastName: 'Hedman', //hedman
       staticAffordances: {
       }
     }
   },
   fardeem: {
-    username: 'richard',
-    email: 'richard@email.com',
+    username: 'fardeem',
+    email: 'fardeem@email.com',
     password: 'password',
     profile: {
-      firstName: 'Richard', //fardeem
-      lastName: 'Lam', //munir
+      firstName: 'Fardeem', //fardeem
+      lastName: 'Munir', //munir
       staticAffordances: {
       }
     }
   },
   connie: {
-    username: 'amy',
-    email: 'amy@email.com',
+    username: 'connie',
+    email: 'connie@email.com',
     password: 'password',
     profile: {
-      firstName: 'Amy', //connie
-      lastName: 'Guo', //chau
+      firstName: 'Connie', //connie
+      lastName: 'Chau', //chau
       staticAffordances: {
       }
     }
   },
   DTR2: {
-    username: 'chase',
-    email: 'chase@email.com',
+    username: 'dtr2',
+    email: 'dtr2@email.com',
     password: 'password',
     profile: {
-      firstName: 'Chase',
-      lastName: 'Duvall',
+      firstName: 'dtr2',
+      lastName: 'dtr2',
       staticAffordances: {
       }
     }
   },
   shubhanshi: {
-    username: 'will',
-    email: 'will@email.com',
+    username: 'shubhanshi',
+    email: 'shubhanshi@email.com',
     password: 'password',
     profile: {
-      firstName: 'Will',
-      lastName: 'Hoffmann',
+      firstName: 'Shubhanshi',
+      lastName: 'Gaudani',
       staticAffordances: {
       }
     }
   },
   jonathan: {
-    username: 'eric',
-    email: 'eric@email.com',
+    username: 'jonathan',
+    email: 'jonathan@email.com',
     password: 'password',
     profile: {
-      firstName: 'Eric',
-      lastName: 'Ma',
+      firstName: 'Jonathan',
+      lastName: 'Liu',
       staticAffordances: {
       }
     }
