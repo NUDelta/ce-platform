@@ -122,7 +122,7 @@ export let USERS = {
     }
   },
   DTR4: {
-    username: 'dtr4',
+    username: 'DTR4',
     email: 'dtr4@email.com',
     password: 'password',
     profile: {
