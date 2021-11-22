@@ -2,7 +2,7 @@ const createDetectors = function (pairNum) {
   return {
   // new detector for walk /////////////////////////////////////
   selfIntroExp:{
-    _id: Random.id(),
+    _id: "decSelfIntro" + pairNum,
     description: 'SelfIntro ' + pairNum,
     variables: [
       `var ${pairNum}`,
