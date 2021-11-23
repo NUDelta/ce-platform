@@ -682,42 +682,141 @@ Template.survivingThriving.helpers({
   },
   castCategories(){
     //To-do: access castCategories
-    let castCategories = ['thriving', 'surviving'];
+    // let castCategories = ['thriving', 'surviving'];
+    
+    // let castCategories = ['😃','🙏','😌','😬', '😫', '😢'];
+    let castCategories = ['Similar', 'Different']
     // console.log("Time " + Date.now());
     return castCategories;
   },
   timeBlocks(){
     // let timeBlocks = ['12 AM', '2 AM', '4 AM', '6 AM', '8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', 'End of Day'];
     // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    let timeBlocks = [0, 1, 2, 3, 4, 5, 6];
+    // let timeBlocks = [0, 1, 2, 3, 4, 5, 6];
+    let timeBlocks = [0, 1, 2];
     return timeBlocks;
   },
   subByCastCategory(cat, block){
     // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     //submissions by category --> all thriving submission
     // console.log("block ", block);
-    if (cat === "thriving") {
-      cat = "WOOOO 🥳";
-    }
-    else if (cat === "surviving") {
-      cat = "BOOOO 👎";
-    }
+
+    // find submission in database with user id then find the emotion correlated with the userid to check if the current cat is that
+    // find all posts by the current user and find all the emotions but pick the most recent...?
+    let user_emotions = Submissions.find({ 
+      uid: Meteor.userId()
+    }).fetch().map(function (x) {
+      return x.castCategory;
+    });
+
+    let current_emotion = user_emotions[0]
+   
+ 
+    // if (cat === "happy") {
+    //   cat = "😃";
+    // }
+    // else if (cat === "relieved"){
+    //   cat = "😌"
+    // }
+    // else if (cat === "hopeful"){
+    //   cat = "🙏"
+    // }
+    // else if (cat === "exhausted") {
+    //   cat = "😫";
+    // }
+    // else if (cat === "anxious"){
+    //   cat = "😬"
+    // }
+    // else if (cat === "sad"){
+    //   cat = "😢"
+    // }
+
+    // if (cat === 'Similar'){
+    //   cat = true
+    // }
+    // else{
+    //   cat = false
+    // }
+
     let subsByCat = this.submissions.filter(function(sub){
+      // console.log("BLOCKKKKK", block);
       
       // let day = block.substr(0, 3);
       // console.log("cat ", cat);
       // console.log("sub ", sub.castCategory);
       // && (sub.timestamp === day)
 
-      if ((sub.castCategory === cat) && (sub.timestamp.getDay() === block)) {
-        return sub;
-      }
+      // if sub.castCategory is 'similar' and if cat is the same as the user's emotion 
+      // elif sub.castCategory is 'different'' and if cat is not the same as the user's emotion
+
+      // before
+      console.log('SUB', sub.castCategory)
+      console.log(sub.castCategory === current_emotion)
+      // if (sub){
+
+        // check if it's the first time block and it's a Sunday, Monday, or Tuesday
+        if (block === 0 && (sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2))){
+          if ((cat === 'Similar') && sub.castCategory === current_emotion){ // if we are in 'Similar' column and same emotion
+            console.log("SHOULD RETURN THIS HERE", sub)
+            return sub
+          }
+          else if ((cat === 'Different') && (sub.castCategory !== current_emotion)){ // if 'Different' column and different emotion
+            return sub
+          }
+        }
+
+        // second time block and Wednesday or Thursday
+        else if ((block === 1) && ((sub.timestamp.getDay() === 3) || (sub.timestamp.getDay() === 4))){
+          if ((cat === 'Similar') && sub.castCategory === current_emotion){
+            return sub
+          }
+          else if ((cat === 'Different') && (sub.castCategory !== current_emotion)){
+            return sub
+          }
+        }
+
+        // third time block and Friday or Saturday
+        else if ((block === 2) && ((sub.timestamp.getDay() === 5) || (sub.timestamp.getDay() === 6))){
+          if ((cat === 'Similar') && sub.castCategory === current_emotion){
+            return sub
+          }
+          else if ((cat === 'Different') && (sub.castCategory !== current_emotion)){
+            return sub
+          }
+        }
+
+      // }
+      
+
+
+      // if ((sub.castCategory === cat) && (block === 0) && ((sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2)))) {
+      // // console.log("BBBBBLOOOCKKK", getTimeBlock(block))
+      // // if ((sub.castCategory === cat) && (block.includes(sub.timestamp.getDay().toString()))) {
+      // // if ((sub.castCategory === cat) && (1 === block)) {
+      //   return sub;
+      // }
+      // else if ((sub.castCategory === cat) && (block === 1) && ((sub.timestamp.getDay() === 3) || (sub.timestamp.getDay() === 4))) {
+      //   // console.log("BBBBBLOOOCKKK", getTimeBlock(block))
+      //   // if ((sub.castCategory === cat) && (block.includes(sub.timestamp.getDay().toString()))) {
+      //   // if ((sub.castCategory === cat) && (1 === block)) {
+      //   return sub;
+      // }
+      // else if ((sub.castCategory === cat) && (block === 2) && ((sub.timestamp.getDay() === 5) || (sub.timestamp.getDay() === 6))) {
+      //   // console.log("BBBBBLOOOCKKK", getTimeBlock(block))
+      //   // if ((sub.castCategory === cat) && (block.includes(sub.timestamp.getDay().toString()))) {
+      //   // if ((sub.castCategory === cat) && (1 === block)) {
+      //   return sub;
+      // }
     });
-    // console.log("sub ", subsByCat);
+    
+    console.log("DOES IT NOT GET HERE HWY")
+    console.log("sub ", subsByCat);
     return subsByCat;
   },
   getTimeBlock(block) {
-    let timeBlocks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // let timeBlocks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // let timeBlocks = ['012', '34', '56'];
+    let timeBlocks = ['Before', 'During', 'After']
     return timeBlocks[block];
   },
   getCast(cast) {
@@ -745,6 +844,24 @@ Template.survivingThriving.helpers({
   },
   getTimeStamp(sub){
     return sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  },
+  getEmotion(sub){
+    console.log('in get emotion')
+    console.log(sub)
+    if (sub.castDescription === undefined){
+      console.log('in if')
+      let fullname = this.users.filter(function(user){
+        if (user._id === sub.uid) {
+          return user;
+        }
+      });
+      let placeholder = fullname[0].profile.firstName  + " is feeling " + sub.castCategory + " .";
+      return placeholder;
+    }
+    else{
+      console.log(sub.castDescription)
+      return "\"" + sub.castDescription + "\"";
+    }
   },
   getSentence(sub){
     console.log('in get sentence')

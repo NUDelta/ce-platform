@@ -65,7 +65,8 @@ export const createInitialSubmission = function(submission) {
         timestamp: submission.timestamp,
         lat: submission.lat,
         lng: submission.lng,
-        castCategory: submission.castCategory
+        castCategory: submission.castCategory,
+        castDescription: submission.castDescription
       }
     },
     (err) => {

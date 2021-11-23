@@ -499,6 +499,18 @@ export let DETECTORS = {
       "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
     ]
   },
+  // beginning_story: {
+  //   _id: Random.id(),
+  //   description: "beginning story",
+  //   variables: ["var day;"],
+  //   rules: ["(monday || tuesday)"]
+  // },
+  // beginning_library: {
+  //   _id: Random.id(),
+  //   description: "beginning story",
+  //   variables: ["var monday; var tuesday; var library;"],
+  //   rules: ["(monday || tuesday) && library"]
+  // },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
     description: "during 00:00",

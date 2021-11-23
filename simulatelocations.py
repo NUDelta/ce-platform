@@ -318,8 +318,8 @@ def testingSeniorFinals():
 if __name__ == "__main__":
     # allUsersGrocery()
 	#allUsersCoffee()
-    testingSeniorFinals()
-	# allUsersAtBars()
+    # testingSeniorFinals()
+	allUsersAtBars()
 	#allUsersAtPark()
     # garrettAndMegBump()
     # single user movement

@@ -847,6 +847,7 @@
   </div> -->
 
     {{#each cat in castCategories}}
+    <!-- similar ///// different -->
     <div class="img-text">
       <div class="item-text center bold">{{getCast cat}}</div>
     </div>
@@ -854,14 +855,22 @@
   </div>
   <div>
     {{#each block in timeBlocks}}
+    <!-- in before, during, after -->
     <div class="time-block">
       <p class="time-text center">{{getTimeBlock block}}</p>
       <div class="item">
+      
       {{#each cat in castCategories}}
+      <!-- in similar / different -->
         <div class="img-text">
+          <!-- cat : emojis, block : time-->
           {{#each sub in (subByCastCategory cat block)}}
+          <!-- if cat is 'similar', get current user's emotion and get similar posts, if differnet get different-->
+          {{sub}}
             <div class="item-contribution" id="{{sub._id}}">
-              <p class="contribution-detail bold">{{getUsername sub}}</p>
+              <p class="contribution-detail bold">{{getUsername sub}} - 
+                <p class="contribution-detail">{{getEmotion sub}}</p>
+              </p>
               <p class="contribution-detail">{{getTimeStamp sub}}</p>
               <p class="contribution-text">{{getSentence sub}}</p>
               <div class="item-img">

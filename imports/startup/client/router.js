@@ -142,7 +142,8 @@ Router.route('api.custom', {
         iid: this.params.iid,
         eid: this.params.eid,
         needName: this.params.needName,
-        castCategory: this.params.castCategory
+        castCategory: this.params.castCategory,
+        castDescription: this.params.castDescription
       }
     };
     Meteor.call('insertLog', dic);

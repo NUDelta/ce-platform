@@ -77,7 +77,8 @@ Template.seniorFinalsExpand.helpers({
   getTimeStamp(sub){
     let timeBlocks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     console.log('time ',sub.timestamp.getDay(0));
-    let dayOfWeek = timeBlocks[sub.timestamp.getDay()];
+    //let dayOfWeek = timeBlocks[sub.timestamp.getDay()];
+    dayOfWeek = 'Monday'
     return dayOfWeek + ", " + sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   },
   getSentence(sub){

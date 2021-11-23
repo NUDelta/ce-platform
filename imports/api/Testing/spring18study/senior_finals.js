@@ -20,6 +20,34 @@ export default SHARED_GOALS = {
     expandTemplate: 'seniorFinalsExpand',
     repeatContributionsToExperienceAfterN: 0, // always allow a repeat contribution to needs
     contributionTypes: [{
+      needName: 'beginning_library',
+      notificationSubject: "Hello! :)",
+      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS.hour0), // set this to day couple days before the exam + location?
+        number: '1'
+      },
+      toPass: {
+        //instruction: 'Can you take a photo of your coffee?',
+        prestoryQuestion: 'How do you feel with still a couple days to go until the exam?',
+        dropdownChoices: {
+          name: 'casting question',
+          options: ['😃','🙏','😌','😬', '😫', '😢']
+        },
+        contextDepQuestion: ['What are you doing at the library?', 'Are you chilling with your friends at 1South or getting a head start on studying for your midterm at Core?'],
+        castingDepQuestion: {
+          happy: 'Why are you happy?', 
+          hopeful: 'Why are you feeling hopeful?',
+          relieved: 'Why do you feel relieved?',
+          anxious: 'Why are you anxious?',
+          exhausted: 'Why are you exhausted?',
+          sad: 'Why are you sad?'
+        },
+      },
+      numberNeeded: 15,
+      notificationDelay: 1, // 1 seconds for debugging
+      allowRepeatContributions : true
+    },{
       needName: '12AM',
       notificationSubject: "Good evening! Or should I say good morning?",
       notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',

@@ -22,6 +22,12 @@
           placeholder="Write here" required></textarea>
 </template>
 
+<template name="emotion">
+    {{> loadingOverlay}}
+    <textarea id={{this}} cols="1" rows="1" name="write" type="text" class="textinput form-control"
+          placeholder="(e.g. happy, anxious, relieved, etc.)" required></textarea>
+</template>
+
 <template name="value">
     <textarea id={{this.key}} value={{this.value}} cols="40" rows="3" name="write" type="text" class="textinput form-control" style="display:none"></textarea>
 </template>

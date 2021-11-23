@@ -53,6 +53,10 @@ Schema.Submission = new SimpleSchema({
   castCategory: {
     type: String,
     optional: true,
+  },
+  castDescription:{
+    type: String,
+    optional: true
   }
 });
 

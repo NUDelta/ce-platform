@@ -334,10 +334,35 @@ Template.imitationGame.helpers({
 
 // KEVIN AND NINA COLLECTIVE NARRATIVE
 Template.survivingThrivingParticipate.helpers({
-  isThriving(){
+  isHappy(){
     let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
     let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
-    return mostRecentSub.castCategory == "WOOOO 🥳";
+    return mostRecentSub.castCategory == "😃";
+  },
+  isHopeful(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "🙏";
+  },
+  isRelieved(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "😌";
+  },
+  isAnxious(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "😬";
+  },
+  isExhausted(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "😫";
+  },
+  isSad(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    return mostRecentSub.castCategory == "😢";
   },
   getContextQuestions() {
     // console.log('questions ', this.toPass.contextDepQuestion);

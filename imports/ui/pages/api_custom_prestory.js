@@ -60,8 +60,11 @@ Template.api_custom_prestory.events({
     
     //castCategory
     const castDropDown = document.getElementById('casting question');
+    // console.log("CAST DROP DOWN: ", castDropDown)
     const index = castDropDown.selectedIndex;
     const castCategory = castDropDown[index].value;
+    const castDescription = document.getElementById('castDescription').value
+    // console.log("GOT EMOTION: ", castDescription)
         
     Router.go(participateUrl);
 
@@ -74,7 +77,8 @@ Template.api_custom_prestory.events({
       timestamp: timestamp,
       lat: location.lat,
       lng: location.lng,
-      castCategory: castCategory
+      castCategory: castCategory,
+      castDescription: castDescription
     };
     
     Meteor.call('createInitialSubmission', submissionObject);
