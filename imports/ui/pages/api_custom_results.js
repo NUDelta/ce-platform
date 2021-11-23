@@ -20,20 +20,22 @@ Template.api_custom_results.helpers({
     let navbar = document.querySelector(".nav-footer");
     navbar.style.display = "block";
     // console.log(navbar);
-    this.submissions.sort(function compare(a, b) {
-      if (a.timestamp === undefined) {
-        return 1;
-      } else if (b.timestamp === undefined) {
-        return -1;
-      }
+    if (this.submissions) {
+      this.submissions.sort(function compare(a, b) {
+        if (a.timestamp === undefined) {
+          return 1;
+        } else if (b.timestamp === undefined) {
+          return -1;
+        }
 
-      const dateA = new Date(a.timestamp);
-      const dateB = new Date(b.timestamp);
-      return dateA - dateB;
-    });
+        const dateA = new Date(a.timestamp);
+        const dateB = new Date(b.timestamp);
+        return dateA - dateB;
+      });
+    }
 
-    console.log(this);
-    console.log(this.images);
+    // console.log(this);
+    // console.log(this.images);
     return this;
   },
 });
@@ -683,7 +685,7 @@ Template.survivingThriving.helpers({
   castCategories(){
     //To-do: access castCategories
     // let castCategories = ['thriving', 'surviving'];
-    
+
     // let castCategories = ['😃','🙏','😌','😬', '😫', '😢'];
     let castCategories = ['Similar', 'Different']
     // console.log("Time " + Date.now());
@@ -703,15 +705,15 @@ Template.survivingThriving.helpers({
 
     // find submission in database with user id then find the emotion correlated with the userid to check if the current cat is that
     // find all posts by the current user and find all the emotions but pick the most recent...?
-    let user_emotions = Submissions.find({ 
+    let user_emotions = Submissions.find({
       uid: Meteor.userId()
     }).fetch().map(function (x) {
       return x.castCategory;
     });
 
     let current_emotion = user_emotions[0]
-   
- 
+
+
     // if (cat === "happy") {
     //   cat = "😃";
     // }
@@ -738,15 +740,16 @@ Template.survivingThriving.helpers({
     //   cat = false
     // }
 
-    let subsByCat = this.submissions.filter(function(sub){
+    const completedSubmissions = Submissions.find({"uid": {$ne: null}}).fetch();
+    let subsByCat = completedSubmissions.filter(function(sub){
       // console.log("BLOCKKKKK", block);
-      
+
       // let day = block.substr(0, 3);
       // console.log("cat ", cat);
       // console.log("sub ", sub.castCategory);
       // && (sub.timestamp === day)
 
-      // if sub.castCategory is 'similar' and if cat is the same as the user's emotion 
+      // if sub.castCategory is 'similar' and if cat is the same as the user's emotion
       // elif sub.castCategory is 'different'' and if cat is not the same as the user's emotion
 
       // before
@@ -786,7 +789,7 @@ Template.survivingThriving.helpers({
         }
 
       // }
-      
+
 
 
       // if ((sub.castCategory === cat) && (block === 0) && ((sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2)))) {
@@ -808,7 +811,7 @@ Template.survivingThriving.helpers({
       //   return sub;
       // }
     });
-    
+
     console.log("DOES IT NOT GET HERE HWY")
     console.log("sub ", subsByCat);
     return subsByCat;
@@ -878,7 +881,7 @@ Template.survivingThriving.helpers({
     else{
       console.log('in else')
       return "\"" + sub.content.sentence + "\"";
-    }  
+    }
   }
 });
 

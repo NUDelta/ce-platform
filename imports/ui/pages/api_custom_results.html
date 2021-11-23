@@ -853,13 +853,14 @@
     </div>
     {{/each}}
   </div>
+  {{#if Template.subscriptionsReady}}
   <div>
     {{#each block in timeBlocks}}
     <!-- in before, during, after -->
     <div class="time-block">
       <p class="time-text center">{{getTimeBlock block}}</p>
       <div class="item">
-      
+
       {{#each cat in castCategories}}
       <!-- in similar / different -->
         <div class="img-text">
@@ -868,7 +869,7 @@
           <!-- if cat is 'similar', get current user's emotion and get similar posts, if differnet get different-->
           {{sub}}
             <div class="item-contribution" id="{{sub._id}}">
-              <p class="contribution-detail bold">{{getUsername sub}} - 
+              <p class="contribution-detail bold">{{getUsername sub}} -
                 <p class="contribution-detail">{{getEmotion sub}}</p>
               </p>
               <p class="contribution-detail">{{getTimeStamp sub}}</p>
@@ -888,6 +889,7 @@
     {{/each}}
 
   </div>
+  {{/if}}
 <!-- <br>
 <b style="background-color:#273147;padding:6px;color:white;margin-bottom:10px;">Items remaining</b>
   <ul class="items-remaining">
