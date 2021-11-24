@@ -46,19 +46,22 @@ Meteor.methods({
   startTestExperiences(){
     createTestExperiences();
 
-    Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-      pair.forEach(function (value) {
-        Detectors.insert(value);
-      });
-    })
-    log.info(`${CONSTANTS.DETECTORS}`);
-    log.info(`Populated ${ Detectors.find().count() } detectors`);
+    // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
+    //   pair.forEach(function (value) {
+    //     Detectors.insert(value);
+    //   });
+    // })
+    // log.info(`${CONSTANTS.DETECTORS}`);
+    // log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
   clearSubmission(){
     Submissions.remove({});
   },
   clearEmptySubmission(){
     clearEmptySubmission()
+  },
+  clearDatabaseProd(){
+    clearDatabaseProd()
   }
   
 });
@@ -91,7 +94,6 @@ function clearDatabaseProd () {
   // Images.remove({});
   // Avatars.remove({});
   ParticipatingNow.remove({});
-  clearEmptySubmission();
 }
 
 function clearEmptySubmission() {
@@ -110,6 +112,14 @@ export const createNewId = (type, need) => {
 }
 
 function createTestExperiences(){
+    // add detectors
+    for (let i = 1; i < 7; i++){
+      let pairNum = "pair" + `${i}`;
+      Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
+        Detectors.insert(value);
+      });
+    }
+  log.info(`Populated ${ Detectors.find().count() } detectors`);
   for (let i = 1; i < 7; i++){
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
@@ -343,19 +353,19 @@ function createTestData(){
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
   
 
-  // add detectors
-  for (let i = 1; i < 7; i++){
-    let pairNum = "pair" + `${i}`;
-    Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-      Detectors.insert(value);
-    });
-  }
-  // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-  //   pair.forEach(function (value) {
+  // // add detectors
+  // for (let i = 1; i < 7; i++){
+  //   let pairNum = "pair" + `${i}`;
+  //   Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
   //     Detectors.insert(value);
   //   });
-  // })
-  log.info(`Populated ${ Detectors.find().count() } detectors`);
+  // }
+  // // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
+  // //   pair.forEach(function (value) {
+  // //     Detectors.insert(value);
+  // //   });
+  // // })
+  // log.info(`Populated ${ Detectors.find().count() } detectors`);
 
 
   // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
