@@ -361,6 +361,18 @@ def testLibraryExpInProd():
     setLocation(library, "4TjybAcfzc6Rob4YX")  # user: mason
     print("user at library")
 
+def dndCafeBubbleTea():
+    coffeeLab = (42.05849649421121, -87.68366051608254)
+    tealicious = (42.04614329251502, -87.68147970259031)
+    setLocation(grocery_dnd, sys.argv[1])
+    setLocation(grocery_dnd, sys.argv[2])
+    setLocation(coffeeLab, sys.argv[3]) 
+    setLocation(coffeeLab, sys.argv[4])
+    setLocation(tealicious, sys.argv[5]) 
+    setLocation(tealicious, sys.argv[6])
+    print("users at dnd, coffee lab, and tealicious")
+
+
 
 if __name__ == "__main__":
     # allUsersGrocery()
@@ -369,7 +381,8 @@ if __name__ == "__main__":
 	# allUsersAtBars()
 	# pairsAtParkLibraryGrocery()
     # allUsersAtLibrary()
-    allUsersAtDnD()
+    # allUsersAtDnD()
+    dndCafeBubbleTea()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()
     # usersParkAndLibrary()

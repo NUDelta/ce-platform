@@ -5,8 +5,8 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'SelfIntro ' + pairNum,
     variables: [
-      `var ${pairNum}`,
-      'var participatedInSelfIntro'
+      `var ${pairNum};`,
+      'var participatedInSelfIntro;'
     ],
     rules: [`${pairNum} && !participatedInSelfIntro`]
     // rules: ['(triad1)']
@@ -16,7 +16,7 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'Walk ' + pairNum,
     variables: [
-      `var ${pairNum}`,
+      `var ${pairNum};`,
       'var daytime;'
     ],
     rules: [`(${pairNum} && daytime)`]
@@ -30,7 +30,7 @@ const createDetectors = function (pairNum) {
       'var libraries;',
       'var usedbooks;',
       'var bookstores;',
-      `var ${pairNum}`
+      `var ${pairNum};`
     ],
     rules: [`${pairNum} && (libraries || bookstores);`]
     // rules: ['(triad2)']
@@ -41,11 +41,11 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'Library2 ' + pairNum,
     variables: [
-      'var participatedInLibraryExp',
+      'var participatedInLibraryExp;',
       'var libraries;',
       'var usedbooks;',
       'var bookstores;',
-      `var ${pairNum}`
+      `var ${pairNum};`
     ],
     rules: [`${pairNum} && participatedInLibraryExp && (libraries || bookstores);`]
   },
@@ -57,9 +57,22 @@ const createDetectors = function (pairNum) {
       'var publictransport;', 
       'var trainstations;', 
       'var trains;',
-      `var ${pairNum}`
+      `var ${pairNum};`
     ],
     rules: [`${pairNum} && (trainstations || trains || publictransport);`]
+  },
+
+  coffeeExp: {
+    _id: Random.id(),
+    description: 'Coffee Shop ' + pairNum,
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      `var ${pairNum};`
+    ],
+    rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
   },
 
   // library_triad2:{
@@ -93,7 +106,7 @@ const createDetectors = function (pairNum) {
       'var marketstalls;',
       'var organic_stores;',
       'var publicmarkets;',
-      `var ${pairNum}`
+      `var ${pairNum};`
     ],
     rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
     farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
@@ -105,13 +118,8 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'Restaurant ' + pairNum,
     variables: [
-      `var ${pairNum}`,
+      `var ${pairNum};`,
       // 'var daytime;',
-      'var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
       'var diners;',
       'var restaurants;',
       'var cafeteria;',
@@ -119,7 +127,7 @@ const createDetectors = function (pairNum) {
       'var bars;',
       'var cocktailbars;'
     ],
-    rules: [`(${pairNum} && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes || diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
+    rules: [`(${pairNum} && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
   },
 
   gymExp: {
@@ -127,10 +135,20 @@ const createDetectors = function (pairNum) {
     description: 'Gym ' + pairNum,
     variables: [
       'var  gyms;',
-      `var ${pairNum}`
+      `var ${pairNum};`
     ],
     rules: [`gyms && ${pairNum};`]
   },
+
+  bubbleTeaExp: {
+    _id: Random.id(),
+    description: 'Bubble Tea ' + pairNum,
+    variables: [
+      'var bubbletea;',
+      `var ${pairNum};`
+    ],
+    rules:[`(bubbletea && ${pairNum});`]
+  }
 
   //  /////////////////////////////////////////////////////////
   

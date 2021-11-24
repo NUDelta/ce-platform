@@ -26,10 +26,10 @@ Meteor.startup(() => {
     }
   }
 
-  if(process.env.MODE === "PROD"){
-    clearDatabaseProd();
-    createTestDataProd();
-  }
+  // if(process.env.MODE === "PROD"){
+  //   clearDatabaseProd();
+  //   createTestDataProd();
+  // }
 
 });
 

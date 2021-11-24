@@ -26,7 +26,7 @@ export const createSelfIntro = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the self intro! Tap here to see your results.'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed Self Intro! Tap here to see your results.'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
     notify(participants, sub.iid, 'See images from you and your partner\'s self intro!', '', route);
@@ -48,13 +48,14 @@ export const createSelfIntro = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let message = 'Your partner just participated in the self-intro activity!'; 
-    sendSystemMessage(message, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + message, '');
+    let systemMessage = 'Your partner just completed Self-Intro! Participate to see their results when you get a chance💬'; 
+    let notifMessage = "Hey! Your partner just completed Self-Intro💬"
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: 'Self Introduction👋',
+    name: '💬Self Introduction💬',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -75,8 +76,8 @@ export const createSelfIntro = function (pairNum) {
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your new friend!',
-    notificationText: 'Share your experience with your new friend!',
+    description: 'Say hi👋 and introduce yourself to your new friend!',
+    notificationText: 'Say hi👋 and introduce yourself to your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('SelfIntro${pairNum}'))`,
         function: selfIntroCompleteCallback.toString(),
@@ -135,9 +136,11 @@ export const createWalk = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let message = 'Your partner just participated in the walk experience!'; 
-    sendSystemMessage(message, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + message, '');
+    let systemMessage = 'Your partner just completed the Walk Experience! Participate to see their results when you get a chance🚶‍♂️'; 
+    let notifMessage = "Hey! Your partner just completed the Walk Experience🚶‍♂️"
+
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, "Hey there! " + notifMessage, '/chat');
   }
 
   let experience = {
@@ -161,8 +164,8 @@ export const createWalk = function (pairNum) {
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
+    description: 'Share your walk experience with your new friend!',
+    notificationText: 'Share your walk experience with your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('Walk${pairNum}'))`,
         function: walkCompleteCallback.toString(),
@@ -218,14 +221,16 @@ export const createLibraryExp = function (pairNum) {
       && (pair in u.profile.staticAffordances)
     )
     partner = partner.map(u => u._id)
+
+    let systemMessage = 'Your partner just completed the Library Experience! Participate to see their results when you get a chance🧑‍💻'; 
+    let notifMessage = "Hey! Your partner just completed the Library Experience🧑‍💻"
   
-    let message = 'Your partner just participated in the library experience!'; 
-    sendSystemMessage(message, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + message, '');
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: '📚Library Experience📚',
+    name: '👩‍💻Library Experience🧑‍💻',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -240,13 +245,13 @@ export const createLibraryExp = function (pairNum) {
           instruction : "Working on something outside home? Show us something cool (or motivating) around your study space that is keeping you going (or focused)? Caption it with why it motivates you!"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 600,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
+    description: 'Share your library experience with your new friend!',
+    notificationText: 'Share your library experience with your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('Library${pairNum}'))`,
         function: libraryExpCompleteCallback.toString(),
@@ -284,7 +289,7 @@ export const createGroceriesExp = function (pairNum) {
     let message = 'Woo-hoo! You two have completed the Groceries experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
-    notify(participants, sub.iid, 'See images from your groceries experience!', '', route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s groceries experience!', '', route);
   }
 
   const groceriesExpCallback = function (sub) {
@@ -302,14 +307,16 @@ export const createGroceriesExp = function (pairNum) {
       && (pair in u.profile.staticAffordances)
     )
     partner = partner.map(u => u._id)
+
+    let systemMessage = 'Your partner just completed the Groceries Experience! Participate to see their results when you get a chance🛒'; 
+    let notifMessage = "Hey! Your partner just completed the Groceries Experience🛒"
   
-    let message = 'Your partner just participated in the groceries experience!'; 
-    sendSystemMessage(message, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + message, '');
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: '🛒Groceries Experience🛒',
+    name: '🍎Groceries Experience🍞',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -324,13 +331,13 @@ export const createGroceriesExp = function (pairNum) {
           instruction : "What is your game plan for shopping for food? Show us what ingredients you’re using! Caption your picture with your plan!"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 180,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
+    description: 'Share your groceries experience with your new friend!',
+    notificationText: 'Share your groceries experience with your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('Groceries${pairNum}'))`,
         function: groceriesExpCompleteCallback.toString(),
@@ -368,7 +375,7 @@ export const createRestaurantExp = function (pairNum) {
     let message = 'Woo-hoo! You two have completed the Restaurant experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
-    notify(participants, sub.iid, 'See images from your restaurant experience!', '', route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s restaurant experience!', '', route);
   }
 
   const restaurantExpCallback = function (sub) {
@@ -386,10 +393,11 @@ export const createRestaurantExp = function (pairNum) {
       && (pair in u.profile.staticAffordances)
     )
     partner = partner.map(u => u._id)
+    let systemMessage = 'Your partner just completed the Restaurant Experience! Participate to see their results when you get a chance🍝'; 
+    let notifMessage = "Hey! Your partner just completed the Restaurant Experience🍝 "
   
-    let message = 'Your partner just participated in the restaurant experience!'; 
-    sendSystemMessage(message, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + message, '');
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
   
 
@@ -409,13 +417,13 @@ export const createRestaurantExp = function (pairNum) {
           instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 180,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
+    description: 'Share your restaurant experience with your new friend!',
+    notificationText: 'Share your restaurant experience with your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('Restaur${pairNum}'))`,
         function: restaurantExpCompleteCallback.toString(),
@@ -453,11 +461,33 @@ export const createGymExp = function (pairNum) {
     let message = 'Woo-hoo! You two have completed the Gym experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
-    notify(participants, sub.iid, 'See images from your gym experience!', '', route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s gym experience!', '', route);
+  }
+
+  const gymExpCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+  
+    let participantId = submissions.map((submission) => { return submission.uid; });
+    let participant = Meteor.users.findOne(participantId[0])
+    let aff = participant.profile.staticAffordances;
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+    let partner = Meteor.users.find().fetch().filter(
+      u => (u._id != participantId[0])
+      && (pair in u.profile.staticAffordances)
+    )
+    partner = partner.map(u => u._id)
+    let systemMessage = 'Your partner just completed the Gym Experience! Participate to see their results when you get a chance🏃'; 
+    let notifMessage = "Hey! Your partner just completed the Gym Experience🏃"
+  
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: 'Group Bumped - Gym',
+    name: '🏀Gym Experience🏐',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -472,16 +502,20 @@ export const createGymExp = function (pairNum) {
           instruction : "How was your workout session today? What keeps you motivated to workout and why? Take a picture of the gym or your motivation and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 300,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
+    description: 'Share your gym experience with your new friend!',
+    notificationText: 'Share your gym experience with your new friend!',
     callbacks: [{
         trigger: `(cb.needFinished('Gym${pairNum}'))`,
         function: gymExpCompleteCallback.toString(),
+      },
+      {
+        trigger: `!(cb.needFinished('Gym${pairNum}'))`,
+        function: gymExpCallback.toString(),
       }
     ],
     allowRepeatContributions: false,
@@ -490,6 +524,293 @@ export const createGymExp = function (pairNum) {
   return experience;
 }
 
+export const createPublicTransportExp = function (pairNum) {
+  const publicTransportExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInPublicTransportExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Public Transportation experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s public transportation experience!', '', route);
+  }
+
+  const publicTransportExpCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+  
+    let participantId = submissions.map((submission) => { return submission.uid; });
+    let participant = Meteor.users.findOne(participantId[0])
+    let aff = participant.profile.staticAffordances;
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+    let partner = Meteor.users.find().fetch().filter(
+      u => (u._id != participantId[0])
+      && (pair in u.profile.staticAffordances)
+    )
+    partner = partner.map(u => u._id)
+    let systemMessage = 'Your partner just completed the Public Transportation Experience! Participate to see their results when you get a chance🚂'; 
+    let notifMessage = "Hey! Your partner just completed the Public Transportation Experience🚂 "
+  
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '');
+  }
+
+  let experience = {
+    name: '🚈Public Transportation Experience🚂',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `PubTrans${pairNum}`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS[pairNum].publicTransportExp),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Where are you going?",
+          instruction : "Take a picture of the view outside the window and share where you are heading to today! What do you do to pass time on public transportation and why?"
+        },
+        numberNeeded : 2,
+        notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your public transportation experience with your new friend!',
+    notificationText: 'Share your public transportation experience with your new friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('PubTrans${pairNum}'))`,
+        function: publicTransportExpCompleteCallback.toString(),
+      },
+      {
+        trigger: `!(cb.needFinished('PubTrans${pairNum}'))`,
+        function: publicTransportExpCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createCoffeeExp = function (pairNum) {
+  const coffeeExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInCoffeeExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Coffee Shop experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s coffee shop experience!', '', route);
+  }
+
+  const coffeeExpCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+  
+    let participantId = submissions.map((submission) => { return submission.uid; });
+    let participant = Meteor.users.findOne(participantId[0])
+    let aff = participant.profile.staticAffordances;
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+    let partner = Meteor.users.find().fetch().filter(
+      u => (u._id != participantId[0])
+      && (pair in u.profile.staticAffordances)
+    )
+    partner = partner.map(u => u._id)
+    let systemMessage = 'Your partner just completed the Coffee Shop Experience! Participate to see their results when you get a chance☕️'; 
+    let notifMessage = "Hey! Your partner just completed the Coffee Shop Experience☕️"
+  
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
+  }
+
+  let experience = {
+    name: '☕️Coffee Shop Experience🥐',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `coffee${pairNum}`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS[pairNum].coffeeExp),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "Are you grabbing a coffee to go or are you staying at the coffee shop?",
+          instruction : "Where do you usually sit and why? Take a picture of your drink or where you are sitting and share it with your partner!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 180,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your coffee shop experience with your new friend!',
+    notificationText: 'Share your coffee shop experience with your new friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('coffee${pairNum}'))`,
+        function: coffeeExpCompleteCallback.toString(),
+      },
+      {
+        trigger: `!(cb.needFinished('coffee${pairNum}'))`,
+        function: coffeeExpCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createBubbleTeaExp = function (pairNum) {
+  const bubbleExpCompleteCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+
+    let participants = submissions.map((submission) => { return submission.uid; });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInBubbleTeaExp']: true
+        }
+      });
+    });
+
+    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let message = 'Woo-hoo! You two have completed the Bubble Tea experience! Tap here to see your results.';
+
+    sendSystemMessage(message, participants, route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s Bubble Tea experience!', '', route);
+  }
+
+  const bubbleExpCallback = function (sub) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+  
+    let participantId = submissions.map((submission) => { return submission.uid; });
+    let participant = Meteor.users.findOne(participantId[0])
+    let aff = participant.profile.staticAffordances;
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+    let partner = Meteor.users.find().fetch().filter(
+      u => (u._id != participantId[0])
+      && (pair in u.profile.staticAffordances)
+    )
+    partner = partner.map(u => u._id)
+    let systemMessage = 'Your partner just completed the Bubble Tea Experience! Participate to see their results when you get a chance🧋'; 
+    let notifMessage = "Hey! Your partner just completed the Bubble Tea Experience🧋"
+  
+    sendSystemMessage(systemMessage, partner, "/chat"); 
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
+  }
+
+  let experience = {
+    name: '🧋Bubble Tea Experience🧋',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `bubble${pairNum}`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS[pairNum].bubbleTeaExp),
+          number : 1
+        },
+        toPass : {
+          situationDescription : "What brought you to the bubble tea shop today?",
+          instruction : "What drink did you get and why? Take a picture of your drink and share it with your partner!"
+        },
+        numberNeeded : 2,
+        notificationDelay : 90,
+        numberAllowedToParticipateAtSameTime: 3,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Share your bubble tea experience with your new friend!',
+    notificationText: 'Share your bubble tea experience with your new friend!',
+    callbacks: [{
+        trigger: `(cb.needFinished('bubble${pairNum}'))`,
+        function: bubbleExpCompleteCallback.toString(),
+      },
+      {
+        trigger: `!(cb.needFinished('bubble${pairNum}'))`,
+        function: bubbleExpCallback.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+// new experiences ///////////////////////////////////////////////////////
+
+const creatPairExperience = function(pairNum) {
+  return {
+    selfIntroExperience: createSelfIntro(pairNum),
+    walkExperience: createWalk(pairNum),
+    libraryExperience: createLibraryExp(pairNum),
+    groceriesExperience: createGroceriesExp(pairNum),
+    restaurantExperience: createRestaurantExp(pairNum),
+    gymExperience: createGymExp(pairNum),
+    publicTransportExperience: createPublicTransportExp(pairNum),
+    coffeeShopExperience: createCoffeeExp(pairNum),
+    bubbleTeaExperience: createBubbleTeaExp(pairNum)
+  }
+}
+
+export default PAIR_EXPERIENCES = {
+  pair1: creatPairExperience("pair1"),
+  pair2: creatPairExperience("pair2"),
+  pair3: creatPairExperience("pair3"),
+  pair4: creatPairExperience("pair4"),
+  pair5: creatPairExperience("pair5"),
+  pair6: creatPairExperience("pair6")
+}
+
+
+//graveyard
+
+/*
 export const createLibraryExp2 = function (pairNum) {
   const libraryExpCompleteCallback2 = function (sub) {
     let submissions = Submissions.find({
@@ -550,86 +871,6 @@ export const createLibraryExp2 = function (pairNum) {
   return experience;
 }
 
-export const createPublicTransportExp = function (pairNum) {
-  const publicTransportExpCompleteCallback = function (sub) {
-    let submissions = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName
-    }).fetch();
-
-    let participants = submissions.map((submission) => { return submission.uid; });
-
-    participants.forEach(function(p){
-      Meteor.users.update({
-        _id: p
-      }, {
-        $set: {
-          ['profile.staticAffordances.participatedInPublicTransportExp']: true
-        }
-      });
-    });
-
-    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Public Transportation experience! Tap here to see your results.';
-
-    sendSystemMessage(message, participants, route);
-    notify(participants, sub.iid, 'See images from your public transportation experience!', '', route);
-  }
-
-  let experience = {
-    name: 'Group Bumped - Public Transportation',
-    participateTemplate: 'groupBumped',
-    resultsTemplate: 'groupBumpedResults',
-    contributionTypes: [
-      {
-        needName : `PubTrans${pairNum}`,
-        situation : {
-          detector : getDetectorUniqueKey(DETECTORS[pairNum].publicTransportExp),
-          number : 1
-        },
-        toPass : {
-          situationDescription : "Where are you going?",
-          instruction : "Take a picture of the view outside the window and share where you are heading to today! What do you do to pass time on public transportation and why?"
-        },
-        numberNeeded : 2,
-        notificationDelay : 90,
-        numberAllowedToParticipateAtSameTime: 3,
-        allowRepeatContributions : false
-      }
-    ],
-    description: 'Share your experience with your friend and their friend!',
-    notificationText: 'Share your experience with your friend and their friend!',
-    callbacks: [{
-        trigger: `(cb.needFinished('PubTrans${pairNum}'))`,
-        function: publicTransportExpCompleteCallback.toString(),
-      }
-    ],
-    allowRepeatContributions: false,
-  };
-
-  return experience;
-}
-
-// new experiences ///////////////////////////////////////////////////////
-
-const creatPairExperience = function(pairNum) {
-  return {
-    selfIntroExperience: createSelfIntro(pairNum),
-    walkExperience: createWalk(pairNum),
-    libraryExperience: createLibraryExp(pairNum),
-    groceriesExperience: createGroceriesExp(pairNum),
-    restaurantExperience: createRestaurantExp(pairNum),
-    publicTransportExperience: createPublicTransportExp(pairNum)
-  }
-}
-
-export default PAIR_EXPERIENCES = {
-  pair1: creatPairExperience("pair1"),
-  pair2: creatPairExperience("pair2"),
-  pair3: creatPairExperience("pair3"),
-  pair4: creatPairExperience("pair4"),
-  pair5: creatPairExperience("pair5"),
-  pair6: creatPairExperience("pair6")
-}
+*/
 
 
