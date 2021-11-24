@@ -50,16 +50,16 @@ Template.chat.helpers({
 
     //find the other chat recipient: will be in same triad && have stranger static affordance
     let aff = this.users.filter(u => u._id == uid)[0].profile.staticAffordances;
-    console.log("affordance: " + aff)
+    // console.log("affordance: " + aff)
     let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
-    console.log("pair: " + pair)
+    // console.log("pair: " + pair)
     let otherStranger = this.users.filter(
       u => (u._id != uid)
       && (pair in u.profile.staticAffordances)
       // && !('friend' in u.profile.staticAffordances)
     );
     otherStranger = otherStranger.map(u => u._id)
-    console.log("other stranger: " + otherStranger)
+    // console.log("other stranger: " + otherStranger)
     data.recipients = data.recipients.concat(otherStranger)
     let currrentUsername = Meteor.users.findOne(Meteor.userId()).username;
 

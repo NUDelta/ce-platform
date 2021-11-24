@@ -11,6 +11,7 @@ import {
   onePlaceNotThesePlacesSets,
   placeSubsetAffordances
 } from "../../UserMonitor/detectors/methods";
+import { createNewId } from '../../../startup/server/fixtures.js';
 
 import {Incidents} from './experiences';
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
@@ -365,19 +366,27 @@ export const changeExperienceToPass = (eid, needName, toPass, field) => {
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
   let i = 0;
   while (i < need.numberNeeded) {
+    let id;
+    if (i == 0) {
+      id = need.needName + "Z";
+    } else {
+      id = need.needName + "Y";
+    }
+    id = createNewId("s", id);
     i++;
 
-    Submissions.insert({
-      eid: eid,
-      iid: iid,
-      needName: need.needName,
-    }, (err) => {
-      if (err) {
-        console.log('upload error,', err);
-      }
-    });
-
-
+    if (!Submissions.findOne({_id: id})){
+      Submissions.insert({
+        _id: id,
+        eid: eid,
+        iid: iid,
+        needName: need.needName,
+      }, (err) => {
+        if (err) {
+          console.log('upload error,', err);
+        }
+      });
+    }
   }
 };
 
@@ -481,17 +490,7 @@ export const updateRunningIncident = (incident) => {
  */
 export const createIncidentFromExperience = (experience) => {
   let need = experience.contributionTypes[0].needName;
-      // console.log("incident need before: "+ need)
-      need = need.replace("1", "Z");
-      need = need.replace("I", "Z");
-      need = need.replace("O", "Z");
-      need = need.replace("U", "Z");
-      need = need.replace("V", "Z");
-      need = need.replace("l", "Z");
-      for (let i = need.length; i < 17; i++){
-        need = need + "i";
-      }
-      // console.log("incident need after: "+ need);
+  need = createNewId("i", need)
   let incident = {
     _id: need,
     eid: experience._id,
