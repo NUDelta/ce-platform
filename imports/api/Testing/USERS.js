@@ -77,13 +77,13 @@ export let USERS = {
       }
     }
   },
-  DTR2: {
-    username: 'DTR2',
-    email: 'dtr2@email.com',
+  roxy: {
+    username: 'roxy',
+    email: 'roxy@email.com',
     password: 'password',
     profile: {
-      firstName: 'DTR',
-      lastName: '2',
+      firstName: 'Roxy',
+      lastName: 'Wilcox',
       staticAffordances: {
       }
     }
@@ -121,13 +121,13 @@ export let USERS = {
       }
     }
   },
-  DTR4: {
-    username: 'DTR4',
-    email: 'dtr4@email.com',
+  yvan: {
+    username: 'yvan',
+    email: 'yvan@email.com',
     password: 'password',
     profile: {
-      firstName: 'DTR',
-      lastName: '4',
+      firstName: 'Yvan',
+      lastName: 'Chu',
       staticAffordances: {
       }
     }

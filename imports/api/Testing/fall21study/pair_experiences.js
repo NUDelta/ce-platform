@@ -26,7 +26,7 @@ export const createSelfIntro = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed Self Intro! Tap here to see your results.'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed Self Intro! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
     notify(participants, sub.iid, 'See images from you and your partner\'s self intro!', '', route);
@@ -113,7 +113,7 @@ export const createWalk = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Walk experience! Tap here to see your results.'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed the Walk experience! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
     notify(participants, sub.iid, 'See images from you and your partner\'s walk experience!', '', route);
@@ -200,7 +200,7 @@ export const createLibraryExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Library experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Library experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s library experience!', '', route);
@@ -286,7 +286,7 @@ export const createGroceriesExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Groceries experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Groceries experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s groceries experience!', '', route);
@@ -372,7 +372,7 @@ export const createRestaurantExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Restaurant experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Restaurant experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s restaurant experience!', '', route);
@@ -417,7 +417,7 @@ export const createRestaurantExp = function (pairNum) {
           instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
         },
         numberNeeded : 2,
-        notificationDelay : 180,
+        notificationDelay : 300,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -458,7 +458,7 @@ export const createGymExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Gym experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Gym experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s gym experience!', '', route);
@@ -544,7 +544,7 @@ export const createPublicTransportExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Public Transportation experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Public Transportation experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s public transportation experience!', '', route);
@@ -630,7 +630,7 @@ export const createCoffeeExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Coffee Shop experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Coffee Shop experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s coffee shop experience!', '', route);
@@ -716,7 +716,7 @@ export const createBubbleTeaExp = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed the Bubble Tea experience! Tap here to see your results.';
+    let message = 'Woo-hoo! You two have completed the Bubble Tea experience! Tap here to see your results and share what you think!';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from you and your partner\'s Bubble Tea experience!', '', route);
@@ -760,7 +760,7 @@ export const createBubbleTeaExp = function (pairNum) {
           instruction : "What drink did you get and why? Take a picture of your drink and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 150,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
