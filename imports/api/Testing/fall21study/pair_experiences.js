@@ -140,7 +140,7 @@ export const createWalk = function (pairNum) {
     let notifMessage = "Hey! Your partner just completed the Walk Experience🚶‍♂️"
 
     sendSystemMessage(systemMessage, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, "Hey there! " + notifMessage, '/chat');
+    Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {

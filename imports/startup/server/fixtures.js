@@ -100,16 +100,16 @@ function clearEmptySubmission() {
   Submissions.remove({uid: null})
 }
 
-export const createNewId = (type, need) => {
-  toReplace = ["1", "I", "l", "O", "V", "U"]  //why does this somehow look like "I love you" lol
-  toReplace.forEach((c) => {
-    need = need.replace(c, "Z")
-  })
-  for (let i = need.length; i < 17; i++){
-    need = need + type;
-  }
-  return need
-}
+// export const createNewId = (type, need) => {
+//   toReplace = ["1", "I", "l", "O", "V", "U"]  //why does this somehow look like "I love you" lol
+//   toReplace.forEach((c) => {
+//     need = need.replace(c, "Z")
+//   })
+//   for (let i = need.length; i < 17; i++){
+//     need = need + type;
+//   }
+//   return need
+// }
 
 function createTestExperiences(){
     // add detectors
@@ -123,11 +123,11 @@ function createTestExperiences(){
   for (let i = 1; i < 7; i++){
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
-      let need = value.contributionTypes[0].needName;
+      // let need = value.contributionTypes[0].needName;
       // console.log("need before: "+ need)
-      need = createNewId("e", need)
+      // need = createNewId("e", need)
       // console.log("need after: "+ need);
-      value._id = need;
+      // value._id = need;
         Experiences.insert(value);
         let incident = createIncidentFromExperience(value);
         startRunningIncident(incident);
