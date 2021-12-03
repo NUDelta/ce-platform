@@ -17,7 +17,8 @@ sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
 # library = (42.058141, -87.674490) 
-library = (42.04858188609233, -87.68016938860654)
+library = (42.05814914752829, -87.67442041754066)
+norris = (42.053262712572675, -87.67268455470771)
 
 def followPath(path, uid):
     for stop in path:
@@ -328,14 +329,16 @@ def usersParkAndLibrary():
     setLocation(library, sys.argv[5])
 
 def allUsersAtLibrary():
+    mainLibrary = (42.05373689551069, -87.67434641930538)
+    mudd = (42.05836839573704, -87.6745109121166)
     print(sys.argv)
-    setLocation(library, sys.argv[1])
-    setLocation(library, sys.argv[2])
-    setLocation(library, sys.argv[3]) 
-    setLocation(library, sys.argv[4])
-    setLocation(library, sys.argv[5]) 
-    setLocation(library, sys.argv[6])
-    print("users at library")
+    setLocation(mudd, sys.argv[1])
+    setLocation(mudd, sys.argv[2])
+    setLocation(mudd, sys.argv[3]) 
+    setLocation(mudd, sys.argv[4])
+    setLocation(mudd, sys.argv[5]) 
+    setLocation(mudd, sys.argv[6])
+    print("users at mudd")
 
 def allUsersAtDnD():
     print(sys.argv)
@@ -347,6 +350,16 @@ def allUsersAtDnD():
     setLocation(grocery_dnd, sys.argv[6])
     print("users at DnD")
 
+def allUsersNorris():
+    print(sys.argv)
+    setLocation(norris, sys.argv[1])
+    setLocation(norris, sys.argv[2])
+    setLocation(norris, sys.argv[3]) 
+    setLocation(norris, sys.argv[4])
+    setLocation(norris, sys.argv[5]) 
+    setLocation(norris, sys.argv[6])
+    print("users at norris")
+
 def halfUsersAtLibrary():
     print(sys.argv)
     setLocation(library, sys.argv[1])
@@ -357,13 +370,12 @@ def halfUsersAtLibrary():
     setLocation(grocery, sys.argv[6])
     print("half users at library, other half at grocery")
 
-def testLibraryExpInProd():
-    setLocation(library, "4TjybAcfzc6Rob4YX")  # user: mason
-    print("user at library")
+
 
 def dndCafeBubbleTea():
-    coffeeLab = (42.05849649421121, -87.68366051608254)
-    tealicious = (42.04614329251502, -87.68147970259031)
+    grocery_dnd = (42.058715179924679, -87.68319437996105)
+    coffeeLab = (42.05849649421129, -87.68366051608254)
+    tealicious = (42.04614329251509, -87.68147970259031)
     setLocation(grocery_dnd, sys.argv[1])
     setLocation(grocery_dnd, sys.argv[2])
     setLocation(coffeeLab, sys.argv[3]) 
@@ -383,6 +395,7 @@ if __name__ == "__main__":
     # allUsersAtLibrary()
     # allUsersAtDnD()
     dndCafeBubbleTea()
+    # allUsersNorris()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()
     # usersParkAndLibrary()

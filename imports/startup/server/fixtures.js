@@ -62,6 +62,9 @@ Meteor.methods({
   },
   clearDatabaseProd(){
     clearDatabaseProd()
+  },
+  createAdditionalTestExperiences(){
+    createAdditionalTestExperiences()
   }
   
 });
@@ -134,6 +137,35 @@ function createTestExperiences(){
       });
   }
   
+}
+
+function createAdditionalTestExperiences(){
+  // add detectors
+  for (let i = 1; i < 7; i++){
+    let pairNum = "pair" + `${i}`;
+    Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
+      if (!Detectors.findOne({description: value.description})){
+        log.info(`new detector: ${value.description} created`);
+        Detectors.insert(value);
+      }
+    });
+  }
+log.info(`Populated ${ Detectors.find().count() } detectors`);
+for (let i = 1; i < 7; i++){
+  let pairNum = "pair" + `${i}`;
+  Object.values(CONSTANTS.NEW_EXPERIENCES[pairNum]).forEach(function (value) {
+    // let need = value.contributionTypes[0].needName;
+    // console.log("need before: "+ need)
+    // need = createNewId("e", need)
+    // console.log("need after: "+ need);
+    // value._id = need;
+      Experiences.insert(value);
+      let incident = createIncidentFromExperience(value);
+      startRunningIncident(incident);
+    });
+}
+log.info(`Populated ${ Detectors.find().count() } new experiences`);
+log.info(`Populated ${ Submissions.find().count()} new submissions`)
 }
 
 function createTestDataProd(){
