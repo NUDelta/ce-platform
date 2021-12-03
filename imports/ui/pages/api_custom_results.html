@@ -867,7 +867,6 @@
           <!-- cat : emojis, block : time-->
           {{#each sub in (subByCastCategory cat block)}}
           <!-- if cat is 'similar', get current user's emotion and get similar posts, if differnet get different-->
-          {{sub}}
             <div class="item-contribution" id="{{sub._id}}">
               <p class="contribution-detail bold">{{getUsername sub}} -
                 <p class="contribution-detail">{{getEmotion sub}}</p>

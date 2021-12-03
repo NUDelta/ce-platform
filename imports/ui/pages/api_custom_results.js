@@ -753,14 +753,18 @@ Template.survivingThriving.helpers({
       // elif sub.castCategory is 'different'' and if cat is not the same as the user's emotion
 
       // before
-      console.log('SUB', sub.castCategory)
-      console.log(sub.castCategory === current_emotion)
+      // console.log('SUB', sub.castCategory)
+      // console.log(sub.castCategory === current_emotion)
       // if (sub){
-
         // check if it's the first time block and it's a Sunday, Monday, or Tuesday
-        if (block === 0 && (sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2))){
+        
+        let day = sub.timestamp.getDay()
+        let subcastcategory = sub.castCategory
+        // debugger;
+
+        if (block === 0 && ((sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2)))){
           if ((cat === 'Similar') && sub.castCategory === current_emotion){ // if we are in 'Similar' column and same emotion
-            console.log("SHOULD RETURN THIS HERE", sub)
+            // debugger;
             return sub
           }
           else if ((cat === 'Different') && (sub.castCategory !== current_emotion)){ // if 'Different' column and different emotion
@@ -771,6 +775,7 @@ Template.survivingThriving.helpers({
         // second time block and Wednesday or Thursday
         else if ((block === 1) && ((sub.timestamp.getDay() === 3) || (sub.timestamp.getDay() === 4))){
           if ((cat === 'Similar') && sub.castCategory === current_emotion){
+            debugger;
             return sub
           }
           else if ((cat === 'Different') && (sub.castCategory !== current_emotion)){
@@ -812,8 +817,8 @@ Template.survivingThriving.helpers({
       // }
     });
 
-    console.log("DOES IT NOT GET HERE HWY")
-    console.log("sub ", subsByCat);
+    // console.log("DOES IT NOT GET HERE HWY")
+    // console.log("sub ", subsByCat);
     return subsByCat;
   },
   getTimeBlock(block) {
@@ -849,16 +854,13 @@ Template.survivingThriving.helpers({
     return sub.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   },
   getEmotion(sub){
-    console.log('in get emotion')
-    console.log(sub)
-    if (sub.castDescription === undefined){
-      console.log('in if')
+    if (sub.castCategory !== undefined){
       let fullname = this.users.filter(function(user){
         if (user._id === sub.uid) {
           return user;
         }
       });
-      let placeholder = fullname[0].profile.firstName  + " is feeling " + sub.castCategory + " .";
+      let placeholder = fullname[0].profile.firstName  + ' is feeling ' + sub.castDescription + ' - ' + sub.castCategory;
       return placeholder;
     }
     else{
@@ -867,7 +869,7 @@ Template.survivingThriving.helpers({
     }
   },
   getSentence(sub){
-    console.log('in get sentence')
+    // console.log('in get sentence')
     if (sub.content.sentence === undefined){
       console.log('in if')
       let fullname = this.users.filter(function(user){
@@ -875,12 +877,12 @@ Template.survivingThriving.helpers({
           return user;
         }
       });
-      let placeholder = fullname[0].profile.firstName  + " is feeling " + sub.castCategory + " .";
+      let placeholder = fullname[0].profile.firstName  + ' is feeling ' + sub.castCategory + ' .';
       return placeholder;
     }
     else{
-      console.log('in else')
-      return "\"" + sub.content.sentence + "\"";
+      // console.log('in else')
+      return '\"' + sub.content.sentence + '\"';
     }
   }
 });
