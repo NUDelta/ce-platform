@@ -499,29 +499,23 @@ export let DETECTORS = {
       "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
     ]
   },
-  // beginning_story: {
-  //   _id: Random.id(),
-  //   description: "beginning story",
-  //   variables: ["var day;"],
-  //   rules: ["(monday || tuesday)"]
-  // },
   beginning_library: {
     _id: "v2ANTJr1I7wle3Ek9",
     description: "beginning library",
-    variables: ["var sunday var monday; var libraries;"],
-    rules: ["(sunday || monday)  && libraries;"]
+    variables: ["var sunday;", "var monday;", "var libraries;"],
+    rules: ["((sunday || monday)  && libraries);"]
   },
   during_library: {
     _id: "v2ANTJr1I7wle3Ek6",
     description: "during library",
-    variables: ["var tuesday; var libraries;"],
-    rules: ["tuesday && libraries;"]
+    variables: ["var tuesday;", "var libraries;"],
+    rules: ["(tuesday && libraries);"]
   },
   after_library: {
     _id: "v2ANTJr1I7wle3Ek5",
     description: "after library",
-    variables: ["var wednesday var libraries;"],
-    rules: ["wednesday && libraries;"]
+    variables: ["var wednesday;", "var libraries;"],
+    rules: ["(wednesday && libraries);"]
   },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
