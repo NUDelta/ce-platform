@@ -23,6 +23,18 @@ export let USERS = {
       }
     }
   },
+  ryan: {
+    username: 'ryan',
+    email: 'ryan@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Ryan',
+      lastName: 'Louie',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
   cindy: {
     username: 'cindy',
     email: 'cindy@email.com',
