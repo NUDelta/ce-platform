@@ -506,10 +506,22 @@ export let DETECTORS = {
   //   rules: ["(monday || tuesday)"]
   // },
   beginning_library: {
-    _id: Random.id(),
+    _id: "v2ANTJr1I7wle3Ek9",
     description: "beginning story",
     variables: ["var sunday var monday; var library;"],
     rules: ["(sunday || monday)  && library"]
+  },
+  during_library: {
+    _id: "v2ANTJr1I7wle3Ek6",
+    description: "during story",
+    variables: ["var tuesday; var library;"],
+    rules: ["tuesday && library"]
+  },
+  after_library: {
+    _id: "v2ANTJr1I7wle3Ek5",
+    description: "after story",
+    variables: ["var wednesday var library;"],
+    rules: ["wednesday && library"]
   },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
