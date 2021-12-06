@@ -237,6 +237,15 @@ def allUsersAtTrain():
 
     print("all users at train")
 
+def allUsersAtLibrary():
+    setLocation(library, sys.argv[1])
+    setLocation(library, sys.argv[2])
+    setLocation(library, sys.argv[3])
+    setLocation(library, sys.argv[4])
+    setLocation(library, sys.argv[5])
+
+    print("all users at library")
+
 def userAatCoffee():
     setLocation(coffee, sys.argv[1])
 
@@ -316,10 +325,11 @@ def testingSeniorFinals():
     print("finished setting up user location")
 
 if __name__ == "__main__":
+    allUsersAtLibrary()
     # allUsersGrocery()
 	#allUsersCoffee()
     # testingSeniorFinals()
-	allUsersAtBars()
+	# allUsersAtBars()
 	#allUsersAtPark()
     # garrettAndMegBump()
     # single user movement
