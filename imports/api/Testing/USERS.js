@@ -1,4 +1,16 @@
 export let USERS = {
+  annie: {
+    username: 'annie',
+    email: 'annie@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Annie',
+      lastName: 'Chen',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
   jenny: {
     username: 'jenny',
     email: 'jenny@email.com',
