@@ -507,19 +507,19 @@ export let DETECTORS = {
   // },
   beginning_library: {
     _id: "v2ANTJr1I7wle3Ek9",
-    description: "beginning story",
+    description: "beginning library",
     variables: ["var sunday var monday; var libraries;"],
     rules: ["(sunday || monday)  && libraries"]
   },
   during_library: {
     _id: "v2ANTJr1I7wle3Ek6",
-    description: "during story",
+    description: "during library",
     variables: ["var tuesday; var libraries;"],
     rules: ["tuesday && libraries"]
   },
   after_library: {
     _id: "v2ANTJr1I7wle3Ek5",
-    description: "after story",
+    description: "after library",
     variables: ["var wednesday var libraries;"],
     rules: ["wednesday && libraries"]
   },
