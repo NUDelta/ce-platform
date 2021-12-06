@@ -508,8 +508,8 @@ export let DETECTORS = {
   beginning_library: {
     _id: Random.id(),
     description: "beginning story",
-    variables: ["var monday; var library;"],
-    rules: ["monday  && library"]
+    variables: ["var sunday var monday; var library;"],
+    rules: ["(sunday || monday)  && library"]
   },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
