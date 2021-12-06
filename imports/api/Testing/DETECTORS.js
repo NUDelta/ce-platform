@@ -542,7 +542,9 @@ export let DETECTORS = {
   beginning_library: {
     _id: "v2ANTJr1I7wle3Ek9",
     description: "beginning library",
-    variables: ["var sunday;", "var monday;", "var libraries;"],
+    variables: ["var sunday;", 
+      "var monday;", 
+      "var libraries;"],
     rules: ["((sunday || monday)  && libraries);"]
   },
   during_library: {
