@@ -325,9 +325,9 @@ def testingSeniorFinals():
     print("finished setting up user location")
 
 if __name__ == "__main__":
-    # allUsersAtLibrary()
+    allUsersAtLibrary()
     # allUsersGrocery()
-	allUsersCoffee()
+	# allUsersCoffee()
     # testingSeniorFinals()
 	# allUsersAtBars()
 	#allUsersAtPark()

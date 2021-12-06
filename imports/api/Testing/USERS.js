@@ -11,13 +11,13 @@ export let USERS = {
       }
     }
   },
-  annie: {
-    username: 'annie',
-    email: 'annie@email.com',
+  jason: {
+    username: 'jason',
+    email: 'jason@email.com',
     password: 'password',
     profile: {
-      firstName: 'Annie',
-      lastName: 'Chen',
+      firstName: 'Jason',
+      lastName: 'Friedman',
       staticAffordances: {
         mechanismRich: true
       }
