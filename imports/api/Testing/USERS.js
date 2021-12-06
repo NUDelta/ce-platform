@@ -1,4 +1,64 @@
 export let USERS = {
+  jenny: {
+    username: 'jenny',
+    email: 'jenny@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Jenny',
+      lastName: 'Chang',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
+  annie: {
+    username: 'annie',
+    email: 'annie@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Annie',
+      lastName: 'Chen',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
+  cindy: {
+    username: 'cindy',
+    email: 'cindy@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Cindy',
+      lastName: 'Hu',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
+  aimee: {
+    username: 'aimee',
+    email: 'aimee@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Aimee',
+      lastName: 'van den Berg',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
+  molly: {
+    username: 'molly',
+    email: 'molly@email.com',
+    password: 'password',
+    profile: {
+      firstName: 'Molly',
+      lastName: 'Pribble',
+      staticAffordances: {
+        mechanismRich: true
+      }
+    }
+  },
   garrett: {
     username: 'garrett',
     email: 'garret@email.com',

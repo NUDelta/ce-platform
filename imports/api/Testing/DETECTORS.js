@@ -505,12 +505,12 @@ export let DETECTORS = {
   //   variables: ["var day;"],
   //   rules: ["(monday || tuesday)"]
   // },
-  // beginning_library: {
-  //   _id: Random.id(),
-  //   description: "beginning story",
-  //   variables: ["var monday; var tuesday; var library;"],
-  //   rules: ["(monday || tuesday) && library"]
-  // },
+  beginning_library: {
+    _id: Random.id(),
+    description: "beginning story",
+    variables: ["var monday; var library;"],
+    rules: ["monday  && library"]
+  },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
     description: "during 00:00",

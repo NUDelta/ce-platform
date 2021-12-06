@@ -22,19 +22,19 @@ export default SHARED_GOALS = {
     contributionTypes: [{
       needName: 'beginning_library',
       notificationSubject: "Hello! :)",
-      notificationText: 'Join your fellow NU seniors in this collective narrative about life during finals season',
+      notificationText: 'How is your DTR deliverable going?',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.hour0), // set this to day couple days before the exam + location?
+        detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set this to day couple days before the exam + location?
         number: '1'
       },
       toPass: {
         //instruction: 'Can you take a photo of your coffee?',
-        prestoryQuestion: 'How do you feel with still a couple days to go until the exam?',
+        prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due tomorrow!',
         dropdownChoices: {
           name: 'casting question',
           options: ['😃','🙏','😌','😬', '😫', '😢']
         },
-        contextDepQuestion: ['What are you doing at the library?', 'Are you chilling with your friends at 1South or getting a head start on studying for your midterm at Core?'],
+        contextDepQuestion: ['What are you doing at the library?', 'Are you already finished with your deliverable and chilling at the library or are you stressed and cramming?'],
         castingDepQuestion: {
           happy: 'Why are you happy?', 
           hopeful: 'Why are you feeling hopeful?',
