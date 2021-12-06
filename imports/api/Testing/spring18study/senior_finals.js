@@ -25,24 +25,26 @@ export default SHARED_GOALS = {
       notificationSubject: "Hello! :)",
       notificationText: 'How is your DTR deliverable going?',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set to "beginning detector"
+        detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set to "beginning detector" 
         number: '1'
       },
       toPass: {
         //instruction: 'Can you take a photo of your coffee?',
-        prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due tomorrow!',
+        prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due EOD tomorrow!',
         dropdownChoices: {
           name: 'casting question',
           options: ['😃','🙏','😌','😬', '😫', '😢']
         },
-        contextDepQuestion: ['What are you doing at the library?', 'Are you already finished with your deliverable and chilling at the library or are you stressed and cramming?'],
+        contextDepQuestion: ['What are you doing at the library?', 
+                        'Are you already finished with your deliverable and chilling at the library or are you currently working on it?',
+                      'Are you working with your whole SIG? With others from your DTR? Just with the people within your project?'],
         castingDepQuestion: {
-          happy: 'What makes you feel happy?', 
-          hopeful: 'Why do you feel hopeful?',
-          relieved: 'What makes you feel relieved?',
-          anxious: 'What makes you anxious? What do you do to help with your anxiety?',
-          exhausted: 'What makes you exhausted? What helps you feel better?',
-          sad: 'What makes you sad? What helps you feel better?'
+          happy: 'What makes you feel this way?', 
+          hopeful: 'Why do you feel this way?',
+          relieved: 'What makes you feel this way?',
+          anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+          exhausted: 'What makes you feel this way? What helps you feel better?',
+          sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
       numberNeeded: 15,
@@ -53,7 +55,7 @@ export default SHARED_GOALS = {
       notificationSubject: "Hello! :)",
       notificationText: 'How is your DTR deliverable going? It\'s due tonight!',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.during_library), // set to "beginning detector"
+        detector: getDetectorUniqueKey(DETECTORS.during_library), 
         number: '1'
       },
       toPass: {
@@ -63,14 +65,16 @@ export default SHARED_GOALS = {
           name: 'casting question',
           options: ['😃','🙏','😌','😬', '😫', '😢']
         },
-        contextDepQuestion: ['What are you doing at the library?', 'Are you already finished with your deliverable and chilling at the library or are you stressed and cramming?'],
+        contextDepQuestion: ['What are you doing at the library?', 
+          'Are you making just last minute changes today, or do you still have a lot of work to complete today?', 
+        'Are you working with other people from DTR, or are you working alone?'],
         castingDepQuestion: {
-          happy: 'What makes you feel happy?', 
-          hopeful: 'Why do you feel hopeful?',
-          relieved: 'What makes you feel relieved?',
-          anxious: 'What makes you anxious? What do you do to help with your anxiety?',
-          exhausted: 'What makes you exhausted? What helps you feel better?',
-          sad: 'What makes you sad? What helps you feel better?'
+          happy: 'What makes you feel this way?', 
+          hopeful: 'Why do you feel this way?',
+          relieved: 'What makes you feel this way?',
+          anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+          exhausted: 'What makes you feel this way? What helps you feel better?',
+          sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
       numberNeeded: 15,
@@ -81,29 +85,122 @@ export default SHARED_GOALS = {
     notificationSubject: "Hello! :)",
     notificationText: 'Yay! You have submitted your deliverable',
     situation: {
-      detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set to "beginning detector"
+      detector: getDetectorUniqueKey(DETECTORS.after_library), 
       number: '1'
     },
     toPass: {
       //instruction: 'Can you take a photo of your coffee?',
-      prestoryQuestion: 'Yay! You have submitted your deliverable! How was that?',
+      prestoryQuestion: 'Yay! You have (hopefully) submitted your deliverable! How was that?',
       dropdownChoices: {
         name: 'casting question',
         options: ['😃','🙏','😌','😬', '😫', '😢']
       },
-      contextDepQuestion: ['What are you doing at the library?', 'Are you already finished with your deliverable and chilling at the library or are you stressed and cramming?'],
+      contextDepQuestion: ['What are you doing at the library?', 
+      'Are you chilling in the library with friends?', 'Are you studying for your next final?', 'Are you submitting something a little late for DTR?'],
       castingDepQuestion: {
-        happy: 'What makes you feel happy?', 
-        hopeful: 'Why do you feel hopeful?',
-        relieved: 'What makes you feel relieved?',
-        anxious: 'What makes you anxious? What do you do to help with your anxiety?',
-        exhausted: 'What makes you exhausted? What helps you feel better?',
-        sad: 'What makes you sad? What helps you feel better?'
+        happy: 'What makes you feel this way?', 
+        hopeful: 'Why do you feel this way?',
+        relieved: 'What makes you feel this way?',
+        anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+        exhausted: 'What makes you feel this way? What helps you feel better?',
+        sad: 'What makes you feel this way? What helps you feel better?'
       },
     },
     numberNeeded: 15,
     notificationDelay: 1, // 1 seconds for debugging
-    allowRepeatContributions : true},
+    allowRepeatContributions : true
+  },{
+    needName: 'beginning_cafe',
+    notificationSubject: "Hello! :)",
+    notificationText: 'How is your DTR deliverable going? Remember, it\'s due EOD tomorrow!',
+    situation: {
+      detector: getDetectorUniqueKey(DETECTORS.beginning_cafe), // set to "beginning detector"
+      number: '1'
+    },
+    toPass: {
+      //instruction: 'Can you take a photo of your coffee?',
+      prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due EOD tomorrow!',
+      dropdownChoices: {
+        name: 'casting question',
+        options: ['😃','🙏','😌','😬', '😫', '😢']
+      },
+      contextDepQuestion: ['What are you doing at the restaurant/cafe?', 
+      'Are you chilling with friends because you have already completed your DTR deliverable?', 
+      'Are you out for a quick bite before going back to grind?', 'Are you working on DTR out here?'],
+      castingDepQuestion: {
+        happy: 'What makes you feel this way?', 
+        hopeful: 'Why do you feel this way?',
+        relieved: 'What makes you feel this way?',
+        anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+        exhausted: 'What makes you feel this way? What helps you feel better?',
+        sad: 'What makes you feel this way? What helps you feel better?'
+      },
+    },
+    numberNeeded: 15,
+    notificationDelay: 1, // 1 seconds for debugging
+    allowRepeatContributions : true
+  },{
+    needName: 'during_cafe',
+    notificationSubject: "Hello! :)",
+    notificationText: 'How is your DTR deliverable going? It\'s due tonight!',
+    situation: {
+      detector: getDetectorUniqueKey(DETECTORS.during_cafe), 
+      number: '1'
+    },
+    toPass: {
+      //instruction: 'Can you take a photo of your coffee?',
+      prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due tonight!',
+      dropdownChoices: {
+        name: 'casting question',
+        options: ['😃','🙏','😌','😬', '😫', '😢']
+      },
+      contextDepQuestion: ['What are you doing at the cafe/restaurant?', 
+        'Have you already submitted your deliverable and had your exit meeting and enjoying your nice meal with friends before you head back home for break?', 
+      'Is this cafe/ restaurant where you work best, so you are focused on completing your deliverable now?'],
+      castingDepQuestion: {
+        happy: 'What makes you feel this way?', 
+        hopeful: 'Why do you feel this way?',
+        relieved: 'What makes you feel this way?',
+        anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+        exhausted: 'What makes you feel this way? What helps you feel better?',
+        sad: 'What makes you feel this way? What helps you feel better?'
+      },
+    },
+    numberNeeded: 15,
+    notificationDelay: 1, // 1 seconds for debugging
+    allowRepeatContributions : true
+},{
+  needName: 'after_cafe',
+  notificationSubject: "Hello! :)",
+  notificationText: 'Yay! You have submitted your deliverable',
+  situation: {
+    detector: getDetectorUniqueKey(DETECTORS.after_cafe), 
+    number: '1'
+  },
+  toPass: {
+    //instruction: 'Can you take a photo of your coffee?',
+    prestoryQuestion: 'Yay! You have (hopefully) submitted your deliverable! How was that?',
+    dropdownChoices: {
+      name: 'casting question',
+      options: ['😃','🙏','😌','😬', '😫', '😢']
+    },
+    contextDepQuestion: ['What are you doing at the cafe/restaurant?', 
+    'Are you relaxed and enjoying your last meal before you head off for break?', 
+    'Are you studying for your next final here?', 
+    'Catching up with DTR people with some nice food/drinks before you all head off to break?'],
+    castingDepQuestion: {
+      happy: 'What makes you feel this way?', 
+      hopeful: 'Why do you feel this way?',
+      relieved: 'What makes you feel this way?',
+      anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
+      exhausted: 'What makes you feel this way? What helps you feel better?',
+      sad: 'What makes you feel this way? What helps you feel better?'
+    },
+  },
+  numberNeeded: 15,
+  notificationDelay: 1, // 1 seconds for debugging
+  allowRepeatContributions : true
+},
 
     /// NINA AND KEVINS
     // {

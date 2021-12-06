@@ -499,6 +499,46 @@ export let DETECTORS = {
       "(((japacurry || sushi) || ((japanese || tonkatsu) || ((noodles || hotpot) || ((asianfusion || korean) || ((teppanyaki || tempura) || ((ramen || izakaya) || (malaysian || udon))))))) || (korean || hawaiian)) || (((singaporean || hakka) || ((chinese || taiwanese) || ((tcm || cantonese) || ((dimsum || shanghainese) || ((szechuan || hkcafe) || burmese))))) || ((laotian || cambodian) || ((vietnamese || indonesian) || (panasian || thai))));"
     ]
   },
+  beginning_cafe: {
+    _id: Random.id(),
+    description: "beginning cafe",
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var sunday;',
+      'var monday;'],
+    rules: ["(sunday || monday) && (coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies || diners || restaurants);"]
+  },
+  during_cafe: {
+    _id: Random.id(),
+    description: "during cafe",
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+    'var tuesday;'],
+    rules: ["(tuesday) && (coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies || diners || restaurants);"]
+  },
+  after_cafe: {
+    _id: Random.id(),
+    description: "after cafe",
+    variables: ['var coffeeroasteries;',
+      'var coffee;',
+      'var cafes;',
+      'var coffeeshops;',
+      'var coffeeteasupplies;',
+      'var diners;',
+      'var restaurants;',
+      'var wednesday;'],
+    rules: ["(wednesday) && (coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies || diners || restaurants);"]
+  },
   beginning_library: {
     _id: "v2ANTJr1I7wle3Ek9",
     description: "beginning library",
