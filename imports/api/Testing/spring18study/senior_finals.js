@@ -13,7 +13,7 @@ let sendNotificationCN = function (sub) {
 export default SHARED_GOALS = {
   surviveOrThrive: {
     _id: Random.id(),
-    name: 'Surviving or Thriving?',
+    name: 'Final Week of DTR!',
     prestoryTemplate: 'seniorFinalsPrestory',
     participateTemplate: 'survivingThrivingParticipate',
     resultsTemplate: 'survivingThriving',
@@ -24,7 +24,7 @@ export default SHARED_GOALS = {
       notificationSubject: "Hello! :)",
       notificationText: 'How is your DTR deliverable going?',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set this to day couple days before the exam + location?
+        detector: getDetectorUniqueKey(DETECTORS.beginning_library), // set to "beginning detector"
         number: '1'
       },
       toPass: {

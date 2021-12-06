@@ -762,7 +762,8 @@ Template.survivingThriving.helpers({
         let subcastcategory = sub.castCategory
         // debugger;
 
-        if (block === 0 && ((sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1) || (sub.timestamp.getDay() === 2)))){
+        // first time block and Monday
+        if (block === 0 && ((sub.timestamp.getDay() === 0) || ((sub.timestamp.getDay() === 1)))){
           if ((cat === 'Similar') && sub.castCategory === current_emotion){ // if we are in 'Similar' column and same emotion
             // debugger;
             return sub
@@ -772,8 +773,8 @@ Template.survivingThriving.helpers({
           }
         }
 
-        // second time block and Wednesday or Thursday
-        else if ((block === 1) && ((sub.timestamp.getDay() === 3) || (sub.timestamp.getDay() === 4))){
+        // second time block and Tuesday
+        else if ((block === 1) && ((sub.timestamp.getDay() === 2) )){
           if ((cat === 'Similar') && sub.castCategory === current_emotion){
             debugger;
             return sub
@@ -783,8 +784,8 @@ Template.survivingThriving.helpers({
           }
         }
 
-        // third time block and Friday or Saturday
-        else if ((block === 2) && ((sub.timestamp.getDay() === 5) || (sub.timestamp.getDay() === 6))){
+        // third time block and Wednesday+
+        else if ((block === 2) && ((sub.timestamp.getDay() === 3) ||(sub.timestamp.getDay() === 4) ||(sub.timestamp.getDay() === 5) || (sub.timestamp.getDay() === 6))){
           if ((cat === 'Similar') && sub.castCategory === current_emotion){
             return sub
           }
