@@ -4,7 +4,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Router } from 'meteor/iron:router';
 
-
+import { Submissions } from "../OCEManager/currentNeeds";
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
@@ -704,7 +704,7 @@ Template.survivingThriving.helpers({
     // console.log("block ", block);
 
     // find submission in database with user id then find the emotion correlated with the userid to check if the current cat is that
-    // find all posts by the current user and find all the emotions but pick the most recent...?
+    // find all posts by the current user and find all the emotions but pick the most recent
     let user_emotions = Submissions.find({
       uid: Meteor.userId()
     }).fetch().map(function (x) {
