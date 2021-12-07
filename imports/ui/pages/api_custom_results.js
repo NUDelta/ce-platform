@@ -713,21 +713,11 @@ Template.survivingThriving.helpers({
     }
 
     let user_emotions = Submissions.find({
-      $and: [
-        { uid: Meteor.userId() },
-      {$or: [
-        { needName: current_situation + "cafe"},
-        { needName: current_situation + "library"},
-      ]}]
+      uid: Meteor.userId(),
+      needName: { $in: [ current_situation+"library", current_situation+"cafe" ] }
     }).fetch().map(function (x) {
       return x.castCategory;
-    }); 
-
-    // let user_emotions = Submissions.find({
-    //   uid: Meteor.userId(),
-    // }).fetch().map(function (x) {
-    //   return x.castCategory;
-    // });
+    });
 
     let current_emotion = user_emotions[0]
 
