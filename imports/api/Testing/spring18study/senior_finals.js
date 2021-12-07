@@ -47,7 +47,7 @@ export default SHARED_GOALS = {
           sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
-      numberNeeded: 1,
+      numberNeeded: 15,
       notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
     },{
@@ -77,7 +77,7 @@ export default SHARED_GOALS = {
           sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
-      numberNeeded: 1,
+      numberNeeded: 15,
       notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
   },{
@@ -106,7 +106,7 @@ export default SHARED_GOALS = {
         sad: 'What makes you feel this way? What helps you feel better?'
       },
     },
-    numberNeeded: 1,
+    numberNeeded: 15,
     notificationDelay: 1, // 1 seconds for debugging
     allowRepeatContributions : true
   },{
