@@ -636,7 +636,7 @@ Template.scavengerHunt.helpers({
   }
 });
 
-// KEVIN AND NINA COLLECTIVE NARRATIVE
+// KEVIN AND NINA  + Jenny COLLECTIVE NARRATIVE
 Template.survivingThriving.helpers({
   // let timeBlocks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   categories() {
@@ -704,11 +704,30 @@ Template.survivingThriving.helpers({
 
     // find submission in database with user id then find the emotion correlated with the userid to check if the current cat is that
     // find all posts by the current user and find all the emotions but pick the most recent
+    let current_situation = "beginning_"
+    if (block === 1){
+      current_situation = "during_"
+    }
+    else if (block === 2){
+      current_situation = "after_"
+    }
+
     let user_emotions = Submissions.find({
-      uid: Meteor.userId()
+      $and: [
+        { uid: Meteor.userId() },
+      {$or: [
+        { needName: current_situation + "cafe"},
+        { needName: current_situation + "library"},
+      ]}]
     }).fetch().map(function (x) {
       return x.castCategory;
-    });
+    }); 
+
+    // let user_emotions = Submissions.find({
+    //   uid: Meteor.userId(),
+    // }).fetch().map(function (x) {
+    //   return x.castCategory;
+    // });
 
     let current_emotion = user_emotions[0]
 
