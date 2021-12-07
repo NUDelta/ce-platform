@@ -3,8 +3,7 @@ import './api_custom_results.html';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Router } from 'meteor/iron:router';
-
-import { Submissions } from "../OCEManager/currentNeeds";
+import { Submissions } from "../../../imports/api/OCEManager/currentNeeds";
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
