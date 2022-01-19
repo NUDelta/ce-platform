@@ -6,6 +6,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
+import { findPartner } from "../pages/chat"
 //import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
@@ -175,12 +176,55 @@ Template.groupBumpedResults.helpers({
       {imageOne: otherImages[0]},
       otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
       {myImage: myImage},
-      mySub && {myCaption: mySub.content.sentence}
+      mySub && {myCaption: mySub.content.sentence},
+      {allUsers: users}
     )
 
     return results;
   }
 });
+
+
+Template.groupBumpedResults.events({
+  'submit #replyResult'(event, instance) {
+    event.preventDefault();
+    const replyText = event.target.getElementsByClassName("replyText")[0].value;
+
+    console.log(replyText);
+    console.log(this);
+
+    
+    const uid = Meteor.userId();
+    const data = { message: replyText};
+    let users = this.allUsers;
+    if (data.message === "") return;
+    data.uid = uid;
+    data.recipients = [uid];
+
+    const otherStranger = findPartner(uid, users)
+    console.log("other stranger" + otherStranger)
+
+    data.recipients = data.recipients.concat(otherStranger)
+    let currentUsername = Meteor.users.findOne(Meteor.userId()).username;
+
+    Meteor.call("sendMessage", data, (error, response) => {
+      if (error) {
+        console.log(error)
+      } else {
+        // $input.val("");
+        event.target.getElementsByClassName("replyText")[0].value = "";
+        //always scroll to bottom after sending a message
+        const messageContainer = document.getElementById('messages');
+        scrollToBottomAbs(messageContainer);
+      }
+    });//send notification to the recipient for every message
+    Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
+     '/chat');
+    // Router.go("/home");
+    
+    
+  }
+})
 
 Template.groupCheersResults.helpers({
   resultsGroupedByNeedAndTriad() {

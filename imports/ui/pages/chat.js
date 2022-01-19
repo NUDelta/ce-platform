@@ -22,6 +22,21 @@ export const scrollToBottomAbs = function(container){
   }, 200);
 }
 
+export const findPartner = function(uid, users) {
+  //find the other chat recipient: will be in same triad && have stranger static affordance
+  let aff = users.filter(u => u._id == uid)[0].profile.staticAffordances;
+  // console.log("affordance: " + aff)
+  let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+  // console.log("pair: " + pair)
+  let otherStranger = users.filter(
+    u => (u._id != uid)
+    && (pair in u.profile.staticAffordances)
+    // && !('friend' in u.profile.staticAffordances)
+  );
+  otherStranger = otherStranger.map(u => u._id);
+  return otherStranger; 
+}
+
 Template.chat.onRendered(function () {
   const messageContainer = document.getElementById('messages');
   messageContainer.style.height = `${window.innerHeight - 52 - 35 - 66}px`;
@@ -47,18 +62,8 @@ Template.chat.helpers({
     if (data.message === "") return;
     data.uid = uid;
     data.recipients = [uid]
-
-    //find the other chat recipient: will be in same triad && have stranger static affordance
-    let aff = this.users.filter(u => u._id == uid)[0].profile.staticAffordances;
-    // console.log("affordance: " + aff)
-    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
-    // console.log("pair: " + pair)
-    let otherStranger = this.users.filter(
-      u => (u._id != uid)
-      && (pair in u.profile.staticAffordances)
-      // && !('friend' in u.profile.staticAffordances)
-    );
-    otherStranger = otherStranger.map(u => u._id)
+    
+    otherStranger = findPartner(uid, this.users)
     // console.log("other stranger: " + otherStranger)
     data.recipients = data.recipients.concat(otherStranger)
     let currrentUsername = Meteor.users.findOne(Meteor.userId()).username;
