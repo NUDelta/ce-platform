@@ -220,7 +220,7 @@ Template.groupBumpedResults.events({
     });//send notification to the recipient for every message
     Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
      '/chat');
-    // Router.go("/home");
+    Router.go("/chat");
     
     
   }

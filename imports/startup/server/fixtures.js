@@ -204,15 +204,15 @@ function createTestDataProd(){
 
   let uid1 = findUserByUsername('ryan')._id;
   let uid2 = findUserByUsername('jenny')._id;
-  let uid3 = findUserByUsername('mason')._id;
+  let uid3 = findUserByUsername('yvan')._id;
   let uid4 = findUserByUsername('cindy')._id;
-  let uid5 = findUserByUsername('garret')._id;
-  let uid6 = findUserByUsername('fardeem')._id;
-  let uid7 = findUserByUsername('connie')._id;
-  let uid8 = findUserByUsername('yvan')._id;
+  let uid5 = findUserByUsername('jennifer')._id;
+  let uid6 = findUserByUsername('evan')._id;
+  let uid7 = findUserByUsername('derex')._id;
+  let uid8 = findUserByUsername('sofia')._id;
   let uid9 = findUserByUsername('shubhanshi')._id;
   let uid10 = findUserByUsername('roxy')._id;
-  let uid11 = findUserByUsername('evey')._id;
+  let uid11 = findUserByUsername('mason')._id;
   let uid12 = findUserByUsername('jonathan')._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
@@ -410,15 +410,15 @@ function createTestData(){
 
   let uid1 = findUserByUsername('ryan')._id;
   let uid2 = findUserByUsername('jenny')._id;
-  let uid3 = findUserByUsername('mason')._id;
+  let uid3 = findUserByUsername('yvan')._id;
   let uid4 = findUserByUsername('cindy')._id;
-  let uid5 = findUserByUsername('garret')._id;
-  let uid6 = findUserByUsername('fardeem')._id;
-  let uid7 = findUserByUsername('connie')._id;
-  let uid8 = findUserByUsername('yvan')._id;
+  let uid5 = findUserByUsername('jennifer')._id;
+  let uid6 = findUserByUsername('evan')._id;
+  let uid7 = findUserByUsername('derex')._id;
+  let uid8 = findUserByUsername('sofia')._id;
   let uid9 = findUserByUsername('shubhanshi')._id;
   let uid10 = findUserByUsername('roxy')._id;
-  let uid11 = findUserByUsername('evey')._id;
+  let uid11 = findUserByUsername('mason')._id;
   let uid12 = findUserByUsername('jonathan')._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
