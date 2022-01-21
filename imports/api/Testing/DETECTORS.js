@@ -720,7 +720,7 @@ export const DETECTORS = {
   pair8: createDetectors("pair8"),
   pair9: createDetectors("pair9"),
   pair10: createDetectors("pair10"),
-  pair11: createDetectors("pair11"),
+  pair11: createDetectors("pair11")
 }
 
 
