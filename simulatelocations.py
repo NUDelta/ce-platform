@@ -385,8 +385,15 @@ def dndCafeBubbleTea():
     print("users at dnd, coffee lab, and tealicious")
 
 
+def statusUpdate():
+    for i in range(1, 23):
+        setLocation(norris, sys.argv[i])
+    print("22 users at Norris")
+
+
 
 if __name__ == "__main__":
+    statusUpdate()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
@@ -394,7 +401,7 @@ if __name__ == "__main__":
     # allUsersAtRestaurant()
 	# pairsAtParkLibraryGrocery()
     # allUsersAtLibrary()
-    allUsersAtDnD()
+    # allUsersAtDnD()
     # dndCafeBubbleTea()
     # allUsersNorris()
     # testLibraryExpInProd()
