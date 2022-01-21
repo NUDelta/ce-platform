@@ -1,25 +1,5 @@
 const createDetectors = function (pairNum) {
   return {
-    activity1:{
-      _id: Random.id(),
-      description: 'activity1 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
-
-    activity2:{
-      _id: Random.id(),
-      description: 'activity2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
-
   // new detector for walk /////////////////////////////////////
   selfIntroExp:{
     _id: Random.id(),
@@ -28,7 +8,7 @@ const createDetectors = function (pairNum) {
       `var ${pairNum};`,
       'var participatedInSelfIntro;'
     ],
-    rules: [`${pairNum} && !participatedInSelfIntro;`]
+    rules: [`${pairNum} && !participatedInSelfIntro`]
     // rules: ['(triad1)']
   },
 

@@ -96,7 +96,7 @@ select {
 .nav-item {
   display: inline-block;
   text-align: center;
-  width: 33%;
+  width: 25%;
   height: 55px;
   padding: 7px 0px 5px 0px;
   font-size: 12px;
@@ -152,6 +152,7 @@ select {
 
 .btn {
   border-radius: 2px;
+  vertical-align: text-top;
 }
 
 hr {

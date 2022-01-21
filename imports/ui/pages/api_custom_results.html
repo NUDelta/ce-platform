@@ -82,7 +82,7 @@
         <div class="person">
             Reach out to {{getName object}} on Slack/iMessage/Messenger to catch up or say hi!<br>
 
-            <b>{{getName object}}'s selife </b><br>
+            <b>{{getName object}}'s selfie </b><br>
 
             {{#if (getImage object)}}
                 <div style="min-height:150px;display:inline-block;">
@@ -90,7 +90,7 @@
                 </div>
             {{else}}
                 <div style="display:inline-block; min-height:290px; outline-style:solid; outline-color:black; outline-width:1px; text-align: center;">
-                    Waiting for {{getName object}} to upload a selife...
+                    Waiting for {{getName object}} to upload a selfie...
                 </div>
             {{/if}}
         </div>
@@ -227,74 +227,240 @@
 <template name="monsterCreateResults">
   <head>
     <style>
-    .pending_img {
-      background-color: #c1c1c1;
+    .monsterGrid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      position: absolute;
+    }
+    .stitched {
+      height: 15vh;
+      width: 15vh;
+    }
+
+    .report {
+      border-bottom: solid 1px darkgrey;
+      border-top: solid 1px darkgrey;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 45vw;
-      min-width: 45vw;
+      padding: 10px 0px;
+    }
+
+    .reportImg {
+      height: 45vh;
+      width: 45vh;
+      margin: auto;
+    }
+
+    .selected{
+      padding: 3px 8px;
+      background: #5178b7;
+      color: white;
+      border: solid 1px #73a5f5;
+      border-radius: 8px;
+    }
+
+    .unselected{
+      padding: 3px 8px;
+      background: #274d8a;
+      color: white;
+      border: solid 1px #73a5f5;
+      border-radius: 8px;
     }
     </style>
   </head>
 
-  <div>
-    Here are the parts of the monster that each scientist has contributed so far:
+  <h4>Frankenstein's Monster Results</h4>
+  <div style="display:flex; justify-content: space-around; margin-bottom: 10px;">
+    <button id="seeFullMonster" class="selected">See Full Monster</button>
+    <button id="seeMonsterStory" class="unselected">See the Monster Report</button>
   </div>
 
-  {{#let needGroups = (resultsGroupedByNeedAndTriad)}}
-  {{#each needGroup in needGroups}}
-      {{#let needImages = needGroup.imagesGroupedByTriad}}
-      {{#let needSubs = needGroup.needSubs}}
-      {{#let names = needGroup.names}}
-          <div>
-          {{#each needSub in needSubs}}
-          {{#if (elementAtIndex needImages @index)}}
-              <div>
-                <div><b>{{elementAtIndex names @index}}</b></div>
-                {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
-              </div>
-          {{else}}
-              <div>Waiting for this user!<div class="pending_img">?</div></div>
-          {{/if}}
-          {{/each}}
-          </div>
+  {{#let needGroups = (needGroups)}}
+  <div id="fullMonster">
+    <div>
+      Here are the parts of the monster that each scientist has contributed so far:
+    </div>
 
-          {{#if (lengthEqual needImages 3)}}
-          <div>
-            Here is the full monster!
-            <div>
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 0)}}
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 1)}}
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages 2)}}
-            </div>
+    {{#let monsterCreate = (elementAtIndex needGroups 0)}}
+    {{#each monsterPiece in monsterCreate.needImages}}
+      {{elementAtIndex monsterCreate.needUsers @index}}:
+      {{> Template.dynamic template="displayFullImage" data=(monsterPiece)}}
+    {{/each}}
+
+    {{#if (lengthEqual monsterCreate.needImages 2)}}
+    <div>
+      <div style="padding:10px; font-size: 16px; text-align:center;">
+        <b>Here is the full monster!</b>
+      </div>
+      <div>
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 0)}}
+        {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 1)}}
+      </div>
+    </div>
+    {{else}}
+    <div>
+      You'll get a notification when the monster is complete. Check back later!
+    </div>
+    {{/if}}
+
+    {{/let}}
+  </div>
+
+  <div id="monsterStory" style="display:none">
+    <div style="margin-bottom: 12px;">
+      Here are the reports that you two have gathered on the monster!
+    </div>
+
+
+    {{#let monsterStory = (elementAtIndex needGroups 1)}}
+    {{#let monsterCreate = (elementAtIndex needGroups 0)}}
+    {{#each i in monsterStory.needImages}}
+      <div class="report">
+      <div><b>Report {{getDescendingIndex monsterStory.needImages @index}}</b></div>
+      <div style="margin-bottom: 10px;"><b>{{elementAtIndex monsterStory.needUsers @index}}</b>:
+      {{elementAtIndex monsterStory.sentences @index}}</div>
+      {{#let l = (elementAtIndex monsterStory.monsterLocations @index)}}
+      {{#let location = (monsterLocation l)}}
+      <div class="reportImg">
+        <div class="monsterGrid">
+          <div class="stitched" style="grid-column:{{location.col}}; grid-row:{{location.row}}">
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 0)}}
+              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex monsterCreate.needImages 1)}}
           </div>
-          {{else}}
-          <div>
-            You'll get a notification when the monster is complete. Check back later!
-          </div>
-          {{/if}}
+        </div>
+        <div class="monsterBg">
+          {{> Template.dynamic template="displayFullImage" data=(i)}}
+        </div>
+      </div>
       {{/let}}
       {{/let}}
-      {{/let}}
-  {{/each}}
+    </div>
+
+    {{/each}}
+    {{/let}}
+    {{/let}}
+
+  </div>
+  {{/let}}
+
+</template>
+
+<template name="appreciationStationResults">
+  <head>
+    <style>
+      .results {
+        border: solid black 1px;
+        padding: 10px;
+        margin: 12px 0px;
+      }
+    </style>
+  </head>
+  {{#let names = getNames}}
+  <h4>Appreciation Station</h4>
+
+  <div>
+    {{#if isMutualFriend}}
+      Your friends <span style="color: blue;">{{names.otherStranger}}</span> and
+      <span style="color: blue;">{{names.otherOtherStranger}}</span> want to show their
+      appreciation towards you! Here are some images that they took with you in mind.
+    {{else}}
+      Good job on appreciating your friend, <span style="color: blue;">{{names.mutualFriend}}</span>!
+      Here are all the appreciations that you and <span style="color: blue;">{{names.otherStranger}}</span>
+      have made so far.
+    {{/if}}
+  </div>
+
+  <div class="results">
+    {{#each result in getImagesAndSubs}}
+      <div style="margin-bottom: 6px">
+        <b>{{result.user}}:</b>
+        {{result.needCaption}}
+      </div>
+      <div style="margin-bottom: 20px">
+      {{> Template.dynamic template="displayFullImage" data=result.needImage}}
+      </div>
+    {{/each}}
+  </div>
   {{/let}}
 </template>
 
-<!-- so far, can filter submissions with content w needName, sort by time, and then map uid to username -->
-<template name="monsterStoryResults">
+
+<template name="lifeJourneyMapResults">
   <head>
     <style>
-      .monsterGrid{
+      .userButtons {
+        display: flex;
+        flex-direction: row;
+        margin: 12px 0px;
+      }
+      .journeyMapButton {
+        background-color: #2c3e78;
+        color: white;
+        padding: 7px;
+        border-radius: 10px;
+        border: none;
+        margin: 4px;
+      }
+      .userMap {
+        text-align: center;
+        margin: auto;
+        border: solid 1px black;
+        border-radius: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <div>
+    <h4>Life Journey Map Results</h4>
+    Take a look at the fun <span style="color:blue;">adventures</span>
+    that you guys have had in your <span style="color:blue;">life journey</span>!
+    We will notify you if someone updates their life journey map!
+  </div>
+
+  <div class="userButtons">
+  {{#each uid in needUsers}}
+    {{#if uid}}
+      <button class="journeyMapButton" data-username={{getUsername uid}}>
+        {{getUsername uid}}'s Journey Map
+      </button>
+    {{/if}}
+  {{/each}}
+  </div>
+
+  <div class="userMap">
+    Choose a journey map to view!
+    <img src="https://media.istockphoto.com/vectors/cute-kid-of-adventurer-with-map-vector-id1162506269?k=6&m=1162506269&s=170667a&w=0&h=YQ6BXozGHWYghqJoidyshkubUXTJTZM9lF7uWjEv7UI=">
+  </div>
+
+  {{#each userMap in userMaps}}
+    {{#let uid = (getUid userMap)}}
+    <div class="userMap" style="display:none;" data-user={{getUsername uid}}>
+    {{#each mapPiece in userMap}}
+      {{> Template.dynamic template="displayFullImage" data=mapPiece}}
+    {{/each}}
+    </div>
+    {{/let}}
+  {{/each}}
+
+</template>
+
+<template name="nightTimeSpooksResults">
+  <head>
+    <style>
+      .grid{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
         position: absolute;
       }
-      .stitched {
+
+      .fearImage {
         height: 15vh;
         width: 15vh;
       }
+
       .reportImg {
         height: 45vh;
         width: 45vh;
@@ -310,42 +476,52 @@
     </style>
   </head>
 
-  {{#let monster = (stitchedMonster)}}
-  {{#let needImages = (getNeedImages)}}
+  {{#let subs = filterSubs}}
+  {{#let images = (filterImages subs)}}
   <div id="results">
     <h4>{{this.experience.name}}</h4>
-    Your monster has been spotted! Read the full lab report to see where you and the other scientists have seen the monster.
-    <div class="slideshow-container">
-      {{#each needImage in needImages}}
-        {{#let info = (subDetails needImage)}}
-        {{#let idx = (increment @index)}}
-        <div class="mySlides" id="img{{@index}}">
-          <div style="padding:3px; text-align: center; font-size: 16px;"><b>Report {{idx}}</b></div>
-          <div class="reportImg">
-            <div class="monsterGrid">
-              <div class="stitched" style="grid-column:{{info.monsterCol}}; grid-row:{{info.monsterRow}}">
-                {{> Template.dynamic template="displayFullImage" data=(monster)}}
+    {{#each sub in subs}}
+      <div id="img{{@index}}" style="display:{{getFirst @index}}">
+      <div>
+        {{#if (isEqual sub.needName "nightTimeSpooks")}}
+          <div>Here are the images of <span style="color:blue">scary</span> things that you and your partner drew!
+          You'll get a notification when the experience is finished!</div>
+          <div style="border: solid 1px black; padding: 10px; margin: 12px 0px;">
+          {{> Template.dynamic template="displayFullImage" data=(elementAtIndex images @index)}}
+          <div style="border-top: darkgrey 1px solid; padding-top: 6px; margin-top: 10px;">
+            <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
+          </div>
+          </div>
+        {{/if}}
+        {{#if (isEqual sub.needName "riddikulus")}}
+            <div>Here are the <span style="color: blue">riddikulus</span>
+              spells that you casted on each other's fears!</div>
+            <div style="border: solid 1px black; padding: 10px; margin: 12px 0px;">
+              <div class="reportImg">
+                <div class="grid">
+                  <div class="fearImage" style="grid-column:2; grid-row:2">
+                      {{> Template.dynamic template="displayImage" data=(getPartnerImage images @index)}}
+                  </div>
+                </div>
+                <div class="bgImg">
+                  {{> Template.dynamic template="displayFullImage" data=(elementAtIndex images @index)}}
+                </div>
               </div>
-            </div>
-            <div class="monsterBg">
-              {{> Template.dynamic template="displayFullImage" data=(elementAtIndex needImages @index)}}
+            <div style="border-top: darkgrey 1px solid; padding-top: 6px; margin-top: 10px;">
+              <b>{{getUsername this.users sub}}: </b>{{sub.content.sentence}}
             </div>
           </div>
-          <div class="monsterCaption" style="padding-top: 7px;">
-              <b>{{info.user}}</b> reported:
-              <br>{{info.sentence}}
-          </div>
-          {{#if (notFirst @index)}}
-            <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
-          {{/if}}
-          {{#if (notLast @index)}}
-            <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
-          {{/if}}
-        </div>
-        {{/let}}
-        {{/let}}
-      {{/each}}
-    </div>
+        {{/if}}
+      </div>
+
+      {{#if (notFirst @index)}}
+        <button class="prev btn btn-primary" data-currslide="{{@index}}">Previous</button>
+      {{/if}}
+      {{#if (notLast subs @index)}}
+        <button class="next btn btn-primary" data-currslide="{{@index}}">Next</button>
+      {{/if}}
+      </div>
+    {{/each}}
   </div>
   {{/let}}
   {{/let}}
@@ -379,6 +555,7 @@
     </style>
   </head>
   {{#with content}}
+  <form id="replyResult" >
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
       <div class="caption">Check out what everyone is up to!</div>
       <div class="sub_container">
@@ -389,21 +566,37 @@
         {{#if imageOne}}
          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
           <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageOne)}}</div>
+          <!-- <div class="buttons">
+            <button class="reactWow" type="button">
+              <span>😮</span>
+            </button>
+            <button class="reactHeart" type="button">
+              <span>😍</span>
+            </button>
+            <button class="reactLaugh" type="button">
+              <span>😂</span>
+            </button>
+          </div> -->
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>
         {{/if}}
       </div>
-      <div class="sub_container">
-        {{#if imageTwo}}
-          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageTwo)}}</div>
-          <div class="caption">"{{captionTwo}}" -{{friendTwoName}}</div>
+      
+      <div class="reply_container">
+        {{#if imageOne}}
+        
+        <div class="resultReply">{{> Template.dynamic template="resultReply"}}</div>
+        <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
+                    style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
+                Submit
+            </button>
+          
         {{else}}
-          <div class="pending_img">?</div>
-          <div class="caption">We're still waiting on this submission. Hang tight!</div>
         {{/if}}
       </div>
     </div>
+  </form>
   {{/with}}
 </template>
 
@@ -423,46 +616,56 @@
       .arrow {
         font-size: 2em;
       }
+      .submission-container {
+        text-align: center;
+      }
       .submission-text {
-        align-self: flex-start;
+        text-align:center;
+        margin-bottom: 10px;
       }
     </style>
   </head>
-  <p class="main-header"><b>Check out the results from "The Imitation Game":</b></p>
+  <p class="main-header"><b>Check out the results from <br>"The Imitation Game":</b></p>
   <div class="content-container">
-    {{#with content}}
+    {{#let content = content}}
     <div class="submission-container">
       <div class="submission-text">Original Image</div>
-      <img src="{{originalImage}}" />
+      <img src="https://i.imgur.com/xf20VKa.jpg" />
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if creatorSub}}
-        <div class="submission-text">The creator, <b>{{creatorName}}</b>, created this image:</div>
-        <div>{{> Template.dynamic template="displayImage" data=(creatorSub)}}</div>
+      {{#if (lengthLessOrEq 1 content)}}
+        {{#let creator = (elementAtIndex 0 content)}}
+        <div class="submission-text">The creator, <b>{{creator.name}}</b>, created this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=creator.content}}</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the creator's submission. Hang tight!</div>
       {{/if}}
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if descriptorSub}}
-        <div class="submission-text">The descriptor, <b>{{descriptorName}}</b>, said</div>
-        <div>"{{descriptorSub}}"</div>
+      {{#if (lengthLessOrEq 2 content)}}
+        {{#let descriptor = (elementAtIndex 1 content)}}
+        <div class="submission-text">The descriptor, <b>{{descriptor.name}}</b>, described the previous image as</div>
+        <div>"{{descriptor.content}}"</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the descriptor's submission. Hang tight!</div>
       {{/if}}
     </div>
     <div class="arrow">↓</div>
     <div class="submission-container">
-      {{#if recreatorSub}}
-        <div class="submission-text">The recreator, <b>{{recreatorName}}</b>, drew this image:</div>
-        <div>{{> Template.dynamic template="displayImage" data=(recreatorSub)}}</div>
+      {{#if (lengthLessOrEq 3 content)}}
+        {{#let recreator = (elementAtIndex 2 content)}}
+        <div class="submission-text">The recreator, <b>{{recreator.name}}</b>, drew this image:</div>
+        <div>{{> Template.dynamic template="displayImage" data=recreator.content}}</div>
+        {{/let}}
       {{else}}
         <div class="caption">We're still waiting on the recreator's submission. Hang tight!</div>
       {{/if}}
     </div>
-    {{/with}}
+    {{/let}}
   </div>
 </template>
 

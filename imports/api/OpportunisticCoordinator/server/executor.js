@@ -116,6 +116,7 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
  *    e.g., { iid : [ (place1, needName1, dist1), (place2, needName2, dist2), (place3, needName3, dist3), ... ], ... }
  * @param needDelays {object} delay before attempting to run experiences as {iid: number}
  */
+//user availability = the group they are in + experience for that group
 export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, needDelays) => {
   // bin user need availabilities by time, and send to coordinator together
   // {
