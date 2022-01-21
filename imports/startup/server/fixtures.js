@@ -1,26 +1,37 @@
-import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
-import { Random } from 'meteor/random'
+import { Meteor } from "meteor/meteor";
+import { Accounts } from "meteor/accounts-base";
+import { Random } from "meteor/random";
 
-import { CONFIG } from '../../api/config.js';
-import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
-import { Locations } from '../../api/UserMonitor/locations/locations.js';
-import { Messages } from '../../api/Messages/messages.js';
+import { CONFIG } from "../../api/config.js";
+import {
+  Experiences,
+  Incidents,
+} from "../../api/OCEManager/OCEs/experiences.js";
+import { Locations } from "../../api/UserMonitor/locations/locations.js";
+import { Messages } from "../../api/Messages/messages.js";
 import { Submissions } from "../../api/OCEManager/currentNeeds";
-import { Assignments, Availability, ParticipatingNow } from "../../api/OpportunisticCoordinator/databaseHelpers";
-import { Images, Avatars } from '../../api/ImageUpload/images.js';
-import { log } from '../../api/logs.js';
+import {
+  Assignments,
+  Availability,
+  ParticipatingNow,
+} from "../../api/OpportunisticCoordinator/databaseHelpers";
+import { Images, Avatars } from "../../api/ImageUpload/images.js";
+import { log } from "../../api/logs.js";
 
 import { CONSTANTS } from "../../api/Testing/testingconstants";
-import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
-import { findUserByUsername } from '../../api/UserMonitor/users/methods';
+import {
+  createIncidentFromExperience,
+  startRunningIncident,
+} from "../../api/OCEManager/OCEs/methods.js";
+import { findUserByUsername } from "../../api/UserMonitor/users/methods";
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
+import { createPairing } from "./utils/createPairing";
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
 
-  if(!(process.env.MODE === "DEV" || process.env.MODE === "PROD")){
-    if(CONFIG.DEBUG){
+  if (!(process.env.MODE === "DEV" || process.env.MODE === "PROD")) {
+    if (CONFIG.DEBUG) {
       clearDatabase();
       createTestData();
     }
@@ -30,20 +41,19 @@ Meteor.startup(() => {
   //   clearDatabaseProd();
   //   createTestDataProd();
   // }
-
 });
 
 // In chrome browser console...
 // Meteor.call('freshDatabase')
 // Meteor.call('createTestUsers')
 Meteor.methods({
-  createTestUsers(){
+  createTestUsers() {
     createTestData();
   },
   freshDatabase() {
     clearDatabase();
   },
-  startTestExperiences(){
+  startTestExperiences() {
     createTestExperiences();
 
     // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
@@ -54,22 +64,21 @@ Meteor.methods({
     // log.info(`${CONSTANTS.DETECTORS}`);
     // log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
-  clearSubmission(){
+  clearSubmission() {
     Submissions.remove({});
   },
-  clearEmptySubmission(){
-    clearEmptySubmission()
+  clearEmptySubmission() {
+    clearEmptySubmission();
   },
-  clearDatabaseProd(){
-    clearDatabaseProd()
+  clearDatabaseProd() {
+    clearDatabaseProd();
   },
-  createAdditionalTestExperiences(){
-    createAdditionalTestExperiences()
-  }
-  
+  createAdditionalTestExperiences() {
+    createAdditionalTestExperiences();
+  },
 });
 
-function clearDatabase () {
+function clearDatabase() {
   Meteor.users.remove({});
   Experiences.remove({});
   Submissions.remove({});
@@ -84,7 +93,7 @@ function clearDatabase () {
   ParticipatingNow.remove({});
 }
 
-function clearDatabaseProd () {
+function clearDatabaseProd() {
   // Meteor.users.remove({});
   Experiences.remove({});
   // Submissions.remove({});
@@ -100,7 +109,7 @@ function clearDatabaseProd () {
 }
 
 function clearEmptySubmission() {
-  Submissions.remove({uid: null})
+  Submissions.remove({ uid: null });
 }
 
 // export const createNewId = (type, need) => {
@@ -114,16 +123,16 @@ function clearEmptySubmission() {
 //   return need
 // }
 
-function createTestExperiences(){
-    // add detectors
-    for (let i = 1; i < 7; i++){
-      let pairNum = "pair" + `${i}`;
-      Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-        Detectors.insert(value);
-      });
-    }
-  log.info(`Populated ${ Detectors.find().count() } detectors`);
-  for (let i = 1; i < 7; i++){
+function createTestExperiences() {
+  // add detectors
+  for (let i = 1; i < 7; i++) {
+    let pairNum = "pair" + `${i}`;
+    Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
+      Detectors.insert(value);
+    });
+  }
+  log.info(`Populated ${Detectors.find().count()} detectors`);
+  for (let i = 1; i < 7; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
       // let need = value.contributionTypes[0].needName;
@@ -131,56 +140,56 @@ function createTestExperiences(){
       // need = createNewId("e", need)
       // console.log("need after: "+ need);
       // value._id = need;
-        Experiences.insert(value);
-        let incident = createIncidentFromExperience(value);
-        startRunningIncident(incident);
-      });
+      Experiences.insert(value);
+      let incident = createIncidentFromExperience(value);
+      startRunningIncident(incident);
+    });
   }
-  
 }
 
-function createAdditionalTestExperiences(){
+function createAdditionalTestExperiences() {
   // add detectors
-  for (let i = 1; i < 7; i++){
+  for (let i = 1; i < 7; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-      if (!Detectors.findOne({description: value.description})){
+      if (!Detectors.findOne({ description: value.description })) {
         log.info(`new detector: ${value.description} created`);
         Detectors.insert(value);
       }
     });
   }
-log.info(`Populated ${ Detectors.find().count() } detectors`);
-for (let i = 1; i < 7; i++){
-  let pairNum = "pair" + `${i}`;
-  Object.values(CONSTANTS.NEW_EXPERIENCES[pairNum]).forEach(function (value) {
-    // let need = value.contributionTypes[0].needName;
-    // console.log("need before: "+ need)
-    // need = createNewId("e", need)
-    // console.log("need after: "+ need);
-    // value._id = need;
+  log.info(`Populated ${Detectors.find().count()} detectors`);
+  for (let i = 1; i < 7; i++) {
+    let pairNum = "pair" + `${i}`;
+    Object.values(CONSTANTS.NEW_EXPERIENCES[pairNum]).forEach(function (value) {
+      // let need = value.contributionTypes[0].needName;
+      // console.log("need before: "+ need)
+      // need = createNewId("e", need)
+      // console.log("need after: "+ need);
+      // value._id = need;
       Experiences.insert(value);
       let incident = createIncidentFromExperience(value);
       startRunningIncident(incident);
     });
-}
-log.info(`Populated ${ Detectors.find().count() } new experiences`);
-log.info(`Populated ${ Submissions.find().count()} new submissions`)
+  }
+  log.info(`Populated ${Detectors.find().count()} new experiences`);
+  log.info(`Populated ${Submissions.find().count()} new submissions`);
 }
 
-function createTestDataProd(){
+function createTestDataProd() {
   // add test users
   Object.values(CONSTANTS.USERS).forEach(function (value) {
-    if (!Meteor.users.findOne({username: value.username})){
-      log.info(`username: ${value.username} not found, creating new account...`)
-      Accounts.createUser(value)
+    if (!Meteor.users.findOne({ username: value.username })) {
+      log.info(
+        `username: ${value.username} not found, creating new account...`
+      );
+      Accounts.createUser(value);
     }
   });
-  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
-  
+  log.info(`Populated ${Meteor.users.find().count()} accounts`);
 
   // add detectors
-  for (let i = 1; i < 7; i++){
+  for (let i = 1; i < 7; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
       Detectors.insert(value);
@@ -191,8 +200,7 @@ function createTestDataProd(){
   //     Detectors.insert(value);
   //   });
   // })
-  log.info(`Populated ${ Detectors.find().count() } detectors`);
-
+  log.info(`Populated ${Detectors.find().count()} detectors`);
 
   // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
   // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
@@ -200,20 +208,36 @@ function createTestDataProd(){
 
   // start experiences
   createTestExperiences();
-  log.info(`Created ${ Experiences.find().count() } experiences`);
+  log.info(`Created ${Experiences.find().count()} experiences`);
 
-  let uid1 = findUserByUsername('ryan')._id;
-  let uid2 = findUserByUsername('jenny')._id;
-  let uid3 = findUserByUsername('yvan')._id;
-  let uid4 = findUserByUsername('cindy')._id;
-  let uid5 = findUserByUsername('jennifer')._id;
-  let uid6 = findUserByUsername('evan')._id;
-  let uid7 = findUserByUsername('derex')._id;
-  let uid8 = findUserByUsername('sofia')._id;
-  let uid9 = findUserByUsername('shubhanshi')._id;
-  let uid10 = findUserByUsername('roxy')._id;
-  let uid11 = findUserByUsername('mason')._id;
-  let uid12 = findUserByUsername('jonathan')._id;
+  //TODO: these names should be imported, but need to determine where to import it from
+  createPairing([
+    "ryan",
+    "jenny",
+    "yvan",
+    "cindy",
+    "jennifer",
+    "evan",
+    "derex",
+    "sofia",
+    "shubhanshi",
+    "roxy",
+    "mason",
+    "jonathan",
+  ]);
+  // code immediately below this was abstracted by Yvan 1/20
+  // let uid1 = findUserByUsername('ryan')._id;
+  // let uid2 = findUserByUsername('jenny')._id;
+  // let uid3 = findUserByUsername('yvan')._id;
+  // let uid4 = findUserByUsername('cindy')._id;
+  // let uid5 = findUserByUsername('jennifer')._id;
+  // let uid6 = findUserByUsername('evan')._id;
+  // let uid7 = findUserByUsername('derex')._id;
+  // let uid8 = findUserByUsername('sofia')._id;
+  // let uid9 = findUserByUsername('shubhanshi')._id;
+  // let uid10 = findUserByUsername('roxy')._id;
+  // let uid11 = findUserByUsername('mason')._id;
+  // let uid12 = findUserByUsername('jonathan')._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
   // let uid2 = findUserByUsername('sig1_mentor')._id;
@@ -240,150 +264,150 @@ function createTestDataProd(){
   //   multi: true
   // });
 
-  Meteor.users.update({
-    _id: {$in: [uid1]}
-  }, {
-    $set: { 'profile.staticAffordances': {
-      "pair1":true,
-    } },
-  }, {
-    multi: true
-  });
+  // code below this was abstracted by Yvan 1/20
+  // Meteor.users.update({
+  //   _id: {$in: [uid1]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair1":true,
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid2]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair1":true, 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid2]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair1":true,
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid3]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair2":true, 
-  } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid3]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair2":true,
+  // } },
+  // }, {
+  //   multi: true
+  // });
 
+  // Meteor.users.update({
+  //   _id: {$in: [uid4]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair2":true,
+  //     // "stranger": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid4]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair2":true, 
-      // "stranger": true 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid5]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair3":true,
+  //     // "friend": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid5]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair3":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid6]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair3":true,
+  //     // "stranger2": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid6]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair3":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid7]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair4":true,
+  //     // "friend": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid7]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair4":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid8]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair4":true,
+  //     // "stranger2": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid8]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair4":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid9]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair5":true,
+  //     // "friend": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid9]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair5":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid10]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair5":true,
+  //     // "stranger2": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid10]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair5":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid11]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair6":true,
+  //     // "friend": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid11]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair6":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  // Meteor.users.update({
+  //   _id: {$in: [uid12]}
+  // }, {
+  //   $set: { 'profile.staticAffordances': {
+  //     "pair6":true,
+  //     // "stranger2": true
+  //   } },
+  // }, {
+  //   multi: true
+  // });
 
-  Meteor.users.update({
-    _id: {$in: [uid12]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair6":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
-
-
-  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
+  // log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
 }
 
-function createTestData(){
+function createTestData() {
   // add test users
   Object.values(CONSTANTS.USERS).forEach(function (value) {
-    if (!Meteor.users.findOne({username: value.username})){
-      log.info(`username: ${value.username} not found, creating new account...`)
-      Accounts.createUser(value)
+    if (!Meteor.users.findOne({ username: value.username })) {
+      log.info(
+        `username: ${value.username} not found, creating new account...`
+      );
+      Accounts.createUser(value);
     }
   });
-  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
-  
+  log.info(`Populated ${Meteor.users.find().count()} accounts`);
 
   // // add detectors
   // for (let i = 1; i < 7; i++){
@@ -399,27 +423,26 @@ function createTestData(){
   // // })
   // log.info(`Populated ${ Detectors.find().count() } detectors`);
 
-
   // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
   // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
   // startRunningIncident(incident);
 
   // start experiences
   createTestExperiences();
-  log.info(`Created ${ Experiences.find().count() } experiences`);
+  log.info(`Created ${Experiences.find().count()} experiences`);
 
-  let uid1 = findUserByUsername('ryan')._id;
-  let uid2 = findUserByUsername('jenny')._id;
-  let uid3 = findUserByUsername('yvan')._id;
-  let uid4 = findUserByUsername('cindy')._id;
-  let uid5 = findUserByUsername('jennifer')._id;
-  let uid6 = findUserByUsername('evan')._id;
-  let uid7 = findUserByUsername('derex')._id;
-  let uid8 = findUserByUsername('sofia')._id;
-  let uid9 = findUserByUsername('shubhanshi')._id;
-  let uid10 = findUserByUsername('roxy')._id;
-  let uid11 = findUserByUsername('mason')._id;
-  let uid12 = findUserByUsername('jonathan')._id;
+  let uid1 = findUserByUsername("ryan")._id;
+  let uid2 = findUserByUsername("jenny")._id;
+  let uid3 = findUserByUsername("yvan")._id;
+  let uid4 = findUserByUsername("cindy")._id;
+  let uid5 = findUserByUsername("jennifer")._id;
+  let uid6 = findUserByUsername("evan")._id;
+  let uid7 = findUserByUsername("derex")._id;
+  let uid8 = findUserByUsername("sofia")._id;
+  let uid9 = findUserByUsername("shubhanshi")._id;
+  let uid10 = findUserByUsername("roxy")._id;
+  let uid11 = findUserByUsername("mason")._id;
+  let uid12 = findUserByUsername("jonathan")._id;
 
   // let uid1 = findUserByUsername('sig1_mentee1')._id;
   // let uid2 = findUserByUsername('sig1_mentor')._id;
@@ -431,153 +454,240 @@ function createTestData(){
   // let olinuid1 = findUserByUsername('nagy')._id;
   // let olinuid2 = findUserByUsername('bonnie')._id;
 
-  Meteor.users.update({
-    // everyone
-  }, {
-    $set: {
-      "profile.experiences": [],
-      "profile.subscriptions": [],
-      "profile.lastParticipated": null,
-      "profile.lastNotified": null,
-      "profile.pastIncidents": [],
-      "profile.staticAffordances": {}
+  Meteor.users.update(
+    {
+      // everyone
+    },
+    {
+      $set: {
+        "profile.experiences": [],
+        "profile.subscriptions": [],
+        "profile.lastParticipated": null,
+        "profile.lastNotified": null,
+        "profile.pastIncidents": [],
+        "profile.staticAffordances": {},
+      },
+    },
+    {
+      multi: true,
     }
-  }, {
-    multi: true
-  });
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid1]}
-  }, {
-    $set: { 'profile.staticAffordances': {
-      "pair1":true,
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid1] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair1: true,
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid2]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair1":true, 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid2] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair1: true,
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid3]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair2":true, 
-  } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid3] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair2: true,
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
+  Meteor.users.update(
+    {
+      _id: { $in: [uid4] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair2: true,
+          // "stranger": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid4]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair2":true, 
-      // "stranger": true 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid5] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair3: true,
+          // "friend": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid5]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair3":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid6] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair3: true,
+          // "stranger2": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid6]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair3":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid7] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair4: true,
+          // "friend": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid7]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair4":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid8] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair4: true,
+          // "stranger2": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid8]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair4":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid9] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair5: true,
+          // "friend": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid9]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair5":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid10] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair5: true,
+          // "stranger2": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid10]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair5":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid11] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair6: true,
+          // "friend": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid11]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair6":true, 
-      // "friend": true 
-    } },
-  }, {
-    multi: true
-  });
+  Meteor.users.update(
+    {
+      _id: { $in: [uid12] },
+    },
+    {
+      $set: {
+        "profile.staticAffordances": {
+          pair6: true,
+          // "stranger2": true
+        },
+      },
+    },
+    {
+      multi: true,
+    }
+  );
 
-  Meteor.users.update({
-    _id: {$in: [uid12]}
-  }, {
-    $set: { 'profile.staticAffordances': { 
-      "pair6":true, 
-      // "stranger2": true
-    } },
-  }, {
-    multi: true
-  });
-
-
-  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+" " + uid4 + " " + uid5 + " " + uid6);
+  log.debug(
+    "FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py " +
+      uid1 +
+      " " +
+      uid2 +
+      " " +
+      uid3 +
+      " " +
+      uid4 +
+      " " +
+      uid5 +
+      " " +
+      uid6
+  );
 }
 
 /* graveyard
