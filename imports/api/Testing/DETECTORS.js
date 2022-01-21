@@ -697,13 +697,30 @@ const createDetectors = function (pairNum) {
 }
 };
 
+// function create_detector_pairs(pairCount) {
+//   let detector_pair = {}
+//   let base = "pair";
+//   for(let i = 1; i <= pairCount; i++) {
+//     let pairNum = base + String(i)
+//     detector_pair[pairNum] = createDetectors(pairNum)
+//   }
+//   return detector_pair
+// }
+
+// export default DETECTORS = create_detector_pairs(11)
+
 export const DETECTORS = {
   pair1: createDetectors("pair1"),
   pair2: createDetectors("pair2"),
   pair3: createDetectors("pair3"),
   pair4: createDetectors("pair4"),
   pair5: createDetectors("pair5"),
-  pair6: createDetectors("pair6")
+  pair6: createDetectors("pair6"),
+  pair7: createDetectors("pair7"),
+  pair8: createDetectors("pair8"),
+  pair9: createDetectors("pair9"),
+  pair10: createDetectors("pair10"),
+  pair11: createDetectors("pair11"),
 }
 
 

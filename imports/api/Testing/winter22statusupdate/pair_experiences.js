@@ -1,5 +1,5 @@
 import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
-import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
+import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
@@ -26,10 +26,10 @@ export const createActivity1 = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed Activity 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
-    notify(participants, sub.iid, 'See images from you and your partner\'s activity!', '', route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
   }
 
   const activity1Callback = function (sub) {
@@ -48,14 +48,14 @@ export const createActivity1 = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let systemMessage = 'Your partner just completed Activity 1! Participate to see their results when you get a chance💬'; 
-    let notifMessage = "Hey! Your partner just completed Activity 1"
+    let systemMessage = 'Your partner just completed Remote Working - 1! Participate to see their results when you get a chance💬'; 
+    let notifMessage = "Hey! Your partner just completed Remote Working - 1"
     sendSystemMessage(systemMessage, partner, "/chat"); 
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: 'Activity 1',
+    name: '💻Remote Working - 1🖥',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -66,8 +66,8 @@ export const createActivity1 = function (pairNum) {
           number : 1 
         },
         toPass : {
-          situationDescription : "Take a picture of your favorite corner in the space you are in!",
-          instruction : ""
+          situationDescription : "Answer from one of the following prompts:",
+          instruction : "1) Take a picture of your zoom classroom set up! Where are you calling from and why? \n 2)Take a picture of your remote working essentials! Why is it important to you?"
         },
         numberNeeded : 2,
         notificationDelay : 1,
@@ -75,8 +75,8 @@ export const createActivity1 = function (pairNum) {
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your favorite corner in the space!',
-    notificationText: 'Share your favorite corner in the space!',
+    description: 'Share your remote working experience!',
+    notificationText: 'Share your remote working experience!',
     callbacks: [{
         trigger: `(cb.needFinished('Activity1${pairNum}'))`,
         function: activity1CompleteCallback.toString(),
@@ -112,10 +112,10 @@ export const createActivity2 = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed Activity 2! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed Remote Working - 2! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
-    notify(participants, sub.iid, 'See images from you and your partner\'s activity!', '', route);
+    notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working - 2!', '', route);
   }
 
   const activity2Callback = function (sub) {
@@ -134,14 +134,14 @@ export const createActivity2 = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let systemMessage = 'Your partner just completed Activity 2! Participate to see their results when you get a chance💬'; 
-    let notifMessage = "Hey! Your partner just completed Activity 2"
+    let systemMessage = 'Your partner just completed Remote working - 2! Participate to see their results when you get a chance💬'; 
+    let notifMessage = "Hey! Your partner just completed Remote working - 2"
     sendSystemMessage(systemMessage, partner, "/chat"); 
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
   let experience = {
-    name: 'Activity 2',
+    name: '💻Remote Working - 2🖥',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -152,8 +152,8 @@ export const createActivity2 = function (pairNum) {
           number : 1 
         },
         toPass : {
-          situationDescription : "Take a picture of something in your work-from-home setting that keeps you motivated!",
-          instruction : ""
+          situationDescription : "Answer from one of the following prompts:",
+          instruction : "1) Take a picture of something around that keeps you motivated! Why? \n 2) Take a picture of something around you that makes you happy! Why?"
         },
         numberNeeded : 2,
         notificationDelay : 1,
@@ -161,8 +161,8 @@ export const createActivity2 = function (pairNum) {
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your motivation during remote learning and working!',
-    notificationText: 'Share your motivation during remote learning and working!',
+    description: 'Share your remote working experience!',
+    notificationText: 'Share your remote working experience!',
     callbacks: [{
         trigger: `(cb.needFinished('Activity2${pairNum}'))`,
         function: activity2CompleteCallback.toString(),
@@ -188,13 +188,30 @@ const creatPairExperience = function(pairNum) {
   }
 }
 
+// function create_pair_experiences(pairCount) {
+//   let pair_experience = {}
+//   let base = "pair";
+//   for(let i = 1; i <= pairCount; i++) {
+//     let pairNum = base + String(i)
+//     pair_experience[pairNum] = creatPairExperience(pairNum)
+//   }
+//   return pair_experience
+// }
+
+// export default PAIR_EXPERIENCES = create_pair_experiences(11)
+
 export default PAIR_EXPERIENCES = {
   pair1: creatPairExperience("pair1"),
   pair2: creatPairExperience("pair2"),
   pair3: creatPairExperience("pair3"),
   pair4: creatPairExperience("pair4"),
   pair5: creatPairExperience("pair5"),
-  pair6: creatPairExperience("pair6")
+  pair6: creatPairExperience("pair6"),
+  pair7: creatPairExperience("pair7"),
+  pair8: creatPairExperience("pair8"),
+  pair9: creatPairExperience("pair9"),
+  pair10: creatPairExperience("pair10"),
+  pair11: creatPairExperience("pair11")
 }
 
 
