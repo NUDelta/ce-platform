@@ -6,15 +6,19 @@ path1 = [(43, -87), (32, -120)]
 
 park =  (42.056838, -87.675940)
 burgers = (42.046131, -87.681559)
-grocery = (42.047621, -87.679488)
+# grocery = (42.047621, -87.679488)
+grocery = (42.047604700619246, -87.6791521822815) 
 grocery2 = (42.039818,-87.680088)
+grocery_dnd = (42.058715179924675, -87.68319437996105)
 coffee = (42.046881, -87.679555)
 # beer = (42.047105, -87.682006)
 bars = (42.046251, -87.680547)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
-library = (42.058141, -87.674490)
+# library = (42.058141, -87.674490) 
+library = (42.05814914752829, -87.67442041754066)
+norris = (42.053262712572675, -87.67268455470771)
 
 def followPath(path, uid):
     for stop in path:
@@ -185,12 +189,24 @@ def test5():
         time.sleep(15)
 
 def allUsersAtPark():
+    print(sys.argv)
     setLocation(park, sys.argv[1])
     setLocation(park, sys.argv[2])
     setLocation(park, sys.argv[3])
     setLocation(park, sys.argv[4])
     setLocation(park, sys.argv[5])
+    setLocation(park, sys.argv[6])
     print("all usrs at parks")
+
+def pairsAtParkLibraryGrocery():
+    print(sys.argv)
+    setLocation(park, sys.argv[1])
+    setLocation(park, sys.argv[2])
+    setLocation(library, sys.argv[3]) 
+    setLocation(library, sys.argv[4])
+    setLocation(grocery, sys.argv[5]) 
+    setLocation(grocery, sys.argv[6])
+    print("users at park, library, and grocery")
 
 def allUsersAtCastle():
     setLocation((42.050538,-87.677355), sys.argv[1])
@@ -204,6 +220,9 @@ def allUsersAtRestaurant():
     setLocation(burgers, sys.argv[1])
     setLocation(burgers, sys.argv[2])
     setLocation(burgers, sys.argv[3])
+    setLocation(burgers, sys.argv[4])
+    setLocation(burgers, sys.argv[5])
+    setLocation(burgers, sys.argv[6])
     print("all users at burgers")
 
 
@@ -222,6 +241,7 @@ def allUsersAtBars():
     setLocation(bars, sys.argv[3])
     setLocation(bars, sys.argv[4])
     setLocation(bars, sys.argv[5])
+    setLocation(bars, sys.argv[6])
     print("all users at bar")
 
 def allUsersAtTrain():
@@ -301,11 +321,85 @@ def allUsersCoffee():
 		setLocation(coffee, i)
 	print("all users at coffee")
 
+def usersParkAndLibrary():
+    setLocation(park, sys.argv[1])
+    setLocation(park, sys.argv[2])
+    setLocation(park, sys.argv[3])
+    setLocation(library, sys.argv[4])
+    setLocation(library, sys.argv[5])
+
+def allUsersAtLibrary():
+    mainLibrary = (42.05373689551069, -87.67434641930538)
+    mudd = (42.05836839573704, -87.6745109121166)
+    print(sys.argv)
+    setLocation(mudd, sys.argv[1])
+    setLocation(mudd, sys.argv[2])
+    setLocation(mudd, sys.argv[3]) 
+    setLocation(mudd, sys.argv[4])
+    setLocation(mudd, sys.argv[5]) 
+    setLocation(mudd, sys.argv[6])
+    print("users at mudd")
+
+def allUsersAtDnD():
+    print(sys.argv)
+    setLocation(grocery_dnd, sys.argv[1])
+    setLocation(grocery_dnd, sys.argv[2])
+    setLocation(grocery_dnd, sys.argv[3]) 
+    setLocation(grocery_dnd, sys.argv[4])
+    setLocation(grocery_dnd, sys.argv[5]) 
+    setLocation(grocery_dnd, sys.argv[6])
+    print("users at DnD")
+
+def allUsersNorris():
+    print(sys.argv)
+    setLocation(norris, sys.argv[1])
+    setLocation(norris, sys.argv[2])
+    setLocation(norris, sys.argv[3]) 
+    setLocation(norris, sys.argv[4])
+    setLocation(norris, sys.argv[5]) 
+    setLocation(norris, sys.argv[6])
+    print("users at norris")
+
+def halfUsersAtLibrary():
+    print(sys.argv)
+    setLocation(library, sys.argv[1])
+    setLocation(grocery, sys.argv[2])
+    setLocation(library, sys.argv[3]) 
+    setLocation(grocery, sys.argv[4])
+    setLocation(library, sys.argv[5]) 
+    setLocation(grocery, sys.argv[6])
+    print("half users at library, other half at grocery")
+
+
+
+def dndCafeBubbleTea():
+    grocery_dnd = (42.058715179924679, -87.68319437996105)
+    coffeeLab = (42.05849649421129, -87.68366051608254)
+    tealicious = (42.04614329251509, -87.68147970259031)
+    setLocation(grocery_dnd, sys.argv[1])
+    setLocation(grocery_dnd, sys.argv[2])
+    setLocation(coffeeLab, sys.argv[3]) 
+    setLocation(coffeeLab, sys.argv[4])
+    setLocation(tealicious, sys.argv[5]) 
+    setLocation(tealicious, sys.argv[6])
+    print("users at dnd, coffee lab, and tealicious")
+
+
+
 if __name__ == "__main__":
     # allUsersGrocery()
-	allUsersCoffee()
+	# allUsersCoffee()
+    #allUsersAtTrain()
 	# allUsersAtBars()
-	#allUsersAtPark()
+    # allUsersAtRestaurant()
+	# pairsAtParkLibraryGrocery()
+    # allUsersAtLibrary()
+    allUsersAtDnD()
+    # dndCafeBubbleTea()
+    # allUsersNorris()
+    # testLibraryExpInProd()
+    # halfUsersAtLibrary()
+    # usersParkAndLibrary()
     # garrettAndMegBump()
     # single user movement
     # setLocation(burgers, sys.argv[1])

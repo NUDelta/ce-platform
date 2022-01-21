@@ -75,38 +75,227 @@ Template.bumped.helpers({
   }
 });
 
-Template.monsterCreate.helpers({
-  mostRecentImageTriadForNeed(images, needName) {
-    // assure they are sorted in ascending (first uploadedAt first)
-    images = images.sort(function(x, y) {
-      return x.uploadedAt - y.uploadedAt;
-    });
-    let needImages = images.filter(function(x) {
-      return x.needName === needName;
-    });
-    let imagesGroupedByTriad = chunkArray(needImages, 3);
-    if(imagesGroupedByTriad.length == 0){
-      return [];
+
+Template.nightTimeSpooks.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.nightTimeSpooks.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.nightTimeSpooks.helpers({
+  getInstruction1(){
+    //get current user & then find static affordances
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0];
+    //show instruction1 if user hasn't done the first part yet
+    if (currentUser.profile.staticAffordances.participatedInNightTimeSpooks){
+      return "none";
+    } else {
+      return "block";
     }
-    else {
-      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
-    }
   },
-  arrayLenEqual(array, len){
-    return array.length === len;
-  },
-  elementIndex(array, index){
-    return array[index];
-  },
-  submitDisplayValue() {
-    // when image submit is ready, submit button should be shown
-    if (Template.instance().imageSubmitReady.get()) {
+  getInstruction2(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0];
+    //show instruction2 if user has done the first part
+    if (currentUser.profile.staticAffordances.participatedInNightTimeSpooks){
       return "block";
     } else {
       return "none";
     }
+  },
+  getPartnerUsername(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    return partner.username;
+  },
+  getPartnerImage(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let partnerImage = this.images.filter(
+      s => s.uid == partner._id
+      && s.needName=="nightTimeSpooks")[0]
+    return partnerImage;
+  },
+  getPartnerCaption(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let partnerSub = this.submissions.filter(
+      s => s.uid == partner._id
+      && s.needName=="nightTimeSpooks")[0];
+    return partnerSub.content.sentence;
   }
 });
+
+Template.nightTimeSpooks.events({
+'click #takePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    toggleCameraControls('takePhotoInProgress');
+    CameraPreview.takePicture({
+      width: 480, height: 640, quality: 85
+    },function(imgData){
+        let rect = getPreviewRect();
+        b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+          // using an instance of jquery tied to current template scope
+          let imagePreview = template.$(".fileinput-preview");
+          imagePreview.attr('src', croppedImgUrl);
+          imagePreview.show();
+          template.imageSubmitReady.set(true);
+          CameraPreview.hide();
+          toggleCameraControls('takePhotoDone');
+          document.getElementById('textbox').style.display = "block";
+          document.getElementById('submit').style.visibility = "visible";
+        });
+    });
+  } else {
+    console.error("Could not access the CameraPreview");
+  }
+},
+'click #retakePhoto'(event, template){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.show()
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+  $(".fileinput-preview").hide();
+  template.imageSubmitReady.set(false);
+  toggleCameraControls('startCamera');
+  document.getElementById('textbox').style.display = "none";
+  document.getElementById('submit').style.visibility = "hidden";
+},
+'click #switchCamera'(){
+  if (typeof CameraPreview !== 'undefined') {
+    CameraPreview.switchCamera();
+  } else {
+    console.error("Could not access the CameraPreview")
+  }
+},
+
+'click #goToParticipate2'(event, template) {
+  document.getElementById('instruction2').style.display = "none";
+  document.getElementById('triparticipate').style.display = "block";
+
+  if (template.cameraStarted.get()) {
+    if (!template.imageSubmitReady.get()) {
+      CameraPreview.show();
+    }
+  } else {
+    Meteor.setTimeout(() => {
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
+      }
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
+    }, 300);
+  }
+},
+'click #goToParticipate1'() {
+  document.getElementById('instruction1').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+},
+'click #goToInstruction1'() {
+  document.getElementById('instruction1').style.display = "block";
+  document.getElementById('participate').style.display = "none";
+},
+'click #goToInstruction2'() {
+  document.getElementById('instruction2').style.display = "block";
+  document.getElementById('triparticipate').style.display = "none";
+  CameraPreview.hide();
+}
+});
+
+//helper functions for finding the other users
+export const getPartner = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
+  let partner = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      tag in u.profile.staticAffordances
+  )[0];
+  return partner;
+}
+
+export const getMutualFriend = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let friend = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      'friend' in u.profile.staticAffordances
+  )[0];
+  return friend;
+}
+
+export const getUsernameFromUid = (uid, users) => {
+  let user = users.filter(u => uid == u._id)[0];
+  return user.username;
+}
+
+Template.appreciationStation.helpers({
+  getNames(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    let partner = getPartner(currentUser, this.users);
+    let friend = getMutualFriend(currentUser, this.users);
+
+    return  {
+      otherStranger: partner.username,
+      mutualFriend: friend.username
+    }
+  }
+})
+
+
+Template.appreciationStation.events({
+'click #goToParticipate'(event, template){
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+})
+
+Template.lifeJourneyMap.helpers({
+  isFirstStyle(){
+    let currUserId = Meteor.userId();
+    let currUserImagesLen = this.images.filter(i => i.uid == currUserId).length;
+    return currUserImagesLen == 0? 'block' : 'none';
+  },
+  notIsFirstStyle(){
+    let currUserId = Meteor.userId();
+    let currUserImagesLen = this.images.filter(i => i.uid == currUserId).length;
+    return currUserImagesLen == 0? 'none' : 'block';
+  },
+  maps(){
+    let currUserId = Meteor.userId();
+    let currUserImages = this.images.filter(i => i.uid == currUserId);
+    return currUserImages;
+  }
+})
+
+Template.lifeJourneyMap.events({
+'click #goToParticipate'(event, template){
+  document.getElementById('instruction').style.display = "none";
+  document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+})
+
 
 Template.monsterCreate.onCreated(() => {
   Template.instance().imageSubmitReady = new ReactiveVar(false);
@@ -156,8 +345,8 @@ Template.monsterCreate.events({
     console.error("Could not access the CameraPreview")
   }
 },
-'click #goToParticipate'(event, template) {
-  document.getElementById('instruction').style.display = "none";
+'click #goToParticipate1'(event, template) {
+  document.getElementById('instruction1').style.display = "none";
   document.getElementById('triparticipate').style.display = "block";
 
   if (template.cameraStarted.get()) {
@@ -178,111 +367,35 @@ Template.monsterCreate.events({
     }, 300);
   }
 },
-'click #goToInstruction'() {
-  document.getElementById('instruction').style.display = "block";
-  document.getElementById('triparticipate').style.display = "none";
-  CameraPreview.hide();
-}
-});
+'click #goToParticipate2'(event, template) {
+  document.getElementById('instruction2').style.display = "none";
+  document.getElementById('participate').style.display = "block";
 
-Template.monsterStory.onCreated(() => {
-  Template.instance().imageSubmitReady = new ReactiveVar(false);
-  Template.instance().cameraStarted = new ReactiveVar(false);
-});
-
-Template.monsterStory.onDestroyed(() => {
-  CameraPreview.stopCamera();
-});
-
-Template.monsterStory.helpers({
-  stitchedMonster(needName, images){
-    images = images.filter(i => i.needName == needName && i.stitched);
-    return images[0]
-  },
-  otherNames(){
-    let currParticipantId = Meteor.userId();
-    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
-    console.log(aff);
-    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
-    let otherUsers = this.users.filter(u => (u._id != currParticipantId)
-      && (triad in u.profile.staticAffordances));
-    return otherUsers.map(u => u.username);
-  },
-  elementIndex(array, index){
-    return array[index];
-  },
-  //latest submission w image, caption & monster position is useful
-  latestStorySubmissionAndImage(submissions, images, needName){
-  }
-});
-
-Template.monsterStory.events({
-  'click #takePhoto'(event, template){
-    if (typeof CameraPreview !== 'undefined') {
-      toggleCameraControls('takePhotoInProgress');
-      CameraPreview.takePicture({
-        width: 480, height: 640, quality: 85
-      },function(imgData){
-          let rect = getPreviewRect();
-          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
-            // using an instance of jquery tied to current template scope
-            let imagePreview = template.$(".fileinput-preview");
-            imagePreview.attr('src', croppedImgUrl);
-            imagePreview.show();
-            template.imageSubmitReady.set(true);
-            CameraPreview.hide();
-            toggleCameraControls('takePhotoDone');
-            document.getElementById('textbox').style.display = "block";
-            document.getElementById('submit').style.visibility = "visible";
-          });
-      });
-    } else {
-      console.error("Could not access the CameraPreview");
+  if (template.cameraStarted.get()) {
+    if (!template.imageSubmitReady.get()) {
+      CameraPreview.show();
     }
-  },
-  'click #retakePhoto'(event, template){
-    if (typeof CameraPreview !== 'undefined') {
-      CameraPreview.show()
-    } else {
-      console.error("Could not access the CameraPreview")
-    }
-    $(".fileinput-preview").hide();
-    template.imageSubmitReady.set(false);
-    toggleCameraControls('startCamera');
-    document.getElementById('textbox').style.display = "none";
-    document.getElementById('submit').style.visibility = "hidden";
-  },
-  'click #switchCamera'(){
-    if (typeof CameraPreview !== 'undefined') {
-      CameraPreview.switchCamera();
-    } else {
-      console.error("Could not access the CameraPreview")
-    }
-  },
-  'click #goToParticipate'(event, template) {
-    document.getElementById('instruction').style.display = "none";
-    document.getElementById('participate').style.display = "block";
-
-    if (template.cameraStarted.get()) {
-      if (!template.imageSubmitReady.get()) {
-        CameraPreview.show();
+  } else {
+    Meteor.setTimeout(() => {
+      if (typeof CameraPreview !== 'undefined') {
+        startCameraAtPreviewRect();
+        template.cameraStarted.set(true);
+      } else {
+        console.error("Could not access the CameraPreview")
       }
-    } else {
-      Meteor.setTimeout(() => {
-        if (typeof CameraPreview !== 'undefined') {
-          startCameraAtPreviewRect();
-          template.cameraStarted.set(true);
-        } else {
-          console.error("Could not access the CameraPreview")
-        }
-        template.$(".fileinput-preview").hide();
-        template.imageSubmitReady.set(false);
-        toggleCameraControls('startCamera');
+      template.$(".fileinput-preview").hide();
+      template.imageSubmitReady.set(false);
+      toggleCameraControls('startCamera');
       }, 300);
     }
   },
-  'click #goToInstruction'() {
-    document.getElementById('instruction').style.display = "block";
+  'click #goToInstruction1'() {
+    document.getElementById('instruction1').style.display = "block";
+    document.getElementById('triparticipate').style.display = "none";
+    CameraPreview.hide();
+  },
+  'click #goToInstruction2'() {
+    document.getElementById('instruction2').style.display = "block";
     document.getElementById('participate').style.display = "none";
     CameraPreview.hide();
   },
@@ -290,6 +403,59 @@ Template.monsterStory.events({
     event.stopPropagation();
     let monster = document.getElementById("monster");
     event.target.append(monster);
+  }
+});
+
+Template.monsterCreate.helpers({
+  isMonsterCreate(needName){
+    return needName.search('monsterCreate') != -1;
+  },
+  stitchedMonster(needName){
+    let triad = needName.split("monsterStory");
+    let oldNeedName = `monsterCreate${triad[1]}`;
+    images = this.images.filter(i => i.needName == oldNeedName);
+    return images;
+  },
+  otherName(){
+    let currParticipantId = Meteor.userId();
+    let aff = this.users.filter(u => u._id == currParticipantId)[0].profile.staticAffordances;
+    let triad = Object.keys(aff).filter(k => k.search('triad') != -1)[0];
+    let otherUser = this.users.find(u => (u._id != currParticipantId)
+      && (triad in u.profile.staticAffordances) && !('friend' in u.profile.staticAffordances));
+    return otherUser.username;
+  },
+  elementIndex(array, index){
+    return array[index];
+  },
+  mostRecentImageTriadForNeed(images, needName) {
+    // assure they are sorted in ascending (first uploadedAt first)
+    images = images.sort(function(x, y) {
+      return x.uploadedAt - y.uploadedAt;
+    });
+    let needImages = images.filter(function(x) {
+      return x.needName === needName;
+    });
+    let imagesGroupedByTriad = chunkArray(needImages, 3);
+    if(imagesGroupedByTriad.length == 0){
+      return [];
+    }
+    else {
+      return imagesGroupedByTriad[imagesGroupedByTriad.length - 1];
+    }
+  },
+  arrayLenEqual(array, len){
+    return array.length === len;
+  },
+  elementIndex(array, index){
+    return array[index];
+  },
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
   }
 });
 
@@ -325,10 +491,28 @@ Template.groupBumped.helpers({
   }
 });
 
+Template.imitationGame.events({
+  'click #goToParticipate'(event, template){
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('participate').style.display = "block";
+  },
+  'click #goToInstruction'(event, template){
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+  }
+});
+
+
 Template.imitationGame.helpers({
   getPreviousImageSub() {
-    return this.images.find(i => i.uid === this.toPass.previousSub.uid);
+    let imageSub = this.submissions.find(s => s.needName == this.needName && s.content.proof)
+    return this.images.find(i => i._id === imageSub.content.proof);
   },
+  getPreviousTextSub(){
+    console.log(this)
+    let textSub = this.submissions.find(i => i.needName == this.needName && i.content.sentence)
+    return textSub.content.sentence;
+  }
 });
 
 Template.groupCheers.helpers({
@@ -647,7 +831,7 @@ const getPreviewRect = function() {
     let triOverlay = document.getElementById('topRTriPreview');
     rect = triOverlay.getBoundingClientRect();
   }
-  else if (document.getElementById('topRTriPreview') !== null){
+  else if (document.getElementById('bottomTriPreview') !== null){
     let triOverlay = document.getElementById('bottomTriPreview');
     rect = triOverlay.getBoundingClientRect();
   } else {
@@ -930,6 +1114,7 @@ Template.api_custom.events({
     const timestamp = Date.now()
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+    console.log("is this what happen when I submit");
 
 
     const dropDowns = event.target.getElementsByClassName('dropdown');
@@ -1064,15 +1249,13 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
-    //sad that there's this condition for this specific experience but :-///
-    //i dont want to mess around w creating different forms for different submits
+    /*
     if (needName.split("_")[0] == "monsterCreate"){
       //if it is the final submission... curr number of submitted images is 2
-      if (this.images.filter(image => image.needName == needName).length === 2){
+      if (this.images.filter(image => image.needName == needName).length === 1){
         let monster0 = document.getElementsByClassName('content')[0].children[1];
         let monster1 = document.getElementsByClassName('content')[1].children[1];
-        let monster2 = document.getElementsByClassName('fileinput')[0].children[0];
-        stitchImageSources([monster0.src, monster1.src, monster2.src], true, function(ImageURL){
+        stitchImageSources([monster0.src, monster1.src], true, function(ImageURL){
           let block = ImageURL.split(";");
           let contentType = block[0].split(":")[1];
           let realData = block[1].split(",")[1];
@@ -1103,6 +1286,7 @@ Template.api_custom.events({
         });
       }
     }
+    */
 
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
