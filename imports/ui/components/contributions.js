@@ -22,6 +22,13 @@ Template.message.helpers({
     } else {
       return 'recipient message'
     }
+  },
+  isReceiver(msg){
+    // console.log("hiiii");
+    // console.log(msg);
+    // let currentUser = Meteor.users.findOne(Meteor.userId());
+    // return true;
+    return Meteor.userId() === msg.replyRecipient;
   }
 });
 

@@ -9,8 +9,23 @@ Meteor.methods({
 			message: message,
 			createdAt: new Date(),
 			system: false,
+			isReply: false,
+			replyRecipient: null,
 			route: null,
 		});
+	},
+	sendReplyMessage({sender, message, receiver}){
+		Messages.insert({
+			uid: sender,
+			recipients: receiver,
+			message: message,
+			createdAt: new Date(),
+			system: false,
+			isReply: true,
+			replyRecipient: receiver[1],
+			route: null,
+		});
+		
 	}
 });
 
@@ -21,6 +36,8 @@ export const sendSystemMessage = (message, recipients, route) => {
 		message: message,
 		createdAt: new Date(),
 		system: true,
+		isReply: false,
+		replyRecipient: null,
 		route: route,
 	});
 };

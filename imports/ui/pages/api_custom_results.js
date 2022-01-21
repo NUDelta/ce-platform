@@ -6,7 +6,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
-import { findPartner } from "../pages/chat"
+import { findPartner, scrollToBottomAbs } from "../pages/chat"
 //import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
@@ -198,16 +198,17 @@ Template.groupBumpedResults.events({
     const data = { message: replyText};
     let users = this.allUsers;
     if (data.message === "") return;
-    data.uid = uid;
-    data.recipients = [uid];
+    data.sender = uid;
+    data.receiver = [uid];
 
     const otherStranger = findPartner(uid, users)
     console.log("other stranger" + otherStranger)
 
-    data.recipients = data.recipients.concat(otherStranger)
+    data.receiver = data.receiver.concat(otherStranger)
+    // console.log(data.receiver);
     let currentUsername = Meteor.users.findOne(Meteor.userId()).username;
 
-    Meteor.call("sendMessage", data, (error, response) => {
+    Meteor.call("sendReplyMessage", data, (error, response) => {
       if (error) {
         console.log(error)
       } else {
