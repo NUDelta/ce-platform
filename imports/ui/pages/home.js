@@ -8,10 +8,13 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences';
 import { Assignments } from '../../api/OpportunisticCoordinator/databaseHelpers';
 
+import {RActiveExperience} from "../react-component/r_active_experience.js";
 import '../components/active_experience.js';
 import {needAggregator} from "../../api/OpportunisticCoordinator/strategizer";
 import {setIntersection} from "../../api/custom/arrayHelpers";
 import {getUserActiveIncidents} from "../../api/UserMonitor/users/methods";
+
+
 
 Template.home.onCreated(function () {
   this.state = new ReactiveDict();
@@ -34,6 +37,13 @@ Template.home.events({
 });
 
 Template.home.helpers({
+  RActiveExperience() {
+    console.log("does it get here")
+    console.log(RActiveExperience);
+    // log.info(RActiveExperience);
+    
+    return RActiveExperience;
+  },
   activeUserAssigment() {
     if (Template.instance().subscriptionsReady()) {
       // create [{iid: incident_id, experience: experience, detectorUniqueKey: detector_id}]

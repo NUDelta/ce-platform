@@ -119,7 +119,7 @@ function createTestExperiences(){
     for (let i = 1; i < 12; i++){
       let pairNum = "pair" + `${i}`;
       Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-        log.info(`creating detectors for ${pairNum}`);
+        // log.info(`creating detectors for ${pairNum}`);
         Detectors.insert(value);
       });
     }
@@ -135,7 +135,7 @@ function createTestExperiences(){
         Experiences.insert(value);
         let incident = createIncidentFromExperience(value);
         startRunningIncident(incident);
-        log.info(`creating experiences for ${pairNum}`);
+        // log.info(`creating experiences for ${pairNum}`);
       });
   }
   
