@@ -386,7 +386,7 @@ def dndCafeBubbleTea():
 
 
 def statusUpdate():
-    for i in range(1, 23):
+    for i in range(1, 5):
         setLocation(norris, sys.argv[i])
     print("22 users at Norris")
 

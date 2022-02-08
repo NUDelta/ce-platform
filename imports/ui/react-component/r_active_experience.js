@@ -14,8 +14,8 @@ export const RActiveExperience = ({exp, iid, detectorUniqueKey}) => {
             </div>
             <div className="card-action">
             {/* <h1>PARTICIPATE</h1> */}
-            <Button variant="contained" href={`/apicustomdynamic/${iid}/${detectorUniqueKey}/`}>PARTICIPATE</Button>
-              {/* <a href="/apicustomdynamic/{{iid}}/{{detectorUniqueKey}}/">PARTICIPATE</a> */}
+            {/* <Button variant="contained" href={`/apicustomdynamic/${iid}/${detectorUniqueKey}/`}>PARTICIPATE</Button> */}
+              <a href={`/apicustomdynamic/${iid}/${detectorUniqueKey}/`}>PARTICIPATE</a>
             </div>
         </div>
     </div>

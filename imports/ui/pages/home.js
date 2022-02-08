@@ -38,8 +38,6 @@ Template.home.events({
 
 Template.home.helpers({
   RActiveExperience() {
-    console.log("does it get here")
-    console.log(RActiveExperience);
     // log.info(RActiveExperience);
     
     return RActiveExperience;

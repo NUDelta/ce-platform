@@ -209,24 +209,24 @@ function createTestData(){
   let uid2 = findUserByUsername('yvan')._id;
   let uid3 = findUserByUsername('ryan')._id;
   let uid4 = findUserByUsername('jenny')._id;
-  let uid5 = findUserByUsername('haoqi')._id;
-  let uid6 = findUserByUsername('natalie')._id;
-  let uid7 = findUserByUsername('jason')._id;
-  let uid8 = findUserByUsername('fardeem')._id;
-  let uid9 = findUserByUsername('kapil')._id;
-  let uid10 = findUserByUsername('molly')._id;
-  let uid11 = findUserByUsername('leesha')._id;
-  let uid12 = findUserByUsername('justin')._id;
-  let uid13 = findUserByUsername('harrison')._id;
-  let uid14 = findUserByUsername('jonathan')._id;
-  let uid15 = findUserByUsername('gobi')._id;
-  let uid16 = findUserByUsername('sydney')._id;
-  let uid17 = findUserByUsername('hang')._id;
-  let uid18 = findUserByUsername('parveen')._id;
-  let uid19 = findUserByUsername('isaac')._id;
-  let uid20 = findUserByUsername('izzy')._id;
-  let uid21 = findUserByUsername('richard')._id;
-  let uid22 = findUserByUsername('roxy')._id;
+  // let uid5 = findUserByUsername('haoqi')._id;
+  // let uid6 = findUserByUsername('natalie')._id;
+  // let uid7 = findUserByUsername('jason')._id;
+  // let uid8 = findUserByUsername('fardeem')._id;
+  // let uid9 = findUserByUsername('kapil')._id;
+  // let uid10 = findUserByUsername('molly')._id;
+  // let uid11 = findUserByUsername('leesha')._id;
+  // let uid12 = findUserByUsername('justin')._id;
+  // let uid13 = findUserByUsername('harrison')._id;
+  // let uid14 = findUserByUsername('jonathan')._id;
+  // let uid15 = findUserByUsername('gobi')._id;
+  // let uid16 = findUserByUsername('sydney')._id;
+  // let uid17 = findUserByUsername('hang')._id;
+  // let uid18 = findUserByUsername('parveen')._id;
+  // let uid19 = findUserByUsername('isaac')._id;
+  // let uid20 = findUserByUsername('izzy')._id;
+  // let uid21 = findUserByUsername('richard')._id;
+  // let uid22 = findUserByUsername('roxy')._id;
 
   Meteor.users.update({
     // everyone
@@ -244,11 +244,7 @@ function createTestData(){
   });
 
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ 
-  uid1 + " " + uid2 + " " +  uid3+ " " + uid4 + " " + uid5 + " " + uid6 + " " +
-  uid7 + " " + uid8 + " " +  uid9+ " " + uid10 + " " + uid11 + " " + uid12 + " " +
-  uid13 + " " + uid14 + " " +  uid15+ " " + uid16 + " " + uid17 + " " + uid18 + " " +
-  uid19 + " " + uid20 + " " +  uid21+ " " + uid22);
+  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+ " " + uid4);
 }
 
 /* graveyard

@@ -29,6 +29,7 @@ export const createActivity1 = function (pairNum) {
     let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
+    // postExpInChat("", participants, sub.eid, sub.iid);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
   }
 
@@ -51,6 +52,7 @@ export const createActivity1 = function (pairNum) {
     let systemMessage = 'Your partner just completed Remote Working - 1! Participate to see their results when you get a chance💬'; 
     let notifMessage = "Hey! Your partner just completed Remote Working - 1"
     sendSystemMessage(systemMessage, partner, "/chat"); 
+    
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 

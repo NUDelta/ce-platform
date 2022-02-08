@@ -8,8 +8,9 @@ Meteor.methods({
 			recipients: recipients,
 			message: message,
 			createdAt: new Date(),
-			system: false,
+			isSystem: false,
 			isReply: false,
+			isExp: false,
 			replyRecipient: null,
 			route: null,
 		});
@@ -20,12 +21,13 @@ Meteor.methods({
 			recipients: receiver,
 			message: message,
 			createdAt: new Date(),
-			system: false,
+			isSystem: false,
 			isReply: true,
+			isExp: false,
 			replyRecipient: receiver[1],
 			route: null,
+			
 		});
-		
 	}
 });
 
@@ -35,9 +37,24 @@ export const sendSystemMessage = (message, recipients, route) => {
 		recipients: recipients,
 		message: message,
 		createdAt: new Date(),
-		system: true,
+		isSystem: true,
 		isReply: false,
+		isExp: false,
 		replyRecipient: null,
 		route: route,
 	});
 };
+ 
+// export const postExpInChat = (message, recipients, eid, iid) => {
+// 	Messages.insert({
+// 		uid: "",
+// 		recipients: recipients,
+// 		message: message,
+// 		createdAt: new Date(),
+// 		isSystem: false,
+// 		isExp: (eid, iid),
+// 		isReply: false,
+// 		replyRecipient: null,
+// 		route: null,
+// 	});
+// }
