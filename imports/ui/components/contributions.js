@@ -3,12 +3,13 @@ import { Users } from '../../api/UserMonitor/users/users.js';
 import { Router } from 'meteor/iron:router';
 import './contributions.html';
 import moment from 'moment';
-// import { CEResponse } from '../react-component/ce_response';
+import { CEResponse } from '../react-component/ce_response';
 
 Template.message.helpers({
-  // CEResponse(){
-  //   return CEResponse
-  // },
+
+  CEResponse(){
+    return CEResponse
+  },
   timestamp(timestamp) {
     const sentTime = moment(timestamp);
     //if today, just show time, else if some other day, show date and time

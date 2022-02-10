@@ -28,7 +28,7 @@ Meteor.methods({
 			route: null,
 			
 		});
-	}
+	},
 });
 
 export const sendSystemMessage = (message, recipients, route) => {
@@ -44,17 +44,18 @@ export const sendSystemMessage = (message, recipients, route) => {
 		route: route,
 	});
 };
+
+export const postExpInChat = (message, recipients, eid, iid) => {
+	Messages.insert({
+		uid: "",
+		recipients: recipients,
+		message: message,
+		createdAt: new Date(),
+		isSystem: false,
+		isExp: (eid, iid),
+		isReply: false,
+		replyRecipient: null,
+		route: null,
+	});
+};
  
-// export const postExpInChat = (message, recipients, eid, iid) => {
-// 	Messages.insert({
-// 		uid: "",
-// 		recipients: recipients,
-// 		message: message,
-// 		createdAt: new Date(),
-// 		isSystem: false,
-// 		isExp: (eid, iid),
-// 		isReply: false,
-// 		replyRecipient: null,
-// 		route: null,
-// 	});
-// }

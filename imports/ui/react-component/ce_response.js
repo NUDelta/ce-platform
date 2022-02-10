@@ -9,48 +9,102 @@ import {
   CardMedia,
 } from '@mui/material';
 
+import { useTracker } from 'meteor/react-meteor-data';
+import { Submissions } from "../../api/OCEManager/currentNeeds.js";
+import { Images } from '../../api/ImageUpload/images.js';
+
 export const CEResponse = () => {
-  return (
-    <div>
-      <Accordion>
-        <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
-          <Typography>Walking Experience 23</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Take a picture of the one that got away... <br /> <br />
-          </Typography>
-          <Card sx={{ display: "flex", flexDirection: "row" }}>
-            <CardMedia
-              component="img"
-              image="https://i.insider.com/5b1703dc1ae66252008b4c19?width=816&format=jpeg"
-              alt="bun bunz"
-              sx={{ width: "50%" }}
-            />
-            <CardContent>
-              <Typography variant="body2" color="text.secondary">
-                Jìan-Yáng is a shady app developer living in Erlich Bachman's
-                Hacker Hostel and business incubator, Aviato.
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ display: "flex", flexDirection: "row" }}>
-            <CardContent>
-              <Typography variant="body2" color="text.secondary">
-                Erlich Bachman, portrayed by T.J. Miller, is an arrogant
-                entrepreneur who founded an innovation incubator in his home
-                after the purchase of his airfare collator Aviato.
-              </Typography>
-            </CardContent>
-            <CardMedia
-              component="img"
-              image="https://static.techspot.com/images2/news/bigimage/2017/05/2017-05-26-image-3.jpg"
-              alt="bun bunz"
-              sx={{ width: "50%" }}
-            />
-          </Card>
-        </AccordionDetails>
-      </Accordion>
-    </div>
-  );
+  console.log("in CEResponse");
+
+  const [subHandle, submissions] = useTracker(() => {
+    const handle = Meteor.subscribe('submissions.all');
+    // while(!handle.ready()){
+    //   console.log("loading submissions");
+    // }
+    // console.log(Submissions.find({}).fetch())
+    return [handle, Submissions.find({}).fetch()];
+  });
+
+  const [imageHandle, images] = useTracker(() => {
+    const handle = Meteor.subscribe('images.all');
+    // while(!handle.ready()){
+    //   console.log("loading images");
+    // }
+    return [handle, Images.find({}).fetch()];
+  });
+
+  const [userHandle, users] = useTracker(() => {
+    const handle = Meteor.subscribe('users.all');
+    // while(!handle.ready()){
+    //   console.log("loading users");
+    // }
+    return [handle, Meteor.users.find({}).fetch()]
+  });
+
+  if (subHandle.ready() && imageHandle.ready() && userHandle.ready()) {
+    console.log("handles are ready")
+     const mySub = submissions.find(s => s.uid === Meteor.userId());
+    const myNeedNames = mySub.needName;
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
+
+    const myImage = images.find(i => i._id === mySub.content.proof);
+    const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+
+    results = {};
+    Object.assign(results,
+      friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
+      {imageOne: otherImages[0]},
+      otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
+      {myImage: myImage},
+      mySub && {myCaption: mySub.content.sentence},
+      {allUsers: users}
+    )
+    console.log(results)
+    return (
+      <div>
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography>TODO: replace with experience</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              TODO: replace with given prompt<br /> <br />
+            </Typography>
+            <Card sx={{ display: "flex", flexDirection: "row" }}>
+              <CardMedia
+                component="img"
+                image={ results.myImage.url }
+                alt="bun bunz"
+                sx={{ width: "50%" }}
+              />
+              <CardContent>
+                <Typography variant="body2" color="text.secondary">
+                  { results.myCaption} - You
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card sx={{ display: "flex", flexDirection: "row" }}>
+              <CardContent>
+                <Typography variant="body2" color="text.secondary">
+                  { results.captionOne } - {results.friendOneName}
+                </Typography>
+              </CardContent>
+              <CardMedia
+                component="img"
+                image= { results.imageOne.url}
+                alt="bun bunz"
+                sx={{ width: "50%" }}
+              />
+            </Card>
+          </AccordionDetails>
+        </Accordion>
+      </div>
+    );
+    
+  } else {
+    console.log("loading submissions, images, and users")
+    return <div></div>
+  }
+  
 };

@@ -202,17 +202,55 @@ Router.route('/', {
 
 Router.route('chat', {
   name: 'chat',
+  template: 'chat',
   before: function() {
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     this.subscribe('users.all').wait();
     this.subscribe('messages.user', Meteor.userId()).wait();
     this.next();
   },
   data: function () {
     return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
       users: Meteor.users.find().fetch(),
       messages: Messages.find().fetch(),
     };
   }
+/*
+  before: function () {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "customresults",
+        params: {
+          iid: this.params.iid,
+          eid: this.params.eid
+        }
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    };
+  }
+  */
 });
 
 Router.route('participate.backdoor', {

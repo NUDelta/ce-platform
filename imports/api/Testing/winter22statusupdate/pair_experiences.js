@@ -1,6 +1,6 @@
 import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
-import { sendSystemMessage } from '../../Messages/methods';
+import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
 
@@ -29,7 +29,7 @@ export const createActivity1 = function (pairNum) {
     let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
-    // postExpInChat("", participants, sub.eid, sub.iid);
+    postExpInChat("", participants, sub.eid, sub.iid);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
   }
 
@@ -117,6 +117,7 @@ export const createActivity2 = function (pairNum) {
     let message = 'Woo-hoo! You two have completed Remote Working - 2! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
+    postExpInChat("", participants, sub.eid, sub.iid);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working - 2!', '', route);
   }
 

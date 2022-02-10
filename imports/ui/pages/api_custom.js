@@ -1114,7 +1114,6 @@ Template.api_custom.events({
     const timestamp = Date.now()
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
-    console.log("is this what happen when I submit");
 
 
     const dropDowns = event.target.getElementsByClassName('dropdown');
