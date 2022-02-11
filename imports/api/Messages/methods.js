@@ -52,7 +52,7 @@ export const postExpInChat = (message, recipients, eid, iid) => {
 		message: message,
 		createdAt: new Date(),
 		isSystem: false,
-		isExp: (eid, iid),
+		isExp: [eid, iid],
 		isReply: false,
 		replyRecipient: null,
 		route: null,
