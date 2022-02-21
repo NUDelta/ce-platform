@@ -14,7 +14,6 @@ import { Submissions } from "../../api/OCEManager/currentNeeds.js";
 import { Images } from '../../api/ImageUpload/images.js';
 
 export const CEResponse = ({ ids }) => {
-  console.log(ids)
   eid = ids[0];
   iid = ids[1];
   console.log("in CEResponse");
@@ -51,13 +50,15 @@ export const CEResponse = ({ ids }) => {
     const myNeedNames = mySub.needName;
     const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
 
-    const myImage = images.find(i => i._id === mySub.content.proof);
-    const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    const myImage =  mySub.content.proof;
+    // const myImage = images.find(i => i._id === mySub.content.proof);
+    // const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    const otherImages =  otherSubs.content.proof;
     const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
 
     results = {
       friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`,
-      imageOne: otherImages[0],
+      imageOne: otherImages,
       captionOne: otherSubs[0].content.sentence,
       myImage: myImage,
       myCaption: mySub.content.sentence,

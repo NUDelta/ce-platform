@@ -1136,6 +1136,7 @@ Template.api_custom.events({
       Router.go(resultsUrl);
     }
 
+    // CINDY: why would there be more than one image upload?
     //otherwise, we do have ImageUpload to upload so need to hang around for that
     _.forEach(images, (image, index) => {
       let picture;
@@ -1144,70 +1145,44 @@ Template.api_custom.events({
         picture = event.target.photo.files[index]
       } else {
         let ImageURL = $('.fileinput-preview').attr('src');
+        // console.log("type of ImageURL: ", typeof ImageURL)
+        // console.log(ImageURL)
         // Split the base64 string in data and contentType
         let block = ImageURL.split(";");
+        // console.log("========BLOCK========")
+        // console.log(block)
+        // console.log("===============")
         // Get the content type
         let contentType = block[0].split(":")[1];
         // get the real base64 content of the file
         let realData = block[1].split(",")[1];
+        picture = realData; 
+        // console.log("type of picture: ", typeof picture)
 
-        picture = b64toBlob(realData, contentType);
+        //CINDY: modify code starting here
+        // picture = b64toBlob(realData, contentType);
       }
 
+      const submissionObject = {
+        uid: uid,
+        eid: experience._id,
+        iid: iid,
+        needName: needName,
+        content: submissions,
+        timestamp: timestamp,
+        lat: location.lat,
+        lng: location.lng
+      };
 
-      // save image and get id of new document
-      const imageFile = Images.insert(picture, (err, imageFile) => {
-        //this is a callback for after the image is inserted
+      Meteor.call("uploadImage", picture, submissionObject, (err) => {
         if (err) {
-          alert(err);
+          console.log("error in uploadImage: ", err)
         } else {
-          //success branch of callback
-          //add more info about the photo
-          Images.update({ _id: imageFile._id }, {
-            $set: {
-              iid: iid,
-              uid: uid,
-              lat: location.lat,
-              lng: location.lng,
-              needName: needName,
-            }
-          }, (err, docs) => {
-            if (err) {
-              console.log('upload error,', err);
-            } else {
-            }
-          });
-          // TODO: setTimeout for automatically moving on if upload takes too long
-
-          //watch to see when the image db has been updated, then go to results
-          const cursor = Images.find(imageFile._id).observe({
-            changed(newImage) {
-              if (newImage.isUploaded()) {
-                cursor.stop();
-                Router.go(resultsUrl);
-              }
-            }
-          });
+          console.log("image has been uploaded");
+          Router.go(resultsUrl);
         }
-      });
-
-      // add the submitted image to the submissions content dictionary
-      submissions[image.id] = imageFile._id;
-      //submissions['imageid'] = imageFile._id;
+      })
     });
-
-    const submissionObject = {
-      uid: uid,
-      eid: experience._id,
-      iid: iid,
-      needName: needName,
-      content: submissions,
-      timestamp: timestamp,
-      lat: location.lat,
-      lng: location.lng
-    };
-
-    Meteor.call('createInitialSubmission', submissionObject);
 
   },
 
@@ -1386,3 +1361,47 @@ Template.api_custom.events({
     photoUpload(event);
   },
 });
+
+
+// >>>>>>>>>>>> CINDY: replace everything here
+/*
+      // save image and get id of new document
+      const imageFile = Images.insert(picture, (err, imageFile) => {
+        //this is a callback for after the image is inserted
+        if (err) {
+          alert(err);
+        } else {
+          //success branch of callback
+          //add more info about the photo
+          Images.update({ _id: imageFile._id }, {
+            $set: {
+              iid: iid,
+              uid: uid,
+              lat: location.lat,
+              lng: location.lng,
+              needName: needName,
+            }
+          }, (err, docs) => {
+            if (err) {
+              console.log('upload error,', err);
+            } else {
+            }
+          });
+          // TODO: setTimeout for automatically moving on if upload takes too long
+
+          //watch to see when the image db has been updated, then go to results
+          const cursor = Images.find(imageFile._id).observe({
+            changed(newImage) {
+              if (newImage.isUploaded()) {
+                cursor.stop();
+                Router.go(resultsUrl);
+              }
+            }
+          });
+        }
+      });
+
+      // add the submitted image to the submissions content dictionary
+      submissions[image.id] = imageFile._id;
+      //submissions['imageid'] = imageFile._id;
+      */

@@ -8,6 +8,19 @@ import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 import {addContribution, changeIncidentToPass} from "./OCEs/methods";
 import { sendSystemMessage, postExpInChat } from '../Messages/methods';
 
+// import needs for aws s3 image upload
+// import { AWS } from 'aws-sdk';
+import { sharp } from 'sharp';
+// import 'dotenv/config';
+require('dotenv').config({ path: `${process.env.PWD}/.env`});
+console.log(process.env) 
+
+let AWS = require('aws-sdk');
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
 const submissionsCursor = Submissions.find({});
 const submissionsHandle = submissionsCursor.observe({
   //TODO: make it so we can check the submission when through completely first?
@@ -28,6 +41,10 @@ Meteor.methods({
   createInitialSubmission(submission) {
     createInitialSubmission(submission);
   },
+  uploadImage(image, submission){
+    uploadImage(image, submission);
+  }
+  // add image upload method
 });
 
 export const updateSubmission = function(submission) {
@@ -75,6 +92,86 @@ export const createInitialSubmission = function(submission) {
     }
   );
 };
+
+export const uploadImage = function (picture, submissionObject){
+  let cdnLink = "";
+  uploadImagesToS3(picture, submissionObject.needName, submissionObject.uid).then((link) => {
+    cdnLink = link;
+    submissionObject.content["proof"] = cdnLink;
+    console.log("image has been uploaded");
+    createInitialSubmission(submissionObject)
+  });
+  
+}
+
+
+const s3 = new AWS.S3({
+  endpoint: new AWS.Endpoint(process.env.S3_ENDPOINT),
+});;
+
+  /**
+   * Uploads an image to an S3 bucket with a specified key.
+   * @param key string key to store image as.
+   * @param buffer buffer of image data as png.
+   * @return {Promise<ManagedUpload.SendData>}
+   */
+   const uploadToS3 = async function (key, buffer) {
+    const uploadParams = {
+      Bucket: process.env.S3_BUCKET,
+      ACL: "public-read",
+      Key: key,
+      Body: buffer,
+      ContentType: "image/png",
+    };
+  
+    return s3.upload(uploadParams).promise();
+  };
+  
+  /**
+   * decode base64 to an image file and upload the file to the bucket specified in .env.
+   * @param {string} base64Data image file encoded with base64
+   * @param {string} needName use needName and uid to generate file name
+   * @param {string} uid use needName and uid to generate file name
+   * @returns {string} CDN link to image that was uploaded to the bucket.
+   */
+const uploadImagesToS3 = async (base64Data, needName, uid) => {
+    console.log("in upload image...")
+  
+    // keys for where files will live on S3
+    const imgKeyPrefix = `${process.env.S3_PREFIX}`;
+    let cdnForImg = "";
+
+    try {
+      // parse and decode base64 into a buffer 
+      const uri = base64Data.split(';base64,').pop();
+      console.log(base64Data)
+      const buffer = Buffer.from(base64Data, "base64");
+  
+      let filename = needName + "-" + uid;
+      let processedImgKey = `${imgKeyPrefix}/${filename}.png`;
+
+      const pngBuffer = await sharp(buffer)
+      .rotate()
+      .toFormat('png')
+      .toBuffer();
+      
+  
+      // upload example image to S3
+      try {
+        await uploadToS3(processedImgKey, pngBuffer);
+  
+        // if upload was successful, create a CDN link to add to airtable
+        cdnForImg = `${process.env.S3_CDN}/${processedImgKey}`;
+      } catch (error) {
+        console.log(`Error in uploading profile photo: ${error}`);
+      }
+    } catch (error) {
+      console.log(`Error in processing file: ${error}`);
+    }
+  
+    return cdnForImg;
+  };
+
 
 //checks the triggers for the experience of the new submission and runs the appropriate callbacks 5
 function runCallbacks(mostRecentSub) {
