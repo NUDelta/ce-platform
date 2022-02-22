@@ -414,7 +414,7 @@ export const createRestaurantExp = function (pairNum) {
         },
         toPass : {
           situationDescription : "Enjoying your food and ambience of the restaurant?",
-          instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
+          instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and share your reason!"
         },
         numberNeeded : 2,
         notificationDelay : 300,

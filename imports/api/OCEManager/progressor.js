@@ -10,10 +10,10 @@ import { sendSystemMessage, postExpInChat } from '../Messages/methods';
 
 // import needs for aws s3 image upload
 // import { AWS } from 'aws-sdk';
-import { sharp } from 'sharp';
+// import { sharp } from 'sharp';
 // import 'dotenv/config';
 require('dotenv').config({ path: `${process.env.PWD}/.env`});
-console.log(process.env) 
+const sharp = require('sharp');
 
 let AWS = require('aws-sdk');
 AWS.config.update({
@@ -144,8 +144,8 @@ const uploadImagesToS3 = async (base64Data, needName, uid) => {
     try {
       // parse and decode base64 into a buffer 
       const uri = base64Data.split(';base64,').pop();
-      console.log(base64Data)
-      const buffer = Buffer.from(base64Data, "base64");
+      // console.log(base64Data)
+      const buffer = Buffer.from(uri, "base64");
   
       let filename = needName + "-" + uid;
       let processedImgKey = `${imgKeyPrefix}/${filename}.png`;

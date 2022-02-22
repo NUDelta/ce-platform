@@ -559,24 +559,13 @@
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
       <div class="caption">Check out what everyone is up to!</div>
       <div class="sub_container">
-        <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(myImage)}}</div>
+        <div class="img_container"><img src="{{myImage}}"></div>
         <div class="caption">"{{myCaption}}" -You</div>
       </div>
       <div class="sub_container">
         {{#if imageOne}}
          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
-          <div class="img_container">{{> Template.dynamic template="displayFullImage" data=(imageOne)}}</div>
-          <!-- <div class="buttons">
-            <button class="reactWow" type="button">
-              <span>😮</span>
-            </button>
-            <button class="reactHeart" type="button">
-              <span>😍</span>
-            </button>
-            <button class="reactLaugh" type="button">
-              <span>😂</span>
-            </button>
-          </div> -->
+         <div class="img_container"><img src="{{imageOne}}"></div>
         {{else}}
           <div class="caption">We're still waiting on this submission. Hang tight!</div>
           <div class="pending_img">?</div>

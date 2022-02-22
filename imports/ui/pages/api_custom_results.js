@@ -164,17 +164,20 @@ Template.groupBumpedResults.helpers({
 
     const mySub = submissions.find(s => s.uid === Meteor.userId());
     const myNeedNames = mySub.needName;
-    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId())[0];
 
-    const myImage = images.find(i => i._id === mySub.content.proof);
-    const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
-    const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+    // const myImage = images.find(i => i._id === mySub.content.proof);
+    // const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    // const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+    const myImage = mySub.content.proof;
+    const otherImages = otherSubs.content.proof;
+    const friends = users.find(u => u._id === otherSubs.uid);
 
     results = {};
     Object.assign(results,
-      friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
-      {imageOne: otherImages[0]},
-      otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
+      friends && {friendOneName: `${friends.profile.firstName} ${friends.profile.lastName}`},
+      {imageOne: otherImages},
+      otherSubs && {captionOne: otherSubs.content.sentence},
       {myImage: myImage},
       mySub && {myCaption: mySub.content.sentence},
       {allUsers: users}

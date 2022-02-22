@@ -11,7 +11,6 @@ import {
 
 import { useTracker } from 'meteor/react-meteor-data';
 import { Submissions } from "../../api/OCEManager/currentNeeds.js";
-import { Images } from '../../api/ImageUpload/images.js';
 
 export const CEResponse = ({ ids }) => {
   eid = ids[0];
@@ -20,59 +19,32 @@ export const CEResponse = ({ ids }) => {
 
   const [subHandle, submissions] = useTracker(() => {
     const handle = Meteor.subscribe('submissions.all');
-    // while(!handle.ready()){
-    //   console.log("loading submissions");
-    // }
-    // console.log(Submissions.find({}).fetch())
     return [handle, Submissions.find({}).fetch()];
-  });
-
-  const [imageHandle, images] = useTracker(() => {
-    const handle = Meteor.subscribe('images.all');
-    // while(!handle.ready()){
-    //   console.log("loading images");
-    // }
-    return [handle, Images.find({}).fetch()];
   });
 
   const [userHandle, users] = useTracker(() => {
     const handle = Meteor.subscribe('users.all');
-    // while(!handle.ready()){
-    //   console.log("loading users");
-    // }
     return [handle, Meteor.users.find({}).fetch()]
   });
 
-  if (subHandle.ready() && imageHandle.ready() && userHandle.ready()) {
-    console.log("handles are ready")
+  if (subHandle.ready() && userHandle.ready()) {
     const mySub = submissions.find(s => (s.uid === Meteor.userId() && s.eid === eid));
-    console.log(mySub)
     const myNeedNames = mySub.needName;
-    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId())[0];
 
     const myImage =  mySub.content.proof;
-    // const myImage = images.find(i => i._id === mySub.content.proof);
-    // const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
     const otherImages =  otherSubs.content.proof;
-    const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+    const friends = users.find(u => u._id === otherSubs.uid);
 
     results = {
-      friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`,
+      friendOneName: `${friends.profile.firstName} ${friends.profile.lastName}`,
       imageOne: otherImages,
-      captionOne: otherSubs[0].content.sentence,
+      captionOne: otherSubs.content.sentence,
       myImage: myImage,
       myCaption: mySub.content.sentence,
       allUsers: users
     };
-    // Object.assign(results,
-    //   friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
-    //   {imageOne: otherImages[0]},
-    //   otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
-    //   {myImage: myImage},
-    //   mySub && {myCaption: mySub.content.sentence},
-    //   {allUsers: users}
-    // )
-    console.log(results)
+  
     return (
       <div>
         <Accordion>
@@ -86,7 +58,7 @@ export const CEResponse = ({ ids }) => {
             <Card sx={{ display: "flex", flexDirection: "row" }}>
               <CardMedia
                 component="img"
-                image={ results.myImage.original.name }
+                image={ results.myImage }
                 alt="bun bunz"
                 sx={{ width: "50%" }}
               />
@@ -104,18 +76,18 @@ export const CEResponse = ({ ids }) => {
               </CardContent>
               <CardMedia
                 component="img"
-                image= { results.imageOne.original.name}
+                image= { results.imageOne}
                 alt="bun bunz"
                 sx={{ width: "50%" }}
               />
             </Card>
           </AccordionDetails>
-        </Accordion>
+        </Accordion> 
       </div>
     );
     
   } else {
-    console.log("loading submissions, images, and users")
+    console.log("loading submissions and users")
     return <div></div>
   }
   

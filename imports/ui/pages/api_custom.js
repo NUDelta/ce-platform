@@ -1143,6 +1143,35 @@ Template.api_custom.events({
       if (event.target.photo) { // form has input[name=photo]
         // imageFile
         picture = event.target.photo.files[index]
+        let reader = new FileReader();
+        reader.readAsDataURL(picture);
+        reader.onload = () => {
+          // console.log("sending file: ", selectedImage)
+          // fetch('/uploadImage', {
+          //   method: 'POST',
+          //   headers: { "Content-type" : "application/json"},
+          //   body: JSON.stringify({
+          //       image: reader.result
+          //   })
+          const submissionObject = {
+            uid: uid,
+            eid: experience._id,
+            iid: iid,
+            needName: needName,
+            content: submissions,
+            timestamp: timestamp,
+            lat: location.lat,
+            lng: location.lng
+          };
+    
+          Meteor.call("uploadImage", reader.result, submissionObject, (err) => {
+            if (err) {
+              console.log("error in uploadImage: ", err)
+            } else {
+              console.log("image has been uploaded");
+              Router.go(resultsUrl);
+            }
+          })}
       } else {
         let ImageURL = $('.fileinput-preview').attr('src');
         // console.log("type of ImageURL: ", typeof ImageURL)
@@ -1163,25 +1192,25 @@ Template.api_custom.events({
         // picture = b64toBlob(realData, contentType);
       }
 
-      const submissionObject = {
-        uid: uid,
-        eid: experience._id,
-        iid: iid,
-        needName: needName,
-        content: submissions,
-        timestamp: timestamp,
-        lat: location.lat,
-        lng: location.lng
-      };
+      // const submissionObject = {
+      //   uid: uid,
+      //   eid: experience._id,
+      //   iid: iid,
+      //   needName: needName,
+      //   content: submissions,
+      //   timestamp: timestamp,
+      //   lat: location.lat,
+      //   lng: location.lng
+      // };
 
-      Meteor.call("uploadImage", picture, submissionObject, (err) => {
-        if (err) {
-          console.log("error in uploadImage: ", err)
-        } else {
-          console.log("image has been uploaded");
-          Router.go(resultsUrl);
-        }
-      })
+      // Meteor.call("uploadImage", picture, submissionObject, (err) => {
+      //   if (err) {
+      //     console.log("error in uploadImage: ", err)
+      //   } else {
+      //     console.log("image has been uploaded");
+      //     Router.go(resultsUrl);
+      //   }
+      // })
     });
 
   },
