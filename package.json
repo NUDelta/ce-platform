@@ -12,7 +12,6 @@
     "cordova-custom-config": "^5.0.2",
     "core-util-is": "^1.0.2",
     "meteor-node-stubs": "^0.4.1",
-    "node-cron": "^3.0.0",
     "photoswipe": "^4.1.1"
   },
   "devDependencies": {},

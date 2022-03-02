@@ -70,18 +70,7 @@ export const onLocationUpdate = (uid, location, callback) => {
 
     // get affordances and begin coordination process
     getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
-
-      log.info(`success: getAffordancesFromLocation`);
-      // get affordances via affordance aware
-      let user = Meteor.users.findOne({_id: uid});
-      if (!user) {
-        log.error(`uid = ${uid} passed to getAffordancesFromLocation did not correspond to a user `);
-        return;
-      }
-      let userAffordances = user.profile.staticAffordances;
-      affordances = Object.assign({}, affordances, userAffordances);
-      affordances = affordances !== null ? affordances : {};
-      serverLog.call({message: `affordances ${affordances}`});
+      affordances = mergeUsersStaticAffordances(uid, affordances);
 
       // blocking, since everything in system works off of Locations collection
       updateLocationInDb(uid, bgLocationObject, affordances);
@@ -90,24 +79,83 @@ export const onLocationUpdate = (uid, location, callback) => {
       insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
       callback(uid);
 
-      // clear assignments and begin matching
-      let newLoc = Locations.findOne({uid: uid});
-      if (!newLoc) {
-        log.error(`uid = ${uid} did not have a current location in Locations collection`);
-        return;
-      }
-      let newAffs = newLoc.affordances; // newest affordances
-      // TODO(rlouie): Ask Kapil -- why do this intersection???
-      let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
-      let sharedAffs = [];
-      _.forEach(sharedKeys, (key) => {
-        sharedAffs[key] = newAffs[key];
-      });
-
-      decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
-      sendToMatcher(uid, sharedAffs);
+      coordinateUsersToNeeds(uid, affordances);
     });
   }
+};
+
+export const onTimeElapsedUpdateTimeWeatherContext = (uid, callback) => {
+  // (1) gets the last location for the user
+  let currentLocation = Locations.findOne({uid: uid});
+  if (!currentLocation) {
+    log.error(`uid = ${uid} did not have a current location in Locations collection`);
+    return;
+  }
+
+  const backgroundGeolocationObject = {
+    coords: {
+      latitude: currentLocation.lat,
+      longitude: currentLocation.lng,
+    }
+  }
+
+  // (2) uses this to get the newest time and weather features
+  // FIXME: I don't have time to write/test this optimization of only getting time/weather. It'll get place affordances too (cached of course), and update the location in the normal way
+  const retrievePlaces = true;
+  getAffordancesFromLocation(uid, backgroundGeolocationObject, retrievePlaces, function(uid, bgLocationObject, affordances) {
+    affordances = mergeUsersStaticAffordances(uid, affordances);
+
+    // (3) update the user's newest affordances (time and weather features), in the Locations collection
+    updateLocationInDb(uid, bgLocationObject, affordances);
+    callback(uid);
+
+    // (4) coordinate users to needs
+    coordinateUsersToNeeds(uid, affordances);
+  });
+};
+
+/**
+ * Queries the static affordances defined in the Users collection, and merges that Object with current environmental affordances
+ * @param {*} uid
+ * @param {*} affordances
+ * @returns affordance dictionary, with static affordances merged
+ */
+const mergeUsersStaticAffordances = function(uid, affordances) {
+  let user = Meteor.users.findOne({_id: uid});
+  if (!user) {
+    log.error(`uid = ${uid} passed to getAffordancesFromLocation did not correspond to a user `);
+    return;
+  }
+  let userAffordances = user.profile.staticAffordances;
+  affordances = Object.assign({}, affordances, userAffordances);
+  affordances = affordances !== null ? affordances : {};
+  serverLog.call({message: `affordances ${affordances}`});
+  return affordances;
+};
+
+/**
+ * Accesses the current location and affordance information;
+ * Clears assignments for a user if they have exited certain situations;
+ * then sends them to the matcher.
+ * @param {*} uid
+ * @param {*} affordances
+ */
+const coordinateUsersToNeeds = (uid, affordances) => {
+  let newLoc = Locations.findOne({uid: uid});
+  if (!newLoc) {
+    log.error(`uid = ${uid} did not have a current location in Locations collection`);
+    return;
+  }
+  let newAffs = newLoc.affordances; // newest affordances
+  // TODO(rlouie): Ask Kapil -- why do this intersection???
+  let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
+  let sharedAffs = [];
+  _.forEach(sharedKeys, (key) => {
+    sharedAffs[key] = newAffs[key];
+  });
+
+  decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
+  sendToMatcher(uid, sharedAffs);
 };
 
 /**
@@ -383,6 +431,8 @@ const updateLocationInDb = (uid, location, affordances) => {
     // });
   }
 };
+
+
 
 
 const insertEstimatedLocationLog = (uid, location, affordances, rawLocationId) => {
