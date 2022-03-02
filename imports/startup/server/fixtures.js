@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Random } from 'meteor/random'
+import {SyncedCron} from 'meteor/littledata:synced-cron';
 
 import { CONFIG } from '../../api/config.js';
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js';
@@ -14,6 +15,7 @@ import { CONSTANTS } from "../../api/Testing/testingconstants";
 import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
 import { findUserByUsername } from '../../api/UserMonitor/users/methods';
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
+import { onTimeElapsedUpdateTimeWeatherContext } from '../../api/UserMonitor/locations/methods';
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
@@ -24,6 +26,25 @@ Meteor.startup(() => {
       createTestData();
     }
   }
+
+  SyncedCron.add({
+    name: 'Update weather and time context for all users at a set interval',
+    schedule: function(parser) {
+      // parser is a later.parse object
+      return parser.text(`every ${CONFIG.CONTEXT_POLL_INTERVAL} seconds`);
+    },
+    job: function() {
+      let locationObjects = Locations.find().fetch()
+      locationObjects.forEach(location => {
+        onTimeElapsedUpdateTimeWeatherContext(location.uid, function(uid) {
+          console.log(`Updated weather and time context for user ${uid}`);
+        });
+      });
+    }
+  });
+
+  SyncedCron.start();
+
 });
 
 Meteor.methods({
