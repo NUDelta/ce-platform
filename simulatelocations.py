@@ -301,9 +301,23 @@ def allUsersCoffee():
 		setLocation(coffee, i)
 	print("all users at coffee")
 
+def usersAcrossTimezones():
+    locations_across_timezones = [
+        (33.5926112,-117.8752189), # pacific time; newport beach, CA; corona del mar
+        (39.7317892,-104.962574), # mountain time; denver, CO; botanic gardens
+        (37.7198794,-97.2932527), # central time; wichita, KS
+        (41.9740704,-87.6832274), # central time; chicago, IL; winnemac park
+        (41.4894584,-81.7380931), # eastern time; cleveland, OH; edgewater park beach
+        (42.2930908,-71.2650681), # eastern time; boston, MA; olin college of engineering
+    ]
+    num_locations = len(locations_across_timezones)
+    for i, uid in enumerate(sys.argv[1:]):
+        setLocation(locations_across_timezones[i % num_locations], uid) 
+
 if __name__ == "__main__":
+    usersAcrossTimezones()
     # allUsersGrocery()
-	allUsersCoffee()
+	# allUsersCoffee()
 	# allUsersAtBars()
 	#allUsersAtPark()
     # garrettAndMegBump()

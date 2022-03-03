@@ -31,7 +31,7 @@ const createSunsetTimelapse = () => {
   const interval_size = 5;
   for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
     let needName;
-    let detectorKey;
+    let detectorObjectKey;
     if (i < 0) {
       let min = -1 * i;
       needName = `${min} minutes after sunset`;
@@ -54,7 +54,7 @@ const createSunsetTimelapse = () => {
       numberNeeded: 1,
       notificationDelay: 1
     }
-    contributionTypes.push[need];
+    contributionTypes.push(need);
   }
   apiDefinition['contributionTypes'] = contributionTypes;
   return apiDefinition;
