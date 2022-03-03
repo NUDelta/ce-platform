@@ -49,13 +49,29 @@ const createSunsetTimelapse = () => {
         number: 1
       },
       toPass: {
-        instruction: 'Take a photo of the sunset!'
+        instruction: 'Take a photo of the sunset!',
+        time: i
       },
       numberNeeded: 1,
       notificationDelay: 1
     }
     contributionTypes.push(need);
   }
+
+  contributionTypes.push({
+    needName: 'Anytime Tester',
+    situation: {
+      detector: getDetectorUniqueKey(DETECTORS.daytime),
+      number: 1,
+    },
+    toPass: {
+      instruction: 'Take a photo of the sunset!',
+      time: i
+    },
+    numberNeeded: 1,
+    notificationDelay: 1
+  })
+
   apiDefinition['contributionTypes'] = contributionTypes;
   return apiDefinition;
 }
