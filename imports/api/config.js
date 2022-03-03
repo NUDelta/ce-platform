@@ -5,7 +5,7 @@ export const CONFIG = {
   MODE: process.env.MODE || "local",
   DEBUG: true,
   BUNDLE_IDENTIFIER: 'edu.northwestern.delta.D',
-  CONTEXT_POLL_INTERVAL: 60, // seconds
+  CONTEXT_POLL_INTERVAL: process.env.CONTEXT_POLL_INTERVAL || 1, // min
 };
 
 export const AUTH = {

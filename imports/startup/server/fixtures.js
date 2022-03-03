@@ -31,7 +31,7 @@ Meteor.startup(() => {
     name: 'Update weather and time context for all users at a set interval',
     schedule: function(parser) {
       // parser is a later.parse object
-      return parser.text(`every ${CONFIG.CONTEXT_POLL_INTERVAL} seconds`);
+      return parser.text(`every ${CONFIG.CONTEXT_POLL_INTERVAL} min`);
     },
     job: function() {
       let locationObjects = Locations.find().fetch()

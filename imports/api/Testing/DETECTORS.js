@@ -1,4 +1,35 @@
-export let DETECTORS = {
+const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after, interval_size) {
+  let sunset_detectors = {};
+  for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
+    if (i < 0) {
+      min = -1*i;
+      sunset_detectors[`sunset${min}after`] = {
+        _id: Random.id(),
+        description: `${min} minutes after sunset`,
+        variables: [
+          'var minutes_around_sunset;'
+        ],
+        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
+      }
+    }
+    else {
+      sunset_detectors[`sunset${i}before`] = {
+        _id: Random.id(),
+        description: `${i} minutes before sunset`,
+        variables: [
+          'var minutes_around_sunset;'
+        ],
+        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
+      }
+    }
+  }
+  return sunset_detectors;
+}
+
+let DETECTORS_GENERATED = {};
+DETECTORS_GENERATED = Object.assign(DETECTORS_GENERATED, generateSunsetTimelapseDetectors(60, 60, 5));
+
+let DETECTORS_HARDCODED = {
   field: {
     _id: 'XeepEbMjjW8yPzSAo',
     description: 'fields',
@@ -658,3 +689,5 @@ export let DETECTORS = {
     ]
   }
 };
+
+export let DETECTORS = Object.assign({}, DETECTORS_HARDCODED, DETECTORS_GENERATED);
