@@ -1,5 +1,3 @@
-
-
 <template name="camera">
     {{> loadingOverlay}}
     <label id={{this}} class="fileinput">
@@ -18,12 +16,46 @@
 
 <template name="text">
     {{> loadingOverlay}}
-    <textarea id={{this}} cols="40" rows="3" name="write" type="text" class="textinput form-control"
+    <textarea id={{this}} cols="40" rows="2" name="write" type="text" class="textinput form-control"
           placeholder="Write here" required></textarea>
 </template>
 
 <template name="value">
     <textarea id={{this.key}} value={{this.value}} cols="40" rows="3" name="write" type="text" class="textinput form-control" style="display:none"></textarea>
+</template>
+
+<template name="message">
+    {{#if this.isSystem}}
+      <div class="system message">
+          <div style="font-size: 12px;">🧠 <b>Cerebro</b> 🧠</div>
+          <div>{{this.message}}</div>
+      </div>
+    {{else if this.isExp}}
+      <div>{{> React component=CEResponse ids=this.isExp}}</div>
+    {{else}}
+      <div class={{getSenderAndSetClass this.uid this.system}}>
+        <div style="font-size: 10px;">
+          <span>
+            <b>{{getUsername this.uid}}</b>
+          </span>
+          <span>
+            {{#let t = (timestamp this.createdAt)}}
+              {{t}}
+            {{/let}}
+          </span>
+        </div>
+        <div>
+          {{#if this.isReply}}
+            {{#if isReceiver this}}
+              <div style="font-style: italic; font-size: 12px;">Replied to your experience: </div>
+            {{else}}
+              <div style="font-style: italic; font-size: 12px;">Replied to {{getUsername this.replyRecipient}}'s experience: </div>
+            {{/if}}
+          {{/if}}
+          {{this.message}}
+        </div>
+      </div>
+    {{/if}}
 </template>
 
 
@@ -44,4 +76,17 @@
             <option value="{{option.[1]}}">{{option.[0]}} </option>
         {{/each}}
     </select>
+</template>
+
+<template name="resultReply">
+  <head>
+    <style>
+      #{{this}}{
+               display: block;
+            }
+    </style>
+  </head>
+  {{> loadingOverlay}}
+  <textarea id={{this}} cols="40" rows="2" name="write" type="text" class="replyText textinput form-control"
+        placeholder="Tell your partner what you think!" required></textarea>
 </template>

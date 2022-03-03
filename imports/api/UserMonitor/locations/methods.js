@@ -173,6 +173,7 @@ const sendToMatcher = (uid, affordances) => {
   if (userCanParticipate) {
     // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
+    // serverLog.call(`uid = ${uid} has availability for ${availabilityDictionary} in UserMonitor/locations/methods.js`)
 
     // update availabilityDictionary of most recent location
     Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});

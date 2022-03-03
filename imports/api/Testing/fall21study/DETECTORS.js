@@ -1,54 +1,5 @@
-const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after, interval_size) {
-  let sunset_detectors = {};
-  for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
-    if (i < 0) {
-      min = -1*i;
-      sunset_detectors[`sunset${min}after`] = {
-        _id: Random.id(),
-        description: `${min} minutes after sunset`,
-        variables: [
-          'var minutes_around_sunset;'
-        ],
-        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
-      }
-    }
-    else {
-      sunset_detectors[`sunset${i}before`] = {
-        _id: Random.id(),
-        description: `${i} minutes before sunset`,
-        variables: [
-          'var minutes_around_sunset;'
-        ],
-        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
-      }
-    }
-  }
-  return sunset_detectors;
-}
-
-
 const createDetectors = function (pairNum) {
   return {
-    activity1:{
-      _id: Random.id(),
-      description: 'activity1 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
-
-    activity2:{
-      _id: Random.id(),
-      description: 'activity2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
-
   // new detector for walk /////////////////////////////////////
   selfIntroExp:{
     _id: Random.id(),
@@ -57,7 +8,7 @@ const createDetectors = function (pairNum) {
       `var ${pairNum};`,
       'var participatedInSelfIntro;'
     ],
-    rules: [`${pairNum} && !participatedInSelfIntro;`]
+    rules: [`${pairNum} && !participatedInSelfIntro`]
     // rules: ['(triad1)']
   },
 
@@ -115,8 +66,8 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'Public Transport ' + pairNum,
     variables: [
-      'var publictransport;',
-      'var trainstations;',
+      'var publictransport;', 
+      'var trainstations;', 
       'var trains;',
       `var ${pairNum};`
     ],
@@ -127,8 +78,8 @@ const createDetectors = function (pairNum) {
     _id: Random.id(),
     description: 'Public Transport2 ' + pairNum,
     variables: [
-      'var publictransport;',
-      'var trainstations;',
+      'var publictransport;', 
+      'var trainstations;', 
       'var trains;',
       `var ${pairNum};`,
       'var participatedInPublicTransportExp;'
@@ -270,40 +221,11 @@ const createDetectors = function (pairNum) {
     ],
     rules:[`(bubbletea && ${pairNum});`]
   }
-  };
-};
 
-// const PAIR_DETECTORS = {
-//   pair1: createDetectors("pair1"),
-//   pair2: createDetectors("pair2"),
-//   pair3: createDetectors("pair3"),
-//   pair4: createDetectors("pair4"),
-//   pair5: createDetectors("pair5"),
-//   pair6: createDetectors("pair6"),
-//   pair7: createDetectors("pair7"),
-//   pair8: createDetectors("pair8"),
-//   pair9: createDetectors("pair9"),
-//   pair10: createDetectors("pair10"),
-//   pair11: createDetectors("pair11")
-// }
-
-let DETECTORS_GENERATED = {};
-// DETECTORS_GENERATED = Object.assign(DETECTORS_GENERATED,
-//   generateSunsetTimelapseDetectors(60, 60, 5),
-//   PAIR_DETECTORS);
-DETECTORS_GENERATED = Object.assign(DETECTORS_GENERATED, generateSunsetTimelapseDetectors(60, 60, 5));
-
-let DETECTORS_HARDCODED = {
-  field: {
-    _id: 'XeepEbMjjW8yPzSAo',
-    description: 'fields',
-    variables: ['var stadiumsarenas;',
-      'var baseballfields;',
-      'var parks;',
-      'var playgrounds;'
-    ],
-    rules: ['(stadiumsarenas || baseballfields || parks || playgrounds);']
-  },
+  //  /////////////////////////////////////////////////////////
+  
+  /*end of progression triad 1*/
+  /*
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
@@ -751,7 +673,21 @@ let DETECTORS_HARDCODED = {
     rules : [
       "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
     ]
-  },
+  } */
+}
+};
+
+export const DETECTORS = {
+  pair1: createDetectors("pair1"),
+  pair2: createDetectors("pair2"),
+  pair3: createDetectors("pair3"),
+  pair4: createDetectors("pair4"),
+  pair5: createDetectors("pair5"),
+  pair6: createDetectors("pair6")
+}
+
+
+/* graveyard
   moodMeteorology_triad1:{
     _id: Random.id(),
     description: 'Moode Meteorology Triad 1',
@@ -1087,44 +1023,5 @@ let DETECTORS_HARDCODED = {
     variables: ["var hour;"],
     rules: ["hour == 23"]
   },
-  eating_pizza: {
-    _id: "D5QSW6S4mNUsxZPq7",
-    description: "eating pizza",
-    variables: ["var pizza;"],
-    rules: ["(pizza);"]
-  },
-  big_bite_restaurant: {
-    _id : "kJQ8sCFbWddhMviMX",
-    description : "hand-held meals eaten with big bites",
-    variables : [
-      "var mexican;",
-      "var foodstands;",
-      "var cafes;",
-      "var delicatessen;",
-      "var driveintheater;",
-      "var cheesesteaks;",
-      "var hotdog;",
-      "var salvadoran;",
-      "var colombian;",
-      "var delis;",
-      "var wraps;",
-      "var hotdogs;",
-      "var burgers;",
-      "var tacos;",
-      "var tex_mex;",
-      "var newmexican;",
-      "var foodtrucks;",
-      "var bagels;",
-      "var comfortfood;",
-      "var sandwiches;",
-      "var argentine;",
-      "var bakeries;",
-      "var cuban;"
-    ],
-    rules : [
-      "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
-    ]
-  }
-};
 
-export let DETECTORS = Object.assign({}, DETECTORS_HARDCODED, DETECTORS_GENERATED);
+*/

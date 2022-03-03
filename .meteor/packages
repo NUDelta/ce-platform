@@ -25,7 +25,6 @@ check@1.3.1
 spacebars@1.0.12
 email@2.0.0
 cfs:filesystem
-cfs:gridfs
 cfs:standard-packages
 ejson@1.1.1
 aldeed:collection2
@@ -60,3 +59,5 @@ dburles:collection-helpers
 meanware:gridfs
 nudelta2015:push@0.0.3
 littledata:synced-cron
+react-template-helper
+react-meteor-data

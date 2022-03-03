@@ -66,7 +66,7 @@ const createSunsetTimelapse = () => {
     },
     toPass: {
       instruction: 'Take a photo of the sunset!',
-      time: i
+      time: 30,
     },
     numberNeeded: 1,
     notificationDelay: 1

@@ -1,49 +1,5 @@
 //previous copy is in triadic_experience
 export let USERS = {
-    user1:{
-      username: 'jennifer',
-      email: 'jennifer@email.com',
-      password: 'password',
-      profile: {
-        firstName: 'Jennifer',
-        lastName: '',
-        staticAffordances: {  //why do the staticAffordances here not showing up?
-        }
-      }
-    },
-    user2:{
-      username: 'sofia',
-      email: 'sofia@email.com',
-      password: 'password',
-      profile: {
-        firstName: 'Sofia',
-        lastName: '',
-        staticAffordances: {  //why do the staticAffordances here not showing up?
-        }
-      }
-    },
-    user3:{
-      username: 'evan',
-      email: 'evan@email.com',
-      password: 'password',
-      profile: {
-        firstName: 'Evan',
-        lastName: '',
-        staticAffordances: {  //why do the staticAffordances here not showing up?
-        }
-      }
-    },
-    user4:{
-      username: 'derex',
-      email: 'derex@email.com',
-      password: 'password',
-      profile: {
-        firstName: 'Derex',
-        lastName: '',
-        staticAffordances: {  //why do the staticAffordances here not showing up?
-        }
-      }
-    },
   ryan: {
     username: 'ryan',
     email: 'ryan@email.com',

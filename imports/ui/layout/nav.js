@@ -14,7 +14,10 @@ Template.nav.helpers({
       return ['profile', 'api.customresults'].includes(Router.current().route.getName());
     }else if(pageName === 'affordances'){
       return Router.current().route.getName() === pageName;
-    }else{
+    }else if(pageName === 'chat'){
+      return Router.current().route.getName() === pageName;
+    }
+    else{
       return false;
     }
   }

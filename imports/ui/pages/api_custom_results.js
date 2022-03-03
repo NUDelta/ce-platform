@@ -6,6 +6,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
+import { findPartner, scrollToBottomAbs } from "../pages/chat"
 //import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
@@ -163,27 +164,71 @@ Template.groupBumpedResults.helpers({
 
     const mySub = submissions.find(s => s.uid === Meteor.userId());
     const myNeedNames = mySub.needName;
-    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId());
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId())[0];
 
-    const myImage = images.find(i => i._id === mySub.content.proof);
-    const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
-    const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+    // const myImage = images.find(i => i._id === mySub.content.proof);
+    // const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
+    // const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
+    const myImage = mySub.content.proof;
+    const otherImages = otherSubs.content.proof;
+    const friends = users.find(u => u._id === otherSubs.uid);
 
     results = {};
     Object.assign(results,
-      friends[0] && {friendOneName: `${friends[0].profile.firstName} ${friends[0].profile.lastName}`},
-      {imageOne: otherImages[0]},
-      otherSubs[0] && {captionOne: otherSubs[0].content.sentence},
+      friends && {friendOneName: `${friends.profile.firstName} ${friends.profile.lastName}`},
+      {imageOne: otherImages},
+      otherSubs && {captionOne: otherSubs.content.sentence},
       {myImage: myImage},
       mySub && {myCaption: mySub.content.sentence},
-      {imageTwo: otherImages[1]},
-      friends[1] && {friendTwoName: `${friends[1].profile.firstName} ${friends[1].profile.lastName}`},
-      otherSubs[1] && {captionTwo: otherSubs[1].content.sentence}
+      {allUsers: users}
     )
 
     return results;
   }
 });
+
+
+Template.groupBumpedResults.events({
+  'submit #replyResult'(event, instance) {
+    event.preventDefault();
+    const replyText = event.target.getElementsByClassName("replyText")[0].value;
+
+    console.log(replyText);
+    console.log(this);
+
+    
+    const uid = Meteor.userId();
+    const data = { message: replyText};
+    let users = this.allUsers;
+    if (data.message === "") return;
+    data.sender = uid;
+    data.receiver = [uid];
+
+    const otherStranger = findPartner(uid, users)
+    console.log("other stranger" + otherStranger)
+
+    data.receiver = data.receiver.concat(otherStranger)
+    // console.log(data.receiver);
+    let currentUsername = Meteor.users.findOne(Meteor.userId()).username;
+
+    Meteor.call("sendReplyMessage", data, (error, response) => {
+      if (error) {
+        console.log(error)
+      } else {
+        // $input.val("");
+        event.target.getElementsByClassName("replyText")[0].value = "";
+        //always scroll to bottom after sending a message
+        const messageContainer = document.getElementById('messages');
+        scrollToBottomAbs(messageContainer);
+      }
+    });//send notification to the recipient for every message
+    Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
+     '/chat');
+    Router.go("/chat");
+    
+    
+  }
+})
 
 Template.groupCheersResults.helpers({
   resultsGroupedByNeedAndTriad() {
@@ -241,7 +286,7 @@ Template.groupCheersResults.helpers({
 });
 
 Template.monsterCreateResults.helpers({
-  resultsGroupedByNeedAndTriad() {
+  needGroups() {
     let mySubs = this.submissions.filter(function(x){
       return x.uid === Meteor.userId();
     });
@@ -250,96 +295,262 @@ Template.monsterCreateResults.helpers({
     let subs = this.submissions;
     let images = this.images;
 
-    let myNeedNames = mySubs.map(function(x){
-      return x.needName;
-    });
+    let myNeedNames = mySubs.map(function(x){ return x.needName;});
     // only show examples where the need names are unique
     myNeedNames = [... new Set(myNeedNames)];
+    let monsterCreateNeedName = myNeedNames.find(n => n.search('monsterCreate') != -1);
+    let monsterStoryNeedName = myNeedNames.find(n => n.search('monsterStory') != -1);
 
     let needGroups = myNeedNames.map((needName) => {
-      // images already filtered by activeIncident. Now get them for each need
-      let needImages = images.filter(function(img){
-        return img.needName == needName && !img.stitched;
-      });
+      if (needName == monsterCreateNeedName) {
+        let needImages = images.filter(function(img){return img.needName == needName;});
+        let needUsers = needImages.map(function(img){return getUserById(users, img.uid);});
 
-      //grab username from img uid
-      let names = needImages.map(function(img){
-        return getUserById(users, img.uid);
-      });
+        return {
+          needName: needName,
+          needImages: needImages,
+          needUsers: needUsers
+        };
+      } else if (needName == monsterStoryNeedName) {
+        let needSubs = subs.filter(s => s.needName == needName && s.uid != null);
+        needSubs = needSubs.reverse();
+        let needImages = needSubs.map(s => images.find(i => i._id == s.content.Preview));
+        let needUsers = needSubs.map(s => getUserById(users, s.uid));
+        let sentences = needSubs.map(s => s.content.sentence)
+        let monsterLocations = needSubs.map(s => s.content.monsterLocation)
 
-      let needSubs = subs.filter(function(sub){
-        return sub.needName == needName;
-      });
-
-      return {needName: needName,
-        needSubs: needSubs,
-        imagesGroupedByTriad: needImages,
-        names: names};
+        return {
+          needName: needName,
+          needImages: needImages,
+          needUsers: needUsers,
+          sentences: sentences,
+          monsterLocations: monsterLocations
+        }
+      }
     });
 
     return(needGroups);
-  },
-  stitchedImage(images){
-    images = images.filter(i => i.stitched == 'true');
-    return images[0];
   },
   elementAtIndex(arr, index){
     return arr[index];
   },
   lengthEqual(arr, len){
     return arr.length == len;
-  }
-});
-
-Template.monsterStoryResults.helpers({
-  stitchedMonster(){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let images = this.images.filter(i => i.stitched == 'true' && needName == i.needName);
-    return images[0];
   },
-  getNeedImages(){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let images = this.images.filter(i => i.needName == needName && !i.stitched);
-    return images;
+  getDescendingIndex(images, idx){
+    return (images.length - idx)
   },
-  subDetails(needImage){
-    let imageId = needImage._id;
-    let sub = this.submissions.filter(s => s.content.Preview == imageId);
-    let monsterLocation = sub[0].content.monsterLocation;
+  monsterLocation(monsterLocation){
     let row = parseInt(monsterLocation / 3) + 1
     let col = parseInt(monsterLocation % 3) + 1
 
     return {
-      sentence: sub[0].content.sentence,
-      monsterRow: row.toString(),
-      monsterCol: col.toString(),
-      user: getUserById(this.users, sub[0].uid)
+      row: row.toString(),
+      col: col.toString(),
     };
+  }
+});
 
+Template.monsterCreateResults.events({
+  'click #seeFullMonster'(event, template){
+    event.target.classList.remove('unselected');
+    event.target.classList.add('selected');
+    let otherButton = document.getElementById("seeMonsterStory");
+    otherButton.classList.add('unselected');
+    otherButton.classList.remove('selected');
+    document.getElementById('fullMonster').style.display = "block";
+    document.getElementById('monsterStory').style.display = "none";
   },
+  'click #seeMonsterStory'(event, template){
+    event.target.classList.remove('unselected');
+    event.target.classList.add('selected');
+    let otherButton = document.getElementById("seeFullMonster");
+    otherButton.classList.add('unselected');
+    otherButton.classList.remove('selected');
+    document.getElementById('fullMonster').style.display = "none";
+    document.getElementById('monsterStory').style.display = "block";
+  },
+});
+
+export const getPartner = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let tag = 'stranger1' in currentUser.profile.staticAffordances? 'stranger2' : 'stranger1';
+  let partner = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      tag in u.profile.staticAffordances
+  )[0];
+  return partner;
+}
+
+export const getMutualFriend = (currentUser, users) => {
+  let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+  let friend = users.filter(u =>
+      u._id != currentUser._id &&
+      triad in u.profile.staticAffordances &&
+      'friend' in u.profile.staticAffordances
+  )[0];
+  return friend;
+}
+
+Template.appreciationStationResults.helpers({
+  isMutualFriend(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    if ('friend' in currentUser.profile.staticAffordances){
+      return true;
+    } else {
+      return false;
+    }
+  },
+  getNames(){
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+    //if is mutual friend
+    if ('friend' in currentUser.profile.staticAffordances){
+      let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+
+      let others = this.users.filter(u =>
+          u._id != currentUser._id &&
+          triad in u.profile.staticAffordances
+      );
+
+      return {
+        mutualFriend: currentUser.username,
+        otherStranger: others[0].username,
+        otherOtherStranger: others[1].username,
+      }
+    } else {
+      let partner = getPartner(currentUser, this.users);
+      let friend = getMutualFriend(currentUser, this.users);
+
+      return  {
+        otherStranger: partner.username,
+        otherOtherStranger: currentUser.username,
+        mutualFriend: friend.username,
+      }
+    }
+  },
+  getImagesAndSubs(){
+    let needName;
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0]
+
+    if ('friend' in currentUser.profile.staticAffordances){
+      let triad = Object.keys(currentUser.profile.staticAffordances).filter(k => k.search('triad') != -1)[0];
+      let others = this.users.filter(u =>
+          u._id != currentUser._id &&
+          triad in u.profile.staticAffordances
+      );
+      needName = this.submissions.filter(s => s.uid == others[0]._id)[0].needName;
+    } else {
+      needName = this.submissions.filter(s => s.uid == currentUser._id)[0].needName;
+    }
+
+    let needImages = this.images.filter(i => i.needName == needName);
+    let needCaptions = needImages.map(needImage =>
+      this.submissions.filter(s => s.content.proof == needImage._id)[0].content.sentence
+    )
+
+    let results = [];
+    for (let i = 0; i < needImages.length; i++){
+      results[i] = {
+        user: getUserById(this.users, needImages[i].uid),
+        needImage: needImages[i],
+        needCaption: needCaptions[i]
+      }
+    }
+
+    return results;
+  }
+});
+
+Template.lifeJourneyMapResults.events({
+  'click .journeyMapButton'(event, template){
+    let username = event.target.dataset.username;
+    document.querySelectorAll('.userMap').forEach(userMap => userMap.style.display = "none");
+    let userMapDOMel = document.querySelectorAll(`[data-user=${username}]`);
+    userMapDOMel.forEach(el => el.style.display = 'block');
+  }
+});
+
+Template.lifeJourneyMapResults.helpers({
+  needUsers(){
+    let currUserSub = this.submissions.filter(s => s.uid == Meteor.userId())[0];
+    let needName = currUserSub.needName;
+    let needSubs = this.submissions.filter(s => s.needName == needName);
+    let needUsers = [...new Set(needSubs.map(s => s.uid))];
+    return needUsers;
+  },
+  getUsername(uid){
+    let user = this.users.filter(u => uid == u._id)[0];
+    return user.username;
+  },
+  getUid(userMap){
+    return userMap[0].uid;
+  },
+  userMaps(){
+    let currUserSub = this.submissions.filter(s => s.uid == Meteor.userId())[0];
+    let needName = currUserSub.needName;
+    let needSubs = this.submissions.filter(s => s.needName == needName);
+    let needUsers = [...new Set(needSubs.map(s => s.uid))];
+    let userMaps;
+    userMaps = needUsers.map(needUser =>
+      this.images.filter(s => s.uid == needUser)
+    )
+    console.log(userMaps);
+    return userMaps;
+  }
+})
+
+Template.nightTimeSpooksResults.helpers({
   elementAtIndex(array, index){
     return array[index];
   },
-  increment(num){
-    return parseInt(num)+1;
+  isEqual(x, y){
+    return x === y;
+  },
+  getUsername(users, sub){
+    let user = users.filter(u => sub.uid == u._id)[0];
+    return user.username;
+  },
+  filterImages(subs){
+    let images = subs.map(s => this.images.filter(i =>
+      s.content.proof == i._id ||
+      s.content.Preview == i._id)[0])
+    return images;
+  },
+  getPartnerImage(images, index){
+    let imageUser = images[index].uid
+    let partnerImage = images.filter(i =>
+      i.uid != imageUser &&
+      i.needName.search('nightTimeSpooks') != -1)[0];
+    return partnerImage;
+  },
+  filterSubs(){
+    let currUser = Meteor.userId();
+    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
+    let uniqueNeedNames = [...new Set(currUserSubs.map(s => s.needName))];
+    //only get subs that are already filled
+    let subs = this.submissions.filter(
+      s => uniqueNeedNames.includes(s.needName)
+      && s.uid);
+    return subs;
+  },
+  getFirst(index){
+    let result;
+    index == 0? result = "block": result = "none";
+    return result;
   },
   notFirst(index) {
     return index != 0;
   },
-  notLast(index){
-    let currUser = Meteor.userId();
-    let currUserSubs = this.submissions.filter(s => s.uid == currUser);
-    let needName = currUserSubs[0].needName;
-    let imagesLength = this.images.filter(i => needName == i.needName).length - 1;
-    return index < imagesLength - 1;
-  },
+  notLast(subs, index){
+    return index < (subs.length-1);
+  }
 });
 
-Template.monsterStoryResults.events({
+Template.nightTimeSpooksResults.events({
   'click .prev'(event, template){
     let currSlideIdx = parseInt(event.target.dataset.currslide);
     let slide = document.getElementById(`img${currSlideIdx}`);
@@ -458,40 +669,30 @@ export const reactSubmission = (react, users, submission) => {
 Template.imitationGameResults.helpers({
   content() {
     let currentUser = this.users.find(x => x._id === Meteor.userId());
+    let userSub = this.submissions.find(s => s.uid === currentUser._id);
+    let needName = userSub.needName;
+    let subs = this.submissions.filter(s => s.needName == needName && s.uid != null);
 
-    let triad;
-    if(currentUser.profile.staticAffordances.triadOne) {
-      triad = 'triadOne';
-    } else if(currentUser.profile.staticAffordances.triadTwo) {
-      triad = 'triadTwo';
-    }
-    let originalImage, creatorSub, descriptorSub, recreatorSub;
-    let creatorName, descriptorName, recreatorName;
+    let results = subs.map((s) => {
+      let map = {}
+      map.name = getUserById(this.users, s.uid)
 
-    this.submissions.filter(s => {
-      let tokenizedNeed = s.needName.split('_');
-      if(tokenizedNeed[2] == triad) {
-        if(tokenizedNeed[0] == 'creator') {
-          creatorSub = this.images.find(i => i._id === s.content.proof);
-          let creatorUser = this.users.find(u => u._id == s.uid);
-          creatorName = `${creatorUser.profile.firstName} ${creatorUser.profile.lastName}`
-          originalImage = this.experience.contributionTypes.find(need => need.needName == s.needName).toPass.example_image;
-        } else if (tokenizedNeed[0] == 'descriptor') {
-          descriptorSub = s.content.sentence;
-          if(descriptorSub) {
-            let descriptorUser = this.users.find(u => u._id == s.uid);
-            descriptorName = `${descriptorUser.profile.firstName} ${descriptorUser.profile.lastName}`
-          }
-        } else if (tokenizedNeed[0] == 'recreator') {
-          recreatorSub = this.images.find(i => i._id === s.content.proof);
-          if(recreatorSub) {
-            let recreatorUser = this.users.find(u => u._id == s.uid);
-            recreatorName = `${recreatorUser.profile.firstName} ${recreatorUser.profile.lastName}`
-          }
-        }
+      if (s.content.proof){
+        map.content = this.images.find(i => i._id == s.content.proof);
+      } else {
+        map.content = s.content.sentence;
       }
+      return map;
     });
-    return {originalImage, creatorSub, descriptorSub, recreatorSub, creatorName, descriptorName, recreatorName};
+
+    console.log(results);
+    return results;
+  },
+  elementAtIndex(index, array){
+    return array[index]
+  },
+  lengthLessOrEq(upperBound, array){
+    return array.length >= upperBound
   }
 });
 
