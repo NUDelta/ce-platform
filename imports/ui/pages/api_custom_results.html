@@ -571,16 +571,16 @@
           <div class="pending_img">?</div>
         {{/if}}
       </div>
-      
+
       <div class="reply_container">
         {{#if imageOne}}
-        
+
         <div class="resultReply">{{> Template.dynamic template="resultReply"}}</div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
             </button>
-          
+
         {{else}}
         {{/if}}
       </div>
@@ -1008,11 +1008,12 @@
   </head>
   <div class="title">Sunsets around the US</div>
   <div class="slideshow">
-    {{#each image in this.images}}
+    {{#each sub in this.submissions}}
       <div class="sunsetSlides" id="img{{@index}}">
-        {{> Template.dynamic template="displayImage" data=image}}
+        <img src="{{sub.content.proof}}" style="width:100%">
+        <!-- {{> Template.dynamic template="displayImage" data=image}} -->
         <br>
-        Sunset from ({{image.lat}}, {{image.lng}})
+        <!-- Sunset from ({{image.lat}}, {{image.lng}}) -->
       </div>
     {{/each}}
   </div>

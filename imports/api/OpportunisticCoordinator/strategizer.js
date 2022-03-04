@@ -137,6 +137,8 @@ export const needIsAvailableToParticipateNow = (incident, needName) => {
     console.log(`Error in needAggregator: incident does not have contribution types\n ${JSON.stringify(incident)}`);
     return;
   }
+  console.log(incident.contributionTypes);
+  console.log(needName);
   const needObject = incident.contributionTypes.find(need => need.needName == needName);
   const numberNeeded = numberSubmissionsRemaining(incident._id, needName);
   const semaphoreMax = needObject.numberAllowedToParticipateAtSameTime ?

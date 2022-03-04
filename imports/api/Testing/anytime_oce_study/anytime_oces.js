@@ -15,7 +15,7 @@ const createSunsetTimelapse = () => {
   let apiDefinition = {
     _id: Random.id(),
     name: 'Sunset',
-    participateTemplate: 'uploadPhoto',
+    participateTemplate: 'sunsetTimelapseParticipate',
     resultsTemplate: 'sunset',
     description: 'Create a timelapse of the sunset with others around the country',
     notificationText: 'Take a photo of the sunset!',
@@ -46,11 +46,11 @@ const createSunsetTimelapse = () => {
       needName: needName,
       situation: {
         detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
+        // detector: getDetectorUniqueKey(DETECTORS.night), // gotta think more about how dynamic participate works here
         number: 1
       },
       toPass: {
         instruction: 'Take a photo of the sunset!',
-        time: i
       },
       numberNeeded: 1,
       notificationDelay: 1
@@ -58,19 +58,20 @@ const createSunsetTimelapse = () => {
     contributionTypes.push(need);
   }
 
-  contributionTypes.push({
-    needName: 'Anytime Tester',
-    situation: {
-      detector: getDetectorUniqueKey(DETECTORS.daytime),
-      number: 1,
-    },
-    toPass: {
-      instruction: 'Take a photo of the sunset!',
-      time: 30,
-    },
-    numberNeeded: 1,
-    notificationDelay: 1
-  })
+  // LEAVE COMMENTED OUT: FOR TESTING!
+  // contributionTypes.push({
+  //   needName: 'Anytime Tester',
+  //   situation: {
+  //     detector: getDetectorUniqueKey(DETECTORS.night),
+  //     number: 1,
+  //   },
+  //   toPass: {
+  //     instruction: 'Take a photo of the sunset!',
+  //     time: 30,
+  //   },
+  //   numberNeeded: 1,
+  //   notificationDelay: 1
+  // })
 
   apiDefinition['contributionTypes'] = contributionTypes;
   return apiDefinition;

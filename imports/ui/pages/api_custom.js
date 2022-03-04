@@ -653,6 +653,168 @@ export const chunkArray = (myArray, chunk_size) => {
   return results;
 };
 
+Template.sunsetTimelapseParticipate.onCreated(() => {
+  Template.instance().imageSubmitReady = new ReactiveVar(false);
+  Template.instance().cameraStarted = new ReactiveVar(false);
+});
+
+Template.sunsetTimelapseParticipate.onDestroyed(() => {
+  CameraPreview.stopCamera();
+});
+
+Template.sunsetTimelapseParticipate.onRendered(() => {
+
+  const canvas = document.getElementById('sunset-guides');
+  const ctx = canvas.getContext('2d');
+
+  const drawDashedLine = (pattern, y_proportion) => {
+    let width = ctx.canvas.width;
+    let height = ctx.canvas.height;
+    ctx.beginPath();
+    ctx.setLineDash(pattern)
+    ctx.moveTo(0, y_proportion * height);
+    ctx.lineTo(width,  y_proportion * height);
+    ctx.stroke();
+  }
+
+  // if sunset_time is 45 minutes before sunset, then proportion should be 25%
+  // if sunset_time is 30 minutes before sunset, then proportion should be 50%
+  // if sunset_time is 15 minutes before sunset, then proportion should be 75%
+  const calculateSunsetHeight = (sunset_time) => {
+    if (sunset_time < 0) {
+      return 1; // sun has definitely set
+    } else {
+      // create a proportion between 0 and 1, if sunset_time is between 60 and 0
+      let sunset_completion_proportion = (60 - sunset_time) / 60;
+      return sunset_completion_proportion;
+    }
+  }
+
+  // if horizon is at 1.0, then this function just returns sunset_completion_proportion
+  // if horizon is at .75, then this function return sunset_completion_proportion * .75
+  const calculateSunsetGuideHeight = (sunset_completion_proportion, horizon_y_proportion) => {
+    return sunset_completion_proportion * horizon_y_proportion;
+  }
+
+  const needName = Router.current().params.needName
+  console.log(needName);
+  let minutes;
+  if (needName.search('before')) {
+    minutes = needName.split(' ')[0];
+  } else if (needName.search('after')) {
+    minutes = needName.split(' ')[0];
+    minutes = minutes * -1;
+  }
+
+  const sunsetCompletionProportion = calculateSunsetHeight(minutes)
+  const horizonProportion = 0.75
+  const yProportion = calculateSunsetGuideHeight(sunsetCompletionProportion, horizonProportion);
+
+  drawDashedLine([15, 5, 5], yProportion);
+  drawDashedLine([], horizonProportion);
+
+});
+
+Template.sunsetTimelapseParticipate.helpers({
+  submitDisplayValue() {
+    // when image submit is ready, submit button should be shown
+    if (Template.instance().imageSubmitReady.get()) {
+      return "block";
+    } else {
+      return "none";
+    }
+  }
+});
+
+Template.sunsetTimelapseParticipate.events({
+  'click #takeHalfHalfPhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      toggleCameraControls('takePhotoInProgress');
+
+      CameraPreview.takePicture({
+        // dimensions of an iPhone 6s front-facing camera are 960 1280
+        // any larger dimensions displays the captured picture with significant lag
+        // reducing to 480 x 640 in an attempt to speed up webclient image processing
+        // TODO(rlouie): test these parameters with many devices, whose supported photo sizes might make this not work
+        width: 480, height: 640, quality: 85
+      },function(imgData){
+          let rect = getPreviewRect();
+          b64CropLikeCordova(imgData, rect.width, rect.height, function(croppedImgUrl) {
+            // using an instance of jquery tied to current template scope
+            let imagePreview = template.$(".fileinput-preview");
+            imagePreview.attr('src', croppedImgUrl);
+            imagePreview.show();
+            template.imageSubmitReady.set(true);
+            CameraPreview.hide();
+            toggleCameraControls('takePhotoDone');
+          });
+      });
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+  },
+  'click #retakePhoto'(event, template){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.show()
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+    $(".fileinput-preview").hide();
+    template.imageSubmitReady.set(false);
+    toggleCameraControls('startCamera');
+  },
+  'click #switchCamera'(){
+    if (typeof CameraPreview !== 'undefined') {
+      CameraPreview.switchCamera();
+    } else {
+      console.error("Could not access the CameraPreview")
+    }
+  },
+  'click #goToParticipate'(event, template) {
+    document.getElementById('instruction').style.display = "none";
+    document.getElementById('participate').style.display = "block";
+
+    // For speed of loading CameraPreview, we will only start the instance once, and use shows/hides to toggle
+    if (template.cameraStarted.get()) {
+      // an image was NOT taken previously and ready to submit, so...
+      if (!template.imageSubmitReady.get()) {
+        // we can show the camera preview
+        CameraPreview.show();
+      }
+    } else {
+      // Wait for the participate div to load before setting the location of the preview
+      Meteor.setTimeout(() => {
+        // start CameraPreview instance running
+        if (typeof CameraPreview !== 'undefined') {
+          startCameraAtPreviewRect();
+          template.cameraStarted.set(true);
+        } else {
+          console.error("Could not access the CameraPreview")
+        }
+        // using an instance of jquery tied to current template scope
+        template.$(".fileinput-preview").hide();
+        template.imageSubmitReady.set(false);
+        toggleCameraControls('startCamera');
+      }, 300);
+    }
+  },
+  'click #goToInstruction'() {
+    document.getElementById('instruction').style.display = "block";
+    document.getElementById('participate').style.display = "none";
+
+    // For speed of loading CameraPreview, we will only start the instance once, and use shows/hides to toggle
+    CameraPreview.hide();
+  },
+  // LEAVE click #testImage event commented out! For non-mobile testing only
+  // 'click #testImage'(event, template) {
+  //   // let sampleImgSrc = "data:image/png:base64..."
+  //   let imagePreview = template.$(".fileinput-preview");
+  //   imagePreview.attr('src', sampleImgSrc);
+  //   imagePreview.show();
+  //   template.imageSubmitReady.set(true);
+  // }
+});
+
 Template.halfhalfParticipate.helpers({
   getUserById(users, uid) {
     let user = users.find(function(x) {
@@ -1163,7 +1325,7 @@ Template.api_custom.events({
             lat: location.lat,
             lng: location.lng
           };
-    
+
           Meteor.call("uploadImage", reader.result, submissionObject, (err) => {
             if (err) {
               console.log("error in uploadImage: ", err)
@@ -1185,7 +1347,7 @@ Template.api_custom.events({
         let contentType = block[0].split(":")[1];
         // get the real base64 content of the file
         let realData = block[1].split(",")[1];
-        picture = realData; 
+        picture = realData;
         // console.log("type of picture: ", typeof picture)
 
         //CINDY: modify code starting here

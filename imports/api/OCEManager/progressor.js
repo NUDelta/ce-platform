@@ -3,6 +3,7 @@ import { Incidents } from "./OCEs/experiences";
 import { Submissions } from "./currentNeeds";
 import {serverLog} from "../logs";
 import {adminUpdates} from "./progressorHelper";
+import { AUTH } from "../config";
 // needed because a callback uses `notify`
 import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 import {addContribution, changeIncidentToPass} from "./OCEs/methods";
@@ -12,13 +13,14 @@ import { sendSystemMessage, postExpInChat } from '../Messages/methods';
 // import { AWS } from 'aws-sdk';
 // import { sharp } from 'sharp';
 // import 'dotenv/config';
-require('dotenv').config({ path: `${process.env.PWD}/.env`});
+// require('dotenv').config({ path: `${process.env.PWD}/.env`});
+
 const sharp = require('sharp');
 
 let AWS = require('aws-sdk');
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  accessKeyId: AUTH.AWS_ACCESS_KEY_ID,
+  secretAccessKey: AUTH.AWS_SECRET_ACCESS_KEY
 });
 
 const submissionsCursor = Submissions.find({});
@@ -101,12 +103,12 @@ export const uploadImage = function (picture, submissionObject){
     console.log("image has been uploaded");
     createInitialSubmission(submissionObject)
   });
-  
+
 }
 
 
 const s3 = new AWS.S3({
-  endpoint: new AWS.Endpoint(process.env.S3_ENDPOINT),
+  endpoint: new AWS.Endpoint(AUTH.S3_ENDPOINT),
 });;
 
   /**
@@ -117,16 +119,16 @@ const s3 = new AWS.S3({
    */
    const uploadToS3 = async function (key, buffer) {
     const uploadParams = {
-      Bucket: process.env.S3_BUCKET,
+      Bucket: AUTH.S3_BUCKET,
       ACL: "public-read",
       Key: key,
       Body: buffer,
       ContentType: "image/png",
     };
-  
+
     return s3.upload(uploadParams).promise();
   };
-  
+
   /**
    * decode base64 to an image file and upload the file to the bucket specified in .env.
    * @param {string} base64Data image file encoded with base64
@@ -136,17 +138,17 @@ const s3 = new AWS.S3({
    */
 const uploadImagesToS3 = async (base64Data, needName, uid) => {
     console.log("in upload image...")
-  
+
     // keys for where files will live on S3
-    const imgKeyPrefix = `${process.env.S3_PREFIX}`;
+    const imgKeyPrefix = `${AUTH.S3_PREFIX}`;
     let cdnForImg = "";
 
     try {
-      // parse and decode base64 into a buffer 
+      // parse and decode base64 into a buffer
       const uri = base64Data.split(';base64,').pop();
       // console.log(base64Data)
       const buffer = Buffer.from(uri, "base64");
-  
+
       let filename = needName + "-" + uid;
       let processedImgKey = `${imgKeyPrefix}/${filename}.png`;
 
@@ -154,21 +156,21 @@ const uploadImagesToS3 = async (base64Data, needName, uid) => {
       .rotate()
       .toFormat('png')
       .toBuffer();
-      
-  
+
+
       // upload example image to S3
       try {
         await uploadToS3(processedImgKey, pngBuffer);
-  
+
         // if upload was successful, create a CDN link to add to airtable
-        cdnForImg = `${process.env.S3_CDN}/${processedImgKey}`;
+        cdnForImg = `${AUTH.S3_CDN}/${processedImgKey}`;
       } catch (error) {
         console.log(`Error in uploading profile photo: ${error}`);
       }
     } catch (error) {
       console.log(`Error in processing file: ${error}`);
     }
-  
+
     return cdnForImg;
   };
 

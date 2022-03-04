@@ -196,7 +196,7 @@ Template.groupBumpedResults.events({
     console.log(replyText);
     console.log(this);
 
-    
+
     const uid = Meteor.userId();
     const data = { message: replyText};
     let users = this.allUsers;
@@ -225,8 +225,8 @@ Template.groupBumpedResults.events({
     Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
      '/chat');
     Router.go("/chat");
-    
-    
+
+
   }
 })
 
@@ -969,3 +969,12 @@ Template.sunset.onDestroyed(function() {
     timeout = null;
   });
 });
+
+Template.sunset.helpers({
+  orderedSunsetImagesUrls() {
+    // TODO: order them by needs
+    return this.submissions.map((sub) => {
+      return sub.content.proof;
+    });
+  }
+})

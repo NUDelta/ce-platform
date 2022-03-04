@@ -44,7 +44,10 @@ Template.dynamicParticipate.onCreated(function() {
       this.assignment = Assignments.findOne();
       let needNamesBinnedByDetector = needAggregator(this.incident);
 
+      console.log(`needNamesBinnedByDetector: ${JSON.stringify(needNamesBinnedByDetector)}`);
+      console.log(`this.detectorUniqueKey: ${this.detectorUniqueKey}`);
       let potentialNeedNames = needNamesBinnedByDetector[this.detectorUniqueKey];
+      console.log(`potentialNeedNames: ${JSON.stringify(potentialNeedNames)}`);
 
       // TODO: filter additionally by only the needs in which this user is assigned to
       /**
@@ -62,12 +65,14 @@ Template.dynamicParticipate.onCreated(function() {
       potentialNeedNames.sort(prioritizeHalfCompletedNeeds); // mutates
       potentialNeedNames = potentialNeedNames.filter(needName => needIsAvailableToParticipateNow(this.incident, needName));
 
+      /*
       if (!potentialNeedNames.length) {
         // tell user that somehow they were too late and there are no needs available for them
         // or redirect them away from this page -- don't go route them to a participate screen.
         this.state.set('renderWaiting', true);
         return;
       }
+      */
 
       // choose the top-1, then dynamically redirect to that participate
       const chosenNeedName = potentialNeedNames[0];
