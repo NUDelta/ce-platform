@@ -1236,6 +1236,24 @@ Template.api_custom.events({
         picture = realData;
         // console.log("type of picture: ", typeof picture)
 
+        const submissionObject = {
+          uid: uid,
+          eid: experience._id,
+          iid: iid,
+          needName: needName,
+          content: submissions,
+          timestamp: timestamp,
+          lat: location.lat,
+          lng: location.lng
+        };
+        Meteor.call("uploadImage", picture, submissionObject, (err) => {
+          if (err) {
+            console.log("error in uploadImage: ", err)
+          } else {
+            console.log("image has been uploaded");
+            Router.go(resultsUrl);
+          }
+        });
         //CINDY: modify code starting here
         // picture = b64toBlob(realData, contentType);
       }
