@@ -18,6 +18,7 @@ import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
 import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
+import Hammer from "hammerjs";
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -656,6 +657,8 @@ export const chunkArray = (myArray, chunk_size) => {
 Template.sunsetTimelapseParticipate.onCreated(() => {
   Template.instance().imageSubmitReady = new ReactiveVar(false);
   Template.instance().cameraStarted = new ReactiveVar(false);
+  Template.instance().scale = new ReactiveVar(null);
+  Template.instance().lastScale = new ReactiveVar(null);
 });
 
 Template.sunsetTimelapseParticipate.onDestroyed(() => {
@@ -712,6 +715,7 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
 
   drawDashedLine([15, 5, 5], yProportion);
   drawDashedLine([], horizonProportion);
+
 
 });
 
@@ -795,6 +799,37 @@ Template.sunsetTimelapseParticipate.events({
         template.$(".fileinput-preview").hide();
         template.imageSubmitReady.set(false);
         toggleCameraControls('startCamera');
+
+        // PINCH ZOOM
+        container = document.getElementById('cameraOverlay');
+
+        let hammer = new Hammer(container, { domEvents: true});
+
+        hammer.get('pinch').set({ enable: true });
+        const MAX_SCALE = CameraPreview.getMaxZoom();
+
+        const restrictScale = (scale) => {
+          if (scale < 1) {
+            scale = MIN_SCALE;
+          } else if (scale > MAX_SCALE) {
+            scale = MAX_SCALE;
+          }
+          return scale;
+        };
+
+        const zoomAround = (scaleBy) => {
+          CameraPreview.setZoom(e.scale)
+          template.lastScale.set(template.scale);
+        }
+        hammer.on('pinch', function(e) {
+          template.newScale.set(restrictScale(scale * e.scale));
+          zoomAround(e.scale);
+        });
+
+        hammer.on('pinchend', function(e) {
+          template.lastScale.set(template.scale);
+        });
+
       }, 300);
     }
   },
