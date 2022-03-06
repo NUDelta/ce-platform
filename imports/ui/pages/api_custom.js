@@ -807,11 +807,28 @@ Template.sunsetTimelapseParticipate.events({
   },
   // LEAVE click #testImage event commented out! For non-mobile testing only
   // 'click #testImage'(event, template) {
-  //   // let sampleImgSrc = "data:image/png:base64..."
-  //   let imagePreview = template.$(".fileinput-preview");
-  //   imagePreview.attr('src', sampleImgSrc);
-  //   imagePreview.show();
-  //   template.imageSubmitReady.set(true);
+  //   // sample
+  //   const prepareBase64Image = (url) => {
+  //     const img = new Image();
+  //     img.setAttribute('crossOrigin', 'anonymous');
+  //     img.onload = () => {
+  //       const canvas = document.createElement("canvas");
+  //       canvas.width = img.width;
+  //       canvas.height = img.height;
+  //       const ctx = canvas.getContext("2d");
+  //       ctx.drawImage(img, 0, 0);
+  //       const dataURL = canvas.toDataURL("image/jpeg");
+
+  //       // use the base64 URL
+  //       let imagePreview = template.$(".fileinput-preview");
+  //       imagePreview.attr('src', dataURL);
+  //       imagePreview.show();
+  //       template.imageSubmitReady.set(true);
+  //     }
+  //     img.src = url
+  //   }
+  //   let sampleImgUrl = "https://tse3.mm.bing.net/th?id=OIP.EkUNGnpN79usmPPn5PiPGwHaE7&pid=Api"
+  //   prepareBase64Image(sampleImgUrl);
   // }
 });
 
