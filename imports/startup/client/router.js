@@ -199,10 +199,26 @@ Router.route('/', {
   }
 });
 
-
 Router.route('chat', {
   name: 'chat',
   template: 'chat',
+  before: function() {
+    this.subscribe('users.all').wait();
+    this.subscribe('messages.user', Meteor.userId()).wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      users: Meteor.users.find().fetch(),
+      messages: Messages.find().fetch(),
+    };
+  }
+});
+
+
+Router.route('chat.users', {
+  path: '/chat/:uid',
+  template: 'chatUsers',
   before: function() {
     this.subscribe('images.activeIncident', this.params.iid).wait();
     this.subscribe('experiences.single', this.params.eid).wait();

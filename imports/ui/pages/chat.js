@@ -2,6 +2,8 @@ import './chat.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Messages } from '../../api/Messages/messages.js';
+import { ChatOverview } from "../react-component/r_chat_overview"
+import { Router } from 'meteor/iron:router';
 
 import '../components/contributions.js';
 
@@ -37,23 +39,46 @@ export const findPartner = function(uid, users) {
   return otherStranger; 
 }
 
-Template.chat.onRendered(function () {
+const getOtherUser = () => {
+  let url =  Router.current().url;
+  let userId = url.split("/");
+  userId = userId[userId.length-1]
+  return userId;
+}
+
+Template.chat.helpers({
+  ChatOverview(){
+    return ChatOverview
+  }
+})
+
+Template.chatUsers.onRendered(function () {
   const messageContainer = document.getElementById('messages');
   messageContainer.style.height = `${window.innerHeight - 52 - 35 - 66}px`;
   scrollToBottomAbs(messageContainer);
 });
 
-Template.chat.helpers({
+Template.chatUsers.helpers({
   scroll(messages){
     const messageContainer = document.getElementById('messages');
     scrollToBottom(messageContainer);
     return
+  },
+  filterMessage(messages) {
+    const otherUser = getOtherUser()
+    return messages.filter(msg => msg.recipients.includes(otherUser) && msg.recipients.includes(Meteor.userId()))
+  },
+  getOtherUserName(){
+    const otherUser = getOtherUser();
+    const otherUserName =  Meteor.users.find({"_id": otherUser}).fetch()[0].username;
+    return otherUserName
   }
 })
 
- Template.chat.events({
+ Template.chatUsers.events({
   'submit #message'(event, instance) {
     event.preventDefault();
+    const otherUser = getOtherUser();
 
     const $el = $(event.currentTarget);
     const $input = $el.find('.message-input');
@@ -61,12 +86,9 @@ Template.chat.helpers({
     const data = { message: $input.val() };
     if (data.message === "") return;
     data.uid = uid;
-    data.recipients = [uid]
+    data.recipients = [uid, otherUser]
     
-    otherStranger = findPartner(uid, this.users)
-    // console.log("other stranger: " + otherStranger)
-    data.recipients = data.recipients.concat(otherStranger)
-    let currrentUsername = Meteor.users.findOne(Meteor.userId()).username;
+    let currentUsername = Meteor.users.findOne(Meteor.userId()).username;
 
     Meteor.call("sendMessage", data, (error, response) => {
       if (error) {
@@ -80,7 +102,7 @@ Template.chat.helpers({
     });
 
     //send notification to the recipient for every message
-    Meteor.call('sendNotification', otherStranger, `${currrentUsername}: ${data.message}`,
+    Meteor.call('sendNotification', otherUser, `${currentUsername}: ${data.message}`,
      '/chat');
   }
 });
