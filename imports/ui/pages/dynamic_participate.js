@@ -65,14 +65,12 @@ Template.dynamicParticipate.onCreated(function() {
       potentialNeedNames.sort(prioritizeHalfCompletedNeeds); // mutates
       potentialNeedNames = potentialNeedNames.filter(needName => needIsAvailableToParticipateNow(this.incident, needName));
 
-      /*
       if (!potentialNeedNames.length) {
         // tell user that somehow they were too late and there are no needs available for them
         // or redirect them away from this page -- don't go route them to a participate screen.
         this.state.set('renderWaiting', true);
         return;
       }
-      */
 
       // choose the top-1, then dynamically redirect to that participate
       const chosenNeedName = potentialNeedNames[0];

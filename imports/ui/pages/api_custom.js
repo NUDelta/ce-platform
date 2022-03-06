@@ -727,7 +727,7 @@ Template.sunsetTimelapseParticipate.helpers({
 });
 
 Template.sunsetTimelapseParticipate.events({
-  'click #takeHalfHalfPhoto'(event, template){
+  'click #takePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       toggleCameraControls('takePhotoInProgress');
 
@@ -789,7 +789,7 @@ Template.sunsetTimelapseParticipate.events({
           startCameraAtPreviewRect();
           template.cameraStarted.set(true);
         } else {
-          console.error("Could not access the CameraPreview")
+          // console.error("Could not access the CameraPreview")
         }
         // using an instance of jquery tied to current template scope
         template.$(".fileinput-preview").hide();
@@ -865,7 +865,7 @@ Template.halfhalfParticipate.onDestroyed(() => {
 });
 
 Template.halfhalfParticipate.events({
-  'click #takeHalfHalfPhoto'(event, template){
+  'click #takePhoto'(event, template){
     if (typeof CameraPreview !== 'undefined') {
       toggleCameraControls('takePhotoInProgress');
 
