@@ -45,14 +45,6 @@ Meteor.methods({
   },
   startTestExperiences(){
     createTestExperiences();
-
-    // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-    //   pair.forEach(function (value) {
-    //     Detectors.insert(value);
-    //   });
-    // })
-    // log.info(`${CONSTANTS.DETECTORS}`);
-    // log.info(`Populated ${ Detectors.find().count() } detectors`);
   },
   clearSubmission(){
     Submissions.remove({});
@@ -103,41 +95,38 @@ function clearEmptySubmission() {
   Submissions.remove({uid: null})
 }
 
-// export const createNewId = (type, need) => {
-//   toReplace = ["1", "I", "l", "O", "V", "U"]  //why does this somehow look like "I love you" lol
-//   toReplace.forEach((c) => {
-//     need = need.replace(c, "Z")
-//   })
-//   for (let i = need.length; i < 17; i++){
-//     need = need + type;
-//   }
-//   return need
-// }
-
 function createTestExperiences(){
     // add detectors
-    for (let i = 1; i < 12; i++){
-      let pairNum = "pair" + `${i}`;
-      Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-        // log.info(`creating detectors for ${pairNum}`);
-        Detectors.insert(value);
-      });
-    }
+    // for (let i = 1; i < 12; i++){
+    //   let pairNum = "pair" + `${i}`;
+    //   Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
+    //     // log.info(`creating detectors for ${pairNum}`);
+    //     Detectors.insert(value);
+    //   });
+    // }
+    Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+      Detectors.insert(value);
+    });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
-  for (let i = 1; i < 12; i++){
-    let pairNum = "pair" + `${i}`;
-    Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
-      // let need = value.contributionTypes[0].needName;
-      // console.log("need before: "+ need)
-      // need = createNewId("e", need)
-      // console.log("need after: "+ need);
-      // value._id = need;
-        Experiences.insert(value);
-        let incident = createIncidentFromExperience(value);
-        startRunningIncident(incident);
-        // log.info(`creating experiences for ${pairNum}`);
-      });
-  }
+  // for (let i = 1; i < 12; i++){
+  //   let pairNum = "pair" + `${i}`;
+  //   Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
+  //     // let need = value.contributionTypes[0].needName;
+  //     // console.log("need before: "+ need)
+  //     // need = createNewId("e", need)
+  //     // console.log("need after: "+ need);
+  //     // value._id = need;
+  //       Experiences.insert(value);
+  //       let incident = createIncidentFromExperience(value);
+  //       startRunningIncident(incident);
+  //       // log.info(`creating experiences for ${pairNum}`);
+  //     });
+  // }
+  Object.values(CONSTANTS.EXPERIENCES).forEach(function (value) {
+      Experiences.insert(value);
+      let incident = createIncidentFromExperience(value);
+      startRunningIncident(incident);
+    });
   
 }
 
@@ -182,21 +171,6 @@ function createTestData(){
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
   
 
-  // // add detectors
-  // for (let i = 1; i < 7; i++){
-  //   let pairNum = "pair" + `${i}`;
-  //   Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-  //     Detectors.insert(value);
-  //   });
-  // }
-  // // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-  // //   pair.forEach(function (value) {
-  // //     Detectors.insert(value);
-  // //   });
-  // // })
-  // log.info(`Populated ${ Detectors.find().count() } detectors`);
-
-
   // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
   // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
   // startRunningIncident(incident);
@@ -207,26 +181,9 @@ function createTestData(){
 
   let uid1 = findUserByUsername('cindy')._id;
   let uid2 = findUserByUsername('yvan')._id;
-  let uid3 = findUserByUsername('ryan')._id;
-  let uid4 = findUserByUsername('jenny')._id;
-  // let uid5 = findUserByUsername('haoqi')._id;
-  // let uid6 = findUserByUsername('natalie')._id;
-  // let uid7 = findUserByUsername('jason')._id;
-  // let uid8 = findUserByUsername('fardeem')._id;
-  // let uid9 = findUserByUsername('kapil')._id;
-  // let uid10 = findUserByUsername('molly')._id;
-  // let uid11 = findUserByUsername('leesha')._id;
-  // let uid12 = findUserByUsername('justin')._id;
-  // let uid13 = findUserByUsername('harrison')._id;
-  // let uid14 = findUserByUsername('jonathan')._id;
-  // let uid15 = findUserByUsername('gobi')._id;
-  // let uid16 = findUserByUsername('sydney')._id;
-  // let uid17 = findUserByUsername('hang')._id;
-  // let uid18 = findUserByUsername('parveen')._id;
-  // let uid19 = findUserByUsername('isaac')._id;
-  // let uid20 = findUserByUsername('izzy')._id;
-  // let uid21 = findUserByUsername('richard')._id;
-  // let uid22 = findUserByUsername('roxy')._id;
+  let uid3 = findUserByUsername('roxy')._id;
+  let uid4 = findUserByUsername('sydney')._id;
+
 
   Meteor.users.update({
     // everyone

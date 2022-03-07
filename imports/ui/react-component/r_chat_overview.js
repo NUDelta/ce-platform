@@ -2,8 +2,11 @@ import React from "react";
 import {
 List,
 ListItemButton,
-ListItemText
+ListItemText,
+ListItemIcon,
+Typography
 } from "@mui/material";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { useTracker } from "meteor/react-meteor-data";
 
@@ -25,25 +28,27 @@ const buttonClicked = (id) => {
   });
 
   if (userHandle.ready()){
-      let otherUsers = users.filter((s) => s._id !== Meteor.userId());
+      let otherUsers = users.filter((s) => (s._id !== Meteor.userId() && s.username !== "cindy" && s.username !== "yvan"));
 
-      const allUsers = otherUsers.map((s) => {
+      otherUsers = otherUsers.map((s) => {
           const userObj = {
               "id": s._id,
-              "name": s.username,
-              "msg": "this is " + s.username
+              "name": s.username.charAt(0).toUpperCase() + s.username.slice(1),
           }
         return userObj
       })
-      console.log(allUsers)
+     
       return (<div>
         <List>
-            {allUsers.map((item) => {
-          return <ListItemButton onClick={(e) => { buttonClicked(item.id) }}>
-          <ListItemText
-          primary= { item.name }
-          secondary = { item.msg}
+            {otherUsers.map((item) => {
+          return <ListItemButton sx={{ borderBottom: "1px solid #A9A9A9" }} onClick={(e) => { buttonClicked(item.id) }}>
+          <ListItemIcon>
+                <AccountCircleIcon fontSize="large" />
+              </ListItemIcon>
+          <ListItemText 
+        //   primary= { item.name }
           >
+          <Typography variant="h5">{ item.name }</Typography>
           </ListItemText>
           </ListItemButton>
       })}

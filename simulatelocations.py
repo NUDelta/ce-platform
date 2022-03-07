@@ -317,9 +317,11 @@ def allUsersGrocery():
     print("all users at grocery")
 
 def allUsersCoffee():
-	for i in sys.argv:
-		setLocation(coffee, i)
-	print("all users at coffee")
+	# for i in sys.argv:
+	# 	setLocation(coffee, i)
+    setLocation(coffee, sys.argv[3])
+    setLocation(coffee, sys.argv[4])
+    print("all users at coffee")
 
 def usersParkAndLibrary():
     setLocation(park, sys.argv[1])
@@ -393,9 +395,9 @@ def statusUpdate():
 
 
 if __name__ == "__main__":
-    statusUpdate()
+    # statusUpdate()
     # allUsersGrocery()
-	# allUsersCoffee()
+	allUsersCoffee()
     #allUsersAtTrain()
 	# allUsersAtBars()
     # allUsersAtRestaurant()

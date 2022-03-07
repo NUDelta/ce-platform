@@ -6,37 +6,43 @@ export let USERS = {
     profile: {
       firstName: "Cindy",
       lastName: "Hu",
-      staticAffordances: { pair1: true },
+      staticAffordances: {},
     },
   },
   yvan: {
     username: "yvan",
     email: "Yvan@email.com",
     password: "password",
-    profile: {
-      firstName: "Yvan",
-      lastName: "Chu",
-      staticAffordances: { pair1: true },
-    },
+    profile: { firstName: "Yvan", lastName: "Chu", staticAffordances: {} },
   },
-  ryan: {
-    username: "ryan",
-    email: "Ryan@email.com",
+  roxy: {
+    username: "roxy",
+    email: "Roxy@email.com",
     password: "password",
-    profile: {
-      firstName: "Ryan",
-      lastName: "Louie",
-      staticAffordances: { pair2: true },
-    },
+    profile: { firstName: "Roxy", lastName: "Wilcox", staticAffordances: {} },
   },
-  jenny: {
-    username: "jenny",
-    email: "Jenny@email.com",
+  sydney: {
+    username: "sydney",
+    email: "Sydney@email.com",
     password: "password",
-    profile: {
-      firstName: "Jenny",
-      lastName: "Chang",
-      staticAffordances: { pair2: true },
-    },
-  }
+    profile: { firstName: "Sydney", lastName: "Smith", staticAffordances: {} },
+  },
+  alex: {
+    username: "alex",
+    email: "Alex@email.com",
+    password: "password",
+    profile: { firstName: "Alex", lastName: "Andreiu", staticAffordances: {} },
+  },
+  amy: {
+    username: "amy",
+    email: "Amy@email.com",
+    password: "password",
+    profile: { firstName: "Amy", lastName: "Guo", staticAffordances: {} },
+  },
+  dani: {
+    username: "dani",
+    email: "Dani@email.com",
+    password: "password",
+    profile: { firstName: "Dani", lastName: "Zhang", staticAffordances: {} },
+  },
 };

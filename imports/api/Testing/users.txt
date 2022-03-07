@@ -1,11 +1,7 @@
-Cindy Hu Yvan Chu
-Ryan Louie Jenny Chang
-Haoqi Zhang Natalie Brewster
-Jason Friedman Fardeem Munir
-Kapil Garg Molly Pribble
-Leesha Shah Justin Shi
-Harrison Kwik Jonathan Liu
-Gobi Dasu Sydney Smith
-Hang Yin Parveen Dhanoa
-Isaac Miller Izzy Chun
-Richard Lam Roxy Wilcox
+Cindy Hu
+Yvan Chu
+Roxy Wilcox
+Sydney Smith
+Alex Andreiu
+Amy Guo
+Dani Zhang

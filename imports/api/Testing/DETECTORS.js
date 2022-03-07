@@ -1,142 +1,65 @@
-const createDetectors = function (pairNum) {
+const createDetectors = function () {
   return {
-    activity1:{
-      _id: Random.id(),
-      description: 'activity1 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
-
-    activity2:{
-      _id: Random.id(),
-      description: 'activity2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
 
   // new detector for walk /////////////////////////////////////
   selfIntroExp:{
     _id: Random.id(),
-    description: 'SelfIntro ' + pairNum,
+    description: 'SelfIntro',
     variables: [
-      `var ${pairNum};`,
       'var participatedInSelfIntro;'
     ],
-    rules: [`${pairNum} && !participatedInSelfIntro;`]
+    rules: [`!participatedInSelfIntro;`]
     // rules: ['(triad1)']
   },
 
   walkExp:{
     _id: Random.id(),
-    description: 'Walk ' + pairNum,
+    description: 'Walk',
     variables: [
-      `var ${pairNum};`,
       'var daytime;'
     ],
-    rules: [`(${pairNum} && daytime)`]
-    // rules: ['(triad1)']
-  },
-
-  walkExp2:{
-    _id: Random.id(),
-    description: 'Walk2 ' + pairNum,
-    variables: [
-      `var ${pairNum};`,
-      'var participatedInWalk;'
-      // 'var daytime;'
-    ],
-    rules: [`(${pairNum} && participatedInWalk);`]
+    rules: [`(daytime);`]
     // rules: ['(triad1)']
   },
 
   libraryExp:{
     _id: Random.id(),
-    description: 'Library ' + pairNum,
+    description: 'Library',
     variables: [
       'var libraries;',
       'var usedbooks;',
       'var bookstores;',
-      `var ${pairNum};`
     ],
-    rules: [`${pairNum} && (libraries || bookstores);`]
+    rules: [`(libraries || bookstores);`]
     // rules: ['(triad2)']
-  },
-
-  //second library exp detector if they
-  libraryExp2:{
-    _id: Random.id(),
-    description: 'Library2 ' + pairNum,
-    variables: [
-      'var participatedInLibraryExp;',
-      'var libraries;',
-      'var usedbooks;',
-      'var bookstores;',
-      `var ${pairNum};`
-    ],
-    rules: [`(${pairNum} && participatedInLibraryExp && (libraries || bookstores));`]
   },
 
   publicTransportExp: {
     _id: Random.id(),
-    description: 'Public Transport ' + pairNum,
+    description: 'Public Transport',
     variables: [
       'var publictransport;', 
       'var trainstations;', 
       'var trains;',
-      `var ${pairNum};`
     ],
-    rules: [`${pairNum} && (trainstations || trains || publictransport);`]
-  },
-
-  publicTransportExp2: {
-    _id: Random.id(),
-    description: 'Public Transport2 ' + pairNum,
-    variables: [
-      'var publictransport;', 
-      'var trainstations;', 
-      'var trains;',
-      `var ${pairNum};`,
-      'var participatedInPublicTransportExp;'
-    ],
-    rules: [`(${pairNum} && participatedInPublicTransportExp && (trainstations || trains || publictransport));`]
+    rules: [`(trainstations || trains || publictransport);`]
   },
 
   coffeeExp: {
     _id: Random.id(),
-    description: 'Coffee Shop ' + pairNum,
+    description: 'Coffee Shop',
     variables: ['var coffeeroasteries;',
       'var coffee;',
       'var cafes;',
       'var coffeeshops;',
       'var coffeeteasupplies;',
-      `var ${pairNum};`,
     ],
-    rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
-  },
-
-  coffeeExp2: {
-    _id: Random.id(),
-    description: 'Coffee Shop2 ' + pairNum,
-    variables: ['var coffeeroasteries;',
-      'var coffee;',
-      'var cafes;',
-      'var coffeeshops;',
-      'var coffeeteasupplies;',
-      `var ${pairNum};`,
-      'var participatedInCoffeeExp'
-    ],
-    rules: [`(${pairNum} && participatedInCoffeeExp && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
+    rules: [`((coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
   },
 
   groceriesExp:{
     _id: Random.id(),
-    description: 'Groceries ' + pairNum,
+    description: 'Groceries',
     variables: [
       'var intlgrocery;',
       'var ethicgrocery;',
@@ -153,47 +76,17 @@ const createDetectors = function (pairNum) {
       'var marketstalls;',
       'var organic_stores;',
       'var publicmarkets;',
-      `var ${pairNum};`
     ],
-    rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
+    rules: [`(intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
     farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-    organic_stores || publicmarkets || marketstalls));`]
-    // rules: ['(triad3)']
-  },
-
-  groceriesExp2:{
-    _id: Random.id(),
-    description: 'Groceries2 ' + pairNum,
-    variables: [
-      'var intlgrocery;',
-      'var ethicgrocery;',
-      'var markets;',
-      'var wholesalers;',
-      'var pharmacy;',
-      'var grocery;',
-      'var farmersmarket;',
-      'var convenience;',
-      'var importedfood;',
-      'var herbsandspices;',
-      'var drugstores;',
-      'var seafoodmarkets;',
-      'var marketstalls;',
-      'var organic_stores;',
-      'var publicmarkets;',
-      `var ${pairNum};`,
-      'var participatedInGroceriesExp;'
-    ],
-    rules: [`(${pairNum} && participatedInGroceriesExp && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
-    farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-    organic_stores || publicmarkets || marketstalls));`]
+    organic_stores || publicmarkets || marketstalls);`]
     // rules: ['(triad3)']
   },
 
   restaurantExp:{
     _id: Random.id(),
-    description: 'Restaurant ' + pairNum,
+    description: 'Restaurant',
     variables: [
-      `var ${pairNum};`,
       // 'var daytime;',
       'var diners;',
       'var restaurants;',
@@ -202,47 +95,43 @@ const createDetectors = function (pairNum) {
       'var bars;',
       'var cocktailbars;'
     ],
-    rules: [`(${pairNum} && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
-  },
-
-  restaurantExp2:{
-    _id: Random.id(),
-    description: 'Restaurant2 ' + pairNum,
-    variables: [
-      `var ${pairNum};`,
-      // 'var daytime;',
-      'var participatedInRestaurantExp;',
-      'var diners;',
-      'var restaurants;',
-      'var cafeteria;',
-      'var food_court;',
-      'var bars;',
-      'var cocktailbars;'
-    ],
-    rules: [`(${pairNum} && participatedInRestaurantExp && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
+    rules: [`(diners || restaurants || cafeteria || food_court || bars || cocktailbars);`]
   },
 
   gymExp: {
     _id: Random.id(),
-    description: 'Gym ' + pairNum,
+    description: 'Gym',
     variables: [
       'var  gyms;',
-      `var ${pairNum};`
     ],
-    rules: [`gyms && ${pairNum};`]
+    rules: [`gyms;`]
   },
-
+  
   bubbleTeaExp: {
     _id: Random.id(),
-    description: 'Bubble Tea ' + pairNum,
+    description: 'Bubble Tea',
     variables: [
       'var bubbletea;',
-      `var ${pairNum};`
     ],
-    rules:[`(bubbletea && ${pairNum});`]
+    rules:[`(bubbletea);`]
   }
 
-  //  /////////////////////////////////////////////////////////
+}
+};
+
+// function create_detector_pairs(pairCount) {
+//   let detector_pair = {}
+//   let base = "pair";
+//   for(let i = 1; i <= pairCount; i++) {
+//     let pairNum = base + String(i)
+//     detector_pair[pairNum] = createDetectors(pairNum)
+//   }
+//   return detector_pair
+// }
+
+// export default DETECTORS = create_detector_pairs(11)
+
+export const DETECTORS = createDetectors()
   
   /*end of progression triad 1*/
   /*
@@ -694,35 +583,6 @@ const createDetectors = function (pairNum) {
       "(((cafes || delicatessen) || ((delis || wraps) || ((bagels || comfortfood) || ((sandwiches || argentine) || (bakeries || cuban))))) || ((driveintheater || cheesesteaks) || ((hotdogs || burgers) || hotdog))) || ((mexican || foodstands) || ((salvadoran || colombian) || ((tacos || tex_mex) || (newmexican || foodtrucks))));"
     ]
   } */
-}
-};
-
-// function create_detector_pairs(pairCount) {
-//   let detector_pair = {}
-//   let base = "pair";
-//   for(let i = 1; i <= pairCount; i++) {
-//     let pairNum = base + String(i)
-//     detector_pair[pairNum] = createDetectors(pairNum)
-//   }
-//   return detector_pair
-// }
-
-// export default DETECTORS = create_detector_pairs(11)
-
-export const DETECTORS = {
-  pair1: createDetectors("pair1"),
-  pair2: createDetectors("pair2"),
-  pair3: createDetectors("pair3"),
-  pair4: createDetectors("pair4"),
-  pair5: createDetectors("pair5"),
-  pair6: createDetectors("pair6"),
-  pair7: createDetectors("pair7"),
-  pair8: createDetectors("pair8"),
-  pair9: createDetectors("pair9"),
-  pair10: createDetectors("pair10"),
-  pair11: createDetectors("pair11")
-}
-
 
 /* graveyard
   moodMeteorology_triad1:{

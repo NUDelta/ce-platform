@@ -39,7 +39,7 @@ export const findPartner = function(uid, users) {
   return otherStranger; 
 }
 
-const getOtherUser = () => {
+export const getOtherUser = () => {
   let url =  Router.current().url;
   let userId = url.split("/");
   userId = userId[userId.length-1]
@@ -70,8 +70,8 @@ Template.chatUsers.helpers({
   },
   getOtherUserName(){
     const otherUser = getOtherUser();
-    const otherUserName =  Meteor.users.find({"_id": otherUser}).fetch()[0].username;
-    return otherUserName
+    const otherUserName =  Meteor.users.find({"_id": otherUser}).fetch()[0];
+    return otherUserName.profile.firstName
   }
 })
 
@@ -102,7 +102,7 @@ Template.chatUsers.helpers({
     });
 
     //send notification to the recipient for every message
-    Meteor.call('sendNotification', otherUser, `${currentUsername}: ${data.message}`,
-     '/chat');
+    Meteor.call('sendNotification', otherUser, `${currentUsername}: ${data.message}`, " ",
+     `/chat/${otherUser}`);
   }
 });

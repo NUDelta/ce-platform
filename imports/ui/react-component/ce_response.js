@@ -71,21 +71,21 @@ export const CEResponse = ({ ids }) => {
       myCaption: mySub.content.sentence,
       allUsers: users,
       promptName: experiencePrompt.name,
-      promptQuestion: experiencePrompt.contributionTypes[0].toPass.instruction,
+      promptQuestion: experiencePrompt.contributionTypes[0].toPass.situationDescription,
     };
 
     return (
       <div>
-        <Accordion sx={{ border: "5px solid red" }}>
+        <Accordion sx={{ border: "1px solid #2018b8", marginBottom: "5px" }}>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
-            <Typography variant="h4">{results.promptName}</Typography>
+            <Typography variant="h5">{results.promptName} Result - tap to expand!</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography variant="h5">
+            {/* <Typography variant="h5">
               {results.promptQuestion}
               <br /> <br />
-            </Typography>
-            <Card sx={{ display: "flex", flexDirection: "row" }}>
+            </Typography> */}
+            <Card sx={{ display: "flex", flexDirection: "row"}}>
               {/* <Zoom
                 in={zoom1}
                 style={{ transitionDelay: zoom1 ? "500ms" : "0ms" }}

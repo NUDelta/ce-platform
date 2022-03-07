@@ -6,7 +6,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
-import { findPartner, scrollToBottomAbs } from "../pages/chat"
+import { findPartner, scrollToBottomAbs, getOtherUser } from "../pages/chat"
 //import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
 
 
@@ -160,15 +160,12 @@ Template.bumpedResults.helpers({
 
 Template.groupBumpedResults.helpers({
   content() {
-    const {submissions, images, users} = this;
+    const {submissions, users} = this;
 
     const mySub = submissions.find(s => s.uid === Meteor.userId());
     const myNeedNames = mySub.needName;
     const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId())[0];
 
-    // const myImage = images.find(i => i._id === mySub.content.proof);
-    // const otherImages = otherSubs.map(s => images.find(i => i._id === s.content.proof));
-    // const friends = otherSubs.map(s => users.find(u => u._id === s.uid));
     const myImage = mySub.content.proof;
     const otherImages = otherSubs.content.proof;
     const friends = users.find(u => u._id === otherSubs.uid);
@@ -191,23 +188,24 @@ Template.groupBumpedResults.helpers({
 Template.groupBumpedResults.events({
   'submit #replyResult'(event, instance) {
     event.preventDefault();
+    // console.log(instance)
+
+    const submissions = instance.data.submissions;
+    const mySub = submissions.find(s => s.uid === Meteor.userId());
+    const myNeedNames = mySub.needName;
+    const otherSubs = submissions.filter(s => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId())[0];
+    const otherUser = otherSubs.uid;
+
     const replyText = event.target.getElementsByClassName("replyText")[0].value;
-
-    console.log(replyText);
-    console.log(this);
-
     
     const uid = Meteor.userId();
+    console.log("my id: ", uid)
+    console.log("the other person: ", otherUser)
     const data = { message: replyText};
-    let users = this.allUsers;
+
     if (data.message === "") return;
     data.sender = uid;
-    data.receiver = [uid];
-
-    const otherStranger = findPartner(uid, users)
-    console.log("other stranger" + otherStranger)
-
-    data.receiver = data.receiver.concat(otherStranger)
+    data.receiver = [uid, otherUser];
     // console.log(data.receiver);
     let currentUsername = Meteor.users.findOne(Meteor.userId()).username;
 
@@ -222,9 +220,9 @@ Template.groupBumpedResults.events({
         scrollToBottomAbs(messageContainer);
       }
     });//send notification to the recipient for every message
-    Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
-     '/chat');
-    Router.go("/chat");
+    Meteor.call('sendNotification', otherUser, `${currentUsername} replied to your experience: ${replyText}`, " ",
+    `/chat/${otherUser}`);
+    Router.go(`/chat/${otherUser}`);
     
     
   }
