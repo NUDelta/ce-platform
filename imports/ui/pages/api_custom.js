@@ -659,6 +659,7 @@ Template.sunsetTimelapseParticipate.onCreated(() => {
   Template.instance().cameraStarted = new ReactiveVar(false);
   Template.instance().scale = new ReactiveVar(null);
   Template.instance().lastScale = new ReactiveVar(null);
+  Template.instance().MAX_SCALE = new ReactiveVar(2);
 });
 
 Template.sunsetTimelapseParticipate.onDestroyed(() => {
@@ -727,6 +728,9 @@ Template.sunsetTimelapseParticipate.helpers({
     } else {
       return "none";
     }
+  },
+  zoomMax() {
+    return Template.instance().MAX_SCALE.get();
   }
 });
 
@@ -774,6 +778,9 @@ Template.sunsetTimelapseParticipate.events({
       console.error("Could not access the CameraPreview")
     }
   },
+  'input #zoom-slider'(event, template){
+    CameraPreview.setZoom(event.target.value);
+  },
   'click #goToParticipate'(event, template) {
     document.getElementById('instruction').style.display = "none";
     document.getElementById('participate').style.display = "block";
@@ -793,42 +800,43 @@ Template.sunsetTimelapseParticipate.events({
           startCameraAtPreviewRect();
           template.cameraStarted.set(true);
         } else {
-          // console.error("Could not access the CameraPreview")
+          console.error("Could not access the CameraPreview")
         }
         // using an instance of jquery tied to current template scope
         template.$(".fileinput-preview").hide();
         template.imageSubmitReady.set(false);
         toggleCameraControls('startCamera');
 
-        // PINCH ZOOM
-        container = document.getElementById('cameraOverlay');
+        // // PINCH ZOOM
+        // container = document.getElementById('cameraOverlay');
 
-        let hammer = new Hammer(container, { domEvents: true});
+        // let hammer = new Hammer(container, { domEvents: true});
 
-        hammer.get('pinch').set({ enable: true });
-        const MAX_SCALE = CameraPreview.getMaxZoom();
+        // hammer.get('pinch').set({ enable: true });
+        // const MAX_SCALE = CameraPreview.getMaxZoom();
+        // template.MAX_SCALE.set(MAX_SCALE);
 
-        const restrictScale = (scale) => {
-          if (scale < 1) {
-            scale = MIN_SCALE;
-          } else if (scale > MAX_SCALE) {
-            scale = MAX_SCALE;
-          }
-          return scale;
-        };
+        // const restrictScale = (scale) => {
+        //   if (scale < 1) {
+        //     scale = MIN_SCALE;
+        //   } else if (scale > MAX_SCALE) {
+        //     scale = MAX_SCALE;
+        //   }
+        //   return scale;
+        // };
 
-        const zoomAround = (scaleBy) => {
-          CameraPreview.setZoom(e.scale)
-          template.lastScale.set(template.scale);
-        }
-        hammer.on('pinch', function(e) {
-          template.newScale.set(restrictScale(scale * e.scale));
-          zoomAround(e.scale);
-        });
+        // const zoomAround = (scaleBy) => {
+        //   CameraPreview.setZoom(e.scale)
+        //   template.lastScale.set(template.scale.get());
+        // }
+        // hammer.on('pinch', function(e) {
+        //   template.newScale.set(restrictScale(scale * e.scale));
+        //   zoomAround(e.scale);
+        // });
 
-        hammer.on('pinchend', function(e) {
-          template.lastScale.set(template.scale);
-        });
+        // hammer.on('pinchend', function(e) {
+        //   template.lastScale.set(template.scale.get());
+        // });
 
       }, 300);
     }

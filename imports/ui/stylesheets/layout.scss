@@ -1,6 +1,6 @@
 body {
   font-size: 15px;
-  margin-top: 55px;
+  margin-top: 35px;
   margin-bottom: 65px;
   // transparent body required for the CameraPreview instance to be displayed behind the layout HTML.
   // this is required when CameraPreview is started with toBack = true
@@ -47,9 +47,11 @@ img.logo {
   margin-bottom: 0px;
   background-color: #263147;
 }
-
 .navbar-header {
   float: left;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
 
 .navbar-nav {
