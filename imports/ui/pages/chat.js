@@ -102,7 +102,7 @@ Template.chatUsers.helpers({
     });
 
     //send notification to the recipient for every message
-    Meteor.call('sendNotification', otherUser, `${currentUsername}: ${data.message}`, " ",
+    Meteor.call('sendNotification', [otherUser], `${currentUsername}: ${data.message}`, " ",
      `/chat/${otherUser}`);
   }
 });

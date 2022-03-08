@@ -220,7 +220,7 @@ Template.groupBumpedResults.events({
         scrollToBottomAbs(messageContainer);
       }
     });//send notification to the recipient for every message
-    Meteor.call('sendNotification', otherUser, `${currentUsername} replied to your experience: ${replyText}`, " ",
+    Meteor.call('sendNotification', [otherUser], `${currentUsername} replied to your experience: ${replyText}`, " ",
     `/chat/${otherUser}`);
     Router.go(`/chat/${otherUser}`);
     
