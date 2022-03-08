@@ -4,7 +4,7 @@ import { Submissions } from '../currentNeeds.js';
 Meteor.publish('submissions.activeIncident', function (incidentId) {
   //console.log('subscribing to OCEManager.activeIncident', incidentId);
   return Submissions.find(
-    { iid: incidentId, uid: {$ne: null}},
+    { iid: incidentId },
     {
       sort: { timestamp: 1 }
     });
