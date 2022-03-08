@@ -223,7 +223,7 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
 
   // Only remove after they do not match again after some decommission delay
   if (!matchPredicateAfterDelay) {
-    log.cerebro(`Removing user ${userId} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
+    log.cerebro(`Removing user {_id: ${userId}, username: ${user.username}} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
 
     Decommission_log.insert({
       iid: incidentId,
@@ -261,7 +261,8 @@ export const adminUpdatesForAddingUserToIncident = (uid, iid, needName) => {
   // TODO(rlouie): add extra incident/need/place/distance info
   // _addActiveIncidentNeedPlaceDistanceToUsers(uid, incidentNeedPlaceDistance);
 
-  log.cerebro(`Assigning [${iid}, ${needName}] to users ` + JSON.stringify(uid));
+  let user = Meteor.users.findOne({_id: uid});
+  log.cerebro(`Assigning [${iid}, ${needName}] to users {_id: ${uid}, username: ${user.username}}`);
   AddedToIncident_log.insert({
     uid: uid,
     timestamp: Date.now(),
