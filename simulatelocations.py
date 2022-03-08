@@ -19,6 +19,8 @@ brisbane = (-37.822464, 144.966146)
 # library = (42.058141, -87.674490) 
 library = (42.05814914752829, -87.67442041754066)
 norris = (42.053262712572675, -87.67268455470771)
+mainLibrary = (42.05373689551069, -87.67434641930538)
+mudd = (42.05836839573704, -87.6745109121166)
 
 def followPath(path, uid):
     for stop in path:
@@ -331,8 +333,7 @@ def usersParkAndLibrary():
     setLocation(library, sys.argv[5])
 
 def allUsersAtLibrary():
-    mainLibrary = (42.05373689551069, -87.67434641930538)
-    mudd = (42.05836839573704, -87.6745109121166)
+
     print(sys.argv)
     setLocation(mudd, sys.argv[1])
     setLocation(mudd, sys.argv[2])
@@ -372,18 +373,31 @@ def halfUsersAtLibrary():
     setLocation(grocery, sys.argv[6])
     print("half users at library, other half at grocery")
 
+def testingLocationAffordance():
+    ice_cream = (42.04961325166564, -87.68202788670921)
+    pastery = (42.04625439232445, -87.68006340390242)
+    cookie = (42.049441224709376, -87.68142596605136)
+    setLocation(ice_cream, sys.argv[1])
+    setLocation(pastery, sys.argv[2])
+    setLocation(cookie, sys.argv[3]) 
+    setLocation(ice_cream, sys.argv[4])
+    print("location set")
 
-
-def dndCafeBubbleTea():
+def dndLibrarySnack():
     grocery_dnd = (42.058715179924679, -87.68319437996105)
     coffeeLab = (42.05849649421129, -87.68366051608254)
     tealicious = (42.04614329251509, -87.68147970259031)
+    cookie = (42.04945715846945, -87.68147961023004)
     setLocation(grocery_dnd, sys.argv[1])
     setLocation(grocery_dnd, sys.argv[2])
-    setLocation(coffeeLab, sys.argv[3]) 
+    time.sleep(10)
+    setLocation(grocery_dnd, sys.argv[3]) 
+    time.sleep(10)
     setLocation(coffeeLab, sys.argv[4])
-    setLocation(tealicious, sys.argv[5]) 
-    setLocation(tealicious, sys.argv[6])
+    time.sleep(10)
+    setLocation(coffeeLab, sys.argv[5]) 
+    time.sleep(10)
+    setLocation(coffeeLab, sys.argv[6])
     print("users at dnd, coffee lab, and tealicious")
 
 
@@ -397,14 +411,15 @@ def statusUpdate():
 if __name__ == "__main__":
     # statusUpdate()
     # allUsersGrocery()
-	allUsersCoffee()
+	# allUsersCoffee()
+    # testingLocationAffordance()
     #allUsersAtTrain()
 	# allUsersAtBars()
     # allUsersAtRestaurant()
 	# pairsAtParkLibraryGrocery()
     # allUsersAtLibrary()
     # allUsersAtDnD()
-    # dndCafeBubbleTea()
+    dndLibrarySnack()
     # allUsersNorris()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()

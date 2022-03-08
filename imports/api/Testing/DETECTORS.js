@@ -57,6 +57,21 @@ const createDetectors = function () {
     rules: [`((coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
   },
 
+  snackExp: {
+    _id: Random.id(),
+    description: 'Snack',
+    variables: [
+      'var bubbletea;',
+      'var bakeries;',
+      'var bagels;',
+      'var chocolate;',
+      'var desserts;',
+      'var icecream;',
+      'var cakeshop;'
+    ],
+    rules: [`(bubbletea || bakeries || bagels || chocolate || desserts || icecream || cakeshop);`]
+  },
+
   groceriesExp:{
     _id: Random.id(),
     description: 'Groceries',
@@ -83,37 +98,87 @@ const createDetectors = function () {
     // rules: ['(triad3)']
   },
 
-  restaurantExp:{
+  restaurantExp: {
     _id: Random.id(),
-    description: 'Restaurant',
-    variables: [
-      // 'var daytime;',
-      'var diners;',
+    description: 'eating restaurant',
+    variables: ['var italian;',
+      'var generic_restaurant;',
+      'var lunch_places;',
+      'var asian_places;',
+      'var pastashops;',
+      'var pizza;',
+      'var spanish;',
+      'var newcanadian;',
+      'var scottish;',
+      'var greek;',
+      'var taiwanese;',
+      'var hkcafe;',
+      'var sandwiches;',
+      'var delis;',
+      'var dimsum;',
+      'var shanghainese;',
+      'var dominican;',
+      'var burmese;',
+      'var indonesian;',
       'var restaurants;',
-      'var cafeteria;',
+      'var uzbek;',
+      'var cambodian;',
+      'var vegan;',
+      'var indpak;',
       'var food_court;',
-      'var bars;',
-      'var cocktailbars;'
+      'var delicatessen;',
+      'var cheesesteaks;',
+      'var himalayan;',
+      'var thai;',
+      'var buffets;',
+      'var cantonese;',
+      'var catering;',
+      'var tuscan;',
+      'var hotdog;',
+      'var salad;',
+      'var hungarian;',
+      'var persian;',
+      'var hotel_bar;',
+      'var mediterranean;',
+      'var asianfusion;',
+      'var malaysian;',
+      'var kosher;',
+      'var modern_european;',
+      'var gluten_free;',
+      'var singaporean;',
+      'var chinese;',
+      'var szechuan;',
+      'var panasian;',
+      'var steak;',
+      'var seafood;',
+      'var pakistani;',
+      'var vegetarian;',
+      'var tapasmallplates;',
+      'var african;',
+      'var soup;',
+      'var halal;',
+      'var basque;',
+      'var french;',
+      'var bangladeshi;',
+      'var wraps;',
+      'var japacurry;',
+      'var cafes;',
+      'var hakka;'
     ],
-    rules: [`(diners || restaurants || cafeteria || food_court || bars || cocktailbars);`]
+    rules: ['italian = (pastashops || pizza) || ((sandwiches || delis) || ((italian || restaurants) || ((delicatessen || cheesesteaks) || ((catering || tuscan) || (hotdog || salad)))));',
+      'generic_restaurant = (spanish || newcanadian) || ((dimsum || shanghainese) || ((uzbek || cambodian) || ((himalayan || italian) || ((hungarian || persian) || ((kosher || modern_european) || ((steak || seafood) || ((tapasmallplates || african) || ((basque || chinese) || (french || bangladeshi)))))))));',
+      'lunch_places = (scottish || greek) || ((dominican || sandwiches) || ((vegan || indpak) || ((thai || delis) || ((hotel_bar || mediterranean) || ((gluten_free || buffets) || ((pakistani || vegetarian) || ((soup || halal) || ((delicatessen || wraps) || ((japacurry || catering) || ((cafes || hakka) || salad))))))))));',
+      'asian_places = (taiwanese || hkcafe) || ((burmese || indonesian) || ((dimsum || food_court) || ((buffets || cantonese) || ((asianfusion || malaysian) || ((singaporean || chinese) || (szechuan || panasian))))));',
+      '(italian || generic_restaurant) || (asian_places || lunch_places);'
+    ]
   },
-
-  gymExp: {
+  parkExp: {
     _id: Random.id(),
-    description: 'Gym',
+    description: 'Park',
     variables: [
-      'var  gyms;',
+      'var  parks;',
     ],
-    rules: [`gyms;`]
-  },
-  
-  bubbleTeaExp: {
-    _id: Random.id(),
-    description: 'Bubble Tea',
-    variables: [
-      'var bubbletea;',
-    ],
-    rules:[`(bubbletea);`]
+    rules: ['parks']
   }
 
 }

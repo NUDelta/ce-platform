@@ -2,11 +2,158 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
-import { Router } from 'meteor/iron:router';
-
-
 
 // new experiences ///////////////////////////////////////////////////////
+
+export const createLibraryExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInLibraryExp']: true
+        }
+      });
+    });
+
+    let subject = "Library experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '👩‍💻Library Experience🧑‍',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : 'LibraryExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.libraryExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Found a study spot you like? Is this where you usually study? Take a picture and share your reason!",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Found a study spot you like in the library?',
+    notificationText: 'Found a study spot you like in the library?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createRestaurantExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInRestaurantExp']: true
+        }
+      });
+    });
+
+    let subject = "Restaurant experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '🍜Restaurant Experience🍝',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : 'RestaurantExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.restaurantExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Revisiting a restaurant? Take a picture of what makes you come back again and share your reason!",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Revisiting a restaurant? What do you like about the restaurant?',
+    notificationText: 'Revisiting a restaurant? What do you like about the restaurant?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
 
 export const createCoffeeExp = function () {
 
@@ -32,20 +179,25 @@ export const createCoffeeExp = function () {
       return submission.uid;
     });
 
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInCoffeeExp']: true
+        }
+      });
+    });
+
     let subject = "Coffee experience completed!";
     let text = "Tap here to view who you bumped into";
     postExpInChat("", participants, sub.eid, sub.iid);
     notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
     notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
-    if(Meteor.userId() === participants[0]) {
-      Router.go(`/chat/${participants[1]}`)
-    } else {
-      Router.go(`/chat/${participants[0]}`)
-    }
   };
 
   let experience = {
-    name: 'Coffee time',
+    name: '☕️Coffee Shop Experience🥐',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
@@ -56,7 +208,7 @@ export const createCoffeeExp = function () {
           number : 1 
         },
         toPass : {
-          situationDescription : "Take a picture and share what you like about the cafe that makes you revisit!",
+          situationDescription : "Revisiting a cafe? Take a picture of what makes you come back again and share your reason!",
           instruction : " "
         },
         numberNeeded : 2,
@@ -65,8 +217,8 @@ export const createCoffeeExp = function () {
         allowRepeatContributions : false
       }
     ],
-    description: 'Revisiting a cafe? What do you like about the place?',
-    notificationText: 'Revisiting a cafe? What do you like about the place?',
+    description: 'Revisiting a cafe? What do you like about the cafe?',
+    notificationText: 'Revisiting a cafe? What do you like about the cafe?',
     callbacks: [{
         trigger: `(cb.numberOfSubmissions() % 2) === 0`,
         function: expCallBack.toString(),
@@ -78,69 +230,61 @@ export const createCoffeeExp = function () {
   return experience;
 }
 
-export const createActivity2 = function (pairNum) {
-  const activity2CompleteCallback = function (sub) {
-    let submissions = Submissions.find({
+export const createSnackExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
       iid: sub.iid,
       needName: sub.needName
-    }).fetch();
-
-    let participants = submissions.map((submission) => { return submission.uid; });
+    }).map((submission) => {
+      return submission.uid;
+    });
 
     participants.forEach(function(p){
       Meteor.users.update({
         _id: p
       }, {
         $set: {
-          ['profile.staticAffordances.participatedInActivity2']: true
+          ['profile.staticAffordances.participatedInSnackExp']: true
         }
       });
     });
 
-    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed Remote Working - 2! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
-
-    sendSystemMessage(message, participants, route); 
+    let subject = "Snack experience completed!";
+    let text = "Tap here to view who you bumped into";
     postExpInChat("", participants, sub.eid, sub.iid);
-    notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working - 2!', '', route);
-  }
-
-  const activity2Callback = function (sub) {
-    let submissions = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName
-    }).fetch();
-
-    let participantId = submissions.map((submission) => { return submission.uid; });
-    let participant = Meteor.users.findOne(participantId[0])
-    let aff = participant.profile.staticAffordances;
-    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
-    let partner = Meteor.users.find().fetch().filter(
-      u => (u._id != participantId[0])
-      && (pair in u.profile.staticAffordances)
-    )
-    partner = partner.map(u => u._id)
-
-    let systemMessage = 'Your partner just completed Remote working - 2! Participate to see their results when you get a chance💬'; 
-    let notifMessage = "Hey! Your partner just completed Remote working - 2"
-    sendSystemMessage(systemMessage, partner, "/chat"); 
-    Meteor.call('sendNotification', partner, notifMessage, '/chat');
-  }
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
 
   let experience = {
-    name: '💻Remote Working - 2🖥',
+    name: '🍪Snack Experience🧋',
     participateTemplate: 'groupBumped',
     resultsTemplate: 'groupBumpedResults',
     contributionTypes: [
       {
-        needName : `Activity2${pairNum}`,
+        needName : 'SnackExp 1',
         situation : {
-          detector : getDetectorUniqueKey(DETECTORS[pairNum].activity2),
+          detector : getDetectorUniqueKey(DETECTORS.snackExp),
           number : 1 
         },
         toPass : {
-          situationDescription : "Answer from one of the following prompts:",
-          instruction : "1) Take a picture of something around that keeps you motivated! Why? \n 2) Take a picture of something around you that makes you happy! Why?"
+          situationDescription : "Grabbing snacks? Have you been here before? Take a picture of what makes you come back again and share your reason!",
+          instruction : " "
         },
         numberNeeded : 2,
         notificationDelay : 1,
@@ -148,15 +292,311 @@ export const createActivity2 = function (pairNum) {
         allowRepeatContributions : false
       }
     ],
-    description: 'Share your remote working experience!',
-    notificationText: 'Share your remote working experience!',
+    description: 'Grabbing snacks? What do you like about the place?',
+    notificationText: 'Grabbing snacks? What do you like about the place?',
     callbacks: [{
-        trigger: `(cb.needFinished('Activity2${pairNum}'))`,
-        function: activity2CompleteCallback.toString(),
-      },
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createGroceryExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInGroceryExp']: true
+        }
+      });
+    });
+
+    let subject = "Grocery experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '🍎Groceries Experience🍞',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
       {
-        trigger: `!(cb.needFinished('Activity2${pairNum}'))`,
-        function: activity2Callback.toString(),
+        needName : 'GroceryExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.groceriesExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "How was your grocery shopping today? Take a picture of the items you're most excited about in your shopping cart and share your reason!",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'How was your grocery shopping today?',
+    notificationText: 'How was your grocery shopping today?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createWalkExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInWalkExp']: true
+        }
+      });
+    });
+
+    let subject = "Walk experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '🚶‍♀️Walk Experience🚶‍',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : 'WalkExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.walkExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Notice something interesting or something that makes you happy on your walk today? Take a picture and share it!",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'How was your walk today?',
+    notificationText: 'How was your walk today?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createPublicTransitExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInPublicTransportExp']: true
+        }
+      });
+    });
+
+    let subject = "Public transport experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '🚈Public Transportation Experience🚂',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : 'PublicTransportExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.publicTransportExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Heading somewhere? What do you do to pass time on public transit and why?",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'Heading somewhere?',
+    notificationText: 'Heading somewhere?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
+      }
+    ],
+    allowRepeatContributions: false,
+  };
+
+  return experience;
+}
+
+export const createParkExp = function () {
+
+  const expCallBack = function (sub) {
+    let contributionTypes = Incidents.findOne(sub.iid).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    let participants = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).map((submission) => {
+      return submission.uid;
+    });
+
+    participants.forEach(function(p){
+      Meteor.users.update({
+        _id: p
+      }, {
+        $set: {
+          ['profile.staticAffordances.participatedInParkExp']: true
+        }
+      });
+    });
+
+    let subject = "Park experience completed!";
+    let text = "Tap here to view who you bumped into";
+    postExpInChat("", participants, sub.eid, sub.iid);
+    notify([participants[0]], sub.iid, subject, text, '/chat/' + participants[1]);
+    notify([participants[1]], sub.iid, subject, text, '/chat/' + participants[0]);
+  };
+
+  let experience = {
+    name: '🌳Park Experience🌳',
+    participateTemplate: 'groupBumped',
+    resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : 'PublicTransportExp 1',
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS.parkExp),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : "Enjoying your time at the park? Have you been here before? Take a picture of what makes you come back again and share your reason!",
+          instruction : " "
+        },
+        numberNeeded : 2,
+        notificationDelay : 1,
+        numberAllowedToParticipateAtSameTime: 2,
+        allowRepeatContributions : false
+      }
+    ],
+    description: 'How was your time at the park?',
+    notificationText: 'How was your time at the park?',
+    callbacks: [{
+        trigger: `(cb.numberOfSubmissions() % 2) === 0`,
+        function: expCallBack.toString(),
       }
     ],
     allowRepeatContributions: false,
@@ -170,22 +610,16 @@ export const createActivity2 = function (pairNum) {
 
 const createTestExperience = function() {
   return {
-    coffeeExperience: createCoffeeExp(),
+    libraryExp: createLibraryExp(),
+    restaurantExp: createRestaurantExp(),
+    coffeeExp: createCoffeeExp(),
+    snackExp: createSnackExp(),
+    groceryExp: createGroceryExp(),
+    walkExp: createWalkExp(),
+    publicTransportExp: createPublicTransitExp(),
+    parkExp: createParkExp()
   }
 }
-
-// function create_pair_experiences(pairCount) {
-//   let pair_experience = {}
-//   let base = "pair";
-//   for(let i = 1; i <= pairCount; i++) {
-//     let pairNum = base + String(i)
-//     pair_experience[pairNum] = creatPairExperience(pairNum)
-//   }
-//   return pair_experience
-// }
-
-// export default PAIR_EXPERIENCES = create_pair_experiences(11)
-
 export default PAIR_EXPERIENCES = createTestExperience()
 
 

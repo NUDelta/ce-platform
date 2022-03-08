@@ -180,9 +180,11 @@ function createTestData(){
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
   let uid1 = findUserByUsername('cindy')._id;
-  let uid2 = findUserByUsername('yvan')._id;
+  let uid2 = findUserByUsername('alex')._id;
   let uid3 = findUserByUsername('roxy')._id;
   let uid4 = findUserByUsername('sydney')._id;
+  let uid5 = findUserByUsername('amy')._id;
+  let uid6 = findUserByUsername('dani')._id;
 
 
   Meteor.users.update({
@@ -201,7 +203,7 @@ function createTestData(){
   });
 
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+ " " + uid4);
+  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3 + " " + uid4 + " " +  uid5 + " " + uid6);
 }
 
 /* graveyard

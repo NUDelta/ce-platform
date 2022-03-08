@@ -13,6 +13,8 @@ import {
 import { useTracker } from "meteor/react-meteor-data";
 import { Submissions } from "../../api/OCEManager/currentNeeds.js";
 import { Experiences } from "../../api/OCEManager/OCEs/experiences.js";
+import { getOtherUser } from "../../ui/pages/chat";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 //TODO: pass in the prompt itself
 export const CEResponse = ({ ids }) => {
@@ -47,17 +49,27 @@ export const CEResponse = ({ ids }) => {
   });
 
   if (subHandle.ready() && userHandle.ready() && expHandle.ready()) {
-    const mySub = submissions.find(
-      (s) => s.uid === Meteor.userId() && s.eid === eid
-    );
-    const myNeedNames = mySub.needName;
+
+    const otherUid = getOtherUser();
     const otherSubs = submissions.filter(
-      (s) => myNeedNames.includes(s.needName) && s.uid !== Meteor.userId()
-    )[0];
+      (s) => s.uid === otherUid && s.eid === eid
+    );
+    let mySub;
+    let otherSub;
+    for (let i = 0; i < otherSubs.length; i++){
+      let tempSub = submissions.find(
+        (s) => otherSubs[i].needName === s.needName && s.uid === Meteor.userId()
+      );
+      if (tempSub) {
+        otherSub = otherSubs[i];
+        mySub = tempSub;
+      }
+    }
 
     const myImage = mySub.content.proof;
-    const otherImages = otherSubs.content.proof;
-    const friends = users.find((u) => u._id === otherSubs.uid);
+    const otherImages = otherSub.content.proof;
+    const friends = users.find((u) => u._id === otherUid);
+    console.log("friends: ", friends)
 
     //to find information on the experience
     const experiencePrompt = experiences.find((e) => e._id === eid);
@@ -66,7 +78,7 @@ export const CEResponse = ({ ids }) => {
     results = {
       friendOneName: `${friends.profile.firstName} ${friends.profile.lastName}`,
       imageOne: otherImages,
-      captionOne: otherSubs.content.sentence,
+      captionOne: otherSub.content.sentence,
       myImage: myImage,
       myCaption: mySub.content.sentence,
       allUsers: users,
@@ -91,31 +103,43 @@ export const CEResponse = ({ ids }) => {
                 style={{ transitionDelay: zoom1 ? "500ms" : "0ms" }}
                 onclick={() => toggle(zoom1, setZoom1)}
               > */}
-              <CardMedia
+              <TransformWrapper style={{width: "50%"}}>
+               <TransformComponent>
+                  <img src={results.myImage} alt="OCE result image 1"/>
+              </TransformComponent>
+              </TransformWrapper>
+              {/* <CardMedia
                 component="img"
                 image={results.myImage}
-                alt="bun bunz"
+                alt="OCE result image 1"
                 sx={{ width: "50%" }}
-              />
+              /> */}
               {/* </Zoom> */}
-              <CardContent>
+              <CardContent sx={{ width: "50%" }}>
                 <Typography variant="body" color="text.secondary">
                   {results.myCaption} - You
                 </Typography>
               </CardContent>
             </Card>
             <Card sx={{ display: "flex", flexDirection: "row" }}>
-              <CardContent>
+              <CardContent 
+              sx={{ width: "50%" }}
+              >
                 <Typography variant="body" color="text.secondary">
                   {results.captionOne} - {results.friendOneName}
                 </Typography>
               </CardContent>
-              <CardMedia
+              <TransformWrapper>
+               <TransformComponent>
+                  <img src={results.imageOne} alt="OCE result image 2"/>
+              </TransformComponent>
+              </TransformWrapper>
+              {/* <CardMedia
                 component="img"
                 image={results.imageOne}
                 alt="bun bunz"
                 sx={{ width: "50%" }}
-              />
+              /> */}
             </Card>
           </AccordionDetails>
         </Accordion>
