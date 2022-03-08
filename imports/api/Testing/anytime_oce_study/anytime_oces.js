@@ -63,7 +63,7 @@ const createSunsetTimelapse = () => {
   //   needName: 'Anytime Tester',
   //   situation: {
   //     detector: getDetectorUniqueKey(DETECTORS.night),
-  //     number: 1,
+  //     number: "1",
   //   },
   //   toPass: {
   //     instruction: 'Take a photo of the sunset!',
@@ -77,6 +77,45 @@ const createSunsetTimelapse = () => {
   return apiDefinition;
 }
 
+const createMomentsOfTheHourTimelapse = () => {
+  let apiDefinition = {
+    _id: Random.id(),
+    name: 'Moments of the Hour',
+    participateTemplate: 'sunsetTimelapseParticipate',
+    resultsTemplate: 'sunset',
+    description: 'Create a timelapse of the hour with others around the country',
+    notificationText: 'Take a photo that captures a moment of the hour!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationSunset.toString()
+    }]
+  }
+
+  contributionTypes = []
+  for (let i = 0; i < 60; i += 5) {
+    let needName = `A moment at ${i} minutes past the hour`;
+    let detectorObjectKey = `fivemin_block_starting_at_${i}`;
+    let need = {
+      needName: needName,
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
+        number: 1
+      },
+      toPass: {
+        instruction: 'Take a photo that captures a moment of the hour!',
+      },
+      numberNeeded: 1,
+      notificationDelay: 1
+    }
+    contributionTypes.push(need);
+  }
+
+  apiDefinition['contributionTypes'] = contributionTypes;
+  return apiDefinition;
+}
+
+
 export default ANYTIME_OCES = {
-  sunsetTimelapse: createSunsetTimelapse()
+  sunsetTimelapse: createSunsetTimelapse(),
+  momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
 }
