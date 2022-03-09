@@ -10,7 +10,7 @@ let sendNotificationSunset = function (sub) {
   notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
-const createSunsetTimelapse = () => {
+const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => {
 
   let apiDefinition = {
     _id: Random.id(),
@@ -26,9 +26,6 @@ const createSunsetTimelapse = () => {
   }
 
   contributionTypes = []
-  const minutes_before = 60;
-  const minutes_after = 60;
-  const interval_size = 5;
   for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
     let needName;
     let detectorObjectKey;
@@ -58,21 +55,6 @@ const createSunsetTimelapse = () => {
     contributionTypes.push(need);
   }
 
-  // LEAVE COMMENTED OUT: FOR TESTING!
-  // contributionTypes.push({
-  //   needName: 'Anytime Tester',
-  //   situation: {
-  //     detector: getDetectorUniqueKey(DETECTORS.night),
-  //     number: "1",
-  //   },
-  //   toPass: {
-  //     instruction: 'Take a photo of the sunset!',
-  //     time: 30,
-  //   },
-  //   numberNeeded: 1,
-  //   notificationDelay: 1
-  // })
-
   apiDefinition['contributionTypes'] = contributionTypes;
   apiDefinition['anytimeSequential'] = {
     "startingBuckets": 3
@@ -80,6 +62,9 @@ const createSunsetTimelapse = () => {
   return apiDefinition;
 }
 
+/**
+ * Testing experience so we can get define needs based on minute timeblocks, at any hour of the day
+ */
 const createMomentsOfTheHourTimelapse = () => {
   let apiDefinition = {
     _id: Random.id(),
@@ -123,6 +108,6 @@ const createMomentsOfTheHourTimelapse = () => {
 
 
 export default ANYTIME_OCES = {
-  sunsetTimelapse: createSunsetTimelapse(),
-  momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
+  sunsetTimelapse: createSunsetTimelapse(75, 15, 2),
+  // momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
 }
