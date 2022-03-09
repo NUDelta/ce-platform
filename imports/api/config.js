@@ -3,7 +3,7 @@ import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
 export const CONFIG = {
   MODE: process.env.MODE || "local",
-  DEBUG: true,
+  DEBUG: process.env.DEBUG || true,
   BUNDLE_IDENTIFIER: 'edu.northwestern.delta.D',
   CONTEXT_POLL_INTERVAL: process.env.CONTEXT_POLL_INTERVAL || 1, // min
 };

@@ -16,6 +16,7 @@ import {
 } from "../strategizer";
 import { Schema } from "../../schema";
 import { createBrotliCompress } from "zlib";
+import { CONFIG } from "../../config";
 
 const util = require('util');
 
@@ -189,13 +190,18 @@ class WhoToAssignToNeed {
 
   decide() {
     const usersNotInIncident = this.getUsersNotInIncident(this.needUserMap.users);
+    if (CONFIG.DEBUG) {
+      console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
+    }
     if (this.meetsSynchronousThreshold(usersNotInIncident)) {
 
       // TODO(rlouie): Should revisit on being judicious about who we assign/notify; for now, let the dynamic participate
       // manage the semaphore count of how many users can take which needs
       // UPDATE 3/8/22: Choosing an available user to assign. So dynaamic participate is not doing much of the work
       let newChosenUsers = this.chooseUsers(usersNotInIncident);
-      // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+      if (CONFIG.DEBUG) {
+        console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+      }
       // incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;
       return newChosenUsers;
     }
@@ -204,7 +210,11 @@ class WhoToAssignToNeed {
   getUsersNotInIncident(users) {
     if (this.experience.allowRepeatContributions) {
       return users.filter((user) => {
-        return !usersAlreadyAssignedToNeed(this.iid, this.needName).find(uid => uid === user.uid);
+        const usersCurrentlyAssigned = usersAlreadyAssignedToNeed(this.iid, this.needName);
+        if (CONFIG.DEBUG) {
+          console.log('usersCurrentlyAssigned: ', util.inspect(usersCurrentlyAssigned, false, null));
+        }
+        return !usersCurrentlyAssigned.find(uid => uid === user.uid);
       });
     } else {
       let uidsWhoSubmittedTooRecently = (this.experience.repeatContributionsToExperienceAfterN < 0 ?
