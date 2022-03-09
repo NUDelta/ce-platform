@@ -1008,7 +1008,7 @@
   </head>
   <div class="title">Sunsets around the US</div>
   <div class="slideshow">
-    {{#each sub in this.submissions}}
+    {{#each sub in orderedSunsetSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
         <img src="{{sub.content.proof}}" style="width:100%">
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->

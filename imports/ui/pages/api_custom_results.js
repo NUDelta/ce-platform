@@ -971,10 +971,11 @@ Template.sunset.onDestroyed(function() {
 });
 
 Template.sunset.helpers({
-  orderedSunsetImagesUrls() {
-    // TODO: order them by needs
-    return this.submissions.map((sub) => {
-      return sub.content.proof;
+  orderedSunsetSubmissions() {
+    const orderedNeedNames = this.experience.contributionTypes.map((need) => need.needName);
+    const completedSubmissions = this.submissions.filter(sub => sub.uid !== null);
+    return completedSubmissions.sort((e1, e2) => {
+      return orderedNeedNames.indexOf(e1) - orderedNeedNames.indexOf(e2);
     });
   }
 })
