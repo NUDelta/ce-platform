@@ -670,8 +670,11 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
 
   const canvas = document.getElementById('sunset-guides');
   const ctx = canvas.getContext('2d');
+  const resolutionScale = 3;
+  canvas.width = canvas.width * resolutionScale;
+  canvas.height = canvas.height * resolutionScale;
 
-  const drawHorizontalLine = (pattern, y_proportion, color) => {
+  const drawHorizontalLine = (pattern, y_proportion, color, lineWidth) => {
     ctx.beginPath();
     ctx.setLineDash(pattern)
     ctx.moveTo(0, y_proportion * ctx.canvas.height);
@@ -679,10 +682,13 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
     if (color) {
       ctx.strokeStyle = color;
     }
+    if (lineWidth) {
+      ctx.lineWidth = lineWidth;
+    }
     ctx.stroke();
   }
 
-  const drawVerticalLine = (pattern, x_proportion, color) => {
+  const drawVerticalLine = (pattern, x_proportion, color, lineWidth) => {
     ctx.beginPath()
     ctx.setLineDash(pattern)
     ctx.moveTo(ctx.canvas.width * x_proportion, 0);
@@ -690,20 +696,22 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
     if (color) {
       ctx.strokeStyle = color;
     }
+    if (lineWidth) {
+      ctx.lineWidth = lineWidth;
+    }
     ctx.stroke();
   }
 
   // if sunset_time is 45 minutes before sunset, then proportion should be 25%
   // if sunset_time is 30 minutes before sunset, then proportion should be 50%
   // if sunset_time is 15 minutes before sunset, then proportion should be 75%
-  const calculateSunsetCompletion = ({sunset_time, time_of_max_height=75}) => {
+  const calculateSunsetCompletion = (sunset_time, time_of_max_height) => {
     if (sunset_time < 0) {
-      return 1; // sun has definitely set
-    } else {
-      // create a proportion between 0 and 1, if sunset_time is between time_of_max_height and 0
-      let sunset_completion_proportion = (time_of_max_height - sunset_time) / time_of_max_height;
-      return sunset_completion_proportion;
+      return 1;
     }
+    // create a proportion between 0 and 1, if sunset_time is between time_of_max_height and 0
+    let sunset_completion_proportion = (time_of_max_height - sunset_time) / time_of_max_height;
+    return sunset_completion_proportion;
   }
 
   // if horizon is at 1.0, then this function just returns sunset_completion_proportion
@@ -724,27 +732,25 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
   }
 
   const needName = Router.current().params.needName
-  console.log(needName);
-  let minutes;
-  if (needName.search('before')) {
-    minutes = needName.split(' ')[0];
-  } else if (needName.search('after')) {
-    minutes = needName.split(' ')[0];
-    minutes = minutes * -1;
-  }
+  const minutes = (needName.search('before') > -1) ?
+    parseInt(needName.split(' ')[0]) :
+    parseInt(needName.split(' ')[0]) * -1;
 
-  const sunsetCompletionProportion = calculateSunsetCompletion(minutes)
   const horizonProportion = 0.80 // proportion from top of canvas
-  const yProportion = calculateSunsetGuideHeight(sunsetCompletionProportion, horizonProportion);
-  const xProportion = calculateSunsetGuideWidth(sunsetCompletionProportion, 0.1, 0.9);
+  drawHorizontalLine([], horizonProportion, 'black');
+  ctx.font = '36px Comic Sans MS'
+  ctx.fillText(
+    "Horizon or Ground",
+    ctx.canvas.width/5,
+    (horizonProportion + 0.1) * ctx.canvas.height);
 
-  drawHorizontalLine([15, 5, 5], yProportion, 'orange');
-  drawVerticalLine([15, 5, 5], xProportion, 'orange');
-  drawHorizontalLine([], horizonProportion);
+  const sunsetCompletionProportion = calculateSunsetCompletion(minutes, 75)
+  const yProportion = calculateSunsetGuideHeight(sunsetCompletionProportion, 0.2, horizonProportion);
+  const xProportion = calculateSunsetGuideWidth(sunsetCompletionProportion, 0.15, 0.85);
 
-  // add text to canvas
-  ctx.font = '12px Comic Sans'
-  ctx.fillText("Horizon or Ground", ctx.canvas.width/2, horizonProportion * ctx.canvas.height);
+  drawHorizontalLine([15, 5], yProportion, 'orange', 3.0);
+  drawVerticalLine([15, 5], xProportion, 'orange', 3.0);
+
 });
 
 Template.sunsetTimelapseParticipate.helpers({
