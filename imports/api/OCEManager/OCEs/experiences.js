@@ -124,6 +124,11 @@ Schema.Experience = new SimpleSchema({
   contributionTypes: {
     type: [Schema.NeedType],
   },
+  anytimeSequential: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
   callbacks: {
     type: [Schema.Callback],
     optional: true

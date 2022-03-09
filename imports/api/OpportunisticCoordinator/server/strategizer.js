@@ -59,16 +59,122 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
   _.forEach(updatedIncidentsAndNeeds, incidentMapping => {
     // console.log('incidentMapping: ', util.inspect(incidentMapping, false, null));
 
+    let anytimeStrategy = new AnytimeStrategizer(incidentMapping._id);
+
     incidentsWithUsersToRun[incidentMapping._id] = {};
     _.forEach(incidentMapping.needUserMaps, needUserMap => {
-      let strategyModule = new WhoToAssignToNeed(incidentMapping._id, needUserMap);
-      let usersToAssignToNeed = strategyModule.decide(incidentMapping._id, needUserMap);
-      incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersToAssignToNeed;
+
+      let findContributionsForNeed;
+      if (anytimeStrategy.isAnytimeExperience()) {
+        if (anytimeStrategy.decide(needUserMap)) {
+          findContributionsForNeed = true;
+        } else {
+          findContributionsForNeed = false;
+        }
+      } else {
+        findContributionsForNeed = true;
+      }
+      if (findContributionsForNeed) {
+        let strategyModule = new WhoToAssignToNeed(incidentMapping._id, needUserMap);
+        let usersToAssignToNeed = strategyModule.decide(incidentMapping._id, needUserMap);
+        incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersToAssignToNeed;
+      }
     });
   });
   // console.log('incidentsWithUsersToRun', util.inspect(incidentsWithUsersToRun, false, null));
   return incidentsWithUsersToRun;
 };
+
+class AnytimeStrategizer {
+  constructor(incidentId) {
+    this.iid = incidentId;
+    let eid = Incidents.findOne({_id: this.iid}, {fields: {eid: true}}).eid;
+    this.experience = Experiences.findOne({_id: eid});
+    this.need = getNeedObject(this.iid, this.needName);
+  }
+
+  isAnytimeExperience() {
+    return this.experience.anytimeSequential !== null;
+  }
+
+  decide(needUserMap) {
+    if (this.experience.anytimeSequential === null) {
+      return true;
+    }
+    const currentBucketedNeeds = this.defineSequentialBuckets();
+    // console.log('currentBucketedNeeds: ', util.inspect(currentBucketedNeeds, false, null));
+    // which bucket is this need in?
+    const bucketIndex = currentBucketedNeeds.findIndex(bucket => bucket.includes(needUserMap.needName));
+    // does this bucket have other completed needs?
+    // console.log('currentBucketedNeeds[bucketIndex]: ', util.inspect(currentBucketedNeeds[bucketIndex], false, null));
+    const bucketHasCompletedNeeds = currentBucketedNeeds[bucketIndex].map(needName => {
+      let needWasCompleted = Submissions.find({
+        iid: this.iid,
+        needName: needName,
+        uid: {$ne: null}
+      }).count() > 0;
+      return needWasCompleted;
+    }).some(needWasCompleted => needWasCompleted);
+
+    // if this bucket has completed needs, then don't get anymore
+    return !bucketHasCompletedNeeds;
+
+  }
+
+  defineSequentialBuckets() {
+    if (this.experience.anytimeSequential === null) {
+      console.error('No anytime constraint defined for this experience');
+      return;
+    }
+    // Which "day" of the experience are we in?
+    let iteration = 1;
+    let currentBucketedNeeds = this.defineNeedBuckets(this.experience.anytimeSequential.startingBuckets)
+    while (this.bucketsAreAllFilled(currentBucketedNeeds)) {
+      iteration++;
+      currentBucketedNeeds = this.defineNeedBuckets(iteration * this.experience.anytimeSequential.startingBuckets);
+    }
+    return currentBucketedNeeds;
+  }
+
+  defineNeedBuckets(numberBuckets) {
+    const needs = this.experience.contributionTypes.map(contributionType => {
+      return contributionType.needName;
+    })
+    let bucketSize = Math.floor(needs.length / numberBuckets);
+    let lastBucketSize = bucketSize;
+    lastBucketSize += needs.length % bucketSize;
+    let bucketedNeeds = [];
+    for (let i = 0; i < this.experience.anytimeSequential.startingBuckets; i++) {
+      if (i === this.experience.anytimeSequential.startingBuckets - 1) {
+        bucketedNeeds.push(
+          needs.slice(i*bucketSize, i*bucketSize + lastBucketSize))
+      } else {
+        bucketedNeeds.push(
+          needs.slice(i*bucketSize, (i+1)*bucketSize))
+      }
+    }
+    return bucketedNeeds;
+  }
+
+  bucketsAreAllFilled(currentBucketedNeeds) {
+    // for each bucket, check if anyone completed it
+    let bucketsThatAreFilled = currentBucketedNeeds.map(needsInBucket => {
+      let needsHaveCompletedSubmissions = needsInBucket.map(needName => {
+        return Submissions.find({
+          iid: this.iid,
+          needName: needName,
+          uid: {$ne: null}
+        }).count();
+      });
+      let bucketIsFilled = needsHaveCompletedSubmissions.some(numberSubmissions => numberSubmissions > 0 );
+      return bucketIsFilled;
+    });
+    return bucketsThatAreFilled.every(bucketIsFilled => bucketIsFilled);
+  }
+
+}
+
+
 
 class WhoToAssignToNeed {
   constructor(incidentId, needUserMap) {
@@ -88,7 +194,7 @@ class WhoToAssignToNeed {
       // manage the semaphore count of how many users can take which needs
       // UPDATE 3/8/22: Choosing an available user to assign. So dynaamic participate is not doing much of the work
       let newChosenUsers = this.chooseUsers(usersNotInIncident);
-      console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
+      // console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
       // incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;
       return newChosenUsers;
     }

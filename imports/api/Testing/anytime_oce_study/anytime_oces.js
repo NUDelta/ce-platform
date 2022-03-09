@@ -74,6 +74,9 @@ const createSunsetTimelapse = () => {
   // })
 
   apiDefinition['contributionTypes'] = contributionTypes;
+  apiDefinition['anytimeSequential'] = {
+    "startingBuckets": 6
+  };
   return apiDefinition;
 }
 
@@ -92,9 +95,10 @@ const createMomentsOfTheHourTimelapse = () => {
   }
 
   contributionTypes = []
-  for (let i = 0; i < 60; i += 5) {
+  let b = 2; // block size
+  for (let i = 0; i < 60; i += b) {
     let needName = `A moment at ${i} minutes past the hour`;
-    let detectorObjectKey = `fivemin_block_starting_at_${i}`;
+    let detectorObjectKey = `block_starting_at_${i}`;
     let need = {
       needName: needName,
       situation: {
@@ -111,6 +115,9 @@ const createMomentsOfTheHourTimelapse = () => {
   }
 
   apiDefinition['contributionTypes'] = contributionTypes;
+  apiDefinition['anytimeSequential'] = {
+    "startingBuckets": 6
+  };
   return apiDefinition;
 }
 

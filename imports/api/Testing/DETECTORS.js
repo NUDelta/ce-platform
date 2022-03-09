@@ -31,14 +31,15 @@ const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after
  */
 const generateFiveMinuteBlockDetectors = function() {
   let detectors = {};
-  for (let i = 0; i < 60; i += 5) {
-    detectors[`fivemin_block_starting_at_${i}`] = {
+  let b = 2; // block size
+  for (let i = 0; i < 60; i += b) {
+    detectors[`block_starting_at_${i}`] = {
       _id: Random.id(),
-      description: `fivemin_block_starting_at_${i}`,
+      description: `block_starting_at_${i}`,
       variables: [
         'var minute;'
       ],
-      rules: [`((minute >= ${i}) && (minute < ${i + 5}));`]
+      rules: [`((minute >= ${i}) && (minute < ${i + b}));`]
     }
   }
   return detectors;
