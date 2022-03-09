@@ -219,4 +219,23 @@ export let USERS = {
       staticAffordances: { pair11: true },
     },
   },
+  mason: {
+    username: "mason",
+    email: "Mason@email.com",
+    password: "password",
+    profile: {
+      firstName: "Mason",
+      lastName: "Lin",
+      staticAffordances: { pair11: true },
+    },
+  },
+  grace: {
+    username: "grace",
+    email: "Grace@email.com",
+    password: "password",
+    profile: {
+      firstName: "Grace",
+      lastName: "Wainana",
+    },
+  },
 };
