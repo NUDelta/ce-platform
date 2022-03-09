@@ -144,8 +144,8 @@ class AnytimeStrategizer {
     let lastBucketSize = bucketSize;
     lastBucketSize += needs.length % bucketSize;
     let bucketedNeeds = [];
-    for (let i = 0; i < this.experience.anytimeSequential.startingBuckets; i++) {
-      if (i === this.experience.anytimeSequential.startingBuckets - 1) {
+    for (let i = 0; i < numberBuckets; i++) {
+      if (i === numberBuckets - 1) {
         bucketedNeeds.push(
           needs.slice(i*bucketSize, i*bucketSize + lastBucketSize))
       } else {

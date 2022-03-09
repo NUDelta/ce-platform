@@ -75,7 +75,7 @@ const createSunsetTimelapse = () => {
 
   apiDefinition['contributionTypes'] = contributionTypes;
   apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 6
+    "startingBuckets": 3
   };
   return apiDefinition;
 }
@@ -116,7 +116,7 @@ const createMomentsOfTheHourTimelapse = () => {
 
   apiDefinition['contributionTypes'] = contributionTypes;
   apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 6
+    "startingBuckets": 3
   };
   return apiDefinition;
 }
