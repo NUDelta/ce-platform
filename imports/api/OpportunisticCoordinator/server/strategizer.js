@@ -102,11 +102,9 @@ class AnytimeStrategizer {
       return true;
     }
     const currentBucketedNeeds = this.defineSequentialBuckets();
-    // console.log('currentBucketedNeeds: ', util.inspect(currentBucketedNeeds, false, null));
     // which bucket is this need in?
     const bucketIndex = currentBucketedNeeds.findIndex(bucket => bucket.includes(needUserMap.needName));
     // does this bucket have other completed needs?
-    // console.log('currentBucketedNeeds[bucketIndex]: ', util.inspect(currentBucketedNeeds[bucketIndex], false, null));
     const bucketHasCompletedNeeds = currentBucketedNeeds[bucketIndex].map(needName => {
       let needWasCompleted = Submissions.find({
         iid: this.iid,
@@ -244,7 +242,12 @@ class WhoToAssignToNeed {
       return [];
     } else {
       let dif = numberPeopleNeeded - usersWeAlreadyHave.length;
-      let chosen = availableUserMetas.splice(0, dif);
+      // using https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array#answer-46545530
+      let chosen = availableUserMetas
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .splice(0, dif);
       return chosen;
     }
   };
