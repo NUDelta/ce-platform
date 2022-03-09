@@ -15,6 +15,7 @@ import {
   usersAlreadySubmittedToNeed
 } from "../strategizer";
 import { Schema } from "../../schema";
+import { createBrotliCompress } from "zlib";
 
 const util = require('util');
 
@@ -70,6 +71,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
           findContributionsForNeed = true;
         } else {
           findContributionsForNeed = false;
+          console.log('---- not running anytime need: ', needUserMap.needName);
         }
       } else {
         findContributionsForNeed = true;
@@ -77,6 +79,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       if (findContributionsForNeed) {
         let strategyModule = new WhoToAssignToNeed(incidentMapping._id, needUserMap);
         let usersToAssignToNeed = strategyModule.decide(incidentMapping._id, needUserMap);
+        console.log('these are the usersToAssignToNeed: ', util.inspect(usersToAssignToNeed, false, null));
         incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersToAssignToNeed;
       }
     });
