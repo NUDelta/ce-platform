@@ -671,33 +671,56 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
   const canvas = document.getElementById('sunset-guides');
   const ctx = canvas.getContext('2d');
 
-  const drawDashedLine = (pattern, y_proportion) => {
-    let width = ctx.canvas.width;
-    let height = ctx.canvas.height;
+  const drawHorizontalLine = (pattern, y_proportion, color) => {
     ctx.beginPath();
     ctx.setLineDash(pattern)
-    ctx.moveTo(0, y_proportion * height);
-    ctx.lineTo(width,  y_proportion * height);
+    ctx.moveTo(0, y_proportion * ctx.canvas.height);
+    ctx.lineTo(ctx.canvas.width,  y_proportion * ctx.canvas.height);
+    if (color) {
+      ctx.strokeStyle = color;
+    }
+    ctx.stroke();
+  }
+
+  const drawVerticalLine = (pattern, x_proportion, color) => {
+    ctx.beginPath()
+    ctx.setLineDash(pattern)
+    ctx.moveTo(ctx.canvas.width * x_proportion, 0);
+    ctx.lineTo(ctx.canvas.width * x_proportion, ctx.canvas.height);
+    if (color) {
+      ctx.strokeStyle = color;
+    }
     ctx.stroke();
   }
 
   // if sunset_time is 45 minutes before sunset, then proportion should be 25%
   // if sunset_time is 30 minutes before sunset, then proportion should be 50%
   // if sunset_time is 15 minutes before sunset, then proportion should be 75%
-  const calculateSunsetHeight = (sunset_time) => {
+  const calculateSunsetCompletion = ({sunset_time, time_of_max_height=75}) => {
     if (sunset_time < 0) {
       return 1; // sun has definitely set
     } else {
-      // create a proportion between 0 and 1, if sunset_time is between 60 and 0
-      let sunset_completion_proportion = (60 - sunset_time) / 60;
+      // create a proportion between 0 and 1, if sunset_time is between time_of_max_height and 0
+      let sunset_completion_proportion = (time_of_max_height - sunset_time) / time_of_max_height;
       return sunset_completion_proportion;
     }
   }
 
   // if horizon is at 1.0, then this function just returns sunset_completion_proportion
   // if horizon is at .75, then this function return sunset_completion_proportion * .75
-  const calculateSunsetGuideHeight = (sunset_completion_proportion, horizon_y_proportion) => {
-    return sunset_completion_proportion * horizon_y_proportion;
+  /**
+   *
+   * @param {*} sunset_completion_proportion How much of the sunset is complete, from 0% at X minutes before til 100% sunset .
+   * @param {*} highest_sun_y_proportion The y proportion of the image where the sun will be at its heighest point
+   * @param {*} horizon_y_proportion The y proportion of the image where the horizon is
+   * @returns
+   */
+  const calculateSunsetGuideHeight = (sunset_completion_proportion, highest_sun_proportion, horizon_y_proportion) => {
+    return sunset_completion_proportion * (horizon_y_proportion - highest_sun_proportion) + highest_sun_proportion;
+  }
+
+  const calculateSunsetGuideWidth = (sunset_completion_proportion, leftMost, rightMost) => {
+    return sunset_completion_proportion * (rightMost - leftMost) + leftMost;
   }
 
   const needName = Router.current().params.needName
@@ -710,14 +733,18 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
     minutes = minutes * -1;
   }
 
-  const sunsetCompletionProportion = calculateSunsetHeight(minutes)
-  const horizonProportion = 0.75
+  const sunsetCompletionProportion = calculateSunsetCompletion(minutes)
+  const horizonProportion = 0.80 // proportion from top of canvas
   const yProportion = calculateSunsetGuideHeight(sunsetCompletionProportion, horizonProportion);
+  const xProportion = calculateSunsetGuideWidth(sunsetCompletionProportion, 0.1, 0.9);
 
-  drawDashedLine([15, 5, 5], yProportion);
-  drawDashedLine([], horizonProportion);
+  drawHorizontalLine([15, 5, 5], yProportion, 'orange');
+  drawVerticalLine([15, 5, 5], xProportion, 'orange');
+  drawHorizontalLine([], horizonProportion);
 
-
+  // add text to canvas
+  ctx.font = '12px Comic Sans'
+  ctx.fillText("Horizon or Ground", ctx.canvas.width/2, horizonProportion * ctx.canvas.height);
 });
 
 Template.sunsetTimelapseParticipate.helpers({
