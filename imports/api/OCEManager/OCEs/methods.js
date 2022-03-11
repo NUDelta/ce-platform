@@ -50,8 +50,10 @@ export const findMatchesForUser = (uid, affordances) => {
     _.forEach(needNames, (needName) => {
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
+        console.log(` .     For findMatchesForUser, ${needName}| before placeSubsetAffordances`);
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
+        console.log(` .     For findMatchesForUser, ${needName}| before doesUserMatchNeed`);
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
 
         if (doesMatchPredicate) {
