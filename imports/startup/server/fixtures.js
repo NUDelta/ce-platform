@@ -16,7 +16,7 @@ import { CONSTANTS } from "../../api/Testing/testingconstants";
 import { createIncidentFromExperience, startRunningIncident } from "../../api/OCEManager/OCEs/methods.js";
 import { findUserByUsername } from '../../api/UserMonitor/users/methods';
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
-import { onTimeElapsedUpdateTimeWeatherContext } from '../../api/UserMonitor/locations/methods';
+import { onTimeElapsedUpdateTimeWeatherContext, updateAllUsersTimeWeatherContext } from '../../api/UserMonitor/locations/methods';
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
@@ -35,14 +35,16 @@ Meteor.startup(() => {
       return parser.text(`every ${CONFIG.CONTEXT_POLL_INTERVAL} min`);
     },
     job: function() {
-      let locationObjects = Locations.find().fetch()
-      locationObjects.forEach(location => {
-        onTimeElapsedUpdateTimeWeatherContext(location.uid, function(uid) {
-          if (CONFIG.DEBUG) {
-            console.log(`Updated weather and time context for user ${uid}`);
-          }
-        });
-      });
+      updateAllUsersTimeWeatherContext();
+      // let usersWithLocation = Locations.find().map(location => uid);
+
+      // locationObjects.forEach(location => {
+      //   onTimeElapsedUpdateTimeWeatherContext(location.uid, function(uid) {
+      //     if (CONFIG.DEBUG) {
+      //       console.log(`Updated weather and time context for user ${uid}`);
+      //     }
+      //   });
+      // });
     }
   });
 
@@ -193,7 +195,9 @@ function createTestData(){
       "profile.lastParticipated": null,
       "profile.lastNotified": null,
       "profile.pastIncidents": [],
-      // "profile.staticAffordances": {}
+      "profile.staticAffordances": {
+        betatester: true,
+      }
     }
   }, {
     multi: true

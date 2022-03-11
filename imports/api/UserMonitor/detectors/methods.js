@@ -1,5 +1,6 @@
 import { HTTP } from 'meteor/http';
-
+const bent = require('bent')
+const getJSON = bent('json')
 import { Detectors } from './detectors'
 
 import { log, serverLog } from "../../logs";
@@ -12,7 +13,7 @@ import { log, serverLog } from "../../logs";
  */
 
 
-export const getAffordancesFromLocation = function (uid, location, retrievePlaces, callback) {
+export const getAffordancesFromLocation = async function (location, retrievePlaces) {
   // setup url with lat and lng from tracking package
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
@@ -21,28 +22,30 @@ export const getAffordancesFromLocation = function (uid, location, retrievePlace
   let url = retrievePlaces ? `${ host }/location_keyvalues/${ lat }/${ lng }` :
             `${ host }/location_weather_time_keyvalues/${ lat }/${ lng }`;
 
-  // make request to affordance aware
-  HTTP.get(url, {}, (error, response) => {
-    let affordances = {};
+  let affordances = await getJSON(url);
+  return affordances;
+  // // make request to affordance aware
+  // HTTP.get(url, {}, (error, response) => {
+  //   let affordances = {};
 
-    // check if valid response from affordance aware
-    if (!error && response.statusCode === 200) {
-      affordances = JSON.parse(response.content);
-      if (affordances !== Object(affordances)) {
-        serverLog.call({
-          message: "Locations/methods expected type Object but did not receive an Object, doing nothing"
-        });
-      }
-    } else {
-      serverLog.call({
-        message: "ERROR WITH AFFORDANCE AWARE: " + JSON.stringify(error)
-      });
-    }
+  //   // check if valid response from affordance aware
+  //   if (!error && response.statusCode === 200) {
+  //     affordances = JSON.parse(response.content);
+  //     if (affordances !== Object(affordances)) {
+  //       serverLog.call({
+  //         message: "Locations/methods expected type Object but did not receive an Object, doing nothing"
+  //       });
+  //     }
+  //   } else {
+  //     serverLog.call({
+  //       message: "ERROR WITH AFFORDANCE AWARE: " + JSON.stringify(error)
+  //     });
+  //   }
 
-    // callback with either retrieved affordances or empty object
-    serverLog.call({  message: `Affordances successfully retrieved for ${ uid } at ${ lat }, ${ lng }.` });
-    callback(uid, location, affordances);
-  });
+  //   // callback with either retrieved affordances or empty object
+  //   serverLog.call({  message: `Affordances successfully retrieved for ${ uid } at ${ lat }, ${ lng }.` });
+  //   callback(uid, location, affordances);
+  // });
 };
 
 /**

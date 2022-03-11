@@ -33,7 +33,7 @@ Meteor.methods({
  * @param location {object} location object from the background geolocation package
  * @param callback {function} callback function to run after code completion, takes in one argument, uid
  */
-export const onLocationUpdate = (uid, location, callback) => {
+export const onLocationUpdate = async (uid, location, callback) => {
   serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
 
   // clear users current availabilities
@@ -69,50 +69,90 @@ export const onLocationUpdate = (uid, location, callback) => {
     let retrievePlaces = not_traveling_on_bicycle_or_vehicle;
 
     // get affordances and begin coordination process
-    getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
+    getAffordancesFromLocation(location, retrievePlaces).then(affordances => {
       affordances = mergeUsersStaticAffordances(uid, affordances);
 
       // blocking, since everything in system works off of Locations collection
-      updateLocationInDb(uid, bgLocationObject, affordances);
+      updateLocationInDb(uid, location, affordances);
 
       // non-blocking, since its for post-hoc analysis
-      insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
-      callback(uid);
+      insertEstimatedLocationLog(uid, location, affordances, rawLocationId);
 
       coordinateUsersToNeeds(uid, affordances);
+
     });
+
+
+    // getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
+    //   affordances = mergeUsersStaticAffordances(uid, affordances);
+
+    //   // blocking, since everything in system works off of Locations collection
+    //   updateLocationInDb(uid, bgLocationObject, affordances);
+
+    //   // non-blocking, since its for post-hoc analysis
+    //   insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
+    //   callback(uid);
+
+    //   coordinateUsersToNeeds(uid, affordances);
+    // });
   }
 };
 
-export const onTimeElapsedUpdateTimeWeatherContext = (uid, callback) => {
-  // (1) gets the last location for the user
-  let currentLocation = Locations.findOne({uid: uid});
-  if (!currentLocation) {
-    log.error(`uid = ${uid} did not have a current location in Locations collection`);
-    return;
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
   }
+}
 
-  const backgroundGeolocationObject = {
-    coords: {
-      latitude: currentLocation.lat,
-      longitude: currentLocation.lng,
+export const updateAllUsersTimeWeatherContext = async () => {
+  let locations = Locations.find().fetch();
+  asyncForEach(locations, async (location) => {
+    const backgroundGeolocationObject = {
+      coords: {
+        latitude: location.lat,
+        longitude: location.lng,
+      }
     }
-  }
+    // Get newest time and weather features for location
+    // FIXME: I don't have time to write/test this optimization of only getting time/weather. It'll get place affordances too (cached of course), and update the location in the normal way
+    const retrievePlaces = true;
 
-  // (2) uses this to get the newest time and weather features
-  // FIXME: I don't have time to write/test this optimization of only getting time/weather. It'll get place affordances too (cached of course), and update the location in the normal way
-  const retrievePlaces = true;
-  getAffordancesFromLocation(uid, backgroundGeolocationObject, retrievePlaces, function(uid, bgLocationObject, affordances) {
-    affordances = mergeUsersStaticAffordances(uid, affordances);
-
-    // (3) update the user's newest affordances (time and weather features), in the Locations collection
-    updateLocationInDb(uid, bgLocationObject, affordances);
-    callback(uid);
-
-    // (4) coordinate users to needs
-    coordinateUsersToNeeds(uid, affordances);
+    let affordances = await getAffordancesFromLocation(backgroundGeolocationObject, retrievePlaces);
+    affordances = mergeUsersStaticAffordances(location.uid, affordances);
+    updateLocationInDb(location.uid, backgroundGeolocationObject, affordances);
+    coordinateUsersToNeeds(location.uid, affordances);
   });
-};
+}
+
+// export const onTimeElapsedUpdateTimeWeatherContext = (uid, callback) => {
+//   // (1) gets the last location for the user
+//   let currentLocation = Locations.findOne({uid: uid});
+//   if (!currentLocation) {
+//     log.error(`uid = ${uid} did not have a current location in Locations collection`);
+//     return;
+//   }
+
+//   const backgroundGeolocationObject = {
+//     coords: {
+//       latitude: currentLocation.lat,
+//       longitude: currentLocation.lng,
+//     }
+//   }
+
+//   // (2) uses this to get the newest time and weather features
+//   // FIXME: I don't have time to write/test this optimization of only getting time/weather. It'll get place affordances too (cached of course), and update the location in the normal way
+//   const retrievePlaces = true;
+//   getAffordancesFromLocation(uid, backgroundGeolocationObject, retrievePlaces, function(uid, bgLocationObject, affordances) {
+//     affordances = mergeUsersStaticAffordances(uid, affordances);
+
+//     // (3) update the user's newest affordances (time and weather features), in the Locations collection
+//     updateLocationInDb(uid, bgLocationObject, affordances);
+//     callback(uid);
+
+//     // (4) coordinate users to needs
+//     coordinateUsersToNeeds(uid, affordances);
+//   });
+// };
 
 /**
  * Queries the static affordances defined in the Users collection, and merges that Object with current environmental affordances

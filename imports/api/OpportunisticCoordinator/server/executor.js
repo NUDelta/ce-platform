@@ -60,9 +60,6 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 
       let usersMeta = needUserMapping[needName];
       if (!usersMeta) {
-        if (CONFIG.DEBUG) {
-          serverLog.call({message: `no users for need ${ needName }`});
-        }
         return;
       }
 
