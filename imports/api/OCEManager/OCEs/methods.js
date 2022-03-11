@@ -48,12 +48,13 @@ export const findMatchesForUser = (uid, affordances) => {
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
+      serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        console.log(` .     For findMatchesForUser, ${needName}| before placeSubsetAffordances`);
+        // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before placeSubsetAffordances`});
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-        console.log(` .     For findMatchesForUser, ${needName}| before doesUserMatchNeed`);
+        // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before doesUserMatchNeed`});
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
 
         if (doesMatchPredicate) {

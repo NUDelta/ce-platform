@@ -159,6 +159,7 @@ const coordinateUsersToNeeds = (uid, affordances) => {
   serverLog.call({message: `From coordinateUsersToNeeds: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
   console.log(util.inspect(sharedAffs, {showHidden: false, depth: null}));
   decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
+  serverLog.call({message: `After DecomissionFromAssignment: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
   sendToMatcher(uid, sharedAffs);
 };
 

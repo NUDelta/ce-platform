@@ -205,7 +205,7 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
  * @param needName
  */
 let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) => {
-  serverLog.call({message: 'decomissionIfSustained | start'});
+  serverLog.call({message: `uid = ${userId} decomissionIfSustained | start`});
   let user = Meteor.users.findOne({_id: userId});
   if (!user) {
     log.warning(`No user exists for uid = ${userId}`);
@@ -221,10 +221,10 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
   let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
 
   let matchPredicateAfterDelay = doesUserMatchNeed(userId, flatAffAfterDelay, incidentId, needName);
-  serverLog.call({message: 'decomissionIfSustained | after doesUserMatchNeed'});
+  serverLog.call({message: `uid = ${userId} decomissionIfSustained | after doesUserMatchNeed`});
   // Only remove after they do not match again after some decommission delay
   if (!matchPredicateAfterDelay) {
-    log.cerebro(`Removing user {_id: ${userId}, username: ${user.username}} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
+    log.cerebro(`Removing user uid = ${userId} username = ${user.username} from [${incidentId},${needName}] after ${decommissionDelay} sec`);
 
     Decommission_log.insert({
       iid: incidentId,
