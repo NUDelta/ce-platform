@@ -17,6 +17,8 @@ import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
 import {EstimatedLocation_log} from "../../Logging/estimated_location_log";
 
+const util = require('util');
+
 Meteor.methods({
   triggerUpdate(lat, lng, uid){
     onLocationUpdate(uid, lat, lng, function (uid) {
@@ -153,6 +155,9 @@ const coordinateUsersToNeeds = (uid, affordances) => {
     sharedAffs[key] = newAffs[key];
   });
 
+
+  serverLog.call({message: `From coordinateUsersToNeeds: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
+  console.log(util.inspect(sharedAffs, {showHidden: false, depth: null}));
   decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
   sendToMatcher(uid, sharedAffs);
 };
@@ -171,11 +176,11 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
 
-    serverLog.call({message: `uid = ${uid} has affordances ${JSON.stringify(affordances)}`});
+    serverLog.call({message: `From sendToMatcher: uid = ${uid} has affordances ${JSON.stringify(affordances)}`});
     // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
     // serverLog.call(`uid = ${uid} has availability for ${availabilityDictionary} in UserMonitor/locations/methods.js`)
-    serverLog.call({message: `uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)} in UserMonitor/locations/methods.js`});
+    serverLog.call({message: `From sendToMatcher: uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)}`});
     // update availabilityDictionary of most recent location
     Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
 
