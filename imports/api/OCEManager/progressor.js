@@ -3,7 +3,7 @@ import { Incidents } from "./OCEs/experiences";
 import { Submissions } from "./currentNeeds";
 import {serverLog} from "../logs";
 import {adminUpdates} from "./progressorHelper";
-import { AUTH } from "../config";
+import { AUTH, CONFIG } from "../config";
 // needed because a callback uses `notify`
 import {notify} from "../OpportunisticCoordinator/server/noticationMethods";
 import {addContribution, changeIncidentToPass} from "./OCEs/methods";
@@ -99,6 +99,7 @@ export const uploadImage = function (picture, submissionObject){
   let cdnLink = "";
   uploadImagesToS3(picture, submissionObject.needName, submissionObject.uid).then((link) => {
     cdnLink = link;
+    console.log(`callback after uploadImagesToS3: {link: ${link}, cdnLink: ${cdnLink}}`);
     submissionObject.content["proof"] = cdnLink;
     console.log("image has been uploaded");
     createInitialSubmission(submissionObject)
@@ -164,6 +165,7 @@ const uploadImagesToS3 = async (base64Data, needName, uid) => {
 
         // if upload was successful, create a CDN link to add to airtable
         cdnForImg = `${AUTH.S3_CDN}/${processedImgKey}`;
+        console.log(`inside uploadImagesToS3 {cdnForImg: ${cdnForImg}}`);
       } catch (error) {
         console.log(`Error in uploading profile photo: ${error}`);
       }
