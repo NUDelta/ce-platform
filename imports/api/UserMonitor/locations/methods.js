@@ -170,10 +170,12 @@ const sendToMatcher = (uid, affordances) => {
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
+
+    serverLog.call({message: `uid = ${uid} has affordances ${JSON.stringify(affordances)}`});
     // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
     // serverLog.call(`uid = ${uid} has availability for ${availabilityDictionary} in UserMonitor/locations/methods.js`)
-
+    serverLog.call({message: `uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)} in UserMonitor/locations/methods.js`});
     // update availabilityDictionary of most recent location
     Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
 

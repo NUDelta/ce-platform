@@ -17,6 +17,7 @@ import {
 import { Schema } from "../../schema";
 import { createBrotliCompress } from "zlib";
 import { CONFIG } from "../../config";
+import { serverLog } from "../../logs";
 
 const util = require('util');
 
@@ -83,7 +84,7 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
         let strategyModule = new WhoToAssignToNeed(incidentMapping._id, needUserMap);
         let usersToAssignToNeed = strategyModule.decide(incidentMapping._id, needUserMap);
         if (CONFIG.DEBUG) {
-          console.log('these are the usersToAssignToNeed: ', util.inspect(usersToAssignToNeed, false, null));
+          serverLog.call(`---- usersToAssignToNeed: ${util.inspect(usersToAssignToNeed, false, null)}`);
         }
         incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersToAssignToNeed;
       }
@@ -194,9 +195,6 @@ class WhoToAssignToNeed {
 
   decide() {
     const usersNotInIncident = this.getUsersNotInIncident(this.needUserMap.users);
-    if (CONFIG.DEBUG) {
-      console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
-    }
     if (this.meetsSynchronousThreshold(usersNotInIncident)) {
 
       // TODO(rlouie): Should revisit on being judicious about who we assign/notify; for now, let the dynamic participate
@@ -204,6 +202,7 @@ class WhoToAssignToNeed {
       // UPDATE 3/8/22: Choosing an available user to assign. So dynaamic participate is not doing much of the work
       let newChosenUsers = this.chooseUsers(usersNotInIncident);
       if (CONFIG.DEBUG) {
+        console.log('usersNotInIncident: ', util.inspect(usersNotInIncident, false, null));
         console.log('newChoosenUsers: ', util.inspect(newChosenUsers, false, null));
       }
       // incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = newChosenUsers;

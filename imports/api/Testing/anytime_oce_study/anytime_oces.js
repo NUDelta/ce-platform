@@ -50,7 +50,7 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
         instruction: 'Take a photo of the sunset!',
       },
       numberNeeded: 1,
-      notificationDelay: 1
+      notificationDelay: 0
     }
     contributionTypes.push(need);
   }
@@ -94,7 +94,7 @@ const createMomentsOfTheHourTimelapse = () => {
         instruction: 'Take a photo that captures a moment of the hour!',
       },
       numberNeeded: 1,
-      notificationDelay: 1
+      notificationDelay: 0
     }
     contributionTypes.push(need);
   }

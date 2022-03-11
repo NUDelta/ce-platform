@@ -161,9 +161,7 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
     });
   });
 
-  if (CONFIG.DEBUG) {
-    serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
-  }
+  serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
 
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(binnedUserAvailabilities, (currAvailabilities, delayString) => {
@@ -210,6 +208,7 @@ const coordinatorWrapper = (uid, availabilityDictionary) => () => {
     if (somePlaceNeedsSustained && userCanParticipate) {
       // update availabilities of users and check if any experience incidents can be run
       let updatedAvailability = updateAvailability(uid, sustainedAvailDict);
+      serverLog.call({message: `user ${ uid } | after sustaining, updated availabilities: ${ JSON.stringify(updatedAvailability) }`});
       let incidentsWithUsersToRun = checkIfThreshold(updatedAvailability);
 
       // add users to incidents to be run
