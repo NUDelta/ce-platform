@@ -161,7 +161,9 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
     });
   });
 
-  serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
+  if (CONFIG.DEBUG) {
+    serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
+  }
 
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(binnedUserAvailabilities, (currAvailabilities, delayString) => {

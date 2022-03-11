@@ -85,8 +85,8 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
     let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
 
     let sustainedPlace_Needs = setIntersection(beforePlacesAndNeeds, afterPlacesAndNeeds);
-    console.log(JSON.stringify(afterAvails[incident]));
-    console.log(JSON.stringify(sustainedPlace_Needs));
+    // console.log(JSON.stringify(afterAvails[incident]));
+    // console.log(JSON.stringify(sustainedPlace_Needs));
     if (sustainedPlace_Needs.length) {
       let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(sustainedPlace_Need =>
         afterAvails[incident].find(place_need_dict =>

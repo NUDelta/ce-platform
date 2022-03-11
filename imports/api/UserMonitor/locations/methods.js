@@ -129,7 +129,6 @@ const mergeUsersStaticAffordances = function(uid, affordances) {
   let userAffordances = user.profile.staticAffordances;
   affordances = Object.assign({}, affordances, userAffordances);
   affordances = affordances !== null ? affordances : {};
-  serverLog.call({message: `affordances ${affordances}`});
   return affordances;
 };
 

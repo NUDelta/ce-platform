@@ -38,7 +38,9 @@ Meteor.startup(() => {
       let locationObjects = Locations.find().fetch()
       locationObjects.forEach(location => {
         onTimeElapsedUpdateTimeWeatherContext(location.uid, function(uid) {
-          console.log(`Updated weather and time context for user ${uid}`);
+          if (CONFIG.DEBUG) {
+            console.log(`Updated weather and time context for user ${uid}`);
+          }
         });
       });
     }
