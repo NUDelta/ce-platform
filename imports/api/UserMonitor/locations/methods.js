@@ -233,7 +233,7 @@ export const userParticipatedTooRecently = (user) => {
     waitTimeAfterParticipating = minutes * 1;
   } else {
     //change this to some larger value after testing if i want them to be available to home screen
-    waitTimeAfterParticipating = minutes * 1;
+    waitTimeAfterParticipating = minutes * CONFIG.PARTICIPATED_TOO_RECENTLY;
   }
   const lastParticipated = user.profile.lastParticipated;
   const now = Date.now();
@@ -253,7 +253,7 @@ export const userNotifiedTooRecently = (user) => {
   if (CONFIG.MODE === "local") {
     waitTimeAfterNotified = minutes * 1;
   } else {
-    waitTimeAfterNotified = minutes * 10;
+    waitTimeAfterNotified = minutes * CONFIG.NOTIFIED_TOO_RECENTLY;
   }
   const lastNotified = user.profile.lastNotified;
   const now = Date.now();

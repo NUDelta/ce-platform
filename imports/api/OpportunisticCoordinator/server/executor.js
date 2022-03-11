@@ -81,12 +81,9 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
-      // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
-      // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-      //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
-      // });
-
-      let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
+      let uidsNotNotifiedRecently = newUsersMeta
+        .filter((userMeta) => {!userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid))})
+        .map((userMeta) => {userMeta.uid});
       let route = "/";
 
       // Try to notify, based on if the current need has need-specific notification info

@@ -6,6 +6,8 @@ export const CONFIG = {
   DEBUG: process.env.DEBUG || true,
   BUNDLE_IDENTIFIER: 'edu.northwestern.delta.D',
   CONTEXT_POLL_INTERVAL: process.env.CONTEXT_POLL_INTERVAL || 1, // min
+  NOTIFIED_TOO_RECENTLY: process.env.NOTIFIED_TOO_RECENTLY || 10, // min
+  PARTICIPATED_TOO_RECENTLY: process.env.PARTICIPATED_TOO_RECENTLY || 10, // min
 };
 
 export const AUTH = {
