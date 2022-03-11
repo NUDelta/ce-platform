@@ -109,5 +109,5 @@ const createMomentsOfTheHourTimelapse = () => {
 
 export default ANYTIME_OCES = {
   sunsetTimelapse: createSunsetTimelapse(75, 15, 2),
-  // momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
+  momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
 }

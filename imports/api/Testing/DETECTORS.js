@@ -36,9 +36,10 @@ const generateMinuteBlockDetectors = function(blockSize) {
       _id: Random.id(),
       description: `block_starting_at_${i}`,
       variables: [
-        'var minute;'
+        'var minute;',
+        'var betatester;'
       ],
-      rules: [`((minute >= ${i}) && (minute < ${i + blockSize}));`]
+      rules: [`(betatester && ((minute >= ${i}) && (minute < ${i + blockSize})));`]
     }
   }
   return detectors;
@@ -307,7 +308,7 @@ const createDetectors = function (pairNum) {
 let DETECTORS_GENERATED = {};
 DETECTORS_GENERATED = Object.assign(DETECTORS_GENERATED,
   generateSunsetTimelapseDetectors(75, 15, 2),
-  // generateMinuteBlockDetectors(2),
+  generateMinuteBlockDetectors(2),
   // PAIR_DETECTORS,
 );
 

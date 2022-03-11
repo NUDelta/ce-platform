@@ -15,6 +15,7 @@ import { serverLog, log } from "../../logs";
 import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
 import {needAggregator} from "../strategizer";
 import {setIntersection} from "../../custom/arrayHelpers";
+import { CONFIG } from "../../config";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
@@ -59,12 +60,21 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
 
       let usersMeta = needUserMapping[needName];
       if (!usersMeta) {
+        if (CONFIG.DEBUG) {
+          serverLog.call({message: `no users for need ${ needName }`});
+        }
         return;
       }
 
+      if (CONFIG.DEBUG) {
+        serverLog.call({message: `need: ${ needName } | users: ${ JSON.stringify(usersMeta) }`});
+      }
       let newUsersMeta = usersMeta.filter(function(userMeta) {
         return !Meteor.users.findOne(userMeta.uid).activeIncidents().includes(iid);
       });
+      if (CONFIG.DEBUG) {
+        serverLog.call({message: `new users not currently active: ${ JSON.stringify(newUsersMeta) }`});
+      }
 
       //administrative updates
       _.forEach(newUsersMeta, (userMeta) => {
