@@ -263,7 +263,7 @@ export const adminUpdatesForAddingUserToIncident = (uid, iid, needName) => {
   // _addActiveIncidentNeedPlaceDistanceToUsers(uid, incidentNeedPlaceDistance);
 
   let user = Meteor.users.findOne({_id: uid});
-  log.cerebro(`Assigning [${iid}, ${needName}] to users {_id: ${uid}, username: ${user.username}}`);
+  log.cerebro(`Assigning [${iid}, ${needName}] to users uid = ${uid} username: ${user.username}}`);
   AddedToIncident_log.insert({
     uid: uid,
     timestamp: Date.now(),
