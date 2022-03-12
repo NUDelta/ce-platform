@@ -38,7 +38,7 @@ const util = require('util');
  */
 export const findMatchesForUser = (uid, affordances) => {
   console.time('findMatchesForUser full')
-  console.time('findMatchesForUser setup')
+  // console.time('findMatchesForUser setup')
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
@@ -47,25 +47,25 @@ export const findMatchesForUser = (uid, affordances) => {
 
   // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
   if (PLACE_BASED_EXPERIENCE) {
-  // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
+    // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
     let placeKeys = getPlaceKeys(affordances);
     let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
   }
-  console.timeEnd('findMatchesForUser setup')
+  // console.timeEnd('findMatchesForUser setup')
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
   // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
-    console.time('Checking all needNames')
+    // console.time('Checking all needNames')
     const incident = Incidents.findOne(iid);
-    const experiences = Experiences.findOne(incident.eid, {fields: {_id: 1, anytimeSequential: 1}});
 
     // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
-    if (typeof experiences.anytimeSequential !== 'undefined') {
-      return; // exit this forEach loop, and skip any individual checking matches per need
-    }
+    // const experiences = Experiences.findOne(incident.eid, {fields: {_id: 1, anytimeSequential: 1}});
+    // if (typeof experiences.anytimeSequential !== 'undefined') {
+    //   return; // exit this forEach loop, and skip any individual checking matches per need
+    // }
 
     // old time: approx six to twelve seconds on server
     // new time: ~1 - 7 seconds, 15 seconds?!
@@ -82,7 +82,7 @@ export const findMatchesForUser = (uid, affordances) => {
 
       // Or do we ignore this check because we are doing time/weather based stuff?
       // we check whether a place is sustained for a detector?
-      console.time('Checking all the places for a need')
+      // console.time('Checking all the places for a need')
 
       if (PLACE_BASED_EXPERIENCE) {
         _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
@@ -102,8 +102,10 @@ export const findMatchesForUser = (uid, affordances) => {
       }
       // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
       else {
-        const flatAffordances = flattenAffordanceDict(affordances);
-        const doesMatchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
+        // FIXME: this is a horribly named function, but somehow by doing the JSON stringify and parse it works
+        // might be just the format of the affordances object that is passed as input
+        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, []);
+        const doesMatchPredicate = applyDetector(affordanceSubsetToMatchForPlace, detector.variables, detector.rules);
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
@@ -114,10 +116,10 @@ export const findMatchesForUser = (uid, affordances) => {
           }
         }
       }
-      console.timeEnd('Checking all the places for a need')
-      console.timeEnd('Checking a needName')
+      // console.timeEnd('Checking all the places for a need')
+      // console.timeEnd('Checking a needName')
    });
-   console.timeEnd('Checking all needNames')
+  //  console.timeEnd('Checking all needNames')
   });
 
   console.timeEnd('findMatchesForUser full')
