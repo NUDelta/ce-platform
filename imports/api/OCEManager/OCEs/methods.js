@@ -38,12 +38,14 @@ const util = require('util');
  */
 export const findMatchesForUser = (uid, affordances) => {
   console.time('findMatchesForUser full')
+  console.time('findMatchesForUser setup')
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
   // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
   let placeKeys = getPlaceKeys(affordances);
   let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+  console.timeEnd('findMatchesForUser setup')
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
@@ -53,15 +55,22 @@ export const findMatchesForUser = (uid, affordances) => {
     console.time('Checking all needNames')
     const incident = Incidents.findOne(iid);
     // old time: approx six to twelve seconds on server
+    // new time: ~1 - 7 seconds, 15 seconds?!
     _.forEach(needNames, (needName) => {
+      console.time('Checking a needName')
       serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
-      console.time('Checking all the places for a need')
       // old time: approx half second on server
+      // new time: still about half a second...
 
+      console.time('Looking at the need and detector')
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
       const detector = Detectors.findOne({ description : detectorUniqueKey });
+      console.timeEnd('Looking at the need and detector')
 
+      // Or do we ignore this check because we are doing time/weather based stuff?
+      // we check whether a place is sustained for a detector?
+      console.time('Checking all the places for a need')
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
@@ -77,6 +86,7 @@ export const findMatchesForUser = (uid, affordances) => {
         }
       });
       console.timeEnd('Checking all the places for a need')
+      console.timeEnd('Checking a needName')
    });
    console.timeEnd('Checking all needNames')
   });
