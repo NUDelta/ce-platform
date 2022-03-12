@@ -9,6 +9,7 @@ import {
   getPlaceKeys,
   applyDetector,
   onePlaceNotThesePlacesSets,
+  flattenAffordanceDict,
   placeSubsetAffordances
 } from "../../UserMonitor/detectors/methods";
 // import { createNewId } from '../../../startup/server/fixtures.js';
@@ -17,7 +18,6 @@ import {Incidents} from './experiences';
 import {Detectors} from '../../UserMonitor/detectors/detectors';
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
 import {Submissions} from '../../OCEManager/currentNeeds';
-import {serverLog} from "../../logs";
 import {setIntersection} from "../../custom/arrayHelpers";
 
 const util = require('util');
@@ -42,9 +42,15 @@ export const findMatchesForUser = (uid, affordances) => {
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
+  // FIXME: hardcoded hack, should be a parameter from experiences
+  const PLACE_BASED_EXPERIENCE = false;
+
+  // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
+  if (PLACE_BASED_EXPERIENCE) {
   // @see detectors.tests.js -- Helpers for Nested {Place: {Affordance: true}} for more details
-  let placeKeys = getPlaceKeys(affordances);
-  let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+    let placeKeys = getPlaceKeys(affordances);
+    let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
+  }
   console.timeEnd('findMatchesForUser setup')
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
@@ -54,37 +60,60 @@ export const findMatchesForUser = (uid, affordances) => {
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     console.time('Checking all needNames')
     const incident = Incidents.findOne(iid);
+    const experiences = Experiences.findOne(incident.eid, {fields: {_id: 1, anytimeSequential: 1}});
+
+    // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
+    if (typeof experiences.anytimeSequential !== 'undefined') {
+      return; // exit this forEach loop, and skip any individual checking matches per need
+    }
+
     // old time: approx six to twelve seconds on server
     // new time: ~1 - 7 seconds, 15 seconds?!
     _.forEach(needNames, (needName) => {
-      console.time('Checking a needName')
-      serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
+      // console.time('Checking a needName')
       // old time: approx half second on server
       // new time: still about half a second...
 
-      console.time('Looking at the need and detector')
+      // console.time('Looking at the need and detector')
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
       const detector = Detectors.findOne({ description : detectorUniqueKey });
-      console.timeEnd('Looking at the need and detector')
+      // console.timeEnd('Looking at the need and detector')
 
       // Or do we ignore this check because we are doing time/weather based stuff?
       // we check whether a place is sustained for a detector?
       console.time('Checking all the places for a need')
-      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
-        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
-        const doesMatchPredicate = applyDetector(affordanceSubsetToMatchForPlace, detector.variables, detector.rules);
+
+      if (PLACE_BASED_EXPERIENCE) {
+        _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
+          let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
+          let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
+          const doesMatchPredicate = applyDetector(affordanceSubsetToMatchForPlace, detector.variables, detector.rules);
+          if (doesMatchPredicate) {
+            if (matches[iid]) {
+              let place_needs = matches[iid];
+              place_needs.push([placeToMatch, needName, distInfo['distance']]);
+              matches[iid] = place_needs;
+            } else {
+              matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
+            }
+          }
+        });
+      }
+      // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
+      else {
+        const flatAffordances = flattenAffordanceDict(affordances);
+        const doesMatchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
-            place_needs.push([placeToMatch, needName, distInfo['distance']]);
+            place_needs.push([null, needName]);
             matches[iid] = place_needs;
           } else {
-            matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
+            matches[iid] = [[null, needName]];
           }
         }
-      });
+      }
       console.timeEnd('Checking all the places for a need')
       console.timeEnd('Checking a needName')
    });
