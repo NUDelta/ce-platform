@@ -154,8 +154,9 @@ export const matchAffordancesWithDetector = function (affordances, detectorUniqu
   if (typeof detector === 'undefined') {
     return false;
   }
-
-  return applyDetector(affordances, detector.variables, detector.rules);
+  console.time('applyDetector Whole');
+  const res = applyDetector(affordances, detector.variables, detector.rules);
+  console.timeEnd('applyDetector Whole');
 };
 
 /**

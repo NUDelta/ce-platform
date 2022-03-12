@@ -35,6 +35,7 @@ import {setIntersection} from "../../custom/arrayHelpers";
  *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
  */
 export const findMatchesForUser = (uid, affordances) => {
+  console.time('findMatchesForUser full')
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
@@ -47,8 +48,10 @@ export const findMatchesForUser = (uid, affordances) => {
   // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
+    console.time('Checking all needNames')
     _.forEach(needNames, (needName) => {
       serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
+      console.time('Checking all the places for a need')
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
         // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before placeSubsetAffordances`});
@@ -67,9 +70,12 @@ export const findMatchesForUser = (uid, affordances) => {
           }
         }
       });
+      console.timeEnd('Checking all the places for a need')
    });
+   console.timeEnd('Checking all needNames')
   });
 
+  console.timeEnd('findMatchesForUser full')
   return matches;
 };
 

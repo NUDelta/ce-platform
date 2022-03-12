@@ -165,6 +165,7 @@ export const clearAvailabilitiesForUser = (uid) => {
  * @param affordances {[string]} list of user's affordances as an array of key/values
  */
 export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
+  console.time('decomissionFromAssignmentsIfAppropriate full')
   let currentAssignments = Assignments.find({
     "needUserMaps.users": {
       $elemMatch: {
@@ -179,6 +180,7 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
   currentAssignments.forEach(assignment => {
     _.forEach(assignment.needUserMaps, needUserMap => {
 
+      console.time('decomissionFromAssignmentsIfAppropriate needUserMap')
       let matchPredicate = doesUserMatchNeed(
         uid,
         flatAffordances,
@@ -194,8 +196,10 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
           decommissionIfSustained.bind(null, uid, assignment._id, needUserMap.needName, delay),
           delay * 1000);
       }
+      console.timeEnd('decomissionFromAssignmentsIfAppropriate needUserMap')
     });
   });
+  console.timeEnd('decomissionFromAssignmentsIfAppropriate full')
 };
 
 /**
