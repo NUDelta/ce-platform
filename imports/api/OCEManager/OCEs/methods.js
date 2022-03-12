@@ -9,7 +9,6 @@ import {
   getPlaceKeys,
   applyDetector,
   onePlaceNotThesePlacesSets,
-  flattenAffordanceDict,
   placeSubsetAffordances
 } from "../../UserMonitor/detectors/methods";
 // import { createNewId } from '../../../startup/server/fixtures.js';

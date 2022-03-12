@@ -11,7 +11,7 @@ import {addEmptySubmissionsForNeed} from "../../OCEManager/OCEs/methods.js";
 
 import {_removeActiveIncidentFromUser} from "../../UserMonitor/users/methods";
 import {log, serverLog} from "../../logs";
-import {flattenAffordanceDict, applyDetector} from "../../UserMonitor/detectors/methods";
+import {placeSubsetAffordances, applyDetector} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
 
@@ -173,7 +173,11 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
     }
   });
 
-  let flatAffordances = flattenAffordanceDict(affordances);
+  // FIXME: hardcoded for no place detection
+  let [flatAffordances, distInfo] = placeSubsetAffordances(affordances, []);
+
+  // FIXME: returns an emtpy object, so obviously someone would be decommissioned.
+  // let flatAffordances = flattenAffordanceDict(affordances);
 
   // iterate over cursor
   currentAssignments.forEach(assignment => {
@@ -218,7 +222,11 @@ let decommissionIfSustained = (userId, incidentId, needName, detector, decommiss
   }
   let lastLocation = Locations.findOne({uid: userId});
   let nestedAffAfterDelay = lastLocation.affordances;
-  let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
+  // FIXME: hardcoded for no place detection
+  let [flatAffAfterDelay , distInfo] = placeSubsetAffordances(affordances, []);
+
+  // FIXME: likely returns an empty object, so obviously someone would be decommissioned
+  // let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
 
   const matchPredicateAfterDelay = applyDetector(flatAffAfterDelay, detector.variables, detector.rules);
   // Only remove after they do not match again after some decommission delay
