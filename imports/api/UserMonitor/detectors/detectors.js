@@ -18,17 +18,17 @@ export const Detectors = new Mongo.Collection('detectors');
     ]
 }
  */
-Schema.Detectors = new SimpleSchema({
-    description: {
-        type: String,
-        unique: true
-    },
-    rules: {
-        type: [String]
-    },
-    variables: {
-        type: [String]
-    }
-});
+// Schema.Detectors = new SimpleSchema({
+//     description: {
+//         type: String,
+//         unique: true
+//     },
+//     rules: {
+//         type: [String]
+//     },
+//     variables: {
+//         type: [String]
+//     }
+// });
 
-Detectors.attachSchema(Schema.Detectors);
+// Detectors.attachSchema(Schema.Detectors);
