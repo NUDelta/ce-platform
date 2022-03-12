@@ -63,6 +63,7 @@ export const findMatchesForUser = (uid, affordances) => {
 
         // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before doesUserMatchNeed`});
         console.time('doesUserMatchNeed wrapper')
+        // this function takes majority of time (2 ms of 2.1ms)
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
         console.timeEnd('doesUserMatchNeed wrapper')
 
@@ -130,13 +131,18 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
  * @returns {boolean} whether user matches need queried for
  */
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
+  console.time('quering that database getNeedFromIncident')
   let need = getNeedFromIncidentId(iid, needName);
+  console.timeEnd('quering that database getNeedFromIncident')
   if (!need) {
     // serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
     return false;
   } else {
     let detectorUniqueKey = need.situation.detector;
-    return matchAffordancesWithDetector(affordances, detectorUniqueKey);
+    console.time('matchAffordancesWithDetector')
+    res = matchAffordancesWithDetector(affordances, detectorUniqueKey);
+    console.timeEnd('matchAffordancesWithDetector')
+    return res
   }
 };
 
@@ -575,7 +581,9 @@ export const updateExperienceCollectionDocument = (eid, experience) => {
  * @returns {object} need object
  */
 export const getNeedFromIncidentId = (iid, needName) => {
+  console.time('getting Incidents')
   let incident = Incidents.findOne(iid);
+  console.timeEnd('getting Incidents')
   let output = undefined;
 
   if (!incident) {

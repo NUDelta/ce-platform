@@ -148,7 +148,9 @@ export const flattenAffordanceDict = function(nestedAff) {
  * @returns {Boolean} whether affordances match detector
  */
 export const matchAffordancesWithDetector = function (affordances, detectorUniqueKey) {
+  console.time('querying the Detectors')
   const detector = Detectors.findOne({ description : detectorUniqueKey });
+  console.timeEnd('querying the Detectors')
 
   // check if no detector for detectorUniqueKey exists, otherwise attempt to match affordances to detector
   if (typeof detector === 'undefined') {
