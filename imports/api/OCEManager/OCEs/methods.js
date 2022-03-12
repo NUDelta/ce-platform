@@ -49,17 +49,24 @@ export const findMatchesForUser = (uid, affordances) => {
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     console.time('Checking all needNames')
+    // approx six to twelve seconds
     _.forEach(needNames, (needName) => {
       serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
       console.time('Checking all the places for a need')
+      // approx half second on server
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
         // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before placeSubsetAffordances`});
+        console.time('placeSubsetAffordances')
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
+        console.timeEnd('placeSubsetAffordances')
 
         // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before doesUserMatchNeed`});
+        console.time('doesUserMatchNeed wrapper')
         let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
+        console.timeEnd('doesUserMatchNeed wrapper')
 
+        console.time('okay heres you')
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
@@ -69,6 +76,7 @@ export const findMatchesForUser = (uid, affordances) => {
             matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
           }
         }
+        console.timeEnd('okay heres you')
       });
       console.timeEnd('Checking all the places for a need')
    });
