@@ -4,7 +4,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { log } from '../../logs.js';
 import { Locations } from './locations.js';
 
-import { findMatchesForUser, getNeedDelay} from
+import { Incidents } from "../../OCEManager/OCEs/experiences";
+import { findMatchesForUser } from
     '../../OCEManager/OCEs/methods'
 import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
 import {
@@ -176,11 +177,8 @@ const sendToMatcher = (uid, affordances) => {
   let userCanParticipate = userIsAvailableToParticipate(uid);
 
   if (userCanParticipate) {
-
-    serverLog.call({message: `From sendToMatcher: uid = ${uid} has affordances ${JSON.stringify(affordances)}`});
     // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    // serverLog.call(`uid = ${uid} has availability for ${availabilityDictionary} in UserMonitor/locations/methods.js`)
     serverLog.call({message: `From sendToMatcher: uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)}`});
     // update availabilityDictionary of most recent location
     Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
@@ -188,13 +186,16 @@ const sendToMatcher = (uid, affordances) => {
     // get delays for each incident-need pair
     let needDelays = {};
     _.forEach(availabilityDictionary, (place_need_distance_s, iid) => {
+      const incident = Incidents.findOne(iid);
+
       // create empty need object for each iid
       needDelays[iid] = {};
 
       // find and add delays for each need
       _.forEach(place_need_distance_s, (individualPlace_individualNeed_individualDist) => {
         let individualNeed = individualPlace_individualNeed_individualDist[1];
-        needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
+        const need = incident.contributionTypes.find(contributionType => contributionType.needName === individualNeed);
+        needDelays[iid][individualNeed] = need.notificationDelay || 0;
       });
     });
 

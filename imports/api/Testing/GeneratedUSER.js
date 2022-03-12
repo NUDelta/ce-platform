@@ -6,7 +6,7 @@ export let USERS = {
     profile: {
       firstName: "Cindy",
       lastName: "Hu",
-      staticAffordances: { pair1: true },
+      staticAffordances: { pair1: true, betateser: true},
     },
   },
   yvan: {
@@ -16,7 +16,7 @@ export let USERS = {
     profile: {
       firstName: "Yvan",
       lastName: "Chu",
-      staticAffordances: { pair1: true },
+      staticAffordances: { pair1: true, betateser: true },
     },
   },
   ryan: {
@@ -26,7 +26,7 @@ export let USERS = {
     profile: {
       firstName: "Ryan",
       lastName: "Louie",
-      staticAffordances: { pair2: true },
+      staticAffordances: { pair2: true, betatester: true},
     },
   },
   jenny: {
@@ -36,7 +36,7 @@ export let USERS = {
     profile: {
       firstName: "Jenny",
       lastName: "Chang",
-      staticAffordances: { pair2: true },
+      staticAffordances: { pair2: true, betatester: true},
     },
   },
   haoqi: {

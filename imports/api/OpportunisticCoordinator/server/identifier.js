@@ -5,17 +5,17 @@ import {Assignments, Availability, ParticipatingNow} from "../databaseHelpers";
 import {Incidents} from "../../OCEManager/OCEs/experiences.js";
 import {Submissions} from "../../OCEManager/currentNeeds.js";
 import {Locations} from "../../UserMonitor/locations/locations";
+import {Detectors} from "../../UserMonitor/detectors/detectors";
 import {numUnfinishedNeeds} from "../../OCEManager/progressor";
 import {addEmptySubmissionsForNeed} from "../../OCEManager/OCEs/methods.js";
 
 import {_removeActiveIncidentFromUser} from "../../UserMonitor/users/methods";
-import {doesUserMatchNeed, getNeedDelay} from "../../OCEManager/OCEs/methods";
 import {log, serverLog} from "../../logs";
-import {flattenAffordanceDict} from "../../UserMonitor/detectors/methods";
+import {flattenAffordanceDict, applyDetector} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
 
-
+const util = require('util');
 export const getNeedObject = (iid, needName) => {
   let incident = Incidents.findOne(iid);
   if (incident) {
@@ -165,7 +165,6 @@ export const clearAvailabilitiesForUser = (uid) => {
  * @param affordances {[string]} list of user's affordances as an array of key/values
  */
 export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
-  console.time('decomissionFromAssignmentsIfAppropriate full')
   let currentAssignments = Assignments.find({
     "needUserMaps.users": {
       $elemMatch: {
@@ -178,28 +177,25 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
 
   // iterate over cursor
   currentAssignments.forEach(assignment => {
+    const iid = assignment._id;
+    const incident = Incidents.findOne(iid);
     _.forEach(assignment.needUserMaps, needUserMap => {
 
-      console.time('decomissionFromAssignmentsIfAppropriate needUserMap')
-      let matchPredicate = doesUserMatchNeed(
-        uid,
-        flatAffordances,
-        assignment._id,
-        needUserMap.needName
-      );
-
+      const needName = needUserMap.needName;
+      const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
+      const detectorUniqueKey = need.situation.detector;
+      const detector = Detectors.findOne({ description : detectorUniqueKey });
+      const matchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
       if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {
         // note: decommissionDelay == notificationDelay
-        let delay = getNeedDelay(assignment._id, needUserMap.needName);
+        const delay = need.notficationDelay;
 
         Meteor.setTimeout(
-          decommissionIfSustained.bind(null, uid, assignment._id, needUserMap.needName, delay),
+          decommissionIfSustained.bind(null, uid, iid, needName, detector, delay),
           delay * 1000);
       }
-      console.timeEnd('decomissionFromAssignmentsIfAppropriate needUserMap')
     });
   });
-  console.timeEnd('decomissionFromAssignmentsIfAppropriate full')
 };
 
 /**
@@ -208,7 +204,7 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
  * @param incidentId
  * @param needName
  */
-let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) => {
+let decommissionIfSustained = (userId, incidentId, needName, detector, decommissionDelay) => {
   serverLog.call({message: `uid = ${userId} decomissionIfSustained | start`});
   let user = Meteor.users.findOne({_id: userId});
   if (!user) {
@@ -224,8 +220,7 @@ let decommissionIfSustained = (userId, incidentId, needName, decommissionDelay) 
   let nestedAffAfterDelay = lastLocation.affordances;
   let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
 
-  let matchPredicateAfterDelay = doesUserMatchNeed(userId, flatAffAfterDelay, incidentId, needName);
-  serverLog.call({message: `uid = ${userId} decomissionIfSustained | after doesUserMatchNeed`});
+  const matchPredicateAfterDelay = applyDetector(flatAffAfterDelay, detector.variables, detector.rules);
   // Only remove after they do not match again after some decommission delay
   if (!matchPredicateAfterDelay) {
     log.cerebro(`Removing user uid = ${userId} username = ${user.username} from [${incidentId},${needName}] after ${decommissionDelay} sec`);

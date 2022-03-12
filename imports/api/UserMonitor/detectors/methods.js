@@ -169,7 +169,7 @@ export const matchAffordancesWithDetector = function (affordances, detectorUniqu
  * @param {[String]} rules - context rules as Javascript logical operations
  * @return {Boolean} doesUserMatchSituation
  */
-const applyDetector = function (userAffordances, varDecl, rules) {
+export const applyDetector = function (userAffordances, varDecl, rules) {
   let affordancesAsJavascriptVars = keyvalues2vardecl(userAffordances);
   let mergedAffordancesWithRules = varDecl.concat(affordancesAsJavascriptVars)
     .concat(rules)

@@ -83,9 +83,6 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
       if (findContributionsForNeed) {
         let strategyModule = new WhoToAssignToNeed(incidentMapping._id, needUserMap);
         let usersToAssignToNeed = strategyModule.decide(incidentMapping._id, needUserMap);
-        if (CONFIG.DEBUG) {
-          serverLog.call(`---- usersToAssignToNeed: ${util.inspect(usersToAssignToNeed, false, null)}`);
-        }
         incidentsWithUsersToRun[incidentMapping._id][needUserMap.needName] = usersToAssignToNeed;
       }
     });

@@ -7,18 +7,20 @@ import {Schema} from '../../schema.js';
 import {getUnfinishedNeedNames} from '../progressorHelper';
 import {
   getPlaceKeys,
-  matchAffordancesWithDetector,
+  applyDetector,
   onePlaceNotThesePlacesSets,
   placeSubsetAffordances
 } from "../../UserMonitor/detectors/methods";
 // import { createNewId } from '../../../startup/server/fixtures.js';
 
 import {Incidents} from './experiences';
+import {Detectors} from '../../UserMonitor/detectors/detectors';
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
 import {Submissions} from '../../OCEManager/currentNeeds';
 import {serverLog} from "../../logs";
 import {setIntersection} from "../../custom/arrayHelpers";
 
+const util = require('util');
 /**
  * Loops through all unmet needs and returns all needs a user matches with.
  *
@@ -49,25 +51,21 @@ export const findMatchesForUser = (uid, affordances) => {
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     console.time('Checking all needNames')
-    // approx six to twelve seconds
+    const incident = Incidents.findOne(iid);
+    // old time: approx six to twelve seconds on server
     _.forEach(needNames, (needName) => {
       serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}`});
       console.time('Checking all the places for a need')
-      // approx half second on server
+      // old time: approx half second on server
+
+      const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
+      const detectorUniqueKey = need.situation.detector;
+      const detector = Detectors.findOne({ description : detectorUniqueKey });
+
       _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
         let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before placeSubsetAffordances`});
-        console.time('placeSubsetAffordances')
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
-        console.timeEnd('placeSubsetAffordances')
-
-        // serverLog.call({message: ` .     For findMatchesForUser, uid = ${uid}, needName = ${needName}| before doesUserMatchNeed`});
-        console.time('doesUserMatchNeed wrapper')
-        // this function takes majority of time (2 ms of 2.1ms)
-        let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
-        console.timeEnd('doesUserMatchNeed wrapper')
-
-        console.time('okay heres you')
+        const doesMatchPredicate = applyDetector(affordanceSubsetToMatchForPlace, detector.variables, detector.rules);
         if (doesMatchPredicate) {
           if (matches[iid]) {
             let place_needs = matches[iid];
@@ -77,7 +75,6 @@ export const findMatchesForUser = (uid, affordances) => {
             matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
           }
         }
-        console.timeEnd('okay heres you')
       });
       console.timeEnd('Checking all the places for a need')
    });
@@ -118,33 +115,6 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
 };
 
 
-
-// TODO: ryan do this plz.
-/**
- * Checks if a user matches a need.
- * Match determined using AA/Affinder to check what affordances a user has and determine if it matches the need.
- *
- * @param uid {string} uid of user
- * @param affordances {object} dictionary of user's affordances
- * @param iid {string} iid of incident to determine matching
- * @param needName {string} name of need to determine match for
- * @returns {boolean} whether user matches need queried for
- */
-export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
-  console.time('quering that database getNeedFromIncident')
-  let need = getNeedFromIncidentId(iid, needName);
-  console.timeEnd('quering that database getNeedFromIncident')
-  if (!need) {
-    // serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
-    return false;
-  } else {
-    let detectorUniqueKey = need.situation.detector;
-    console.time('matchAffordancesWithDetector')
-    res = matchAffordancesWithDetector(affordances, detectorUniqueKey);
-    console.timeEnd('matchAffordancesWithDetector')
-    return res
-  }
-};
 
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({
@@ -571,59 +541,4 @@ export const updateExperienceCollectionDocument = (eid, experience) => {
     });
 
   return Experiences.findOne({_id: eid});
-};
-
-/**
- * Finds the need dictionary in an incident given the need's name
- *
- * @param iid {string} incident id we are looking up a need in
- * @param needName {string} name of the need we are looking up
- * @returns {object} need object
- */
-export const getNeedFromIncidentId = (iid, needName) => {
-  console.time('getting Incidents')
-  let incident = Incidents.findOne(iid);
-  console.timeEnd('getting Incidents')
-  let output = undefined;
-
-  if (!incident) {
-    console.error(`Error in getNeedFromIncidentId: Could not find incident of iid = ${iid}`)
-    return false;
-  }
-
-  _.forEach(incident.contributionTypes, (need) => {
-    if (need.needName === needName) {
-      output = need;
-      return false;
-    }
-
-    // check if found
-    if (typeof output === 'undefined') {
-      return false;
-    }
-  });
-
-  return output;
-};
-
-/**
- * Finds and returns a need's notificationDelay given a iid and needName
- *
- * @param iid {string} incident id we are looking up a need in
- * @param needName {string} name of the need we are looking up
- * @returns {number} seconds to delay execution for the experience
- */
-export const getNeedDelay = (iid, needName) => {
-  let incident = Incidents.findOne(iid);
-  let notificationDelayOutput = 0; // default to no delay if notificationDelay is not found
-
-  _.forEach(incident.contributionTypes, (need) => {
-    // set notification delay and terminate for loop early if need names match
-    if (need.needName === needName) {
-      notificationDelayOutput = need.notificationDelay;
-      return false;
-    }
-  });
-
-  return notificationDelayOutput;
 };
