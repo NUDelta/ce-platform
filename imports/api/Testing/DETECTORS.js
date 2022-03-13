@@ -1146,4 +1146,7 @@ let DETECTORS_HARDCODED = {
   }
 };
 
-export let DETECTORS = Object.assign({}, DETECTORS_HARDCODED, DETECTORS_GENERATED);
+export let DETECTORS = Object.assign({},
+  DETECTORS_GENERATED,
+  // DETECTORS_HARDCODED,
+);

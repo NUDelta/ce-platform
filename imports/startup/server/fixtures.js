@@ -17,6 +17,7 @@ import { createIncidentFromExperience, startRunningIncident } from "../../api/OC
 import { findUserByUsername } from '../../api/UserMonitor/users/methods';
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 import { onTimeElapsedUpdateTimeWeatherContext } from '../../api/UserMonitor/locations/methods';
+import { DetectorsCache } from '../../api/UserMonitor/detectors/server/detectorsCache.js';
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
@@ -149,6 +150,7 @@ function createTestData(){
   // add detectors
   Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
     Detectors.insert(value);
+    DetectorsCache.insert(value);
   });
   log.info(`Populated ${ Detectors.find().count() } detectors`);
 

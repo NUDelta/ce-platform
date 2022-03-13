@@ -15,6 +15,7 @@ import {
 
 import {Incidents} from './experiences';
 import {Detectors} from '../../UserMonitor/detectors/detectors';
+import {DetectorsCache} from '../../UserMonitor/detectors/server/detectorsCache'
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
 import {Submissions} from '../../OCEManager/currentNeeds';
 import {setIntersection} from "../../custom/arrayHelpers";
@@ -78,7 +79,7 @@ export const findMatchesForUser = (uid, affordances) => {
       console.time('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
-      const detector = Detectors.findOne({ description : detectorUniqueKey });
+      const detector = DetectorsCache.findOne({ description : detectorUniqueKey });
       console.timeEnd('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
 
       // Or do we ignore this check because we are doing time/weather based stuff?

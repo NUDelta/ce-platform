@@ -14,6 +14,7 @@ import {log, serverLog} from "../../logs";
 import {placeSubsetAffordances, applyDetector} from "../../UserMonitor/detectors/methods";
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
+import { DetectorsCache } from "../../UserMonitor/detectors/server/detectorsCache";
 
 const util = require('util');
 export const getNeedObject = (iid, needName) => {
@@ -188,7 +189,7 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
       const needName = needUserMap.needName;
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
-      const detector = Detectors.findOne({ description : detectorUniqueKey });
+      const detector = DetectorsCache.findOne({ description : detectorUniqueKey });
       const matchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
       if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {
         // note: decommissionDelay == notificationDelay

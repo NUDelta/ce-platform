@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 
 import { Submissions } from "../OCEManager/currentNeeds";
 import { Detectors } from "../UserMonitor/detectors/detectors";
+import { DetectorsCache } from "../UserMonitor/detectors/server/detectorsCache";
 import { Experiences, Incidents } from "../OCEManager/OCEs/experiences";
 
 import { CONSTANTS } from "./testingconstants";
@@ -91,6 +92,18 @@ Meteor.methods({
       }
     );
     console.log(`Method call to "upsertDetector"! numberAffected: ${numberAffected}, insertedId: ${insertedId}`);
+    let {numberAffectedCache, insertedIdCache} = DetectorsCache.upsert({
+        // Selector
+        // Note: Don't select on _id, since _id in CONSTANTS.DETECTORS changes from deployments cuz of Random.id()
+        description: CONSTANTS.DETECTORS[name].description,
+      }, {
+        // Modifier
+        $set : {
+          variables: CONSTANTS.DETECTORS[name].variables,
+          rules: CONSTANTS.DETECTORS[name].rules
+        }
+      }
+    );
   }
 });
 
