@@ -113,9 +113,11 @@ class AnytimeStrategizer {
       return true;
     }
     const currentBucketedNeeds = this.defineSequentialBuckets();
+    console.log("currentBucketedNeeds", currentBucketedNeeds);
     // which bucket is this need in?
     const bucketIndex = currentBucketedNeeds.findIndex(bucket => bucket.includes(needUserMap.needName));
     // does this bucket have other completed needs?
+    console.log("currentBucketedNeeds[bucketIndex]", currentBucketedNeeds[bucketIndex]);
     const bucketHasCompletedNeeds = currentBucketedNeeds[bucketIndex].map(needName => {
       let needWasCompleted = Submissions.find({
         iid: this.iid,
