@@ -101,7 +101,7 @@ const createMomentsOfTheHourTimelapse = () => {
 
   apiDefinition['contributionTypes'] = contributionTypes;
   apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 3
+    "startingBuckets": 9
   };
   return apiDefinition;
 }

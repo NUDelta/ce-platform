@@ -113,11 +113,9 @@ class AnytimeStrategizer {
       return true;
     }
     const currentBucketedNeeds = this.defineSequentialBuckets();
-    console.log("currentBucketedNeeds", currentBucketedNeeds);
     // which bucket is this need in?
     const bucketIndex = currentBucketedNeeds.findIndex(bucket => bucket.includes(needUserMap.needName));
     // does this bucket have other completed needs?
-    console.log("currentBucketedNeeds[bucketIndex]", currentBucketedNeeds[bucketIndex]);
     const bucketHasCompletedNeeds = currentBucketedNeeds[bucketIndex].map(needName => {
       let needWasCompleted = Submissions.find({
         iid: this.iid,
@@ -151,17 +149,22 @@ class AnytimeStrategizer {
     const needs = this.incident.contributionTypes.map(contributionType => {
       return contributionType.needName;
     })
-    let bucketSize = Math.floor(needs.length / numberBuckets);
+    let divisor = needs.length / numberBuckets;
+    let bucketSize = Math.floor(divisor)
     let lastBucketSize = bucketSize;
     lastBucketSize += needs.length % bucketSize;
+    let bucketLimits = [];
+    for (let b = 0.0; b < needs.length; b += divisor) {
+      bucketLimits.push(Math.floor(b));
+    }
     let bucketedNeeds = [];
     for (let i = 0; i < numberBuckets; i++) {
       if (i === numberBuckets - 1) {
         bucketedNeeds.push(
-          needs.slice(i*bucketSize, i*bucketSize + lastBucketSize))
+          needs.slice(bucketLimits[i], needs.length));
       } else {
         bucketedNeeds.push(
-          needs.slice(i*bucketSize, (i+1)*bucketSize))
+          needs.slice(bucketLimits[i], bucketLimits[i+1]));
       }
     }
     return bucketedNeeds;
