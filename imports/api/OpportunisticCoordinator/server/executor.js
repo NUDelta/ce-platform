@@ -91,7 +91,11 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       // let uidsNotNotifiedRecently = newUsersMeta
       //   .filter((userMeta) => {!userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid))})
       //   .map((userMeta) => {userMeta.uid});
-      let route = "/";
+
+      // FIXME(rlouie): should dynamically adjust based on this sunset experience, not the detectorUniqueKey
+      // for now, we will give them A WORKING LINK to participate in the sunset
+      // let route = "/";
+      let route = `/apicustomdynamic/${iid}/${detectorUniqueKey}/`;
 
       // Try to notify, based on if the current need has need-specific notification info
       let needObject = incident.contributionTypes.find((need) => need.needName === needName);
