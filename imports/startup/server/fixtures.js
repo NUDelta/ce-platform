@@ -54,6 +54,13 @@ Meteor.startup(() => {
 // In chrome browser console...
 // Meteor.call('freshDatabase')
 // Meteor.call('createTestUsers')
+
+// ~~~ A typical workflow in production if you want people keep their user accounts
+// Meteor.call('clearDatabaseProd')
+// ~~~ And you'll want to clear their submissions too...
+// Meteor.call('clearSubmission')
+// ~~~ And maybe you'll want to then create all new experiences again. Dont worry - if users are already in the database. This will run
+// Meteor.call('createTestUsers')
 Meteor.methods({
   createTestUsers(){
     createTestData();
@@ -142,11 +149,14 @@ function createTestExperiences(){
 
 function createTestData(){
   // add test users
-  Object.values(CONSTANTS.USERS).forEach(function (value) {
-    Accounts.createUser(value)
-  });
-  log.info(`Populated ${ Meteor.users.find().count() } accounts`);
-
+  try {
+    Object.values(CONSTANTS.USERS).forEach(function (value) {
+      Accounts.createUser(value)
+    });
+    log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+  } catch (e) {
+    log.error("Error populating accounts: " + e);
+  }
   // add detectors
   Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
     Detectors.insert(value);
