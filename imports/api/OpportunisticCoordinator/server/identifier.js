@@ -223,7 +223,7 @@ let decommissionIfSustained = (userId, incidentId, needName, detector, decommiss
   let lastLocation = Locations.findOne({uid: userId});
   let nestedAffAfterDelay = lastLocation.affordances;
   // FIXME: hardcoded for no place detection
-  let [flatAffAfterDelay , distInfo] = placeSubsetAffordances(affordances, []);
+  let [flatAffAfterDelay , distInfo] = placeSubsetAffordances(nestedAffAfterDelay, []);
 
   // FIXME: likely returns an empty object, so obviously someone would be decommissioned
   // let flatAffAfterDelay = flattenAffordanceDict(nestedAffAfterDelay);
