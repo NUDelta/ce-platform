@@ -977,5 +977,11 @@ Template.sunset.helpers({
     return completedSubmissions.sort((e1, e2) => {
       return orderedNeedNames.indexOf(e1) - orderedNeedNames.indexOf(e2);
     });
-  }
+  },
+  getUserById(users_arr, uid) {
+    let user = users_arr.find(function(x) {
+      return x._id === uid;
+    });
+    return user;
+  },
 })

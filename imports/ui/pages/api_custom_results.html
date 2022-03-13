@@ -1010,10 +1010,14 @@
   <div class="slideshow">
     {{#each sub in orderedSunsetSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
+        <h3>sub.needName</h3>
         <img src="{{sub.content.proof}}" style="width:100%">
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->
         <br>
         <!-- Sunset from ({{image.lat}}, {{image.lng}}) -->
+        {{#let user=(getUserById users sub.uid)}}
+          {{> displayTopToBottom_Avatar_FullName user=user avatar=(userAvatarImg avatars user) }}
+        {{/let}}
       </div>
     {{/each}}
   </div>
