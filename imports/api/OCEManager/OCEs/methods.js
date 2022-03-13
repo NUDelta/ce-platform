@@ -19,6 +19,7 @@ import {DetectorsCache} from '../../UserMonitor/detectors/server/detectorsCache'
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
 import {Submissions} from '../../OCEManager/currentNeeds';
 import {setIntersection} from "../../custom/arrayHelpers";
+import { IncidentsCache } from './server/experiencesCache.js';
 
 const util = require('util');
 /**
@@ -60,7 +61,7 @@ export const findMatchesForUser = (uid, affordances) => {
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     console.time(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
     console.time('querying incidents | uid: ' + uid + ', iid: ' + iid);
-    const incident = Incidents.findOne(iid);
+    const incident = IncidentsCache.findOne(iid);
     console.timeEnd('querying incidents | uid: ' + uid + ', iid: ' + iid);
 
     // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
@@ -541,6 +542,7 @@ export const createIncidentFromExperience = (experience) => {
     } else {
     }
   });
+  IncidentsCache.insert(incident);
 
   return incident;
 };
@@ -559,6 +561,12 @@ export const updateIncidentFromExperience = (eid, experience) => {
   };
 
   Incidents.update(
+    {
+      eid: eid
+    }, {
+      $set: incident
+    });
+  IncidentsCache.update(
     {
       eid: eid
     }, {
