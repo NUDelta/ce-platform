@@ -36,7 +36,7 @@ const util = require('util');
  *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
  */
 export const findMatchesForUser = (uid, affordances) => {
-  console.time('findMatchesForUser full')
+  console.time(`findMatchesForUser full | uid: ${uid}`);
   // console.time('findMatchesForUser setup')
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
@@ -57,8 +57,10 @@ export const findMatchesForUser = (uid, affordances) => {
   // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
-    // console.time('Checking all needNames')
+    console.time(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
+    console.time('querying incidents | uid: ' + uid + ', iid: ' + iid);
     const incident = Incidents.findOne(iid);
+    console.timeEnd('querying incidents | uid: ' + uid + ', iid: ' + iid);
 
     // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
     // const experiences = Experiences.findOne(incident.eid, {fields: {_id: 1, anytimeSequential: 1}});
@@ -69,21 +71,21 @@ export const findMatchesForUser = (uid, affordances) => {
     // old time: approx six to twelve seconds on server
     // new time: ~1 - 7 seconds, 15 seconds?!
     _.forEach(needNames, (needName) => {
-      // console.time('Checking a needName')
+      console.time(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
       // old time: approx half second on server
       // new time: still about half a second...
 
-      // console.time('Looking at the need and detector')
+      console.time('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
       const detector = Detectors.findOne({ description : detectorUniqueKey });
-      // console.timeEnd('Looking at the need and detector')
+      console.timeEnd('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
 
       // Or do we ignore this check because we are doing time/weather based stuff?
       // we check whether a place is sustained for a detector?
-      // console.time('Checking all the places for a need')
 
       if (PLACE_BASED_EXPERIENCE) {
+        console.time('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
         _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
           let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
           let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
@@ -98,9 +100,11 @@ export const findMatchesForUser = (uid, affordances) => {
             }
           }
         });
+        console.timeEnd('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       }
       // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
       else {
+        console.time('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
         // FIXME: this is a horribly named function, but somehow by doing the JSON stringify and parse it works
         // might be just the format of the affordances object that is passed as input
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, []);
@@ -114,14 +118,13 @@ export const findMatchesForUser = (uid, affordances) => {
             matches[iid] = [[null, needName]];
           }
         }
+        console.timeEnd('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       }
-      // console.timeEnd('Checking all the places for a need')
-      // console.timeEnd('Checking a needName')
-   });
-  //  console.timeEnd('Checking all needNames')
+      console.timeEnd(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
+    });
+    console.timeEnd(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
   });
-
-  console.timeEnd('findMatchesForUser full')
+  console.timeEnd(`findMatchesForUser full | uid: ${uid}`);
   return matches;
 };
 

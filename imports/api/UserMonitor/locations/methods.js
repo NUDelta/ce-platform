@@ -157,10 +157,10 @@ const coordinateUsersToNeeds = (uid, affordances) => {
   });
 
 
-  serverLog.call({message: `From coordinateUsersToNeeds: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
-  console.log(util.inspect(sharedAffs, {showHidden: false, depth: null}));
+  // serverLog.call({message: `From coordinateUsersToNeeds: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
+  // console.log(util.inspect(sharedAffs, {showHidden: false, depth: null}));
   decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
-  serverLog.call({message: `After DecomissionFromAssignment: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
+  // serverLog.call({message: `After DecomissionFromAssignment: uid = ${uid} has affordances ${JSON.stringify(sharedAffs)}`});
   sendToMatcher(uid, sharedAffs);
 };
 
@@ -179,7 +179,7 @@ const sendToMatcher = (uid, affordances) => {
   if (userCanParticipate) {
     // get availabilities containing iid/need/place/distance information
     let availabilityDictionary = findMatchesForUser(uid, affordances);
-    serverLog.call({message: `From sendToMatcher: uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)}`});
+    // serverLog.call({message: `From sendToMatcher: uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)}`});
     // update availabilityDictionary of most recent location
     Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
 
