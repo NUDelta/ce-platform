@@ -38,8 +38,8 @@ const util = require('util');
  *    e.g., { iid : [ (place1, needName1), (place2, needName1), (place3, needName2), ... ], ... }
  */
 export const findMatchesForUser = (uid, affordances) => {
-  console.time(`findMatchesForUser full | uid: ${uid}`);
-  // console.time('findMatchesForUser setup')
+  // console.time.(`findMatchesForUser full | uid: ${uid}`);
+  // // console.time.('findMatchesForUser setup')
   let matches = {};
   let unfinishedNeeds = getUnfinishedNeedNames();
 
@@ -52,21 +52,21 @@ export const findMatchesForUser = (uid, affordances) => {
     let placeKeys = getPlaceKeys(affordances);
     let currentPlace_notThesePlaces = onePlaceNotThesePlacesSets(placeKeys);
   }
-  // console.timeEnd('findMatchesForUser setup')
+  // // console.time.End('findMatchesForUser setup')
 
   //console.log('unfinishedNeeds', unfinishedNeeds);
 
   // constructing matches to look like {iid : [ (place, needName, distance), ... ], ... }
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
-    console.time(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
-    console.time('querying incidents | uid: ' + uid + ', iid: ' + iid);
+    // console.time.(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
+    // console.time.('querying incidents | uid: ' + uid + ', iid: ' + iid);
     let incident = IncidentsCache.findOne(iid);
     if (!incident) {
       incident = Incidents.findOne(iid)
-      IncidentsCache.insert(incident);
+      IncidentsCache.insert(incident, (err) => { if (err) { console.log('error ', err); } });
     }
-    console.timeEnd('querying incidents | uid: ' + uid + ', iid: ' + iid);
+    // console.time.End('querying incidents | uid: ' + uid + ', iid: ' + iid);
 
     // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
     // const experiences = Experiences.findOne(incident.eid, {fields: {_id: 1, anytimeSequential: 1}});
@@ -77,25 +77,25 @@ export const findMatchesForUser = (uid, affordances) => {
     // old time: approx six to twelve seconds on server
     // new time: ~1 - 7 seconds, 15 seconds?!
     _.forEach(needNames, (needName) => {
-      console.time(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
+      // console.time.(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
       // old time: approx half second on server
       // new time: still about half a second...
 
-      console.time('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+      // console.time.('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
       let detector = DetectorsCache.findOne({ description : detectorUniqueKey });
-      if (detector === undefined || detector === null) {
+      if (!detector) {
         detector = Detectors.findOne({ description : detectorUniqueKey });
-        DetectorsCache.insert(detector)
+        DetectorsCache.insert(detector, (err) => { if (err) { console.log('error ', err) }});
       }
-      console.timeEnd('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+      // console.time.End('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
 
       // Or do we ignore this check because we are doing time/weather based stuff?
       // we check whether a place is sustained for a detector?
 
       if (PLACE_BASED_EXPERIENCE) {
-        console.time('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+        // console.time.('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
         _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
           let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
           let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
@@ -110,11 +110,11 @@ export const findMatchesForUser = (uid, affordances) => {
             }
           }
         });
-        console.timeEnd('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+        // console.time.End('Checking all the places for a need | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       }
       // ~~~ If the need is not a place-based need, dont even do the whole placesSustained
       else {
-        console.time('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+        // console.time.('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
         // FIXME: this is a horribly named function, but somehow by doing the JSON stringify and parse it works
         // might be just the format of the affordances object that is passed as input
         let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, []);
@@ -128,13 +128,13 @@ export const findMatchesForUser = (uid, affordances) => {
             matches[iid] = [[null, needName]];
           }
         }
-        console.timeEnd('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
+        // console.time.End('applying non place detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       }
-      console.timeEnd(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
+      // console.time.End(`Checking a needName | uid: ${uid}, iid: ${iid}, needName: ${needName}`);
     });
-    console.timeEnd(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
+    // console.time.End(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
   });
-  console.timeEnd(`findMatchesForUser full | uid: ${uid}`);
+  // console.time.End(`findMatchesForUser full | uid: ${uid}`);
   return matches;
 };
 
@@ -538,6 +538,8 @@ export const createIncidentFromExperience = (experience) => {
   // need = createNewId("i", need)
   let incident = {
     // _id: need,
+    name: experience.name,
+    notificationText: experience.notificationText,
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
@@ -551,7 +553,7 @@ export const createIncidentFromExperience = (experience) => {
     } else {
     }
   });
-  IncidentsCache.insert(incident);
+  IncidentsCache.insert(incident, (err) => { if (err) { console.log('error,', err); } });
 
   return incident;
 };
@@ -582,7 +584,7 @@ export const updateIncidentFromExperience = (eid, experience) => {
       eid: eid
     }, {
       $set: incident
-    });
+    }, (err) => { if (err) {console.log('error,', err); } });
 
   return Incidents.findOne({eid: eid});
 };

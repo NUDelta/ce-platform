@@ -182,23 +182,25 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
   // let flatAffordances = flattenAffordanceDict(affordances);
 
   // iterate over cursor
+  // console.log('currentAssignments.length', currentAssignments.count());
   currentAssignments.forEach(assignment => {
     const iid = assignment._id;
     let incident = IncidentsCache.findOne(iid);
     if (!incident) {
       incident = Incidents.findOne(iid)
-      IncidentsCache.insert(incident);
+      IncidentsCache.insert(incident, (err) => { if (err) { console.log('error ', err) }});
     }
 
+    // console.log('assignment.needUserMaps', assignment.needUserMaps.length);
     _.forEach(assignment.needUserMaps, needUserMap => {
 
       const needName = needUserMap.needName;
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
-      const detector = DetectorsCache.findOne({ description : detectorUniqueKey });
+      let detector = DetectorsCache.findOne({ description : detectorUniqueKey });
       if (!detector) {
         detector = Detectors.findOne({ description : detectorUniqueKey });
-        DetectorsCache.insert(detector)
+        DetectorsCache.insert(detector, (err) => {if (err) { console.log('error ', err) }});
       }
       const matchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
       if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {

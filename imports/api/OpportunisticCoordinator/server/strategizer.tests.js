@@ -31,6 +31,7 @@ describe('test checkIfThreshold. Single Need, Single UID; allowRepeatContributio
 
     Incidents.insert({
       _id: incident_id,
+      name: 'Test Experience Name',
       eid: eid,
       callbacks: null, // dont need callbacks
       contributionTypes: [
@@ -152,6 +153,7 @@ describe('test checkIfThreshold; Single Need, Single UID; allowRepeatContributio
 
     Incidents.insert({
       _id: incident_id,
+      name: 'Test Experience Name',
       eid: eid,
       callbacks: null, // dont need callbacks
       contributionTypes: [
@@ -299,6 +301,7 @@ describe('Half Half Rainy Need - with [userA, userB] matching the requirements o
     halfhalfNeed2.needName = needName2;
     Incidents.insert({
       _id: incident_id,
+      name: 'Test Experience Name',
       eid: eid,
       callbacks: null, // dont need callbacks
       contributionTypes: [
@@ -448,6 +451,7 @@ describe('Dynamic Loading of Exact Participate Need - needAggregator', () => {
 
     Incidents.insert({
       _id: incident_id,
+      name: 'Test Experience Name',
       eid: eid,
       callbacks: null, // dont need callbacks
       contributionTypes: [

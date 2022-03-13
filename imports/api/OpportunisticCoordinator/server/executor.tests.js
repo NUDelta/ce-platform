@@ -60,6 +60,7 @@ describe('Executor - Half Half Need when User is Assigned to "Need 1" and "Need 
     halfhalfNeed2.needName = needName2;
     Incidents.insert({
       _id: incident_id,
+      name: 'Test Experience Name',
       eid: eid,
       callbacks: null, // dont need callbacks
       contributionTypes: [

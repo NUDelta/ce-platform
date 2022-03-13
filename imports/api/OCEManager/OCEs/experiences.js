@@ -172,6 +172,14 @@ Schema.Incident = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true
   },
+  name: {
+    type: String,
+    label: 'Experience name',
+  },
+  notificationText: {
+    type: String,
+    optional: true
+  },
   eid: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,

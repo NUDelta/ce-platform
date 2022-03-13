@@ -98,7 +98,7 @@ class AnytimeStrategizer {
     let incident = IncidentsCache.findOne(this.iid);
     if (!incident) {
       incident = Incidents.findOne(this.iid)
-      IncidentsCache.insert(incident);
+      IncidentsCache.insert(incident, (err) => { if (err) { console.log('error,', err); } });
     }
     this.incident = incident;
     this.need = getNeedObject(this.iid, this.needName);
@@ -193,7 +193,7 @@ class WhoToAssignToNeed {
     let incident = IncidentsCache.findOne(this.iid);
     if (!incident) {
       incident = Incidents.findOne(this.iid)
-      IncidentsCache.insert(incident);
+      IncidentsCache.insert(incident, (err) => { if (err) { console.log('error,', err); } });
     }
     this.incident = incident;
     this.need = getNeedObject(this.iid, this.needName);

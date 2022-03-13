@@ -39,14 +39,14 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
     let incident = IncidentsCache.findOne(iid);
     if (!incident) {
-      incident = Incidents.findOne(iid)
-      IncidentsCache.insert(incident);
+      incident = Incidents.findOne(iid);
+      IncidentsCache.insert(incident, (err) => { if (err) { console.log('error ', err); } });
     }
 
     // FIXME(rlouie): rewrite to use ExperiencesCache when notifying if this gets called too much
-    console.time('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
-    let experience = Experiences.findOne(incident.eid);
-    console.timeEnd('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
+    // console.time('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
+    // let experience = Experiences.findOne(incident.eid);
+    // console.timeEnd('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
 
     // { [detectorUniqueKey]: [need1, ...], ...}
     let needNamesBinnedByDetector = needAggregator(incident);
@@ -87,9 +87,10 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
-      let uidsNotNotifiedRecently = newUsersMeta
-        .filter((userMeta) => {!userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid))})
-        .map((userMeta) => {userMeta.uid});
+      let uidsNotNotifiedRecently = newUsersMeta.map(userMeta => userMeta.uid);
+      // let uidsNotNotifiedRecently = newUsersMeta
+      //   .filter((userMeta) => {!userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid))})
+      //   .map((userMeta) => {userMeta.uid});
       let route = "/";
 
       // Try to notify, based on if the current need has need-specific notification info
@@ -99,9 +100,9 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
           needObject.notificationText, route);
       }
       // Try to notify, based on experience-level notification info
-      else if (experience.name && experience.notificationText) {
-        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-          experience.notificationText, route);
+      else if (incident.name && incident.notificationText) {
+        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${incident.name}"!`,
+          incident.notificationText, route);
       }
       // Fail to notify, because these parameters are not defined
       else {
@@ -115,7 +116,7 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
           iid: iid,
           needName: needName,
           timestamp: Date.now()
-        });
+        }, (err) => { if (err) { console.log ('error ', err); } });
       });
     });
   });

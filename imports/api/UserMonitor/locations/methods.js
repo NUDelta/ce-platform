@@ -179,6 +179,7 @@ const sendToMatcher = (uid, affordances) => {
 
   if (userCanParticipate) {
     // get availabilities containing iid/need/place/distance information
+    // console.time('findMatchesForUser | ' + uid)
     let availabilityDictionary = findMatchesForUser(uid, affordances);
     // serverLog.call({message: `From sendToMatcher: uid = ${uid} has availability for ${JSON.stringify(availabilityDictionary)}`});
     // update availabilityDictionary of most recent location
@@ -190,7 +191,7 @@ const sendToMatcher = (uid, affordances) => {
       let incident = IncidentsCache.findOne(iid);
       if (!incident) {
         incident = Incidents.findOne(iid)
-        IncidentsCache.insert(incident);
+        IncidentsCache.insert(incident, (err) => { if (err) { console.log('error,', err); } });
       }
 
       // create empty need object for each iid
