@@ -190,7 +190,17 @@ Schema.Incident = new SimpleSchema({
     type: Boolean,
     optional: true,
     defaultValue: true
-  }
+  },
+  anytimeSequential: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  repeatContributionsToExperienceAfterN: {
+    type: Number,
+    optional: true,
+    defaultValue: 0
+  },
 });
 
 Incidents.attachSchema(Schema.Incident);

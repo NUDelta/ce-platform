@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { Experiences } from "../../OCEManager/OCEs/experiences";
 import { Incidents } from "../../OCEManager/OCEs/experiences";
 import { Locations } from "../../UserMonitor/locations/locations";
+import { IncidentsCache } from "../../OCEManager/OCEs/server/experiencesCache";
 
 import { notifyForParticipating } from "./noticationMethods";
 import { adminUpdatesForAddingUserToIncident, updateAvailability } from "./identifier";
@@ -36,8 +37,16 @@ import { CONFIG } from "../../config";
 export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   // admin updates for all incidents and users
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
-    let incident = Incidents.findOne(iid);
+    let incident = IncidentsCache.findOne(iid);
+    if (!incident) {
+      incident = Incidents.findOne(iid)
+      IncidentsCache.insert(incident);
+    }
+
+    // FIXME(rlouie): rewrite to use ExperiencesCache when notifying if this gets called too much
+    console.time('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
     let experience = Experiences.findOne(incident.eid);
+    console.timeEnd('query Experiences in runNeedsWithThresholdMet | iid ' + iid);
 
     // { [detectorUniqueKey]: [need1, ...], ...}
     let needNamesBinnedByDetector = needAggregator(incident);

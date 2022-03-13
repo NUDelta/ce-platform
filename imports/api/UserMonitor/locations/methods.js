@@ -17,6 +17,7 @@ import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
 import {EstimatedLocation_log} from "../../Logging/estimated_location_log";
+import { IncidentsCache } from "../../OCEManager/OCEs/server/experiencesCache.js";
 
 const util = require('util');
 
@@ -186,7 +187,11 @@ const sendToMatcher = (uid, affordances) => {
     // get delays for each incident-need pair
     let needDelays = {};
     _.forEach(availabilityDictionary, (place_need_distance_s, iid) => {
-      const incident = Incidents.findOne(iid);
+      let incident = IncidentsCache.findOne(iid);
+      if (!incident) {
+        incident = Incidents.findOne(iid)
+        IncidentsCache.insert(incident);
+      }
 
       // create empty need object for each iid
       needDelays[iid] = {};

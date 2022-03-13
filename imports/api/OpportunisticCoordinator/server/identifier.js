@@ -15,6 +15,7 @@ import {placeSubsetAffordances, applyDetector} from "../../UserMonitor/detectors
 import {Decommission_log} from "../../Logging/decommission_log";
 import {AddedToIncident_log} from "../../Logging/added_to_incident_log";
 import { DetectorsCache } from "../../UserMonitor/detectors/server/detectorsCache";
+import { IncidentsCache } from "../../OCEManager/OCEs/server/experiencesCache";
 
 const util = require('util');
 export const getNeedObject = (iid, needName) => {
@@ -183,13 +184,22 @@ export const decomissionFromAssignmentsIfAppropriate = (uid, affordances) => {
   // iterate over cursor
   currentAssignments.forEach(assignment => {
     const iid = assignment._id;
-    const incident = Incidents.findOne(iid);
+    let incident = IncidentsCache.findOne(iid);
+    if (!incident) {
+      incident = Incidents.findOne(iid)
+      IncidentsCache.insert(incident);
+    }
+
     _.forEach(assignment.needUserMaps, needUserMap => {
 
       const needName = needUserMap.needName;
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
       const detector = DetectorsCache.findOne({ description : detectorUniqueKey });
+      if (!detector) {
+        detector = Detectors.findOne({ description : detectorUniqueKey });
+        DetectorsCache.insert(detector)
+      }
       const matchPredicate = applyDetector(flatAffordances, detector.variables, detector.rules);
       if (!matchPredicate && needUserMap.users.find(user => user.uid === uid)) {
         // note: decommissionDelay == notificationDelay

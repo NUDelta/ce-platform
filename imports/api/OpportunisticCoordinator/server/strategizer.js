@@ -18,6 +18,7 @@ import { Schema } from "../../schema";
 import { createBrotliCompress } from "zlib";
 import { CONFIG } from "../../config";
 import { serverLog } from "../../logs";
+import { IncidentsCache } from "../../OCEManager/OCEs/server/experiencesCache";
 
 const util = require('util');
 
@@ -94,17 +95,21 @@ export const checkIfThreshold = updatedIncidentsAndNeeds => {
 class AnytimeStrategizer {
   constructor(incidentId) {
     this.iid = incidentId;
-    let eid = Incidents.findOne({_id: this.iid}, {fields: {eid: true}}).eid;
-    this.experience = Experiences.findOne({_id: eid});
+    let incident = IncidentsCache.findOne(this.iid);
+    if (!incident) {
+      incident = Incidents.findOne(this.iid)
+      IncidentsCache.insert(incident);
+    }
+    this.incident = incident;
     this.need = getNeedObject(this.iid, this.needName);
   }
 
   isAnytimeExperience() {
-    return this.experience.anytimeSequential !== null;
+    return this.incident.anytimeSequential !== null;
   }
 
   decide(needUserMap) {
-    if (this.experience.anytimeSequential === null) {
+    if (this.incident.anytimeSequential === null) {
       return true;
     }
     const currentBucketedNeeds = this.defineSequentialBuckets();
@@ -126,22 +131,22 @@ class AnytimeStrategizer {
   }
 
   defineSequentialBuckets() {
-    if (this.experience.anytimeSequential === null) {
+    if (this.incident.anytimeSequential === null) {
       console.error('No anytime constraint defined for this experience');
       return;
     }
     // Which "day" of the experience are we in?
     let iteration = 1;
-    let currentBucketedNeeds = this.defineNeedBuckets(this.experience.anytimeSequential.startingBuckets)
+    let currentBucketedNeeds = this.defineNeedBuckets(this.incident.anytimeSequential.startingBuckets)
     while (this.bucketsAreAllFilled(currentBucketedNeeds)) {
       iteration++;
-      currentBucketedNeeds = this.defineNeedBuckets(iteration * this.experience.anytimeSequential.startingBuckets);
+      currentBucketedNeeds = this.defineNeedBuckets(iteration * this.incident.anytimeSequential.startingBuckets);
     }
     return currentBucketedNeeds;
   }
 
   defineNeedBuckets(numberBuckets) {
-    const needs = this.experience.contributionTypes.map(contributionType => {
+    const needs = this.incident.contributionTypes.map(contributionType => {
       return contributionType.needName;
     })
     let bucketSize = Math.floor(needs.length / numberBuckets);
@@ -185,8 +190,12 @@ class WhoToAssignToNeed {
     this.iid = incidentId;
     this.needUserMap = needUserMap;
     this.needName = needUserMap.needName;
-    let eid = Incidents.findOne({_id: this.iid}, {fields: {eid: true}}).eid;
-    this.experience = Experiences.findOne({_id: eid});
+    let incident = IncidentsCache.findOne(this.iid);
+    if (!incident) {
+      incident = Incidents.findOne(this.iid)
+      IncidentsCache.insert(incident);
+    }
+    this.incident = incident;
     this.need = getNeedObject(this.iid, this.needName);
   }
 
@@ -208,7 +217,7 @@ class WhoToAssignToNeed {
   }
 
   getUsersNotInIncident(users) {
-    if (this.experience.allowRepeatContributions) {
+    if (this.incident.allowRepeatContributions) {
       return users.filter((user) => {
         const usersCurrentlyAssigned = usersAlreadyAssignedToNeed(this.iid, this.needName);
         if (CONFIG.DEBUG) {
@@ -217,9 +226,9 @@ class WhoToAssignToNeed {
         return !usersCurrentlyAssigned.find(uid => uid === user.uid);
       });
     } else {
-      let uidsWhoSubmittedTooRecently = (this.experience.repeatContributionsToExperienceAfterN < 0 ?
+      let uidsWhoSubmittedTooRecently = (this.incident.repeatContributionsToExperienceAfterN < 0 ?
         usersAlreadySubmittedToIncident(this.iid, null) :
-        usersAlreadySubmittedToIncident(this.iid, this.experience.repeatContributionsToExperienceAfterN));
+        usersAlreadySubmittedToIncident(this.iid, this.incident.repeatContributionsToExperienceAfterN));
       // console.log('uidsWhoSubToIncident: ', util.inspect(uidsWhoSubToIncident, false, null));
       return users.filter((user) => {
         return (

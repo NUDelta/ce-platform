@@ -61,7 +61,11 @@ export const findMatchesForUser = (uid, affordances) => {
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     console.time(`Checking all needNames | uid: ${uid}, iid: ${iid}`);
     console.time('querying incidents | uid: ' + uid + ', iid: ' + iid);
-    const incident = IncidentsCache.findOne(iid);
+    let incident = IncidentsCache.findOne(iid);
+    if (!incident) {
+      incident = Incidents.findOne(iid)
+      IncidentsCache.insert(incident);
+    }
     console.timeEnd('querying incidents | uid: ' + uid + ', iid: ' + iid);
 
     // ~~~ If its a sequential experience, treat all the needs as sequential and mutually exclusive
@@ -80,7 +84,11 @@ export const findMatchesForUser = (uid, affordances) => {
       console.time('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
       const need = incident.contributionTypes.find(contributionType => contributionType.needName === needName);
       const detectorUniqueKey = need.situation.detector;
-      const detector = DetectorsCache.findOne({ description : detectorUniqueKey });
+      let detector = DetectorsCache.findOne({ description : detectorUniqueKey });
+      if (detector === undefined || detector === null) {
+        detector = Detectors.findOne({ description : detectorUniqueKey });
+        DetectorsCache.insert(detector)
+      }
       console.timeEnd('Looking at the need and detector | uid: ' + uid + ', iid: ' + iid + ', needName: ' + needName);
 
       // Or do we ignore this check because we are doing time/weather based stuff?
@@ -533,7 +541,8 @@ export const createIncidentFromExperience = (experience) => {
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
-    allowRepeatContributions: experience.allowRepeatContributions
+    allowRepeatContributions: experience.allowRepeatContributions,
+    anytimeSequential: experience.anytimeSequential,
   };
 
   Incidents.insert(incident, (err) => {
@@ -557,7 +566,9 @@ export const updateIncidentFromExperience = (eid, experience) => {
 
   let incident = {
     callbacks: experience.callbacks,
-    contributionTypes: experience.contributionTypes
+    contributionTypes: experience.contributionTypes,
+    allowRepeatContributions: experience.allowRepeatContributions,
+    anytimeSequential: experience.anytimeSequential,
   };
 
   Incidents.update(
