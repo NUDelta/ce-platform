@@ -36,6 +36,7 @@ import { CONFIG } from "../../config";
  */
 export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
   // admin updates for all incidents and users
+
   _.forEach(incidentsWithUsersToRun, (needUserMapping, iid) => {
     let incident = IncidentsCache.findOne(iid);
     if (!incident) {
@@ -87,10 +88,14 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
-      let uidsNotNotifiedRecently = newUsersMeta.map(userMeta => userMeta.uid);
-      // let uidsNotNotifiedRecently = newUsersMeta
-      //   .filter((userMeta) => {!userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid))})
-      //   .map((userMeta) => {userMeta.uid});
+
+      userMetaToNotify = newUsersMeta.filter(userMeta => {
+        let user = Meteor.users.findOne(userMeta.uid);
+        let tooRecent = userNotifiedTooRecently(user);
+        return !tooRecent;
+      });
+      serverLog.call({message: `new users to notify: ${ JSON.stringify(userMetaToNotify) }`});
+      let uidsNotNotifiedRecently = userMetaToNotify.map(userMeta => userMeta.uid);
 
       // FIXME(rlouie): should dynamically adjust based on this sunset experience, not the detectorUniqueKey
       // for now, we will give them A WORKING LINK to participate in the sunset

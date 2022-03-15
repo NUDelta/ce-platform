@@ -270,6 +270,9 @@ export const userNotifiedTooRecently = (user) => {
     waitTimeAfterNotified = minutes * CONFIG.NOTIFIED_TOO_RECENTLY;
   }
   const lastNotified = user.profile.lastNotified;
+  if (!lastNotified) {
+    return false;
+  }
   const now = Date.now();
   return (now - lastNotified) < waitTimeAfterNotified;
 };
