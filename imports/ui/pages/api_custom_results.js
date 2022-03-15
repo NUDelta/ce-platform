@@ -973,10 +973,11 @@ Template.sunset.onDestroyed(function() {
 Template.sunset.helpers({
   orderedSunsetSubmissions() {
     const orderedNeedNames = this.experience.contributionTypes.map((need) => need.needName);
-    const completedSubmissions = this.submissions.filter(sub => sub.uid !== null);
-    return completedSubmissions.sort((e1, e2) => {
-      return orderedNeedNames.indexOf(e1) - orderedNeedNames.indexOf(e2);
-    });
+    let completedSubmissions = this.submissions.filter(sub => sub.uid !== null);
+    completedSubmissions.sort((e1, e2) => {
+      return orderedNeedNames.indexOf(e1.needName) - orderedNeedNames.indexOf(e2.needName);
+    }); // side-effect, mutates array
+    return completedSubmissions;
   },
   getUserById(users_arr, uid) {
     let user = users_arr.find(function(x) {
