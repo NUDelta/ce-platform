@@ -48,7 +48,22 @@ Development build is nice to develop the mobile app, connected to a local server
 
 ## iOS Enterprise Build
 
-For a quick script that does the meteor build and sets up the xcworkspace, see the `ipaHelper.sh` script. For all the details that lead to writing the streamlined script, see the rest of this section.
+Quick Tutorial
+1. If you did some major Meteor version or package updates, you might need to start from a clean state clear your build directories. 
+```bash
+meteor reset
+rm -rf .meteor/local/cordova-build
+```
+2. Run the ipaHelper script. 
+```bash
+./ipaHelper.sh
+```
+3. Navigate to `../ce-platform-ios/ios/project` and open the `Cerebro.xcworkspace`.
+4. In "Signing and Capabilities", change the *release* Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.D`).
+5. run `./ceEnterpriseExport.sh` to create the application.
+6. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
+
+For all the details that lead to writing the streamlined script, see the rest of this section.
 
 ### Building iOS Application from Meteor
 1. Deploy Meteor application to Galaxy or Heroku, or start a local server.
@@ -78,7 +93,7 @@ Exporting an iOS application as an `.ipa` file requires the `ceEnterpriseExport.
 Push notifications are currently configured to work with the Enterprise A certificate. Talk to Ryan or Yongsung for more information.
 
 #### Export
-1. Navigate to `../Cerebro-ios/ios/project` and open the `.xcworkspace`.
+1. Navigate to `../ce-platform-ios/ios/project` and open the `.xcworkspace`.
 2. Change the Bundle Identifier to the same identifier as in the provisioning profile above (here, `edu.northwestern.delta.A`).
 3. Copy `ceEnterpriseExport.sh` and `exportOptions.plist` to the same directory as the `.xcworkspace`. Then, run `./ceEnterpriseExport.sh` to create the application.
 4. The `.ipa` can be found in the `Cerebro-export/` directory. Distribute your `.ipa` to testers using [diawi.com](www.diawi.com).
