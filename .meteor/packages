@@ -35,9 +35,7 @@ standard-minifier-css@1.7.4
 standard-minifier-js@2.8.0
 mdg:validated-method
 fourseven:scss@4.12.0
-oauth@2.1.1
 nooitaf:colors
-oauth1@1.5.0
 mrt:moment-timezone
 cfs:graphicsmagick
 msavin:mongol
