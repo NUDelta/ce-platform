@@ -1,5 +1,5 @@
 import { Push } from 'meteor/nudelta2015:push';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { log, serverLog } from '../../api/logs.js';
 import {Meteor} from "meteor/meteor";
 
@@ -46,7 +46,7 @@ Push.addListener('startup', (notification) => {
       Meteor.call('insertLog', dic);
     }
 
-    Router.go(notification.payload.route);
+    FlowRouter.go(notification.payload.route);
   }
 });
 
@@ -74,7 +74,7 @@ Push.addListener('message', (notification) => {
       Meteor.call('insertLog', dic);
     }
 
-    Router.go(notification.payload.route);
+    FlowRouter.go(notification.payload.route);
   }
 });
 

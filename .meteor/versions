@@ -83,6 +83,7 @@ iron:middleware-stack@1.1.0
 iron:router@1.2.0
 iron:url@1.1.0
 jquery@1.11.11
+kadira:blaze-layout@2.3.0
 launch-screen@1.3.0
 littledata:synced-cron@1.5.1
 livedata@1.0.18
@@ -93,7 +94,6 @@ mdg:validation-error@0.5.1
 meanware:gridfs@0.1.1
 meteor@1.10.0
 meteor-base@1.5.1
-meteortoys:toykit@3.0.4
 minifier-css@1.6.0
 minifier-js@2.7.3
 minimongo@1.8.0
@@ -109,14 +109,12 @@ mongo-id@1.0.8
 mongo-livedata@1.0.12
 mrt:moment@2.8.1
 mrt:moment-timezone@0.2.1
-msavin:mongol@2.0.1
 nooitaf:colors@1.2.0
 npm-mongo@4.3.1
 nudelta2015:push@0.0.5
-oauth@2.1.1
-oauth1@1.5.0
 observe-sequence@1.0.19
 ordered-dict@1.1.0
+ostrio:flow-router-extra@3.7.5
 practicalmeteor:chai@2.1.0_1
 practicalmeteor:loglevel@1.2.0_2
 practicalmeteor:mocha@2.4.5_6

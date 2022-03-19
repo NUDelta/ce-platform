@@ -8,7 +8,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import { Users } from '../../api/UserMonitor/users/users.js';
 import { Images } from '../../api/ImageUpload/images.js';
@@ -27,11 +27,11 @@ Template.api_custom.helpers({
   data() {
 
     let currentNeed = this.incident.contributionTypes.find(function (x) {
-      return x.needName === Router.current().params.needName;
+      return x.needName === FlowRouter.getParam('needName');
     });
 
-    this.iid = Router.current().params.iid;
-    this.needName = Router.current().params.needName;
+    this.iid = FlowRouter.getParam('iid');
+    this.needName = FlowRouter.getParam('needName');
     this.toPass = currentNeed.toPass;
 
     return this;
@@ -731,7 +731,7 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
     return sunset_completion_proportion * (rightMost - leftMost) + leftMost;
   }
 
-  const needName = Router.current().params.needName
+  const needName = FlowRouter.getParam('needName');
   const minutes = (needName.search('before') > -1) ?
     parseInt(needName.split(' ')[0]) :
     parseInt(needName.split(' ')[0]) * -1;
@@ -1304,18 +1304,20 @@ Template.api_custom.onCreated(() => {
   this.state = new ReactiveDict();
 
   if (!Meteor.userId()) {
-    Router.go('home');
+    FlowRouter.go('home');
     return;
   }
 
-  const params = Router.current().params;
+  const params = {
+    iid: FlowRouter.getParam('iid'),
+    needName: FlowRouter.getParam('needName')
+  }
   this.state.set('iid', params.iid);
   this.state.set('needName', params.needName);
 
   const incident = Incidents.findOne({_id: params.iid});
   if (!needIsAvailableToParticipateNow(incident, params.needName)) {
     // TODO: redirect to an apology page
-    //Router.go('home');
     return;
   }
 
@@ -1363,8 +1365,8 @@ Template.api_custom.events({
     const experience = this.experience;
     // give null values for use when testing submitted photos on the web, without location data
     const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = Router.current().params.iid;
-    const needName = Router.current().params.needName;
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
@@ -1388,7 +1390,7 @@ Template.api_custom.events({
     const images = event.target.getElementsByClassName('fileinput');
     //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
-      Router.go(resultsUrl);
+      FlowRouter.go(resultsUrl);
     }
 
     // CINDY: why would there be more than one image upload?
@@ -1424,7 +1426,7 @@ Template.api_custom.events({
               console.log("error in uploadImage: ", err)
             } else {
               console.log("image has been uploaded");
-              Router.go(resultsUrl);
+              FlowRouter.go(resultsUrl);
             }
           })}
       } else {
@@ -1458,32 +1460,13 @@ Template.api_custom.events({
             console.log("error in uploadImage: ", err)
           } else {
             console.log("image has been uploaded");
-            Router.go(resultsUrl);
+            FlowRouter.go(resultsUrl);
           }
         });
         //CINDY: modify code starting here
         // picture = b64toBlob(realData, contentType);
       }
 
-      // const submissionObject = {
-      //   uid: uid,
-      //   eid: experience._id,
-      //   iid: iid,
-      //   needName: needName,
-      //   content: submissions,
-      //   timestamp: timestamp,
-      //   lat: location.lat,
-      //   lng: location.lng
-      // };
-
-      // Meteor.call("uploadImage", picture, submissionObject, (err) => {
-      //   if (err) {
-      //     console.log("error in uploadImage: ", err)
-      //   } else {
-      //     console.log("image has been uploaded");
-      //     Router.go(resultsUrl);
-      //   }
-      // })
     });
 
   },
@@ -1500,8 +1483,8 @@ Template.api_custom.events({
     const experience = this.experience;
     // give null values for use when testing submitted photos on the web, without location data
     const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = Router.current().params.iid;
-    const needName = Router.current().params.needName;
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
@@ -1522,7 +1505,7 @@ Template.api_custom.events({
     const images = event.target.getElementsByClassName('fileinput');
     //no ImageUpload being uploaded so we can just go right to the results page
     if (images.length === 0) {
-      Router.go(resultsUrl);
+      FlowRouter.go(resultsUrl);
     }
 
     /*
@@ -1613,7 +1596,7 @@ Template.api_custom.events({
             changed(newImage) {
               if (newImage.isUploaded()) {
                 cursor.stop();
-                Router.go(resultsUrl);
+                FlowRouter.go(resultsUrl);
               }
             }
           });
@@ -1663,47 +1646,3 @@ Template.api_custom.events({
     photoUpload(event);
   },
 });
-
-
-// >>>>>>>>>>>> CINDY: replace everything here
-/*
-      // save image and get id of new document
-      const imageFile = Images.insert(picture, (err, imageFile) => {
-        //this is a callback for after the image is inserted
-        if (err) {
-          alert(err);
-        } else {
-          //success branch of callback
-          //add more info about the photo
-          Images.update({ _id: imageFile._id }, {
-            $set: {
-              iid: iid,
-              uid: uid,
-              lat: location.lat,
-              lng: location.lng,
-              needName: needName,
-            }
-          }, (err, docs) => {
-            if (err) {
-              console.log('upload error,', err);
-            } else {
-            }
-          });
-          // TODO: setTimeout for automatically moving on if upload takes too long
-
-          //watch to see when the image db has been updated, then go to results
-          const cursor = Images.find(imageFile._id).observe({
-            changed(newImage) {
-              if (newImage.isUploaded()) {
-                cursor.stop();
-                Router.go(resultsUrl);
-              }
-            }
-          });
-        }
-      });
-
-      // add the submitted image to the submissions content dictionary
-      submissions[image.id] = imageFile._id;
-      //submissions['imageid'] = imageFile._id;
-      */

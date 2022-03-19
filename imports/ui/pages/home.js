@@ -2,7 +2,6 @@ import './home.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences';
@@ -39,7 +38,7 @@ Template.home.events({
 Template.home.helpers({
   RActiveExperience() {
     // log.info(RActiveExperience);
-    
+
     return RActiveExperience;
   },
   activeUserAssigment() {
