@@ -18,10 +18,10 @@ WebApp.connectHandlers.use("/api/geolocation", (req, res, next) => {
     onLocationUpdate(uid, location, function (uid) {
       serverLog.call({message: "triggering internal location update for: " + uid});
     });
+    res.writeHead(200);
+    res.end(`POST to api/geolocation: ${ JSON.stringify(req.body) }`)
   } else {
     serverLog.call({ message: 'location update not triggered since user was null'});
     next();
   }
-  res.writeHead(200);
-  res.end(`POST to api/geolocation: ${ JSON.stringify(req.body) }`)
 });
