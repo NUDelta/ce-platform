@@ -406,9 +406,9 @@ def statusUpdate():
 
 
 if __name__ == "__main__":
-    usersAcrossTimezones()
+    # usersAcrossTimezones()
     # statusUpdate()
-    # allUsersGrocery()
+    allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
 	# allUsersAtBars()

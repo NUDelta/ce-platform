@@ -46,7 +46,6 @@ accounts-base@2.2.1
 practicalmeteor:chai
 erasaur:meteor-lodash
 dynamic-import@0.7.2
-useraccounts:iron-routing
 aldeed:template-extension
 useraccounts:bootstrap
 underscore@1.0.10

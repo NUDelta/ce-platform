@@ -5,7 +5,7 @@ import { onLocationUpdate } from "../../api/UserMonitor/locations/methods";
 import { serverLog } from "../../api/logs";
 
 
-WebApp.connectHandlers.use(bodyParser.urlencoded({ extended: false }));
+WebApp.connectHandlers.use('/', bodyParser.json());
 
 WebApp.connectHandlers.use("/api/geolocation", (req, res, next) => {
   // serverLog.call({message: `POST to api/geolocation: ${ JSON.stringify(req.body) }`});
@@ -20,6 +20,7 @@ WebApp.connectHandlers.use("/api/geolocation", (req, res, next) => {
     });
   } else {
     serverLog.call({ message: 'location update not triggered since user was null'});
+    next();
   }
   res.writeHead(200);
   res.end(`POST to api/geolocation: ${ JSON.stringify(req.body) }`)
