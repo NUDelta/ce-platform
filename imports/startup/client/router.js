@@ -39,13 +39,23 @@ import {Assignments, Availability} from "../../api/OpportunisticCoordinator/data
 import {Notification_log} from "../../api/Logging/notification_log";
 import {Page_log} from "../../api/Logging/page_log/page_log";
 
-// Router.configure({
-//   layoutTemplate: 'layout'
-// });
-
 AccountsTemplates.configureRoute('enrollAccount');
 AccountsTemplates.configureRoute('signIn');
 AccountsTemplates.configureRoute('signUp');
+
+FlowRouter.route('/', {
+  name: 'home',
+  action() {
+    BlazeLayout.render('layout', { main: 'home'});
+  }
+});
+
+FlowRouter.route('/affordances', {
+  name: 'affordances',
+  action() {
+    BlazeLayout.render('layout', { main: 'affordances_page'});
+  }
+})
 
 // Router.route('affordances', {
 //   path: '/affordances',
@@ -200,13 +210,6 @@ AccountsTemplates.configureRoute('signUp');
 //     this.next();
 //   }
 // });
-
-FlowRouter.route('/', {
-  name: 'home',
-  action() {
-    BlazeLayout.render('layout', { main: 'home'});
-  }
-});
 
 
 // Router.route('chat', {
