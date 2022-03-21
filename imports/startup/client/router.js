@@ -1,4 +1,5 @@
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+// import AccountsTemplates from 'meteor/useraccounts:flow-routing-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import '../../ui/blaze-helpers.js';
 import '../../ui/common.js';
@@ -42,9 +43,9 @@ import {Page_log} from "../../api/Logging/page_log/page_log";
 //   layoutTemplate: 'layout'
 // });
 
-// AccountsTemplates.configureRoute('enrollAccount');
-// AccountsTemplates.configureRoute('signIn');
-// AccountsTemplates.configureRoute('signUp');
+AccountsTemplates.configureRoute('enrollAccount');
+AccountsTemplates.configureRoute('signIn');
+AccountsTemplates.configureRoute('signUp');
 
 // Router.route('affordances', {
 //   path: '/affordances',
