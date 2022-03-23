@@ -9,8 +9,8 @@ import '../components/result_link.js';
 
 Template.profile_page.onCreated(function() {
   this.autorun(() => {
-    this.subscribe('experiences.all');
-    this.subscribe('incidents.all');
+    this.subscribe('experiences.pastUser');
+    this.subscribe('incidents.pastUser');
   })
 });
 Template.profile_page.helpers({
