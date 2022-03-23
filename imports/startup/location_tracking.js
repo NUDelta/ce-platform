@@ -19,23 +19,22 @@ if (Meteor.isCordova) {
     let bgGeo = window.BackgroundGeolocation;
 
     // configure and start background geolocation when ready
-    bgGeo.ready({
+    const bgGeoConfigBase = {
       reset: true, // always supply this configuration when application restarts
 
       // Geolocation config
-      desiredAccuracy: 0, // highest accuracy, highest power consumption
-      distanceFilter: 10, // meters device must move before location update is generated
-      stationaryRadius: 25, // distance user must move in order to trigger location tracking
-      disableElasticity: false, // disable dynamic filtering and return every distanceFilter amount
-
-      // Activity Recognition config
-      activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
+      // FIXME: LOW ACCURACY TRACKING
+      desiredAccuracy: 10, // was 0
+      // distanceFilter: 10, // meters device must move before location update is generated
+      // stationaryRadius: 25, // distance user must move in order to trigger location tracking
+      useSignificantChangesOnly: true, // when true, will stop location tracking when user moves beyond stationaryRadius
+      // disableElasticity: false, // disable dynamic filtering and return every distanceFilter amount
 
       // Application config
       stopOnTerminate: false, // continue tracking user even if they terminate the application
       startOnBoot: true, // restart location tracking after device reboots
-      preventSuspend: true, // prevent iOS from suspending application while stationary
-      heartbeatInterval: 60, // firing heartbeat events (needed for preventSuspend)
+      preventSuspend: false, // FIXME: LOW ACCURACY TRACKING
+      // heartbeatInterval: 60, // firing heartbeat events (needed for preventSuspend)
       pausesLocationUpdatesAutomatically: true, // used for conserving battery, when able
       debug: false,  // debug sounds & notifications.
       logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
@@ -43,12 +42,16 @@ if (Meteor.isCordova) {
       // HTTP / SQLite config
       url: `${ Meteor.absoluteUrl({secure: false}) }api/geolocation`, // submit location updates to backend route
       method: "POST", // submission method
+      autoSync: true, // upload each location update as it is received
+      maxDaysToPersist: 1 // days for SQLite database to persist
+    }
+
+    let bgGeoConfig = Object.assign({}, bgGeoConfigBase, {
       params: {
         userId: Meteor.userId()
       },
-      autoSync: true, // upload each location update as it is received
-      maxDaysToPersist: 1 // days for SQLite database to persist
-    }, function (state) {
+    });
+    bgGeo.ready(bgGeoConfig, function (state) {
       // This callback is executed when the plugin is ready to use.
       serverLog.call({ message: "location tracking setup for: " + Meteor.userId()});
       serverLog.call({ message: `state: ${ JSON.stringify(state) }, bgGeo: ${ JSON.stringify(bgGeo) }` });
@@ -148,36 +151,12 @@ if (Meteor.isCordova) {
     });
 
     Tracker.autorun(() => {
-      bgGeo.reset({
-        reset: true, // always supply this configuration when application restarts
-
-        // Geolocation config
-        desiredAccuracy: 0, // highest accuracy, highest power consumption
-        distanceFilter: 10, // meters device must move before location update is generated
-        stationaryRadius: 25, // distance user must move in order to trigger location tracking
-        disableElasticity: false, // disable dynamic filtering and return every distanceFilter amount
-
-        // Activity Recognition config
-        activityRecognitionInterval: 1000, // interval to check for changes in activity (in seconds)
-
-        // Application config
-        stopOnTerminate: false, // continue tracking user even if they terminate the application
-        startOnBoot: true, // restart location tracking after device reboots
-        preventSuspend: true, // prevent iOS from suspending application while stationary
-        heartbeatInterval: 60, // firing heartbeat events (needed for preventSuspend)
-        pausesLocationUpdatesAutomatically: true, // used for conserving battery, when able
-        debug: false,  // debug sounds & notifications.
-        logLevel: 5, // verbose logging WARNING: TURN OFF FOR PRODUCTION
-
-        // HTTP / SQLite config
-        url: `${ Meteor.absoluteUrl({secure: false}) }api/geolocation`, // submit location updates to backend route
-        method: "POST", // submission method
+      let bgGeoConfig = Object.assign({}, bgGeoConfigBase, {
         params: {
           userId: Meteor.userId()
         },
-        autoSync: true, // upload each location update as it is received
-        maxDaysToPersist: 1 // days for SQLite database to persist
-      }, function (state) {
+      });
+      bgGeo.reset(bgGeoConfig, function (state) {
         // This callback is executed when the plugin is ready to use.
         serverLog.call({ message: "Tracker: location tracking setup for: " + Meteor.userId()});
         serverLog.call({ message: `Tracker: state: ${ JSON.stringify(state) }, bgGeo: ${ JSON.stringify(bgGeo) }` });
