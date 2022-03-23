@@ -6,42 +6,65 @@
 
 <template name="affordances">
     {{#if currentUser}}
-        <h4> Your Profile Information </h4>
-        {{> displayTopToBottom_Avatar_FullName user=currentUser avatar=(userAvatarImg avatars currentUser)}}
-        <div class="centered">
-          {{currentUser.username}}
+      <div class="thumbnail">
+        <div class="caption">
+          <h4 class="centered">Your Profile Information</h4>
+          {{> displayTopToBottom_Avatar_FullName user=currentUser avatar=(userAvatarImg avatars currentUser)}}
+          <div class="centered">
+            {{currentUser.username}}
+          </div>
+          <div class="centered">
+            {{currentUser.emails.[0].address}}
+          </div>
         </div>
-        <div class="centered">
-          {{currentUser.emails.[0].address}}
-        </div>
-        <button id="toggle-affordance-info">Toggle to view Affordances</button>
-        <div id="affordance-info" style="display: none;">
-          {{#each key in affordanceKeys}}
-            {{key}}
-            {{affordanceValues key}}<br>
-          {{/each}}
-        </div>
-        <h4> Your location </h4>
-        {{this.location.lat}} / {{this.location.lng}}
-        <br><br>
-        <div class="row">
-            <div style="width:95%; max-width: 95%; padding-left:5%; height: 300px">
-                {{> googleMap name="yourLocation" options=mapOptions}}
-            </div>
-        </div>
-      <form id="groundtruth-form">
-        <div>
-          <label for="groundtruth-label">Event Label: </label>
-          <input type="text" id="groundtruth-label" name="groundtruth-label" required>
-        </div>
-        <div>
-          <button type="submit">Log Ground Truth</button>
-          <div id="groundtruth-status"></div>
-        </div>
-      </form>
-      <div>
-        <span><a href="/participate/backdoor">Participate Backdoor...</a></span>
       </div>
+      <div class="thumbnail">
+        <div class="caption">
+          <h4 class="centered">Approximate Location</h4>
+          <p>Don't worry if your location is not precise. Cerebro only needs an approximate location.</p>
+          <!-- {{this.location.lat}} / {{this.location.lng}} -->
+        </div>
+        <div style="width:100%; max-width: 100%; padding-left:0%; height: 300px">
+            {{> googleMap name="yourLocation" options=mapOptions}}
+        </div>
+      </div>
+      <div class="thumbnail">
+        <div class="caption">
+          <h4 class="centered">Aspects of your Context</h4>
+          Cerebro uses data about place, time, and weather to find nearby experiences.
+          <button class="btn btn-info centered" style="width: 100%" id="toggle-affordance-info">Toggle to View Context Features</button>
+          <div id="affordance-info" class="list-group" style="display: none;">
+          {{#each key in affordanceKeys}}
+            <li class="list-group-item">
+              <span>{{key}}</span> : {{affordanceValues key}}
+            </li>
+          {{/each}}
+          </div>
+        </div>
+      </div>
+      <div class="thumbnail">
+        <div class="caption">
+          <h4 class="centered">Developer Tools</h4>
+          This section is for debugging purposes. You can safely ignore if you are not a developer.
+          <button class="btn btn-default centered" style="width: 100%" id="toggle-devtools">Toggle for Debugging</button>
+          <div id="devtools" style="display: none">
+            <form id="groundtruth-form">
+              <div>
+                <label for="groundtruth-label">Event Label: </label>
+                <input type="text" id="groundtruth-label" name="groundtruth-label" required>
+              </div>
+              <div>
+                <button type="submit">Log Ground Truth</button>
+                <div id="groundtruth-status"></div>
+              </div>
+            </form>
+            <div>
+              <span><a href="/participate/backdoor">Participate Backdoor...</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     {{else}}
         <h3>Welcome to CE 👋</h3>
         <h4>Sign in to see your affordances!</h4>

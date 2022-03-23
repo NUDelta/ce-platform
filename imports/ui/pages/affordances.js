@@ -48,7 +48,15 @@ Template.affordances.events({
       affordanceInfo.style.display = "block";
     }
   },
+  'click #toggle-devtools': function() {
+    var devTools = document.getElementById('devtools');
 
+    if (devTools.style.display == "block") {
+      devTools.style.display = "none";
+    } else {
+      devTools.style.display = "block";
+    }
+  },
   'submit form': function(event) {
     event.preventDefault();
 
