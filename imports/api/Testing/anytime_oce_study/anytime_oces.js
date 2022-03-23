@@ -48,6 +48,8 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
       },
       toPass: {
         instruction: 'Take a photo of the sunset!',
+        minutes_before: minutes_before,
+        minutes_after: minutes_after,
       },
       numberNeeded: 1,
       notificationDelay: 0
@@ -108,6 +110,6 @@ const createMomentsOfTheHourTimelapse = () => {
 
 
 export default ANYTIME_OCES = {
-  sunsetTimelapse: createSunsetTimelapse(75, 15, 2),
+  sunsetTimelapse: createSunsetTimelapse(120, 0, 2),
   momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
 }

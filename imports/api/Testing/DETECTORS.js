@@ -9,7 +9,7 @@ const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after
         variables: [
           'var minutes_around_sunset;'
         ],
-        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
+        rules: [`(clear && ((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size})));`]
       }
     }
     else {
@@ -19,7 +19,7 @@ const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after
         variables: [
           'var minutes_around_sunset;'
         ],
-        rules: [`((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size}));`]
+        rules: [`(clear && ((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size})));`]
       }
     }
   }
@@ -307,7 +307,7 @@ const createDetectors = function (pairNum) {
 
 let DETECTORS_GENERATED = {};
 DETECTORS_GENERATED = Object.assign(DETECTORS_GENERATED,
-  generateSunsetTimelapseDetectors(75, 15, 2),
+  generateSunsetTimelapseDetectors(120, 0, 2),
   generateMinuteBlockDetectors(2),
   // PAIR_DETECTORS,
 );
