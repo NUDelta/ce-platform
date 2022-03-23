@@ -7,22 +7,25 @@ let sendNotificationSunset = function (sub) {
     return x.uid;
   });
 
-  notify(uids, sub.iid, 'Our sunset timelapse is complete! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+  notify(uids, sub.iid, 'Three new snapshots were added to the sunset timelapse! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
 
 const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => {
 
   let apiDefinition = {
     _id: Random.id(),
-    name: 'Sunset',
+    name: '🌇 Sunset Timelapse 🌄',
     participateTemplate: 'sunsetTimelapseParticipate',
     resultsTemplate: 'sunset',
     description: 'Create a timelapse of the sunset with others around the country',
-    notificationText: 'Take a photo of the sunset!',
+    notificationText: 'Do you have a clear view of the sunset? If yes, add to the timelapse!',
     callbacks: [{
-      trigger: 'cb.incidentFinished()',
+      trigger: 'cb.numberOfSubmissions() % 3 === 0',
       function: sendNotificationSunset.toString()
-    }]
+    }],
+    anytimeSequential: {
+      startingBuckets: 3
+    },
   }
 
   contributionTypes = []
@@ -47,7 +50,9 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
         number: 1
       },
       toPass: {
-        instruction: 'Take a photo of the sunset!',
+        instruction: ('<p>Do you have <span style="color: #ffa500; font-weight: bold;">a clear view of sunset</span>?</p>' +
+          '<p>If <b>no</b>, <a href="/">go back to home</a> and wait for a better view.</p><br>' +
+          '<p>If <b>yes</b>, take a snapshot 📸 for the timelapse!</p>'),
         minutes_before: minutes_before,
         minutes_after: minutes_after,
       },
@@ -58,9 +63,6 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
   }
 
   apiDefinition['contributionTypes'] = contributionTypes;
-  apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 3
-  };
   return apiDefinition;
 }
 
