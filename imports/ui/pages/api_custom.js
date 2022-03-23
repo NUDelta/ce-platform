@@ -10,9 +10,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-import { Users } from '../../api/UserMonitor/users/users.js';
-import { Images } from '../../api/ImageUpload/images.js';
-import { Incidents } from "../../api/OCEManager/OCEs/experiences";
+import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
+import { Locations } from '../../api/UserMonitor/locations/locations';
+import { Avatars, Images } from '../../api/ImageUpload/images.js';
+import { Submissions } from "../../api/OCEManager/currentNeeds";
+import {Notification_log} from "../../api/Logging/notification_log";
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
@@ -1300,6 +1302,38 @@ const stitchImageSources = function(sources, verticalStitch = true, callback) {
   });
 };
 
+Template.api_custom_page.onCreated(function() {
+  const eid = FlowRouter.getParam('eid');
+  const iid = FlowRouter.getParam('iid');
+  this.autorun(() => {
+    this.subscribe('experiences.single', eid);
+    this.subscribe('incidents.single', iid);
+    this.subscribe('locations.activeUser');
+    this.subscribe('participating.now.activeIncident', iid);
+    // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('avatars.all');
+  });
+});
+
+Template.api_custom_page.helpers({
+  apiCustomArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      incident: Incidents.findOne(),
+      location: Locations.findOne(),
+      notification_log: Notification_log.find().fetch(),
+      images: Images.find({}).fetch(),
+      avatars: Avatars.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      submissions: Submissions.find().fetch(),
+    }
+  }
+});
+
 Template.api_custom.onCreated(() => {
   this.state = new ReactiveDict();
 
@@ -1315,8 +1349,7 @@ Template.api_custom.onCreated(() => {
   this.state.set('iid', params.iid);
   this.state.set('needName', params.needName);
 
-  const incident = Incidents.findOne({_id: params.iid});
-  if (!needIsAvailableToParticipateNow(incident, params.needName)) {
+  if (!needIsAvailableToParticipateNow(this.incident, params.needName)) {
     // TODO: redirect to an apology page
     return;
   }

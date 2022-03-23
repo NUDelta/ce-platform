@@ -1,7 +1,17 @@
+<template name="api_custom_results_page">
+  {{#if Template.subscriptionsReady}}
+    {{> api_custom_results (apiCustomResultsArgs)}}
+  {{/if}}
+</template>
 <template name="api_custom_results">
     {{> Template.dynamic template=this.experience.resultsTemplate data=data}}
 </template>
 
+<template name="api_custom_results_admin_page">
+  {{#if Template.subscriptionsReady}}
+    {{> api_custom_results_admin (apiCustomResultsAdminArgs)}}
+  {{/if}}
+</template>
 <template name="api_custom_results_admin">
   {{> Template.dynamic template=(adminTemplate this.experience.resultsTemplate) data=data}}
 </template>

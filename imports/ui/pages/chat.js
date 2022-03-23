@@ -1,7 +1,11 @@
 import './chat.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Messages } from '../../api/Messages/messages.js';
+import { Experiences } from "../../api/OCEManager/OCEs/experiences";
+import { Avatars, Images } from '../../api/ImageUpload/images.js';
+import { Submissions } from "../../api/OCEManager/currentNeeds";
 
 import '../components/contributions.js';
 
@@ -34,8 +38,34 @@ export const findPartner = function(uid, users) {
     // && !('friend' in u.profile.staticAffordances)
   );
   otherStranger = otherStranger.map(u => u._id);
-  return otherStranger; 
+  return otherStranger;
 }
+
+Template.chat_page.onCreated(function () {
+  const iid = FlowRouter.getParam('iid');
+  const eid = FlowRouter.getParam('eid');
+  this.autorun(() => {
+    this.subscribe('images.activeIncident', iid);
+    this.subscribe('experiences.single', eid);
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
+  });
+});
+
+Template.chat_page.helpers({
+  chatArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      messages: Messages.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    }
+  }
+});
 
 Template.chat.onRendered(function () {
   const messageContainer = document.getElementById('messages');
@@ -62,7 +92,7 @@ Template.chat.helpers({
     if (data.message === "") return;
     data.uid = uid;
     data.recipients = [uid]
-    
+
     otherStranger = findPartner(uid, this.users)
     // console.log("other stranger: " + otherStranger)
     data.recipients = data.recipients.concat(otherStranger)

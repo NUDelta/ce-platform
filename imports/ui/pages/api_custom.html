@@ -1,3 +1,9 @@
+<template name="api_custom_page">
+  {{#if Template.subscriptionsReady}}
+    {{> api_custom (apiCustomArgs)}}
+  {{/if}}
+</template>
+
 <template name="api_custom">
     {{> Template.dynamic template=data.experience.participateTemplate data=data}}
 </template>

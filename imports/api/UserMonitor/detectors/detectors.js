@@ -32,4 +32,6 @@ Schema.Detectors = new SimpleSchema({
 });
 
 Detectors.attachSchema(Schema.Detectors);
-Detectors.createIndex({ description: 'text' }, { name: 'Detector unique description' });
+if (Meteor.isServer) {
+    Detectors.createIndex({ description: 'text' }, { name: 'Detector unique description' });
+}
