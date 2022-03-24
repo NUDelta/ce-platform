@@ -51,7 +51,7 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
       },
       toPass: {
         instruction: ('<p>Do you have <span style="color: #ffa500; font-weight: bold;">a clear view of sunset</span>?</p>' +
-          '<p>If <b>no</b>, <a href="/">go back to home</a> and wait for a better view.</p><br>' +
+          '<p>If <b>no</b>, try to find higher ground where the sun is not covered. Otherwise, <a style="font-weight: bold" href="/affordances">ignore this opportunity and go back</a></p><br>' +
           '<p>If <b>yes</b>, take a snapshot 📸 for the timelapse!</p>'),
         minutes_before: minutes_before,
         minutes_after: minutes_after,
