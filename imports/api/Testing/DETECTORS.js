@@ -7,7 +7,8 @@ const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after
         _id: Random.id(),
         description: `${min} minutes after sunset`,
         variables: [
-          'var minutes_around_sunset;'
+          'var minutes_around_sunset;',
+          'var clear;'
         ],
         rules: [`(clear && ((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size})));`]
       }
@@ -17,7 +18,8 @@ const generateSunsetTimelapseDetectors = function (minutes_before, minutes_after
         _id: Random.id(),
         description: `${i} minutes before sunset`,
         variables: [
-          'var minutes_around_sunset;'
+          'var minutes_around_sunset;',
+          'var clear;'
         ],
         rules: [`(clear && ((minutes_around_sunset <= ${i}) && (minutes_around_sunset > ${i - interval_size})));`]
       }
