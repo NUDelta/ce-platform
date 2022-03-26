@@ -110,7 +110,7 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
       }
       // Try to notify, based on experience-level notification info
       else if (incident.name && incident.notificationText) {
-        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${incident.name}"!`,
+        notifyForParticipating(uidsNotNotifiedRecently, iid, `${incident.name}`,
           incident.notificationText, route);
       }
       // Fail to notify, because these parameters are not defined
