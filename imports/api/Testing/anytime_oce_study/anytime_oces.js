@@ -1,5 +1,5 @@
 import {DETECTORS} from "../DETECTORS";
-import { getDetectorUniqueKey } from "../oce_api_helpers";
+import { getDetectorUniqueKey, addStaticAffordanceToNeeds } from "../oce_api_helpers";
 
 
 let sendNotificationSunset = function (sub) {
@@ -9,6 +9,42 @@ let sendNotificationSunset = function (sub) {
 
   notify(uids, sub.iid, 'Three new snapshots were added to the sunset timelapse! Click here to see it.', '', '/apicustomresults/' + sub.iid + '/' + sub.eid);
 };
+
+const createSunsetNeeds = (minutes_before, minutes_after, interval_size) => {
+  contributionTypes = []
+  for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
+    let needName;
+    let detectorObjectKey;
+    if (i < 0) {
+      let min = -1 * i;
+      needName = `${min} minutes after sunset`;
+      detectorObjectKey = `sunset${min}after`
+    }
+    else {
+      let min = i;
+      needName = `${min} minutes before sunset`;
+      detectorObjectKey = `sunset${min}before`
+    }
+    let need = {
+      needName: needName,
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
+        number: 1
+      },
+      toPass: {
+        instruction: ('<p>Do you have <span style="color: #ffa500; font-weight: bold;">a clear view of sunset</span>?</p>' +
+          '<p>If <b>no</b>, try to find higher ground where the sun is not covered. Otherwise, <a style="font-weight: bold" href="/affordances">ignore this opportunity and go back</a></p><br>' +
+          '<p>If <b>yes</b>, take a snapshot 📸 for the timelapse!</p>'),
+        minutes_before: minutes_before,
+        minutes_after: minutes_after,
+      },
+      numberNeeded: 1,
+      notificationDelay: 0
+    }
+    contributionTypes.push(need);
+  }
+  return contributionTypes;
+}
 
 const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => {
 
@@ -28,43 +64,30 @@ const createSunsetTimelapse = (minutes_before, minutes_after, interval_size) => 
     },
   }
 
-  contributionTypes = []
-  for (let i = minutes_before; i > -1*minutes_after; i -= interval_size) {
-    let needName;
-    let detectorObjectKey;
-    if (i < 0) {
-      let min = -1 * i;
-      needName = `${min} minutes after sunset`;
-      detectorObjectKey = `sunset${min}after`
-    }
-    else {
-      let min = i;
-      needName = `${min} minutes before sunset`;
-      detectorObjectKey = `sunset${min}before`
-    }
-    let need = {
-      needName: needName,
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
-        // detector: getDetectorUniqueKey(DETECTORS.night), // gotta think more about how dynamic participate works here
-        number: 1
-      },
-      toPass: {
-        instruction: ('<p>Do you have <span style="color: #ffa500; font-weight: bold;">a clear view of sunset</span>?</p>' +
-          '<p>If <b>no</b>, try to find higher ground where the sun is not covered. Otherwise, <a style="font-weight: bold" href="/affordances">ignore this opportunity and go back</a></p><br>' +
-          '<p>If <b>yes</b>, take a snapshot 📸 for the timelapse!</p>'),
-        minutes_before: minutes_before,
-        minutes_after: minutes_after,
-      },
-      numberNeeded: 1,
-      notificationDelay: 0
-    }
-    contributionTypes.push(need);
-  }
-
-  apiDefinition['contributionTypes'] = contributionTypes;
+  // NOTE: anytime static affordance, so people are assigned properly for the experiment
+  apiDefinition['contributionTypes'] = addStaticAffordanceToNeeds('anytime', createSunsetNeeds(minutes_before, minutes_after, interval_size));
   return apiDefinition;
 }
+
+const createBaselineSunsetTimelapse = (minutes_before, minutes_after, interval_size) => {
+  let apiDefinition = {
+    _id: Random.id(),
+    name: '🌇 Sunset Timelapse 🌄',
+    participateTemplate: 'sunsetTimelapseParticipate',
+    resultsTemplate: 'sunset',
+    description: 'Create a timelapse of the sunset with others around the country',
+    notificationText: 'Do you have a clear view of the sunset? If yes, add to the timelapse!',
+    callbacks: [{
+      trigger: 'cb.numberOfSubmissions() % 3 === 0',
+      function: sendNotificationSunset.toString()
+    }],
+    // NOTE: explicitly ignore anytimeSequential
+  }
+
+  // NOTE: baseline static affordance, so people are assigned properly for the experiment
+  apiDefinition['contributionTypes'] = addStaticAffordanceToNeeds('baseline', createSunsetNeeds(minutes_before, minutes_after, interval_size));
+  return apiDefinition;
+};
 
 /**
  * Testing experience so we can get define needs based on minute timeblocks, at any hour of the day
@@ -105,7 +128,7 @@ const createMomentsOfTheHourTimelapse = () => {
 
   apiDefinition['contributionTypes'] = contributionTypes;
   apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 9
+    "startingBuckets": 3
   };
   return apiDefinition;
 }
@@ -113,5 +136,6 @@ const createMomentsOfTheHourTimelapse = () => {
 
 export default ANYTIME_OCES = {
   sunsetTimelapse: createSunsetTimelapse(120, 0, 2),
+  baselineSunsetTimelapse: createBaselineSunsetTimelapse(120, 0, 2),
   momentsOfHourTimelapse: createMomentsOfTheHourTimelapse()
 }

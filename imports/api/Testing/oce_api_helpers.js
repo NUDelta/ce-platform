@@ -28,7 +28,7 @@ export const addStaticAffordanceToNeeds = function(staticAffordance, contributio
 };
 
 /**
- * Side effect: Changes the global DETECTORS object, adding another detector with key "detectorKey_staticAffordance"
+ * Side effect: Changes the global DETECTORS object, adding another detector with key "detectorKey staticAffordance"
  *
  * @param staticAffordance
  * @param detectorKey
