@@ -746,7 +746,9 @@ Template.sunsetTimelapseParticipate.onRendered(() => {
     ctx.canvas.width/5,
     (horizonProportion + 0.1) * ctx.canvas.height);
 
-  const minutes_before = this.experience.contributionTypes[0].toPass.minutes_before;
+  debugger;
+  // const minutes_before = this.experience.contributionTypes[0].toPass.minutes_before;
+  const minutes_before = 120; // FIXME: hardcoded for now
   const sunsetCompletionProportion = calculateSunsetCompletion(minutes, minutes_before)
   const yProportion = calculateSunsetGuideHeight(sunsetCompletionProportion, 0.2, horizonProportion);
   const xProportion = calculateSunsetGuideWidth(sunsetCompletionProportion, 0.15, 0.85);
