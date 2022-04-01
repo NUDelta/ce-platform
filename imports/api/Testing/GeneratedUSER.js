@@ -6,7 +6,7 @@ export let USERS = {
     profile: {
       firstName: "Cindy",
       lastName: "Hu",
-      staticAffordances: { pair1: true, betatester: true},
+      staticAffordances: { anytime: true }
     },
   },
   yvan: {
@@ -236,6 +236,83 @@ export let USERS = {
     profile: {
       firstName: "Grace",
       lastName: "Wainana",
+    },
+  },
+  alexandra: {
+    username: "alexandra",
+    email: "Alexandra@email.com",
+    password: "password",
+    profile: {
+      firstName: "Alexandra",
+      lastName: "Andreiu",
+    }
+  },
+  lauren: {
+    username: "lauren",
+    email: "Lauren@email.com",
+    password: "password",
+    profile: {
+      firstName: "Lauren",
+      lastName: "Bichelmeir",
+    }
+  },
+  amy: {
+    username: "amy",
+    email: "Amy@email.com",
+    password: "password",
+    profile: {
+      firstName: "Amy",
+      lastName: "Guo",
+    }
+  },
+  sasha: {
+    username: "sasha",
+    email: "Sasha@email.com",
+    password: "password",
+    profile: {
+      firstName: "Sasha",
+      lastName: "Weiss",
+      staticAffordances: { anytime: true },
+    },
+  },
+  frank: {
+    username: "frank",
+    email: "Frank@email.com",
+    password: "password",
+    profile: {
+      firstName: "Frank",
+      lastName: "Avino",
+      staticAffordances: { anytime: true },
+    },
+  },
+  allison: {
+    username: "allison",
+    email: "Allison@email.com",
+    password: "password",
+    profile: {
+      firstName: "Allison",
+      lastName: "Sun",
+      staticAffordances: { anytime: true },
+    },
+  },
+  josh: {
+    username: "josh",
+    email: "Josh@email.com",
+    password: "password",
+    profile: {
+      firstName: "Josh",
+      lastName: "Hibschman",
+      staticAffordances: { anytime: true },
+    },
+  },
+  shankar: {
+    username: "shankar",
+    email: "Shankar@email.com",
+    password: "password",
+    profile: {
+      firstName: "Shankar",
+      lastName: "Salwan",
+      staticAffordances: { anytime: true },
     },
   },
 };
