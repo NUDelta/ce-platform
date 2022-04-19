@@ -71,24 +71,26 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
+      let notificationID = experience.contributionTypes[0].needName.split(' ')[0].toLowerCase();
       // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
-      // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-      //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
-      // });
+      let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+        return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid), notificationID);
+      });
 
-      let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
+      let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(usermeta => usermeta.uid);
       let route = "/";
 
       // Try to notify, based on if the current need has need-specific notification info
       let needObject = incident.contributionTypes.find((need) => need.needName === needName);
+
       if (needObject && needObject.notificationSubject && needObject.notificationText) {
         notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
-          needObject.notificationText, route);
+          needObject.notificationText, route, notificationID);
       }
       // Try to notify, based on experience-level notification info
       else if (experience.name && experience.notificationText) {
         notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-          experience.notificationText, route);
+          experience.notificationText, route, notificationID);
       }
       // Fail to notify, because these parameters are not defined
       else {

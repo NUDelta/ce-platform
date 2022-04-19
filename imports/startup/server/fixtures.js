@@ -186,6 +186,15 @@ function createTestData(){
   let uid5 = findUserByUsername('amy')._id;
   let uid6 = findUserByUsername('dani')._id;
 
+  let initialNotifications = {};
+  const expKeys = Object.keys(CONSTANTS.EXPERIENCES);
+  expKeys.forEach((key) => {
+    initialNotifications[key.toLowerCase()] = -1;
+  });
+
+  // const initialNotifications = Object.keys(CONSTANTS.EXPERIENCES).reduce((obj, key) => {
+  //   return {...obj, `${key}`: -1};
+  // }, {});
 
   Meteor.users.update({
     // everyone
@@ -194,7 +203,7 @@ function createTestData(){
       "profile.experiences": [],
       "profile.subscriptions": [],
       "profile.lastParticipated": null,
-      "profile.lastNotified": null,
+      "profile.lastNotified": initialNotifications,
       "profile.pastIncidents": [],
       // "profile.staticAffordances": {}
     }

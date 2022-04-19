@@ -23,16 +23,17 @@ import {Submissions} from "../../OCEManager/currentNeeds";
  * @param text
  * @param route
  */
-export const notifyForParticipating = function (uids, iid, subject, text, route) {
+export const notifyForParticipating = function (uids, iid, subject, text, route, notificationID) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
+  const lastNotifiedKey = `profile.lastNotified.${notificationID}`;
 
   if(uids.length !== 0){
     Meteor.users.update({
       _id: { $in: uids }
     }, {
       $set: {
-        'profile.lastNotified': Date.now()
+        [lastNotifiedKey]: Date.now()
       }
     }, {
       multi: true

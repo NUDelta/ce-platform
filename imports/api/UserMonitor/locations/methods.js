@@ -198,7 +198,7 @@ export const userParticipatedTooRecently = (user) => {
  * @param user {Object} has Meteor.users Schema
  * @return {boolean} whether the user was notified too recently or not
  */
-export const userNotifiedTooRecently = (user) => {
+export const userNotifiedTooRecently = (user, notificationID) => {
   let minutes = 60 * 1000;
   let waitTimeAfterNotified;
   // adjust time for local vs prod deployment (lower in local for testing)
@@ -207,7 +207,7 @@ export const userNotifiedTooRecently = (user) => {
   } else {
     waitTimeAfterNotified = minutes * 10;
   }
-  const lastNotified = user.profile.lastNotified;
+  const lastNotified = user.profile.lastNotified[notificationID];
   const now = Date.now();
   return (now - lastNotified) < waitTimeAfterNotified;
 };
