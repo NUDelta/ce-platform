@@ -105,11 +105,11 @@ class AnytimeStrategizer {
   }
 
   isAnytimeExperience() {
-    return this.incident.anytimeSequential !== null;
+    return this.incident.anytimeSequential != null;
   }
 
   decide(needUserMap) {
-    if (this.incident.anytimeSequential === null) {
+    if (this.incident.anytimeSequential == null) {
       return true;
     }
     const currentBucketedNeeds = this.defineSequentialBuckets();
@@ -131,7 +131,7 @@ class AnytimeStrategizer {
   }
 
   defineSequentialBuckets() {
-    if (this.incident.anytimeSequential === null) {
+    if (this.incident.anytimeSequential == null) {
       console.error('No anytime constraint defined for this experience');
       return;
     }
