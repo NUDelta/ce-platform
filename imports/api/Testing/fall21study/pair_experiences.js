@@ -159,7 +159,7 @@ export const createWalk = function (pairNum) {
           instruction : "Pick out and take a picture of a piece of nature around you that makes you happy! Caption your picture with what about it sparks joy"
         },
         numberNeeded : 2,
-        notificationDelay : 60,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 1,
         allowRepeatContributions : false
       }
@@ -245,7 +245,7 @@ export const createLibraryExp = function (pairNum) {
           instruction : "Working on something outside home? Show us something cool (or motivating) around your study space that is keeping you going (or focused)? Caption it with why it motivates you!"
         },
         numberNeeded : 2,
-        notificationDelay : 600,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -331,7 +331,7 @@ export const createGroceriesExp = function (pairNum) {
           instruction : "What is your game plan for shopping for food? Show us what ingredients you’re using! Caption your picture with your plan!"
         },
         numberNeeded : 2,
-        notificationDelay : 180,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -417,7 +417,7 @@ export const createRestaurantExp = function (pairNum) {
           instruction : "Where are you sitting in the restaurant? Why? Take a picture of your place and tell us your reason!"
         },
         numberNeeded : 2,
-        notificationDelay : 300,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -502,7 +502,7 @@ export const createGymExp = function (pairNum) {
           instruction : "How was your workout session today? What keeps you motivated to workout and why? Take a picture of the gym or your motivation and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 300,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -588,7 +588,7 @@ export const createPublicTransportExp = function (pairNum) {
           instruction : "Take a picture of the view outside the window and share where you are heading to today! What do you do to pass time on public transportation and why?"
         },
         numberNeeded : 2,
-        notificationDelay : 90,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -674,7 +674,7 @@ export const createCoffeeExp = function (pairNum) {
           instruction : "Where do you usually sit and why? Take a picture of your drink or where you are sitting and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 180,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
@@ -760,7 +760,7 @@ export const createBubbleTeaExp = function (pairNum) {
           instruction : "What drink did you get and why? Take a picture of your drink and share it with your partner!"
         },
         numberNeeded : 2,
-        notificationDelay : 150,
+        notificationDelay : 1,
         numberAllowedToParticipateAtSameTime: 3,
         allowRepeatContributions : false
       }
