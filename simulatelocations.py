@@ -253,6 +253,15 @@ def allUsersAtTrain():
 
     print("all users at train")
 
+def allUsersAtPark():
+    setLocation(park, sys.argv[1])
+    setLocation(park, sys.argv[2])
+    setLocation(park, sys.argv[3])
+    setLocation(park, sys.argv[4])
+    setLocation(park, sys.argv[5])
+
+    print("all users at park")
+
 def userAatCoffee():
     setLocation(coffee, sys.argv[1])
 
@@ -385,8 +394,9 @@ def dndCafeBubbleTea():
     print("users at dnd, coffee lab, and tealicious")
 
 
-
+# THIS DOES NOT ACTUALLY INSTANTLY TELEPORT. IT TAKES MIDWAY BETWEEN HERE AND THERE. UNLESS YOU ARE IN NULL.
 if __name__ == "__main__":
+    allUsersAtPark()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
@@ -394,7 +404,7 @@ if __name__ == "__main__":
 	# pairsAtParkLibraryGrocery()
     # allUsersAtLibrary()
     # allUsersAtDnD()
-    dndCafeBubbleTea()
+    # dndCafeBubbleTea()
     # allUsersNorris()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()
