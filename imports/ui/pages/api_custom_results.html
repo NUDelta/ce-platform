@@ -557,7 +557,7 @@
   {{#with content}}
   <form id="replyResult" >
     <div class="resultsContainer" style="display:flex; flex-direction:column; align-items: center;">
-      <div class="caption">Check out what everyone is up to!</div>
+      <div class="caption">Your submissions have been recorded! Your partner hasn't submitted yet, we'll notify you when they do!</div>
       <div class="sub_container">
         <div class="img_container"><img src="{{myImage}}"></div>
         <div class="caption">"{{myCaption}}" -You</div>
@@ -567,8 +567,8 @@
          <div class="caption">"{{captionOne}}" -{{friendOneName}}</div>
          <div class="img_container"><img src="{{imageOne}}"></div>
         {{else}}
-          <div class="caption">We're still waiting on this submission. Hang tight!</div>
-          <div class="pending_img">?</div>
+          <div class="caption">Your partner hasn't submitted yet, we'll notify you when they do!</div>
+          <!-- <div class="pending_img">?</div> -->
         {{/if}}
       </div>
       
