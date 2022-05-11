@@ -1,8 +1,8 @@
-import { Meteor } from 'meteor/meteor';
-import { Push } from 'meteor/nudelta2015:push';
-import { log } from '../../logs.js';
-import { CONFIG } from '../../config.js';
-import {Submissions} from "../../OCEManager/currentNeeds";
+import { Meteor } from "meteor/meteor";
+import { Push } from "meteor/nudelta2015:push";
+import { log } from "../../logs.js";
+import { CONFIG } from "../../config.js";
+import { Submissions } from "../../OCEManager/currentNeeds";
 
 /**
  * _sendPush - sends a notification to the given user
@@ -23,20 +23,31 @@ import {Submissions} from "../../OCEManager/currentNeeds";
  * @param text
  * @param route
  */
-export const notifyForParticipating = function (uids, iid, subject, text, route) {
+export const notifyForParticipating = function (
+  uids,
+  iid,
+  subject,
+  text,
+  route,
+  notificationID
+) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
-
-  if(uids.length !== 0){
-    Meteor.users.update({
-      _id: { $in: uids }
-    }, {
-      $set: {
-        'profile.lastNotified': Date.now()
+  const lastNotifiedKey = `profile.lastNotified.${notificationID}`;
+  if (uids.length !== 0) {
+    Meteor.users.update(
+      {
+        _id: { $in: uids },
+      },
+      {
+        $set: {
+          [lastNotifiedKey]: Date.now(),
+        },
+      },
+      {
+        multi: true,
       }
-    }, {
-      multi: true
-    });
+    );
 
     _sendPush(uids, subject, text, route, iid, true);
   }
@@ -49,17 +60,24 @@ export const notifyForParticipating = function (uids, iid, subject, text, route)
  *
  * @param uids
  */
-export const notifyForMissingParticipation = function(uids) {
+export const notifyForMissingParticipation = function (uids) {
   // Don't set users profile lastNotified, because this parameter means lastNotified TO participate,
   // where as this notification is an apology
 
-  _sendPush(uids, "Your situation changed!", "You missed a chance to participate.", "/", null, true);
+  _sendPush(
+    uids,
+    "Your situation changed!",
+    "You missed a chance to participate.",
+    "/",
+    null,
+    true
+  );
 };
 
 export const notify = function (uids, iid, subject, text, route) {
   //TODO: i think that route shouldn't just be "apicustom", but "apicustom/incidentId/need"
   // so the notification links directly to the experience
-    _sendPush(uids, subject, text, route, iid, true);
+  _sendPush(uids, subject, text, route, iid, true);
 };
 
 /**
@@ -69,15 +87,23 @@ export const notify = function (uids, iid, subject, text, route) {
  * @param text [String]
  * @return [Function]
  */
-export const notifyUsersInIncident = function(subject, text) {
+export const notifyUsersInIncident = function (subject, text) {
   const functionTemplate = function (sub) {
-    let uids = Submissions.find({iid: sub.iid}).fetch().map(function (x) {
-      return x.uid;
-    });
+    let uids = Submissions.find({ iid: sub.iid })
+      .fetch()
+      .map(function (x) {
+        return x.uid;
+      });
 
-    notify(uids, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+    notify(
+      uids,
+      sub.iid,
+      "${subject}",
+      "${text}",
+      "/apicustomresults/" + sub.iid + "/" + sub.eid
+    );
   };
-  return eval('`'+functionTemplate.toString()+'`');
+  return eval("`" + functionTemplate.toString() + "`");
 };
 
 /**
@@ -87,23 +113,31 @@ export const notifyUsersInIncident = function(subject, text) {
  * @param text [String]
  * @return [Function]
  */
-export const notifyUsersInNeed = function(subject, text) {
-  const functionTemplate = function(sub) {
-    let uids = Submissions.find({iid: sub.iid, needName: sub.needName}).fetch().map((x) => {
-      return x.uid;
-    });
-    notify(uids, sub.iid, '${subject}', '${text}', '/apicustomresults/' + sub.iid + '/' + sub.eid);
+export const notifyUsersInNeed = function (subject, text) {
+  const functionTemplate = function (sub) {
+    let uids = Submissions.find({ iid: sub.iid, needName: sub.needName })
+      .fetch()
+      .map((x) => {
+        return x.uid;
+      });
+    notify(
+      uids,
+      sub.iid,
+      "${subject}",
+      "${text}",
+      "/apicustomresults/" + sub.iid + "/" + sub.eid
+    );
   };
-  return eval('`'+functionTemplate.toString()+'`');
+  return eval("`" + functionTemplate.toString() + "`");
 };
 
 // Meteor.call('sendNotification', ['6enTAPJMPSH9X4ya6'], 'Are you awake?', 'If you are, open the app to participate.', '/')
 Meteor.methods({
   sendNotification(uids, subject, text, route) {
-    log.cerebro('Sending manual push notifications to ' + uids);
+    log.cerebro("Sending manual push notifications to " + uids);
 
     _sendPush(uids, subject, text, route, null, false);
-  }
+  },
 });
 
 /**
@@ -131,10 +165,10 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
     title: subject,
     text: text,
     iid: iid,
-    route: route
+    route: route,
   };
 
-  log.cerebro('Sending push notifications to ' + uids);
+  log.cerebro("Sending push notifications to " + uids);
   log.cerebro(payload);
 
   let pushUsers = [];
@@ -142,7 +176,7 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
     log.info(`Debug push enabled. Sending to debug set.`);
     pushUsers = _.intersection(userIds, CONFIG.DEBUG_USERS);
   } else {
-    pushUsers = uids
+    pushUsers = uids;
   }
 
   let notification = {
@@ -152,14 +186,13 @@ function _sendPush(uids, subject, text, route, iid, soundP) {
     badge: 0,
     payload: payload,
     query: {
-      userId: { $in: pushUsers }
-    }
+      userId: { $in: pushUsers },
+    },
   };
 
-  if(soundP){
-    notification["sound"] = 'airhorn.caf';
+  if (soundP) {
+    notification["sound"] = "airhorn.caf";
     notification["badge"] = 1;
-
   }
 
   // attempt to send a push notification

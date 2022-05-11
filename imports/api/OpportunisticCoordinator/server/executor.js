@@ -4,17 +4,22 @@ import { Incidents } from "../../OCEManager/OCEs/experiences";
 import { Locations } from "../../UserMonitor/locations/locations";
 
 import { notifyForParticipating } from "./noticationMethods";
-import { adminUpdatesForAddingUserToIncident, updateAvailability } from "./identifier";
 import {
-  distanceBetweenLocations, userIsAvailableToParticipate,
-  userNotifiedTooRecently, userParticipatedTooRecently
+  adminUpdatesForAddingUserToIncident,
+  updateAvailability,
+} from "./identifier";
+import {
+  distanceBetweenLocations,
+  userIsAvailableToParticipate,
+  userNotifiedTooRecently,
+  userParticipatedTooRecently,
 } from "../../UserMonitor/locations/methods";
 import { checkIfThreshold } from "./strategizer";
 import { Notification_log } from "../../Logging/notification_log";
 import { serverLog, log } from "../../logs";
-import {sustainedAvailabilities} from "../../OCEManager/OCEs/methods";
-import {needAggregator} from "../strategizer";
-import {setIntersection} from "../../custom/arrayHelpers";
+import { sustainedAvailabilities } from "../../OCEManager/OCEs/methods";
+import { needAggregator } from "../strategizer";
+import { setIntersection } from "../../custom/arrayHelpers";
 
 /**
  * Sends notifications to the users, adds to the user's active experience list,
@@ -42,69 +47,105 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
     let needNamesBinnedByDetector = needAggregator(incident);
     let assignedNeedNames = Object.keys(needUserMapping);
 
-    _.forEach(needNamesBinnedByDetector, (commonDetectorNeedNames, detectorUniqueKey) => {
+    _.forEach(
+      needNamesBinnedByDetector,
+      (commonDetectorNeedNames, detectorUniqueKey) => {
+        // might have to distinguish what is logged done when its not half half vs not.
+        // maybe use a "strategy" class model
+        // if (commonDetectorNeedNames.length == 1) {
+        //
+        // }
 
-      // might have to distinguish what is logged done when its not half half vs not.
-      // maybe use a "strategy" class model
-      // if (commonDetectorNeedNames.length == 1) {
-      //
-      // }
+        // before doing a dynamic strategy algorithm, make sure we are looking at the candidate needs
+        let candidateNeedNames = setIntersection(
+          commonDetectorNeedNames,
+          assignedNeedNames
+        );
 
-      // before doing a dynamic strategy algorithm, make sure we are looking at the candidate needs
-      let candidateNeedNames = setIntersection(commonDetectorNeedNames, assignedNeedNames);
+        // TODO: send to a dynamic route endpoint
+        // choose a random need from the aggregated set for now
+        let needName = candidateNeedNames[0];
 
-      // TODO: send to a dynamic route endpoint
-      // choose a random need from the aggregated set for now
-      let needName = candidateNeedNames[0];
+        let usersMeta = needUserMapping[needName];
+        if (!usersMeta) {
+          return;
+        }
 
-      let usersMeta = needUserMapping[needName];
-      if (!usersMeta) {
-        return;
-      }
-
-      let newUsersMeta = usersMeta.filter(function(userMeta) {
-        return !Meteor.users.findOne(userMeta.uid).activeIncidents().includes(iid);
-      });
-
-      //administrative updates
-      _.forEach(newUsersMeta, (userMeta) => {
-        adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
-      });
-
-      // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
-      // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-      //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
-      // });
-
-      let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
-      let route = "/";
-
-      // Try to notify, based on if the current need has need-specific notification info
-      let needObject = incident.contributionTypes.find((need) => need.needName === needName);
-      if (needObject && needObject.notificationSubject && needObject.notificationText) {
-        notifyForParticipating(uidsNotNotifiedRecently, iid, needObject.notificationSubject,
-          needObject.notificationText, route);
-      }
-      // Try to notify, based on experience-level notification info
-      else if (experience.name && experience.notificationText) {
-        notifyForParticipating(uidsNotNotifiedRecently, iid, `Participate in "${experience.name}"!`,
-          experience.notificationText, route);
-      }
-      // Fail to notify, because these parameters are not defined
-      else {
-        log.error('notification information cannot be found in the need or experience level');
-        return;
-      }
-
-      _.forEach(newUsersMeta, usermeta => {
-        Notification_log.insert({
-          uid: usermeta.uid,
-          iid: iid,
-          needName: needName,
-          timestamp: Date.now()
+        let newUsersMeta = usersMeta.filter(function (userMeta) {
+          return !Meteor.users
+            .findOne(userMeta.uid)
+            .activeIncidents()
+            .includes(iid);
         });
-      });
-    });
+
+        //administrative updates
+        _.forEach(newUsersMeta, (userMeta) => {
+          adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
+        });
+
+        let notificationID = experience.contributionTypes[0].needName
+          .split(" ")[0]
+          .toLowerCase();
+        // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
+        let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+          return !userNotifiedTooRecently(
+            Meteor.users.findOne(userMeta.uid),
+            notificationID
+          );
+        });
+
+        let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
+          (usermeta) => usermeta.uid
+        );
+        let route = "/";
+
+        // Try to notify, based on if the current need has need-specific notification info
+        let needObject = incident.contributionTypes.find(
+          (need) => need.needName === needName
+        );
+        if (
+          needObject &&
+          needObject.notificationSubject &&
+          needObject.notificationText
+        ) {
+          notifyForParticipating(
+            uidsNotNotifiedRecently,
+            iid,
+            needObject.notificationSubject,
+            needObject.notificationText,
+            route,
+            notificationID
+          );
+        }
+        // Try to notify, based on experience-level notification info
+        else if (experience.name && experience.notificationText) {
+          notifyForParticipating(
+            uidsNotNotifiedRecently,
+            iid,
+            `Participate in "${experience.name}"!`,
+            experience.notificationText,
+            route,
+            notificationID
+          );
+        }
+        // Fail to notify, because these parameters are not defined
+        else {
+          log.error(
+            "notification information cannot be found in the need or experience level"
+          );
+          return;
+        }
+
+        _.forEach(newUsersMeta, (usermeta) => {
+          Notification_log.insert({
+            uid: usermeta.uid,
+            iid: iid,
+            needName: needName,
+            timestamp: Date.now(),
+          });
+        });
+      }
+    );
   });
 };
 
@@ -117,7 +158,11 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
  * @param needDelays {object} delay before attempting to run experiences as {iid: number}
  */
 //user availability = the group they are in + experience for that group
-export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, needDelays) => {
+export const runCoordinatorAfterUserLocationChange = (
+  uid,
+  userAvailability,
+  needDelays
+) => {
   // bin user need availabilities by time, and send to coordinator together
   // {
   // '10000': {
@@ -150,11 +195,17 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
       }
 
       // add [place, need, dist] to current delay for iid
-      binnedUserAvailabilities[currDelayStr][iid].push(individualPlace_Need_Dist);
+      binnedUserAvailabilities[currDelayStr][iid].push(
+        individualPlace_Need_Dist
+      );
     });
   });
 
-  serverLog.call({message: `user ${ uid } | binned availabilities: ${ JSON.stringify(binnedUserAvailabilities) }`});
+  serverLog.call({
+    message: `user ${uid} | binned availabilities: ${JSON.stringify(
+      binnedUserAvailabilities
+    )}`,
+  });
 
   // create a timeout for each incident for the current user with the incident delay
   _.forEach(binnedUserAvailabilities, (currAvailabilities, delayString) => {
@@ -181,7 +232,11 @@ export const runCoordinatorAfterUserLocationChange = (uid, userAvailability, nee
  * @returns {Function}
  */
 const coordinatorWrapper = (uid, availabilityDictionary) => () => {
-  serverLog.call({message: `user ${ uid } | userAvailability: ${ JSON.stringify(availabilityDictionary) } | can participate? ${ userIsAvailableToParticipate(uid) }` });
+  serverLog.call({
+    message: `user ${uid} | userAvailability: ${JSON.stringify(
+      availabilityDictionary
+    )} | can participate? ${userIsAvailableToParticipate(uid)}`,
+  });
   let currAvailabilityDictionary = undefined;
 
   // get latest availabilityDictionary from Locations (currentState) collection
@@ -196,7 +251,10 @@ const coordinatorWrapper = (uid, availabilityDictionary) => () => {
     // only run coordinator update loop if sustained match for (place, need)
     // edge case: being at the same place and triggering multiple updates under location alone will cause multiple timeout callbacks to be successful. once notified, however, they are no longer available to participate
     let userCanParticipate = userIsAvailableToParticipate(uid);
-    let sustainedAvailDict = sustainedAvailabilities(availabilityDictionary, currAvailabilityDictionary);
+    let sustainedAvailDict = sustainedAvailabilities(
+      availabilityDictionary,
+      currAvailabilityDictionary
+    );
     let somePlaceNeedsSustained = Object.keys(sustainedAvailDict).length > 0;
     if (somePlaceNeedsSustained && userCanParticipate) {
       // update availabilities of users and check if any experience incidents can be run
@@ -208,5 +266,3 @@ const coordinatorWrapper = (uid, availabilityDictionary) => () => {
     }
   }
 };
-
-

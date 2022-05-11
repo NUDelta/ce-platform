@@ -1,28 +1,32 @@
 import { Meteor } from "meteor/meteor";
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { log } from '../../logs.js';
-import { Locations } from './locations.js';
+import { ValidatedMethod } from "meteor/mdg:validated-method";
+import { SimpleSchema } from "meteor/aldeed:simple-schema";
+import { log } from "../../logs.js";
+import { Locations } from "./locations.js";
 
-import { findMatchesForUser, getNeedDelay} from
-    '../../OCEManager/OCEs/methods'
-import { runCoordinatorAfterUserLocationChange } from '../../OpportunisticCoordinator/server/executor'
+import {
+  findMatchesForUser,
+  getNeedDelay,
+} from "../../OCEManager/OCEs/methods";
+import { runCoordinatorAfterUserLocationChange } from "../../OpportunisticCoordinator/server/executor";
 import {
   clearAvailabilitiesForUser,
-  decomissionFromAssignmentsIfAppropriate
+  decomissionFromAssignmentsIfAppropriate,
 } from "../../OpportunisticCoordinator/server/identifier";
-import { getAffordancesFromLocation } from '../detectors/methods';
+import { getAffordancesFromLocation } from "../detectors/methods";
 import { CONFIG } from "../../config";
 import { Location_log } from "../../Logging/location_log";
 import { serverLog } from "../../logs";
-import {EstimatedLocation_log} from "../../Logging/estimated_location_log";
+import { EstimatedLocation_log } from "../../Logging/estimated_location_log";
 
 Meteor.methods({
-  triggerUpdate(lat, lng, uid){
+  triggerUpdate(lat, lng, uid) {
     onLocationUpdate(uid, lat, lng, function (uid) {
-      serverLog.call({message: "triggering manual location update for: " + uid});
+      serverLog.call({
+        message: "triggering manual location update for: " + uid,
+      });
     });
-  }
+  },
 });
 
 /**
@@ -34,79 +38,104 @@ Meteor.methods({
  * @param callback {function} callback function to run after code completion, takes in one argument, uid
  */
 export const onLocationUpdate = (uid, location, callback) => {
-  serverLog.call({message: `Location update for ${ uid }: removing them from all availabilities and getting new affordances.`});
+  serverLog.call({
+    message: `Location update for ${uid}: removing them from all availabilities and getting new affordances.`,
+  });
 
   // clear users current availabilities
   clearAvailabilitiesForUser(uid);
 
   // obtain activity info
   let not_traveling_on_bicycle_or_vehicle;
-  if ('activity' in location) {
-    not_traveling_on_bicycle_or_vehicle = !((location.activity.type === "in_vehicle") || (location.activity.type === "on_bicycle"));
+  if ("activity" in location) {
+    not_traveling_on_bicycle_or_vehicle = !(
+      location.activity.type === "in_vehicle" ||
+      location.activity.type === "on_bicycle"
+    );
   } else {
-    serverLog.call({message: `no activity data for ${uid}. defaulting to a value that allows location update`});
+    serverLog.call({
+      message: `no activity data for ${uid}. defaulting to a value that allows location update`,
+    });
     not_traveling_on_bicycle_or_vehicle = true;
   }
 
   // attempt to find a user with the given uid
-  let user = Meteor.users.findOne({_id: uid});
-  serverLog.call({message: `user ${user}`});
+  let user = Meteor.users.findOne({ _id: uid });
+  serverLog.call({ message: `user ${user}` });
 
   if (user) {
-
     let rawLocationId = insertRawLocationInDB(uid, location);
 
     // smooth location if not traveling on bicycle or vehicle
     if (not_traveling_on_bicycle_or_vehicle) {
-      let [estimatedLat, estimatedLng] = estimateLocationViaAccuracyTimeWeightedAverage(lastNLocationsForUser(5, uid));
+      let [estimatedLat, estimatedLng] =
+        estimateLocationViaAccuracyTimeWeightedAverage(
+          lastNLocationsForUser(5, uid)
+        );
 
       // modify bgGeolocation object with estimated location, if appropriate
-      location.coords['latitude'] = estimatedLat;
-      location.coords['longitude'] = estimatedLng;
+      location.coords["latitude"] = estimatedLat;
+      location.coords["longitude"] = estimatedLng;
     }
 
     // retrieve place affordances if not traveling on bicycle or vehicle
     let retrievePlaces = not_traveling_on_bicycle_or_vehicle;
 
     // get affordances and begin coordination process
-    getAffordancesFromLocation(uid, location, retrievePlaces, function (uid, bgLocationObject, affordances) {
+    getAffordancesFromLocation(
+      uid,
+      location,
+      retrievePlaces,
+      function (uid, bgLocationObject, affordances) {
+        log.info(`success: getAffordancesFromLocation`);
+        // get affordances via affordance aware
+        let user = Meteor.users.findOne({ _id: uid });
+        if (!user) {
+          log.error(
+            `uid = ${uid} passed to getAffordancesFromLocation did not correspond to a user `
+          );
+          return;
+        }
+        let userAffordances = user.profile.staticAffordances;
+        affordances = Object.assign({}, affordances, userAffordances);
+        affordances = affordances !== null ? affordances : {};
+        serverLog.call({ message: `affordances ${affordances}` });
 
-      log.info(`success: getAffordancesFromLocation`);
-      // get affordances via affordance aware
-      let user = Meteor.users.findOne({_id: uid});
-      if (!user) {
-        log.error(`uid = ${uid} passed to getAffordancesFromLocation did not correspond to a user `);
-        return;
+        // blocking, since everything in system works off of Locations collection
+        updateLocationInDb(uid, bgLocationObject, affordances);
+
+        // non-blocking, since its for post-hoc analysis
+        insertEstimatedLocationLog(
+          uid,
+          bgLocationObject,
+          affordances,
+          rawLocationId
+        );
+        callback(uid);
+
+        // clear assignments and begin matching
+        let newLoc = Locations.findOne({ uid: uid });
+        if (!newLoc) {
+          log.error(
+            `uid = ${uid} did not have a current location in Locations collection`
+          );
+          return;
+        }
+        let newAffs = newLoc.affordances; // newest affordances
+        // TODO(rlouie): Ask Kapil -- why do this intersection???
+        let sharedKeys = _.intersection(
+          Object.keys(newAffs),
+          Object.keys(affordances)
+        );
+        let sharedAffs = [];
+        _.forEach(sharedKeys, (key) => {
+          sharedAffs[key] = newAffs[key];
+        });
+
+        decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
+        sendToMatcher(uid, sharedAffs);
       }
-      let userAffordances = user.profile.staticAffordances;
-      affordances = Object.assign({}, affordances, userAffordances);
-      affordances = affordances !== null ? affordances : {};
-      serverLog.call({message: `affordances ${affordances}`});
-
-      // blocking, since everything in system works off of Locations collection
-      updateLocationInDb(uid, bgLocationObject, affordances);
-
-      // non-blocking, since its for post-hoc analysis
-      insertEstimatedLocationLog(uid, bgLocationObject, affordances, rawLocationId);
-      callback(uid);
-
-      // clear assignments and begin matching
-      let newLoc = Locations.findOne({uid: uid});
-      if (!newLoc) {
-        log.error(`uid = ${uid} did not have a current location in Locations collection`);
-        return;
-      }
-      let newAffs = newLoc.affordances; // newest affordances
-      // TODO(rlouie): Ask Kapil -- why do this intersection???
-      let sharedKeys = _.intersection(Object.keys(newAffs), Object.keys(affordances));
-      let sharedAffs = [];
-      _.forEach(sharedKeys, (key) => {
-        sharedAffs[key] = newAffs[key];
-      });
-
-      decomissionFromAssignmentsIfAppropriate(uid, sharedAffs);
-      sendToMatcher(uid, sharedAffs);
-    });
+    );
   }
 };
 
@@ -128,7 +157,10 @@ const sendToMatcher = (uid, affordances) => {
     // serverLog.call(`uid = ${uid} has availability for ${availabilityDictionary} in UserMonitor/locations/methods.js`)
 
     // update availabilityDictionary of most recent location
-    Locations.update({uid: uid}, {$set: {availabilityDictionary: availabilityDictionary}});
+    Locations.update(
+      { uid: uid },
+      { $set: { availabilityDictionary: availabilityDictionary } }
+    );
 
     // get delays for each incident-need pair
     let needDelays = {};
@@ -137,16 +169,23 @@ const sendToMatcher = (uid, affordances) => {
       needDelays[iid] = {};
 
       // find and add delays for each need
-      _.forEach(place_need_distance_s, (individualPlace_individualNeed_individualDist) => {
-        let individualNeed = individualPlace_individualNeed_individualDist[1];
-        needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
-      });
+      _.forEach(
+        place_need_distance_s,
+        (individualPlace_individualNeed_individualDist) => {
+          let individualNeed = individualPlace_individualNeed_individualDist[1];
+          needDelays[iid][individualNeed] = getNeedDelay(iid, individualNeed);
+        }
+      );
     });
 
     // start coordination process
-    runCoordinatorAfterUserLocationChange(uid, availabilityDictionary, needDelays);
+    runCoordinatorAfterUserLocationChange(
+      uid,
+      availabilityDictionary,
+      needDelays
+    );
   } else {
-    serverLog.call({ message: `user ${ uid } cannot participate yet.`})
+    serverLog.call({ message: `user ${uid} cannot participate yet.` });
   }
 };
 
@@ -189,7 +228,7 @@ export const userParticipatedTooRecently = (user) => {
   }
   const lastParticipated = user.profile.lastParticipated;
   const now = Date.now();
-  return (now - lastParticipated) < waitTimeAfterParticipating;
+  return now - lastParticipated < waitTimeAfterParticipating;
 };
 
 /**
@@ -198,7 +237,7 @@ export const userParticipatedTooRecently = (user) => {
  * @param user {Object} has Meteor.users Schema
  * @return {boolean} whether the user was notified too recently or not
  */
-export const userNotifiedTooRecently = (user) => {
+export const userNotifiedTooRecently = (user, notificationID) => {
   let minutes = 60 * 1000;
   let waitTimeAfterNotified;
   // adjust time for local vs prod deployment (lower in local for testing)
@@ -209,9 +248,8 @@ export const userNotifiedTooRecently = (user) => {
   }
   const lastNotified = user.profile.lastNotified;
   const now = Date.now();
-  return (now - lastNotified) < waitTimeAfterNotified;
+  return now - lastNotified < waitTimeAfterNotified[notificationID];
 };
-
 
 /**
  * Computes distance between a start and end location in meters using the haversine forumla.
@@ -231,8 +269,9 @@ export const distanceBetweenLocations = (start, end) => {
   const lat2 = end.latitude * degToRad;
 
   // compute c
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
@@ -240,42 +279,54 @@ export const distanceBetweenLocations = (start, end) => {
   return r * c;
 };
 
-
-const lastNLocationsForUser = function(N, uid) {
-  let locs = Location_log.find({
-    uid: uid
-  }, {
-    sort: {timestamp: -1},
-    limit: N
-  }).map((doc) => {return doc; });
+const lastNLocationsForUser = function (N, uid) {
+  let locs = Location_log.find(
+    {
+      uid: uid,
+    },
+    {
+      sort: { timestamp: -1 },
+      limit: N,
+    }
+  ).map((doc) => {
+    return doc;
+  });
   return locs;
 };
 
-
-const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) {
+const estimateLocationViaAccuracyTimeWeightedAverage = function (
+  lastNLocations
+) {
   let weightedSumLat = 0;
   let weightedSumLng = 0;
   let totalWeight = 0;
 
-  let accuracyArr = lastNLocations.map((loc) => { return (loc.accuracy < 10) ? 10 : loc.accuracy; });
-  let timeArr = lastNLocations.map((loc) => { return loc.timestamp; });
-  let latArr = lastNLocations.map((loc) => { return loc.lat; });
-  let lngArr = lastNLocations.map((loc) => { return loc.lng; });
+  let accuracyArr = lastNLocations.map((loc) => {
+    return loc.accuracy < 10 ? 10 : loc.accuracy;
+  });
+  let timeArr = lastNLocations.map((loc) => {
+    return loc.timestamp;
+  });
+  let latArr = lastNLocations.map((loc) => {
+    return loc.lat;
+  });
+  let lngArr = lastNLocations.map((loc) => {
+    return loc.lng;
+  });
 
   for (let i = 0; i < accuracyArr.length; i++) {
     let dt = Math.abs(timeArr[0] - timeArr[i]) / 1000; // time difference in seconds
     let w_i;
     if (dt == 0) {
       // when dt = 0 seconds, time-weighting component = 1
-      w_i = (10 / accuracyArr[i]);
-    }
-    else {
+      w_i = 10 / accuracyArr[i];
+    } else {
       // when dt > 0, time-weighting component =
       // 1 / ( log(dt + 1) ) =
       // 1 / ( log(0.1 + 1) ) =
       // 1 / ( log(1.1) ) =
       // 1 / ( some-positive-number )
-      w_i = (10 / accuracyArr[i]) * (1 / (Math.log(dt + 2.719)));
+      w_i = (10 / accuracyArr[i]) * (1 / Math.log(dt + 2.719));
       // w_i = (10 / accuracyArr[i]) * (10 / (dt + 10));
     }
     totalWeight += w_i;
@@ -285,7 +336,7 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
 
   let averageLat = weightedSumLat / totalWeight;
   let averageLng = weightedSumLng / totalWeight;
-  return [averageLat, averageLng]
+  return [averageLat, averageLng];
 };
 
 /**
@@ -295,12 +346,12 @@ const estimateLocationViaAccuracyTimeWeightedAverage = function(lastNLocations) 
  */
 export const insertRawLocationInDB = (uid, location) => {
   // check if nested objects exist
-  if (!('activity' in location)) {
-    location.activity = {}
+  if (!("activity" in location)) {
+    location.activity = {};
   }
 
-  if (!('battery' in location)) {
-    location.battery = {}
+  if (!("battery" in location)) {
+    location.battery = {};
   }
 
   let lat = location.coords.latitude;
@@ -328,7 +379,6 @@ export const insertRawLocationInDB = (uid, location) => {
   return _id;
 };
 
-
 /**
  * Updates the estimated location for a user in the database.
  *
@@ -341,15 +391,15 @@ const updateLocationInDb = (uid, location, affordances) => {
   let lng = location.coords.longitude;
 
   // get user's current estimated location and update, if exists. otherwise, create a new entry.
-  const entry = Locations.findOne({uid: uid});
+  const entry = Locations.findOne({ uid: uid });
   if (entry) {
     Locations.update(entry._id, {
       $set: {
         lat: lat,
         lng: lng,
         timestamp: Date.now(),
-        affordances: affordances
-      }
+        affordances: affordances,
+      },
     }); // blocking
     // Locations.update(entry._id, {
     //   $set: {
@@ -369,7 +419,7 @@ const updateLocationInDb = (uid, location, affordances) => {
       lat: lat,
       lng: lng,
       timestamp: Date.now(),
-      affordances: affordances
+      affordances: affordances,
     }); // blocking
     // Locations.insert({
     //   uid: uid,
@@ -385,21 +435,31 @@ const updateLocationInDb = (uid, location, affordances) => {
   }
 };
 
-
-const insertEstimatedLocationLog = (uid, location, affordances, rawLocationId) => {
+const insertEstimatedLocationLog = (
+  uid,
+  location,
+  affordances,
+  rawLocationId
+) => {
   let lat = location.coords.latitude;
   let lng = location.coords.longitude;
-  let _id = EstimatedLocation_log.insert({
-    uid: uid,
-    raw_location_id: rawLocationId,
-    lat: lat,
-    lng: lng,
-    timestamp: Date.now(),
-    affordances: affordances
-  }, (err) => {
-    if (err) {
-      log.error("EstimatedLocation_log, can't add a new estimated location", err);
+  let _id = EstimatedLocation_log.insert(
+    {
+      uid: uid,
+      raw_location_id: rawLocationId,
+      lat: lat,
+      lng: lng,
+      timestamp: Date.now(),
+      affordances: affordances,
+    },
+    (err) => {
+      if (err) {
+        log.error(
+          "EstimatedLocation_log, can't add a new estimated location",
+          err
+        );
+      }
     }
-  });
+  );
   return _id;
 };
