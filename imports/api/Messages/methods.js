@@ -41,18 +41,18 @@ export const sendSystemMessage = (message, recipients, route) => {
 		isReply: false,
 		isExp: false,
 		replyRecipient: null,
-		route: route,
+		route: null,
 	});
 };
 
-export const postExpInChat = (message, recipients, eid, iid) => {
+export const postExpInChat = (message, recipients, expInChat) => {
 	Messages.insert({
 		uid: "",
 		recipients: recipients,
 		message: message,
 		createdAt: new Date(),
 		isSystem: false,
-		isExp: [eid, iid],
+		isExp: expInChat,
 		isReply: false,
 		replyRecipient: null,
 		route: null,

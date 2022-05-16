@@ -4,11 +4,15 @@ import { Router } from 'meteor/iron:router';
 import './contributions.html';
 import moment from 'moment';
 import { CEResponse } from '../react-component/ce_response';
+import { CEResponseChat } from '../react-component/ce_response_chat';
 
 Template.message.helpers({
 
   CEResponse(){
     return CEResponse
+  },
+  CEResponseChat(){
+    return CEResponseChat
   },
   timestamp(timestamp) {
     const sentTime = moment(timestamp);

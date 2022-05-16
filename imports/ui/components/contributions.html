@@ -31,7 +31,8 @@
           <div>{{this.message}}</div>
       </div>
     {{else if this.isExp}}
-      <div>{{> React component=CEResponse ids=this.isExp}}</div>
+    <div>{{> React component=CEResponseChat expInChat=this.isExp}}</div>
+      <!-- <div>{{> React component=CEResponse ids=this.isExp}}</div> -->
     {{else}}
       <div class={{getSenderAndSetClass this.uid this.system}}>
         <div style="font-size: 10px;">

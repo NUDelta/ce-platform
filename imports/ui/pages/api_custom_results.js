@@ -28,8 +28,8 @@ Template.api_custom_results.helpers({
       return dateA - dateB;
     });
 
-    console.log(this);
-    console.log(this.images);
+    // console.log(this);
+    // console.log(this.images);
     return this;
   },
 });

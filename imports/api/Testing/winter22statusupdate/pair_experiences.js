@@ -13,6 +13,17 @@ export const createActivity1 = function (pairNum) {
       needName: sub.needName
     }).fetch();
 
+    let expInChat = submissions.map((submission) => {
+      return {
+        uid: submission.uid,
+        name: Meteor.users.findOne(submission.uid).profile.firstName,
+        text: submission.content.sentence,
+        image: submission.content.proof
+      }
+    });
+
+    console.log("expInChat: ", expInChat);
+
     let participants = submissions.map((submission) => { return submission.uid; });
 
     participants.forEach(function(p){
@@ -25,11 +36,11 @@ export const createActivity1 = function (pairNum) {
       });
     });
 
-    let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
+    let route = `/chat`;
     let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
     sendSystemMessage(message, participants, route); 
-    postExpInChat("", participants, sub.eid, sub.iid);
+    postExpInChat("", participants, expInChat);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
   }
 
