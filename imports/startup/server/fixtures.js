@@ -132,7 +132,7 @@ function createTestExperiences() {
     });
   }
   log.info(`Populated ${Detectors.find().count()} detectors`);
-  for (let i = 1; i < 12; i++) {
+  for (let i = 1; i < 4; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
       // let need = value.contributionTypes[0].needName;

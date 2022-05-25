@@ -43,10 +43,12 @@ export const CEResponseChat = ({ expInChat }) => {
       } else {
         expStyle = recipientStyle;
       }
-      console.log(expStyle);
+      let sentTime = moment(exp.time);
+      sentTime = sentTime.format("M/D/YY");
       return <div style={expStyle}>
         <div style={{fontSize: "10px"}}>
-          <span>{exp.name}</span>
+          <span>{exp.name} </span>
+          <span>{sentTime}</span>
         </div>
         <div>
           <img 

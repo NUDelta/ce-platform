@@ -1169,24 +1169,19 @@ Template.api_custom.events({
               console.log("error in uploadImage: ", err)
             } else {
               console.log("image has been uploaded");
-              Router.go(resultsUrl);
+              // Router.go(resultsUrl);
+              Router.go("/chat");
             }
           })}
       } else {
         let ImageURL = $('.fileinput-preview').attr('src');
-        // console.log("type of ImageURL: ", typeof ImageURL)
-        // console.log(ImageURL)
         // Split the base64 string in data and contentType
         let block = ImageURL.split(";");
-        // console.log("========BLOCK========")
-        // console.log(block)
-        // console.log("===============")
         // Get the content type
         let contentType = block[0].split(":")[1];
         // get the real base64 content of the file
         let realData = block[1].split(",")[1];
         picture = realData; 
-        // console.log("type of picture: ", typeof picture)
 
         //CINDY: modify code starting here
         // picture = b64toBlob(realData, contentType);

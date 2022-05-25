@@ -2,6 +2,7 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
+import { Router } from 'meteor/iron:router';
 
 
 // new experiences ///////////////////////////////////////////////////////
@@ -18,7 +19,8 @@ export const createActivity1 = function (pairNum) {
         uid: submission.uid,
         name: Meteor.users.findOne(submission.uid).profile.firstName,
         text: submission.content.sentence,
-        image: submission.content.proof
+        image: submission.content.proof,
+        time: submission.timestamp
       }
     });
 
@@ -37,11 +39,12 @@ export const createActivity1 = function (pairNum) {
     });
 
     let route = `/chat`;
-    let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
+    let message = 'Woo-hoo! You two have completed Remote Working - 1: Take a picture of your remote working essentials! Why is it important to you?';
 
-    sendSystemMessage(message, participants, route); 
+    sendSystemMessage(message, participants, null); 
     postExpInChat("", participants, expInChat);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
+    Router.go('/chat');
   }
 
   const activity1Callback = function (sub) {
@@ -60,8 +63,8 @@ export const createActivity1 = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let systemMessage = 'Your partner just completed Remote Working - 1! Participate to see their results when you get a chance💬'; 
-    let notifMessage = "Hey! Your partner just completed Remote Working - 1"
+    let systemMessage = '---- Your partner just completed Remote Working - 1! Participate to see their results when you get a chance ----'; 
+    let notifMessage = "Hey! Your partner just completed Remote Working - 1! Participate to see their results when you get a chance"
     sendSystemMessage(systemMessage, partner, "/chat"); 
     
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
@@ -80,7 +83,7 @@ export const createActivity1 = function (pairNum) {
         },
         toPass : {
           situationDescription : "Answer from one of the following prompts:",
-          instruction : "1) Take a picture of your zoom classroom set up! Where are you calling from and why? \n 2)Take a picture of your remote working essentials! Why is it important to you?"
+          instruction : "Take a picture of your remote working essentials! Why is it important to you?"
         },
         numberNeeded : 2,
         notificationDelay : 1,
