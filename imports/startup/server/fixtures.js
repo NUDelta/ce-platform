@@ -153,7 +153,7 @@ function createTestData(){
   createTestExperiences();
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
-  let uid1 = findUserByUsername('garrett')._id;
+  let uid1 = findUserByUsername('jenny')._id;
   let uid2 = findUserByUsername('garretts_brother')._id;
   let uid3 = findUserByUsername('meg')._id;
   let uid4 = findUserByUsername('megs_sister')._id;

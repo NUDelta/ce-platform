@@ -11,7 +11,7 @@ let sendNotificationCN = function (sub) {
 };
 
 
-export default SHARED_GOALS = {
+export default PARALLEL = {
   surviveOrThrive: {
     _id: Random.id(),
     name: 'Final Week of DTR!',
