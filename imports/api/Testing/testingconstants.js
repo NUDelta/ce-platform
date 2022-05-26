@@ -5,6 +5,7 @@ import {DETECTORS} from "./DETECTORS";
 // import CHI20_DTR_EXPERIENCES from "./summer19study/dtr_experiences";
 // import CHI20_Olin_EXPERIENCES from "./summer19study/olin_experiences";
 // import SPRING18_EXPERIENCES from "./spring18study/four_interaction_structures";
+import SAMESITUATION_ACROSSTIME from "./spring18study/samesituation_acrosstime";
 // import SCAVENGER_HUNT from "./spring18study/shared_goals.js";
 // import SUMMER18_BETA from "./summer18beta/beta_experiences";
 // import SUMMER18_EXPERIENCES from "./summer18study/summer18experiences";
@@ -17,8 +18,9 @@ import SENIOR_FINALS from "./spring18study/senior_finals.js";
 let EXPERIENCES = Object.assign({},
   //CHI20_DTR_EXPERIENCES,
   //CHI20_Olin_EXPERIENCES,
-  //SPRING18_EXPERIENCES,
+  // SPRING18_EXPERIENCES,
   //SUMMER18_BETA,
+  SAMESITUATION_ACROSSTIME, // sunset
   SENIOR_FINALS,
   //SCAVENGER_HUNT
   //SUMMER18_EXPERIENCES,

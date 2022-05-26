@@ -48,11 +48,10 @@ Meteor.methods({
 });
 
 export const updateSubmission = function(submission) {
+  console.log("submission id: " + submission._id);
+  console.log("submission content: " + JSON.stringify(submission.content));
   Submissions.update(
     {
-      eid: submission.eid,
-      iid: submission.iid,
-      needName: submission.needName,
       _id: submission._id,
     },
     {
@@ -66,6 +65,7 @@ export const updateSubmission = function(submission) {
       }
     }
   );
+
 };
 
 export const createInitialSubmission = function(submission) {
@@ -79,7 +79,7 @@ export const createInitialSubmission = function(submission) {
     {
       $set: {
         uid: submission.uid,
-        //content: submission.content,
+        // content: submission.content,
         timestamp: submission.timestamp,
         lat: submission.lat,
         lng: submission.lng,
@@ -99,11 +99,25 @@ export const uploadImage = function (picture, submissionObject){
   let cdnLink = "";
   uploadImagesToS3(picture, submissionObject.needName, submissionObject.uid).then((link) => {
     cdnLink = link;
+    console.log(`cdnLink: ${cdnLink}`);
     submissionObject.content["proof"] = cdnLink;
     console.log("image has been uploaded");
-    createInitialSubmission(submissionObject)
+    existingSub = Submissions.findOne({
+      eid: submissionObject.eid,
+      iid: submissionObject.iid,
+      needName: submissionObject.needName,
+      uid: submissionObject.uid
+    });
+    if (existingSub) {
+      // in CN, we create an initial submission during the prestory phase
+      submissionObject._id = existingSub._id;
+      updateSubmission(submissionObject);
+    } else {
+      // without a prestory phase, we create an initial submission
+      createInitialSubmission(submissionObject)
+    }
   });
-  
+
 }
 
 
@@ -125,10 +139,10 @@ const s3 = new AWS.S3({
       Body: buffer,
       ContentType: "image/png",
     };
-  
+
     return s3.upload(uploadParams).promise();
   };
-  
+
   /**
    * decode base64 to an image file and upload the file to the bucket specified in .env.
    * @param {string} base64Data image file encoded with base64
@@ -138,17 +152,17 @@ const s3 = new AWS.S3({
    */
 const uploadImagesToS3 = async (base64Data, needName, uid) => {
     console.log("in upload image...")
-  
+
     // keys for where files will live on S3
     const imgKeyPrefix = `${process.env.S3_PREFIX}`;
     let cdnForImg = "";
 
     try {
-      // parse and decode base64 into a buffer 
+      // parse and decode base64 into a buffer
       const uri = base64Data.split(';base64,').pop();
       // console.log(base64Data)
       const buffer = Buffer.from(uri, "base64");
-  
+
       let filename = needName + "-" + uid;
       let processedImgKey = `${imgKeyPrefix}/${filename}.png`;
 
@@ -156,12 +170,12 @@ const uploadImagesToS3 = async (base64Data, needName, uid) => {
       .rotate()
       .toFormat('png')
       .toBuffer();
-      
-  
+
+
       // upload example image to S3
       try {
         await uploadToS3(processedImgKey, pngBuffer);
-  
+
         // if upload was successful, create a CDN link to add to airtable
         cdnForImg = `${process.env.S3_CDN}/${processedImgKey}`;
       } catch (error) {
@@ -170,7 +184,7 @@ const uploadImagesToS3 = async (base64Data, needName, uid) => {
     } catch (error) {
       console.log(`Error in processing file: ${error}`);
     }
-  
+
     return cdnForImg;
   };
 

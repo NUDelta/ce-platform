@@ -978,8 +978,10 @@ export const DETECTORS = {
       'var coffeeteasupplies;',
       'var diners;',
       'var restaurants;',
-      'var wednesday;'],
-    rules: ["(wednesday) && (coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies || diners || restaurants);"]
+      'var wednesday;',
+      'var thursday;',
+      'var friday;',],
+    rules: ["(wednesday || thursday || friday) && (coffeeroasteries || coffee || cafes || coffeeshops || coffeeteasupplies || diners || restaurants);"]
   },
   beginning_library: {
     _id: "v2ANTJr1I7wle3Ek9",
@@ -999,8 +1001,8 @@ export const DETECTORS = {
   after_library: {
     _id: "v2ANTJr1I7wle3Ek5",
     description: "after library",
-    variables: ["var wednesday;",  'var bookstores;', "var libraries;"],
-    rules: ["(wednesday && (libraries || bookstores));"]
+    variables: ["var wednesday;", "var thursday;", "var friday;", 'var bookstores;', "var libraries;"],
+    rules: ["((wednesday || thursday || friday) && (libraries || bookstores));"]
   },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",

@@ -48,8 +48,12 @@ Template.seniorFinalsExpand.helpers({
     return thisSub;
   },
   getImageSub(sub) {
-    creatorSub = this.images.find(i => i._id === sub.content.proof);
-    return creatorSub;
+    // OLD VERSION WITH METEOR CFS
+    // creatorSub = this.images.find(i => i._id === sub.content.proof);
+    // return creatorSub;
+
+    // S3 LINK
+    return sub.content.proof;
   },
   getAvatarImg(sub) {
     // console.log("sub ", sub);
@@ -96,7 +100,7 @@ Template.seniorFinalsExpand.helpers({
     else{
       console.log('in else')
       return "\"" + sub.content.sentence + "\"";
-    }  
+    }
   }
 });
 

@@ -571,16 +571,16 @@
           <div class="pending_img">?</div>
         {{/if}}
       </div>
-      
+
       <div class="reply_container">
         {{#if imageOne}}
-        
+
         <div class="resultReply">{{> Template.dynamic template="resultReply"}}</div>
         <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
                     style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
                 Submit
             </button>
-          
+
         {{else}}
         {{/if}}
       </div>
@@ -1008,7 +1008,7 @@
     {{else}}
       In the meantime, check out the items others have found.
     {{/if}} -->
-    It's the last week of DTR this quarter, which means it's time to finish your self-assessments and turn in your final deliverables! How's it going? Check out everyone's narrative below! 
+    It's the last week of DTR this quarter, which means it's time to finish your self-assessments and turn in your final deliverables! How's it going? Check out everyone's narrative below!
     <!--Hey fellow seniors! Your last quarter at Northwestern is wrapping up. How are you feeling? COVID-19 has brought a lot of changes to our senior year and we can no longer spend our senior year in person together. Check out in the narrative below what other community members are doing during this special time! -->
   </div>
   <div id="timeline-dates">
@@ -1068,7 +1068,8 @@
               <p class="contribution-detail">{{getTimeStamp sub}}</p>
               <p class="contribution-text">{{getSentence sub}}</p>
               <div class="item-img">
-                {{> Template.dynamic template="displayImage" data=(getImageSub sub)}}
+                <img src="{{getImageSub sub}}">
+                <!-- {{> Template.dynamic template="displayImage" data=(getImageSub sub)}} -->
               </div>
               <!-- <div class="item-img">
                 <img src="https://i.ibb.co/Pt3JjSc/new-img-2.jpg" alt="fireside talk">

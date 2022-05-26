@@ -202,7 +202,7 @@ Template.groupBumpedResults.events({
     console.log(replyText);
     console.log(this);
 
-    
+
     const uid = Meteor.userId();
     const data = { message: replyText};
     let users = this.allUsers;
@@ -231,8 +231,8 @@ Template.groupBumpedResults.events({
     Meteor.call('sendNotification', otherStranger, `${currentUsername} replied to your experience: ${replyText}`,
      '/chat');
     Router.go("/chat");
-    
-    
+
+
   }
 })
 
@@ -849,39 +849,6 @@ Template.survivingThriving.helpers({
     console.log("Hi ", categoriesSet);
     return [...categoriesSet];
   },
-  imagesByCategory(category){
-    //submissions by category --> all thriving submission
-
-    let specific = this.images.filter(function(x){
-      return x.needName === category;
-    });
-
-    return specific;
-  },
-  getNeed(image){
-    return image.needName
-    //this.submissions.
-  },
-  uncompletedNeeds(){
-    let needs = this.experience.contributionTypes.map(function(x){
-      return x.needName;
-    });
-    completedNeeds = [];
-    for (i=0; i<this.images.length; i++){
-      completedNeeds.push(this.images[i].needName);
-    }
-    let unfinished = needs.filter(x => !completedNeeds.includes(x))
-    return unfinished
-  },
-  numTasksRemaining(){
-    // console.log("Hi " + this.experience.contributionTypes);
-    return this.images.length + "/" + this.experience.contributionTypes.length + " tasks completed";
-  },
-  onlySubmission(){
-    if (this.images.length<=1){
-      return true;
-    }
-  },
   castCategories(){
     //To-do: access castCategories
     // let castCategories = ['thriving', 'surviving'];
@@ -966,7 +933,7 @@ Template.survivingThriving.helpers({
       // console.log(sub.castCategory === current_emotion)
       // if (sub){
         // check if it's the first time block and it's a Sunday, Monday, or Tuesday
-        
+
         let day = sub.timestamp.getDay()
         let subcastcategory = sub.castCategory
         // debugger;
@@ -1044,12 +1011,13 @@ Template.survivingThriving.helpers({
   },
   getImageSub(sub) {
     // console.log("Hi " + sub.content.proof);
-    // debugger;
-    creatorSub = this.images.find(i => i._id === sub.content.proof);
-    // console.log("Hi " + creatorSub);
-    // let i = creatorSub.original.name;
-    // console.log("Hi " + creatorSub);
-    return creatorSub;
+
+    // OLD USE OF METEOR CFS
+    // creatorSub = this.images.find(i => i._id === sub.content.proof);
+    // return creatorSub;
+
+    // S3 URL
+    return sub.content.proof;
   },
   getUsername(sub){
     let fullname = this.users.filter(function(user){
