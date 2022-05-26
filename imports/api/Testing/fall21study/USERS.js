@@ -7,51 +7,9 @@ export let USERS = {
     profile: {
       firstName: 'Ryan',
       lastName: 'Louie',
-      staticAffordances: {
-        mechanismRich: true
-      }
-    }
-  },
-  cindy: {
-    username: 'cindy',
-    email: 'cindy@email.com',
-    password: 'password',
-    profile: {
-      firstName: 'Cindy',
-      lastName: 'Hu',
-      staticAffordances: {
-        mechanismRich: true
-      }
-    }
-  },
-  aimee: {
-    username: 'aimee',
-    email: 'aimee@email.com',
-    password: 'password',
-    profile: {
-      firstName: 'Aimee',
-      lastName: 'van den Berg',
-      staticAffordances: {
-        mechanismRich: true
-      }
-    }
-  },
-  molly: {
-    username: 'molly',
-    email: 'molly@email.com',
-    password: 'password',
-    profile: {
-      firstName: 'Molly',
-      lastName: 'Pribble',
-      staticAffordances: {
-        mechanismRich: true
-      }
-    }
-  },
-  garrett: {
-    username: 'garrett',
       staticAffordances: {  //why do the staticAffordances here not showing up?
       }
+    }
   },
   jenny: {
     username: 'jenny',
@@ -71,7 +29,7 @@ export let USERS = {
     profile: {
       firstName: 'Mason',
       lastName: 'Lin',
-      staticAffordances: {
+      staticAffordances: { 
       }
     }
   },

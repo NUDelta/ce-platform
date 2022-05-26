@@ -73,7 +73,7 @@ Schema.NeedType = new SimpleSchema({
   allowRepeatContributions: {
     type: Boolean,
     optional: true,
-    defaultValue: true
+    defaultValue: false
   }
 });
 
@@ -154,6 +154,11 @@ Schema.Experience = new SimpleSchema({
     type: Boolean,
     optional: true,
     defaultValue: true //default to true to avoid breaking changes
+  },
+  repeatContributionsToExperienceAfterN: {
+    type: Number,
+    optional: true,
+    defaultValue: 0
   }
 });
 

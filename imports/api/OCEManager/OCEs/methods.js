@@ -11,6 +11,7 @@ import {
   onePlaceNotThesePlacesSets,
   placeSubsetAffordances
 } from "../../UserMonitor/detectors/methods";
+// import { createNewId } from '../../../startup/server/fixtures.js';
 
 import {Incidents} from './experiences';
 import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
@@ -114,7 +115,7 @@ export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
 export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
   let need = getNeedFromIncidentId(iid, needName);
   if (!need) {
-    serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
+    // serverLog.call({message: `doesUserMatchNeed: need not found for {needName: ${needName}, iid: ${iid}}`});
     return false;
   } else {
     let detectorUniqueKey = need.situation.detector;
@@ -323,6 +324,36 @@ export const addContribution = (iid, contribution) =>{
   });
 };
 
+//uhhhh this is too specific to imitation game
+export const changeIncidentToPass = (iid, needName, field1, field2) => {
+  let incident = Incidents.findOne({
+    _id: iid,
+  });
+
+  let contributionTypeIndex = 0;
+
+  if (incident){
+    for (let i = 0; i < incident.contributionTypes.length; i++){
+      if (incident.contributionTypes[i].needName === needName){
+          contributionTypeIndex = i;
+        }
+      }
+  };
+
+  let search1 = `contributionTypes.${contributionTypeIndex}.toPass.${field1}`;
+  let search2 = `contributionTypes.${contributionTypeIndex}.toPass.${field2}`
+
+  Incidents.update({
+    _id: iid
+  }, {
+   $set: {
+     [search1] : false,
+     [search2] : true
+   }
+  });
+}
+
+
 export const changeExperienceToPass = (eid, needName, toPass, field) => {
     //first must find correct contributionType via needName & then update
     //only that contributionType with new toPass
@@ -356,19 +387,26 @@ export const changeExperienceToPass = (eid, needName, toPass, field) => {
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
   let i = 0;
   while (i < need.numberNeeded) {
+    // let id;
+    // if (i == 0) {
+    //   id = need.needName + "Z";
+    // } else {
+    //   id = need.needName + "Y";
+    // }
+    // id = createNewId("s", id);
     i++;
 
-    Submissions.insert({
-      eid: eid,
-      iid: iid,
-      needName: need.needName,
-    }, (err) => {
-      if (err) {
-        console.log('upload error,', err);
-      }
-    });
-
-
+    // if (!Submissions.findOne({_id: id})){
+      Submissions.insert({
+        eid: eid,
+        iid: iid,
+        needName: need.needName,
+      }, (err) => {
+        if (err) {
+          console.log('upload error,', err);
+        }
+      });
+    // }
   }
 };
 
@@ -471,7 +509,10 @@ export const updateRunningIncident = (incident) => {
  * @param experience {object} of the created incident
  */
 export const createIncidentFromExperience = (experience) => {
+  // let need = experience.contributionTypes[0].needName;
+  // need = createNewId("i", need)
   let incident = {
+    // _id: need,
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,

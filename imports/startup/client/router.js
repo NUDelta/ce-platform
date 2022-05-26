@@ -13,6 +13,7 @@ import '../../ui/components/user_avatar_name.html';
 import '../../ui/pages/account_page.html';
 import '../../ui/pages/account_page.js';
 import '../../ui/pages/admin_locations.js';
+import '../../ui/pages/chat.js';
 import '../../ui/pages/profile.js';
 import '../../ui/pages/debug.html';
 import '../../ui/pages/debug.js';
@@ -33,6 +34,7 @@ import '../../ui/pages/api_custom_results_expand.js';
 import { Experiences, Incidents } from "../../api/OCEManager/OCEs/experiences";
 import { Locations } from "../../api/UserMonitor/locations/locations";
 import {Avatars, Images} from "../../api/ImageUpload/images";
+import {Messages} from "../../api/Messages/messages";
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Meteor } from "meteor/meteor";
 import {Assignments, Availability} from "../../api/OpportunisticCoordinator/databaseHelpers";
@@ -158,6 +160,7 @@ Router.route('api.custom', {
     // TODO(rlouie): create subscribers which only get certain fields like, username which would be useful for templates
     this.subscribe('users.all').wait();
     this.subscribe('avatars.all').wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
 
     this.next();
   },
@@ -170,7 +173,7 @@ Router.route('api.custom', {
       images: Images.find({}).fetch(),
       avatars: Avatars.find({}).fetch(),
       users: Meteor.users.find().fetch(),
-      submissions: Submissions.find({}).fetch()
+      submissions: Submissions.find().fetch(),
     };
   }
 });
@@ -283,6 +286,60 @@ Router.route('/', {
   }
 });
 
+
+Router.route('chat', {
+  name: 'chat',
+  template: 'chat',
+  before: function() {
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('messages.user', Meteor.userId()).wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      messages: Messages.find().fetch(),
+    };
+  }
+/*
+  before: function () {
+    if (Meteor.userId()) {
+      let dic = {
+        uid: Meteor.userId(),
+        timestamp: Date.now(),
+        route: "customresults",
+        params: {
+          iid: this.params.iid,
+          eid: this.params.eid
+        }
+      };
+      Meteor.call('insertLog', dic);
+    }
+    this.subscribe('images.activeIncident', this.params.iid).wait();
+    this.subscribe('experiences.single', this.params.eid).wait();
+    this.subscribe('submissions.activeIncident', this.params.iid).wait();
+    this.subscribe('users.all').wait();
+    this.subscribe('avatars.all').wait();
+    this.next();
+  },
+  data: function () {
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    };
+  }
+  */
+});
+
 Router.route('participate.backdoor', {
   path: '/participate/backdoor',
   template: 'participateBackdoor',
@@ -367,5 +424,3 @@ Router.route('profile', {
     };
   }
 });
-
-

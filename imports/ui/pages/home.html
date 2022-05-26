@@ -39,8 +39,10 @@
                 </div>
                 <div class="list-group">
                     {{#each info in activeUserAssigment}}
-                        {{> activeExperience info}}
+                    <div>{{> React component=RActiveExperience exp=info.experience iid=info.iid detectorUniqueKey=info.detectorUniqueKey}}</div>
+                        <!-- {{> activeExperience info}} -->
                     {{/each}}
+                    <!-- <div>{{> React component=RActiveExperience}}</div>  -->
                 </div>
                 <button class="refresh btn btn-primary btn-participate btn-block"
                         style="border-radius: 4px; height: 38px;">Refresh
