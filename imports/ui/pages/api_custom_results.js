@@ -1166,8 +1166,10 @@ let timeout = null;
 
 let sunsetSlideIndex = 1;
 function showSlidesAuto() {
+
   // let i
   let slides = document.getElementsByClassName("sunsetSlides");
+  console.log("SLIDES", slides.length)
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
@@ -1187,6 +1189,7 @@ function showSlidesAuto() {
 
 Template.sunset.onRendered(function() {
   this.autorun(() => {
+    console.log("I'm going here!")
     showSlidesAuto();
     // window.onload = function () {
     //   console.log("run slideshow before");

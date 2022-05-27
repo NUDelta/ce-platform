@@ -1209,13 +1209,13 @@
       }
     </style>
   </head>
-  <div class="title">Sunsets around the US</div>
+  <div class="title">Studying in the Library</div>
   <div class="slideshow">
-    {{#each image in this.images}}
+    {{#each submission in this.submissions}}
       <div class="sunsetSlides" id="img{{@index}}">
-        {{> Template.dynamic template="displayImage" data=image}}
-        <br>
-        Sunset from ({{image.lat}}, {{image.lng}})
+        <!-- {{> Template.dynamic template="displayImage" data=image}} -->
+        <img src="{{submission.content.proof}}">
+        I need the library to {{submission.content.sentence}}
       </div>
     {{/each}}
   </div>
