@@ -14,9 +14,9 @@ export default PARALLEL = {
   sample: {
     _id: Random.id(),
     name: 'Please Work',
-    prestoryTemplate: 'seniorFinalsPrestory',
-    participateTemplate: 'survivingThrivingParticipate',
-    resultsTemplate: 'survivingThriving',
+    prestoryTemplate: 'studyNight',
+    participateTemplate: 'fakeParticipate',
+    resultsTemplate: 'sunset',
     expandTemplate: 'seniorFinalsExpand',
     repeatContributionsToExperienceAfterN: 0,
     contributionTypes: [{
@@ -29,7 +29,7 @@ export default PARALLEL = {
       },
       toPass: {
         //instruction: 'Can you take a photo of your coffee?',
-        prestoryQuestion: 'How is your DTR deliverable going? Remember, it\'s due EOD tomorrow!',
+        prestoryQuestion: "Are you studying at the library?",
         dropdownChoices: {
           name: 'casting question',
           options: ['😃','🙏','😌','😬', '😫', '😢']

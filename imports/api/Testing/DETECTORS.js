@@ -1148,4 +1148,11 @@ export let DETECTORS = {
     variables: ["var hour;"],
     rules: ["hour == 23"]
   },
+  studying_night: {
+    _id: Random.id(), 
+    description: 'studying late at night',
+    variables: ['var norris;', 'var libraries;', 'var cafes;', 'var nighttime;'],
+    rules: ['(norris || libraries || cafes) && nighttime']
+  }
+  
 };
