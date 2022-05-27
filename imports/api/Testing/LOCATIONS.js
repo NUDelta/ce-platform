@@ -22,5 +22,9 @@ export let LOCATIONS = {
   'grocery2': {
     lat: 42.039818,
     lng: -87.680088
+  },
+  'coffee': {
+    lat: 42.046881,
+    lng: -87.679555
   }
 };

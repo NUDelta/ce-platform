@@ -198,7 +198,15 @@ function createTestData(){
       Accounts.createUser(value)
     }
   });
+
   log.info(`Populated ${ Meteor.users.find().count() } accounts`);
+
+
+  Object.values(CONSTANTS.DETECTORS).forEach(function (value) {
+    Detectors.insert(value);
+  });
+  log.info(`Populated ${ Detectors.find().count() } detectors`);
+
 
 
   // // add detectors
@@ -208,11 +216,11 @@ function createTestData(){
   //     Detectors.insert(value);
   //   });
   // }
-  // // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-  // //   pair.forEach(function (value) {
-  // //     Detectors.insert(value);
-  // //   });
-  // // })
+  // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
+  //   pair.forEach(function (value) {
+  //     Detectors.insert(value);
+  //   });
+  // })
   // log.info(`Populated ${ Detectors.find().count() } detectors`);
 
 
@@ -227,7 +235,7 @@ function createTestData(){
   log.info(`Created ${ Experiences.find().count() } experiences`);
 
   let uid1 = findUserByUsername('cindy')._id;
-  let uid2 = findUserByUsername('yvan')._id;
+  let uid2 = findUserByUsername('mason')._id;
   let uid3 = findUserByUsername('ryan')._id;
   let uid4 = findUserByUsername('jenny')._id;
   // let uid5 = findUserByUsername('haoqi')._id;
@@ -258,7 +266,7 @@ function createTestData(){
       "profile.lastParticipated": null,
       "profile.lastNotified": null,
       "profile.pastIncidents": [],
-      // "profile.staticAffordances": {}
+      "profile.staticAffordances": { mechanismRich: true }
     }
   }, {
     multi: true

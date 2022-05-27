@@ -6,7 +6,7 @@ export let USERS = {
     profile: {
       firstName: "Cindy",
       lastName: "Hu",
-      staticAffordances: { pair1: true },
+      staticAffordances: { pair1: true, mechanismRich: true },
     },
   },
   yvan: {

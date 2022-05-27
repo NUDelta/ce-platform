@@ -61,6 +61,7 @@ export let USERS = {
       firstName: 'Jenny',
       lastName: 'Chang',
       staticAffordances: {
+        mechanismRich: true
       }
     }
   },
@@ -83,6 +84,7 @@ export let USERS = {
       firstName: 'Cindy',
       lastName: 'Hu',
       staticAffordances: {
+        mechanismRich: true
       }
     }
   },

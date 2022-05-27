@@ -16,17 +16,16 @@ bars = (42.046251, -87.680547)
 sydney = (-33, 151)
 train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
-<<<<<<< HEAD
 library = (42.048468377293354, -87.68011573000601)
 secret_base = (42.04329086478451, -87.68102300188055)
 sargent = (42.058813, -87.675602)
 norris = (42.05340447417977, -87.67268330208677)
 lakefill = (42.05526993946647, -87.67085351697622)
-=======
 # library = (42.058141, -87.674490)
 library = (42.05814914752829, -87.67442041754066)
 norris = (42.053262712572675, -87.67268455470771)
->>>>>>> origin/w2022-react
+mainLibrary = (42.05373689551069, -87.67434641930538)
+mudd = (42.05836839573704, -87.6745109121166)
 
 def followPath(path, uid):
     for stop in path:
@@ -196,6 +195,11 @@ def test5():
         setLocation(train, sys.argv[1])
         time.sleep(15)
 
+def allUsersAtCoffee():
+    for i in sys.argv:
+        setLocation(coffee, i)
+    print("all users at Coffee")
+
 def allUsersAtPark():
     print(sys.argv)
     setLocation(park, sys.argv[1])
@@ -352,17 +356,19 @@ def usersParkAndLibrary():
     setLocation(library, sys.argv[4])
     setLocation(library, sys.argv[5])
 
-def allUsersAtLibrary():
-    mainLibrary = (42.05373689551069, -87.67434641930538)
-    mudd = (42.05836839573704, -87.6745109121166)
-    print(sys.argv)
-    setLocation(mudd, sys.argv[1])
-    setLocation(mudd, sys.argv[2])
-    setLocation(mudd, sys.argv[3])
-    setLocation(mudd, sys.argv[4])
-    setLocation(mudd, sys.argv[5])
-    setLocation(mudd, sys.argv[6])
-    print("users at mudd")
+# def allUsersAtLibrary():
+
+
+#     for i in sys.argv:
+#         setLocation(mudd, i)
+#     # print(sys.argv)
+#     # setLocation(mudd, sys.argv[1])
+#     # setLocation(mudd, sys.argv[2])
+#     # setLocation(mudd, sys.argv[3])
+#     # setLocation(mudd, sys.argv[4])
+#     # setLocation(mudd, sys.argv[5])
+#     # setLocation(mudd, sys.argv[6])
+#     print("users at mudd")
 
 def allUsersAtDnD():
     print(sys.argv)
@@ -418,14 +424,13 @@ def statusUpdate():
 
 if __name__ == "__main__":
     # statusUpdate()
-    allUsersAtLibrary()
+    # allUsersAtLibrary()
     # allUsersGrocery()
-	# allUsersCoffee()
+	allUsersCoffee()
     # testingSeniorFinals()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
->>>>>>> origin/w2022-react
 	# allUsersAtBars()
     # allUsersAtRestaurant()
 	# pairsAtParkLibraryGrocery()

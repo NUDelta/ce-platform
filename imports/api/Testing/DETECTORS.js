@@ -1,253 +1,253 @@
-const createDetectors = function (pairNum) {
-  return {
-    activity1:{
-      _id: Random.id(),
-      description: 'activity1 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
+// const createDetectors = function (pairNum) {
+//   return {
+//     activity1:{
+//       _id: Random.id(),
+//       description: 'activity1 ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//       ],
+//       rules: [`${pairNum};`]
+//       // rules: ['(triad1)']
+//     },
 
-    activity2:{
-      _id: Random.id(),
-      description: 'activity2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-      ],
-      rules: [`${pairNum};`]
-      // rules: ['(triad1)']
-    },
+//     activity2:{
+//       _id: Random.id(),
+//       description: 'activity2 ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//       ],
+//       rules: [`${pairNum};`]
+//       // rules: ['(triad1)']
+//     },
 
-    // new detector for walk /////////////////////////////////////
-    selfIntroExp:{
-      _id: Random.id(),
-      description: 'SelfIntro ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-        'var participatedInSelfIntro;'
-      ],
-      rules: [`${pairNum} && !participatedInSelfIntro;`]
-      // rules: ['(triad1)']
-    },
+//     // new detector for walk /////////////////////////////////////
+//     selfIntroExp:{
+//       _id: Random.id(),
+//       description: 'SelfIntro ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//         'var participatedInSelfIntro;'
+//       ],
+//       rules: [`${pairNum} && !participatedInSelfIntro;`]
+//       // rules: ['(triad1)']
+//     },
 
-    walkExp:{
-      _id: Random.id(),
-      description: 'Walk ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-        'var daytime;'
-      ],
-      rules: [`(${pairNum} && daytime)`]
-      // rules: ['(triad1)']
-    },
+//     walkExp:{
+//       _id: Random.id(),
+//       description: 'Walk ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//         'var daytime;'
+//       ],
+//       rules: [`(${pairNum} && daytime)`]
+//       // rules: ['(triad1)']
+//     },
 
-    walkExp2:{
-      _id: Random.id(),
-      description: 'Walk2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-        'var participatedInWalk;'
-        // 'var daytime;'
-      ],
-      rules: [`(${pairNum} && participatedInWalk);`]
-      // rules: ['(triad1)']
-    },
+//     walkExp2:{
+//       _id: Random.id(),
+//       description: 'Walk2 ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//         'var participatedInWalk;'
+//         // 'var daytime;'
+//       ],
+//       rules: [`(${pairNum} && participatedInWalk);`]
+//       // rules: ['(triad1)']
+//     },
 
-    libraryExp:{
-      _id: Random.id(),
-      description: 'Library ' + pairNum,
-      variables: [
-        'var libraries;',
-        'var usedbooks;',
-        'var bookstores;',
-        `var ${pairNum};`
-      ],
-      rules: [`${pairNum} && (libraries || bookstores);`]
-      // rules: ['(triad2)']
-    },
+//     libraryExp:{
+//       _id: Random.id(),
+//       description: 'Library ' + pairNum,
+//       variables: [
+//         'var libraries;',
+//         'var usedbooks;',
+//         'var bookstores;',
+//         `var ${pairNum};`
+//       ],
+//       rules: [`${pairNum} && (libraries || bookstores);`]
+//       // rules: ['(triad2)']
+//     },
 
-    //second library exp detector if they
-    libraryExp2:{
-      _id: Random.id(),
-      description: 'Library2 ' + pairNum,
-      variables: [
-        'var participatedInLibraryExp;',
-        'var libraries;',
-        'var usedbooks;',
-        'var bookstores;',
-        `var ${pairNum};`
-      ],
-      rules: [`(${pairNum} && participatedInLibraryExp && (libraries || bookstores));`]
-    },
+//     //second library exp detector if they
+//     libraryExp2:{
+//       _id: Random.id(),
+//       description: 'Library2 ' + pairNum,
+//       variables: [
+//         'var participatedInLibraryExp;',
+//         'var libraries;',
+//         'var usedbooks;',
+//         'var bookstores;',
+//         `var ${pairNum};`
+//       ],
+//       rules: [`(${pairNum} && participatedInLibraryExp && (libraries || bookstores));`]
+//     },
 
-    publicTransportExp: {
-      _id: Random.id(),
-      description: 'Public Transport ' + pairNum,
-      variables: [
-        'var publictransport;',
-        'var trainstations;',
-        'var trains;',
-        `var ${pairNum};`
-      ],
-      rules: [`${pairNum} && (trainstations || trains || publictransport);`]
-    },
+//     publicTransportExp: {
+//       _id: Random.id(),
+//       description: 'Public Transport ' + pairNum,
+//       variables: [
+//         'var publictransport;',
+//         'var trainstations;',
+//         'var trains;',
+//         `var ${pairNum};`
+//       ],
+//       rules: [`${pairNum} && (trainstations || trains || publictransport);`]
+//     },
 
-    publicTransportExp2: {
-      _id: Random.id(),
-      description: 'Public Transport2 ' + pairNum,
-      variables: [
-        'var publictransport;',
-        'var trainstations;',
-        'var trains;',
-        `var ${pairNum};`,
-        'var participatedInPublicTransportExp;'
-      ],
-      rules: [`(${pairNum} && participatedInPublicTransportExp && (trainstations || trains || publictransport));`]
-    },
+//     publicTransportExp2: {
+//       _id: Random.id(),
+//       description: 'Public Transport2 ' + pairNum,
+//       variables: [
+//         'var publictransport;',
+//         'var trainstations;',
+//         'var trains;',
+//         `var ${pairNum};`,
+//         'var participatedInPublicTransportExp;'
+//       ],
+//       rules: [`(${pairNum} && participatedInPublicTransportExp && (trainstations || trains || publictransport));`]
+//     },
 
-    coffeeExp: {
-      _id: Random.id(),
-      description: 'Coffee Shop ' + pairNum,
-      variables: ['var coffeeroasteries;',
-        'var coffee;',
-        'var cafes;',
-        'var coffeeshops;',
-        'var coffeeteasupplies;',
-        `var ${pairNum};`,
-      ],
-      rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
-    },
+//     coffeeExp: {
+//       _id: Random.id(),
+//       description: 'Coffee Shop ' + pairNum,
+//       variables: ['var coffeeroasteries;',
+//         'var coffee;',
+//         'var cafes;',
+//         'var coffeeshops;',
+//         'var coffeeteasupplies;',
+//         `var ${pairNum};`,
+//       ],
+//       rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
+//     },
 
-    coffeeExp2: {
-      _id: Random.id(),
-      description: 'Coffee Shop2 ' + pairNum,
-      variables: ['var coffeeroasteries;',
-        'var coffee;',
-        'var cafes;',
-        'var coffeeshops;',
-        'var coffeeteasupplies;',
-        `var ${pairNum};`,
-        'var participatedInCoffeeExp'
-      ],
-      rules: [`(${pairNum} && participatedInCoffeeExp && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
-    },
+//     coffeeExp2: {
+//       _id: Random.id(),
+//       description: 'Coffee Shop2 ' + pairNum,
+//       variables: ['var coffeeroasteries;',
+//         'var coffee;',
+//         'var cafes;',
+//         'var coffeeshops;',
+//         'var coffeeteasupplies;',
+//         `var ${pairNum};`,
+//         'var participatedInCoffeeExp'
+//       ],
+//       rules: [`(${pairNum} && participatedInCoffeeExp && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
+//     },
 
-    groceriesExp:{
-      _id: Random.id(),
-      description: 'Groceries ' + pairNum,
-      variables: [
-        'var intlgrocery;',
-        'var ethicgrocery;',
-        'var markets;',
-        'var wholesalers;',
-        'var pharmacy;',
-        'var grocery;',
-        'var farmersmarket;',
-        'var convenience;',
-        'var importedfood;',
-        'var herbsandspices;',
-        'var drugstores;',
-        'var seafoodmarkets;',
-        'var marketstalls;',
-        'var organic_stores;',
-        'var publicmarkets;',
-        `var ${pairNum};`
-      ],
-      rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
-      farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-      organic_stores || publicmarkets || marketstalls));`]
-      // rules: ['(triad3)']
-    },
+//     groceriesExp:{
+//       _id: Random.id(),
+//       description: 'Groceries ' + pairNum,
+//       variables: [
+//         'var intlgrocery;',
+//         'var ethicgrocery;',
+//         'var markets;',
+//         'var wholesalers;',
+//         'var pharmacy;',
+//         'var grocery;',
+//         'var farmersmarket;',
+//         'var convenience;',
+//         'var importedfood;',
+//         'var herbsandspices;',
+//         'var drugstores;',
+//         'var seafoodmarkets;',
+//         'var marketstalls;',
+//         'var organic_stores;',
+//         'var publicmarkets;',
+//         `var ${pairNum};`
+//       ],
+//       rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
+//       farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
+//       organic_stores || publicmarkets || marketstalls));`]
+//       // rules: ['(triad3)']
+//     },
 
-    groceriesExp2:{
-      _id: Random.id(),
-      description: 'Groceries2 ' + pairNum,
-      variables: [
-        'var intlgrocery;',
-        'var ethicgrocery;',
-        'var markets;',
-        'var wholesalers;',
-        'var pharmacy;',
-        'var grocery;',
-        'var farmersmarket;',
-        'var convenience;',
-        'var importedfood;',
-        'var herbsandspices;',
-        'var drugstores;',
-        'var seafoodmarkets;',
-        'var marketstalls;',
-        'var organic_stores;',
-        'var publicmarkets;',
-        `var ${pairNum};`,
-        'var participatedInGroceriesExp;'
-      ],
-      rules: [`(${pairNum} && participatedInGroceriesExp && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
-      farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-      organic_stores || publicmarkets || marketstalls));`]
-      // rules: ['(triad3)']
-    },
+//     groceriesExp2:{
+//       _id: Random.id(),
+//       description: 'Groceries2 ' + pairNum,
+//       variables: [
+//         'var intlgrocery;',
+//         'var ethicgrocery;',
+//         'var markets;',
+//         'var wholesalers;',
+//         'var pharmacy;',
+//         'var grocery;',
+//         'var farmersmarket;',
+//         'var convenience;',
+//         'var importedfood;',
+//         'var herbsandspices;',
+//         'var drugstores;',
+//         'var seafoodmarkets;',
+//         'var marketstalls;',
+//         'var organic_stores;',
+//         'var publicmarkets;',
+//         `var ${pairNum};`,
+//         'var participatedInGroceriesExp;'
+//       ],
+//       rules: [`(${pairNum} && participatedInGroceriesExp && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
+//       farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
+//       organic_stores || publicmarkets || marketstalls));`]
+//       // rules: ['(triad3)']
+//     },
 
-    restaurantExp:{
-      _id: Random.id(),
-      description: 'Restaurant ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-        // 'var daytime;',
-        'var diners;',
-        'var restaurants;',
-        'var cafeteria;',
-        'var food_court;',
-        'var bars;',
-        'var cocktailbars;'
-      ],
-      rules: [`(${pairNum} && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
-    },
+//     restaurantExp:{
+//       _id: Random.id(),
+//       description: 'Restaurant ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//         // 'var daytime;',
+//         'var diners;',
+//         'var restaurants;',
+//         'var cafeteria;',
+//         'var food_court;',
+//         'var bars;',
+//         'var cocktailbars;'
+//       ],
+//       rules: [`(${pairNum} && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
+//     },
 
-    restaurantExp2:{
-      _id: Random.id(),
-      description: 'Restaurant2 ' + pairNum,
-      variables: [
-        `var ${pairNum};`,
-        // 'var daytime;',
-        'var participatedInRestaurantExp;',
-        'var diners;',
-        'var restaurants;',
-        'var cafeteria;',
-        'var food_court;',
-        'var bars;',
-        'var cocktailbars;'
-      ],
-      rules: [`(${pairNum} && participatedInRestaurantExp && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
-    },
+//     restaurantExp2:{
+//       _id: Random.id(),
+//       description: 'Restaurant2 ' + pairNum,
+//       variables: [
+//         `var ${pairNum};`,
+//         // 'var daytime;',
+//         'var participatedInRestaurantExp;',
+//         'var diners;',
+//         'var restaurants;',
+//         'var cafeteria;',
+//         'var food_court;',
+//         'var bars;',
+//         'var cocktailbars;'
+//       ],
+//       rules: [`(${pairNum} && participatedInRestaurantExp && (diners || restaurants || cafeteria || food_court || bars || cocktailbars));`]
+//     },
 
-    gymExp: {
-      _id: Random.id(),
-      description: 'Gym ' + pairNum,
-      variables: [
-        'var  gyms;',
-        `var ${pairNum};`
-      ],
-      rules: [`gyms && ${pairNum};`]
-    },
+//     gymExp: {
+//       _id: Random.id(),
+//       description: 'Gym ' + pairNum,
+//       variables: [
+//         'var  gyms;',
+//         `var ${pairNum};`
+//       ],
+//       rules: [`gyms && ${pairNum};`]
+//     },
 
-    bubbleTeaExp: {
-      _id: Random.id(),
-      description: 'Bubble Tea ' + pairNum,
-      variables: [
-        'var bubbletea;',
-        `var ${pairNum};`
-      ],
-      rules:[`(bubbletea && ${pairNum});`]
-    }
+//     bubbleTeaExp: {
+//       _id: Random.id(),
+//       description: 'Bubble Tea ' + pairNum,
+//       variables: [
+//         'var bubbletea;',
+//         `var ${pairNum};`
+//       ],
+//       rules:[`(bubbletea && ${pairNum});`]
+//     }
 
-  //  /////////////////////////////////////////////////////////
+//   //  /////////////////////////////////////////////////////////
 
-  /*end of progression triad 1*/
+//   /*end of progression triad 1*/
 
-  };
-};
+//   };
+// };
 
 // function create_detector_pairs(pairCount) {
 //   let detector_pair = {}
@@ -275,7 +275,7 @@ const createDetectors = function (pairNum) {
 //   pair11: createDetectors("pair11")
 // }
 
-export const DETECTORS = {
+export let DETECTORS = {
   library: {
     _id: '5LqfPRajiQRe9BwBT',
     description: 'libraries and other books',
