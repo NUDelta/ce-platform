@@ -6,7 +6,7 @@ import { Router } from 'meteor/iron:router';
 
 
 const promptDict = {
-  selfIntro: {name: "Self-introduction", prompts: ["placeholder prompt"], delay: 1},
+  selfIntro: {name: "Self-introduction", prompts: ["placeholder prompt 1", "placeholder prompt 2", "placeholder prompt3"], delay: 1},
   library: {name: "Library working time", prompts: ["placeholder prompt"], delay: 1},
   restaurant: {name: "Food time", prompts: ["placeholder prompt"], delay: 1},
   cafe: {name: "Cafe chill-out time", prompts: ["placeholder prompt"], delay: 1},
@@ -55,6 +55,7 @@ export const createExp = function (pairNum, exp) {
         },
         toPass : {
           situationDescription : promptDict[exp].name,
+          promptCount: promptDict[exp].prompts.length,
           instruction : promptDict[exp].prompts[0]
         },
         numberNeeded : 2, notificationDelay : promptDict[exp].delay, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false
@@ -63,7 +64,7 @@ export const createExp = function (pairNum, exp) {
     description: promptDict[exp].prompts[0], notificationText: promptDict[exp].prompts[0],
     callbacks: [{trigger: `(cb.needFinished('${exp}${pairNum} 1'))`, function: callback[0]}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
                 {trigger: `!(cb.needFinished('${exp}${pairNum} 1'))`, function: callback[1]}],
-    allowRepeatContributions: false,
+    allowRepeatContributions: false, //try set this to true
   };
 
   return experience;
