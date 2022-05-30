@@ -87,14 +87,17 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
           .split(" ")[0]
           .toLowerCase();
         // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
-        let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-          return !userNotifiedTooRecently(
-            Meteor.users.findOne(userMeta.uid),
-            notificationID
-          );
-        });
+        // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+        //   return !userNotifiedTooRecently(
+        //     Meteor.users.findOne(userMeta.uid),
+        //     notificationID
+        //   );
+        // });
 
-        let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
+        // let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
+        //   (usermeta) => usermeta.uid
+        // );
+        let uidsNotNotifiedRecently = newUsersMeta.map(
           (usermeta) => usermeta.uid
         );
         let route = "/";
