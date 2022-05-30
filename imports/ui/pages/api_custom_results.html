@@ -1193,6 +1193,9 @@
   {{> storyBook_noInterdependence}}
 </template>
 
+
+
+
 <template name="sunset">
   <head>
     <style>
@@ -1200,12 +1203,35 @@
         padding-top: 10px;
         padding-bottom: 10px;
         font-weight: 700;
+        border: solid 1px #000000;
+        margin: auto;
+        text-align: center;
       }
       .sunsetSlides {
-          display: none
+          display: none;
+          /* border: 1px solid black; */
+          height: 300px;
+          margin: auto;
       }
-      #img0 {
+
+      .slideshow {
+        margin: auto;
+      }
+      /* #img0 {
           display: block;
+      } */
+      img {
+        width:  200px;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .formatted {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column nowrap;
       }
     </style>
   </head>
@@ -1213,9 +1239,23 @@
   <div class="slideshow">
     {{#each submission in this.submissions}}
       <div class="sunsetSlides" id="img{{@index}}">
+        <!-- <img src="{{submission.content.proof}}"> -->
+        <div class="formatted">
+          <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+          <br>
+          <p>I need the library to {{textValue(submission)}}</p>
+          <br>
+        </div>
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->
-        <img src="{{submission.content.proof}}">
-        I need the library to {{submission.content.sentence}}
+        <!-- <div>
+          {{#if (submission.content.proof == undefined) }}
+            <p>I need the library to ... </p>
+          {{else}}
+          {{/if}
+        </div> -->
+        <!-- 
+        {{submission.content.proof ?
+        }} -->
       </div>
     {{/each}}
   </div>

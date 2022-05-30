@@ -1172,6 +1172,7 @@ function showSlidesAuto() {
   console.log("SLIDES", slides.length)
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
+    console.log(slides[i])
   }
   sunsetSlideIndex++;
 
@@ -1186,6 +1187,31 @@ function showSlidesAuto() {
   }
   timeout = Meteor.setTimeout(showSlidesAuto, 1500);
 };
+
+
+Template.sunset.helpers({
+  textValue: function(submission) {
+    if (submission.content.sentence != undefined) {
+      return submission.content.sentence;
+    } else {
+      return "...";
+    }
+  },
+  imageValue: function(submission) {
+    if (submission.content.proof != undefined) {
+      let element = document.createElement('div');
+      element.innerHTML = 'chocolate';
+      console.log(element);
+      // document.getElementByClassName("sunsetSlides").appendChild(element);
+      // return 0;
+      return submission.content.proof;
+    } else {
+      return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
+    }
+  }
+});
+
+
 
 Template.sunset.onRendered(function() {
   this.autorun(() => {
