@@ -313,6 +313,21 @@ Meteor.methods({
     sendSystemMessage(systemMsg, participants, null); 
     postExpInChat("", participants, expInChat);
     notify(participants, sub.iid, notifMsg, '', route);
+
+    //respawn the new experience
+    let contributionTypes = Incidents.findOne({_id: sub.iid}).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
     },
     expInProgressCallback(sub, systemMsg, notifMsg, confirmationMsg){
 

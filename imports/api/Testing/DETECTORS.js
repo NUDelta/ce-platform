@@ -10,7 +10,6 @@ const createDetectors = function (pairNum) {
       'var participatedInSelfIntro;'
     ],
     rules: [`${pairNum} && !participatedInSelfIntro;`]
-    // rules: ['(triad1)']
   },
 
   library:{
@@ -23,7 +22,6 @@ const createDetectors = function (pairNum) {
       `var ${pairNum};`
     ],
     rules: [`(${pairNum} && (libraries || bookstores));`]
-    // rules: ['(triad2)']
   },
 
   restaurant:{
@@ -79,16 +77,21 @@ const createDetectors = function (pairNum) {
     rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
     farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
     organic_stores || publicmarkets || marketstalls));`]
-    // rules: ['(triad3)']
   },
 
-  outdoor:{
-    _id: Random.id(),
-    description: 'Outdoor ' + pairNum,
-    variables: [
+  outdoor: {
+    _id : Random.id(),
+    description : 'Outdoor ' + pairNum,
+    variables : [
       `var ${pairNum};`,
+      'var playgrounds;',
+      'var hiking;',
+      'var rock_climbing;',
+      'var lakes;',
+      'var fishing;',
+      'var beaches;'
     ],
-    rules: [`${pairNum};`]
+    rules: [`(${pairNum} && (playgrounds || hiking || rock_climbing || lakes || fishing || beaches));`]
   },
 
   exercise:{
@@ -96,8 +99,47 @@ const createDetectors = function (pairNum) {
     description: 'Exercise ' + pairNum,
     variables: [
       `var ${pairNum};`,
+      'var boxing;',
+      'var kickboxing;',
+      'var amateursportsteams;',
+      'var gyms;',
+      'var physicaltherapy;',
+      'var fencing;',
+      'var tennis;',
+      'var healthtrainers;',
+      'var poledancingclasses;',
+      'var badminton;',
+      'var beachvolleyball;',
+      'var football;',
+      'var pilates;',
+      'var dancestudio;',
+      'var brazilianjiujitsu;',
+      'var trampoline;',
+      'var cyclingclasses;',
+      'var cardioclasses;',
+      'var barreclasses;',
+      'var intervaltraininggyms;',
+      'var sports_clubs;',
+      'var weightlosscenters;',
+      'var active;',
+      'var aerialfitness;',
+      'var communitycenters;',
+      'var yoga;',
+      'var squash;',
+      'var surfing;',
+      'var circuittraininggyms;',
+      'var fitness;',
+      'var martialarts;',
+      'var dance;',
+      'var dance_studios;',
+      'var dance_schools;'
     ],
-    rules: [`${pairNum};`]
+    rules: [`(${pairNum} && (boxing || kickboxing || amateursportsteams || gyms || physicaltherapy || fencing || \
+    tennis || healthtrainers || poledancingclasses || badminton || beachvolleyball || football || pilates || \
+    dancestudio || brazilianjiujitsu || trampoline || cyclingclasses || cardioclasses || barreclasses || \
+    intervaltraininggyms || sports_clubs || weightlosscenters || active || aerialfitness || communitycenters || \
+    yoga || squash || surfing || circuittraininggyms || fitness || martialarts || dance || dance_studios || \
+    dance_schools));`]
   },
 
   commute: {
@@ -133,8 +175,37 @@ const createDetectors = function (pairNum) {
     description: 'Weekend ' + pairNum,
     variables: [
       `var ${pairNum};`,
+      'var saturday;',
+      'var sunday;',
+      'var entertainment;',
+      'var theatre_and_shows_related;',
+      'var museum_related;',
+      'var architecture;',
+      'var movietheaters;',
+      'var theater;',
+      'var opera;',
+      'var comedyclubs;',
+      'var magicians;',
+      'var museums;',
+      'var artmuseums;',
+      'var childrensmuseums;',
+      'var lasertag;',
+      'var escapegames;',
+      'var arcade;',
+      'var bowling;',
+      'var teambuilding',
+      'var landmarks;',
+      'var culturalcenter;',
+      'var historicalcenter;',
+      'var amusementparks;',
+      'var aquariums;',
+      'var aquarium;',
+
     ],
-    rules: [`${pairNum};`]
+    rules: [`(${pairNum} && (saturday || sunday) && (entertainment || theatre_and_shows_related || museum_related || \
+    architecture || movietheaters || theater || opera || comedyclubs || magicians || museums || artmuseums || \
+    childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || culturalcenter || \
+    historicalcenter || amusementparks || aquariums || aquarium));`]
   },
 
   weekday:{
@@ -142,17 +213,39 @@ const createDetectors = function (pairNum) {
     description: 'Weekday ' + pairNum,
     variables: [
       `var ${pairNum};`,
+      'var monday;',
+      'var tuesday;',
+      'var wednesday;',
+      'var thursday;',
+      'var friday;',
+      'var entertainment;',
+      'var theatre_and_shows_related;',
+      'var museum_related;',
+      'var architecture;',
+      'var movietheaters;',
+      'var theater;',
+      'var opera;',
+      'var comedyclubs;',
+      'var magicians;',
+      'var museums;',
+      'var artmuseums;',
+      'var childrensmuseums;',
+      'var lasertag;',
+      'var escapegames;',
+      'var arcade;',
+      'var bowling;',
+      'var teambuilding',
+      'var landmarks;',
+      'var culturalcenter;',
+      'var historicalcenter;',
+      'var amusementparks;',
+      'var aquariums;',
+      'var aquarium;',
     ],
-    rules: [`${pairNum};`]
-  },
-
-  remoteWorking:{
-    _id: Random.id(),
-    description: 'Remote Working ' + pairNum,
-    variables: [
-      `var ${pairNum};`,
-    ],
-    rules: [`${pairNum};`]
+    rules: [`(${pairNum} && (monday || tuesday || wednesday || thursday || friday) && (entertainment || theatre_and_shows_related || \
+    museum_related || architecture || movietheaters || theater || opera || comedyclubs || magicians || museums || \
+    artmuseums || childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || \
+    culturalcenter || historicalcenter || amusementparks || aquariums || aquarium));`]
   },
 
   gymExp: {

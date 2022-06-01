@@ -253,7 +253,7 @@ function createTestData() {
         "profile.experiences": [],
         "profile.subscriptions": [],
         "profile.lastParticipated": null,
-        "profile.lastNotified": initialNotifications,
+        // "profile.lastNotified": initialNotifications,
         "profile.pastIncidents": [],
         // "profile.staticAffordances": {}
       },

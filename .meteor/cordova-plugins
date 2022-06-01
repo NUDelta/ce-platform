@@ -7,4 +7,4 @@ cordova-plugin-flashlight@3.2.0
 cordova-plugin-meteor-webapp@1.9.1
 cordova-plugin-splashscreen@5.0.3
 cordova-plugin-statusbar@2.4.3
-phonegap-plugin-push@2.3.0
+@havesource/cordova-plugin-push@https://github.com/havesource/cordova-plugin-push.git#a1df480db66821e29bd3c7a432e2e2fa2ba18bd4

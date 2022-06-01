@@ -100,7 +100,8 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         let uidsNotNotifiedRecently = newUsersMeta.map(
           (usermeta) => usermeta.uid
         );
-        let route = "/";
+        // let route = "/"; 
+        let route = `/apicustom/${iid}/${incident.eid}/${needName}`;
 
         // Try to notify, based on if the current need has need-specific notification info
         let needObject = incident.contributionTypes.find(
