@@ -2,7 +2,7 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 // new experiences ///////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ export const createActivity1 = function (pairNum) {
     sendSystemMessage(message, participants, null); 
     postExpInChat("", participants, expInChat);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
-    Router.go('/chat');
+    FlowRouter.go('/chat');
   }
 
   const activity1Callback = function (sub) {

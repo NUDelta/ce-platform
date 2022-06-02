@@ -1,6 +1,6 @@
 import { Template } from 'meteor/templating';
 import { Users } from '../../api/UserMonitor/users/users.js';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './contributions.html';
 import moment from 'moment';
 import { CEResponse } from '../react-component/ce_response';
@@ -44,6 +44,6 @@ Template.message.helpers({
 Template.message.events({
   'click .system'(event, instance) {
     event.preventDefault();
-    Router.go(this.route);
+    FlowRouter.go(this.route);
   }
 })

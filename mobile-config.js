@@ -32,3 +32,6 @@ App.appendToConfig(`<platform name="ios">
 App.configurePlugin('phonegap-plugin-push', {
   SENDER_ID: 12341234
 });
+
+// https://github.com/meteor/meteor/issues/4496#issuecomment-127773041
+App.setPreference('AutoHideSplashScreen' ,'true'); 

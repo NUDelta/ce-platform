@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { Messages } from './messages';
-import { Router } from 'meteor/iron:router';
 
 Meteor.methods({
 	sendMessage({uid, message, recipients}) {

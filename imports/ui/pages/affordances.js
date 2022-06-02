@@ -5,6 +5,25 @@ import { Template } from 'meteor/templating';
 
 import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { GoogleMaps } from 'meteor/dburles:google-maps';
+import { Avatars } from '../../api/ImageUpload/images';
+
+ Template.affordances_page.onCreated(function() {
+   this.autorun(() => {
+     this.subscribe('locations.activeUser');
+     this.subscribe('avatars.all');
+   });
+ });
+
+ Template.affordances_page.helpers({
+   pageArgs() {
+     const instance = Template.instance();
+     return {
+       pageReady: instance.subscriptionsReady(),
+       location: Locations.findOne(),
+       avatars: Avatars.find().fetch(),
+     }
+   }
+ });
 
 Template.affordances.onCreated(function () {
 

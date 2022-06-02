@@ -2,7 +2,6 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
-import { Router } from 'meteor/iron:router';
 
 
 const promptDict = {

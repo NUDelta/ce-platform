@@ -1,6 +1,22 @@
 import './participate_backdoor.html';
 
 import {Template} from 'meteor/templating';
+import {Submissions} from '../../api/OCEManager/currentNeeds';
+ import { Experiences } from '../../api/OCEManager/OCEs/experiences';
+
+ Template.participate_backdoor_page.onCreated(function() {
+   this.autorun(() => {
+     this.subscribe('submissions.all');
+   });
+ });
+
+ Template.participate_backdoor_page.helpers({
+   participateBackdoorArgs() {
+     return {
+       submissions: Submissions.find().fetch(),
+     }
+   }
+ });
 
 Template.participateBackdoor.helpers({
   apiCustomLinks() {
@@ -9,6 +25,22 @@ Template.participateBackdoor.helpers({
     });
 
     return [... new Set(links)];
+  }
+});
+
+Template.results_backdoor_page.onCreated(function() {
+  this.autorun(() => {
+    this.subscribe('experiences.all');
+    this.subscribe('submissions.all');
+  });
+});
+
+Template.results_backdoor_page.helpers({
+  resultsBackdoorArgs() {
+    return {
+      submissions: Submissions.find({}).fetch(),
+      experiences: Experiences.find({}).fetch()
+    }
   }
 });
 

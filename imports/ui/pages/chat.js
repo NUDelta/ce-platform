@@ -1,9 +1,33 @@
 import './chat.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Messages } from '../../api/Messages/messages.js';
 
 import '../components/contributions.js';
+
+Template.chat_page.onCreated(function () {
+  const iid = FlowRouter.getParam('iid');
+  const eid = FlowRouter.getParam('eid');
+  this.autorun(() => {
+    this.subscribe('users.all');
+    // this.subscribe('messages.all');
+    this.subscribe('messages.user', Meteor.userId());
+    // this.subscribe('avatars.all');
+  });
+});
+
+Template.chat_page.helpers({
+  chatArgs() {
+    const instance = Template.instance();
+    return {
+      pageReady: instance.subscriptionsReady(),
+      users: Meteor.users.find().fetch(),
+      messages: Messages.find().fetch(),
+      // avatars: Avatars.find({}).fetch(),
+    }
+  }
+});
 
 //the settimeout is a bad hack to wait for newest messages to come in
 //would recommend that you use tracker autorun instead (look at the collective narrative branch)
@@ -22,19 +46,21 @@ export const scrollToBottomAbs = function(container){
   }, 200);
 }
 
-export const findPartner = function(uid, users) {
-  //find the other chat recipient: will be in same triad && have stranger static affordance
-  let aff = users.filter(u => u._id == uid)[0].profile.staticAffordances;
+//find their partner given the uid
+export const findPartner = function(uid) {
+  console.log(`my uid: ${uid}`);
+  //find their partner (look for another user with "pairX" in staticAffordances)
+  let aff = Meteor.user().profile.staticAffordances;
   // console.log("affordance: " + aff)
   let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
   // console.log("pair: " + pair)
-  let otherStranger = users.filter(
+  let partner = Meteor.users.find().fetch().filter(
     u => (u._id != uid)
     && (pair in u.profile.staticAffordances)
-    // && !('friend' in u.profile.staticAffordances)
-  );
-  otherStranger = otherStranger.map(u => u._id);
-  return otherStranger; 
+  )
+  partner = partner.map(u => u._id);
+  console.log(`partner: ${partner}`);
+  return partner; 
 }
 
 Template.chat.onRendered(function () {
@@ -63,7 +89,7 @@ Template.chat.helpers({
     data.uid = uid;
     data.recipients = [uid]
     
-    otherStranger = findPartner(uid, this.users)
+    otherStranger = findPartner(uid)
     // console.log("other stranger: " + otherStranger)
     data.recipients = data.recipients.concat(otherStranger)
     let currrentUsername = Meteor.users.findOne(Meteor.userId()).username;
@@ -76,6 +102,7 @@ Template.chat.helpers({
         //always scroll to bottom after sending a message
         const messageContainer = document.getElementById('messages');
         scrollToBottomAbs(messageContainer);
+        console.log(`where are my messages ${this.messages}`);
       }
     });
 
