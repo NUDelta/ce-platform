@@ -7,6 +7,23 @@ import { Experiences, Incidents } from '../../api/OCEManager/OCEs/experiences.js
 
 import '../components/result_link.js';
 
+Template.profile_page.onCreated(function() {
+  this.autorun(() => {
+    this.subscribe('incidents.pastUser');
+    this.subscribe('experiences.pastUser');
+  })
+});
+Template.profile_page.helpers({
+  profileArgs() {
+    const instance = Template.instance();
+    return {
+      pageReady: instance.subscriptionsReady(),
+      experiences: Experiences.find().fetch(),
+      incidents: Incidents.find().fetch(),
+    }
+  }
+})
+
 Template.profile.onCreated(function () {
 
 });

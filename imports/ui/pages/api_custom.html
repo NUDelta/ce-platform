@@ -1,3 +1,9 @@
+<template name="api_custom_page">
+  {{#if Template.subscriptionsReady}}
+    {{> api_custom (apiCustomArgs)}}
+  {{/if}}
+</template>
+
 <template name="api_custom">
     {{> Template.dynamic template=data.experience.participateTemplate data=data}}
 </template>
@@ -1071,7 +1077,7 @@
       </style>
   </head>
   <div class="instruction">
-    <h4 class="bold">When I'm studying at night, I need ___. </h4>    
+    <h4 class="bold">When I'm studying at night, I need ___. </h4>
   </div>
   <form id="participate">
       <div>

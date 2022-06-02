@@ -199,3 +199,5 @@ packages/
 ssl/
 .eslintrc.json
 *.pyc
+aws-env.sh
+prod-env.sh

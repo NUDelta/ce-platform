@@ -1,6 +1,6 @@
 import './nav.html';
 
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.nav.onRendered(function () {
   // adjustActive();
@@ -9,13 +9,13 @@ Template.nav.onRendered(function () {
 Template.nav.helpers({
   isCurrentPage(pageName) {
     if(pageName === 'home'){
-      return ['home', 'api.custom'].includes(Router.current().route.getName());
+      return ['home', 'api.custom'].includes(FlowRouter.getRouteName());
     }else if (pageName === 'profile'){
-      return ['profile', 'api.customresults'].includes(Router.current().route.getName());
+      return ['profile', 'api.customresults'].includes(FlowRouter.getRouteName());
     }else if(pageName === 'affordances'){
-      return Router.current().route.getName() === pageName;
+      return FlowRouter.getRouteName() === pageName;
     }else if(pageName === 'chat'){
-      return Router.current().route.getName() === pageName;
+      return FlowRouter.getRouteName() === pageName;
     }
     else{
       return false;
@@ -25,5 +25,5 @@ Template.nav.helpers({
 
 const adjustActive = function () {
   $('.nav-item').removeClass('active');
-  const route = Router.current().route.getName();
+  const route = FlowRouter.getRouteName();
 };

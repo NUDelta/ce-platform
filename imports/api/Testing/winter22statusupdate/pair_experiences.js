@@ -2,6 +2,7 @@ import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpe
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 // new experiences ///////////////////////////////////////////////////////
@@ -28,9 +29,10 @@ export const createActivity1 = function (pairNum) {
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
     let message = 'Woo-hoo! You two have completed Remote Working - 1! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
-    sendSystemMessage(message, participants, route); 
+    sendSystemMessage(message, participants, route);
     postExpInChat("", participants, sub.eid, sub.iid);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working experience!', '', route);
+    FlowRouter.go('/chat');
   }
 
   const activity1Callback = function (sub) {
@@ -49,10 +51,10 @@ export const createActivity1 = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let systemMessage = 'Your partner just completed Remote Working - 1! Participate to see their results when you get a chance💬'; 
+    let systemMessage = 'Your partner just completed Remote Working - 1! Participate to see their results when you get a chance💬';
     let notifMessage = "Hey! Your partner just completed Remote Working - 1"
-    sendSystemMessage(systemMessage, partner, "/chat"); 
-    
+    sendSystemMessage(systemMessage, partner, "/chat");
+
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
@@ -65,7 +67,7 @@ export const createActivity1 = function (pairNum) {
         needName : `Activity1${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].activity1),
-          number : 1 
+          number : 1
         },
         toPass : {
           situationDescription : "Answer from one of the following prompts:",
@@ -116,7 +118,7 @@ export const createActivity2 = function (pairNum) {
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
     let message = 'Woo-hoo! You two have completed Remote Working - 2! Tap here to see your results and share what you think!'; //how do I change this so that it doesn't show up until both people finish?
 
-    sendSystemMessage(message, participants, route); 
+    sendSystemMessage(message, participants, route);
     postExpInChat("", participants, sub.eid, sub.iid);
     notify(participants, sub.iid, 'See images from you and your partner\'s Remote Working - 2!', '', route);
   }
@@ -137,9 +139,9 @@ export const createActivity2 = function (pairNum) {
     )
     partner = partner.map(u => u._id)
 
-    let systemMessage = 'Your partner just completed Remote working - 2! Participate to see their results when you get a chance💬'; 
+    let systemMessage = 'Your partner just completed Remote working - 2! Participate to see their results when you get a chance💬';
     let notifMessage = "Hey! Your partner just completed Remote working - 2"
-    sendSystemMessage(systemMessage, partner, "/chat"); 
+    sendSystemMessage(systemMessage, partner, "/chat");
     Meteor.call('sendNotification', partner, notifMessage, '/chat');
   }
 
@@ -152,7 +154,7 @@ export const createActivity2 = function (pairNum) {
         needName : `Activity2${pairNum}`,
         situation : {
           detector : getDetectorUniqueKey(DETECTORS[pairNum].activity2),
-          number : 1 
+          number : 1
         },
         toPass : {
           situationDescription : "Answer from one of the following prompts:",
@@ -241,7 +243,7 @@ export const createLibraryExp2 = function (pairNum) {
     });
 
     let route = `/apicustomresults/${sub.iid}/${sub.eid}`;
-    let message = 'Woo-hoo! You two have completed another Library experience! Tap here to see your results.'; 
+    let message = 'Woo-hoo! You two have completed another Library experience! Tap here to see your results.';
 
     sendSystemMessage(message, participants, route);
     notify(participants, sub.iid, 'See images from your library experience!', '', route);

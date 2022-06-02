@@ -19,6 +19,7 @@ import {Submissions} from '../../OCEManager/currentNeeds';
 import {serverLog} from "../../logs";
 import {setIntersection} from "../../custom/arrayHelpers";
 
+
 /**
  * Loops through all unmet needs and returns all needs a user matches with.
  *

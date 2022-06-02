@@ -7,7 +7,11 @@ const getImageFiles = () => {
 };
 
 AccountsTemplates.configure({
+  defaultLayoutType: 'blaze', //Optional, the default is 'blaze'
   defaultLayout: 'layout',
+  defaultLayoutRegions: {},
+  defaultContentRegion: 'main',
+   // old parameters?
   showLabels: false,
   texts: {
     navSignIn: "Sign In / Join",

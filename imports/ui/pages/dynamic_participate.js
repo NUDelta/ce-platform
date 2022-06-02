@@ -2,7 +2,7 @@ import './dynamic_participate.html';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import {Incidents} from "../../api/OCEManager/OCEs/experiences";
 import {
   needAggregator, needIsAvailableToParticipateNow, numberSubmissionsRemaining, prioritizeHalfCompletedNeeds
@@ -15,11 +15,12 @@ Template.dynamicParticipate.onCreated(function() {
   this.uid = Meteor.userId();
 
   if (!this.uid) {
-    Router.go('home');
+    FlowRouter.go('home');
     return;
   }
-  this.iid = Router.current().params.iid;
-  this.detectorUniqueKey = Router.current().params.detectorUniqueKey;
+
+  this.iid = FlowRouter.getParam('iid');
+  this.detectorUniqueKey = FlowRouter.getParam('detectorUniqueKey');
   const handles = [
     this.subscribe('incidents.single', this.iid),
     this.subscribe('assignments.single', this.iid),
@@ -71,8 +72,8 @@ Template.dynamicParticipate.onCreated(function() {
 
       // choose the top-1, then dynamically redirect to that participate
       const chosenNeedName = potentialNeedNames[0];
-      //Router.go(`/apicustom/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
-      Router.go(`/apicustomprestory/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
+      //FlowRouter.go(`/apicustom/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
+      FlowRouter.go(`/apicustomprestory/${this.iid}/${this.incident.eid}/${chosenNeedName}`);
     }
   });
 });

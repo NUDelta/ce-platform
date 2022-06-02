@@ -2,13 +2,68 @@ import './api_custom_results.html';
 
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Router } from 'meteor/iron:router';
-import { Submissions } from "../../../imports/api/OCEManager/currentNeeds";
+
+import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import { Template } from "meteor/templating";
 import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
 import { findPartner, scrollToBottomAbs } from "../pages/chat"
 //import {notify} from "../../api/OpportunisticCoordinator/server/noticationMethods";
+
+import { Experiences } from "../../api/OCEManager/OCEs/experiences";
+import { Avatars, Images } from '../../api/ImageUpload/images.js';
+import { Submissions } from "../../api/OCEManager/currentNeeds";
+
+
+Template.api_custom_results_page.onCreated(function () {
+  const iid = FlowRouter.getParam('iid');
+  const eid = FlowRouter.getParam('eid');
+  this.autorun(() => {
+    this.subscribe('images.activeIncident', iid);
+    this.subscribe('experiences.single', eid);
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
+  });
+});
+
+Template.api_custom_results_page.helpers({
+  apiCustomResultsArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    }
+  }
+});
+
+Template.api_custom_results_admin_page.onCreated(function () {
+  const iid = FlowRouter.getParam('iid');
+  const eid = FlowRouter.getParam('eid');
+  this.autorun(() => {
+    this.subscribe('images.activeIncident', iid);
+    this.subscribe('experiences.single', eid);
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
+  });
+});
+
+Template.api_custom_results_admin_page.helpers({
+  apiCustomResultsAdminArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      images: Images.find({}).fetch(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    }
+  }
+});
 
 
 Template.api_custom_results.onCreated(() => {
@@ -210,7 +265,7 @@ Template.groupBumpedResults.events({
     data.sender = uid;
     data.receiver = [uid];
 
-    const otherStranger = findPartner(uid, users)
+    const otherStranger = findPartner(uid)
     console.log("other stranger" + otherStranger)
 
     data.receiver = data.receiver.concat(otherStranger)

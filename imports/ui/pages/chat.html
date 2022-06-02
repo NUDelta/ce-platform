@@ -1,3 +1,9 @@
+<template name="chat_page">
+  {{#if Template.subscriptionsReady}}
+    {{> chat (chatArgs)}}
+  {{/if}}
+</template>
+
 <template name="chat">
   <!--these styles are for the chat messages -->
   <head>
@@ -45,7 +51,7 @@
           }
       </style>
   </head>
-  {{#if Template.subscriptionsReady}}
+  <!-- {{#if Template.subscriptionsReady}} -->
   {{#if currentUser}}
     <!-- {{#if currentUser.profile.staticAffordances.friend}}
       <h3>Error 😢</h3>
@@ -84,5 +90,5 @@
   <h4>Log in to see your messages!</h4>
   <div id="messages"></div>
   {{/if}} <!-- endif currentUser-->
-  {{/if}}
+  <!-- {{/if}} -->
 </template>

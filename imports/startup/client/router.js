@@ -1,4 +1,5 @@
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import '../../ui/blaze-helpers.js';
 import '../../ui/common.js';
 
@@ -41,6 +42,84 @@ import {Assignments, Availability} from "../../api/OpportunisticCoordinator/data
 import {Notification_log} from "../../api/Logging/notification_log";
 import {Page_log} from "../../api/Logging/page_log/page_log";
 
+
+AccountsTemplates.configureRoute('enrollAccount');
+AccountsTemplates.configureRoute('signIn');
+AccountsTemplates.configureRoute('signUp');
+
+FlowRouter.route('/', {
+  name: 'home',
+  action() {
+    BlazeLayout.render('layout', { main: 'home'});
+  }
+});
+
+FlowRouter.route('/profile', {
+  name: 'profile',
+  action() {
+    BlazeLayout.render('layout', { main: 'profile_page'});
+  }
+});
+
+FlowRouter.route('/affordances', {
+  name: 'affordances',
+  action() {
+    BlazeLayout.render('layout', { main: 'affordances_page'});
+  }
+});
+
+FlowRouter.route('/apicustomdynamic/:iid/:detectorUniqueKey', {
+  name: 'api.custom.dynamic',
+  action() {
+    BlazeLayout.render('layout', { main: 'dynamicParticipate'});
+  }
+});
+
+FlowRouter.route('/apicustom/:iid/:eid/:needName', {
+  name: 'api.custom',
+  action() {
+    BlazeLayout.render('layout', { main: 'api_custom_page'});
+  }
+});
+
+FlowRouter.route('/apicustomresults/:iid/:eid', {
+  name: 'api.custom.results',
+  action() {
+    BlazeLayout.render('layout', { main: 'api_custom_results_page'});
+  }
+});
+
+FlowRouter.route('/apicustomresultsadmin/:iid/:eid', {
+  name: 'api.custom.results.admin',
+  action() {
+    BlazeLayout.render('layout', { main: 'api_custom_results_admin_page'});
+  }
+});
+
+
+FlowRouter.route('/participate/backdoor', {
+  name: 'participate.backdoor',
+  action() {
+    BlazeLayout.render('layout', { main: 'participate_backdoor_page'});
+  }
+});
+
+FlowRouter.route('/results/backdoor', {
+  name: 'results.backdoor',
+  action() {
+    BlazeLayout.render('layout', { main: 'results_backdoor_page'});
+  }
+});
+
+FlowRouter.route('/chat', {
+  name: 'chat',
+  action() {
+    BlazeLayout.render('layout', { main: 'chat_page'});
+  }
+});
+
+
+/*
 Router.configure({
   layoutTemplate: 'layout'
 });
@@ -291,53 +370,16 @@ Router.route('chat', {
   name: 'chat',
   template: 'chat',
   before: function() {
-    this.subscribe('images.activeIncident', this.params.iid).wait();
-    this.subscribe('experiences.single', this.params.eid).wait();
-    this.subscribe('submissions.activeIncident', this.params.iid).wait();
     this.subscribe('users.all').wait();
     this.subscribe('messages.user', Meteor.userId()).wait();
     this.next();
   },
   data: function () {
     return {
-      experience: Experiences.findOne(),
-      images: Images.find({}).fetch(),
-      submissions: Submissions.find({}).fetch(),
       users: Meteor.users.find().fetch(),
       messages: Messages.find().fetch(),
     };
   }
-/*
-  before: function () {
-    if (Meteor.userId()) {
-      let dic = {
-        uid: Meteor.userId(),
-        timestamp: Date.now(),
-        route: "customresults",
-        params: {
-          iid: this.params.iid,
-          eid: this.params.eid
-        }
-      };
-      Meteor.call('insertLog', dic);
-    }
-    this.subscribe('images.activeIncident', this.params.iid).wait();
-    this.subscribe('experiences.single', this.params.eid).wait();
-    this.subscribe('submissions.activeIncident', this.params.iid).wait();
-    this.subscribe('users.all').wait();
-    this.subscribe('avatars.all').wait();
-    this.next();
-  },
-  data: function () {
-    return {
-      experience: Experiences.findOne(),
-      images: Images.find({}).fetch(),
-      submissions: Submissions.find({}).fetch(),
-      users: Meteor.users.find().fetch(),
-      avatars: Avatars.find({}).fetch(),
-    };
-  }
-  */
 });
 
 Router.route('participate.backdoor', {
@@ -424,3 +466,4 @@ Router.route('profile', {
     };
   }
 });
+*/

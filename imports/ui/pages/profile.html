@@ -1,3 +1,9 @@
+<template name="profile_page">
+    {{#if Template.subscriptionsReady}}
+      {{> profile (profileArgs)}}
+    {{/if}}
+  </template>
+
 <template name="profile">
     {{#if currentUser}}
         <h4>Results from experiences</h4>
