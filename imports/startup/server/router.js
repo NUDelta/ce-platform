@@ -8,7 +8,7 @@ import { serverLog } from "../../api/logs";
 WebApp.connectHandlers.use('/', bodyParser.json());
 
 WebApp.connectHandlers.use("/api/geolocation", (req, res, next) => {
-  serverLog.call({message: `POST to api/geolocation: ${ JSON.stringify(req.body) }`});
+  serverLog.call({message: `in SERVER/ROUTER.JS: POST to api/geolocation: ${ JSON.stringify(req.body) }`});
 
   const uid = req.body.userId;
   const location = req.body.location;

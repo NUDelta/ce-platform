@@ -18,7 +18,7 @@ train = (42.053872,-87.683748)
 brisbane = (-37.822464, 144.966146)
 # library = (42.058141, -87.674490) 
 library = (42.05814914752829, -87.67442041754066)
-norris = (42.053262712572679, -87.67268455470773)
+norris = (42.053262712572679, -87.67268455470775)
 
 def followPath(path, uid):
     for stop in path:
@@ -26,7 +26,7 @@ def followPath(path, uid):
         time.sleep(1)
 
 def setLocation(location, uid):
-    # host = "http://localhost:3000"
+    host = "http://localhost:3000"
     # host = "https://ce-platform.herokuapp.com"
     # host = "https://staging-ce-platform.herokuapp.com"
     r = requests.post(host + "/api/geolocation", json={
