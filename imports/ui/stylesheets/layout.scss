@@ -5,7 +5,7 @@ body {
   // transparent body required for the CameraPreview instance to be displayed behind the layout HTML.
   // this is required when CameraPreview is started with toBack = true
   // see documentation on startCamera https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
-  background-color: transparent;
+  background-color: white;
   font-family: 'Lato', 'Roboto', Helvetica;
 }
 
