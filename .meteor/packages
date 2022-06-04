@@ -53,3 +53,5 @@ react-template-helper
 react-meteor-data
 ostrio:flow-router-extra
 kadira:blaze-layout
+aldeed:simple-schema
+nudelta2015:push
