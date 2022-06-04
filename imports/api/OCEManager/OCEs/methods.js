@@ -294,7 +294,79 @@ Meteor.methods({
     }).validate({eid, needName, toPass, field});
 
     changeExperienceToPass(eid, needName, toPass, field);
-  }
+  },
+  expCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg){
+    
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName
+    }).fetch();
+    
+    let expInChat = submissions.map((submission) => {
+      return {
+      uid: submission.uid,
+      name: Meteor.users.findOne(submission.uid).profile.firstName,
+      text: submission.content.sentence,
+      image: submission.content.proof,
+      time: submission.timestamp
+      }
+    });
+    
+    let participants = submissions.map((submission) => { return submission.uid; });
+    let userUpdateKey = 'profile.staticAffordances.' + setParticipatedKey;
+    
+    participants.forEach(function(p){
+      Meteor.users.update({
+      _id: p
+      }, {
+      $set: {
+        [userUpdateKey]: true
+      }
+      });
+    });
+    
+    let route = `/chat`;
+    
+    sendSystemMessage(systemMsg, participants, null); 
+    postExpInChat("", participants, expInChat);
+    notify(participants, sub.iid, notifMsg, '', route);
+
+    //respawn the new experience
+    let contributionTypes = Incidents.findOne({_id: sub.iid}).contributionTypes;
+    let need = contributionTypes.find((x) => {
+      return x.needName === sub.needName;
+    });
+    // Convert Need Name i to Need Name i+1
+    let splitName = sub.needName.split(' ');
+    let iPlus1 = Number(splitName.pop()) + 1;
+    splitName.push(iPlus1);
+    let newNeedName = splitName.join(' ');
+
+    need.needName = newNeedName;
+    addContribution(sub.iid, need);
+
+    },
+    expInProgressCallback(sub, systemMsg, notifMsg, confirmationMsg){
+
+      let submissions = Submissions.find({
+        iid: sub.iid,
+        needName: sub.needName
+      }).fetch();
+      
+      let participantId = submissions.map((submission) => { return submission.uid; });
+      let participant = Meteor.users.findOne(participantId[0])
+      let aff = participant.profile.staticAffordances;
+      let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+      let partner = Meteor.users.find().fetch().filter(
+        u => (u._id != participantId[0])
+        && (pair in u.profile.staticAffordances)
+      )
+      partner = partner.map(u => u._id)
+      
+      sendSystemMessage(systemMsg, partner, "/chat"); 
+      sendSystemMessage(confirmationMsg, participantId[0], null); 
+      Meteor.call('sendNotification', partner, notifMsg, '/chat');
+      }
 });
 
 export const addContribution = (iid, contribution) =>{

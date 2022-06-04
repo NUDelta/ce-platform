@@ -19,6 +19,8 @@ import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
 import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
 
+import { Prompt } from "../react-component/prompt.js";
+
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
 Template.api_custom.helpers({
@@ -461,6 +463,9 @@ Template.monsterCreate.helpers({
 });
 
 Template.groupBumped.helpers({
+  Prompt() {
+    return Prompt;
+  },
   // @TODO - determine if we won't need this then delete
   friendNames() {
     const friends = this.users.filter(friend => {

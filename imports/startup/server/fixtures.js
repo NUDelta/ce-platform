@@ -272,8 +272,39 @@ function createTestData(){
     multi: true
   });
 
+  // const initialNotifications = Object.keys(CONSTANTS.EXPERIENCES).reduce((obj, key) => {
+  //   return {...obj, `${key}`: -1};
+  // }, {});
 
-  log.debug('FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py '+ uid1 + " " + uid2 + " " +  uid3+ " " + uid4);
+  Meteor.users.update(
+    {
+      // everyone
+    },
+    {
+      $set: {
+        "profile.experiences": [],
+        "profile.subscriptions": [],
+        "profile.lastParticipated": null,
+        // "profile.lastNotified": initialNotifications,
+        "profile.pastIncidents": [],
+        // "profile.staticAffordances": {}
+      },
+    },
+    {
+      multi: true,
+    }
+  );
+
+  log.debug(
+    "FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py " +
+      uid1 +
+      " " +
+      uid2 +
+      " " +
+      uid3 +
+      " " +
+      uid4
+  );
 }
 
 /* graveyard

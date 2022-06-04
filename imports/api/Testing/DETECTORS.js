@@ -1,5 +1,5 @@
-// const createDetectors = function (pairNum) {
-//   return {
+const createDetectors = function (pairNum) {
+  return {
 //     activity1:{
 //       _id: Random.id(),
 //       description: 'activity1 ' + pairNum,
@@ -31,6 +31,28 @@
 //       rules: [`${pairNum} && !participatedInSelfIntro;`]
 //       // rules: ['(triad1)']
 //     },
+  // new detector for walk /////////////////////////////////////
+  selfIntro:{
+    _id: Random.id(),
+    description: 'SelfIntro ' + pairNum,
+    variables: [
+      `var ${pairNum};`,
+      'var participatedInSelfIntro;'
+    ],
+    rules: [`${pairNum} && !participatedInSelfIntro;`]
+  },
+
+  library:{
+    _id: Random.id(),
+    description: 'Library ' + pairNum,
+    variables: [
+      'var libraries;',
+      'var usedbooks;',
+      'var bookstores;',
+      `var ${pairNum};`
+    ],
+    rules: [`(${pairNum} && (libraries || bookstores));`]
+  },
 
 //     walkExp:{
 //       _id: Random.id(),
@@ -55,44 +77,94 @@
 //       // rules: ['(triad1)']
 //     },
 
-//     libraryExp:{
-//       _id: Random.id(),
-//       description: 'Library ' + pairNum,
-//       variables: [
-//         'var libraries;',
-//         'var usedbooks;',
-//         'var bookstores;',
-//         `var ${pairNum};`
-//       ],
-//       rules: [`${pairNum} && (libraries || bookstores);`]
-//       // rules: ['(triad2)']
-//     },
+  grocery:{
+    _id: Random.id(),
+    description: 'Groceries ' + pairNum,
+    variables: [
+      'var intlgrocery;',
+      'var ethicgrocery;',
+      'var markets;',
+      'var wholesalers;',
+      'var pharmacy;',
+      'var grocery;',
+      'var farmersmarket;',
+      'var convenience;',
+      'var importedfood;',
+      'var herbsandspices;',
+      'var drugstores;',
+      'var seafoodmarkets;',
+      'var marketstalls;',
+      'var organic_stores;',
+      'var publicmarkets;',
+      `var ${pairNum};`
+    ],
+    rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
+    farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
+    organic_stores || publicmarkets || marketstalls));`]
+  },
 
-//     //second library exp detector if they
-//     libraryExp2:{
-//       _id: Random.id(),
-//       description: 'Library2 ' + pairNum,
-//       variables: [
-//         'var participatedInLibraryExp;',
-//         'var libraries;',
-//         'var usedbooks;',
-//         'var bookstores;',
-//         `var ${pairNum};`
-//       ],
-//       rules: [`(${pairNum} && participatedInLibraryExp && (libraries || bookstores));`]
-//     },
+  outdoor: {
+    _id : Random.id(),
+    description : 'Outdoor ' + pairNum,
+    variables : [
+      `var ${pairNum};`,
+      'var playgrounds;',
+      'var hiking;',
+      'var rock_climbing;',
+      'var lakes;',
+      'var fishing;',
+      'var beaches;'
+    ],
+    rules: [`(${pairNum} && (playgrounds || hiking || rock_climbing || lakes || fishing || beaches));`]
+  },
 
-//     publicTransportExp: {
-//       _id: Random.id(),
-//       description: 'Public Transport ' + pairNum,
-//       variables: [
-//         'var publictransport;',
-//         'var trainstations;',
-//         'var trains;',
-//         `var ${pairNum};`
-//       ],
-//       rules: [`${pairNum} && (trainstations || trains || publictransport);`]
-//     },
+  exercise:{
+    _id: Random.id(),
+    description: 'Exercise ' + pairNum,
+    variables: [
+      `var ${pairNum};`,
+      'var boxing;',
+      'var kickboxing;',
+      'var amateursportsteams;',
+      'var gyms;',
+      'var physicaltherapy;',
+      'var fencing;',
+      'var tennis;',
+      'var healthtrainers;',
+      'var poledancingclasses;',
+      'var badminton;',
+      'var beachvolleyball;',
+      'var football;',
+      'var pilates;',
+      'var dancestudio;',
+      'var brazilianjiujitsu;',
+      'var trampoline;',
+      'var cyclingclasses;',
+      'var cardioclasses;',
+      'var barreclasses;',
+      'var intervaltraininggyms;',
+      'var sports_clubs;',
+      'var weightlosscenters;',
+      'var active;',
+      'var aerialfitness;',
+      'var communitycenters;',
+      'var yoga;',
+      'var squash;',
+      'var surfing;',
+      'var circuittraininggyms;',
+      'var fitness;',
+      'var martialarts;',
+      'var dance;',
+      'var dance_studios;',
+      'var dance_schools;'
+    ],
+    rules: [`(${pairNum} && (boxing || kickboxing || amateursportsteams || gyms || physicaltherapy || fencing || \
+    tennis || healthtrainers || poledancingclasses || badminton || beachvolleyball || football || pilates || \
+    dancestudio || brazilianjiujitsu || trampoline || cyclingclasses || cardioclasses || barreclasses || \
+    intervaltraininggyms || sports_clubs || weightlosscenters || active || aerialfitness || communitycenters || \
+    yoga || squash || surfing || circuittraininggyms || fitness || martialarts || dance || dance_studios || \
+    dance_schools));`]
+  },
 
 //     publicTransportExp2: {
 //       _id: Random.id(),
@@ -120,74 +192,83 @@
 //       rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
 //     },
 
-//     coffeeExp2: {
-//       _id: Random.id(),
-//       description: 'Coffee Shop2 ' + pairNum,
-//       variables: ['var coffeeroasteries;',
-//         'var coffee;',
-//         'var cafes;',
-//         'var coffeeshops;',
-//         'var coffeeteasupplies;',
-//         `var ${pairNum};`,
-//         'var participatedInCoffeeExp'
-//       ],
-//       rules: [`(${pairNum} && participatedInCoffeeExp && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
-//     },
+  weekend:{
+    _id: Random.id(),
+    description: 'Weekend ' + pairNum,
+    variables: [
+      `var ${pairNum};`,
+      'var saturday;',
+      'var sunday;',
+      'var entertainment;',
+      'var theatre_and_shows_related;',
+      'var museum_related;',
+      'var architecture;',
+      'var movietheaters;',
+      'var theater;',
+      'var opera;',
+      'var comedyclubs;',
+      'var magicians;',
+      'var museums;',
+      'var artmuseums;',
+      'var childrensmuseums;',
+      'var lasertag;',
+      'var escapegames;',
+      'var arcade;',
+      'var bowling;',
+      'var teambuilding',
+      'var landmarks;',
+      'var culturalcenter;',
+      'var historicalcenter;',
+      'var amusementparks;',
+      'var aquariums;',
+      'var aquarium;',
 
-//     groceriesExp:{
-//       _id: Random.id(),
-//       description: 'Groceries ' + pairNum,
-//       variables: [
-//         'var intlgrocery;',
-//         'var ethicgrocery;',
-//         'var markets;',
-//         'var wholesalers;',
-//         'var pharmacy;',
-//         'var grocery;',
-//         'var farmersmarket;',
-//         'var convenience;',
-//         'var importedfood;',
-//         'var herbsandspices;',
-//         'var drugstores;',
-//         'var seafoodmarkets;',
-//         'var marketstalls;',
-//         'var organic_stores;',
-//         'var publicmarkets;',
-//         `var ${pairNum};`
-//       ],
-//       rules: [`(${pairNum} && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
-//       farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-//       organic_stores || publicmarkets || marketstalls));`]
-//       // rules: ['(triad3)']
-//     },
+    ],
+    rules: [`(${pairNum} && (saturday || sunday) && (entertainment || theatre_and_shows_related || museum_related || \
+    architecture || movietheaters || theater || opera || comedyclubs || magicians || museums || artmuseums || \
+    childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || culturalcenter || \
+    historicalcenter || amusementparks || aquariums || aquarium));`]
+  },
 
-//     groceriesExp2:{
-//       _id: Random.id(),
-//       description: 'Groceries2 ' + pairNum,
-//       variables: [
-//         'var intlgrocery;',
-//         'var ethicgrocery;',
-//         'var markets;',
-//         'var wholesalers;',
-//         'var pharmacy;',
-//         'var grocery;',
-//         'var farmersmarket;',
-//         'var convenience;',
-//         'var importedfood;',
-//         'var herbsandspices;',
-//         'var drugstores;',
-//         'var seafoodmarkets;',
-//         'var marketstalls;',
-//         'var organic_stores;',
-//         'var publicmarkets;',
-//         `var ${pairNum};`,
-//         'var participatedInGroceriesExp;'
-//       ],
-//       rules: [`(${pairNum} && participatedInGroceriesExp && (intlgrocery || ethicgrocery || markets || wholesalers || pharmacy || grocery || \
-//       farmersmarket || convenience || importedfood || herbsandspices || drugstores || seafoodmarkets || \
-//       organic_stores || publicmarkets || marketstalls));`]
-//       // rules: ['(triad3)']
-//     },
+  weekday:{
+    _id: Random.id(),
+    description: 'Weekday ' + pairNum,
+    variables: [
+      `var ${pairNum};`,
+      'var monday;',
+      'var tuesday;',
+      'var wednesday;',
+      'var thursday;',
+      'var friday;',
+      'var entertainment;',
+      'var theatre_and_shows_related;',
+      'var museum_related;',
+      'var architecture;',
+      'var movietheaters;',
+      'var theater;',
+      'var opera;',
+      'var comedyclubs;',
+      'var magicians;',
+      'var museums;',
+      'var artmuseums;',
+      'var childrensmuseums;',
+      'var lasertag;',
+      'var escapegames;',
+      'var arcade;',
+      'var bowling;',
+      'var teambuilding',
+      'var landmarks;',
+      'var culturalcenter;',
+      'var historicalcenter;',
+      'var amusementparks;',
+      'var aquariums;',
+      'var aquarium;',
+    ],
+    rules: [`(${pairNum} && (monday || tuesday || wednesday || thursday || friday) && (entertainment || theatre_and_shows_related || \
+    museum_related || architecture || movietheaters || theater || opera || comedyclubs || magicians || museums || \
+    artmuseums || childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || \
+    culturalcenter || historicalcenter || amusementparks || aquariums || aquarium));`]
+  },
 
 //     restaurantExp:{
 //       _id: Random.id(),
@@ -246,8 +327,8 @@
 
 //   /*end of progression triad 1*/
 
-//   };
-// };
+  };
+};
 
 // function create_detector_pairs(pairCount) {
 //   let detector_pair = {}

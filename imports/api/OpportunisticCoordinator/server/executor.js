@@ -71,10 +71,21 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
         adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
       });
 
+<<<<<<< HEAD
       // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
       // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
       //   return !userNotifiedTooRecently(Meteor.users.findOne(userMeta.uid));
       // });
+=======
+        // let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
+        //   (usermeta) => usermeta.uid
+        // );
+        let uidsNotNotifiedRecently = newUsersMeta.map(
+          (usermeta) => usermeta.uid
+        );
+        // let route = "/"; 
+        let route = `/apicustom/${iid}/${incident.eid}/${needName}`;
+>>>>>>> 5652e06 (add multiple prompts display and respawn new experience)
 
       let uidsNotNotifiedRecently = newUsersMeta.map(usermeta => usermeta.uid);
       let route = "/";
