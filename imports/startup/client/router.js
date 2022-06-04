@@ -82,12 +82,28 @@ FlowRouter.route('/apicustom/:iid/:eid/:needName', {
   }
 });
 
+FlowRouter.route('/apicustomprestory/:iid/:eid/:needName', {
+  name: 'api.custom.prestory',
+  action() {
+    BlazeLayout.render('layout', { main: 'api_custom_prestory_page'});
+  }
+});
+
 FlowRouter.route('/apicustomresults/:iid/:eid', {
   name: 'api.custom.results',
   action() {
     BlazeLayout.render('layout', { main: 'api_custom_results_page'});
   }
 });
+
+FlowRouter.route('/apicustomresults/:iid/:eid/:sid', {
+  name: 'api.custom.results.expand',
+  action() {
+    BlazeLayout.render('layout', { main: 'api_custom_results_expand_page'});
+  }
+});
+
+
 
 FlowRouter.route('/apicustomresultsadmin/:iid/:eid', {
   name: 'api.custom.results.admin',
