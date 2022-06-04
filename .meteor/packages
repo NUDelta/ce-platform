@@ -1,59 +1,50 @@
-# Meteor packages used by this project, one per line.
-# Check this file (and the other files in this directory) into your repository.
-#
-# 'meteor add' and 'meteor remove' will edit this file for you,
-# but you can also edit it by hand.
-meteor-base@1.5.1             # Packages every Meteor app needs to have
-mobile-experience@1.1.0       # Packages for a great mobile UX
-mongo@1.14.6                   # The database Meteor supports right now
-blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
-session@1.2.0                 # Client-side reactive dictionary for your app
-jquery@1.11.10                  # Helpful client-side library
-tracker@1.2.0                 # Meteor's client-side reactive programming library
-es5-shim@4.8.0                # ECMAScript 5 compatibility for older browsers.
-ecmascript@0.16.2              # Enable ECMAScript2015+ syntax in app code
-insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
-accounts-password@2.3.1
-twbs:bootstrap
-iron:router
-random@1.2.0
-reload@1.3.1
-check@1.3.1
-spacebars@1.0.12
-email@2.2.1
+
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+es5-shim
+ecmascript
+insecure
+accounts-password
+random
+reload
+check
+spacebars
+email
 cfs:filesystem
 cfs:standard-packages
-ejson@1.1.2
+ejson
 aldeed:collection2
-browser-policy@1.1.0
-sergeyt:typeahead
+browser-policy
 dburles:google-maps
-standard-minifier-css@1.8.1
-standard-minifier-js@2.8.0
+standard-minifier-css
+standard-minifier-js
 mdg:validated-method
-fourseven:scss@4.12.0
-oauth@2.1.2
+fourseven:scss
 nooitaf:colors
-oauth1@1.5.0
 mrt:moment-timezone
 cfs:graphicsmagick
-msavin:mongol
-shell-server@0.5.0
-force-ssl@1.1.0
+shell-server
+force-ssl
 remcoder:chronos
 practicalmeteor:mocha
 xolvio:cleaner
-accounts-base@2.2.2
+accounts-base
 practicalmeteor:chai
 erasaur:meteor-lodash
-dynamic-import@0.7.2
-useraccounts:iron-routing
+dynamic-import
 aldeed:template-extension
 useraccounts:bootstrap
-underscore@1.0.10
- fortawesome:fontawesome
- dburles:collection-helpers
- meanware:gridfs
- nudelta2015:push@1.0.1
- react-template-helper
- react-meteor-data
+underscore
+fortawesome:fontawesome
+dburles:collection-helpers
+nudelta2015:push
+react-template-helper
+react-meteor-data
+ostrio:flow-router-extra
+kadira:blaze-layout
+aldeed:simple-schema
