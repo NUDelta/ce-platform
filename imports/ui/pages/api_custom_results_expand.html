@@ -1,3 +1,9 @@
+<template name="api_custom_results_expand_page">
+    {{#if Template.subscriptionsReady}}
+        {{> api_custom_results_expand (apiCustomResultsExpandArgs)}}
+    {{/if}}
+</template>
+
 <template name="api_custom_results_expand">
     {{> Template.dynamic template=data.experience.expandTemplate data=data}}
 </template>

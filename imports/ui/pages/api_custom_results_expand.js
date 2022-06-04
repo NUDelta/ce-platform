@@ -2,7 +2,7 @@ import './api_custom_results_expand.html';
 
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 import { Template } from "meteor/templating";
@@ -10,6 +10,29 @@ import { Meteor } from 'meteor/meteor'
 import '../components/displayImage.html';
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM PRESTORY QUESTIONS
+Template.api_custom_results_expand_page.onCreated(function () {
+  const iid = FlowRouter.getParam('iid');
+  const eid = FlowRouter.getParam('eid');
+  this.autorun(() => {
+    this.subscribe('experiences.single', eid);
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
+  });
+});
+
+Template.api_custom_results_expand_page.helpers({
+  apiCustomResultsExpandArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      submissions: Submissions.find({}).fetch(),
+      users: Meteor.users.find().fetch(),
+      avatars: Avatars.find({}).fetch(),
+    }
+  }
+});
+
 Template.api_custom_results_expand.helpers({
 
   data() {
@@ -27,7 +50,6 @@ Template.api_custom_results_expand.helpers({
     });
 
     console.log(this);
-    console.log(this.images);
     return this;
   }
 
@@ -36,7 +58,7 @@ Template.api_custom_results_expand.helpers({
 Template.seniorFinalsExpand.helpers({
   getSub(){
     // console.log('running')
-    const subId = Router.current().params.sid;
+    const subId = FlowRouter.getParam('sid');
     const thisSub = this.submissions.filter(function(x){
       // console.log('id ', subId);
       if (x._id === subId) {

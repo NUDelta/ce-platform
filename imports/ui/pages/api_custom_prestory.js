@@ -18,6 +18,28 @@ import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinato
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM PRESTORY QUESTIONS
+Template.api_custom_prestory_page.onCreated(function() {
+
+  const eid = FlowRouter.getParam('eid');
+  const iid = FlowRouter.getParam('iid');
+  this.autorun(() => {
+    this.subscribe('experiences.single', eid);
+    this.subscribe('incidents.single', iid);
+    this.subscribe('locations.activeUser');
+  })
+});
+
+Template.api_custom_prestory_page.helpers({
+  apiCustomPrestoryArgs() {
+    const instance = Template.instance();
+    return {
+      experience: Experiences.findOne(),
+      incident: Incidents.findOne(),
+      location: Locations.findOne(),
+    }
+  }
+});
+
 Template.api_custom_prestory.helpers({
 
   data() {
