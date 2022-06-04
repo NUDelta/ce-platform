@@ -21,7 +21,7 @@ export const Detectors = new Mongo.Collection('detectors');
 Schema.Detectors = new SimpleSchema({
     description: {
         type: String,
-        unique: true
+        // unique: true
     },
     rules: {
         type: [String]

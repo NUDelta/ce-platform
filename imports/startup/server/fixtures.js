@@ -89,8 +89,8 @@ function clearDatabase () {
   Locations.remove({});
   Incidents.remove({});
   Detectors.remove({});
-  Images.remove({});
-  Avatars.remove({});
+  // Images.remove({});
+  // Avatars.remove({});
   ParticipatingNow.remove({});
 }
 

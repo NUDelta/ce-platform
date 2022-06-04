@@ -48,3 +48,5 @@ react-meteor-data
 ostrio:flow-router-extra
 kadira:blaze-layout
 aldeed:simple-schema
+cfs:base-package
+iron:router
