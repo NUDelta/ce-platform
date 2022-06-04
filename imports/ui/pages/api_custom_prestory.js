@@ -5,7 +5,7 @@ import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
 import { Template } from 'meteor/templating';
-import { Router } from 'meteor/iron:router';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import { Users } from '../../api/UserMonitor/users/users.js';
 import { Images } from '../../api/ImageUpload/images.js';
@@ -24,11 +24,11 @@ Template.api_custom_prestory.helpers({
     let navbar = document.querySelector(".nav-footer");
     navbar.style.display = "block";
     let currentNeed = this.incident.contributionTypes.find(function (x) {
-      return x.needName === Router.current().params.needName;
+      return x.needName === FlowRouter.getParam('needName');
     });
 
-    this.iid = Router.current().params.iid;
-    this.needName = Router.current().params.needName;
+    this.iid = FlowRouter.getParam('iid');
+    this.needName = FlowRouter.getParam('needName');
     this.toPass = currentNeed.toPass;
 
     return this;
@@ -50,14 +50,14 @@ Template.api_custom_prestory.events({
     const experience = this.experience;
     // give null values for use fwhen testing submitted photos on the web, without location data
     const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = Router.current().params.iid;
-    const needName = Router.current().params.needName;
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
     const uid = Meteor.userId();
     const timestamp = Date.now()
     const submissions = {};
     // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
-    
+
     //castCategory
     const castDropDown = document.getElementById('casting question');
     // console.log("CAST DROP DOWN: ", castDropDown)
@@ -65,8 +65,8 @@ Template.api_custom_prestory.events({
     const castCategory = castDropDown[index].value;
     const castDescription = document.getElementById('castDescription').value
     // console.log("GOT EMOTION: ", castDescription)
-        
-    Router.go(participateUrl);
+
+    FlowRouter.go(participateUrl);
 
     const submissionObject = {
       uid: uid,
@@ -80,13 +80,13 @@ Template.api_custom_prestory.events({
       castCategory: castCategory,
       castDescription: castDescription
     };
-    
+
     Meteor.call('createInitialSubmission', submissionObject);
   },
 
   'click #back-btn': function(event, instance) {
     // console.log('back');
     // event.preventDefault();
-    Router.go('home');
+    FlowRouter.go('home');
   }
 });
