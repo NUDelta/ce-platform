@@ -22,7 +22,6 @@ check@1.3.1
 spacebars
 email@2.2.1
 ejson@1.1.2
-aldeed:collection2
 browser-policy@1.1.0
 dburles:google-maps
 standard-minifier-css@1.8.1
@@ -37,7 +36,6 @@ force-ssl@1.1.0
 remcoder:chronos
 xolvio:cleaner
 accounts-base@2.2.3
-practicalmeteor:chai
 erasaur:meteor-lodash
 dynamic-import@0.7.2
 aldeed:template-extension
@@ -50,7 +48,8 @@ react-template-helper
 react-meteor-data
 ostrio:flow-router-extra
 kadira:blaze-layout
-aldeed:simple-schema
 nudelta2015:push
 cfs:filesystem@=0.1.2
 cfs:standard-packages@=0.5.10
+useraccounts:flow-routing-extra
+aldeed:collection2@=2.10.0
