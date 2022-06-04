@@ -8,7 +8,7 @@ import { Locations } from '../../api/UserMonitor/locations/locations.js';
 import { Messages } from '../../api/Messages/messages.js';
 import { Submissions } from "../../api/OCEManager/currentNeeds";
 import { Assignments, Availability, ParticipatingNow } from "../../api/OpportunisticCoordinator/databaseHelpers";
-// import { Images, Avatars } from '../../api/ImageUpload/images.js';
+import { Images, Avatars } from '../../api/ImageUpload/images.js';
 import { log } from '../../api/logs.js';
 
 import { CONSTANTS } from "../../api/Testing/testingconstants";
@@ -89,8 +89,8 @@ function clearDatabase () {
   Locations.remove({});
   Incidents.remove({});
   Detectors.remove({});
-  // Images.remove({});
-  // Avatars.remove({});
+  Images.remove({});
+  Avatars.remove({});
   ParticipatingNow.remove({});
 }
 
