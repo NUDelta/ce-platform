@@ -277,7 +277,7 @@ Meteor.methods({
 
     changeExperienceToPass(eid, needName, toPass, field);
   },
-  expCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg){
+  expCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey){
     
     let submissions = Submissions.find({
       iid: sub.iid,
@@ -296,13 +296,15 @@ Meteor.methods({
     
     let participants = submissions.map((submission) => { return submission.uid; });
     let userUpdateKey = 'profile.staticAffordances.' + setParticipatedKey;
+    let submissionUpdateKey = 'profile.waitOnPartnerSubmission.' + waitOnPartnerSubmissionKey;
     
     participants.forEach(function(p){
       Meteor.users.update({
       _id: p
       }, {
       $set: {
-        [userUpdateKey]: true
+        [userUpdateKey]: true,
+        [submissionUpdateKey]: false
       }
       });
     });
@@ -328,7 +330,7 @@ Meteor.methods({
     addContribution(sub.iid, need);
 
     },
-    expInProgressCallback(sub, systemMsg, notifMsg, confirmationMsg){
+    expInProgressCallback(sub, systemMsg, notifMsg, confirmationMsg, waitOnParterSubmissionKey){
 
       let submissions = Submissions.find({
         iid: sub.iid,
@@ -337,6 +339,18 @@ Meteor.methods({
       
       let participantId = submissions.map((submission) => { return submission.uid; });
       let participant = Meteor.users.findOne(participantId[0])
+
+      //update waitOnPartnerSubmission to true
+      let updateKey = 'profile.waitOnPartnerSubmission.' + waitOnParterSubmissionKey;
+      Meteor.users.update({
+        _id: participantId[0]
+        }, {
+        $set: {
+          [updateKey]: true
+        }
+      });
+
+      //find partner
       let aff = participant.profile.staticAffordances;
       let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
       let partner = Meteor.users.find().fetch().filter(

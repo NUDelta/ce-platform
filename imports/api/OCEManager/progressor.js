@@ -241,6 +241,19 @@ class CallbackManager {
     }
   }
 
+  specificNeedFinish(needName) {
+    let need = needName.split("pair")[0];
+    let allSubmission = Submissions.find({iid: this.submission.iid, uid: { $ne: null }}).fetch();
+    let count = 0;
+    _.forEach(allSubmission, submission => {
+      console.log(submission);
+      if (submission.needName.includes(need)) {
+        count++;
+      }
+    })
+    return count % 2 === 0;
+  }
+
   //trigger used in callbacks: returns minutes since the first need was submitted. Additionally for this trigger, in runCallbacks we need to set a timer to run the function in the future
   timeSinceFirstSubmission(need) {
     return number; //minutes

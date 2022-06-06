@@ -145,21 +145,6 @@ function createAdditionalTestExperiences() {
     });
   }
   log.info(`Populated ${Detectors.find().count()} detectors`);
-  // const initialNotifications = Object.keys(CONSTANTS.DETECTORS["pair1"]).reduce((obj, key) => {
-  //   return { ...obj, [`${key}`]: -1 };
-  // }, {});
-
-  // Meteor.users.update(
-  //   {}, // everyone
-  //   {
-  //     $set: {
-  //       "profile.lastNotified": initialNotifications,
-  //     },
-  //   },
-  //   {
-  //     multi: true,
-  //   }
-  // );
 
   //update every user for initial notifications
   //add experiences
@@ -218,30 +203,15 @@ function createTestData() {
   let uid2 = findUserByUsername("yvan")._id;
   let uid3 = findUserByUsername("ryan")._id;
   let uid4 = findUserByUsername("jenny")._id;
-  // let uid5 = findUserByUsername('haoqi')._id;
-  // let uid6 = findUserByUsername('natalie')._id;
-  // let uid7 = findUserByUsername('jason')._id;
-  // let uid8 = findUserByUsername('fardeem')._id;
-  // let uid9 = findUserByUsername('kapil')._id;
-  // let uid10 = findUserByUsername('molly')._id;
-  // let uid11 = findUserByUsername('leesha')._id;
-  // let uid12 = findUserByUsername('justin')._id;
-  // let uid13 = findUserByUsername('harrison')._id;
-  // let uid14 = findUserByUsername('jonathan')._id;
-  // let uid15 = findUserByUsername('gobi')._id;
-  // let uid16 = findUserByUsername('sydney')._id;
-  // let uid17 = findUserByUsername('hang')._id;
-  // let uid18 = findUserByUsername('parveen')._id;
-  // let uid19 = findUserByUsername('isaac')._id;
-  // let uid20 = findUserByUsername('izzy')._id;
-  // let uid21 = findUserByUsername('richard')._id;
-  // let uid22 = findUserByUsername('roxy')._id;
 
   let initialNotifications = {};
+  let waitOnPartnerSubmission = {};
   const expKeys = Object.keys(CONSTANTS.DETECTORS["pair1"]);
   expKeys.forEach((key) => {
     initialNotifications[key.toLowerCase()] = -1;
+    waitOnPartnerSubmission[key.toLowerCase()] = false;
   });
+
 
   // const initialNotifications = Object.keys(CONSTANTS.EXPERIENCES).reduce((obj, key) => {
   //   return {...obj, `${key}`: -1};
@@ -257,6 +227,7 @@ function createTestData() {
         "profile.subscriptions": [],
         "profile.lastParticipated": null,
         "profile.lastNotified": initialNotifications,
+        "profile.waitOnPartnerSubmission": waitOnPartnerSubmission,
         "profile.pastIncidents": [],
         // "profile.staticAffordances": {}
       },

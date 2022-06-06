@@ -95,7 +95,9 @@ const promptDict = {
 const createCallback = (completeCallback, inprogressCallback, name, key) => {
   completeCallback = completeCallback.replace(/TOSUBWITHNAME/g, name);
   completeCallback = completeCallback.replace(/TOSUBWITHKEY/g, key);
+  completeCallback = completeCallback.replace(/TOSUBWITHSUBMISSIONKEY/g, key.toLowerCase());
   inprogressCallback = inprogressCallback.replace(/TOSUBWITHNAME/g, name);
+  inprogressCallback = inprogressCallback.replace(/TOSUBWITHSUBMISSIONKEY/g, key.toLowerCase());
   return [completeCallback, inprogressCallback];
 }
 
@@ -108,13 +110,15 @@ export const createExp = function (pairNum, exp) {
       let userUpdateKey = 'participatedInTOSUBWITHKEY';
       let systemMsg = 'Woo-hoo! You two have completed TOSUBWITHNAME!';
       let notifMsg = 'See images from you and your partner\'s TOSUBWITHNAME';
-      Meteor.call('expCompleteCallback', sub, userUpdateKey, systemMsg, notifMsg);
+      let waitOnPartnerSubmissionKey = 'TOSUBWITHSUBMISSIONKEY';
+      Meteor.call('expCompleteCallback', sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey);
   }
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 
       let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Participate to see their results when you get a chance'; 
-      let confirmationMsg = "Your submission for TOSUBWITHNAME has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!"
-      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg);
+      let confirmationMsg = "Your submission for TOSUBWITHNAME has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
+      let waitOnPartnerSubmissionKey = 'TOSUBWITHSUBMISSIONKEY';
+      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);
   }
 
   let callback = createCallback(completeCallback.toString(), inprogressCallback.toString(), promptDict[exp].name, exp);
@@ -137,8 +141,8 @@ export const createExp = function (pairNum, exp) {
       }
     ],
     description: promptDict[exp].description, notificationText: promptDict[exp].description,
-    callbacks: [{trigger: `(cb.numberOfSubmissions() % 2) === 0`, function: callback[0]}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
-                {trigger: `(cb.numberOfSubmissions() % 2) !== 0`, function: callback[1]}],
+    callbacks: [{trigger: `(cb.specificNeedFinish('${exp}${pairNum}'))`, function: callback[0]}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
+                {trigger: `!(cb.specificNeedFinish('${exp}${pairNum}'))`, function: callback[1]}],
     allowRepeatContributions: true, //try set this to true
   };
 
@@ -155,8 +159,9 @@ export const createSelfIntro = function (pairNum, exp) {
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed Self Introduction! `+ 'Participate to see their results when you get a chance'; 
       let notifMsg = `Hey! Your partner just completed Self Introduction! ` + 'Participate to see their results when you get a chance'; 
-      let confirmationMsg = "Your submission for Self Introduction has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!"
-      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg);
+      let confirmationMsg = "Your submission for Self Introduction has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
+      let waitOnPartnerSubmissionKey = 'selfintro';
+      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);
   }
 
   let experience = {
@@ -178,8 +183,8 @@ export const createSelfIntro = function (pairNum, exp) {
       }
     ],
     description: "Say hello to your new friend!", notificationText: "Say hello to your new friend!",
-    callbacks: [{trigger: `(cb.numberOfSubmissions() % 2) === 0`, function: completeCallback.toString()}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
-                {trigger: `(cb.numberOfSubmissions() % 2) !== 0`, function: inprogressCallback.toString()}],
+    callbacks: [{trigger: `(cb.specificNeedFinish('${exp}${pairNum}'))`, function: completeCallback.toString()}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
+                {trigger: `!(cb.specificNeedFinish('${exp}${pairNum}'))`, function: inprogressCallback.toString()}],
     allowRepeatContributions: false, //try set this to true
   };
 

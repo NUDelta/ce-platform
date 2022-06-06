@@ -57,7 +57,6 @@ Template.home.helpers({
 
         // TODO(rlouie): errors on refresh? try the competing resource test garret/barrett
         let needNamesBinnedByDetector = needAggregator(incident);
-        console.log("needNamesBinnedByDetector: ", needNamesBinnedByDetector);
 
         // gah I wish the assignments had its own interface
         let assignedNeedNames = assignment.needUserMaps.map(currNeedUserMap => {
@@ -67,7 +66,6 @@ Template.home.helpers({
         });
 
         _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
-          console.log("detectorUniqueKey: ", detectorUniqueKey);
           let assignedNeedNamesForDetector = setIntersection(assignedNeedNames, needNamesForDetector);
           if (assignedNeedNamesForDetector.length === 0) {
             // user not assigned to any needs for this detector
@@ -118,17 +116,23 @@ Template.home.helpers({
     let output = [];
     _.forEach(allIncidents, (incident) => {
       if(incident.contributionTypes[0].needName.includes(pair)) {
-        // get experience
-        let experience = Experiences.findOne(incident.eid);
+        let currentExp = incident.contributionTypes[0].needName.split('pair')[0].toLowerCase();
+        if(currentExp === 'selfintro' && ('participatedInSelfIntro' in aff) ) {
+          //don't show self intro if user hs participated
+        } else if (!user.profile.waitOnPartnerSubmission[currentExp]) {  // don't show the experience if the user is waiting for their partner to submit
+          // get experience
+          let experience = Experiences.findOne(incident.eid);
 
-        let needNamesBinnedByDetector = needAggregator(incident);
-        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
-          output.push({
-            'iid': incident._id,
-            'experience': experience,
-            'detectorUniqueKey': detectorUniqueKey
-          });
-        })
+          let needNamesBinnedByDetector = needAggregator(incident);
+          _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
+            output.push({
+              'iid': incident._id,
+              'experience': experience,
+              'detectorUniqueKey': detectorUniqueKey
+            });
+          })
+        }
+        
       }
     })
 
