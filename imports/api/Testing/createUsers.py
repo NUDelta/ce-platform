@@ -19,7 +19,9 @@ def createProfile(name1, pair, lastname1 = ""):
 
 pairCounter = 1
 for ind, line in enumerate(f.readlines()):
+    
     arr = line.strip("\n").split(" ")
+    print(arr)
     if len(arr) == 4:
         [name1, lastname1, name2, lastname2] = arr
     else:
