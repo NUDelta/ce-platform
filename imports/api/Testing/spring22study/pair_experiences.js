@@ -13,7 +13,7 @@ const promptDict = {
       "Found a study spot you like? Is this where you usually sit? Take a picture and share your reason!",
       "How do you stay productive or motivated? Share a study tip with your partner!"
     ], 
-    delay: 1},
+    delay: 600},
   restaurant: {
     name: "🍝Food time🍜", 
     description: "Eating at a restaurant? Share your experience with your partner!",
@@ -22,7 +22,7 @@ const promptDict = {
       "Revisiting a restaurant? Take a picture of what makes you come back again and share it with your partner! (e.g., something about the food, people, ambiance, or memories?)",
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ], 
-    delay: 1},
+    delay: 360},
   cafe: {
     name: "☕️Cafe chill-out time🍵", 
     description: "Grabbing coffee? Share your experience with your partner!",
@@ -31,7 +31,7 @@ const promptDict = {
       "Revisiting a cafe? Take a picture of what makes you come back again and share it with your partner! (e.g., something about the drinks, people, ambiance, or memories?)",
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ], 
-    delay: 1},
+    delay: 360},
   grocery: {
     name: "🍎Grocery Shopping time🍊", 
     description: "Grocery shopping? Share your experience with your partner!",
@@ -40,7 +40,7 @@ const promptDict = {
       "What's one grocery item you always get? Take a picture and caption it with your reason!",
       "What's one item you highly recommend from the store? Share it with your partner for them to try out next time!"
     ], 
-    delay: 1},
+    delay: 180},
   outdoor: {
     name: "🌳Outdoor time🌳", 
     description: "Enjoying nature? Share your experience with your partner!",
@@ -48,7 +48,7 @@ const promptDict = {
       "Enjoying your time outdoors? Take a picture of something around you that is interesting or makes you happy and caption it with your reason!",
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ], 
-    delay: 1},
+    delay: 180},
   exercise: {
     name: "🏀Exercise time🏐", 
     description: "Exercising? Share your experience with your partner!",
@@ -56,7 +56,7 @@ const promptDict = {
       "Enjoying your exercising session today? What did you do and what has been keeping you motivated to exercise? Take a picture and share your reason! ",
       "Share a tip that helps you stay healthy with your partner for them to try out!"
     ], 
-    delay: 1},
+    delay: 180},
   commute: {
     name: "🚌Commute time🚃", 
     description: "Heading somewhere? Share your experience with your partner!",
@@ -65,7 +65,7 @@ const promptDict = {
       "Heading somewhere for school, work, or a fun plan? What do you usually do in your commute time? Take a picture and share your favorite pastime!",
       "Recommend a podcast/video/article/music album to your partner for them to check out!"
     ], 
-    delay: 1},
+    delay: 60},
   snack: {
     name: "🍩Snack time🍪", 
     description: "Grabbing snacks? Share your experience with your partner!",
@@ -73,7 +73,7 @@ const promptDict = {
       "Grabbing snacks? Do you have a go-to order or are you trying out something different today? Take a picture and share it with your partner!",
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ], 
-    delay: 1},
+    delay: 120},
   weekend: {
     name: "🎬Weekend fun time🎮", 
     description: "Doing something fun on the weekend? Share your experience with your partner!",
@@ -81,7 +81,7 @@ const promptDict = {
       "It's the weekend! Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ], 
-    delay: 1},
+    delay: 360},
   weekday: {
     name: "🎨Weekday de-stress time🎧", 
     description: "Doing something fun to de-stress on a weekday? Share your experience with your partner!",
@@ -89,7 +89,7 @@ const promptDict = {
       "Enjoying small breaks from school work? Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ], 
-    delay: 1},
+    delay: 360},
 }
 
 const createCallback = (completeCallback, inprogressCallback, name, key) => {
