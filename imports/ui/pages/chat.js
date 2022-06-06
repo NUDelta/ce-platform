@@ -102,12 +102,10 @@ Template.chat.helpers({
         //always scroll to bottom after sending a message
         const messageContainer = document.getElementById('messages');
         scrollToBottomAbs(messageContainer);
-        console.log(`where are my messages ${this.messages}`);
       }
     });
 
     //send notification to the recipient for every message
-    Meteor.call('sendNotification', otherStranger, `${currrentUsername}: ${data.message}`,
-     '/chat');
+    Meteor.call('sendNotification', otherStranger, `${currrentUsername}: ${data.message}`, ' ', '/chat');
   }
 });
