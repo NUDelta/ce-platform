@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-
+ 
 import '../stylesheets/layout.scss';
 
 export const RActiveExperience = ({exp, iid, detectorUniqueKey}) => {

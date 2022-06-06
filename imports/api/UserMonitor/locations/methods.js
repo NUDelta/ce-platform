@@ -242,13 +242,13 @@ export const userNotifiedTooRecently = (user, notificationID) => {
   let waitTimeAfterNotified;
   // adjust time for local vs prod deployment (lower in local for testing)
   if (CONFIG.MODE === "local") {
-    waitTimeAfterNotified = minutes * 1;
+    waitTimeAfterNotified = minutes * 5;
   } else {
     waitTimeAfterNotified = minutes * 10;
   }
-  const lastNotified = user.profile.lastNotified;
+  const lastNotified = user.profile.lastNotified[notificationID];
   const now = Date.now();
-  return now - lastNotified < waitTimeAfterNotified[notificationID];
+  return now - lastNotified < waitTimeAfterNotified;
 };
 
 /**

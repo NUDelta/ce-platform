@@ -388,12 +388,24 @@ def dndCafeBubbleTea():
 def statusUpdate():
     for i in range(1, 5):
         setLocation(norris, sys.argv[i])
-    print("22 users at Norris")
+    print("22 users at Norrsis")
 
+def testLastNotified():
+    norris1 = (42.053262712572679, -87.67268455470775)
+    norris2 = (42.053262712572679, -87.67268455470774)
+    noyes1 = (42.05845590320995, -87.6827223666355)
+    noyes2 = (42.058431740676646, -87.68405245870183)
+    noyes3 = (42.05840292591656, -87.6826121863653)
+    # loc = (42.04445570933452, -87.68831298380957)
+    loc = (42.045905349942636, -87.67801205812562)
+    setLocation(noyes1, sys.argv[1])
+    setLocation(noyes1, sys.argv[2])
+    print("second location update at norris")
 
 
 if __name__ == "__main__":
-    statusUpdate()
+    testLastNotified()
+    # statusUpdate()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()

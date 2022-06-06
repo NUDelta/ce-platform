@@ -26,6 +26,8 @@ import {
 import { findUserByUsername } from "../../api/UserMonitor/users/methods";
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
+let PAIR_COUNT = 3; //TEST SET UP: change it to pair count
+
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
 
@@ -111,35 +113,18 @@ function clearEmptySubmission() {
   Submissions.remove({ uid: null });
 }
 
-// export const createNewId = (type, need) => {
-//   toReplace = ["1", "I", "l", "O", "V", "U"]  //why does this somehow look like "I love you" lol
-//   toReplace.forEach((c) => {
-//     need = need.replace(c, "Z")
-//   })
-//   for (let i = need.length; i < 17; i++){
-//     need = need + type;
-//   }
-//   return need
-// }
-
 function createTestExperiences() {
   // add detectors
-  for (let i = 1; i < 12; i++) {
+  for (let i = 1; i <= PAIR_COUNT; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-      // log.info(`creating detectors for ${pairNum}`);
       Detectors.insert(value);
     });
   }
   log.info(`Populated ${Detectors.find().count()} detectors`);
-  for (let i = 1; i < 4; i++) {
+  for (let i = 1; i <= PAIR_COUNT; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.EXPERIENCES[pairNum]).forEach(function (value) {
-      // let need = value.contributionTypes[0].needName;
-      // console.log("need before: "+ need)
-      // need = createNewId("e", need)
-      // console.log("need after: "+ need);
-      // value._id = need;
       Experiences.insert(value);
       let incident = createIncidentFromExperience(value);
       startRunningIncident(incident);
@@ -150,7 +135,7 @@ function createTestExperiences() {
 
 function createAdditionalTestExperiences() {
   // add detectors
-  for (let i = 1; i <= 11; i++) {
+  for (let i = 1; i <= PAIR_COUNT; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
       if (!Detectors.findOne({ description: value.description })) {
@@ -160,7 +145,25 @@ function createAdditionalTestExperiences() {
     });
   }
   log.info(`Populated ${Detectors.find().count()} detectors`);
-  for (let i = 1; i <= 11; i++) {
+  // const initialNotifications = Object.keys(CONSTANTS.DETECTORS["pair1"]).reduce((obj, key) => {
+  //   return { ...obj, [`${key}`]: -1 };
+  // }, {});
+
+  // Meteor.users.update(
+  //   {}, // everyone
+  //   {
+  //     $set: {
+  //       "profile.lastNotified": initialNotifications,
+  //     },
+  //   },
+  //   {
+  //     multi: true,
+  //   }
+  // );
+
+  //update every user for initial notifications
+  //add experiences
+  for (let i = 1; i <= PAIR_COUNT; i++) {
     let pairNum = "pair" + `${i}`;
     Object.values(CONSTANTS.NEW_EXPERIENCES[pairNum]).forEach(function (value) {
       // let need = value.contributionTypes[0].needName;
@@ -235,7 +238,7 @@ function createTestData() {
   // let uid22 = findUserByUsername('roxy')._id;
 
   let initialNotifications = {};
-  const expKeys = Object.keys(CONSTANTS.EXPERIENCES);
+  const expKeys = Object.keys(CONSTANTS.DETECTORS["pair1"]);
   expKeys.forEach((key) => {
     initialNotifications[key.toLowerCase()] = -1;
   });
@@ -253,7 +256,7 @@ function createTestData() {
         "profile.experiences": [],
         "profile.subscriptions": [],
         "profile.lastParticipated": null,
-        // "profile.lastNotified": initialNotifications,
+        "profile.lastNotified": initialNotifications,
         "profile.pastIncidents": [],
         // "profile.staticAffordances": {}
       },

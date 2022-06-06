@@ -348,7 +348,43 @@ Meteor.methods({
       sendSystemMessage(systemMsg, partner, "/chat"); 
       sendSystemMessage(confirmationMsg, participantId[0], null); 
       Meteor.call('sendNotification', partner, notifMsg, '/chat');
-      }
+      },
+      selfIntroCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg){
+    
+        let submissions = Submissions.find({
+          iid: sub.iid,
+          needName: sub.needName
+        }).fetch();
+        
+        let expInChat = submissions.map((submission) => {
+          return {
+          uid: submission.uid,
+          name: Meteor.users.findOne(submission.uid).profile.firstName,
+          text: submission.content.sentence,
+          image: submission.content.proof,
+          time: submission.timestamp
+          }
+        });
+        
+        let participants = submissions.map((submission) => { return submission.uid; });
+        let userUpdateKey = 'profile.staticAffordances.' + setParticipatedKey;
+        
+        participants.forEach(function(p){
+          Meteor.users.update({
+          _id: p
+          }, {
+          $set: {
+            [userUpdateKey]: true
+          }
+          });
+        });
+        
+        let route = `/chat`;
+        
+        sendSystemMessage(systemMsg, participants, null); 
+        postExpInChat("", participants, expInChat);
+        notify(participants, sub.iid, notifMsg, '', route);
+        },
 });
 
 export const addContribution = (iid, contribution) =>{

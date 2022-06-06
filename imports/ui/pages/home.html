@@ -38,7 +38,7 @@
                     <h4 class="title-text hi">Available experiences</h4>
                 </div>
                 <div class="list-group">
-                    {{#each info in activeUserAssigment}}
+                    {{#each info in allExperience}}
                     <div>{{> React component=RActiveExperience exp=info.experience iid=info.iid detectorUniqueKey=info.detectorUniqueKey}}</div>
                         <!-- {{> activeExperience info}} -->
                     {{/each}}

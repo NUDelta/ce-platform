@@ -50,7 +50,7 @@ const createDetectors = function (pairNum) {
       'var coffeeteasupplies;',
       `var ${pairNum};`,
     ],
-    rules: [`(${pairNum} && (coffeeroasteries || coffee) || ((coffeeshops || coffeeteasupplies) || cafes));`]
+    rules: [`(${pairNum} && (coffeeroasteries || coffee || coffeeshops || coffeeteasupplies || cafes));`]
   },
 
   grocery:{

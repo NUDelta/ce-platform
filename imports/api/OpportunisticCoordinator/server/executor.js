@@ -83,23 +83,34 @@ export const runNeedsWithThresholdMet = (incidentsWithUsersToRun) => {
           adminUpdatesForAddingUserToIncident(userMeta.uid, iid, needName);
         });
 
-        let notificationID = experience.contributionTypes[0].needName
+        /* without NotNotifiedTooRecently filter:
+         let notificationID = experience.contributionTypes[0].needName
           .split(" ")[0]
           .toLowerCase();
-        // S19: DO NOT FILTER BY NOTIFIED TOO RECENTLY
-        // let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
-        //   return !userNotifiedTooRecently(
-        //     Meteor.users.findOne(userMeta.uid),
-        //     notificationID
-        //   );
-        // });
-
-        // let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
-        //   (usermeta) => usermeta.uid
-        // );
+        
         let uidsNotNotifiedRecently = newUsersMeta.map(
           (usermeta) => usermeta.uid
         );
+        
+        */
+
+        //with NotifiedTooRecently:
+        let notificationID = experience.contributionTypes[0].needName
+          .split("pair")[0]
+          .toLowerCase();
+        let userMetasNotNotifiedRecently = newUsersMeta.filter((userMeta) => {
+          return !userNotifiedTooRecently(
+            Meteor.users.findOne(userMeta.uid),
+            notificationID
+          );
+        });
+
+        let uidsNotNotifiedRecently = userMetasNotNotifiedRecently.map(
+          (usermeta) => usermeta.uid
+        );
+
+        // NotifiedTooRecently: end here
+
         // let route = "/"; 
         let route = `/apicustom/${iid}/${incident.eid}/${needName}`;
 

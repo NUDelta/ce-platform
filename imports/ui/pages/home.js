@@ -21,8 +21,10 @@ Template.home.onCreated(function () {
   this.state.set('render', true);
   this.autorun(() => {
     Template.instance().state.set('render', true);
-    this.subscribe('experiences.activeUser');
-    this.subscribe('incidents.activeUser');
+    // this.subscribe('experiences.activeUser');
+    this.subscribe('experiences.all');
+    // this.subscribe('incidents.activeUser');
+    this.subscribe('incidents.all');
     this.subscribe('assignments.activeUser');
   });
 });
@@ -47,7 +49,7 @@ Template.home.helpers({
       // create [{iid: incident_id, experience: experience, detectorUniqueKey: detector_id}]
       let activeAssignments = Assignments.find().fetch();
       let output = [];
-
+      
       _.forEach(activeAssignments, (assignment) => {
 
         let iid = assignment._id;
@@ -55,6 +57,7 @@ Template.home.helpers({
 
         // TODO(rlouie): errors on refresh? try the competing resource test garret/barrett
         let needNamesBinnedByDetector = needAggregator(incident);
+        console.log("needNamesBinnedByDetector: ", needNamesBinnedByDetector);
 
         // gah I wish the assignments had its own interface
         let assignedNeedNames = assignment.needUserMaps.map(currNeedUserMap => {
@@ -64,6 +67,7 @@ Template.home.helpers({
         });
 
         _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
+          console.log("detectorUniqueKey: ", detectorUniqueKey);
           let assignedNeedNamesForDetector = setIntersection(assignedNeedNames, needNamesForDetector);
           if (assignedNeedNamesForDetector.length === 0) {
             // user not assigned to any needs for this detector
@@ -103,5 +107,33 @@ Template.home.helpers({
     return {
       experience: Experiences.findOne(Incidents.findOne(iid).eid)
     }
+  },
+  allExperience() {
+    if (Template.instance().subscriptionsReady()) {
+    let user = Meteor.users.findOne(Meteor.userId());
+    let aff = user.profile.staticAffordances;
+    let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
+
+    let allIncidents = Incidents.find().fetch();
+    let output = [];
+    _.forEach(allIncidents, (incident) => {
+      if(incident.contributionTypes[0].needName.includes(pair)) {
+        // get experience
+        let experience = Experiences.findOne(incident.eid);
+
+        let needNamesBinnedByDetector = needAggregator(incident);
+        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
+          output.push({
+            'iid': incident._id,
+            'experience': experience,
+            'detectorUniqueKey': detectorUniqueKey
+          });
+        })
+      }
+    })
+
+    console.log( "output: ", output);
+    return output;
   }
+}
 });
