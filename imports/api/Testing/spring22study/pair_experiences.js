@@ -219,15 +219,15 @@ const creatPairExperience = function(pairNum) {
 export default PAIR_EXPERIENCES = {
   pair1: creatPairExperience("pair1"),
   pair2: creatPairExperience("pair2"),
-  pair3: creatPairExperience("pair3")
-  // pair4: creatPairExperience("pair4"),
-  // pair5: creatPairExperience("pair5"),
-  // pair6: creatPairExperience("pair6"),
-  // pair7: creatPairExperience("pair7"),
-  // pair8: creatPairExperience("pair8"),
-  // pair9: creatPairExperience("pair9"),
-  // pair10: creatPairExperience("pair10"),
-  // pair11: creatPairExperience("pair11")
+  pair3: creatPairExperience("pair3"),
+  pair4: creatPairExperience("pair4"),
+  pair5: creatPairExperience("pair5"),
+  pair6: creatPairExperience("pair6"),
+  pair7: creatPairExperience("pair7"),
+  pair8: creatPairExperience("pair8"),
+  pair9: creatPairExperience("pair9"),
+  pair10: creatPairExperience("pair10"),
+  pair11: creatPairExperience("pair11")
 }
 
 
