@@ -26,7 +26,7 @@ import {
 import { findUserByUsername } from "../../api/UserMonitor/users/methods";
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
-let PAIR_COUNT = 3; //TEST SET UP: change it to pair count
+let PAIR_COUNT = 11; //TEST SET UP: change it to pair count
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
