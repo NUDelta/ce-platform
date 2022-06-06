@@ -386,7 +386,7 @@ def dndCafeBubbleTea():
 
 
 def statusUpdate():
-    for i in range(1, 5):
+    for i in range(1, 23):
         setLocation(norris, sys.argv[i])
     print("22 users at Norrsis")
 
@@ -404,8 +404,8 @@ def testLastNotified():
 
 
 if __name__ == "__main__":
-    testLastNotified()
-    # statusUpdate()
+    # testLastNotified()
+    statusUpdate()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()

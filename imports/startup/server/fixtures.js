@@ -237,15 +237,14 @@ function createTestData() {
     }
   );
 
+  let allUserId = Meteor.users.find().fetch().map((user) => user._id);
+  let simulateLocations = "FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py ";
+  allUserId.forEach((uid) => {
+    simulateLocations += `${uid} `;
+  })
+
   log.debug(
-    "FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py " +
-      uid1 +
-      " " +
-      uid2 +
-      " " +
-      uid3 +
-      " " +
-      uid4
+    simulateLocations
   );
 }
 

@@ -246,7 +246,7 @@ class CallbackManager {
     let allSubmission = Submissions.find({iid: this.submission.iid, uid: { $ne: null }}).fetch();
     let count = 0;
     _.forEach(allSubmission, submission => {
-      console.log(submission);
+      // console.log(submission);
       if (submission.needName.includes(need)) {
         count++;
       }

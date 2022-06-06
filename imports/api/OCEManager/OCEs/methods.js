@@ -310,10 +310,10 @@ Meteor.methods({
     });
     
     let route = `/chat`;
-    
+     
     sendSystemMessage(systemMsg, participants, null); 
     postExpInChat("", participants, expInChat);
-    notify(participants, sub.iid, notifMsg, '', route);
+    notify(participants, sub.iid, notifMsg, '', route); 
 
     //respawn the new experience
     let contributionTypes = Incidents.findOne({_id: sub.iid}).contributionTypes;

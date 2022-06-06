@@ -26,7 +26,7 @@ export const Prompt = ({ promptList }) => {
     >
         {buttons}
     </ToggleButtonGroup>
-    <p id="currentPrompt" style={{marginTop:"10px"}}>{promptList[0]}</p>
+    <p id="currentPrompt" style={{marginTop:"10px", fontWeight:"bold"}}>{promptList[0]}</p>
     </div>
   );
 }
