@@ -25,6 +25,9 @@ Template.message.helpers({
   getUsername(uid){
     return Meteor.users.findOne({_id: uid}).username;
   },
+  getFirstName(uid){
+    return Meteor.users.findOne({_id: uid}).profile.firstName;
+  },
   getSenderAndSetClass(uid, system){
     if (Meteor.userId() == uid) {
       return 'sender message'

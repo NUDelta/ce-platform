@@ -386,8 +386,9 @@ def dndCafeBubbleTea():
 
 
 def statusUpdate():
+    noyes1 = (42.05845590320995, -87.6827223666355)
     for i in range(1, 23):
-        setLocation(norris, sys.argv[i])
+        setLocation(noyes1, sys.argv[i])
     print("22 users at Norrsis")
 
 def testLastNotified():
