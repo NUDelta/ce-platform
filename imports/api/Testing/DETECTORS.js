@@ -1,3 +1,5 @@
+const PAIR_COUNT = 12;
+
 const createDetectors = function (pairNum) {
   return {
 
@@ -247,28 +249,20 @@ const createDetectors = function (pairNum) {
     artmuseums || childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || \
     culturalcenter || historicalcenter || amusementparks || aquariums || aquarium));`]
   },
-
-  gymExp: {
-    _id: Random.id(),
-    description: 'Gym ' + pairNum,
-    variables: [
-      'var  gyms;',
-      `var ${pairNum};`
-    ],
-    rules: [`gyms && ${pairNum};`]
-  },
-
-  bubbleTeaExp: {
-    _id: Random.id(),
-    description: 'Bubble Tea ' + pairNum,
-    variables: [
-      'var bubbletea;',
-      `var ${pairNum};`
-    ],
-    rules:[`(bubbletea && ${pairNum});`]
-  }
 }
 };
+
+const createAllDectors = function() {
+  let detectors = {};
+  for (let i = 1; i <= PAIR_COUNT; i++) {
+    let key = `pair${i}`;
+    detectors[key] = createDetectors(key);
+  }
+  return detectors
+}
+
+export const DETECTORS = createAllDectors();
+
 
   //  /////////////////////////////////////////////////////////
   
@@ -735,20 +729,6 @@ const createDetectors = function (pairNum) {
 // }
 
 // export default DETECTORS = create_detector_pairs(11)
-
-export const DETECTORS = {
-  pair1: createDetectors("pair1"),
-  pair2: createDetectors("pair2"),
-  pair3: createDetectors("pair3"),
-  pair4: createDetectors("pair4"),
-  pair5: createDetectors("pair5"),
-  pair6: createDetectors("pair6"),
-  pair7: createDetectors("pair7"),
-  pair8: createDetectors("pair8"),
-  pair9: createDetectors("pair9"),
-  pair10: createDetectors("pair10"),
-  pair11: createDetectors("pair11")
-}
 
 
 /* graveyard

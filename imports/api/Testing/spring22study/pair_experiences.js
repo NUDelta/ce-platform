@@ -3,6 +3,7 @@ import { addContribution, changeExperienceToPass, createExperience } from '../..
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
+const PAIR_COUNT = 12;
 
 const promptDict = {
   library: {
@@ -195,7 +196,7 @@ export const createSelfIntro = function (pairNum, exp) {
 
 // new experiences ///////////////////////////////////////////////////////
 
-const creatPairExperience = function(pairNum) {
+const createIndividualPairExperience = function(pairNum) {
   let exp = {};
   exp['selfIntro'] = createSelfIntro(pairNum, 'selfIntro');
   for (const key in promptDict) {
@@ -204,31 +205,16 @@ const creatPairExperience = function(pairNum) {
   return exp;
 }
 
-// function create_pair_experiences(pairCount) {
-//   let pair_experience = {}
-//   let base = "pair";
-//   for(let i = 1; i <= pairCount; i++) {
-//     let pairNum = base + String(i)
-//     pair_experience[pairNum] = creatPairExperience(pairNum)
-//   }
-//   return pair_experience
-// }
-
-// export default PAIR_EXPERIENCES = create_pair_experiences(11)
-
-export default PAIR_EXPERIENCES = {
-  pair1: creatPairExperience("pair1"),
-  pair2: creatPairExperience("pair2"),
-  pair3: creatPairExperience("pair3"),
-  pair4: creatPairExperience("pair4"),
-  pair5: creatPairExperience("pair5"),
-  pair6: creatPairExperience("pair6"),
-  pair7: creatPairExperience("pair7"),
-  pair8: creatPairExperience("pair8"),
-  pair9: creatPairExperience("pair9"),
-  pair10: creatPairExperience("pair10"),
-  pair11: creatPairExperience("pair11")
+const createAllPairExperience = function() {
+  let pair_exp = {}
+  for (let i = 1; i <= PAIR_COUNT; i++) {
+    let key = `pair${i}`;
+    pair_exp[key] = createIndividualPairExperience(key);
+  }
+  return pair_exp;
 }
+
+export default PAIR_EXPERIENCES = createAllPairExperience();
 
 
 //graveyard

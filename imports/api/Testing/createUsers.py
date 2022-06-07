@@ -1,3 +1,5 @@
+# cd imports/api/Testing
+# python3 createUsers.py
 import json
 
 
@@ -21,7 +23,6 @@ pairCounter = 1
 for ind, line in enumerate(f.readlines()):
     
     arr = line.strip("\n").split(" ")
-    print(arr)
     if len(arr) == 4:
         [name1, lastname1, name2, lastname2] = arr
     else:

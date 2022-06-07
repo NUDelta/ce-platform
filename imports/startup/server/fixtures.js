@@ -26,7 +26,7 @@ import {
 import { findUserByUsername } from "../../api/UserMonitor/users/methods";
 import { Detectors } from "../../api/UserMonitor/detectors/detectors";
 
-let PAIR_COUNT = 11; //TEST SET UP: change it to pair count
+export const PAIR_COUNT = 12; //TEST SET UP: change it to pair count
 
 Meteor.startup(() => {
   log.debug(`Running in mode: ${process.env.MODE}`);
@@ -199,10 +199,10 @@ function createTestData() {
   createTestExperiences();
   log.info(`Created ${Experiences.find().count()} experiences`);
 
-  let uid1 = findUserByUsername("cindy")._id;
-  let uid2 = findUserByUsername("yvan")._id;
-  let uid3 = findUserByUsername("ryan")._id;
-  let uid4 = findUserByUsername("jenny")._id;
+  let uid1 = findUserByUsername("user1")._id;
+  let uid2 = findUserByUsername("user2")._id;
+  let uid3 = findUserByUsername("user3")._id;
+  let uid4 = findUserByUsername("user4")._id;
 
   let initialNotifications = {};
   let waitOnPartnerSubmission = {};
