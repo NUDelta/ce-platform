@@ -8,6 +8,16 @@
     <input type="file" name="photo" required>
 </template>
 
+<template name="videoCamera">
+  {{> loadingOverlay}}
+  <label id={{this}} class="fileinput">
+      <img src="#" class="fileinput-preview thumbnail fileinput-exists"/>
+      <div class="glyphicon glyphicon-camera fileinput-new"></div>
+      <div class="glyphicon glyphicon-remove fileinput-exists"></div>
+  </label>
+  <input type="file" name="video" accept="video/*" required>
+</template>
+
 <template name="halfhalfCamera">
   <label id={{this}} class="fileinput content">
     <img src="#" class="fileinput-preview"/>
