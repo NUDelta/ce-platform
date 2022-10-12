@@ -10,39 +10,23 @@ let sendNotificationCN = function (sub) {
 export default CHEFS_JOURNEY = {
    sample: {
      _id: Random.id(),
-     name: 'Please Work',
-     prestoryTemplate: 'studyNight',
+     name: 'Chefs Journey',
+     prestoryTemplate: 'chefsKitchen',
      participateTemplate: 'cookingJourney',
      resultsTemplate: 'sunset',
      expandTemplate: 'seniorFinalsExpand',
      repeatContributionsToExperienceAfterN: 0,
      contributionTypes: [{
-      needName: 'huh',
-      notificationSubject: "Hello! :)",
-      notificationText: 'How is your DTR deliverable going?',
+      needName: 'cooking',
+      notificationSubject: "What's on the menu?",
+      notificationText: 'Looks like you\'re ready to eat lunch! Share what you\'re cooking with us!',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.coffee), // set to "beginning detector" 
+        detector: getDetectorUniqueKey(DETECTORS.hour12), // set to "beginning detector" 
         number: '1'
        },
        toPass: {
-         prestoryQuestion: "Are you studying at the library?",
-         dropdownChoices: {
-           name: 'casting question',
-           options: ['😃','🙏','😌','😬', '😫', '😢']
-        },
-        contextDepQuestion: ['What are you doing at the library?', 
-                        'Are you already finished with your deliverable and chilling at the library or are you currently working on it?',
-                      'Are you working with your whole SIG? With others from your DTR? Just with the people within your project?'],
-        castingDepQuestion: {
-          happy: 'What makes you feel this way?', 
-          hopeful: 'Why do you feel this way?',
-          relieved: 'What makes you feel this way?',
-          anxious: 'What makes you feel this way? What do you do to help with your anxiety?',
-          exhausted: 'What makes you feel this way? What helps you feel better?',
-          sad: 'What makes you feel this way? What helps you feel better?'
-        },
       },
-      numberNeeded: 15,
+      numberNeeded: 1,
       notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
     }]

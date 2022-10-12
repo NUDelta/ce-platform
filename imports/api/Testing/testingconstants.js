@@ -11,13 +11,11 @@ import { DETECTORS } from "./DETECTORS";
 // import SUMMER18_EXPERIENCES from "./summer18study/summer18experiences";
 // import TRIADIC_EXPERIENCES from "./triadic_experiences/triadic_experiences.js"
 // import SENIOR_FINALS from "./spring18study/senior_finals.js";
-import PARALLEL from './s22test/parallel';
+// import PARALLEL from './s22test/parallel';
+import CHEFS_JOURNEY from './fall22-CN/cookingJourney';
 // import TRIADIC_EXPERIENCES from "./triadic_experiences/triadic_experiences.js"
 // import PAIR_EXPERIENCES from "./winter22statusupdate/pair_experiences.js"
 // import NEW_PAIR_EXPERIENCES from "./fall21study/new_pair_experiences.js"
-
-console.log("I AM IN THE WRITE PLACE")
-
 let EXPERIENCES = Object.assign({},
   //CHI20_DTR_EXPERIENCES,
   //CHI20_Olin_EXPERIENCES,
@@ -25,7 +23,8 @@ let EXPERIENCES = Object.assign({},
   //SUMMER18_BETA,
   // SAMESITUATION_ACROSSTIME, // sunset
   // SENIOR_FINALS,
-  PARALLEL
+  // PARALLEL
+  CHEFS_JOURNEY
   //SCAVENGER_HUNT
   //SUMMER18_EXPERIENCES,
   // TRIADIC_EXPERIENCES
