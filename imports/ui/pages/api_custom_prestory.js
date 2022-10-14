@@ -4,12 +4,16 @@ import '../components/loading_overlay.html';
 import '../components/loading_overlay.js';
 import '../components/loading_overlay.scss';
 
+
+import { Cooking } from '../components/cooking';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import { Users } from '../../api/UserMonitor/users/users.js';
 import { Images } from '../../api/ImageUpload/images.js';
 import { Incidents } from "../../api/OCEManager/OCEs/experiences";
+
+
 
 import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
@@ -30,6 +34,9 @@ Template.api_custom_prestory_page.onCreated(function() {
 });
 
 Template.api_custom_prestory_page.helpers({
+
+  
+
   apiCustomPrestoryArgs() {
     const instance = Template.instance();
     return {
@@ -111,4 +118,11 @@ Template.api_custom_prestory.events({
     // event.preventDefault();
     FlowRouter.go('home');
   }
+});
+
+Template.chefsKitchen.helpers({
+
+  Cooking() {
+    return Cooking;
+  },
 });
