@@ -1062,7 +1062,11 @@
 
 <!-- Used for Richard and Parveen's CN project -->
 <!-- Cooking journey -->
-<template name="cookingJourney">
+   
+
+
+<!-- KEVIN & NINA'S COLLECTIVE NARRATIVE -->
+<template name="cookingEatingFood ">
   <head>
       <style>
           .instruction {
@@ -1080,12 +1084,58 @@
       </style>
   </head>
   <div class="instruction">
-    <h4 class="bold">Take a video of cooking and show us how it's done! :) </h4>
+    <h4 class="bold">Share your experience!</h4>
+
+    <!-- [Nina]: this is the casting-dependent question👇<br> -->
+    <p>
+      {{#if isHappy}}
+        Yayy! Let's celebrate!
+      {{else if isHopeful}}
+        Aw yay!
+      {{else if isRelieved}}
+        *Sigh* That's nice to hear.
+      {{else if isAnxious}}
+        Aw. So sorry
+      {{else if isExhausted}}
+        Nooo... you need some rest
+      {{else if isSad}}
+        :( So sorry.
+      {{/if}}
+    </p>
+
+    <p>You can share whatever you want and these are just some inspirational questions to start you off:</p>
+
+    <!-- [Nina]: this is the context-dependent question👇 <br> -->
+    <ul>
+      {{#each cont in getContextQuestions}}
+      <li>{{getQuestion cont}}</li>
+      {{/each}}
+      <li>
+        {{#if isHappy}}
+          {{this.toPass.castingDepQuestion.happy}}
+        {{else if isHopeful}}
+          {{this.toPass.castingDepQuestion.hopeful}}
+        {{else if isRelieved}}
+          {{this.toPass.castingDepQuestion.relieved}}
+        {{else if isAnxious}}
+          {{this.toPass.castingDepQuestion.anxious}}
+        {{else if isExhausted}}
+          {{this.toPass.castingDepQuestion.exhausted}}
+        {{else if isSad}}
+          {{this.toPass.castingDepQuestion.sad}}
+        {{/if}}
+      </li>
+    </ul>
+
   </div>
   <form id="participate">
+      <div>
+        <!-- <p>What are you thinking?</p> -->
+        {{> Template.dynamic template="text" data="sentence"}}
+      </div>
       <div class="camera-upload">
-        <p>Share a photo that shows what you're experiencing.</p>
-        {{> Template.dynamic template="videoCamera" data="proof"}}
+        <p>Share a photo that shows what you're experiencing!</p>
+        {{> Template.dynamic template="camera" data="proof"}}
       </div>
       <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
               style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
@@ -1093,6 +1143,9 @@
       </button>
   </form>
 </template>
+
+
+
 
 
 <!-- KEVIN & NINA'S COLLECTIVE NARRATIVE -->

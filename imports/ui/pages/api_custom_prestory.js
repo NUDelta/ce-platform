@@ -125,4 +125,29 @@ Template.chefsKitchen.helpers({
   Cooking() {
     return Cooking;
   },
+  
 });
+
+// var dropDown = document.getElementById("dropDown"),
+//     myWrappers = [
+//        document.getElementById("cookingSelect"),
+//        document.getElementById("eatingSelect"),
+//        document.getElementById("notCookingEating")
+//     ];
+//  function test() {
+//    for (i=0; i<myWrappers.length; i++){
+//      if(dropDown.value === "default"){ 
+//         myWrappers[i].style.display = "none";
+//      } else if(dropDown.value === "cooking"){
+//        myWrappers[i].style.display = "none";
+//        myWrappers[0].style.display = "block";
+//      } else if(dropDown.value === "eating"){
+//        myWrappers[i].style.display = "none";
+//        myWrappers[1].style.display = "block";
+//      } else if(dropDown.value === "notDoingThis"){
+//        myWrappers[i].style.display = "none";
+//        myWrappers[2].style.display = "block";
+//      }
+//   }
+// }
+

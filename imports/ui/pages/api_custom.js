@@ -296,6 +296,12 @@ Template.imitationGame.helpers({
   }
 });
 
+
+// PARVEEN AND RICHARD CN
+
+
+
+
 // KEVIN AND NINA COLLECTIVE NARRATIVE
 Template.survivingThrivingParticipate.helpers({
   isHappy(){
