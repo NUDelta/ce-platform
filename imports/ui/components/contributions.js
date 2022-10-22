@@ -5,11 +5,15 @@ import './contributions.html';
 import moment from 'moment';
 import { CEResponse } from '../react-component/ce_response';
 import { CEResponseChat } from '../react-component/ce_response_chat';
+import { Followups } from '../react-component/followups';
 
 Template.message.helpers({
 
   CEResponse(){
     return CEResponse
+  },
+  Followups(){
+    return Followups
   },
   CEResponseChat(){
     return CEResponseChat

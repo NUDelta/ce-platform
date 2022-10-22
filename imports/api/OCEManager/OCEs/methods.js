@@ -1,25 +1,29 @@
-import {Meteor} from 'meteor/meteor';
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import { Meteor } from "meteor/meteor";
+import { ValidatedMethod } from "meteor/mdg:validated-method";
+import { SimpleSchema } from "meteor/aldeed:simple-schema";
 
-import {Experiences} from './experiences.js';
-import {Schema} from '../../schema.js';
-import {getUnfinishedNeedNames} from '../progressorHelper';
+import { Experiences } from "./experiences.js";
+import { Schema } from "../../schema.js";
+import { getUnfinishedNeedNames } from "../progressorHelper";
 import {
   getPlaceKeys,
   matchAffordancesWithDetector,
   onePlaceNotThesePlacesSets,
-  placeSubsetAffordances
+  placeSubsetAffordances,
 } from "../../UserMonitor/detectors/methods";
 // import { createNewId } from '../../../startup/server/fixtures.js';
 
-import {Incidents} from './experiences';
-import {Assignments, Availability, ParticipatingNow} from '../../OpportunisticCoordinator/databaseHelpers';
-import {Submissions} from '../../OCEManager/currentNeeds';
-import {serverLog} from "../../logs";
-import {setIntersection} from "../../custom/arrayHelpers";
+import { Incidents } from "./experiences";
+import {
+  Assignments,
+  Availability,
+  ParticipatingNow,
+} from "../../OpportunisticCoordinator/databaseHelpers";
+import { Submissions } from "../../OCEManager/currentNeeds";
+import { serverLog } from "../../logs";
+import { setIntersection } from "../../custom/arrayHelpers";
 
-import { sendSystemMessage, postExpInChat } from '../../Messages/methods';
+import { sendSystemMessage, postExpInChat } from "../../Messages/methods";
 import { notify } from "../../OpportunisticCoordinator/server/noticationMethods";
 
 /**
@@ -51,23 +55,33 @@ export const findMatchesForUser = (uid, affordances) => {
   // unfinishedNeeds = {iid : [needName] }
   _.forEach(unfinishedNeeds, (needNames, iid) => {
     _.forEach(needNames, (needName) => {
-      _.forEach(currentPlace_notThesePlaces, (placeToMatch_ignoreThesePlaces) => {
-        let [placeToMatch, ignoreThesePlaces] = placeToMatch_ignoreThesePlaces;
-        let [affordanceSubsetToMatchForPlace, distInfo] = placeSubsetAffordances(affordances, ignoreThesePlaces);
+      _.forEach(
+        currentPlace_notThesePlaces,
+        (placeToMatch_ignoreThesePlaces) => {
+          let [placeToMatch, ignoreThesePlaces] =
+            placeToMatch_ignoreThesePlaces;
+          let [affordanceSubsetToMatchForPlace, distInfo] =
+            placeSubsetAffordances(affordances, ignoreThesePlaces);
 
-        let doesMatchPredicate = doesUserMatchNeed(uid, affordanceSubsetToMatchForPlace, iid, needName);
+          let doesMatchPredicate = doesUserMatchNeed(
+            uid,
+            affordanceSubsetToMatchForPlace,
+            iid,
+            needName
+          );
 
-        if (doesMatchPredicate) {
-          if (matches[iid]) {
-            let place_needs = matches[iid];
-            place_needs.push([placeToMatch, needName, distInfo['distance']]);
-            matches[iid] = place_needs;
-          } else {
-            matches[iid] = [[placeToMatch, needName, distInfo['distance']]];
+          if (doesMatchPredicate) {
+            if (matches[iid]) {
+              let place_needs = matches[iid];
+              place_needs.push([placeToMatch, needName, distInfo["distance"]]);
+              matches[iid] = place_needs;
+            } else {
+              matches[iid] = [[placeToMatch, needName, distInfo["distance"]]];
+            }
           }
         }
-      });
-   });
+      );
+    });
   });
 
   return matches;
@@ -80,29 +94,40 @@ export const findMatchesForUser = (uid, affordances) => {
  * @return sustainedAvailDict {{Object}}
  *    e.g., {"QybuLeDFSbTijxFbi":[["whole_foods_market_evanston_2","Shopping for groceries",5.108054606381277]]}
  */
-export const sustainedAvailabilities = function(beforeAvails, afterAvails) {
-  let incidentIntersection = setIntersection(Object.keys(beforeAvails), Object.keys(afterAvails));
+export const sustainedAvailabilities = function (beforeAvails, afterAvails) {
+  let incidentIntersection = setIntersection(
+    Object.keys(beforeAvails),
+    Object.keys(afterAvails)
+  );
   let sustainedAvailDict = {};
   _.forEach(incidentIntersection, (incident) => {
-    let beforePlacesAndNeeds = beforeAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
-    let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) => place_need_dist.slice(0,2));
+    let beforePlacesAndNeeds = beforeAvails[incident].map((place_need_dist) =>
+      place_need_dist.slice(0, 2)
+    );
+    let afterPlacesAndNeeds = afterAvails[incident].map((place_need_dist) =>
+      place_need_dist.slice(0, 2)
+    );
 
-    let sustainedPlace_Needs = setIntersection(beforePlacesAndNeeds, afterPlacesAndNeeds);
+    let sustainedPlace_Needs = setIntersection(
+      beforePlacesAndNeeds,
+      afterPlacesAndNeeds
+    );
     console.log(JSON.stringify(afterAvails[incident]));
     console.log(JSON.stringify(sustainedPlace_Needs));
     if (sustainedPlace_Needs.length) {
-      let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(sustainedPlace_Need =>
-        afterAvails[incident].find(place_need_dict =>
-          JSON.stringify(place_need_dict.slice(0,2)) == JSON.stringify(sustainedPlace_Need)
-        )
+      let sustainedPlace_Need_Distances = sustainedPlace_Needs.map(
+        (sustainedPlace_Need) =>
+          afterAvails[incident].find(
+            (place_need_dict) =>
+              JSON.stringify(place_need_dict.slice(0, 2)) ==
+              JSON.stringify(sustainedPlace_Need)
+          )
       );
       sustainedAvailDict[incident] = sustainedPlace_Need_Distances;
     }
   });
   return sustainedAvailDict;
 };
-
-
 
 // TODO: ryan do this plz.
 /**
@@ -128,38 +153,41 @@ export const doesUserMatchNeed = (uid, affordances, iid, needName) => {
 
 // TODO: Clean this up if possible
 export const updateUserExperiences = new ValidatedMethod({
-  name: 'experiences.updateUser',
+  name: "experiences.updateUser",
   validate: new SimpleSchema({
     userId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id
-    }
+      regEx: SimpleSchema.RegEx.Id,
+    },
   }).validator(),
   run({ userId }) {
     let user = Meteor.users.findOne(userId);
-    let exps = Experiences.find().fetch().filter((doc) => {
-      let match = true;
+    let exps = Experiences.find()
+      .fetch()
+      .filter((doc) => {
+        let match = true;
 
-      doc.requirements.forEach((req) => {
-        if (!user.profile.qualifications[req]) {
-          match = false;
-        }
+        doc.requirements.forEach((req) => {
+          if (!user.profile.qualifications[req]) {
+            match = false;
+          }
+        });
+
+        return match;
+      })
+      .map((doc) => {
+        return doc._id;
       });
 
-      return match;
-    }).map((doc) => {
-      return doc._id;
-    });
-
-    Meteor.users.update(userId, { $set: { 'profile.experiences': exps } });
+    Meteor.users.update(userId, { $set: { "profile.experiences": exps } });
 
     let subs = user.profile.subscriptions;
     subs = subs.filter((sub) => {
       return _.contains(exps, sub);
     });
 
-    Meteor.users.update(userId, { $set: { 'profile.subscriptions': subs } });
-  }
+    Meteor.users.update(userId, { $set: { "profile.subscriptions": subs } });
+  },
 });
 
 /**
@@ -169,16 +197,16 @@ export const updateUserExperiences = new ValidatedMethod({
  * Associated
  */
 export const removeExperience = new ValidatedMethod({
-  name: 'experiences.remove',
+  name: "experiences.remove",
   validate: new SimpleSchema({
     experienceId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id
-    }
+      regEx: SimpleSchema.RegEx.Id,
+    },
   }).validator(),
   run({ experienceId }) {
     Experiences.remove(experienceId);
-  }
+  },
 });
 
 /**
@@ -187,41 +215,48 @@ export const removeExperience = new ValidatedMethod({
  * in contrast to simply Experience.insert(exp) without checking the JSON
  */
 export const createExperience = new ValidatedMethod({
-  name: 'api.createExperience',
+  name: "api.createExperience",
   validate: new SimpleSchema({
     name: {
-      type: String
+      type: String,
     },
     description: {
       type: String,
-      label: 'Experience description',
-      optional: true
+      label: "Experience description",
+      optional: true,
     },
     image: {
       type: String,
-      label: 'Experience image url',
-      optional: true
+      label: "Experience image url",
+      optional: true,
     },
     participateTemplate: {
-      type: String
+      type: String,
     },
     resultsTemplate: {
-      type: String
+      type: String,
     },
     notificationText: {
-      type: String
+      type: String,
     },
     contributionGroups: {
-      type: [Schema.ContributionTypes]
+      type: [Schema.ContributionTypes],
     },
     callbackPair: {
-      type: [Schema.CallbackPair]
+      type: [Schema.CallbackPair],
     },
   }).validator(),
   run({
-        name, description, image, participateTemplate, resultsTemplate, contributionGroups,
-        notificationStrategy, notificationText, callbackPair
-      }) {
+    name,
+    description,
+    image,
+    participateTemplate,
+    resultsTemplate,
+    contributionGroups,
+    notificationStrategy,
+    notificationText,
+    callbackPair,
+  }) {
     //console.log('validated');
 
     const experience = {
@@ -233,7 +268,7 @@ export const createExperience = new ValidatedMethod({
       contributionGroups: contributionGroups,
       notificationStrategy: notificationStrategy,
       notificationText: notificationText,
-      callbackPair: callbackPair
+      callbackPair: callbackPair,
     };
 
     return Experiences.insert(experience, (err) => {
@@ -241,7 +276,7 @@ export const createExperience = new ValidatedMethod({
         console.log(err);
       }
     });
-  }
+  },
 });
 
 Meteor.methods({
@@ -249,183 +284,224 @@ Meteor.methods({
     let experience = Experiences.findOne(eid);
     startRunningIncident(createIncidentFromExperience(experience));
   },
-  addNeed({iid, need}) {
+  addNeed({ iid, need }) {
     new SimpleSchema({
-      iid: {type: String},
-      need: {type: Schema.NeedType}
-    }).validate({iid, need});
+      iid: { type: String },
+      need: { type: Schema.NeedType },
+    }).validate({ iid, need });
 
     addContribution(iid, need);
   },
-  updateSubmissionNeedName({iid, eid, oldNeedName, newNeedName}) {
+  updateSubmissionNeedName({ iid, eid, oldNeedName, newNeedName }) {
     new SimpleSchema({
-      iid: {type: String},
-      eid: {type: String},
-      oldNeedName: {type: String},
-      newNeedName: {type: String}
-    }).validate({iid, eid, oldNeedName, newNeedName});
+      iid: { type: String },
+      eid: { type: String },
+      oldNeedName: { type: String },
+      newNeedName: { type: String },
+    }).validate({ iid, eid, oldNeedName, newNeedName });
 
     updateSubmissionNeedName(iid, eid, oldNeedName, newNeedName);
   },
-  changeExperienceToPass({eid, needName, toPass, field}) {
+  changeExperienceToPass({ eid, needName, toPass, field }) {
     new SimpleSchema({
-      eid: {type: String},
-      needName: {type: String},
-      toPass: {type: String},
-      field: {type: String},
-    }).validate({eid, needName, toPass, field});
+      eid: { type: String },
+      needName: { type: String },
+      toPass: { type: String },
+      field: { type: String },
+    }).validate({ eid, needName, toPass, field });
 
     changeExperienceToPass(eid, needName, toPass, field);
   },
-  expCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey){
-    
+  expCompleteCallback(
+    sub,
+    setParticipatedKey,
+    systemMsg,
+    notifMsg,
+    waitOnPartnerSubmissionKey
+  ) {
     let submissions = Submissions.find({
       iid: sub.iid,
-      needName: sub.needName
+      needName: sub.needName,
     }).fetch();
-    
+
     let expInChat = submissions.map((submission) => {
       return {
-      uid: submission.uid,
-      name: Meteor.users.findOne(submission.uid).profile.firstName,
-      text: submission.content.sentence,
-      image: submission.content.proof,
-      time: submission.timestamp
-      }
+        uid: submission.uid,
+        name: Meteor.users.findOne(submission.uid).profile.firstName,
+        text: submission.content.sentence,
+        image: submission.content.proof,
+        time: submission.timestamp,
+      };
     });
-    
-    let participants = submissions.map((submission) => { return submission.uid; });
-    let userUpdateKey = 'profile.staticAffordances.' + setParticipatedKey;
-    let submissionUpdateKey = 'profile.waitOnPartnerSubmission.' + waitOnPartnerSubmissionKey;
-    
-    participants.forEach(function(p){
-      Meteor.users.update({
-      _id: p
-      }, {
-      $set: {
-        [userUpdateKey]: true,
-        [submissionUpdateKey]: false
-      }
-      });
+
+    let participants = submissions.map((submission) => {
+      return submission.uid;
     });
-    
+    let userUpdateKey = "profile.staticAffordances." + setParticipatedKey;
+    let submissionUpdateKey =
+      "profile.waitOnPartnerSubmission." + waitOnPartnerSubmissionKey;
+
+    participants.forEach(function (p) {
+      Meteor.users.update(
+        {
+          _id: p,
+        },
+        {
+          $set: {
+            [userUpdateKey]: true,
+            [submissionUpdateKey]: false,
+          },
+        }
+      );
+    });
+
     let route = `/chat`;
-     
-    sendSystemMessage(systemMsg, participants, null); 
+    
     postExpInChat("", participants, expInChat);
-    notify(participants, sub.iid, notifMsg, '', route); 
+    sendSystemMessage(systemMsg, participants, null);
+    notify(participants, sub.iid, notifMsg, "", route);
 
     //respawn the new experience
-    let contributionTypes = Incidents.findOne({_id: sub.iid}).contributionTypes;
+    let contributionTypes = Incidents.findOne({
+      _id: sub.iid,
+    }).contributionTypes;
     let need = contributionTypes.find((x) => {
       return x.needName === sub.needName;
     });
     // Convert Need Name i to Need Name i+1
-    let splitName = sub.needName.split(' ');
+    let splitName = sub.needName.split(" ");
     let iPlus1 = Number(splitName.pop()) + 1;
     splitName.push(iPlus1);
-    let newNeedName = splitName.join(' ');
+    let newNeedName = splitName.join(" ");
 
     need.needName = newNeedName;
     addContribution(sub.iid, need);
+  },
+  expInProgressCallback(
+    sub,
+    systemMsg,
+    notifMsg,
+    confirmationMsg,
+    waitOnParterSubmissionKey
+  ) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName,
+    }).fetch();
 
-    },
-    expInProgressCallback(sub, systemMsg, notifMsg, confirmationMsg, waitOnParterSubmissionKey){
+    let participantId = submissions.map((submission) => {
+      return submission.uid;
+    });
+    let participant = Meteor.users.findOne(participantId[0]);
 
-      let submissions = Submissions.find({
-        iid: sub.iid,
-        needName: sub.needName
-      }).fetch();
-      
-      let participantId = submissions.map((submission) => { return submission.uid; });
-      let participant = Meteor.users.findOne(participantId[0])
-
-      //update waitOnPartnerSubmission to true
-      let updateKey = 'profile.waitOnPartnerSubmission.' + waitOnParterSubmissionKey;
-      Meteor.users.update({
-        _id: participantId[0]
-        }, {
-        $set: {
-          [updateKey]: true
-        }
-      });
-
-      //find partner
-      let aff = participant.profile.staticAffordances;
-      let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
-      let partner = Meteor.users.find().fetch().filter(
-        u => (u._id != participantId[0])
-        && (pair in u.profile.staticAffordances)
-      )
-      partner = partner.map(u => u._id)
-      
-      sendSystemMessage(systemMsg, partner, "/chat"); 
-      sendSystemMessage(confirmationMsg, participantId[0], null); 
-      Meteor.call('sendNotification', partner, notifMsg, '/chat');
+    //update waitOnPartnerSubmission to true
+    let updateKey =
+      "profile.waitOnPartnerSubmission." + waitOnParterSubmissionKey;
+    Meteor.users.update(
+      {
+        _id: participantId[0],
       },
-      selfIntroCompleteCallback (sub, setParticipatedKey, systemMsg, notifMsg){
-    
-        let submissions = Submissions.find({
-          iid: sub.iid,
-          needName: sub.needName
-        }).fetch();
-        
-        let expInChat = submissions.map((submission) => {
-          return {
-          uid: submission.uid,
-          name: Meteor.users.findOne(submission.uid).profile.firstName,
-          text: submission.content.sentence,
-          image: submission.content.proof,
-          time: submission.timestamp
-          }
-        });
-        
-        let participants = submissions.map((submission) => { return submission.uid; });
-        let userUpdateKey = 'profile.staticAffordances.' + setParticipatedKey;
-        
-        participants.forEach(function(p){
-          Meteor.users.update({
-          _id: p
-          }, {
-          $set: {
-            [userUpdateKey]: true
-          }
-          });
-        });
-        
-        let route = `/chat`;
-        
-        sendSystemMessage(systemMsg, participants, null); 
-        postExpInChat("", participants, expInChat);
-        notify(participants, sub.iid, notifMsg, '', route);
+      {
+        $set: {
+          [updateKey]: true,
         },
+      }
+    );
+
+    //find partner
+    let aff = participant.profile.staticAffordances;
+    let pair = Object.keys(aff).filter((k) => k.search("pair") != -1)[0];
+    let partner = Meteor.users
+      .find()
+      .fetch()
+      .filter(
+        (u) => u._id != participantId[0] && pair in u.profile.staticAffordances
+      );
+    partner = partner.map((u) => u._id);
+
+    sendSystemMessage(systemMsg, partner, "/chat");
+    sendSystemMessage(confirmationMsg, participantId[0], null);
+    Meteor.call("sendNotification", partner, notifMsg, "/chat");
+  },
+  selfIntroCompleteCallback(sub, setParticipatedKey, systemMsg, notifMsg) {
+    let submissions = Submissions.find({
+      iid: sub.iid,
+      needName: sub.needName,
+    }).fetch();
+
+    let expInChat = submissions.map((submission) => {
+      return {
+        uid: submission.uid,
+        name: Meteor.users.findOne(submission.uid).profile.firstName,
+        text: submission.content.sentence,
+        image: submission.content.proof,
+        time: submission.timestamp,
+      };
+    });
+
+    let participants = submissions.map((submission) => {
+      return submission.uid;
+    });
+    let userUpdateKey = "profile.staticAffordances." + setParticipatedKey;
+
+    participants.forEach(function (p) {
+      Meteor.users.update(
+        {
+          _id: p,
+        },
+        {
+          $set: {
+            [userUpdateKey]: true,
+          },
+        }
+      );
+    });
+
+    let route = `/chat`;
+
+    sendSystemMessage(systemMsg, participants, null);
+    postExpInChat("", participants, expInChat);
+    notify(participants, sub.iid, notifMsg, "", route);
+  },
 });
 
-export const addContribution = (iid, contribution) =>{
-  Incidents.update({
-    _id: iid,
-  }, {
-    $push: {contributionTypes: contribution}
-  });
+export const addContribution = (iid, contribution) => {
+  Incidents.update(
+    {
+      _id: iid,
+    },
+    {
+      $push: { contributionTypes: contribution },
+    }
+  );
   addEmptySubmissionsForNeed(iid, Incidents.findOne(iid).eid, contribution);
 
-  Availability.update({
-    _id: iid
-  },{
-    $push: {needUserMaps: {needName: contribution.needName, users: []}}
-  });
+  Availability.update(
+    {
+      _id: iid,
+    },
+    {
+      $push: { needUserMaps: { needName: contribution.needName, users: [] } },
+    }
+  );
 
-  Assignments.update({
-    _id: iid
-  },{
-    $push: {needUserMaps: {needName: contribution.needName, users: []}}
-  });
+  Assignments.update(
+    {
+      _id: iid,
+    },
+    {
+      $push: { needUserMaps: { needName: contribution.needName, users: [] } },
+    }
+  );
 
-  ParticipatingNow.update({
-    _id: iid
-  },{
-    $push: {needUserMaps: {needName: contribution.needName, users: []}}
-  });
+  ParticipatingNow.update(
+    {
+      _id: iid,
+    },
+    {
+      $push: { needUserMaps: { needName: contribution.needName, users: [] } },
+    }
+  );
 };
 
 //uhhhh this is too specific to imitation game
@@ -436,56 +512,59 @@ export const changeIncidentToPass = (iid, needName, field1, field2) => {
 
   let contributionTypeIndex = 0;
 
-  if (incident){
-    for (let i = 0; i < incident.contributionTypes.length; i++){
-      if (incident.contributionTypes[i].needName === needName){
-          contributionTypeIndex = i;
-        }
+  if (incident) {
+    for (let i = 0; i < incident.contributionTypes.length; i++) {
+      if (incident.contributionTypes[i].needName === needName) {
+        contributionTypeIndex = i;
       }
-  };
+    }
+  }
 
   let search1 = `contributionTypes.${contributionTypeIndex}.toPass.${field1}`;
-  let search2 = `contributionTypes.${contributionTypeIndex}.toPass.${field2}`
+  let search2 = `contributionTypes.${contributionTypeIndex}.toPass.${field2}`;
 
-  Incidents.update({
-    _id: iid
-  }, {
-   $set: {
-     [search1] : false,
-     [search2] : true
-   }
-  });
-}
-
+  Incidents.update(
+    {
+      _id: iid,
+    },
+    {
+      $set: {
+        [search1]: false,
+        [search2]: true,
+      },
+    }
+  );
+};
 
 export const changeExperienceToPass = (eid, needName, toPass, field) => {
-    //first must find correct contributionType via needName & then update
-    //only that contributionType with new toPass
-    let experience = Experiences.findOne({
-      _id: eid,
-    });
+  //first must find correct contributionType via needName & then update
+  //only that contributionType with new toPass
+  let experience = Experiences.findOne({
+    _id: eid,
+  });
 
-    let contributionTypeIndex = 0;
+  let contributionTypeIndex = 0;
 
-    if (experience){
-      for (let i = 0; i < experience.contributionTypes.length; i++){
-        if (experience.contributionTypes[i].needName === needName){
-            contributionTypeIndex = i;
-          }
-        }
-    };
-
-    let search = `contributionTypes.${contributionTypeIndex}.toPass.${field}`;
-
-    Experiences.update(
-      {
-        _id: eid
-      }, {
-       $set: {
-          [search] : toPass
-       }
+  if (experience) {
+    for (let i = 0; i < experience.contributionTypes.length; i++) {
+      if (experience.contributionTypes[i].needName === needName) {
+        contributionTypeIndex = i;
       }
-    );
+    }
+  }
+
+  let search = `contributionTypes.${contributionTypeIndex}.toPass.${field}`;
+
+  Experiences.update(
+    {
+      _id: eid,
+    },
+    {
+      $set: {
+        [search]: toPass,
+      },
+    }
+  );
 };
 
 export const addEmptySubmissionsForNeed = (iid, eid, need) => {
@@ -501,15 +580,18 @@ export const addEmptySubmissionsForNeed = (iid, eid, need) => {
     i++;
 
     // if (!Submissions.findOne({_id: id})){
-      Submissions.insert({
+    Submissions.insert(
+      {
         eid: eid,
         iid: iid,
         needName: need.needName,
-      }, (err) => {
+      },
+      (err) => {
         if (err) {
-          console.log('upload error,', err);
+          console.log("upload error,", err);
         }
-      });
+      }
+    );
     // }
   }
 };
@@ -521,44 +603,50 @@ export const addEmptySubmissionsForNeed = (iid, eid, need) => {
  * @param oldNeedName
  * @param newNeedName
  */
-export const updateSubmissionNeedName = (iid, eid, oldNeedName, newNeedName) => {
+export const updateSubmissionNeedName = (
+  iid,
+  eid,
+  oldNeedName,
+  newNeedName
+) => {
   Submissions.update(
     {
       iid: iid,
       eid: eid,
-      needName: oldNeedName
-    }, {
+      needName: oldNeedName,
+    },
+    {
       $set: {
-        needName: newNeedName
-      }
-    }, {
-      multi: true
+        needName: newNeedName,
+      },
+    },
+    {
+      multi: true,
     }
-  )
+  );
 };
 
 export const startRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, users: []});
+    needUserMaps.push({ needName: need.needName, users: [] });
     addEmptySubmissionsForNeed(incident._id, incident.eid, need);
-
   });
 
   Availability.insert({
     _id: incident._id,
-    needUserMaps: needUserMaps
+    needUserMaps: needUserMaps,
   });
 
   Assignments.insert({
     _id: incident._id,
-    needUserMaps: needUserMaps
+    needUserMaps: needUserMaps,
   });
 
   ParticipatingNow.insert({
     _id: incident._id,
-    needUserMaps: needUserMaps
+    needUserMaps: needUserMaps,
   });
 };
 
@@ -572,40 +660,42 @@ export const updateRunningIncident = (incident) => {
   let needUserMaps = [];
 
   _.forEach(incident.contributionTypes, (need) => {
-    needUserMaps.push({needName: need.needName, users: []});
+    needUserMaps.push({ needName: need.needName, users: [] });
     // FIXME(rlouie): not accessing old need names here, so another function has to do this manually on submissions
   });
 
   Availability.update(
     {
       _id: incident._id,
-    }, {
+    },
+    {
       $set: {
-        needUserMaps: needUserMaps
-      }
+        needUserMaps: needUserMaps,
+      },
     }
   );
 
   Assignments.update(
     {
       _id: incident._id,
-    }, {
+    },
+    {
       $set: {
-        needUserMaps: needUserMaps
-      }
+        needUserMaps: needUserMaps,
+      },
     }
   );
 
   ParticipatingNow.update(
     {
       _id: incident._id,
-    }, {
+    },
+    {
       $set: {
-        needUserMaps: needUserMaps
-      }
+        needUserMaps: needUserMaps,
+      },
     }
-  )
-
+  );
 };
 
 /**
@@ -620,12 +710,12 @@ export const createIncidentFromExperience = (experience) => {
     eid: experience._id,
     callbacks: experience.callbacks,
     contributionTypes: experience.contributionTypes,
-    allowRepeatContributions: experience.allowRepeatContributions
+    allowRepeatContributions: experience.allowRepeatContributions,
   };
 
   Incidents.insert(incident, (err) => {
     if (err) {
-      console.log('error,', err);
+      console.log("error,", err);
     } else {
     }
   });
@@ -640,20 +730,21 @@ export const createIncidentFromExperience = (experience) => {
  * @param experience [Object] comes from CONSTANTS.EXPERIENCES
  */
 export const updateIncidentFromExperience = (eid, experience) => {
-
   let incident = {
     callbacks: experience.callbacks,
-    contributionTypes: experience.contributionTypes
+    contributionTypes: experience.contributionTypes,
   };
 
   Incidents.update(
     {
-      eid: eid
-    }, {
-      $set: incident
-    });
+      eid: eid,
+    },
+    {
+      $set: incident,
+    }
+  );
 
-  return Incidents.findOne({eid: eid});
+  return Incidents.findOne({ eid: eid });
 };
 
 /** Updates the experience in the Experience collection, but keeps the same _id
@@ -663,16 +754,17 @@ export const updateIncidentFromExperience = (eid, experience) => {
  * @param experience [Object] comes from CONSTANTS.EXPERIENCES
  */
 export const updateExperienceCollectionDocument = (eid, experience) => {
-
   delete experience._id;
   Experiences.update(
     {
-      _id: eid
-    }, {
-      $set: experience
-    });
+      _id: eid,
+    },
+    {
+      $set: experience,
+    }
+  );
 
-  return Experiences.findOne({_id: eid});
+  return Experiences.findOne({ _id: eid });
 };
 
 /**
@@ -687,7 +779,9 @@ export const getNeedFromIncidentId = (iid, needName) => {
   let output = undefined;
 
   if (!incident) {
-    console.error(`Error in getNeedFromIncidentId: Could not find incident of iid = ${iid}`)
+    console.error(
+      `Error in getNeedFromIncidentId: Could not find incident of iid = ${iid}`
+    );
     return false;
   }
 
@@ -698,7 +792,7 @@ export const getNeedFromIncidentId = (iid, needName) => {
     }
 
     // check if found
-    if (typeof output === 'undefined') {
+    if (typeof output === "undefined") {
       return false;
     }
   });

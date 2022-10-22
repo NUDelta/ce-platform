@@ -25,9 +25,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-zoom-pan-pinch": "^2.1.3",
-    "sharp": "^0.30.1"
+    "sharp": "^0.30.7"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "meteor build ../ce-platform-ios  --server=ce-platform.herokuapp.com/",
     "build-dev": "run(){ meteor run ios-device -p $1 --mobile-server=http://$2:$1; }; run",
