@@ -1004,6 +1004,19 @@ export let DETECTORS = {
     variables: ["var wednesday;", "var thursday;", "var friday;", 'var bookstores;', "var libraries;"],
     rules: ["((wednesday || thursday || friday) && (libraries || bookstores));"]
   },
+  meal_time: {
+    _id: Random.id(),
+    description: "During meal times",
+    variables: ['var coffeeroasteries;',
+    'var cafeteria;',
+    'var food_court;',
+    'var diners;',
+    'var restaurants;',
+    'var hour;',],
+  rules: ["(hour == 12 || hour == 8 || hour == 18) || (food_court || cafeteria || diners || restaurants);"]
+
+
+  },
   hour0: {
     _id: "v2ANTJr1I7wle3Ek8",
     description: "during 00:00",
