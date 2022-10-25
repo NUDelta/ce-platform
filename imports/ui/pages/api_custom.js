@@ -298,7 +298,15 @@ Template.imitationGame.helpers({
 
 
 // PARVEEN AND RICHARD CN
-
+Template.cookingJourney.helpers({
+  isCooking(){
+    let userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
+    console.log(userSubs.length);
+    let mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
+    console.log(mostRecentSub.castCategory);
+    return mostRecentSub.castCategory == "cooking"
+  }
+})
 
 
 
