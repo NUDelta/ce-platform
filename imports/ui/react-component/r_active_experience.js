@@ -5,6 +5,7 @@ import '../stylesheets/layout.scss';
 
 export const RActiveExperience = ({exp, iid, detectorUniqueKey}) => {
     // const link = `/apicustomdynamic/${iid}`
+    console.log("hello?");
     return(
         <div className="card">
         <div className="list-group-item participate-chunk" style={{borderRadius: '1px', padding: '0px'}}>

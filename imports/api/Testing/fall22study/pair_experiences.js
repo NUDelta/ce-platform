@@ -3,7 +3,7 @@ import { addContribution, changeExperienceToPass, createExperience } from '../..
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
-const PAIR_COUNT = 12;
+const PAIR_COUNT = 3;
 
 const promptDict = {
   library: {
@@ -14,16 +14,18 @@ const promptDict = {
       "Found a study spot you like? Is this where you usually sit? Take a picture and share your reason!",
       "How do you stay productive or motivated? Share a study tip with your partner!"
     ], 
+    mood_prompts: "How are you feeling? Feeling motivated or stressed working at the library? Share what you are working on and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What's keeping you going/focused? 2. What's your favorite study spot? 3. How do you stay productive? Any tips?"],
     delay: 600},
   restaurant: {
     name: "🍝Food time🍜", 
-    description: "Eating at a restaurant? Share your experience with your partner!",
+    description: "Enjoying your meal? Share your experience with your partner!",
     prompts: [
       "Are you excited about anything at this restaurant? Food, people, ambiance, or memories?  Take a picture and caption it with your reason!",
       "Revisiting a restaurant? Take a picture of what makes you come back again and share it with your partner! (e.g., something about the food, people, ambiance, or memories?)",
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ],
+    mood_prompts: "How are you feeling? Enjoying a nice meal? Share your dining moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. Is this your first time dining or are you revisiting? 2. What brings you here today? 3. What's your favorite thing about this restaurant?"], 
     delay: 360},
   cafe: {
@@ -34,6 +36,7 @@ const promptDict = {
       "Revisiting a cafe? Take a picture of what makes you come back again and share it with your partner! (e.g., something about the drinks, people, ambiance, or memories?)",
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ], 
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. Are you stopping by to grab a coffee or staying at the cafe? 2. Are you revisiting? What's your favorite thing about this cafe? 3. Is this your first time visiting? What brought you here today?"],
     delay: 360},
   grocery: {
@@ -44,6 +47,7 @@ const promptDict = {
       "What's one grocery item you always get? Take a picture and caption it with your reason!",
       "What's one item you highly recommend from the store? Share it with your partner for them to try out next time!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. What items are in your haul today? What are you most excited to use? 2. What's a grocery item you always get? 3. What's an item you'd recommend to me?"], 
     delay: 180},
   outdoor: {
@@ -53,6 +57,7 @@ const promptDict = {
       "Enjoying your time outdoors? Take a picture of something around you that is interesting or makes you happy and caption it with your reason!",
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. Do you prefer the outdoors or the indoors more? 2. What's the most interesting thing in nature that you see around you? 3. Are you revisiting this spot or is it your first time?"], 
     delay: 180},
   exercise: {
@@ -62,6 +67,7 @@ const promptDict = {
       "Enjoying your exercising session today? What did you do and what has been keeping you motivated to exercise? Take a picture and share your reason! ",
       "Share a tip that helps you stay healthy with your partner for them to try out!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. What did your routine today consist of? 2. What's your motivation to work out? 3. Any tips on staying healthy?"], 
     delay: 180},
   commute: {
@@ -72,6 +78,7 @@ const promptDict = {
       "Heading somewhere for school, work, or a fun plan? What do you usually do in your commute time? Take a picture and share your favorite pastime!",
       "Recommend a podcast/video/article/music album to your partner for them to check out!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. What do you usually do during your commute time? 2. Do you have any podcast/video/article/album recommendations to kill time? 3. Did you see anything interesting on your commute today?"], 
     delay: 60},
   snack: {
@@ -81,6 +88,7 @@ const promptDict = {
       "Grabbing snacks? Do you have a go-to order or are you trying out something different today? Take a picture and share it with your partner!",
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. What's your favorite or go-to snack? 2. Are you revisiting this place or trying something new? 3. What else would you recommend?"], 
     delay: 120},
   weekend: {
@@ -90,6 +98,7 @@ const promptDict = {
       "It's the weekend! Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. What other plans do you have this weekend or next weekend? 2. Are you revisiting this place? 3. What else would you recommend?"], 
     delay: 360},
   weekday: {
@@ -99,6 +108,7 @@ const promptDict = {
       "Enjoying small breaks from school work? Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
+    mood_prompts: "prompt",
     followups: ["Here's some questions you can ask your partner!: 1. Any other plans for today?"], 
     delay: 360},
 }
@@ -147,8 +157,7 @@ export const createExp = function (pairNum, exp) {
         },
         toPass : {
           situationDescription : promptDict[exp].name,
-          promptCount: promptDict[exp].prompts.length,
-          instruction : promptDict[exp].prompts
+          instruction : promptDict[exp].mood_prompts
         },
         numberNeeded : 2, notificationDelay : promptDict[exp].delay, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false
       }

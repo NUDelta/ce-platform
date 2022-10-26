@@ -1,7 +1,7 @@
-import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
-import { addContribution, changeExperienceToPass } from '../../OCEManager/OCEs/methods';
-import { sendSystemMessage } from '../../Messages/methods';
-import {DETECTORS} from "../DETECTORS";
+import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../../oce_api_helpers";
+import { addContribution, changeExperienceToPass } from '../../../OCEManager/OCEs/methods';
+import { sendSystemMessage } from '../../../Messages/methods';
+import {DETECTORS} from "../../DETECTORS";
 
 
 // new experiences ///////////////////////////////////////////////////////

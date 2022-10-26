@@ -1,5 +1,5 @@
-import {getDetectorUniqueKey} from "../oce_api_helpers";
-import {DETECTORS} from "../DETECTORS";
+import {getDetectorUniqueKey} from "../../oce_api_helpers";
+import {DETECTORS} from "../../DETECTORS";
 
 
 let sendNotificationScavenger = function (sub) {

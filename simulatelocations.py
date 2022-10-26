@@ -406,7 +406,7 @@ def testLastNotified():
 
 if __name__ == "__main__":
     # testLastNotified()
-    statusUpdate()
+    # statusUpdate()
     # allUsersGrocery()
 	# allUsersCoffee()
     #allUsersAtTrain()
@@ -415,7 +415,7 @@ if __name__ == "__main__":
 	# pairsAtParkLibraryGrocery()
     # allUsersAtLibrary()
     # allUsersAtDnD()
-    # dndCafeBubbleTea()
+    dndCafeBubbleTea()
     # allUsersNorris()
     # testLibraryExpInProd()
     # halfUsersAtLibrary()

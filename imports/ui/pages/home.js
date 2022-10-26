@@ -113,7 +113,6 @@ Template.home.helpers({
     let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
 
     let allIncidents = Incidents.find().fetch();
-    // console.log(`allIncidents: ${allIncidents}`);
     let output = [];
     _.forEach(allIncidents, (incident) => {
       if(incident.contributionTypes[0].needName.includes(pair)) {
@@ -137,7 +136,6 @@ Template.home.helpers({
       }
     })
 
-    // console.log( "output: ", output);
     return output;
   }
 }
