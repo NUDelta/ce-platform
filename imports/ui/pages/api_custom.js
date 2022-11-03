@@ -518,6 +518,42 @@ Template.imitationGame.helpers({
   }
 });
 
+Template.cookParticipate.helpers({
+  textValue: function(submission) {
+    if (submission.content.sentence != undefined) {
+      return submission.content.sentence;
+    } else {
+      return "...";
+    }
+  },
+
+  hello: function() {
+    return this.submissions[0];
+  },
+
+  lastImage: function() {
+    return this.submisions[this.submissions.length - 1];
+  },
+
+  // returnHi: function () {
+  //   return "HELLOOOOO"
+  // }, 
+
+  imageValue: function(submission) {
+    if (submission.content.proof != undefined) {
+      let element = document.createElement('div');
+      element.innerHTML = 'chocolate';
+      console.log(element);
+      // document.getElementByClassName("sunsetSlides").appendChild(element);
+      // return 0;
+      return submission.content.proof;
+    } else {
+      return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
+    }
+  }
+})
+
+
 // KEVIN AND NINA COLLECTIVE NARRATIVE
 Template.survivingThrivingParticipate.helpers({
   isHappy(){

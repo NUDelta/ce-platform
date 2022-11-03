@@ -15,7 +15,7 @@ export default PARALLEL = {
     _id: Random.id(),
     name: 'Please Work',
     prestoryTemplate: 'studyNight',
-    participateTemplate: 'fakeParticipate',
+    participateTemplate: 'cookParticipate',
     resultsTemplate: 'sunset',
     expandTemplate: 'seniorFinalsExpand',
     repeatContributionsToExperienceAfterN: 0,
