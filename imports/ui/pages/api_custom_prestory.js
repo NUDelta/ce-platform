@@ -18,6 +18,14 @@ import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinato
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM PRESTORY QUESTIONS
+
+
+// Template.cookNight.helpers({
+//   notDefault: function() {
+//     console.log(document.getElementById("selected"));
+//   }
+// })
+
 Template.api_custom_prestory_page.onCreated(function() {
 
   const eid = FlowRouter.getParam('eid');
@@ -81,11 +89,12 @@ Template.api_custom_prestory.events({
     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
 
     //castCategory
-    const castDropDown = document.getElementById('casting question');
-    // console.log("CAST DROP DOWN: ", castDropDown)
+    const castDropDown = document.getElementById('dropDown');
+    console.log("CAST DROP DOWN: ", castDropDown)
     const index = castDropDown.selectedIndex;
     const castCategory = castDropDown[index].value;
-    const castDescription = document.getElementById('castDescription').value
+    // const castDescription = document.getElementById('castDescription').value
+    
     // console.log("GOT EMOTION: ", castDescription)
 
     FlowRouter.go(participateUrl);
@@ -100,7 +109,7 @@ Template.api_custom_prestory.events({
       lat: location.lat,
       lng: location.lng,
       castCategory: castCategory,
-      castDescription: castDescription
+      // castDescription: castDescription
     };
 
     Meteor.call('createInitialSubmission', submissionObject);

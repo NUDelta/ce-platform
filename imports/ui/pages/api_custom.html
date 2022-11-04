@@ -1077,7 +1077,7 @@
       </style>
   </head>
   <div class="instruction">
-    <h4 class="bold">When I'm studying at night, I need ___. </h4>
+    <h4 class="bold">Take a picture of you doing what you're doing! (need to take prestory input and display here)</h4>
   </div>
   <form id="participate">
       <div>
@@ -1168,18 +1168,23 @@
   </head>
 
   <div class="instruction">
-    <h4 class="bold">When I'm studying at night, I need ___. </h4>
+    <!-- TODO: use isCooking() etc. to change the phrasing -->
+    <h4 class="bold">Take a picture of you doing what you're doing! (need to take prestory input and display here) </h4>
   </div>
   <form id="participate">
-      <div>
-        <p>Fill in the blank! {{hello}}</p>
+      <!-- <div>
+        <p>Fill in the blank!</p>
         {{> Template.dynamic template="text" data="sentence"}}
-      </div>
+      </div> -->
 
-
+      {{#if (bye)}}
       
-      <img src={{imageValue(hello)}} referrerpolicy="no-referrer"/>
-
+      <div style="height: 200px; display: flex; justify-content: center; align-items: center;">
+        <img style="display: block; border: 1px solid black;" src={{imageValue(hello)}} referrerpolicy="no-referrer"/>
+      </div>
+      <br>
+      <div>(The picture above is a submission made by a previous person; try to have something that lines up with this!)</div>
+      {{/if}}
 
 
       <!-- <div class="slideshow"> -->

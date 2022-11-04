@@ -528,7 +528,17 @@ Template.cookParticipate.helpers({
   },
 
   hello: function() {
-    return this.submissions[0];
+    for (let i=0; i < this.submissions.length; i++) {
+      if (Object.keys(this.submissions[i].content).length != 0) {
+        return this.submissions[i]
+      }
+    }
+    return {};
+  },
+
+  bye: function() {
+    console.log(this.submissions);
+    return Object.keys(this.submissions[this.submissions.length - 1].content).length != 0;
   },
 
   lastImage: function() {
