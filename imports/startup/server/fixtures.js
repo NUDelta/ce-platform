@@ -206,10 +206,12 @@ function createTestData() {
 
   let initialNotifications = {};
   let waitOnPartnerSubmission = {};
+  let waitOnUserSubmission = {};
   const expKeys = Object.keys(CONSTANTS.DETECTORS["pair1"]);
   expKeys.forEach((key) => {
     initialNotifications[key.toLowerCase()] = -1;
     waitOnPartnerSubmission[key.toLowerCase()] = false;
+    waitOnUserSubmission[key.toLowerCase()] = false;
   });
 
 
@@ -229,6 +231,7 @@ function createTestData() {
         "profile.lastNotified": initialNotifications,
         "profile.waitOnPartnerSubmission": waitOnPartnerSubmission,
         "profile.pastIncidents": [],
+        "profile.waitOnUserSubmission": waitOnUserSubmission,
         // "profile.staticAffordances": {}
       },
     },

@@ -113,19 +113,32 @@ Template.home.helpers({
     let pair = Object.keys(aff).filter(k => k.search('pair') != -1)[0];
 
     let allIncidents = Incidents.find().fetch();
-    let output = [];
+    let waitingSubmission = [];
+    let restOfExperiences = [];
     _.forEach(allIncidents, (incident) => {
       if(incident.contributionTypes[0].needName.includes(pair)) {
         let currentExp = incident.contributionTypes[0].needName.split('pair')[0].toLowerCase();
         if(currentExp === 'selfintro' && ('participatedInSelfIntro' in aff) ) {
           //don't show self intro if user hs participated
+        } else if (user.profile.waitOnUserSubmission[currentExp]) {
+          // get experience
+          let experience = Experiences.findOne(incident.eid);
+
+          let needNamesBinnedByDetector = needAggregator(incident);
+          _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
+            waitingSubmission.push({
+              'iid': incident._id,
+              'experience': experience,
+              'detectorUniqueKey': detectorUniqueKey
+            });
+          })
         } else if (!user.profile.waitOnPartnerSubmission[currentExp]) {  // don't show the experience if the user is waiting for their partner to submit
           // get experience
           let experience = Experiences.findOne(incident.eid);
 
           let needNamesBinnedByDetector = needAggregator(incident);
           _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
-            output.push({
+            restOfExperiences.push({
               'iid': incident._id,
               'experience': experience,
               'detectorUniqueKey': detectorUniqueKey
@@ -135,8 +148,7 @@ Template.home.helpers({
         
       }
     })
-
-    return output;
+    return [waitingSubmission, restOfExperiences]
   }
 }
 });

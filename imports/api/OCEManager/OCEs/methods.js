@@ -340,6 +340,7 @@ Meteor.methods({
     let userUpdateKey = "profile.staticAffordances." + setParticipatedKey;
     let submissionUpdateKey =
       "profile.waitOnPartnerSubmission." + waitOnPartnerSubmissionKey;
+    let waitOnUserSubmissionKey = "profile.waitOnUserSubmission." + waitOnPartnerSubmissionKey;
 
     participants.forEach(function (p) {
       Meteor.users.update(
@@ -350,6 +351,7 @@ Meteor.methods({
           $set: {
             [userUpdateKey]: true,
             [submissionUpdateKey]: false,
+            [waitOnUserSubmissionKey]: false,
           },
         }
       );
@@ -382,7 +384,7 @@ Meteor.methods({
     systemMsg,
     notifMsg,
     confirmationMsg,
-    waitOnParterSubmissionKey
+    waitOnPartnerSubmissionKey
   ) {
     let submissions = Submissions.find({
       iid: sub.iid,
@@ -396,7 +398,7 @@ Meteor.methods({
 
     //update waitOnPartnerSubmission to true
     let updateKey =
-      "profile.waitOnPartnerSubmission." + waitOnParterSubmissionKey;
+      "profile.waitOnPartnerSubmission." + waitOnPartnerSubmissionKey;
     Meteor.users.update(
       {
         _id: participantId[0],
@@ -418,6 +420,17 @@ Meteor.methods({
         (u) => u._id != participantId[0] && pair in u.profile.staticAffordances
       );
     partner = partner.map((u) => u._id);
+    updateKey = "profile.waitOnUserSubmission." + waitOnPartnerSubmissionKey;
+    Meteor.users.update(
+      {
+        _id: partner[0],
+      },
+      {
+        $set: {
+          [updateKey]: true,
+        },
+      }
+    );
 
     sendSystemMessage(systemMsg, partner, "/chat");
     sendSystemMessage(confirmationMsg, participantId[0], null);
