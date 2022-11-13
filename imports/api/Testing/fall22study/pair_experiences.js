@@ -14,7 +14,7 @@ const promptDict = {
       "Found a study spot you like? Is this where you usually sit? Take a picture and share your reason!",
       "How do you stay productive or motivated? Share a study tip with your partner!"
     ], 
-    mood_prompts: "How are you feeling? Feeling motivated or stressed working at the library? Share what you are working on and how you feel with your partner!",
+    mood_prompts: "How are you feeling? Feeling motivated or stressed working at the library? Share your working moment on and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What's keeping you going/focused? 2. What's your favorite study spot? 3. How do you stay productive? Any tips?"],
     delay: 600},
   restaurant: {
@@ -36,7 +36,7 @@ const promptDict = {
       "Revisiting a cafe? Take a picture of what makes you come back again and share it with your partner! (e.g., something about the drinks, people, ambiance, or memories?)",
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ], 
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Chilling at the cafe or working on something exciting? Share your moment at the cafe and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. Are you stopping by to grab a coffee or staying at the cafe? 2. Are you revisiting? What's your favorite thing about this cafe? 3. Is this your first time visiting? What brought you here today?"],
     delay: 360},
   grocery: {
@@ -47,7 +47,7 @@ const promptDict = {
       "What's one grocery item you always get? Take a picture and caption it with your reason!",
       "What's one item you highly recommend from the store? Share it with your partner for them to try out next time!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Excited about what you are getting or restocking your groceries like usual? Share your grocery shopping moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What items are in your haul today? What are you most excited to use? 2. What's a grocery item you always get? 3. What's an item you'd recommend to me?"], 
     delay: 180},
   outdoor: {
