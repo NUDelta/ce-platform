@@ -548,33 +548,41 @@ Template.cookParticipate.helpers({
 
   isCooking: function () {
     let currentSubmission = this.submissions.filter(x =>(x.hasOwnProperty("castCategory") && Object.entries(x['content']) == 0));
+    console.log("isCooking:", currentSubmission);
     return currentSubmission['castCategory'] == "cooking";
   },
 
   isEating: function () {
     let currentSubmission = this.submissions.filter(x =>(x.hasOwnProperty("castCategory") && Object.entries(x['content']) == 0));
+    console.log("isEating:", currentSubmission);
     return currentSubmission['castCategory'] == "eating";
   }, 
 
   shouldShowLatestCooking: function () {
     let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    console.log("Should show latest cooking:", cooking);
     return cooking.length > 1;
   },
 
   shouldShowEarliestEating: function () {
     let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
     let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
-    return cooking.length == 3 && eating.length > 0;
+    console.log("Should show earliest eating:", eating);
+    console.log("Should show earliest eating cooking:", cooking);
+    return cooking.length == 2 && eating.length > 0;
   },
 
   lateCookEarlyEat: function () {
     let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
     let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
-    return cooking.length == 3 && eating.length > 0 && cooking.length > 1;
+    console.log("Should show latest eating LATE COOK EARLY EAT:", eating);
+    console.log("Should show latest cooking LATE COOK EARLY EAT:", cooking);
+    return cooking.length == 2 && eating.length > 0;
   },
 
   shouldShowLatestEating: function () {
     let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    console.log("Should show latest eating:", eating);
     return eating.length > 1;
   },
 
@@ -586,6 +594,7 @@ Template.cookParticipate.helpers({
   showLatestCooking: function () {
     let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
     cooking.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    console.log("cooking[cooking.length - 2]:", cooking[cooking.length-2]);
     return cooking[cooking.length - 2];
   },
 
@@ -594,6 +603,7 @@ Template.cookParticipate.helpers({
   showLatestEating: function () {
     let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
     eating.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    console.log("eating[eating.length - 2]:", eating[eating.length-2]);
     return eating[eating.length - 2];
   },
 
@@ -602,6 +612,7 @@ Template.cookParticipate.helpers({
   showEarliestCooking: function () {
     let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
     cooking.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    console.log("cooking[0]:", cooking[0]);
     return cooking[0];
   },
 
@@ -610,6 +621,7 @@ Template.cookParticipate.helpers({
   showEarliestEating: function () {
     let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
     eating.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    console.log("eating[0]:", eating[0]);
     return eating[0];
   },
 
