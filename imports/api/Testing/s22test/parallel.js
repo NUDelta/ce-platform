@@ -16,7 +16,7 @@ export default PARALLEL = {
     name: 'Please Work',
     prestoryTemplate: 'cookNight',
     participateTemplate: 'cookParticipate',
-    resultsTemplate: 'sunset',
+    resultsTemplate: 'cookSlides',
     expandTemplate: 'seniorFinalsExpand',
     repeatContributionsToExperienceAfterN: 0,
     contributionTypes: [{

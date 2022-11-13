@@ -1244,6 +1244,29 @@ function showSlidesAuto() {
 };
 
 
+Template.cookSlides.helpers({
+  textValue: function(submission) {
+    if (submission.content.sentence != undefined) {
+      return submission.content.sentence;
+    } else {
+      return "...";
+    }
+  },
+  imageValue: function(submission) {
+    if (submission.content.proof != undefined) {
+      let element = document.createElement('div');
+      element.innerHTML = 'chocolate';
+      console.log(element);
+      // document.getElementByClassName("sunsetSlides").appendChild(element);
+      // return 0;
+      return submission.content.proof;
+    } else {
+      return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
+    }
+  }
+});
+
+
 Template.sunset.helpers({
   textValue: function(submission) {
     if (submission.content.sentence != undefined) {
@@ -1281,6 +1304,26 @@ Template.sunset.onRendered(function() {
 })
 
 Template.sunset.onDestroyed(function() {
+  this.autorun(() => {
+    console.log("destroyed")
+    Meteor.clearTimeout(timeout)
+    timeout = null;
+  });
+});
+
+Template.cookSlides.onRendered(function() {
+  this.autorun(() => {
+    console.log("I'm going here!")
+    showSlidesAuto();
+    // window.onload = function () {
+    //   console.log("run slideshow before");
+    //   // showSlidesAuto();
+    //   console.log("run slideshow after");
+    // }
+  });
+})
+
+Template.cookSlides.onDestroyed(function() {
   this.autorun(() => {
     console.log("destroyed")
     Meteor.clearTimeout(timeout)
