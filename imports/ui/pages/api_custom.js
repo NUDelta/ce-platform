@@ -527,6 +527,9 @@ Template.cookParticipate.helpers({
     }
   },
 
+  // TODO: WRITE DOCUMENTATION FOR THIS LATER
+
+  // SO THIS ONE SHOWED THE EARLIEST SUBMISSION, BUT NOW WE ACTUALLY JUST NEED THE ACTUAL THING
   hello: function() {
     for (let i=0; i < this.submissions.length; i++) {
       if (Object.keys(this.submissions[i].content).length != 0) {
@@ -536,18 +539,136 @@ Template.cookParticipate.helpers({
     return {};
   },
 
-  bye: function() {
-    console.log(this.submissions);
-    return Object.keys(this.submissions[this.submissions.length - 1].content).length != 0;
+
+  
+  // I WILL NEED FUNCTIONS TO SHOW THE 
+  // LATEST <PREVIOUS BLANK>, 
+  // LATEST <BLANK> 
+  // EARLIEST <NEXT BLANK>
+
+  isCooking: function () {
+    let currentSubmission = this.submissions.filter(x =>(x.hasOwnProperty("castCategory") && Object.entries(x['content']) == 0));
+    return currentSubmission['castCategory'] == "cooking";
   },
+
+  isEating: function () {
+    let currentSubmission = this.submissions.filter(x =>(x.hasOwnProperty("castCategory") && Object.entries(x['content']) == 0));
+    return currentSubmission['castCategory'] == "eating";
+  }, 
+
+  shouldShowLatestCooking: function () {
+    let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    return cooking.length > 1;
+  },
+
+  shouldShowEarliestEating: function () {
+    let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    return cooking.length == 3 && eating.length > 0;
+  },
+
+  lateCookEarlyEat: function () {
+    let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    return cooking.length == 3 && eating.length > 0 && cooking.length > 1;
+  },
+
+  shouldShowLatestEating: function () {
+    let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    return eating.length > 1;
+  },
+
+
+
+  // THIS IS THE ACTUAL IMAGE, NOT WHETHER OR NOT WE SHOULD SHOW THE LATEST COOKING
+
+  // WE NEED THIS ONE
+  showLatestCooking: function () {
+    let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    cooking.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    return cooking[cooking.length - 2];
+  },
+
+
+  // WE NEED THIS ONE
+  showLatestEating: function () {
+    let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    eating.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    return eating[eating.length - 2];
+  },
+
+
+  // THIS ONE WE NEED WHEN WE HAVE GROCERIES
+  showEarliestCooking: function () {
+    let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+    cooking.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    return cooking[0];
+  },
+
+
+  // WE NEED THIS ONE
+  showEarliestEating: function () {
+    let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+    eating.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+    return eating[0];
+  },
+
+
+
+  // I WILL NEED TO BREAK THIS FUNCTION INTO MULTIPLE PARTS ACTUALLY
+  // checkPreviousExists: function() {
+
+
+  //   // I NEED TO KNOW HOW TO SORT THESE BY TIME
+  //   let cooking = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "cooking");
+  //   let eating = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "eating");
+  //   let grocery = this.submissions.filter(x => x.hasOwnProperty("castCategory") && x['castCategory'] == "grocery");
+
+
+  //   console.log("UNSORTED COOKING: ", cooking);
+  //   // THIS FUNCTION SEEMS TO WORK
+  //   cooking.sort(function (a,b) { return new Date(a.timestamp) - new Date(b.timestamp); }) 
+  //   console.log("SORTED COOKING: ", cooking);
+
+  //   // CREATE VARIABLE THAT HOLDS THE OBJECT THAT IS THE CURRENT PRE-STORY SUBMISSION
+
+  //   let currentSubmission = this.submissions.filter(x =>(x.hasOwnProperty("castCategory") && Object.entries(x['content']) == 0));
+
+  //   if (currentSubmission['castCategory'] == "cooking") {
+  //     // I need to see if there's a previous or next cooking to be shown
+  //     return (cooking.length > 1) || (grocery.length > 0)
+      
+  //   } else if (currentSubmission['castCategory'] == "eating") {
+
+  //   }
+
+
+  //   console.log(this.submissions);
+  //   console.log("COOKING: ", cooking);
+  //   console.log("EATING: ", eating);
+  //   console.log("GROCERY: ", grocery);
+
+  //   // showCooking();
+
+  //   // IS PERSON COOKING, EATING or GROCERY?
+
+  //   // ### IF PERSON IS <BLANK>, WHAT WAS THE LAST <BLANK> SUBMISSION IS
+
+  //   // 1. DOES THE <BLANK> ARRAY HAVE MORE THAN ONE ENTRY? IF NOT 
+  //   // 1a. IS THE <PREVIOUS BLANK> ARRAY EMPTY? IF NOT THEY SEE THE LAST <PREVIOUS BLANK>
+  //   // 1b. ELSE THEY SEE NOTHING BEFORE
+  //   // 2. OTHERWISE, THEY SEE THE MOST RECENT <BLANK> ENTRY THAT ISN"T THEM
+
+  //   // IF PERSON IS THE NTH <BLANK> AND NOT EATING, AND THE NEXT <BLANK> IS NONEMPTY,
+  //   // THEY SEE THE <BLANK FIRST> ENTRY.
+
+  //   // CURRENTLY ONLY RETURNS A BOOLEAN THAT SAYS THERE IS A NONZERO NUMBER OF SUBMISSIONS
+  //   return Object.keys(this.submissions[this.submissions.length - 1].content).length != 0;
+  // },
 
   lastImage: function() {
     return this.submisions[this.submissions.length - 1];
   },
-
-  // returnHi: function () {
-  //   return "HELLOOOOO"
-  // }, 
 
   imageValue: function(submission) {
     if (submission.content.proof != undefined) {
