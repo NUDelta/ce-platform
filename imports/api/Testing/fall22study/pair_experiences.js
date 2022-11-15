@@ -167,7 +167,8 @@ export const createExp = function (pairNum, exp) {
         },
         toPass : {
           situationDescription : promptDict[exp].name,
-          instruction : promptDict[exp].mood_prompts
+          instruction : promptDict[exp].mood_prompts,
+          degraded : promptDict[exp].degradedprompt
         },
         numberNeeded : 2, notificationDelay : promptDict[exp].delay, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false
       }

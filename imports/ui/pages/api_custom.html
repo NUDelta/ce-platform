@@ -484,6 +484,11 @@
           <h3>{{this.toPass.situationDescription}}</h3>
             <!-- <div>{{> React component=Prompt promptList=this.toPass.instruction}}</div> -->
             <p>{{this.toPass.instruction}}</p>
+            {{#if isWaitingOnSubmission}}
+            <p>{{this.toPass.degraded}}</p>p>
+            {{/if}}
+            <!-- check if this.isWaitingToSubimit , if true -->
+            <!-- we display the degraded prompt -->
         </div>
         <form class="col col-xs-12" id="participate">
             <div class="camera-upload">

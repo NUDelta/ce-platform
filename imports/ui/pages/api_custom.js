@@ -467,6 +467,13 @@ Template.groupBumped.helpers({
   Prompt() {
     return Prompt;
   },
+  
+  isWaitingOnSubmission() {
+    let currentUserID = Meteor.userId();
+    let currentUser = this.users.filter(u => u._id == currentUserID)[0];
+    let currentExp = this.needName.split('pair')[0].toLowerCase();
+    return currentUser.profile.waitOnUserSubmission[currentExp];
+  },
   // @TODO - determine if we won't need this then delete
   friendNames() {
     const friends = this.users.filter(friend => {

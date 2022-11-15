@@ -10,6 +10,7 @@ export const RActiveExperience = ({allExperience}) => {
         waitingSubmissionBlock = 
         <div>
             <h4>Here's what your partner already submitted!</h4>
+            <h5>Don't have a current experience for this activity? Share your most recent experience with your partner instead!</h5>
             {waitingSubmission} 
         </div>
     }
