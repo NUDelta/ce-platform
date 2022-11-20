@@ -61,7 +61,7 @@ const promptDict = {
       "Enjoying your time outdoors? Take a picture of something around you that is interesting or makes you happy and caption it with your reason!",
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Feeling relaxed outdoor? Share your outdoor moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. Do you prefer the outdoors or the indoors more? 2. What's the most interesting thing in nature that you see around you? 3. Are you revisiting this spot or is it your first time?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 180},
@@ -72,7 +72,7 @@ const promptDict = {
       "Enjoying your exercising session today? What did you do and what has been keeping you motivated to exercise? Take a picture and share your reason! ",
       "Share a tip that helps you stay healthy with your partner for them to try out!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Exhausted or energized? Share your exercising moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What did your routine today consist of? 2. What's your motivation to work out? 3. Any tips on staying healthy?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 180},
@@ -84,21 +84,10 @@ const promptDict = {
       "Heading somewhere for school, work, or a fun plan? What do you usually do in your commute time? Take a picture and share your favorite pastime!",
       "Recommend a podcast/video/article/music album to your partner for them to check out!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Heading somewhere different or somewhere usual? Share your commuting moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What do you usually do during your commute time? 2. Do you have any podcast/video/article/album recommendations to kill time? 3. Did you see anything interesting on your commute today?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 60},
-  snack: {
-    name: "🍩Snack time🍪", 
-    description: "Grabbing snacks? Share your experience with your partner!",
-    prompts: [
-      "Grabbing snacks? Do you have a go-to order or are you trying out something different today? Take a picture and share it with your partner!",
-      "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
-    ],
-    mood_prompts: "prompt",
-    followups: ["Here's some questions you can ask your partner!: 1. What's your favorite or go-to snack? 2. Are you revisiting this place or trying something new? 3. What else would you recommend?"], 
-    degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
-    delay: 120},
   weekend: {
     name: "🎬Weekend fun time🎮", 
     description: "Doing something fun on the weekend? Share your experience with your partner!",
@@ -106,7 +95,7 @@ const promptDict = {
       "It's the weekend! Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Doing something fun on the weekend? Share your moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. What other plans do you have this weekend or next weekend? 2. Are you revisiting this place? 3. What else would you recommend?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
@@ -117,7 +106,7 @@ const promptDict = {
       "Enjoying small breaks from school work? Take a picture of the fun things you are doing and share your experience with your partner!",
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
-    mood_prompts: "prompt",
+    mood_prompts: "How are you feeling? Doing something fun to de-stress on a weekday? Share your moment and how you feel with your partner!",
     followups: ["Here's some questions you can ask your partner!: 1. Any other plans for today?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
