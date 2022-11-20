@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { ValidatedMethod } from "meteor/mdg:validated-method";
 import { SimpleSchema } from "meteor/aldeed:simple-schema";
+import {SyncedCron} from 'meteor/littledata:synced-cron';
 
 import { Experiences } from "./experiences.js";
 import { Schema } from "../../schema.js";
@@ -390,6 +391,27 @@ Meteor.methods({
       iid: sub.iid,
       needName: sub.needName,
     }).fetch();
+
+    SyncedCron.add({
+      name: '2MinAfterSubmission',
+      schedule: function(parser) {
+        const d = new Date();
+        console.log("current time: " + d);
+        d.setMinutes(d.getMinutes() + 2);
+        console.log("scheduled time: " + d);
+        // parser is a later.parse object
+        // return parser.text('after 2 min');
+        return parser.recur().on(d).fullDate();
+      },
+      job: function() {
+        console.log("2 minutes since submission");
+        // check whether there is matching submission after 72 hours
+        // if yes, do nothing
+        // if no, user sees -> we post the singular and the follow up questions, system -> (1) create a fake submission 
+
+      }
+    });
+    SyncedCron.start();
 
     let participantId = submissions.map((submission) => {
       return submission.uid;

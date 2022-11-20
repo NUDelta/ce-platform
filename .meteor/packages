@@ -58,3 +58,4 @@ react-meteor-data
 ostrio:flow-router-extra
 kadira:blaze-layout
 useraccounts:flow-routing-extra
+littledata:synced-cron
