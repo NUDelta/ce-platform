@@ -47,7 +47,7 @@ export const onLocationUpdate = (uid, location, callback) => {
 
   //TODO: "activity" in location is throwing error
   // obtain activity info
-  // let not_traveling_on_bicycle_or_vehicle;
+  let not_traveling_on_bicycle_or_vehicle = true;
   // if ("activity" in location) {
   //   not_traveling_on_bicycle_or_vehicle = !(
   //     location.activity.type === "in_vehicle" ||
