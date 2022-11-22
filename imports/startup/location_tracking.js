@@ -13,6 +13,7 @@ if (Meteor.isCordova) {
   //     bgGeo.start();
   //   }
   // };
+  //
 
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin
