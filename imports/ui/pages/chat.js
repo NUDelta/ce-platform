@@ -48,7 +48,6 @@ export const scrollToBottomAbs = function(container){
 
 //find their partner given the uid
 export const findPartner = function(uid) {
-  console.log(`my uid: ${uid}`);
   //find their partner (look for another user with "pairX" in staticAffordances)
   let aff = Meteor.user().profile.staticAffordances;
   // console.log("affordance: " + aff)
@@ -59,7 +58,6 @@ export const findPartner = function(uid) {
     && (pair in u.profile.staticAffordances)
   )
   partner = partner.map(u => u._id);
-  console.log(`partner: ${partner}`);
   return partner; 
 }
 
@@ -106,6 +104,6 @@ Template.chat.helpers({
     });
 
     //send notification to the recipient for every message
-    Meteor.call('sendNotification', otherStranger, `${currrentUsername}: ${data.message}`, ' ', '/chat');
+    Meteor.call('sendNotification', otherStranger, "Cerebro", `${currrentUsername}: ${data.message}`, '/chat');
   }
 });

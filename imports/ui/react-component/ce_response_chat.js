@@ -30,7 +30,6 @@ export const CEResponseChat = ({ expInChat }) => {
     marginBottom: "4px",
     maxWidth: "60%"
   }
-  console.log(expInChat);
 
   return (
     <div style={{

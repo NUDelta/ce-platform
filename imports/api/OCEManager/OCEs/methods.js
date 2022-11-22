@@ -361,7 +361,7 @@ Meteor.methods({
     
     postExpInChat("", participants, expInChat);
     sendSystemMessage(systemMsg, participants, null);
-    notify(participants, sub.iid, notifMsg, "", route);
+    notify(participants, sub.iid, "Cerebro", notifMsg, route);
 
     //respawn the new experience
     let contributionTypes = Incidents.findOne({
@@ -434,7 +434,7 @@ Meteor.methods({
 
     sendSystemMessage(systemMsg, partner, "/chat");
     sendSystemMessage(confirmationMsg, participantId[0], null);
-    Meteor.call("sendNotification", partner, notifMsg, "/chat");
+    Meteor.call("sendNotification", partner, "Cerebro", notifMsg);
   },
   selfIntroCompleteCallback(sub, setParticipatedKey, systemMsg, notifMsg) {
     let submissions = Submissions.find({
@@ -474,7 +474,7 @@ Meteor.methods({
 
     sendSystemMessage(systemMsg, participants, null);
     postExpInChat("", participants, expInChat);
-    notify(participants, sub.iid, notifMsg, "", route);
+    notify(participants, sub.iid, "Cerebro", notifMsg, route);
   },
 });
 
