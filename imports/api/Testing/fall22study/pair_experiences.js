@@ -3,7 +3,7 @@ import { addContribution, changeExperienceToPass, createExperience } from '../..
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
-const PAIR_COUNT = 3;
+const PAIR_COUNT = 5;
 
 const promptDict = {
   library: {

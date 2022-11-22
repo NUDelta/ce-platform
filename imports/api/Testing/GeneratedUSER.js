@@ -1,1 +1,60 @@
-export let USERS = {"user1": {"username": "user1", "email": "User1@email.com", "password": "password", "profile": {"firstName": "User1", "lastName": "User1", "staticAffordances": {"pair1": true}}}, "user2": {"username": "user2", "email": "User2@email.com", "password": "password", "profile": {"firstName": "User2", "lastName": "User2", "staticAffordances": {"pair1": true}}}, "user3": {"username": "user3", "email": "User3@email.com", "password": "password", "profile": {"firstName": "User3", "lastName": "User3", "staticAffordances": {"pair2": true}}}, "user4": {"username": "user4", "email": "User4@email.com", "password": "password", "profile": {"firstName": "User4", "lastName": "User4", "staticAffordances": {"pair2": true}}}, "jack": {"username": "jack", "email": "Jack@email.com", "password": "password", "profile": {"firstName": "Jack", "lastName": "Moses", "staticAffordances": {"pair3": true}}}, "katie": {"username": "katie", "email": "Katie@email.com", "password": "password", "profile": {"firstName": "Katie", "lastName": "Mumford", "staticAffordances": {"pair3": true}}}, "lauren": {"username": "lauren", "email": "Lauren@email.com", "password": "password", "profile": {"firstName": "Lauren", "lastName": "Schlageter", "staticAffordances": {"pair4": true}}}, "liam": {"username": "liam", "email": "Liam@email.com", "password": "password", "profile": {"firstName": "Liam", "lastName": "Hubbard", "staticAffordances": {"pair4": true}}}, "ian": {"username": "ian", "email": "Ian@email.com", "password": "password", "profile": {"firstName": "Ian", "lastName": "Lei", "staticAffordances": {"pair5": true}}}, "lena": {"username": "lena", "email": "Lena@email.com", "password": "password", "profile": {"firstName": "Lena", "lastName": "Huang", "staticAffordances": {"pair5": true}}}, "shreya": {"username": "shreya", "email": "Shreya@email.com", "password": "password", "profile": {"firstName": "Shreya", "lastName": "Pugalia", "staticAffordances": {"pair6": true}}}, "maria": {"username": "maria", "email": "Maria@email.com", "password": "password", "profile": {"firstName": "Maria", "lastName": "Heim", "staticAffordances": {"pair6": true}}}, "kate": {"username": "kate", "email": "Kate@email.com", "password": "password", "profile": {"firstName": "Kate", "lastName": "Lee", "staticAffordances": {"pair7": true}}}, "tara": {"username": "tara", "email": "Tara@email.com", "password": "password", "profile": {"firstName": "Tara", "lastName": "King", "staticAffordances": {"pair7": true}}}, "yvan": {"username": "yvan", "email": "Yvan@email.com", "password": "password", "profile": {"firstName": "Yvan", "lastName": "Chu", "staticAffordances": {"pair8": true}}}, "amy": {"username": "amy", "email": "Amy@email.com", "password": "password", "profile": {"firstName": "Amy", "lastName": "Chen", "staticAffordances": {"pair8": true}}}, "stella": {"username": "stella", "email": "Stella@email.com", "password": "password", "profile": {"firstName": "Stella", "lastName": "Xiao", "staticAffordances": {"pair9": true}}}, "victor": {"username": "victor", "email": "Victor@email.com", "password": "password", "profile": {"firstName": "Victor", "lastName": "Chen", "staticAffordances": {"pair9": true}}}, "judy": {"username": "judy", "email": "Judy@email.com", "password": "password", "profile": {"firstName": "Judy", "lastName": "Wu", "staticAffordances": {"pair10": true}}}, "hilda": {"username": "hilda", "email": "Hilda@email.com", "password": "password", "profile": {"firstName": "Hilda", "lastName": "Hsu", "staticAffordances": {"pair10": true}}}, "wanru": {"username": "wanru", "email": "Wanru@email.com", "password": "password", "profile": {"firstName": "Wanru", "lastName": "Liu", "staticAffordances": {"pair11": true}}}, "melody": {"username": "melody", "email": "Melody@email.com", "password": "password", "profile": {"firstName": "Melody", "lastName": "Chuang", "staticAffordances": {"pair11": true}}}, "cindy": {"username": "cindy", "email": "Cindy@email.com", "password": "password", "profile": {"firstName": "Cindy", "lastName": "Hu", "staticAffordances": {"pair12": true}}}, "macie": {"username": "macie", "email": "Macie@email.com", "password": "password", "profile": {"firstName": "Macie", "lastName": "Liu", "staticAffordances": {"pair12": true}}}}
+export let USERS = {
+    "user4": {
+        "username": "user4", 
+        "profile": {
+            "lastName": "user4", 
+            "firstName": "user4", 
+            "staticAffordances": {"pair3": true}
+        }, 
+        "password": "password", 
+        "email": "user4@email.com"}, 
+     "user2": {
+        "username": "user2", 
+        "profile": {
+            "lastName": "user2", 
+            "firstName": "user2", 
+            "staticAffordances": {
+                "pair2": true
+            }
+        }, 
+        "password": "password", 
+        "email": "user2@email.com"}, 
+    "user3": {
+        "username": "user3", 
+        "profile": {
+            "lastName": "user3", 
+            "firstName": "user3", 
+            "staticAffordances": {
+                "pair3": true
+            }
+        }, 
+        "password": "password", 
+        "email": "user3@email.com"
+    }, 
+    "user1": {
+        "username": "user1", 
+        "profile": {
+            "lastName": "user1", 
+            "firstName": "user1", 
+            "staticAffordances": {
+                "pair2": true
+            }
+        }, 
+        "password": "password", 
+        "email": "user1@email.com"
+    }, 
+    "rawan": {
+        "username": "rawan", 
+        "profile": {
+            "lastName": "Mohamed", 
+            "firstName": "Rawan", 
+            "staticAffordances": {
+                "pair5": true
+            }
+        }, 
+        "password": "password", 
+        "email": "Rawan@email.com"
+    }, 
+    "victoria": {
+        "username": "victoria", 
+        "profile": {"lastName": "Tran", "firstName": "Victoria", "staticAffordances": {"pair1": true}}, "password": "password", "email": "Victoria@email.com"}, "amy": {"username": "amy", "profile": {"lastName": "Guo", "firstName": "Amy", "staticAffordances": {"pair5": true}}, "password": "password", "email": "Amy@email.com"}, "cindy": {"username": "cindy", "profile": {"lastName": "Hu", "firstName": "Cindy", "staticAffordances": {"pair1": true}}, "password": "password", "email": "Cindy@email.com"}, "alex": {"username": "alex", "profile": {"lastName": "Fang", "firstName": "Alex", "staticAffordances": {"pair4": true}}, "password": "password", "email": "Alex@email.com"}, "chase": {"username": "chase", "profile": {"lastName": "Duvall", "firstName": "Chase", "staticAffordances": {"pair4": true}}, "password": "password", "email": "Chase@email.com"}}
