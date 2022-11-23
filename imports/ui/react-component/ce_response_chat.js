@@ -31,6 +31,7 @@ export const CEResponseChat = ({ expInChat }) => {
     maxWidth: "60%"
   }
   console.log(expInChat);
+  expInChat = expInChat.filter(sub => sub.text !== "FAKESUBMISSION");
 
   return (
     <div style={{
