@@ -3,16 +3,17 @@ import { serverLog } from '../api/logs.js';
 import { Tracker } from 'meteor/tracker';
 
 if (Meteor.isCordova) {
-  export const toggleLocationTracking = () => {
-    serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
+  // export const toggleLocationTracking = () => {
+  //   serverLog.call({message: "toggling location tracking " + Meteor.userId() + bgGeo});
 
-    let bgGeo = window.BackgroundGeolocation;
-    if(bgGeo && Meteor.isCordova) {
-      serverLog.call({message: "on cordova so toggle time" });
-      bgGeo.stop();
-      bgGeo.start();
-    }
-  };
+  //   let bgGeo = window.BackgroundGeolocation;
+  //   if(bgGeo && Meteor.isCordova) {
+  //     serverLog.call({message: "on cordova so toggle time" });
+  //     bgGeo.stop();
+  //     bgGeo.start();
+  //   }
+  // };
+  //
 
   Meteor.startup(() => {
     // initialize BackgroundGeolocation plugin

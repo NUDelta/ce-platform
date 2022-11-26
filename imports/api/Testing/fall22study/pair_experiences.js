@@ -3,7 +3,7 @@ import { addContribution, changeExperienceToPass, createExperience } from '../..
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
 import {DETECTORS} from "../DETECTORS";
 
-const PAIR_COUNT = 3;
+const PAIR_COUNT = 5;
 
 const promptDict = {
   library: {
@@ -137,7 +137,7 @@ export const createExp = function (pairNum, exp) {
   }
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 
-      let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Participate to see their results when you get a chance'; 
+      let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Don\'t leave them waiting! Participate to see their results when you get a chance'; 
       let confirmationMsg = "Your submission for TOSUBWITHNAME has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
       let waitOnPartnerSubmissionKey = 'TOSUBWITHSUBMISSIONKEY';
       Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);
@@ -199,7 +199,7 @@ export const createSelfIntro = function (pairNum, exp) {
         toPass : {
           situationDescription : '💬Self Introduction💬',
           promptCount: 1,
-          instruction : ["Say hello to your partner for the next 2 weeks! \
+          instruction : ["Say hello to your partner! \
           Share a picture of yourself or something that's representative of you, and tell your partner about yourself!"]
         },
         numberNeeded : 2, notificationDelay : 1, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false

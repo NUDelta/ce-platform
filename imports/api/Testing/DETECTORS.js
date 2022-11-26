@@ -1,4 +1,4 @@
-const PAIR_COUNT = 3;
+const PAIR_COUNT = 5;
 
 const createDetectors = function (pairNum) {
   return {

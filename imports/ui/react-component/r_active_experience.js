@@ -9,7 +9,7 @@ export const RActiveExperience = ({allExperience}) => {
         let waitingSubmission = mapExperience(allExperience[0], true)
         waitingSubmissionBlock = 
         <div>
-            <h4>Here's what your partner already submitted!</h4>
+            <h3><b>Here's what your partner already submitted!</b></h3>
             <h5>Don't leave your partner hanging! Won't be at the location in the next few days? Share a picture from your photo library instead!</h5>
             {waitingSubmission} 
         </div>

@@ -1,5 +1,5 @@
 import {LOCATIONS} from "./LOCATIONS";
-import {USERS} from "./USERS";
+import {USERS} from "./GeneratedUSER";
 import {DETECTORS} from "./DETECTORS";
 
 // import CHI20_DTR_EXPERIENCES from "./summer19study/dtr_experiences";

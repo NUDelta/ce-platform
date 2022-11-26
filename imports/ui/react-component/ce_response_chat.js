@@ -30,7 +30,6 @@ export const CEResponseChat = ({ expInChat }) => {
     marginBottom: "4px",
     maxWidth: "60%"
   }
-  console.log(expInChat);
   expInChat = expInChat.filter(sub => sub.text !== "FAKESUBMISSION");
 
   return (

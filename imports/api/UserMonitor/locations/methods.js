@@ -45,19 +45,20 @@ export const onLocationUpdate = (uid, location, callback) => {
   // clear users current availabilities
   clearAvailabilitiesForUser(uid);
 
+  //TODO: "activity" in location is throwing error
   // obtain activity info
-  let not_traveling_on_bicycle_or_vehicle;
-  if ("activity" in location) {
-    not_traveling_on_bicycle_or_vehicle = !(
-      location.activity.type === "in_vehicle" ||
-      location.activity.type === "on_bicycle"
-    );
-  } else {
-    serverLog.call({
-      message: `no activity data for ${uid}. defaulting to a value that allows location update`,
-    });
-    not_traveling_on_bicycle_or_vehicle = true;
-  }
+  let not_traveling_on_bicycle_or_vehicle = true;
+  // if ("activity" in location) {
+  //   not_traveling_on_bicycle_or_vehicle = !(
+  //     location.activity.type === "in_vehicle" ||
+  //     location.activity.type === "on_bicycle"
+  //   );
+  // } else {
+  //   serverLog.call({
+  //     message: `no activity data for ${uid}. defaulting to a value that allows location update`,
+  //   });
+  //   not_traveling_on_bicycle_or_vehicle = true;
+  // }
 
   // attempt to find a user with the given uid
   let user = Meteor.users.findOne({ _id: uid });

@@ -375,11 +375,11 @@ Meteor.methods({
       let hasSubNotifMsg = "It’s been 48 hours, so your submission for" + expName + " has been posted!";
       let hasSubmissionUID = participants.filter(id => id !== missingSubmissionUID);
       sendSystemMessage(systemMsg, participants, null);
-      notify([hasSubmissionUID], sub.iid, missingSubNotifMsg, "", route);
-      notify(hasSubmissionUID, sub.iid, hasSubNotifMsg, "", route);
+      notify([hasSubmissionUID], sub.iid, "Cerebro", missingSubNotifMsg, route);
+      notify(hasSubmissionUID, sub.iid, "Cerebro", hasSubNotifMsg, route);
     } else {
       sendSystemMessage(systemMsg, participants, null);
-      notify(participants, sub.iid, notifMsg, "", route);
+      notify(participants, sub.iid, "Cerebro", notifMsg, route);
     }
     
     //respawn the new experience
@@ -453,10 +453,10 @@ Meteor.methods({
 
     sendSystemMessage(systemMsg, partner, "/chat");
     sendSystemMessage(confirmationMsg, participantId[0], null);
-    Meteor.call("sendNotification", partner, notifMsg, "/chat");
+    Meteor.call("sendNotification", partner, "Cerebro", notifMsg);
 
     SyncedCron.add({
-      name: '2MinAfterSubmission',
+      name: '2DayAfterSubmission for need: ' + sub.needName,
       schedule: function(parser) {
         const d = new Date();
         d.setDate(d.getDate() + 2);
@@ -530,7 +530,7 @@ Meteor.methods({
 
     sendSystemMessage(systemMsg, participants, null);
     postExpInChat("", participants, expInChat);
-    notify(participants, sub.iid, notifMsg, "", route);
+    notify(participants, sub.iid, "Cerebro", notifMsg, route);
   },
 });
 
