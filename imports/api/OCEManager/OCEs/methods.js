@@ -317,7 +317,6 @@ Meteor.methods({
     sub,
     setParticipatedKey,
     systemMsg,
-    followupMsg,
     notifMsg,
     waitOnPartnerSubmissionKey,
     expName
@@ -370,15 +369,16 @@ Meteor.methods({
     postExpInChat("", participants, expInChat);
 
     if(missingSubmissionUID) {
+      let toReplace = "Woo-hoo! You two have completed " + expName + "! ";
+      systemMsg = systemMsg.replace(toReplace, "");
       let missingSubNotifMsg = "It’s been 48 hours, so your partner’s submission for " + expName + " has been posted! Feel free to follow-up with them.";
       let hasSubNotifMsg = "It’s been 48 hours, so your submission for" + expName + " has been posted!";
       let hasSubmissionUID = participants.filter(id => id !== missingSubmissionUID);
-      sendSystemMessage(followupMsg, participants, null);
+      sendSystemMessage(systemMsg, participants, null);
       notify([hasSubmissionUID], sub.iid, "Cerebro", missingSubNotifMsg, route);
       notify(hasSubmissionUID, sub.iid, "Cerebro", hasSubNotifMsg, route);
     } else {
       sendSystemMessage(systemMsg, participants, null);
-      sendSystemMessage(followupMsg, participants, null);
       notify(participants, sub.iid, "Cerebro", notifMsg, route);
     }
     
