@@ -15,7 +15,7 @@ const promptDict = {
       "How do you stay productive or motivated? Share a study tip with your partner!"
     ], 
     mood_prompts: "How are you feeling? Feeling motivated or stressed working at the library? Share your working moment on and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. What's keeping you going/focused? 2. What's your favorite study spot? 3. How do you stay productive? Any tips?"],
+    followups: ["Here's some questions you can ask your partner: 1. What's keeping you going/focused? 2. What's your favorite study spot? 3. How do you stay productive? Any tips?"],
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 600},
   restaurant: {
@@ -27,7 +27,7 @@ const promptDict = {
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ],
     mood_prompts: "How are you feeling? Enjoying a nice meal? Share your dining moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. Is this your first time dining or are you revisiting? 2. What brings you here today? 3. What's your favorite thing about this restaurant?"],
+    followups: ["Here's some questions you can ask your partner: 1. Is this your first time dining or are you revisiting? 2. What brings you here today? 3. What's your favorite thing about this restaurant?"],
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"], 
     delay: 360},
   cafe: {
@@ -39,7 +39,7 @@ const promptDict = {
       "First time visiting? What brought you here today? Take a picture and share it with your partner!"
     ], 
     mood_prompts: "How are you feeling? Chilling at the cafe or working on something exciting? Share your moment at the cafe and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. Are you stopping by to grab a coffee or staying at the cafe? 2. Are you revisiting? What's your favorite thing about this cafe? 3. Is this your first time visiting? What brought you here today?"],
+    followups: ["Here's some questions you can ask your partner: 1. Are you stopping by to grab a coffee or staying at the cafe? 2. Are you revisiting? What's your favorite thing about this cafe? 3. Is this your first time visiting? What brought you here today?"],
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
   grocery: {
@@ -51,7 +51,7 @@ const promptDict = {
       "What's one item you highly recommend from the store? Share it with your partner for them to try out next time!"
     ],
     mood_prompts: "How are you feeling? Excited about what you are getting or restocking your groceries like usual? Share your grocery shopping moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. What items are in your haul today? What are you most excited to use? 2. What's a grocery item you always get? 3. What's an item you'd recommend to me?"], 
+    followups: ["Here's some questions you can ask your partner: 1. What items are in your haul today? What are you most excited to use? 2. What's a grocery item you always get? 3. What's an item you'd recommend to me?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 180},
   outdoor: {
@@ -62,7 +62,7 @@ const promptDict = {
       "Revisiting somewhere familiar? Take a picture of what makes you come back again and share it with your partner!"
     ],
     mood_prompts: "How are you feeling? Feeling relaxed outdoor? Share your outdoor moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. Do you prefer the outdoors or the indoors more? 2. What's the most interesting thing in nature that you see around you? 3. Are you revisiting this spot or is it your first time?"], 
+    followups: ["Here's some questions you can ask your partner: 1. Do you prefer the outdoors or the indoors more? 2. What's the most interesting thing in nature that you see around you? 3. Are you revisiting this spot or is it your first time?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 180},
   exercise: {
@@ -73,7 +73,7 @@ const promptDict = {
       "Share a tip that helps you stay healthy with your partner for them to try out!"
     ],
     mood_prompts: "How are you feeling? Exhausted or energized? Share your exercising moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. What did your routine today consist of? 2. What's your motivation to work out? 3. Any tips on staying healthy?"], 
+    followups: ["Here's some questions you can ask your partner: 1. What did your routine today consist of? 2. What's your motivation to work out? 3. Any tips on staying healthy?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 180},
   commute: {
@@ -85,7 +85,7 @@ const promptDict = {
       "Recommend a podcast/video/article/music album to your partner for them to check out!"
     ],
     mood_prompts: "How are you feeling? Heading somewhere different or somewhere usual? Share your commuting moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. What do you usually do during your commute time? 2. Do you have any podcast/video/article/album recommendations to kill time? 3. Did you see anything interesting on your commute today?"], 
+    followups: ["Here's some questions you can ask your partner: 1. What do you usually do during your commute time? 2. Do you have any podcast/video/article/album recommendations to kill time? 3. Did you see anything interesting on your commute today?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 60},
   weekend: {
@@ -96,7 +96,7 @@ const promptDict = {
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
     mood_prompts: "How are you feeling? Doing something fun on the weekend? Share your moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. What other plans do you have this weekend or next weekend? 2. Are you revisiting this place? 3. What else would you recommend?"], 
+    followups: ["Here's some questions you can ask your partner: 1. What other plans do you have this weekend or next weekend? 2. Are you revisiting this place? 3. What else would you recommend?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
   weekday: {
@@ -107,7 +107,7 @@ const promptDict = {
       "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
     ],
     mood_prompts: "How are you feeling? Doing something fun to de-stress on a weekday? Share your moment and how you feel with your partner!",
-    followups: ["Here's some questions you can ask your partner!: 1. Any other plans for today?"], 
+    followups: ["Here's some questions you can ask your partner: 1. Any other plans for today?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
 }
@@ -129,15 +129,16 @@ const createCallback = (completeCallback, inprogressCallback, name, key, followu
 export const createExp = function (pairNum, exp) {
   const completeCallback = function (sub) {
       let userUpdateKey = "participatedInTOSUBWITHKEY";
-      let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME! TOSUBWITHFOLLOWUPS";
+      let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME!";
+      let followupMsg = "TOSUBWITHFOLLOWUPS";
       let notifMsg = "See images from you and your partner\'s TOSUBWITHNAME";
       let waitOnPartnerSubmissionKey = "TOSUBWITHSUBMISSIONKEY";
       let expName = "TOSUBWITHNAME";
-      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
+      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, followupMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
   }
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 
-      let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Don\'t leave them waiting! Participate to see their results when you get a chance'; 
+      let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Share your picture within next 48 hours to complete the experience together!'; 
       let confirmationMsg = "Your submission for TOSUBWITHNAME has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
       let waitOnPartnerSubmissionKey = 'TOSUBWITHSUBMISSIONKEY';
       Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);

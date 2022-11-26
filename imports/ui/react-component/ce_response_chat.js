@@ -1,6 +1,7 @@
 
 import React from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import Zoomable from "react-instagram-zoom";
 
 
 //TODO: pass in the prompt itself
@@ -52,11 +53,12 @@ export const CEResponseChat = ({ expInChat }) => {
           <span>{sentTime}</span>
         </div>
         <div>
-        <TransformWrapper>
+        {/* <TransformWrapper>
           <TransformComponent>
                <img src={exp.image} alt="submission image"></img>
           </TransformComponent>
-        </TransformWrapper>
+        </TransformWrapper> */}
+        <Zoomable><img src={exp.image} alt="submission image"></img></Zoomable>
         </div>
         <div style={{fontSize: "12px"}}>
           <span>

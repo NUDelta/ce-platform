@@ -5,7 +5,7 @@ function isNumeric(char) {
   }
 
 export const Followups = ({followup}) => {
-  if (followup.includes("Woo-hoo!")) {
+  if (followup.includes("questions you can ask")) {
     let result = [];
     let question = "";
     for (let i = 0; i < followup.length; i++) {
@@ -18,7 +18,7 @@ export const Followups = ({followup}) => {
     }
     result.push(question);
     return (
-      <div>
+      <div style={{fontSize: "12px", color: "#858585"}}>
         {result.map((item) => {
           return <div>{item}</div>
         })}
