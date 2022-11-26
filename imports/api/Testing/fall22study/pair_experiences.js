@@ -132,7 +132,8 @@ export const createExp = function (pairNum, exp) {
       let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME! TOSUBWITHFOLLOWUPS";
       let notifMsg = "See images from you and your partner\'s TOSUBWITHNAME";
       let waitOnPartnerSubmissionKey = "TOSUBWITHSUBMISSIONKEY";
-      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey);
+      let expName = "TOSUBWITHNAME";
+      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
   }
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 

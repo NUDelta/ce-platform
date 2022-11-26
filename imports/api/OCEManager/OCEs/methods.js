@@ -318,12 +318,19 @@ Meteor.methods({
     setParticipatedKey,
     systemMsg,
     notifMsg,
-    waitOnPartnerSubmissionKey
+    waitOnPartnerSubmissionKey,
+    expName
   ) {
     let submissions = Submissions.find({
       iid: sub.iid,
       needName: sub.needName,
     }).fetch();
+
+    let missingSubmissionUID = null;
+    let fakeSubmission = submissions.filter(sub => sub.content.sentence === 'FAKESUBMISSION');
+    if (fakeSubmission.length === 1) {
+      missingSubmissionUID = fakeSubmission[0].uid;
+    }
 
     let expInChat = submissions.map((submission) => {
       return {
@@ -359,11 +366,22 @@ Meteor.methods({
     });
 
     let route = `/chat`;
-    
     postExpInChat("", participants, expInChat);
-    sendSystemMessage(systemMsg, participants, null);
-    notify(participants, sub.iid, notifMsg, "", route);
 
+    if(missingSubmissionUID) {
+      let toReplace = "Woo-hoo! You two have completed " + expName + "! ";
+      systemMsg = systemMsg.replace(toReplace, "");
+      let missingSubNotifMsg = "It’s been 48 hours, so your partner’s submission for " + expName + " has been posted! Feel free to follow-up with them.";
+      let hasSubNotifMsg = "It’s been 48 hours, so your submission for" + expName + " has been posted!";
+      let hasSubmissionUID = participants.filter(id => id !== missingSubmissionUID);
+      sendSystemMessage(systemMsg, participants, null);
+      notify([hasSubmissionUID], sub.iid, missingSubNotifMsg, "", route);
+      notify(hasSubmissionUID, sub.iid, hasSubNotifMsg, "", route);
+    } else {
+      sendSystemMessage(systemMsg, participants, null);
+      notify(participants, sub.iid, notifMsg, "", route);
+    }
+    
     //respawn the new experience
     let contributionTypes = Incidents.findOne({
       _id: sub.iid,
@@ -441,60 +459,37 @@ Meteor.methods({
       name: '2MinAfterSubmission',
       schedule: function(parser) {
         const d = new Date();
-        console.log("current time: " + d);
-        d.setMinutes(d.getMinutes() + 2);
-        console.log("scheduled time: " + d);
+        d.setDate(d.getDate() + 2);
         // parser is a later.parse object
-        // return parser.text('after 2 min');
         return parser.recur().on(d).fullDate();
       },
       job: function() {
-        console.log("2 minutes since submission");
         // check whether there is matching submission after 72 hours
-        // let incompleteSub = Submissions.find({
-        //   iid: sub.iid,
-        //   needName: sub.needName,
-        //   uid: null
-        // }).fetch();
-        // // if yes, do nothing
-        // if (incompleteSub.length === 0) {
-        //   //ignore this
-        // } else {
-        //   // if no, user sees -> we post the singular and the follow up questions, system -> (1) create a fake submission (2) remove the extra empty one
-        //   Submission.updateOne(
-        //     {id: incompleteSub[0].id},
-        //     {$set: 
-        //       {
-        //         "uid": "FAKESUBMISSION",
-        //         "content.sentence": "FAKESUBMISSION"
-        //       }
-        //     }
-        //   )
-        // }
+        let incompleteSub = Submissions.find({
+          iid: sub.iid,
+          needName: sub.needName,
+          uid: null
+        }).fetch();
+        // if yes, do nothing
+        if (incompleteSub.length === 0) {
+          //ignore this
+        } else {
+          // if no, user sees -> we post the singular and the follow up questions, system -> (1) create a fake submission (2) remove the extra empty one
+          Submissions.update(
+            {
+              _id: incompleteSub[0]._id
+            },
+            {
+              $set: {
+                "uid": partner[0],
+                "content.sentence": "FAKESUBMISSION"
+              }
+            }
+          )
+        }
       }
     });
     SyncedCron.start();
-
-    let incompleteSub = Submissions.find({
-      iid: sub.iid,
-      needName: sub.needName,
-      uid: null
-    }).fetch();
-    // if yes, do nothing
-    if (incompleteSub.length === 0) {
-      //ignore this
-    } else {
-      // if no, user sees -> we post the singular and the follow up questions, system -> (1) create a fake submission (2) remove the extra empty one
-      Submissions.update(
-        {id: incompleteSub[0].id},
-        {$set: 
-          {
-            "uid": partner[0],
-            "content.sentence": "FAKESUBMISSION"
-          }
-        }
-      )
-    }
     
   },
   selfIntroCompleteCallback(sub, setParticipatedKey, systemMsg, notifMsg) {
