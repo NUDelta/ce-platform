@@ -489,7 +489,6 @@ Meteor.methods({
         }
       }
     });
-    SyncedCron.start();
     
   },
   selfIntroCompleteCallback(sub, setParticipatedKey, systemMsg, notifMsg) {

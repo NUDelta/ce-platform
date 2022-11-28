@@ -80,6 +80,9 @@ Meteor.methods({
   createAdditionalTestExperiences() {
     createAdditionalTestExperiences();
   },
+  startSyncedCron(){
+    SyncedCron.start();
+  }
 });
 
 function clearDatabase() {
