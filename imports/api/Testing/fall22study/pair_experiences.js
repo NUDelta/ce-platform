@@ -1,7 +1,7 @@
 import {getDetectorUniqueKey, addStaticAffordanceToNeeds} from "../oce_api_helpers";
 import { addContribution, changeExperienceToPass, createExperience } from '../../OCEManager/OCEs/methods';
 import { sendSystemMessage, postExpInChat, expCompleteCallback, expInProgressCallback } from '../../Messages/methods';
-import {DETECTORS} from "../DETECTORS";
+import {DETECTORS, DETECTORS_EXTRA} from "../DETECTORS";
 
 const PAIR_COUNT = 5;
 
@@ -129,12 +129,11 @@ const createCallback = (completeCallback, inprogressCallback, name, key, followu
 export const createExp = function (pairNum, exp) {
   const completeCallback = function (sub) {
       let userUpdateKey = "participatedInTOSUBWITHKEY";
-      let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME!";
-      let followupMsg = "TOSUBWITHFOLLOWUPS";
+      let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME! TOSUBWITHFOLLOWUPS";
       let notifMsg = "See images from you and your partner\'s TOSUBWITHNAME";
       let waitOnPartnerSubmissionKey = "TOSUBWITHSUBMISSIONKEY";
       let expName = "TOSUBWITHNAME";
-      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, followupMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
+      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
   }
   const inprogressCallback = function (sub) {
       let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 
@@ -215,6 +214,94 @@ export const createSelfIntro = function (pairNum, exp) {
   return experience;
 }
 
+export const createExpExtra = function (pairNum, exp) {
+  const completeCallback = function (sub) {
+      let userUpdateKey = "participatedInTOSUBWITHKEY";
+      let systemMsg = "Woo-hoo! You two have completed TOSUBWITHNAME! TOSUBWITHFOLLOWUPS";
+      let notifMsg = "See images from you and your partner\'s TOSUBWITHNAME";
+      let waitOnPartnerSubmissionKey = "TOSUBWITHSUBMISSIONKEY";
+      let expName = "TOSUBWITHNAME";
+      Meteor.call("expCompleteCallback", sub, userUpdateKey, systemMsg, notifMsg, waitOnPartnerSubmissionKey, expName);
+  }
+  const inprogressCallback = function (sub) {
+      let systemMsg = `Your partner just completed TOSUBWITHNAME! `+ 'Participate to see their results when you get a chance'; 
+      let notifMsg = `Hey! Your partner just completed TOSUBWITHNAME! ` + 'Share your picture within next 48 hours to complete the experience together!'; 
+      let confirmationMsg = "Your submission for TOSUBWITHNAME has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
+      let waitOnPartnerSubmissionKey = 'TOSUBWITHSUBMISSIONKEY';
+      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);
+  }
+
+  let callback = createCallback(completeCallback.toString(), inprogressCallback.toString(), promptDict[exp].name, exp, promptDict[exp].followups[0]);
+  // let callback = createCallback(completeCallback.toString(), inprogressCallback.toString(), promptDict[exp].name, exp);
+
+  let experience = {
+    name: promptDict[exp].name, participateTemplate: 'groupBumped', resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `${exp}${pairNum} 1`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS_EXTRA[pairNum][exp]),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : promptDict[exp].name,
+          instruction : promptDict[exp].mood_prompts,
+          degraded : promptDict[exp].degradedprompt
+        },
+        numberNeeded : 2, notificationDelay : promptDict[exp].delay, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false
+      }
+    ],
+    description: promptDict[exp].description, notificationText: promptDict[exp].description,
+    callbacks: [{trigger: `(cb.specificNeedFinish('${exp}${pairNum}'))`, function: callback[0]}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
+                {trigger: `!(cb.specificNeedFinish('${exp}${pairNum}'))`, function: callback[1]}],
+    allowRepeatContributions: true, //try set this to true
+  };
+
+  return experience;
+}
+
+export const createSelfIntroExtra = function (pairNum, exp) {
+  const completeCallback = function (sub) {
+      let userUpdateKey = 'participatedInSelfIntro';
+      let systemMsg = 'Woo-hoo! You two have completed Self Introduction!';
+      let notifMsg = 'See images from you and your partner\'s Self Introduction';
+      Meteor.call('selfIntroCompleteCallback', sub, userUpdateKey, systemMsg, notifMsg);
+  }
+  const inprogressCallback = function (sub) {
+      let systemMsg = `Your partner just completed Self Introduction! `+ 'Participate to see their results when you get a chance'; 
+      let notifMsg = `Hey! Your partner just completed Self Introduction! ` + 'Participate to see their results when you get a chance'; 
+      let confirmationMsg = "Your submission for Self Introduction has been recorded! Your partner hasn't submitted yet, but we'll notify you when they do!";
+      let waitOnPartnerSubmissionKey = 'selfintro';
+      Meteor.call('expInProgressCallback', sub, systemMsg, notifMsg, confirmationMsg, waitOnPartnerSubmissionKey);
+  }
+
+  let experience = {
+    name: '💬Self Introduction💬', participateTemplate: 'groupBumped', resultsTemplate: 'groupBumpedResults',
+    contributionTypes: [
+      {
+        needName : `${exp}${pairNum} 1`,
+        situation : {
+          detector : getDetectorUniqueKey(DETECTORS_EXTRA[pairNum][exp]),
+          number : 1 
+        },
+        toPass : {
+          situationDescription : '💬Self Introduction💬',
+          promptCount: 1,
+          instruction : ["Say hello to your partner! \
+          Share a picture of yourself or something that's representative of you, and tell your partner about yourself!"]
+        },
+        numberNeeded : 2, notificationDelay : 1, numberAllowedToParticipateAtSameTime: 2, allowRepeatContributions : false
+      }
+    ],
+    description: "Say hello to your new friend!", notificationText: "Say hello to your new friend!",
+    callbacks: [{trigger: `(cb.specificNeedFinish('${exp}${pairNum}'))`, function: completeCallback.toString()}, //completeCallback.toString().replace(/TOSUBWITHNAME/i, promptDict[exp].name)
+                {trigger: `!(cb.specificNeedFinish('${exp}${pairNum}'))`, function: inprogressCallback.toString()}],
+    allowRepeatContributions: false, //try set this to true
+  };
+
+  return experience;
+}
+
 
 
 // new experiences ///////////////////////////////////////////////////////
@@ -228,6 +315,15 @@ const createIndividualPairExperience = function(pairNum) {
   return exp;
 }
 
+const createIndividualPairExperienceExtra = function(pairNum) {
+  let exp = {};
+  exp['selfIntro'] = createSelfIntroExtra(pairNum, 'selfIntro');
+  for (const key in promptDict) {
+    exp[key] = createExpExtra(pairNum, key);
+  }
+  return exp;
+}
+
 const createAllPairExperience = function() {
   let pair_exp = {}
   for (let i = 1; i <= PAIR_COUNT; i++) {
@@ -237,7 +333,17 @@ const createAllPairExperience = function() {
   return pair_exp;
 }
 
-export default PAIR_EXPERIENCES = createAllPairExperience();
+const createAllPairExperienceExtra = function() {
+  let pair_exp = {}
+  for (let i = 6; i <= 10; i++) {
+    let key = `pair${i}`;
+    pair_exp[key] = createIndividualPairExperienceExtra(key);
+  }
+  return pair_exp;
+}
+
+export const PAIR_EXPERIENCES = createAllPairExperience();
+export const PAIR_EXPERIENCES_EXTRA = createAllPairExperienceExtra();
 
 
 //graveyard

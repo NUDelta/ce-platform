@@ -261,7 +261,17 @@ const createAllDectors = function() {
   return detectors
 }
 
+const createDetectorsExtra = function() {
+  let detectors = {};
+  for (let i = 6; i <= 10; i++) {
+    let key = `pair${i}`;
+    detectors[key] = createDetectors(key);
+  }
+  return detectors
+}
+
 export const DETECTORS = createAllDectors();
+export const DETECTORS_EXTRA = createDetectorsExtra();
 
 
   //  /////////////////////////////////////////////////////////

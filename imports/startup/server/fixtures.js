@@ -18,7 +18,7 @@ import {
 import { Images, Avatars } from "../../api/ImageUpload/images.js";
 import { log } from "../../api/logs.js";
 
-import { CONSTANTS } from "../../api/Testing/testingconstants";
+import { CONSTANTS, CONSTANTS_EXTRA } from "../../api/Testing/testingconstants";
 import {
   createIncidentFromExperience,
   startRunningIncident,
@@ -50,6 +50,9 @@ Meteor.startup(() => {
 Meteor.methods({
   createTestUsers() {
     createTestData();
+  },
+  createTestUsersExtra() {
+    createTestDataExtra();
   },
   freshDatabase() {
     clearDatabase();
@@ -133,6 +136,26 @@ function createTestExperiences() {
   }
 }
 
+function createTestExperiencesExtra() {
+  // add detectors
+  for (let i = 6; i <= 10; i++) {
+    let pairNum = "pair" + `${i}`;
+    Object.values(CONSTANTS_EXTRA.DETECTORS[pairNum]).forEach(function (value) {
+      Detectors.insert(value);
+    });
+  }
+  log.info(`Populated ${Detectors.find().count()} detectors`);
+  for (let i = 6; i <= 10; i++) {
+    let pairNum = "pair" + `${i}`;
+    Object.values(CONSTANTS_EXTRA.EXPERIENCES[pairNum]).forEach(function (value) {
+      Experiences.insert(value);
+      let incident = createIncidentFromExperience(value);
+      startRunningIncident(incident);
+      // log.info(`creating experiences for ${pairNum}`);
+    });
+  }
+}
+
 function createAdditionalTestExperiences() {
   // add detectors
   for (let i = 1; i <= PAIR_COUNT; i++) {
@@ -176,25 +199,6 @@ function createTestData() {
     }
   });
   log.info(`Populated ${Meteor.users.find().count()} accounts`);
-
-  // // add detectors
-  // for (let i = 1; i < 7; i++){
-  //   let pairNum = "pair" + `${i}`;
-  //   Object.values(CONSTANTS.DETECTORS[pairNum]).forEach(function (value) {
-  //     Detectors.insert(value);
-  //   });
-  // }
-  // // Object.values(CONSTANTS.DETECTORS).forEach(function (pair) {
-  // //   pair.forEach(function (value) {
-  // //     Detectors.insert(value);
-  // //   });
-  // // })
-  // log.info(`Populated ${ Detectors.find().count() } detectors`);
-
-  // Experiences.insert(CONSTANTS.EXPERIENCES.bumped);
-  // let incident = createIncidentFromExperience(CONSTANTS.EXPERIENCES.bumped);
-  // startRunningIncident(incident);
-
   // start experiences
   createTestExperiences();
   log.info(`Created ${Experiences.find().count()} experiences`);
@@ -213,11 +217,6 @@ function createTestData() {
     waitOnPartnerSubmission[key.toLowerCase()] = false;
     waitOnUserSubmission[key.toLowerCase()] = false;
   });
-
-
-  // const initialNotifications = Object.keys(CONSTANTS.EXPERIENCES).reduce((obj, key) => {
-  //   return {...obj, `${key}`: -1};
-  // }, {});
 
   Meteor.users.update(
     {
@@ -249,6 +248,69 @@ function createTestData() {
   log.debug(
     simulateLocations
   );
+}
+
+function createTestDataExtra(){
+
+  let usernames = [];
+
+  // add test users
+  Object.values(CONSTANTS_EXTRA.USERS).forEach(function (value) {
+    if (!Meteor.users.findOne({ username: value.username })) {
+      log.info(
+        `username: ${value.username} not found, creating new account...`
+      );
+      Accounts.createUser(value);
+      usernames.push(value.username)
+    }
+  });
+  log.info(`new usernames: ${usernames}`)
+  log.info(`Populated ${Meteor.users.find().count()} accounts`);
+  // start experiences
+  createTestExperiencesExtra();
+  log.info(`Created ${Experiences.find().count()} experiences`);
+
+  let initialNotifications = {};
+  let waitOnPartnerSubmission = {};
+  let waitOnUserSubmission = {};
+  const expKeys = Object.keys(CONSTANTS.DETECTORS["pair1"]);
+  expKeys.forEach((key) => {
+    initialNotifications[key.toLowerCase()] = -1;
+    waitOnPartnerSubmission[key.toLowerCase()] = false;
+    waitOnUserSubmission[key.toLowerCase()] = false;
+  });
+
+  Meteor.users.update(
+    {
+      username: { $in: usernames }
+    },
+    {
+      $set: {
+        "profile.experiences": [],
+        "profile.subscriptions": [],
+        "profile.lastParticipated": null,
+        "profile.lastNotified": initialNotifications,
+        "profile.waitOnPartnerSubmission": waitOnPartnerSubmission,
+        "profile.pastIncidents": [],
+        "profile.waitOnUserSubmission": waitOnUserSubmission,
+        // "profile.staticAffordances": {}
+      },
+    },
+    {
+      multi: true,
+    }
+  );
+
+  // let allUserId = Meteor.users.find().fetch().map((user) => user._id);
+  // let simulateLocations = "FOR LOCATION TESTING RUN >>>> python3 simulatelocations.py ";
+  // allUserId.forEach((uid) => {
+  //   simulateLocations += `${uid} `;
+  // })
+
+  // log.debug(
+  //   simulateLocations
+  // );
+
 }
 
 /* graveyard
