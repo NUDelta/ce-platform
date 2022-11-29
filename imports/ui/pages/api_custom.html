@@ -1059,6 +1059,8 @@
 </template>
 
 
+
+
 <template name="fakeParticipate">
   <head>
       <style>
@@ -1186,90 +1188,31 @@
       <!-- INSIDE EACH, I WILL HAVE A SHOW PREVIOUS? NEXT? AND DO THAT ACCORDINGLY. -->
 
 
-      {{#if (isCooking)}}
+      <script>
+          var dropDown = document.getElementById("dropDown");
+          myWrappers = [
+          document.getElementById("cookingText"),
+          document.getElementById("eatingText"),
+          document.getElementById("notCookingEating")
+          ];
+            function test() {
+              for (i=0; i<myWrappers.length; i++){
+                  if(dropDown.value === "default"){ 
+                      myWrappers[i].style.display = "none";
+                  } else if(dropDown.value === "cooking"){
+                  myWrappers[i].style.display = "none";
+                  myWrappers[0].style.display = "block";
+                  } else if(dropDown.value === "eating"){
+                  myWrappers[i].style.display = "none";
+                  myWrappers[1].style.display = "block";
+                  } else if(dropDown.value === "notDoingThis"){
+                  myWrappers[i].style.display = "none";
+                  myWrappers[2].style.display = "block";
+                  }
+              }
 
-        {{#if (lateCookEarlyEat)}}
-
-        <div style="height: 200px; display: flex; justify-content: center; align-items: space-around;">
-
-          <div style="display: flex; margin: auto;justify-content: center;flex-direction: column;align-items: center;">
-            <img style="display: block; border: 1px solid black;" src="{{imageValue showLatestCooking}}" referrerpolicy="no-referrer"/>
-            <div>
-              (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-            </div>
-          </div>
-
-          <div style="display: flex; margin: auto;justify-content: center;flex-direction: column;align-items: center;">
-            <img style="display: block; border: 1px solid black;" src="{{imageValue showEarliestEating}}" referrerpolicy="no-referrer"/>
-            <div>
-              (The picture above is a submission made by the after you person; try to have something that lines up with this!)
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Then show both -->
-
-        {{else if (shouldShowLatestCooking)}}
-
-        <!-- Then show the last cooking submission -->
-
-        <div style="height: 200px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
-          <img style="display: block; border: 1px solid black;" src="{{imageValue showLatestCooking}}" referrerpolicy="no-referrer"/>
-          (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-        </div>
-
-        {{/if}}
-
-
-      {{else if (isEating)}}
-
-        {{#if (shouldShowLatestEating)}}
-
-        <div style="height: 200px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
-          <img style="display: block; border: 1px solid black;" src="{{imageValue showLatestEating}}" referrerpolicy="no-referrer"/>
-          (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-        </div>
-
-        {{else if (shouldShowLatestCooking)}}
-
-        <div style="height: 200px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
-          <img style="display: block; border: 1px solid black;" src="{{imageValue showLatestCooking}}" referrerpolicy="no-referrer"/>
-          (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-        </div>
-
-        {{/if}}
-
-      {{/if}}
-
-      <!-- IS COOKING? -->
-      <!-- IS EATING? -->
-      <!-- IS GROCERY? -->
-
-      <!-- SINGLE TEMPLATE -->
-      <!-- <div style="height: 200px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
-        <img style="display: block; border: 1px solid black;" src={{imageValue(hello)}} referrerpolicy="no-referrer"/>
-        (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-      </div> -->
-
-      <!-- DOUBLE TEMPLATE -->
-      <!-- <div style="height: 200px; display: flex; justify-content: center; align-items: space-around;">
-
-        <div style="display: flex; margin: auto;justify-content: center;flex-direction: column;align-items: center;">
-          <img style="display: block; border: 1px solid black;" src={{imageValue(hello)}} referrerpolicy="no-referrer"/>
-          <div>
-            (The picture above is a submission made by a previous person; try to have something that lines up with this!)
-          </div>
-        </div>
-
-        <div style="display: flex; margin: auto;justify-content: center;flex-direction: column;align-items: center;">
-          <img style="display: block; border: 1px solid black;" src={{imageValue(hello)}} referrerpolicy="no-referrer"/>
-          <div>
-            (The picture above is a submission made by the after you person; try to have something that lines up with this!)
-          </div>
-        </div>
-
-      </div> -->
+          }
+      </script>
       <br>
       <!-- {{/if}} -->
 
@@ -1282,10 +1225,26 @@
         <p>Share a photo that shows what you're experiencing.</p>
         {{> Template.dynamic template="camera" data="proof"}}
       </div>
+
+
+    <div>Choose the tag that best describes the photo you're submitting:</div>
+
+      <select id="dropDown" onChange="test()">
+        <option value="default" selected="selected"></option>
+        <option value="package" id="packageSelect">Packaged Non-Ready to Eat Food (e.g. pasta, canned goods)</option>
+        <option value="raw-veggies" id="rawSelect">Raw Vegetables and Meats</option>
+        <option value="cutfood" id="cutSelect">Cut Ingredients</option>
+        <option value="boiling" id="boilingSelect">Boiling Broth/Water</option>
+        <option value="readyMeal" id="readyMealSelect">Meal on Plate</option>
+      </select>
+        <div>Tell us about what you're doing in this photo! </div>
+        {{> Template.dynamic template="text" data="eatingData" }}<br><br>    
+
       <button type="submit" class="btn btn-default btn-participate btn-primary btn-block"
               style="border-radius: 3px; height: 38px; width: 50%; margin-top: 10px;">
           Submit
       </button>
+
   </form>
 </template>
 
