@@ -24,7 +24,7 @@ export default PARALLEL = {
       notificationSubject: "Hello! :)",
       notificationText: 'How is your DTR deliverable going?',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.coffee), // set to "beginning detector" 
+        detector: getDetectorUniqueKey(DETECTORS.cookingJourneyDetector), // set to "beginning detector" 
         number: '1'
       },
       toPass: {
@@ -46,7 +46,7 @@ export default PARALLEL = {
           sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
-      numberNeeded: 5,
+      numberNeeded: 10,
       notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
     }]

@@ -220,6 +220,18 @@ const createDetectors = function (pairNum) {
       `var ${pairNum};`
     ],
     rules:[`(bubbletea && ${pairNum});`]
+  },
+
+  cookingJourneyDetector: {
+    _id: Random.id(),
+    description: 'Meal Time or Groceries' + pairNum,
+    vrabiles: [
+      'var hour;',
+      'var grocery;',
+      `var ${pairNum};`
+    ],
+
+    rules: [`(${pairNum} && participatedInRestaurantExp && (hour == 9 || hour == 12 || hour == 18 || grocery ));`]
   }
 
   //  /////////////////////////////////////////////////////////
@@ -991,7 +1003,9 @@ export const DETECTORS = {
     _id: "Jdz8DFUyC37jqROOq",
     description: "during 18:00",
     variables: ["var hour;"],
-    rules: ["hour == 18"]
+    rules: [
+      
+    ]
   },
   hour19: {
     _id: "tV0Jt9xgGkME1MBla",

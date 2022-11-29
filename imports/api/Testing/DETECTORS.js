@@ -1,14 +1,17 @@
-// const createDetectors = function (pairNum) {
-//   return {
-//     activity1:{
-//       _id: Random.id(),
-//       description: 'activity1 ' + pairNum,
-//       variables: [
-//         `var ${pairNum};`,
-//       ],
-//       rules: [`${pairNum};`]
-//       // rules: ['(triad1)']
-//     },
+const createDetectors = function (pairNum) {
+  return {
+    activity1:{
+      _id: Random.id(),
+      description: 'activity1 ' + pairNum,
+      variables: [
+        `var ${pairNum};`,
+      ],
+      rules: [`${pairNum};`]
+      // rules: ['(triad1)']
+    },
+  }
+}
+    
 
 //     activity2:{
 //       _id: Random.id(),
@@ -285,6 +288,16 @@ export let DETECTORS = {
       'var bookstores;'
     ],
     rules: ['(libraries || bookstores);']
+  },
+  cookingJourneyDetector: {
+    _id: Random.id(),
+    description: 'Meal Time or Groceries',
+    variables: [
+      'var hour;',
+      'var grocery;'
+    ],
+
+    rules: [`(hour == 9 || hour == 12 || hour == 18 || grocery );`]
   },
   gym: {
     _id: '3XqHN8A4EpCZRpegS',
