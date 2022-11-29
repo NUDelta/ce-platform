@@ -1244,16 +1244,34 @@
         flex-flow: column nowrap;
       }
     </style>
+
   </head>
+
+
+
   <div class="title">Cooking: A Montage</div>
   <div class="slideshow">
-    {{#each submission in this.submissions}}
+    <script>
+      // function getSortedSubmissions() {
+      //   let sortedSubmissions = this.submissions.filter(submission => {return Object.values(submission.content).length == 0});
+      //   console.log("SORTED SUBMISSIONS: ", sortedSubmissions);
+      //   return <div>The non meteor way</div>;
+      // }
+
+
+      // console.log("GOOD SUBMISSIONS: ", {{this.submissions}});
+      // const node = document.createElement("div");
+      // node.innerHTML = "hi";
+      // document.getElementsByClassName("slideshow")[0].appendChild(node);
+    </script>
+    
+    {{#each submission in this.betterSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
         <!-- <img src="{{submission.content.proof}}"> -->
         <div class="formatted">
           <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
           <br>
-          <p>"This is a description from the person maybe" --Name</p>
+          <p>{{getEatingData(submission)}}</p>
           <br>
         </div>
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->
@@ -1309,10 +1327,11 @@
         flex-flow: column nowrap;
       }
     </style>
+
   </head>
   <div class="title">Studying in the Library</div>
   <div class="slideshow">
-    {{#each submission in this.submissions}}
+    {{#each submission in sortedSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
         <!-- <img src="{{submission.content.proof}}"> -->
         <div class="formatted">

@@ -57,6 +57,7 @@ export const updateSubmission = function(submission) {
     {
       $set: {
         content: submission.content,
+        dummyVariable: submission.dummyVariable
       }
     },
     (err) => {
@@ -84,7 +85,8 @@ export const createInitialSubmission = function(submission) {
         lat: submission.lat,
         lng: submission.lng,
         castCategory: submission.castCategory,
-        castDescription: submission.castDescription
+        castDescription: submission.castDescription,
+        dummyVariable: submission.dummyVariable
       }
     },
     (err) => {
@@ -96,11 +98,13 @@ export const createInitialSubmission = function(submission) {
 };
 
 export const uploadImage = function (picture, submissionObject){
+  console.log("inside uploadImage: ", submissionObject);
   let cdnLink = "";
   uploadImagesToS3(picture, submissionObject.needName, submissionObject.uid).then((link) => {
     cdnLink = link;
     console.log(`cdnLink: ${cdnLink}`);
     submissionObject.content["proof"] = cdnLink;
+    submissionObject.content['order'] = submissionObject.dummyVariable;
     console.log("image has been uploaded");
     existingSub = Submissions.findOne({
       eid: submissionObject.eid,

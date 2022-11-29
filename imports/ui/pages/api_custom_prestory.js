@@ -109,6 +109,7 @@ Template.api_custom_prestory.events({
       lat: location.lat,
       lng: location.lng,
       castCategory: castCategory,
+      
       // castDescription: castDescription
     };
 

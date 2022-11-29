@@ -46,7 +46,7 @@ export default PARALLEL = {
           sad: 'What makes you feel this way? What helps you feel better?'
         },
       },
-      numberNeeded: 4,
+      numberNeeded: 5,
       notificationDelay: 1, // 1 seconds for debugging
       allowRepeatContributions : true
     }]

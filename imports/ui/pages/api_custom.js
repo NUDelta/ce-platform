@@ -20,6 +20,7 @@ import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
 import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
+import { KinesisVideoSignalingChannels } from 'aws-sdk';
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM EXPERIENCES
@@ -517,6 +518,59 @@ Template.imitationGame.helpers({
     return textSub.content.sentence;
   }
 });
+
+// Template.cookParticipate.events({
+//   'submit #bn-participate'(event, instance) {
+//     event.preventDefault();
+
+//     //this makes the loading circle show up
+//     //console.log(event.target.getElementsByClassName('overlay'));
+
+//     //event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
+
+
+//     const experience = this.experience;
+//     // give null values for use fwhen testing submitted photos on the web, without location data
+//     const location = this.location ? this.location : {lat: null, lng: null};
+//     const iid = FlowRouter.getParam('iid');
+//     const needName = FlowRouter.getParam('needName');
+//     const uid = Meteor.userId();
+//     const timestamp = Date.now()
+//     const submissions = {};
+//     // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+//     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
+
+//     //castCategory
+//     const castDropDown = document.getElementById('dropDown');
+//     console.log("CAST DROP DOWN: ", castDropDown)
+//     const index = castDropDown.selectedIndex;
+//     const castCategory = castDropDown[index].value;
+//     const castDescription = document.getElementById('castDescription').value
+    
+//     // console.log("GOT EMOTION: ", castDescription)
+
+
+//     const submissionObject = {
+//       uid: uid,
+//       eid: experience._id,
+//       iid: iid,
+//       needName: needName,
+//       content: submissions,
+//       timestamp: timestamp,
+//       lat: location.lat,
+//       lng: location.lng,
+//       castCategory: castCategory,
+//       dummyVariable: 0
+      
+//       // castDescription: castDescription
+//     };
+
+//     Meteor.call('updateSubmission', submissionObject);
+
+//     // FlowRouter.go(resultsUrl);
+
+//   },
+// })
 
 Template.cookParticipate.helpers({
   textValue: function(submission) {
@@ -1276,11 +1330,17 @@ Template.api_custom.events({
   'submit #participate'(event, instance) {
     event.preventDefault();
 
+    console.log("I BET YOU ARE RUNNING IN THE BACKGROUND");
+
     //this makes the loading circle show up
     console.log(event.target.getElementsByClassName('overlay'));
 
     event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
+
+    // package, raw-veggies, cutfood, boiling, readyMeal
+
+    // console.log("EVENT TARGET: ", event.target);
 
     const experience = this.experience;
     // give null values for use when testing submitted photos on the web, without location data
@@ -1291,6 +1351,9 @@ Template.api_custom.events({
     const timestamp = Date.now()
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+
+    const dummyDropDown = document.getElementById('dropDown');
+    const dummyVariable = dummyDropDown.selectedIndex;
 
     //submission id
     const userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
@@ -1343,8 +1406,10 @@ Template.api_custom.events({
             content: submissions,
             timestamp: timestamp,
             lat: location.lat,
-            lng: location.lng
+            lng: location.lng,
+            dummyVariable: dummyVariable
           };
+
 
           Meteor.call("uploadImage", reader.result, submissionObject, (err) => {
             if (err) {
@@ -1379,8 +1444,11 @@ Template.api_custom.events({
           content: submissions,
           timestamp: timestamp,
           lat: location.lat,
-          lng: location.lng
+          lng: location.lng,
+          dummyVariable: dummyVariable
         };
+
+
         Meteor.call("uploadImage", picture, submissionObject, (err) => {
           if (err) {
             console.log("error in uploadImage: ", err)

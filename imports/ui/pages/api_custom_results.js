@@ -30,12 +30,21 @@ Template.api_custom_results_page.onCreated(function () {
 Template.api_custom_results_page.helpers({
   apiCustomResultsArgs() {
     const instance = Template.instance();
+    let unsortedBetterSubmissions = Submissions.find({})
+    .fetch()
+    .filter(submission => {return Object.values(submission.content).length != 0;});
+    
+    unsortedBetterSubmissions.sort((a, b) => a.content.order - b.content.order);
+
     return {
       experience: Experiences.findOne(),
       images: Images.find({}).fetch(),
       submissions: Submissions.find({}).fetch(),
       users: Meteor.users.find().fetch(),
       avatars: Avatars.find({}).fetch(),
+      betterSubmissions: unsortedBetterSubmissions
+       
+
     }
   }
 });
@@ -1253,6 +1262,7 @@ Template.cookSlides.helpers({
     }
   },
   imageValue: function(submission) {
+    console.log("Final submission: ", submission);
     if (submission.content.proof != undefined) {
       let element = document.createElement('div');
       element.innerHTML = 'chocolate';
@@ -1263,6 +1273,10 @@ Template.cookSlides.helpers({
     } else {
       return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
     }
+  },
+
+  getEatingData: function(submission) {
+    return submission.content.eatingData;
   }
 });
 
@@ -1275,6 +1289,12 @@ Template.sunset.helpers({
       return "...";
     }
   },
+
+  currentPics: function () {
+    console.log("THIS SUBMISSIONS: ", this.submissions);
+    return this.submissions.filter(submission => submission.content != {});
+  },
+
   imageValue: function(submission) {
     if (submission.content.proof != undefined) {
       let element = document.createElement('div');
