@@ -15,6 +15,11 @@ export const RActiveExperience = ({allExperience}) => {
             {waitingSubmission} 
         </div>
     }
+    let blastFromThePastBlock =
+        <div>
+            <h4>Blast from the Past</h4>
+            <h5>Connect with each other through past memories!</h5>
+        </div>
     let rest = 
         <div>
             <h4>Available Experiences</h4>
@@ -23,6 +28,7 @@ export const RActiveExperience = ({allExperience}) => {
     return (
         <div>
             {waitingSubmissionBlock}
+            {blastFromThePastBlock}
             {rest}
         </div> 
     )

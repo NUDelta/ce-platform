@@ -110,6 +110,17 @@ const promptDict = {
     followups: ["Here's some questions you can ask your partner: 1. Any other plans for today?"], 
     degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
     delay: 360},
+  bestfriend: {
+    name: "🎨Weekday de-stress time🎧", 
+    description: "Doing something fun to de-stress on a weekday? Share your experience with your partner!",
+    prompts: [
+        "Enjoying small breaks from school work? Take a picture of the fun things you are doing and share your experience with your partner!",
+        "Revisiting somewhere familiar or coming here for the first time? Take a picture of the fun things you are doing and share your experience with your partner!"
+    ],
+    mood_prompts: "How are you feeling? Doing something fun to de-stress on a weekday? Share your moment and how you feel with your partner!",
+    followups: ["Here's some questions you can ask your partner: 1. Any other plans for today?"], 
+    degradedprompt: ["Don't have a current experience for this activity? Share your most recent experience with your partner instead!"],
+    delay: 360},
 }
 
 const createCallback = (completeCallback, inprogressCallback, name, key, followups) => {
