@@ -249,6 +249,18 @@ const createDetectors = function (pairNum) {
     artmuseums || childrensmuseums || lasertag || escapegames || arcade || bowling || teambuilding || landmarks || \
     culturalcenter || historicalcenter || amusementparks || aquariums || aquarium));`]
   },
+
+  // BLAST FROM THE PAST EXPERIENCES
+
+  bestfriends: {
+    _id: Random.id(),
+    description: 'Best Friends ' + pairNum,
+    variables: [
+      `var ${pairNum};`
+    ],
+    rules: [`${pairNum};`]
+  },
+
 }
 };
 

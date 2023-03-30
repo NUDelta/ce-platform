@@ -114,8 +114,10 @@ Template.home.helpers({
 
     let allIncidents = Incidents.find().fetch();
     let waitingSubmission = [];
+    let blastFromThePasts = [];
     let restOfExperiences = [];
     _.forEach(allIncidents, (incident) => {
+      console.log(incident)
       if(incident.contributionTypes[0].needName.includes(pair)) {
         let currentExp = incident.contributionTypes[0].needName.split('pair')[0].toLowerCase();
         if(currentExp === 'selfintro' && ('participatedInSelfIntro' in aff) ) {

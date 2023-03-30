@@ -770,6 +770,9 @@ export const updateRunningIncident = (incident) => {
  * Given an experience object, creates an incident
  * @param experience {object} of the created incident
  */
+
+// in order to access the field at the time you're trying to separate things
+// have to add a new value in creation of an incident here
 export const createIncidentFromExperience = (experience) => {
   // let need = experience.contributionTypes[0].needName;
   // need = createNewId("i", need)
