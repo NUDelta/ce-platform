@@ -10,8 +10,9 @@ import { DETECTORS } from "./DETECTORS";
 // import SUMMER18_BETA from "./summer18beta/beta_experiences";
 // import SUMMER18_EXPERIENCES from "./summer18study/summer18experiences";
 // import TRIADIC_EXPERIENCES from "./triadic_experiences/triadic_experiences.js"
-// import SENIOR_FINALS from "./spring18study/senior_finals.js";
-import PARALLEL from './s22test/parallel';
+import SENIOR_FINALS from "./spring18study/senior_finals.js";
+import PARALLEL from './s22test/parallel'
+import DEBIAS from './s23study/debiasing'
 // import TRIADIC_EXPERIENCES from "./triadic_experiences/triadic_experiences.js"
 // import PAIR_EXPERIENCES from "./winter22statusupdate/pair_experiences.js"
 // import NEW_PAIR_EXPERIENCES from "./fall21study/new_pair_experiences.js"
@@ -24,9 +25,9 @@ let EXPERIENCES = Object.assign({},
   // SPRING18_EXPERIENCES,
   //SUMMER18_BETA,
   // SAMESITUATION_ACROSSTIME, // sunset
-  // SENIOR_FINALS,
-  PARALLEL
-  //SCAVENGER_HUNT
+  // SENIOR_FINALS,\
+  DEBIAS 
+  // SCAVENGER_HUNT
   //SUMMER18_EXPERIENCES,
   // TRIADIC_EXPERIENCES
   // PAIR_EXPERIENCES,
