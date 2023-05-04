@@ -57,6 +57,8 @@ Template.home.helpers({
         let needNamesBinnedByDetector = needAggregator(incident);
 
         // gah I wish the assignments had its own interface
+
+        // FIXME: 
         let assignedNeedNames = assignment.needUserMaps.map(currNeedUserMap => {
           if (currNeedUserMap.users.find(user => user.uid === Meteor.userId())) {
             return currNeedUserMap.needName;
@@ -102,6 +104,39 @@ Template.home.helpers({
 
     return {
       experience: Experiences.findOne(Incidents.findOne(iid).eid)
+    }
+  },
+  allExperience() {
+    if (Template.instance().subscriptionsReady()) {
+      // create [{iid: incident_id, experience: experience, detectorUniqueKey: detector_id}]
+      let activeAssignments = Assignments.find().fetch();
+      let output = [];
+
+      _.forEach(activeAssignments, (assignment) => {
+
+        let iid = assignment._id;
+        let incident = Incidents.findOne(iid);
+
+        // TODO(rlouie): errors on refresh? try the competing resource test garret/barrett
+        let needNamesBinnedByDetector = needAggregator(incident);
+
+        _.forEach(needNamesBinnedByDetector, (needNamesForDetector, detectorUniqueKey) => {
+          // get experience
+          let experience = Experiences.findOne(Incidents.findOne(iid).eid);
+
+          // instead of knowing the specific need at the home screen,
+          // we only know the associated iid/detector; dynamic routing to the need will happen
+          output.push({
+            'iid': iid,
+            'experience': experience,
+            'detectorUniqueKey': detectorUniqueKey
+          });
+
+        });
+
+      });
+
+      return output;
     }
   }
 });

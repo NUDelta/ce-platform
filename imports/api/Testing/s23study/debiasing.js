@@ -7,7 +7,7 @@ export default DEBIAS = {
       _id: Random.id(),
       name: 'Debias',
       prestoryTemplate: 'cookNight',
-      participateTemplate: 'cookParticipate',
+      participateTemplate: 'sceneContribution',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
       repeatContributionsToExperienceAfterN: 0,

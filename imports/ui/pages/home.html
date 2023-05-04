@@ -25,29 +25,16 @@
 
     {{#if currentUser}}
         {{#if Template.subscriptionsReady}}
-            {{#if noActiveIncidents}}
-                <div id="empty-state">
-                    <h1 id="emoji">🏃‍🤔✌️</h1>
-                    <h4 id="title">There are no experiences near you.</h4>
-                    <p id="empty-state-text">Walk around to see if any pop up. If you were notified
-                        for an experience that's no longer here, that means you took too long to
-                        participate. Participate faster next time!</p>
-                </div>
-            {{else}}
-                <div class="title-chunk">
-                    <h4 class="title-text hi">Available experiences</h4>
-                </div>
-                <div class="list-group">
-                    {{#each info in activeUserAssigment}}
-                    <div>{{> React component=RActiveExperience exp=info.experience iid=info.iid detectorUniqueKey=info.detectorUniqueKey}}</div>
-                        <!-- {{> activeExperience info}} -->
-                    {{/each}}
-                    <!-- <div>{{> React component=RActiveExperience}}</div>  -->
-                </div>
-                <button class="refresh btn btn-primary btn-participate btn-block"
-                        style="border-radius: 4px; height: 38px;">Refresh
-                </button>
-            {{/if}}
+            <div class="list-group">
+                {{#each info in allExperience}}
+                <div>{{> React component=RActiveExperience exp=info.experience iid=info.iid detectorUniqueKey=info.detectorUniqueKey}}</div>
+                    <!-- {{> activeExperience info}} -->
+                {{/each}}
+                <!-- <div>{{> React component=RActiveExperience}}</div>  -->
+            </div>
+            <button class="refresh btn btn-primary btn-participate btn-block"
+                    style="border-radius: 4px; height: 38px;">Refresh
+            </button>
         {{else}}
           <div id="empty-state">
             <h1 id="emoji">🤞📲</h1>

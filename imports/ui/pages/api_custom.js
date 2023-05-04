@@ -571,6 +571,13 @@ Template.imitationGame.helpers({
 
 //   },
 // })
+Template.sceneContribution.helpers({
+  getPreviousImageSub() {
+    debugger;
+    let imageSub = this.submissions.find(s => s.needName == this.needName && s.content.proof)
+    return this.images.find(i => i._id === imageSub.content.proof);
+  }, 
+});
 
 Template.cookParticipate.helpers({
   textValue: function(submission) {
@@ -652,8 +659,9 @@ Template.cookParticipate.helpers({
   // },
 
   lastImage: function() {
+    debugger;
     return this.submisions[this.submissions.length - 1];
-  },
+  }, 
 
   imageValue: function(submission) {
     if (submission.content.proof != undefined) {
