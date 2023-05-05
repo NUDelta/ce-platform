@@ -26,6 +26,7 @@ import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinato
 //   }
 // })
 
+
 Template.api_custom_prestory_page.onCreated(function() {
 
   const eid = FlowRouter.getParam('eid');
@@ -77,41 +78,42 @@ Template.api_custom_prestory.events({
     //event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
-    const experience = this.experience;
-    // give null values for use fwhen testing submitted photos on the web, without location data
-    const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = FlowRouter.getParam('iid');
-    const needName = FlowRouter.getParam('needName');
-    const uid = Meteor.userId();
-    const timestamp = Date.now()
-    const submissions = {};
-    // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+    // const experience = this.experience;
+    // // give null values for use fwhen testing submitted photos on the web, without location data
+    // const location = this.location ? this.location : {lat: null, lng: null};
+    // const iid = FlowRouter.getParam('iid');
+    // const needName = FlowRouter.getParam('needName');
+    // const uid = Meteor.userId();
+    // const timestamp = Date.now()
+    // const submissions = {};
+    // // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
-
-    //castCategory
-    const castDropDown = document.getElementById('dropDown');
-    console.log("CAST DROP DOWN: ", castDropDown)
-    const index = castDropDown.selectedIndex;
-    const castCategory = castDropDown[index].value;
+ 
+    // //castCategory
+    // const castDropDown = document.getElementById('dropDown');
+    // console.log("CAST DROP DOWN: ", castDropDown)
+    // const index = castDropDown.selectedIndex;
+    // const castCategory = castDropDown[index].value;
     // const castDescription = document.getElementById('castDescription').value
     
     // console.log("GOT EMOTION: ", castDescription)
-
+    console.log("abc")
     FlowRouter.go(participateUrl);
 
     const submissionObject = {
-      uid: uid,
-      eid: experience._id,
-      iid: iid,
-      needName: needName,
-      content: submissions,
-      timestamp: timestamp,
-      lat: location.lat,
-      lng: location.lng,
-      castCategory: castCategory,
+      uid: 1,
+      // eid: experience._id,
+      // iid: iid,
+      // needName: needName,
+      // content: submissions,
+      // timestamp: timestamp,
+      // lat: location.lat,
+      // lng: location.lng,
+      // castCategory: castCategory,
       
       // castDescription: castDescription
     };
+   
 
     Meteor.call('createInitialSubmission', submissionObject);
   },

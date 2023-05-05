@@ -2,11 +2,12 @@ import {getDetectorUniqueKey} from "../oce_api_helpers";
 import {DETECTORS} from "../DETECTORS";
 
 
-export default DEBIAS = {
+
+export default Test1 = {
     sample: {
       _id: Random.id(),
-      name: 'Debias',
-      prestoryTemplate: 'debias_1',
+      name: 'Cook',
+      prestoryTemplate: 'cookNight',
       participateTemplate: 'sceneContribution',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
@@ -20,9 +21,7 @@ export default DEBIAS = {
           number: '1'
         },
         toPass: {
-          instruction: "Please take a picture based on previous submissions and author's needs",
-          
-
+          //instruction: 'Can you take a photo of your coffee?',
           prestoryQuestion: "Are you studying at the library?",
           dropdownChoices: {
             name: 'casting question',
