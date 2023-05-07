@@ -14,15 +14,51 @@
     <!-- I think we wanna query this from the db -->
     <div>
         <div id="topic">
-            Scene topic: city centers that represent your city
+            Scene topic: {{this.toPass.scene_description.topic}}
         </div>
         <div id = "objective">
-            Objective: I want to showcase the differences in city culture between India and USA
+            Objective: {{this.toPass.scene_description.objective}}
         </div>
-        <div>Location: city</div>
-        <div>Subjects: street, people, building</div>
+        <div>Location: {{this.toPass.scene_description.location}}</div>
+        <div>Subjects: {{this.toPass.scene_description.subjects}}</div>
     
     </div>
+    {{#if this.toPass.Right_Image}}
+        <div>
+            <!-- <h5>Example to try</h5> -->
+            <img style="width: 20%; height: 15%;" src="{{this.toPass.ExampleImageURL}}"/>
+            {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
+        </div>
+       
+    {{/if}}
+
+    {{#if this.toPass.Left_Image}}
+        <div>
+            <!-- <h5>Example to try</h5> -->
+            <img style="width: 20%; height: 15%;" src="{{this.toPass.ExampleImageURL}}"/>
+            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+        </div>
+        
+        <div>
+            Annotation:
+            <div style ="display:flex"> 
+                <div>Subjects:  </div>
+                <div>{{this.toPass.pastpic.subjects}}</div>
+            </div>
+           
+            <div style="display:flex">
+                <div>
+                    Location:
+                </div>
+                <div>
+                   {{this.toPass.pastpic.location}}
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
+    
+    
 
     <div>
         <!-- <form class="col col-xs-12" id="participate">
@@ -40,6 +76,9 @@
                 Continue
             </button>
         </form>
+        <button id = "home">
+            Fxxk
+        </button>
     </div>
    
 </template>

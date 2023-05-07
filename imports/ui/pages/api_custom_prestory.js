@@ -67,34 +67,55 @@ Template.api_custom_prestory.helpers({
 
 });
 
+Template.debias_1.events({
+  'submit #cn-participate'(event, instance) {
+    event.preventDefault()
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
+    const uid = Meteor.userId();
+    const experience = this.experience;
+
+    const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
+    FlowRouter.go(participateUrl)
+
+  },
+  'click #home': function(event, instance) {
+    // console.log('back');
+    // event.preventDefault();
+    FlowRouter.go('home');
+  }
+});
+
+
 //note: needName for triparticipate often split into needName_triad#
 Template.api_custom_prestory.events({
   'submit #cn-participate'(event, instance) {
     event.preventDefault();
+    
 
     //this makes the loading circle show up
-    //console.log(event.target.getElementsByClassName('overlay'));
+    console.log(event.target.getElementsByClassName('overlay'));
 
-    //event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
+    event.target.getElementsByClassName('overlay')[0].style.display = 'initial';
 
 
-    // const experience = this.experience;
-    // // give null values for use fwhen testing submitted photos on the web, without location data
-    // const location = this.location ? this.location : {lat: null, lng: null};
-    // const iid = FlowRouter.getParam('iid');
-    // const needName = FlowRouter.getParam('needName');
-    // const uid = Meteor.userId();
-    // const timestamp = Date.now()
-    // const submissions = {};
-    // // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+    const experience = this.experience;
+    // give null values for use fwhen testing submitted photos on the web, without location data
+    const location = this.location ? this.location : {lat: null, lng: null};
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
+    const uid = Meteor.userId();
+    const timestamp = Date.now()
+    const submissions = {};
+    const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
     const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
  
     // //castCategory
-    // const castDropDown = document.getElementById('dropDown');
-    // console.log("CAST DROP DOWN: ", castDropDown)
-    // const index = castDropDown.selectedIndex;
-    // const castCategory = castDropDown[index].value;
-    // const castDescription = document.getElementById('castDescription').value
+    const castDropDown = document.getElementById('dropDown');
+    console.log("CAST DROP DOWN: ", castDropDown)
+    const index = castDropDown.selectedIndex;
+    const castCategory = castDropDown[index].value;
+    const castDescription = document.getElementById('castDescription').value
     
     // console.log("GOT EMOTION: ", castDescription)
     console.log("abc")
@@ -102,16 +123,16 @@ Template.api_custom_prestory.events({
 
     const submissionObject = {
       uid: 1,
-      // eid: experience._id,
-      // iid: iid,
-      // needName: needName,
-      // content: submissions,
-      // timestamp: timestamp,
-      // lat: location.lat,
-      // lng: location.lng,
-      // castCategory: castCategory,
+      eid: experience._id,
+      iid: iid,
+      needName: needName,
+      content: submissions,
+      timestamp: timestamp,
+      lat: location.lat,
+      lng: location.lng,
+      castCategory: castCategory,
       
-      // castDescription: castDescription
+      castDescription: castDescription
     };
    
 
@@ -121,6 +142,7 @@ Template.api_custom_prestory.events({
   'click #back-btn': function(event, instance) {
     // console.log('back');
     // event.preventDefault();
+    
     FlowRouter.go('home');
   }
 });

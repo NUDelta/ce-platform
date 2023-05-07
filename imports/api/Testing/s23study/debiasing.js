@@ -7,7 +7,7 @@ export default DEBIAS = {
       _id: Random.id(),
       name: 'Debias',
       prestoryTemplate: 'debias_1',
-      participateTemplate: 'sceneContribution',
+      participateTemplate: 'debias',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
       repeatContributionsToExperienceAfterN: 0,
@@ -21,8 +21,20 @@ export default DEBIAS = {
         },
         toPass: {
           instruction: "Please take a picture based on previous submissions and author's needs",
-          
-
+          Right_Image: false,
+          Left_Image: true,
+          pastpic:{
+            subjects:["Skycrappers", "midtown", "Empire State Building"],
+            location:"Manhattan"
+            
+          },
+          scene_description:{
+            topic: "City center that represent your city",
+            objective:" I want to showcase the differences in city culture between India and USA",
+            location:["city"],
+            subjects: ["street", "people", "building"]
+          },
+          ExampleImageURL: "https://res.cloudinary.com/dwruudqoc/image/upload/v1683437513/nyc_pxzdmu.jpg",
           prestoryQuestion: "Are you studying at the library?",
           dropdownChoices: {
             name: 'casting question',
