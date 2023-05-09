@@ -1360,8 +1360,6 @@ Template.api_custom.events({
     const submissions = {};
     const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
 
-    const dummyDropDown = document.getElementById('dropDown');
-    const dummyVariable = dummyDropDown.selectedIndex;
 
     //submission id
     const userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
@@ -1415,7 +1413,6 @@ Template.api_custom.events({
             timestamp: timestamp,
             lat: location.lat,
             lng: location.lng,
-            dummyVariable: dummyVariable
           };
 
 
@@ -1453,7 +1450,6 @@ Template.api_custom.events({
           timestamp: timestamp,
           lat: location.lat,
           lng: location.lng,
-          dummyVariable: dummyVariable
         };
 
 

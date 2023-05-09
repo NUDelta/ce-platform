@@ -67,6 +67,12 @@ Template.api_custom_prestory.helpers({
 
 });
 
+Template.debias_1.helpers({
+  'previousSubmission'() {
+    debugger;
+  }
+})
+
 Template.debias_1.events({
   'submit #cn-participate'(event, instance) {
     event.preventDefault()
@@ -91,8 +97,6 @@ Template.debias_1.events({
 Template.api_custom_prestory.events({
   'submit #cn-participate'(event, instance) {
     event.preventDefault();
-    
-
     //this makes the loading circle show up
     console.log(event.target.getElementsByClassName('overlay'));
 

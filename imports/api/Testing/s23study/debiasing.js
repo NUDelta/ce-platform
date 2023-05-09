@@ -6,13 +6,13 @@ export default DEBIAS = {
     sample: {
       _id: Random.id(),
       name: 'Debias',
-      prestoryTemplate: 'debias_1',
-      participateTemplate: 'debias',
+      prestoryTemplate: 'studyNight',
+      participateTemplate: 'sceneContribution',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
       repeatContributionsToExperienceAfterN: 0,
       contributionTypes: [{
-        needName: 'huh',
+        needName: 'Context Building',
         notificationSubject: "Hello! :)",
         notificationText: 'How is your DTR deliverable going?',
         situation: {

@@ -50,7 +50,7 @@ AccountsTemplates.configureRoute('signUp');
 FlowRouter.route('/', {
   name: 'home',
   action() {
-    BlazeLayout.render('layout', { main: 'home'});
+    BlazeLayout.render('layout', { main: 'participate_backdoor_page'});
   }
 });
 
