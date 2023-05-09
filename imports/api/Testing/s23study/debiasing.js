@@ -6,8 +6,8 @@ export default DEBIAS = {
     sample: {
       _id: Random.id(),
       name: 'Debias',
-      prestoryTemplate: 'studyNight',
-      participateTemplate: 'sceneContribution',
+      prestoryTemplate: 'cookNight',
+      participateTemplate: 'cookParticipate',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
       repeatContributionsToExperienceAfterN: 0,

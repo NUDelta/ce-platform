@@ -659,7 +659,7 @@ Template.cookParticipate.helpers({
   // },
 
   lastImage: function() {
-    debugger;
+    // debugger;
     return this.submisions[this.submissions.length - 1];
   }, 
 
@@ -1362,6 +1362,8 @@ Template.api_custom.events({
 
 
     //submission id
+    console.log(this,submissions.uid)
+    console.log(Meteor.userId())
     const userSubs = this.submissions.filter(sub => sub.uid === Meteor.userId());
     const mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
     const subId = userSubs.length === 0 ? null : mostRecentSub._id;
