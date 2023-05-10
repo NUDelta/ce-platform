@@ -1,0 +1,353 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "/*": [
+        "./*"
+      ],
+      "meteor/mongo": [
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/local_collection_driver.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/collection.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/connection_options.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/doc_fetcher.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/mongo_driver.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/mongo_utils.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/observe_multiplex.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/oplog_observe_driver.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/oplog_tailing.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/oplog_v2_converter.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/polling_observe_driver.js",
+        "/Users/sounakgupta/.meteor/packages/mongo/1.15.0/web.browser/remote_collection_driver.js"
+      ],
+      "meteor/session": [
+        "/Users/sounakgupta/.meteor/packages/session/1.2.0/web.browser/session.js"
+      ],
+      "meteor/jquery": [
+        "/Users/sounakgupta/.meteor/packages/jquery/1.11.11/web.browser/main.js",
+        "/Users/sounakgupta/.meteor/packages/jquery/1.11.11/web.browser/jquery.js"
+      ],
+      "meteor/tracker": [
+        "/Users/sounakgupta/.meteor/packages/tracker/1.2.0/web.browser/tracker.js"
+      ],
+      "meteor/es5-shim": [
+        "/Users/sounakgupta/.meteor/packages/es5-shim/4.8.0/web.browser/client.js",
+        "/Users/sounakgupta/.meteor/packages/es5-shim/4.8.0/web.browser/console.js",
+        "/Users/sounakgupta/.meteor/packages/es5-shim/4.8.0/web.browser/cordova.js",
+        "/Users/sounakgupta/.meteor/packages/es5-shim/4.8.0/web.browser/export_globals.js",
+        "/Users/sounakgupta/.meteor/packages/es5-shim/4.8.0/web.browser/import_globals.js"
+      ],
+      "meteor/ecmascript": [
+        "/Users/sounakgupta/.meteor/packages/ecmascript/0.16.2/web.browser/ecmascript.js"
+      ],
+      "meteor/accounts-password": [
+        "/Users/sounakgupta/.meteor/packages/accounts-password/2.3.1/web.browser/password_client.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-password/2.3.1/web.browser/email_templates.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-password/2.3.1/web.browser/password_server.js"
+      ],
+      "meteor/twbs:bootstrap": [
+        "/Users/sounakgupta/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/js/bootstrap.js"
+      ],
+      "meteor/iron:router": [
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/current_options.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/http_methods.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/route_controller.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/route_controller_client.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/route.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/router.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/hooks.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/helpers.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/router_client.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/plugins.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/global_router.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/route_controller_server.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/body_parser_server.js",
+        "/Users/sounakgupta/.meteor/packages/iron_router/1.1.2/web.browser/lib/router_server.js"
+      ],
+      "meteor/random": [
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/main_client.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/AbstractRandomGenerator.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/AleaRandomGenerator.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/BrowserRandomGenerator.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/NodeRandomGenerator.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/createAleaGenerator.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/createRandom.js",
+        "/Users/sounakgupta/.meteor/packages/random/1.2.0/web.browser/main_server.js"
+      ],
+      "meteor/reload": [
+        "/Users/sounakgupta/.meteor/packages/reload/1.3.1/web.browser/reload.js"
+      ],
+      "meteor/check": [
+        "/Users/sounakgupta/.meteor/packages/check/1.3.1/web.browser/match.js",
+        "/Users/sounakgupta/.meteor/packages/check/1.3.1/web.browser/isPlainObject.js"
+      ],
+      "meteor/spacebars": [
+        "/Users/sounakgupta/.meteor/packages/spacebars/1.3.0/web.browser/spacebars-runtime.js"
+      ],
+      "meteor/email": [
+        "/Users/sounakgupta/.meteor/packages/email/2.2.1/web.browser/email.js"
+      ],
+      "meteor/cfs:filesystem": [
+        "/Users/sounakgupta/.meteor/packages/cfs_filesystem/0.1.2/web.browser//packages/cfs:filesystem.js"
+      ],
+      "meteor/cfs:gridfs": [
+        "/Users/sounakgupta/.meteor/packages/cfs_gridfs/0.0.34/web.browser/gridfs.client.js",
+        "/Users/sounakgupta/.meteor/packages/cfs_gridfs/0.0.34/web.browser/gridfs.server.js"
+      ],
+      "meteor/ejson": [
+        "/Users/sounakgupta/.meteor/packages/ejson/1.1.2/web.browser/ejson.js",
+        "/Users/sounakgupta/.meteor/packages/ejson/1.1.2/web.browser/stringify.js",
+        "/Users/sounakgupta/.meteor/packages/ejson/1.1.2/web.browser/utils.js"
+      ],
+      "meteor/browser-policy": [
+        "/Users/sounakgupta/.meteor/packages/browser-policy/1.1.0/web.browser/browser-policy.js"
+      ],
+      "meteor/sergeyt:typeahead": [
+        "/Users/sounakgupta/.meteor/packages/sergeyt_typeahead/0.11.1_9/web.browser/typeahead.bundle.js",
+        "/Users/sounakgupta/.meteor/packages/sergeyt_typeahead/0.11.1_9/web.browser/index.js"
+      ],
+      "meteor/dburles:google-maps": [
+        "/Users/sounakgupta/.meteor/packages/dburles_google-maps/1.1.5/web.browser/google-maps.js"
+      ],
+      "meteor/mdg:validated-method": [
+        "/Users/sounakgupta/.meteor/packages/mdg_validated-method/1.2.0/web.browser/validated-method.js"
+      ],
+      "meteor/oauth": [
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/oauth_client.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/oauth_browser.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/oauth_common.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/deprecated.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/end_of_popup_response.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/end_of_redirect_response.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/oauth_cordova.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/oauth_server.js",
+        "/Users/sounakgupta/.meteor/packages/oauth/1.3.0/web.browser/pending_credentials.js"
+      ],
+      "meteor/nooitaf:colors": [
+        "/Users/sounakgupta/.meteor/packages/nooitaf_colors/1.2.0/web.browser/export.js"
+      ],
+      "meteor/oauth1": [
+        "/Users/sounakgupta/.meteor/packages/oauth1/1.3.0/web.browser/oauth1_binding.js",
+        "/Users/sounakgupta/.meteor/packages/oauth1/1.3.0/web.browser/oauth1_pending_request_tokens.js",
+        "/Users/sounakgupta/.meteor/packages/oauth1/1.3.0/web.browser/oauth1_server.js"
+      ],
+      "meteor/mrt:moment-timezone": [
+        "/Users/sounakgupta/.meteor/packages/mrt_moment-timezone/0.2.1/web.browser//packages/mrt:moment-timezone.js"
+      ],
+      "meteor/cfs:graphicsmagick": [
+        "/Users/sounakgupta/.meteor/packages/cfs_graphicsmagick/0.0.18/web.browser//packages/cfs:graphicsmagick.js"
+      ],
+      "meteor/msavin:mongol": [
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/lib/common.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_header/header.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/doc_editor/docViewer.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/doc_editor/inline.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_account/account.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_account/accountViewer.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_collection_notFound/notFound.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_collection/collections.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_trash/main.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/row_subscriptions/main.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/doc_insert/docInsert.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/_component/component.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/main.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/client/doc_controls/docControls.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/server/methods.js",
+        "/Users/sounakgupta/.meteor/packages/msavin_mongol/2.0.1/web.browser/server/utilities.js"
+      ],
+      "meteor/shell-server": [
+        "/Users/sounakgupta/.meteor/packages/shell-server/0.5.0/web.browser/main.js",
+        "/Users/sounakgupta/.meteor/packages/shell-server/0.5.0/web.browser/shell-server.js"
+      ],
+      "meteor/force-ssl": [
+        "/Users/sounakgupta/.meteor/packages/force-ssl/1.1.0/web.browser/force_ssl_both.js",
+        "/Users/sounakgupta/.meteor/packages/force-ssl/1.1.0/web.browser/force_ssl_server.js"
+      ],
+      "meteor/remcoder:chronos": [
+        "/Users/sounakgupta/.meteor/packages/remcoder_chronos/0.5.0/web.browser/chronos.js"
+      ],
+      "meteor/practicalmeteor:mocha": [
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/mocha.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/bin/options.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/context.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/hook.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/mocha.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/ms.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/pending.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/runnable.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/runner.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/suite.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/utils.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/browser/debug.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/browser/events.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/browser/progress.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/browser/tty.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/bdd.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/common.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/exports.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/qunit.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/tdd.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/base.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/doc.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/dot.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/html-cov.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/html.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/json-cov.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/json-stream.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/json.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/landing.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/list.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/markdown.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/min.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/nyan.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/progress.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/spec.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/tap.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/reporters/xunit.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/lib/log.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/reporters/html.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/reporters/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/setup/index.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/setup/setupMochaClient.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/support/browser-entry.js",
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/meteor/src/server/autoupdate.js"
+      ],
+      "meteor/xolvio:cleaner": [
+        "/Users/sounakgupta/.meteor/packages/xolvio_cleaner/0.4.0/web.browser/cleaner.js"
+      ],
+      "meteor/accounts-base": [
+        "/Users/sounakgupta/.meteor/packages/accounts-base/2.2.3/web.browser/client_main.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-base/2.2.3/web.browser/accounts_client.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-base/2.2.3/web.browser/accounts_common.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-base/2.2.3/web.browser/accounts_server.js",
+        "/Users/sounakgupta/.meteor/packages/accounts-base/2.2.3/web.browser/server_main.js"
+      ],
+      "meteor/practicalmeteor:chai": [
+        "/Users/sounakgupta/.meteor/packages/practicalmeteor_chai/2.1.0_1/web.browser//packages/practicalmeteor_chai.js"
+      ],
+      "meteor/erasaur:meteor-lodash": [
+        "/Users/sounakgupta/.meteor/packages/erasaur_meteor-lodash/4.0.0/web.browser/lodash/lodash.js",
+        "/Users/sounakgupta/.meteor/packages/erasaur_meteor-lodash/4.0.0/web.browser/export.js"
+      ],
+      "meteor/dynamic-import": [
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/client.js",
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/cache.js",
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/common.js",
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/dynamic-versions.js",
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/security.js",
+        "/Users/sounakgupta/.meteor/packages/dynamic-import/0.7.2/web.browser/server.js"
+      ],
+      "meteor/useraccounts:iron-routing": [
+        "/Users/sounakgupta/.meteor/packages/useraccounts_iron-routing/1.14.2/web.browser/lib/core.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_iron-routing/1.14.2/web.browser/lib/client.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_iron-routing/1.14.2/web.browser/lib/templates_helpers/at_input.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_iron-routing/1.14.2/web.browser/lib/server.js"
+      ],
+      "meteor/aldeed:template-extension": [
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/hooks.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-for-each.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-hooks.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-global-hooks.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-for-each-instance.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-inherits-events-from.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-inherits-helpers-from.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-inherits-hooks-from.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-register-helpers.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-replaces.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-clear-event-maps.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-copy-as.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-instance-parent.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-instance-get.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-instance-set.js",
+        "/Users/sounakgupta/.meteor/packages/aldeed_template-extension/4.1.0/web.browser/lib/template-parent-data-function.js"
+      ],
+      "meteor/useraccounts:bootstrap": [
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_error.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_form.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_input.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_message.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_nav_button.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_oauth.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_pwd_form.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_pwd_form_btn.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_pwd_link.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_reCaptcha.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_result.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_sep.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_signin_link.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_signup_link.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_social.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_terms_link.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_resend_verification_email_link.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_bootstrap/1.15.0/web.browser/lib/at_title.js"
+      ],
+      "meteor/underscore": [
+        "/Users/sounakgupta/.meteor/packages/underscore/1.0.10/web.browser/pre.js",
+        "/Users/sounakgupta/.meteor/packages/underscore/1.0.10/web.browser/underscore.js",
+        "/Users/sounakgupta/.meteor/packages/underscore/1.0.10/web.browser/post.js"
+      ],
+      "meteor/dburles:collection-helpers": [
+        "/Users/sounakgupta/.meteor/packages/dburles_collection-helpers/1.1.0/web.browser/collection-helpers.js"
+      ],
+      "meteor/meanware:gridfs": [
+        "/Users/sounakgupta/.meteor/packages/meanware_gridfs/0.1.1/web.browser/gridfs.client.js",
+        "/Users/sounakgupta/.meteor/packages/meanware_gridfs/0.1.1/web.browser/gridfs.server.js"
+      ],
+      "meteor/nudelta2015:push": [
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/common/main.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/common/notifications.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/client/browser.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/client/client.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/client/cordova.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/server/push.api.js",
+        "/Users/sounakgupta/.meteor/packages/nudelta2015_push/1.0.2/web.browser/lib/server/server.js"
+      ],
+      "meteor/react-template-helper": [
+        "/Users/sounakgupta/.meteor/packages/react-template-helper/0.2.14/web.browser/react-template-helper.js"
+      ],
+      "meteor/react-meteor-data": [
+        "/Users/sounakgupta/.meteor/packages/react-meteor-data/2.5.1/web.browser/index.js"
+      ],
+      "meteor/ostrio:flow-router-extra": [
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/_init.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/active.route.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/group.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/modules.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/renderer.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/route.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/router.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/client/triggers.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/lib/_helpers.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/server/_init.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/server/group.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/server/route.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/server/router.js",
+        "/Users/sounakgupta/.meteor/packages/ostrio_flow-router-extra/3.7.5/web.browser/server/plugins/fast-render.js"
+      ],
+      "meteor/kadira:blaze-layout": [
+        "/Users/sounakgupta/.meteor/packages/kadira_blaze-layout/2.3.0/web.browser/lib/client/namespace.js",
+        "/Users/sounakgupta/.meteor/packages/kadira_blaze-layout/2.3.0/web.browser/lib/client/layout.js"
+      ],
+      "meteor/useraccounts:flow-routing-extra": [
+        "/Users/sounakgupta/.meteor/packages/useraccounts_flow-routing-extra/1.0.0/web.browser/lib/core.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_flow-routing-extra/1.0.0/web.browser/lib/client/client.js",
+        "/Users/sounakgupta/.meteor/packages/useraccounts_flow-routing-extra/1.0.0/web.browser/lib/client/templates_helpers/at_input.js"
+      ]
+    }
+  },
+  "typeAcquisition": {
+    "include": [
+      "meteor"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    ".meteor"
+  ]
+}
