@@ -15,6 +15,8 @@ import { photoInput } from './photoUploadHelpers.js'
 import { photoUpload } from './photoUploadHelpers.js'
 import {Meteor} from "meteor/meteor";
 import {needIsAvailableToParticipateNow} from "../../api/OpportunisticCoordinator/strategizer";
+import { EventBusy } from '@mui/icons-material';
+import { Submissions } from '/imports/api/OCEManager/currentNeeds';
 
 
 // HELPER FUNCTIONS FOR LOADING CUSTOM PRESTORY QUESTIONS
@@ -33,7 +35,12 @@ Template.api_custom_prestory_page.onCreated(function() {
   this.autorun(() => {
     this.subscribe('experiences.single', eid);
     this.subscribe('incidents.single', iid);
+    this.subscribe('images.activeIncident', iid);
+    this.subscribe('submissions.activeIncident', iid);
+    this.subscribe('users.all');
+    this.subscribe('avatars.all');
     this.subscribe('locations.activeUser');
+
   })
 });
 
@@ -63,8 +70,64 @@ Template.api_custom_prestory.helpers({
 
     return this;
   },
+  imageValue: function(submission){
+    console.log("Final submission: ", submission);
+    if (submission.content.proof != undefined) {
+      // let element = document.createElement('div');
+      // element.innerHTML = 'chocolate';
+      // console.log(element);
+      // document.getElementByClassName("sunsetSlides").appendChild(element);
+      // return 0;
+      return submission.content.proof;
+    } else {
+      return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
+    }
+  },
+  previousSubmission: function(){
+    console.log("aha", submission)
+  },
+
 
 });
+
+
+Template.debias_1.events({
+  'submit #cn-participate'(event, instance){
+    event.preventDefault();
+    const experience = this.experience;
+    const location = this.location ? this.location : {lat: null, lng: null};
+    const iid = FlowRouter.getParam('iid');
+    const needName = FlowRouter.getParam('needName');
+    const uid = Meteor.userId();
+    const timestamp = Date.now()
+    const submissions = {};
+    // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+    const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
+    console.log(this.submissions)
+
+    FlowRouter.go(participateUrl);
+    FlowRouter.go(participateUrl);
+
+    const submissionObject = {
+      uid: uid,
+      eid: experience._id,
+      iid: iid,
+      needName: needName,
+      content: submissions,
+      timestamp: timestamp,
+      lat: location.lat,
+      lng: location.lng,
+      
+      // castDescription: castDescription
+    };
+
+    Meteor.call('createInitialSubmission', submissionObject);
+
+
+  }
+})
+
+
 
 //note: needName for triparticipate often split into needName_triad#
 Template.api_custom_prestory.events({

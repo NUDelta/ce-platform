@@ -1206,6 +1206,8 @@
 </template>
 
 
+
+<!-- s_23 debias -->
 <template name="cookSlides">
   <head>
     <style>
@@ -1249,7 +1251,7 @@
 
 
 
-  <div class="title">Cooking: A Montage</div>
+  <div class="title">{{Name}}</div>
   <div class="slideshow">
     <script>
       // function getSortedSubmissions() {
@@ -1268,10 +1270,16 @@
     {{#each submission in this.betterSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
         <!-- <img src="{{submission.content.proof}}"> -->
+       
+        <div class = "topic">
+          Story topic: {{topic}}
+        </div>
+        <div id = "objective">
+          Story objective: {{objective}}
+        </div>
+      <!-- {{ExampleURL}} -->
         <div class="formatted">
           <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
-          <br>
-          <p>{{getEatingData(submission)}}</p>
           <br>
         </div>
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->

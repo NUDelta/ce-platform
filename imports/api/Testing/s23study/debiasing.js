@@ -6,13 +6,14 @@ export default DEBIAS = {
     sample: {
       _id: Random.id(),
       name: 'Debias',
-      prestoryTemplate: 'cookNight',
-      participateTemplate: 'cookParticipate',
+      prestoryTemplate: 'debias_1',
+      participateTemplate: 'debias',
       resultsTemplate: 'cookSlides',
       expandTemplate: 'seniorFinalsExpand',
       repeatContributionsToExperienceAfterN: 0,
       contributionTypes: [{
-        needName: 'Context Building',
+
+        needName: 'Context Building1',
         notificationSubject: "Hello! :)",
         notificationText: 'How is your DTR deliverable going?',
         situation: {
@@ -20,6 +21,7 @@ export default DEBIAS = {
           number: '1'
         },
         toPass: {
+          story_topic: 'Debiasing Story between U.S and India',
           instruction: "Please take a picture based on previous submissions and author's needs",
           Right_Image: false,
           Left_Image: true,

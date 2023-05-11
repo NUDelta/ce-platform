@@ -21,6 +21,8 @@ Template.api_custom_results_page.onCreated(function () {
   this.autorun(() => {
     this.subscribe('images.activeIncident', iid);
     this.subscribe('experiences.single', eid);
+    this.subscribe('incidents.single', iid);
+    this.subscribe('locations.activeUser');
     this.subscribe('submissions.activeIncident', iid);
     this.subscribe('users.all');
     this.subscribe('avatars.all');
@@ -42,7 +44,9 @@ Template.api_custom_results_page.helpers({
       submissions: Submissions.find({}).fetch(),
       users: Meteor.users.find().fetch(),
       avatars: Avatars.find({}).fetch(),
-      betterSubmissions: unsortedBetterSubmissions
+      betterSubmissions: unsortedBetterSubmissions,
+      incident: Incidents.findOne(),
+
        
 
     }
@@ -1274,10 +1278,25 @@ Template.cookSlides.helpers({
       return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
     }
   },
+  Example: function(){
+    console.log("This is the example")
+  },
+  objective:function(){
+    return this.incident.contributionTypes[0].toPass.scene_description.objective
+    console.log(this.incident.contributionTypes[0].toPass.scene_description.objective)
+  },
+  topic: function(){
+    return this.incident.contributionTypes[0].toPass.scene_description.topic
+  },
+  Name: function(){
+    // debugger;
+    // console.log(this.incident.name)
+    // debugger;
+    return this.incident.contributionTypes[0].toPass.story_topic
 
-  getEatingData: function(submission) {
-    return submission.content.eatingData;
   }
+
+  
 });
 
 

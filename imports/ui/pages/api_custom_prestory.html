@@ -27,6 +27,7 @@
     {{#if this.toPass.Right_Image}}
         <div>
             <!-- <h5>Example to try</h5> -->
+            <img src="{{imageValue(submission)}}" referrerpolicy="no-referrer"/>
             <img style="width: 20%; height: 15%;" src="{{this.toPass.ExampleImageURL}}"/>
             {{> Template.dynamic template="halfhalfCamera" data="leftHalfPreview"}}
         </div>
@@ -37,7 +38,7 @@
         <div>
             <!-- <h5>Example to try</h5> -->
             <img style="width: 20%; height: 15%;" src="{{this.toPass.ExampleImageURL}}"/>
-            {{> Template.dynamic template="halfhalfCamera" data="rightHalfPreview"}}
+            <!-- {{> Template.dynamic template="halfhalfCamera" data=""}} -->
         </div>
         
         <div>
@@ -83,6 +84,9 @@
     </div>
    
 </template>
+
+
+
 
 <template name="cookNight">
     
