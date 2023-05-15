@@ -1240,7 +1240,7 @@ function showSlidesAuto() {
   console.log("SLIDES", slides.length)
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
-    console.log(slides[i])
+    // console.log(slides[i])
   }
   sunsetSlideIndex++;
 
@@ -1279,7 +1279,7 @@ Template.cookSlides.helpers({
     }
   },
   Example: function(){
-    console.log("This is the example")
+    console.log()
   },
   objective:function(){
     return this.incident.contributionTypes[0].toPass.scene_description.objective
@@ -1333,7 +1333,7 @@ Template.sunset.helpers({
 Template.sunset.onRendered(function() {
   this.autorun(() => {
     console.log("I'm going here!")
-    showSlidesAuto();
+    // showSlidesAuto();
     // window.onload = function () {
     //   console.log("run slideshow before");
     //   // showSlidesAuto();
@@ -1356,7 +1356,7 @@ Template.cookSlides.onRendered(function() {
     showSlidesAuto();
     // window.onload = function () {
     //   console.log("run slideshow before");
-    //   // showSlidesAuto();
+    //   // showSlidesAuto();me
     //   console.log("run slideshow after");
     // }
   });

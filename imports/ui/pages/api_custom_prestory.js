@@ -51,6 +51,7 @@ Template.api_custom_prestory_page.helpers({
       experience: Experiences.findOne(),
       incident: Incidents.findOne(),
       location: Locations.findOne(),
+      submissions: Submissions.find().fetch()
     }
   }
 });
@@ -71,6 +72,7 @@ Template.api_custom_prestory.helpers({
     return this;
   },
   imageValue: function(submission){
+  
     console.log("Final submission: ", submission);
     if (submission.content.proof != undefined) {
       // let element = document.createElement('div');
@@ -84,11 +86,34 @@ Template.api_custom_prestory.helpers({
     }
   },
   previousSubmission: function(){
+    debugger;
     console.log("aha", submission)
   },
 
 
 });
+
+Template.debias_1.helpers({
+  previousSubmission: function(){
+    console.log(this.needName)
+    // debugger;
+    // console.log("aha", this.submissions)
+    // debugger;
+    res = this.submissions.filter(sub => sub.needName == this.needName && sub.content.proof != undefined)
+    // console.log("res: ", res.length)
+    const end = res.length
+    console.log("end is: ",end)
+    // console.log("Previous submission is: ", res[end-1].content)
+    if (end != 0){
+      return str(res[end-1].content.proof)
+    }
+    else{
+      return "https://res.cloudinary.com/dwruudqoc/image/upload/v1684111699/placeholder_uuupdh.png"
+  }
+}
+
+})
+
 
 
 Template.debias_1.events({

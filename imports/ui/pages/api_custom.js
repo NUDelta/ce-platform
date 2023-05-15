@@ -161,6 +161,19 @@ Template.api_custom.events({
     const mostRecentSub = userSubs.reduce((a, b) => (a.timestamp > b.timestamp ? a : b));
     const subId = userSubs.length === 0 ? null : mostRecentSub._id;
 
+    // dropdown info
+    const dropDowns = event.target.getElementsByClassName('dropdown');
+    _.forEach(dropDowns, (dropDown) => {
+      const index = dropDown.selectedIndex;
+      submissions[dropDown.id] = dropDown[index].value
+    });
+
+    // text info
+    const textBoxes = event.target.getElementsByClassName('textinput');
+    _.forEach(textBoxes, (textBox) => {
+      submissions[textBox.id] = textBox.value;
+      
+    });
 
 
     const images = event.target.getElementsByClassName('fileinput');
@@ -200,7 +213,7 @@ Template.api_custom.events({
           Meteor.call("uploadImage", reader.result, submissionObject, (err) => {
             if (err) {
               console.log("error in uploadImage: ", err)
-            } else {
+            } else { 
               console.log("image has been uploaded");
               FlowRouter.go(resultsUrl);
               // FlowRouter.go("/chat");

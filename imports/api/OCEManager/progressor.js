@@ -102,7 +102,7 @@ export const uploadImage = function (picture, submissionObject){
   let cdnLink = "";
   uploadImagesToS3(picture, submissionObject.needName, submissionObject.uid).then((link) => {
     cdnLink = link;
-    console.log(`cdnLink: ${cdnLink}`);
+    console.log(`cdnLink:ahahahaha ${cdnLink}`);
     submissionObject.content["proof"] = cdnLink;
     submissionObject.content['order'] = submissionObject.dummyVariable;
     console.log("image has been uploaded");

@@ -1282,6 +1282,15 @@
           <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
           <br>
         </div>
+        <div>
+          Specific subjects of the submission: {{submission.content.sentence1}}
+        </div>
+        <div>
+          Specific location of the submission: {{submission.content.sentence2}}
+        </div>
+        <div>
+          Objective of this picture: {{submission.content.sentence3}}
+        </div>
         <!-- {{> Template.dynamic template="displayImage" data=image}} -->
         <!-- <div>
           {{#if (submission.content.proof == undefined) }}
