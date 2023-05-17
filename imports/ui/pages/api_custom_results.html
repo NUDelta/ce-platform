@@ -1259,6 +1259,9 @@
       //   console.log("SORTED SUBMISSIONS: ", sortedSubmissions);
       //   return <div>The non meteor way</div>;
       // }
+      function aha(){
+        window.alert("aha");
+      }
 
 
       // console.log("GOOD SUBMISSIONS: ", {{this.submissions}});
@@ -1267,17 +1270,16 @@
       // document.getElementsByClassName("slideshow")[0].appendChild(node);
     </script>
     
-    {{#each submission in this.betterSubmissions}}
+    <!-- {{#each submission in this.betterSubmissions}}
       <div class="sunsetSlides" id="img{{@index}}">
-        <!-- <img src="{{submission.content.proof}}"> -->
-       
+    
         <div class = "topic">
           Story topic: {{topic}}
         </div>
         <div id = "objective">
           Story objective: {{objective}}
         </div>
-      <!-- {{ExampleURL}} -->
+    
         <div class="formatted">
           <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
           <br>
@@ -1291,18 +1293,21 @@
         <div>
           Objective of this picture: {{submission.content.sentence3}}
         </div>
-        <!-- {{> Template.dynamic template="displayImage" data=image}} -->
-        <!-- <div>
-          {{#if (submission.content.proof == undefined) }}
-            <p>I need the library to ... </p>
-          {{else}}
-          {{/if}
-        </div> -->
-        <!--
-        {{submission.content.proof ?
-        }} -->
+       
       </div>
-    {{/each}}
+    {{/each}} -->
+  </div>
+  <div class="slideshow">
+    <!-- <a class="prev" onclick= {{previousScene}}>&#10094;</a>
+    <a class="next" >&#10095;</a> -->
+    <div class = "picsection">
+      <!-- <img src={{get_pic(0)}}/> -->
+      <!-- <img src= {{get_pic(1)}}/> -->
+      <img src={{Getpic)}} referrerpolicy="no-referrer"/>
+      
+    </div>
+    <button onclick = "aha()" >Last</button>
+    
   </div>
 </template>
 

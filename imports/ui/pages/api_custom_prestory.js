@@ -103,14 +103,26 @@ Template.debias_1.helpers({
     // console.log("res: ", res.length)
     const end = res.length
     console.log("end is: ",end)
-    // console.log("Previous submission is: ", res[end-1].content)
+    console.log("Previous submission is: ", res[end-1].content)
     if (end != 0){
-      return str(res[end-1].content.proof)
+      return `${res[end-1].content.proof}`
     }
     else{
       return "https://res.cloudinary.com/dwruudqoc/image/upload/v1684111699/placeholder_uuupdh.png"
+    }
+  },
+  previousAnnotation1: function(){
+    const end = res.length
+    return res[end-1].content.sentence1
+
+  },
+  previousAnnotation2: function(){
+    const end = res.length
+    return res[end-1].content.sentence2
+
   }
-}
+
+
 
 })
 

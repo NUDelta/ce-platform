@@ -1294,7 +1294,18 @@ Template.cookSlides.helpers({
     // debugger;
     return this.incident.contributionTypes[0].toPass.story_topic
 
-  }
+  },
+  previousScene: function(){
+    console.log("aha")
+  },
+  Getpic: function(){
+    // if(this.submissions[index] != undefined){
+    //   console.log(this.submissions[index].content.proof)
+    //   return this.submissions[index].content.proof
+    // }
+    return this.submissions[0].content.proof
+   
+  },
 
   
 });
