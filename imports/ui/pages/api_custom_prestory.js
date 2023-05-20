@@ -105,7 +105,7 @@ Template.debias_1.helpers({
     console.log("end is: ",end)
     console.log("Previous submission is: ", res[end-1].content)
     if (end != 0){
-      return `${res[end-1].content.proof}`
+      return res[end-1].content.proof
     }
     else{
       return "https://res.cloudinary.com/dwruudqoc/image/upload/v1684111699/placeholder_uuupdh.png"

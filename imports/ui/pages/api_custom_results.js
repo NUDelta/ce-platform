@@ -37,7 +37,10 @@ Template.api_custom_results_page.helpers({
     .filter(submission => {return Object.values(submission.content).length != 0;});
     
     unsortedBetterSubmissions.sort((a, b) => a.content.order - b.content.order);
+    
 
+    
+    
     return {
       experience: Experiences.findOne(),
       images: Images.find({}).fetch(),
@@ -1233,15 +1236,16 @@ Template.storyBook_noInterdependence.events({
 let timeout = null;
 
 let sunsetSlideIndex = 1;
+
 function showSlidesAuto() {
 
   // let i
   let slides = document.getElementsByClassName("sunsetSlides");
   console.log("SLIDES", slides.length)
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-    // console.log(slides[i])
-  }
+  // for (i = 0; i < slides.length; i++) {
+  //   // slides[i].style.display = "none";
+  //   // console.log(slides[i])
+  // }
   sunsetSlideIndex++;
 
   if (sunsetSlideIndex > slides.length) {sunsetSlideIndex = 1}
@@ -1286,6 +1290,7 @@ Template.cookSlides.helpers({
     console.log(this.incident.contributionTypes[0].toPass.scene_description.objective)
   },
   topic: function(){
+    console.log("bettersubmission: ", this.betterSubmissions)
     return this.incident.contributionTypes[0].toPass.scene_description.topic
   },
   Name: function(){
@@ -1298,14 +1303,79 @@ Template.cookSlides.helpers({
   previousScene: function(){
     console.log("aha")
   },
-  Getpic: function(){
+  Getpic(index){
     // if(this.submissions[index] != undefined){
     //   console.log(this.submissions[index].content.proof)
     //   return this.submissions[index].content.proof
     // }
-    return this.submissions[0].content.proof
+    console.log(this.submissions[index].content.proof)
+    if (this.submissions[index].content.proof != undefined){
+      return this.submissions[index].content.proof
+    }
+    else{
+      return "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E"
+    }
    
   },
+  
+
+  Fxxkthat(){
+    // console.log("Fxxk", index)
+    // console.log("Fxxk", this.betterSubmissions[index])
+    console.log(this.betterSubmissions[0].content.proof)
+    return this.betterSubmissions[0].content.proof
+  },
+  
+
+  Fxxkthat2(){
+    let a = this.betterSubmissions[1].content.proof
+    console.log(a)
+    if (a != undefined){
+      return this.betterSubmissions[1].content.proof
+    }
+    else{
+      return "/"
+    }
+  },
+  Contextb(){
+    for (const i of this.betterSubmissions){
+      if(i.needName = "Context Building1"){
+        return true
+      }
+    }
+    return false
+    
+   
+    
+  },
+  Contextb_value(){
+    // return this.betterSubmissions.filter(submission => submission.content.Needname == "Context Building1")
+    const res = this.betterSubmissions.filter(submission => submission.needName = "Context Building1")
+    // console.log("context building shit: ", res)
+    return res
+  },
+
+  Subjectresolution(){
+    for (const i of this.betterSubmissions){
+      if(i.needName = "Character Introduction"){
+        return true
+      }
+    }
+    return false
+  },
+  Subjectresolution_value(){
+    const res = this.betterSubmissions.filter(submission => submission.needName = "Character Introduction")
+    console.log("subject: ", res)
+    return res
+  },
+
+  GetSubject(index){
+    return this.betterSubmissions[index].content.sentence1
+  },
+     
+  GetLocation(index){
+    return this.betterSubmissions[index].content.sentence2
+  }
 
   
 });
@@ -1364,7 +1434,7 @@ Template.sunset.onDestroyed(function() {
 Template.cookSlides.onRendered(function() {
   this.autorun(() => {
     console.log("I'm going here!")
-    showSlidesAuto();
+    // showSlidesAuto();
     // window.onload = function () {
     //   console.log("run slideshow before");
     //   // showSlidesAuto();me

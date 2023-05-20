@@ -1220,7 +1220,7 @@
         text-align: center;
       }
       .sunsetSlides {
-          display: none;
+          display: block;
           /* border: 1px solid black; */
           height: 300px;
           margin: auto;
@@ -1245,71 +1245,153 @@
         align-items: center;
         flex-flow: column nowrap;
       }
+      .sceneblock{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .slideshow2{
+        padding-top: 0%;
+      }
     </style>
 
   </head>
 
-
-
   <div class="title">{{Name}}</div>
+  
   <div class="slideshow">
     <script>
-      // function getSortedSubmissions() {
-      //   let sortedSubmissions = this.submissions.filter(submission => {return Object.values(submission.content).length == 0});
-      //   console.log("SORTED SUBMISSIONS: ", sortedSubmissions);
-      //   return <div>The non meteor way</div>;
-      // }
       function aha(){
         window.alert("aha");
-      }
-
-
-      // console.log("GOOD SUBMISSIONS: ", {{this.submissions}});
-      // const node = document.createElement("div");
-      // node.innerHTML = "hi";
-      // document.getElementsByClassName("slideshow")[0].appendChild(node);
-    </script>
-    
-    <!-- {{#each submission in this.betterSubmissions}}
-      <div class="sunsetSlides" id="img{{@index}}">
-    
-        <div class = "topic">
-          Story topic: {{topic}}
-        </div>
-        <div id = "objective">
-          Story objective: {{objective}}
-        </div>
-    
-        <div class="formatted">
-          <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
-          <br>
-        </div>
-        <div>
-          Specific subjects of the submission: {{submission.content.sentence1}}
-        </div>
-        <div>
-          Specific location of the submission: {{submission.content.sentence2}}
-        </div>
-        <div>
-          Objective of this picture: {{submission.content.sentence3}}
-        </div>
        
-      </div>
-    {{/each}} -->
+      }
+    </script>
+     <div class = "topic">
+      Story topic: {{topic}}
+    </div>
+    <div id = "objective">
+      Story objective: {{objective}}
+    </div>
+
+    <!-- <div class="sceneblock">
+      {{#each submission in this.betterSubmissions}}
+
+     <div class="sunsetSlides" id="img{{@index}}">
+       <div class="formatted">
+         <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+         <br>
+       </div>
+       <div>
+         Specific subjects of the submission: {{submission.content.sentence1}}
+       </div>
+       <div>
+         Specific location of the submission: {{submission.content.sentence2}}
+       </div>
+       <div>
+         Objective of this picture: {{submission.content.sentence3}}
+       </div>
+      
+     </div>
+    {{/each}}
+    
+    </div>
+  </div> -->
   </div>
-  <div class="slideshow">
+
+  <div class="slideshow2">
     <!-- <a class="prev" onclick= {{previousScene}}>&#10094;</a>
     <a class="next" >&#10095;</a> -->
     <div class = "picsection">
+      {{#if Contextb}}
+      <div class="sceneblock">
+        {{#each submission in Contextb_value}}
+          <div class = "sunsetSlides" id="img{{@index}}">
+            <!-- {{Fxxkthat}} -->
+            
+            <div class="formatted">
+              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+              <br>
+            </div>
+            <div>
+              Specific subjects of the submission: {{submission.content.sentence1}}
+            </div>
+            <div>
+              Specific location of the submission: {{submission.content.sentence2}}
+            </div>
+            <div>
+              Objective of this picture: {{submission.content.sentence3}}
+            </div>
+          
+          </div>
+        {{/each}}
+    
+      </div>
+
+      {{/if}}
+
+
+    </div>
+    <div>
+      {{#if Subjectresolution}}
+      <div>aha</div>
+      <div class="sceneblock">
+        {{#each submission in Subjectresolution_value}}
+          <div class="sunsetSlides" id="img{{@index}}">
+            <!-- {{Fxxkthat}} -->
+            <div class="formatted">
+              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+              <br>
+            </div>
+            <div>
+              Specific subjects of the submission: {{submission.content.sentence1}}
+            </div>
+            <div>
+              Specific location of the submission: {{submission.content.sentence2}}
+            </div>
+            <div>
+              Objective of this picture: {{submission.content.sentence3}}
+            </div>
+          
+          </div>
+        {{/each}}
+    
+      </div>
+       
+      
+      {{/if}}
+
+      <!-- <img src = {{Fxxkthat}} referrerpolicy="no-referrer"/>
+      <img src = {{Fxxkthat2}} referrerpolicy="no-referrer"/>
+       -->
+     
       <!-- <img src={{get_pic(0)}}/> -->
       <!-- <img src= {{get_pic(1)}}/> -->
-      <img src={{Getpic)}} referrerpolicy="no-referrer"/>
-      
+      <!-- <img src={{}}/> -->
+      <!-- <img src = {{Getpic(0)}}/>
+      <div>
+        Specific subjects of the submission: {{GetSubject(0)}}
+      </div>
+        -->
     </div>
     <button onclick = "aha()" >Last</button>
     
   </div>
 </template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <template name="sunset">
   <head>
