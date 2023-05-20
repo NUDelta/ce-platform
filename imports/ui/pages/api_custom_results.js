@@ -1270,7 +1270,7 @@ Template.cookSlides.helpers({
     }
   },
   imageValue: function(submission) {
-    console.log("Final submission: ", submission);
+    // console.log("Final submission: ", submission);
     if (submission.content.proof != undefined) {
       let element = document.createElement('div');
       element.innerHTML = 'chocolate';
@@ -1338,33 +1338,46 @@ Template.cookSlides.helpers({
     }
   },
   Contextb(){
-    for (const i of this.betterSubmissions){
-      if(i.needName = "Context Building1"){
+    for(let i of this.betterSubmissions){
+      if(i.needName == "Context Building1"){
         return true
       }
     }
     return false
-    
-   
-    
   },
+
   Contextb_value(){
     // return this.betterSubmissions.filter(submission => submission.content.Needname == "Context Building1")
-    const res = this.betterSubmissions.filter(submission => submission.needName = "Context Building1")
+    const res = this.betterSubmissions.filter(submission => submission.needName === "Context Building1")
     // console.log("context building shit: ", res)
     return res
   },
 
   Subjectresolution(){
-    for (const i of this.betterSubmissions){
-      if(i.needName = "Character Introduction"){
+    // this.betterSubmissions.filter(element => {
+    //   if(element === "Character Introduction"){
+    //     return true
+    //   }
+    // });
+    // return false
+    for(let i of this.betterSubmissions){
+      if(i.needName === 'Character Introduction'){
         return true
       }
     }
     return false
   },
+  
+  Subject_helper(value){
+    return true
+    if(value == "Character Introduction"){
+      console.log("yes!") 
+      return true
+    }
+  },
+
   Subjectresolution_value(){
-    const res = this.betterSubmissions.filter(submission => submission.needName = "Character Introduction")
+    const res = this.betterSubmissions.filter(submission => submission.needName === "Character Introduction")
     console.log("subject: ", res)
     return res
   },

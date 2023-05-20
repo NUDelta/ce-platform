@@ -1250,6 +1250,11 @@
         flex-direction: row;
         justify-content: center;
       }
+      .sceneblock2{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
       .slideshow2{
         padding-top: 0%;
       }
@@ -1303,26 +1308,26 @@
     <a class="next" >&#10095;</a> -->
     <div class = "picsection">
       {{#if Contextb}}
-      <div class="sceneblock">
-        {{#each submission in Contextb_value}}
-          <div class = "sunsetSlides" id="img{{@index}}">
-            <!-- {{Fxxkthat}} -->
+        <div class="sceneblock2">
+          {{#each submission in Contextb_value}}
+            <div class = "sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                Specific subjects of the submission: {{submission.content.sentence1}}
+              </div>
+              <div>
+                Specific location of the submission: {{submission.content.sentence2}}
+              </div>
+              <div>
+                Objective of this picture: {{submission.content.sentence3}}
+              </div>
             
-            <div class="formatted">
-              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
-              <br>
             </div>
-            <div>
-              Specific subjects of the submission: {{submission.content.sentence1}}
-            </div>
-            <div>
-              Specific location of the submission: {{submission.content.sentence2}}
-            </div>
-            <div>
-              Objective of this picture: {{submission.content.sentence3}}
-            </div>
-          
-          </div>
         {{/each}}
     
       </div>
@@ -1331,9 +1336,8 @@
 
 
     </div>
-    <div>
+    <div  class="pisection2">
       {{#if Subjectresolution}}
-      <div>aha</div>
       <div class="sceneblock">
         {{#each submission in Subjectresolution_value}}
           <div class="sunsetSlides" id="img{{@index}}">
