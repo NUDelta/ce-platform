@@ -60,13 +60,12 @@ export default DEBIAS = {
           //   sad: 'What makes you feel this way? What helps you feel better?'
           // },
         },
-        numberNeeded: 10,
+        numberNeeded: 2,
         notificationDelay: 1, // 1 seconds for debugging
         allowRepeatContributions : true
       },
 
       {
-
         needName: 'Character Introduction',
         notificationSubject: "Hello! :)",
         notificationText: 'How is your DTR deliverable going?',
@@ -85,22 +84,76 @@ export default DEBIAS = {
             
           },
           scene_description:{
-            topic: "City center that represent your city",
-            objective:" I want to showcase the differences in city culture between India and USA",
-            location:["city"],
-            subjects: ["street", "people", "building"]
+            topic: "Street Food at your place",
+            objective:" I want to elaborate on the street food in India and USA",
+            location:["food court","downtown"],
+            subjects: ["classical street food"]
           },
           ExampleImageURL: "https://res.cloudinary.com/dwruudqoc/image/upload/v1683437513/nyc_pxzdmu.jpg",
           prestoryQuestion: "Are you studying at the library?",
-          dropdownChoices: {
-            name: 'casting question',
-            options: ['😃','🙏','😌','😬', '😫', '😢']
-          },
+         
         },
-        numberNeeded: 10,
+        numberNeeded: 2,
         notificationDelay: 1, // 1 seconds for debugging
         allowRepeatContributions : true
-      }
+      },
+
+      {
+        needName: 'Conflict',
+        notificationSubject: "Hello! :)",
+        // notificationText: 'How is your DTR deliverable going?',
+        situation: {
+          detector: getDetectorUniqueKey(DETECTORS.cookingJourneyDetector), // set to "beginning detector" 
+          number: '1'
+        },
+        toPass: {
+          story_topic: 'Debiasing Story between U.S and India',
+          instruction: "Please take a picture based on previous submissions and author's needs",
+          Right_Image: false,
+          Left_Image: true,
+          scene_description:{
+            topic: "Sellers in market place",
+            objective:" I want to showcase the hardship these peddlers in face of",
+            location:["farmer market","city street"],
+            subjects: ["peddler selling food", "items"]
+          },
+          ExampleImageURL: "https://res.cloudinary.com/dwruudqoc/image/upload/v1683437513/nyc_pxzdmu.jpg",
+        },
+        numberNeeded: 2,
+        notificationDelay: 1, // 1 seconds for debugging
+        allowRepeatContributions : true
+      },
+
+      
+      {
+        needName: 'Conflict resolution',
+        notificationSubject: "Hello! :)",
+        // notificationText: 'How is your DTR deliverable going?',
+        situation: {
+          detector: getDetectorUniqueKey(DETECTORS.cookingJourneyDetector), // set to "beginning detector" 
+          number: '1'
+        },
+        toPass: {
+          story_topic: 'Debiasing Story between U.S and India',
+          instruction: "Please take a picture based on previous submissions and author's needs",
+          Right_Image: false,
+          Left_Image: true,
+          scene_description:{
+            topic: "Wedding in your country",
+            objective:" I want to showcase happiness of wedding",
+            location:["lawn","church","hotel"],
+            subjects: ["blissful", "Enchanting", "romantic"]
+          },
+          ExampleImageURL: "https://res.cloudinary.com/dwruudqoc/image/upload/v1683437513/nyc_pxzdmu.jpg",
+        },
+        numberNeeded: 2,
+        notificationDelay: 1, // 1 seconds for debugging
+        allowRepeatContributions : true
+      },
+      
+
+
+      
     ]
     }
   }

@@ -1367,13 +1367,30 @@ Template.cookSlides.helpers({
     }
     return false
   },
-  
-  Subject_helper(value){
-    return true
-    if(value == "Character Introduction"){
-      console.log("yes!") 
-      return true
+
+  Conflict(){
+    for(let i of this.betterSubmissions){
+      if(i.needName === 'Conflict'){
+        return true
+      }
     }
+    return false
+  },
+  Conflict_value(){
+    const res = this.betterSubmissions.filter(submission => submission.needName === "Conflict")
+    return res
+  },
+  Conflict_resolution(){
+    for(let i of this.betterSubmissions){
+      if(i.needName === 'Conflict resolution'){
+        return true
+      }
+    }
+    return false
+  },
+  Conflict_resolution_value(){
+    const res = this.betterSubmissions.filter(submission => submission.needName === "Conflict resolution")
+    return res
   },
 
   Subjectresolution_value(){
@@ -1381,6 +1398,7 @@ Template.cookSlides.helpers({
     console.log("subject: ", res)
     return res
   },
+  
 
   GetSubject(index){
     return this.betterSubmissions[index].content.sentence1
@@ -1389,6 +1407,7 @@ Template.cookSlides.helpers({
   GetLocation(index){
     return this.betterSubmissions[index].content.sentence2
   }
+
 
   
 });

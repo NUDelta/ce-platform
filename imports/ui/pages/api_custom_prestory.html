@@ -9,18 +9,73 @@
 </template>
 
 <template name = "debias_1">
+    <head>
+        <style>
+            #intro{
+                padding-bottom: 1%;
+            }
+            .annotation{
+                padding-top: 3%;
+            }
+            .word1{
+                font-size: 20px;
+                padding-top: 1%;
+            }
+            .topic1{
+                
+            }
+            .topic2{
+               display: inline;
+               font-size: 20px;
+            }
+            .objective2{
+                display: inline;
+                font-size: 20px;
+            }
+            .location2{
+                display: inline;
+                font-size: 20px;
+            }
+            .subject2{
+                display: inline;
+                font-size: 20px;
+            }
+            .annotation2{
+                font-size: 20px;
+            }
+            
+        </style>
+    </head>
     <div id = "intro">You appear to be interested in this scene. Click on the party you are interested in! </div>
 
     <!-- I think we wanna query this from the db -->
-    <div>
-        <div id="topic">
-            Scene topic: {{this.toPass.scene_description.topic}}
+    <div class="scene_des">
+        <div class="topic1">
+            <div class="topic2">
+                Scene topic: 
+            </div>
+            {{this.toPass.scene_description.topic}}
         </div>
-        <div id = "objective">
-            Objective: {{this.toPass.scene_description.objective}}
+
+        <div class = "objective1">
+            <div class="objective2">
+                Objective:
+            </div>
+            {{this.toPass.scene_description.objective}}
         </div>
-        <div>Location: {{this.toPass.scene_description.location}}</div>
-        <div>Subjects: {{this.toPass.scene_description.subjects}}</div>
+        <div class="location1">
+            <div class="location2">
+                Location: 
+            </div>  
+           {{this.toPass.scene_description.location}}
+            
+        </div>
+        <div class="subject1">
+            <div class="subject2">
+                Subjects:
+            </div>
+            {{this.toPass.scene_description.subjects}}
+        </div>
         
     </div>
 
@@ -35,25 +90,28 @@
     {{/if}}
 
     {{#if this.toPass.Left_Image}}
-        
-        <div>
-            Previous Submission: 
+        <div> 
+            <div class="word1">
+                Previous Submission: 
+            </div>
             <!-- <h5>Example to try</h5> -->
             <img src= {{previousSubmission}}/>
             
             <!-- {{> Template.dynamic template="halfhalfCamera" data=""}} -->
         </div>
         
-        <div>
-            Annotation:
+        <div class="annotation">
+            <div class="annotation2">
+                Annotation from the previous contributor:
+            </div>
             <div style ="display:flex"> 
-                <div>Specific subjects of the submission:  </div>
+                <div>Specific subjects of my submission:  </div>
                 <div>{{previousAnnotation1}}</div>
             </div>
            
             <div style="display:flex">
                 <div>
-                    Specific location of the submission:
+                    Specific location of my submission:
                 </div>
                 <div>
                    {{previousAnnotation2}}
@@ -81,9 +139,7 @@
                 Continue
             </button>
         </form>
-        <button id = "home">
-            Fxxk
-        </button>
+
     </div>
    
 </template>
