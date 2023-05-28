@@ -3,12 +3,12 @@ import {DETECTORS} from "../DETECTORS";
 
 
 // the scene object
-Let scene = {
+let scene = {
   scene_topic: "",
   scene_objective: "",
-  subjects = [],
-  location = []
-}
+  subjects: [],
+  location:[]
+};
 
 let scene_1 = {
   needName: 1,
@@ -45,10 +45,13 @@ let scene_4 = {
 
 highlevelauthordescription = {
   // narrative objects 
+
   story_topic:"Debiasing Story between U.S and India",
   instruction:"Please take a picture based on previous submissions and author's needs",
-  let scene_array = [scene_1, sceen_2, scene_3, scene_4],
-  num_contribution: 2,
+  scene_array: [scene_1, sceen_2, scene_3, scene_4],
+
+  //How many contribution we 
+  num_contribution: 2
   
   
   
