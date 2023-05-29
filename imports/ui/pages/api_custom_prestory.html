@@ -76,7 +76,8 @@
             </div>
             {{this.toPass.scene_description.subjects}}
         </div>
-        
+
+        {{> Template.dynamic template="dropdown" data=this.toPass.dropdownChoices}}<br><br>
     </div>
 
     {{#if this.toPass.Right_Image}}

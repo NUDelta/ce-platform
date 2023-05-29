@@ -11,8 +11,8 @@ let scene = {
 
 let scene_1 = {
   needName: 1,
-  scene_topic: "Debiasing Story between U.S and India",
-  scene_objective: "I wanna showcase the difference between city scenes in India and U.S.",
+  topic: "Debiasing Story between U.S and India",
+  objective: "I wanna showcase the difference between city scenes in India and U.S.",
   subjects:["Skycrappers", "midtown", "Empire State Building"],
   location:"Manhattan"
 }
@@ -51,7 +51,8 @@ highlevelauthordescription = {
   needNames: ['Context Building1','Character Introduction','Conflict','Conflict resolution'],
 
   //How many contribution we 
-  num_contribution: 2	
+  //num_contribution: 2	
+  perspectives:["India", "USA"]
 }
 
 function cn_compile(debias_object){
@@ -76,7 +77,11 @@ function cn_compile(debias_object){
         instruction: "Please take a picture based on previous submissions and author's needs",
         Right_Image: false,
         Left_Image: true,
-      
+        perspectives: debias_object.perspectives,
+        dropdownChoices: {
+          name: 'dropDown',
+          options: debias_object.perspectives,
+        },
         scene_description:{
           topic: scene.topic,
           objective:scene.objective,
@@ -84,7 +89,8 @@ function cn_compile(debias_object){
           subjects: scene.subjects
         },
       },
-      numberNeeded: debias_object.num_contribution,
+      //numberNeeded: debias_object.num_contribution,
+      numberNeeded: debias_object.perspectives.length,
       notificationDelay: 1, // 1 seconds for debugging
     })
   }

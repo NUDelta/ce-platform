@@ -129,39 +129,39 @@ Template.debias_1.helpers({
 
 
 Template.debias_1.events({
-  'submit #cn-participate'(event, instance){
-    event.preventDefault();
-    const experience = this.experience;
-    const location = this.location ? this.location : {lat: null, lng: null};
-    const iid = FlowRouter.getParam('iid');
-    const needName = FlowRouter.getParam('needName');
-    const uid = Meteor.userId();
-    const timestamp = Date.now()
-    const submissions = {};
-    // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
-    const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
-    console.log(this.submissions)
+  // 'submit #cn-participate'(event, instance){
+  //   event.preventDefault();
+  //   const experience = this.experience;
+  //   const location = this.location ? this.location : {lat: null, lng: null};
+  //   const iid = FlowRouter.getParam('iid');
+  //   const needName = FlowRouter.getParam('needName');
+  //   const uid = Meteor.userId();
+  //   const timestamp = Date.now()
+  //   const submissions = {};
+  //   // const resultsUrl = '/apicustomresults/' + iid + '/' + experience._id;
+  //   const participateUrl = '/apicustom/' + iid + '/' + experience._id + '/' + needName;
+  //   console.log(this.submissions)
 
-    FlowRouter.go(participateUrl);
-    FlowRouter.go(participateUrl);
+  //   FlowRouter.go(participateUrl);
+  //   FlowRouter.go(participateUrl);
 
-    const submissionObject = {
-      uid: uid,
-      eid: experience._id,
-      iid: iid,
-      needName: needName,
-      content: submissions,
-      timestamp: timestamp,
-      lat: location.lat,
-      lng: location.lng,
+  //   const submissionObject = {
+  //     uid: uid,
+  //     eid: experience._id,
+  //     iid: iid,
+  //     needName: needName,
+  //     content: submissions,
+  //     timestamp: timestamp,
+  //     lat: location.lat,
+  //     lng: location.lng,
       
-      // castDescription: castDescription
-    };
+  //     // castDescription: castDescription
+  //   };
 
-    Meteor.call('createInitialSubmission', submissionObject);
+  //   Meteor.call('createInitialSubmission', submissionObject);
 
 
-  }
+  // }
 })
 
 
