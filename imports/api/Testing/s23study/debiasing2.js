@@ -1,5 +1,5 @@
 import {getDetectorUniqueKey} from "../oce_api_helpers";
-import {DETECTORS} from "../DETECTORS";
+import {DETECTORS} from "./DETECTORS";
 
 // the scene object
 let scene = {
@@ -69,7 +69,7 @@ function cn_compile(debias_object){
       notificationSubject: "Hello! :)",
       notificationText: 'Hello :)',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.cookingJourneyDetector), // set to "beginning detector" 
+        detector: getDetectorUniqueKey(DETECTORS.wedding), // set to "beginning detector" 
         number: '1'
       },
       toPass: {
