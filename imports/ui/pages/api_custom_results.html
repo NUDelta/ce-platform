@@ -1323,10 +1323,11 @@
     <div class = "picsection1">
       {{#if Contextb}}
         <div class="sceneblock1">
-          {{#each submission in Contextb_value}}
+          <div>
+            {{#each submission in Contextb_value_1}}
             <div class = "sunsetSlides" id="img{{@index}}">
               <!-- {{Fxxkthat}} -->
-              
+          
               <div class="formatted">
                 <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
                 <br>
@@ -1353,18 +1354,89 @@
               </div>
             
             </div>
-        {{/each}}
-    
+            {{/each}}
+          </div>
+            {{#each submission in Contextb_value_2}}
+            <div class = "sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+          
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+            {{/each}}
+          <div>
+
+        </div>
+          
+        
+      
       </div>
 
       {{/if}}
-
-
     </div>
+
+
     <div  class="pisection2">
       {{#if Subjectresolution}}
       <div class="sceneblock2">
-        {{#each submission in Subjectresolution_value}}
+        <div class="sceneblock2_1">
+          {{#each submission in Subjectresolution_value_1}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}}
+      
+        </div>
+        <div class="sceneblock2_2">
+          {{#each submission in Subjectresolution_value_2}}
           <div class="sunsetSlides" id="img{{@index}}">
             <!-- {{Fxxkthat}} -->
             <div class="formatted">
@@ -1382,19 +1454,20 @@
               <div class="denotation">
                 Specific location of the submission: 
               </div>
-             {{submission.content.sentence2}}
+            {{submission.content.sentence2}}
             </div>
 
             <div>
               <div class="denotation">
                 Objective of this picture: 
               </div>
-             {{submission.content.sentence3}}
+            {{submission.content.sentence3}}
             </div>
           
           </div>
         {{/each}}
-    
+        </div>
+       
       </div>
        
       
@@ -1404,7 +1477,8 @@
     <div class="pisection3">
       {{#if Conflict}}
       <div class="sceneblock3">
-        {{#each submission in Conflict_value}}
+        <div class="sceneblock3_1">
+          {{#each submission in Conflict_value_1}}
           <div class="sunsetSlides" id="img{{@index}}">
             <!-- {{Fxxkthat}} -->
             <div class="formatted">
@@ -1435,13 +1509,9 @@
           </div>
         {{/each}}
     
-      </div>
-      {{/if}}
-    </div>
-    <div class="pisection4">
-      {{#if Conflict_resolution}}
-      <div class="sceneblock4">
-        {{#each submission in Conflict_resolution_value}}
+        </div>
+        <div class="sceneblock3_2">
+          {{#each submission in Conflict_value_2}}
           <div class="sunsetSlides" id="img{{@index}}">
             <!-- {{Fxxkthat}} -->
             <div class="formatted">
@@ -1471,6 +1541,81 @@
           
           </div>
         {{/each}}
+    
+        </div>
+
+       
+      </div>
+      {{/if}}
+    </div>
+    <div class="pisection4">
+      {{#if Conflict_resolution}}
+      <div class="sceneblock4">
+        <div class="sceneblock4_1">
+          {{#each submission in Conflict_resolution_value_1}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}} 
+        </div>
+        <div class="sceneblock4_2">
+          {{#each submission in Conflict_resolution_value_2}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}} 
+        </div>
+        
       </div>
       {{/if}}
     </div>

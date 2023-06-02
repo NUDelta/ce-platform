@@ -1338,19 +1338,28 @@ Template.cookSlides.helpers({
     }
   },
   Contextb(){
+    
     for(let i of this.betterSubmissions){
-      if(i.needName == "Context Building1"){
+      if(i.needName == "Context Building1" ){
         return true
       }
     }
     return false
   },
 
-  Contextb_value(){
+  Contextb_value_1(){
     // return this.betterSubmissions.filter(submission => submission.content.Needname == "Context Building1")
-    const res = this.betterSubmissions.filter(submission => submission.needName === "Context Building1")
-    // console.log("context building shit: ", res)
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "USA" && submission.needName === "Context Building1")
+    // const res = this.betterSubmissions.filter(submission => submision.castCategory == "USA")
+    console.log("context building shit: ", res)
     return res
+  },
+
+  Contextb_value_2(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "India" && submission.needName === "Context Building1")
+    console.log("Context Building shit: ", res)
+    return res
+
   },
 
   Subjectresolution(){
@@ -1376,10 +1385,15 @@ Template.cookSlides.helpers({
     }
     return false
   },
-  Conflict_value(){
-    const res = this.betterSubmissions.filter(submission => submission.needName === "Conflict")
+  Conflict_value_1(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "USA" && submission.needName === "Conflict")
     return res
   },
+  Conflict_value_2(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "India" && submission.needName === "Conflict")
+    return res
+  },
+
   Conflict_resolution(){
     for(let i of this.betterSubmissions){
       if(i.needName === 'Conflict resolution'){
@@ -1388,17 +1402,27 @@ Template.cookSlides.helpers({
     }
     return false
   },
-  Conflict_resolution_value(){
-    const res = this.betterSubmissions.filter(submission => submission.needName === "Conflict resolution")
+  Conflict_resolution_value_1(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "USA" && submission.needName === "Conflict resolution")
+    return res
+  },
+  Conflict_resolution_value_2(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "India" && submission.needName === "Conflict resolution")
     return res
   },
 
-  Subjectresolution_value(){
-    const res = this.betterSubmissions.filter(submission => submission.needName === "Character Introduction")
+
+  Subjectresolution_value_1(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "USA" && submission.needName === "Character Introduction")
     console.log("subject: ", res)
     return res
   },
-  
+
+  Subjectresolution_value_2(){
+    const res = this.betterSubmissions.filter(submission => submission.castCategory === "India" && submission.needName === "Character Introduction")
+    console.log("subject: ", res)
+    return res
+  },
 
   GetSubject(index){
     return this.betterSubmissions[index].content.sentence1
