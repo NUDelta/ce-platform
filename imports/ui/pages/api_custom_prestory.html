@@ -66,18 +66,26 @@
             </div>
             {{this.toPass.scene_description.objective}}
         </div>
-        <div class="location1">
+        {{!-- <div class="location1">
             <div class="location2">
                 Location: 
             </div>  
            {{this.toPass.scene_description.location}}
             
-        </div>
-        <div class="subject1">
-            <div class="subject2">
-                Subjects:
+        </div> --}}
+
+        <div class="objective1">
+            <div class="objective1">
+                Instructions:
             </div>
-            {{this.toPass.scene_description.subjects}}
+            {{this.toPass.scene_description.instructions}}
+        </div>
+
+        <div class="objective1">
+            <div class="objective1">
+                Scene Descriptors:
+            </div>
+            {{this.toPass.scene_description.descriptors}}
         </div>
         <div class="dropdown_des">
             Which perspective you wanna contribute to?

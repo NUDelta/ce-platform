@@ -60,7 +60,7 @@ export let DETECTORS = {
     rules:['(collegeuniv || libraries || gardeners)']
 
 
-  }
+  },
 
 
   commuting:{

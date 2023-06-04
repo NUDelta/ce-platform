@@ -5,44 +5,82 @@ import {DETECTORS} from "./DETECTORS";
 let scene = {
   scene_topic: "",
   scene_objective: "",
-  subjects: [],
-  location:[]
+  contributor_instructions: "",
+  key_descriptors: [],
+  situation_detector: ""
 };
+
+// let scene_1 = {
+//   needName: 1,
+//   topic: "Debiasing Story between U.S and India",
+//   objective: "I wanna showcase the difference between city scenes in India and U.S.",
+//   subjects:["Skycrappers", "midtown", "Empire State Building"],
+//   location:"Manhattan"
+// }
+// let sceen_2 = {
+//   needName: 2,
+//   topic: "Street Food at your place",
+//   objective:" I want to elaborate on the street food in India and USA",
+//   location:["food court","downtown"],
+//   subjects: ["classical street food"]
+// }
+// let scene_3 = {
+//   needName: 3,
+//   topic: "Sellers in market place",
+//   objective:" I want to showcase the hardship these peddlers in face of",
+//   location:["farmer market","city street"],
+//   subjects: ["peddler selling food", "items"]
+// }
+
+// let scene_4 = {
+//   needName: 4,
+//   topic: "Wedding in your country",
+//   objective:" I want to showcase happiness of wedding",
+//   location:["lawn","church","hotel"],
+//   subjects: ["blissful", "Enchanting", "romantic"]
+
+// }   
+
+let detector_list = [DETECTORS.Myownplace, DETECTORS.commuting, DETECTORS.workplace, DETECTORS.Personaltime]
+
 
 let scene_1 = {
   needName: 1,
-  topic: "Debiasing Story between U.S and India",
-  objective: "I wanna showcase the difference between city scenes in India and U.S.",
-  subjects:["Skycrappers", "midtown", "Empire State Building"],
-  location:"Manhattan"
+  scene_topic: "Making breakfast",
+  scene_objective: "I want to show the different kinds of food people eat to start their day in the two countries",
+  contributor_instructions: "Take a picture of you cooking or eating the type of breakfast that is representative of your country",
+  key_descriptors: ["breakfast", "food", "cereal"],
+  situation_detector: detector_list[0]
 }
 let sceen_2 = {
   needName: 2,
-  topic: "Street Food at your place",
-  objective:" I want to elaborate on the street food in India and USA",
-  location:["food court","downtown"],
-  subjects: ["classical street food"]
+  scene_topic: "Traveling to work",
+  scene_objective: "I want to show the distinct ways in which people travel to work across the world",
+  contributor_instructions: "Capture a scene that makes your journey to work unique about your country",
+  key_descriptors: ["Taxis", "cars", "train", "public transport", "road", "crowd"],
+  situation_detector: detector_list[1]
 }
 let scene_3 = {
   needName: 3,
-  topic: "Sellers in market place",
-  objective:" I want to showcase the hardship these peddlers in face of",
-  location:["farmer market","city street"],
-  subjects: ["peddler selling food", "items"]
+  scene_topic: "Struggles that come up during work",
+  scene_objective: "I want to show the problems people face in their daily work lives",
+  contributor_instructions: "Click a picture of something that is really challenging for you physically or mentally when you re at work",
+  key_descriptors: ["office", "university", "school", "desk", "pressure"],
+  situation_detector: detector_list[2]
 }
 
 let scene_4 = {
   needName: 4,
-  topic: "Wedding in your country",
-  objective:" I want to showcase happiness of wedding",
-  location:["lawn","church","hotel"],
-  subjects: ["blissful", "Enchanting", "romantic"]
-
+  scene_topic: "Personal time",
+  scene_objective: "Showing commonalities between different cultures on how they spend their personal time",
+  contributor_instructions: "Take a picture of something you enjoy doing alone - it can be anything you are passionate about or which gives you peace",
+  key_descriptors: ["reading", "music", "art", "passion", "relaxing"],
+  situation_detector: detector_list[3]
 }   
 
 
 
-highlevelauthordescription = {
+let highlevelauthordescription = {
   // narrative objects 
 
   story_topic:"Debiasing Story between U.S and India",
@@ -72,7 +110,7 @@ function cn_compile(debias_object){
       notificationSubject: "Hello! :)",
       notificationText: 'Hello :)',
       situation: {
-        detector: getDetectorUniqueKey(DETECTORS.wedding), // set to "beginning detector" 
+        detector: getDetectorUniqueKey(detector_list[needname_index]), // set to "beginning detector" 
         number: '1'
       },
       toPass: {
@@ -88,8 +126,8 @@ function cn_compile(debias_object){
         scene_description:{
           topic: scene.topic,
           objective:scene.objective,
-          location:scene.location,
-          subjects: scene.subjects
+          instructions: scene.contributor_instructions,
+          descriptors: scene.key_descriptors
         },
       },
       //numberNeeded: debias_object.num_contribution,
