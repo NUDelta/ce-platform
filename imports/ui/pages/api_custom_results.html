@@ -1390,9 +1390,6 @@
           <div>
 
         </div>
-          
-        
-      
       </div>
 
       {{/if}}
@@ -1624,6 +1621,395 @@
   </div>
 </template>
 
+
+<template name="debias_res">
+  <head>
+    <style>
+      .title {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-weight: 700;
+        border: solid 1px #000000;
+        margin: auto;
+        text-align: center;
+      }
+      .sunsetSlides {
+          display: block;
+          /* border: 1px solid black; */
+          /* height: 300px; */
+          margin: 1%;
+          width: 400px;
+      }
+
+      .slideshow {
+        margin: auto;
+      }
+      /* #img0 {
+          display: block;
+      } */
+      img {
+        width:  200px;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .formatted {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column nowrap;
+      }
+      .sceneblock1{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .sceneblock2{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .sceneblock3{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .sceneblock4{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .slideshow2{
+        padding-top: 0%;
+      }
+      .denotation{
+        font-size: 18px;
+      }
+    </style>
+
+  </head>
+
+  <div class="title">{{Name}}</div>
+  
+  <div class="slideshow">
+    <script>
+      function aha(){
+        window.alert("aha");
+       
+      }
+    </script>
+     <div class = "topic">
+      Story topic: {{topic}}
+    </div>
+    <div id = "objective">
+      Story objective: {{objective}}
+    </div>
+  </div>
+
+  <div class="slideshow2">
+    <!-- <a class="prev" onclick= {{previousScene}}>&#10094;</a>
+    <a class="next" >&#10095;</a> -->
+    <div class = "picsection1">
+      {{#if Contextb}}
+        <div class="sceneblock1">
+          <div>
+            {{#each submission in Contextb_value_1}}
+            <div class = "sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+          
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+               {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+               {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+            {{/each}}
+          </div>
+            {{#each submission in Contextb_value_2}}
+            <div class = "sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+          
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+            {{/each}}
+          <div>
+
+        </div>
+      </div>
+
+      {{/if}}
+    </div>
+
+
+    <div  class="pisection2">
+      {{#if Subjectresolution}}
+      <div class="sceneblock2">
+        <div class="sceneblock2_1">
+          {{#each submission in Subjectresolution_value_1}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}}
+      
+        </div>
+        <div class="sceneblock2_2">
+          {{#each submission in Subjectresolution_value_2}}
+          <div class="sunsetSlides" id="img{{@index}}">
+            <!-- {{Fxxkthat}} -->
+            <div class="formatted">
+              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+              <br>
+            </div>
+            <div>
+              <div class="denotation">
+                Specific subjects of the submission: 
+              </div>
+              {{submission.content.sentence1}}
+            </div>
+            
+            <div>
+              <div class="denotation">
+                Specific location of the submission: 
+              </div>
+            {{submission.content.sentence2}}
+            </div>
+
+            <div>
+              <div class="denotation">
+                Objective of this picture: 
+              </div>
+            {{submission.content.sentence3}}
+            </div>
+          
+          </div>
+        {{/each}}
+        </div>
+       
+      </div>
+       
+      
+      {{/if}}
+    </div>
+
+    <div class="pisection3">
+      {{#if Conflict}}
+      <div class="sceneblock3">
+        <div class="sceneblock3_1">
+          {{#each submission in Conflict_value_1}}
+          <div class="sunsetSlides" id="img{{@index}}">
+            <!-- {{Fxxkthat}} -->
+            <div class="formatted">
+              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+              <br>
+            </div>
+            <div>
+              <div class="denotation">
+                Specific subjects of the submission: 
+              </div>
+              {{submission.content.sentence1}}
+            </div>
+            
+            <div>
+              <div class="denotation">
+                Specific location of the submission: 
+              </div>
+             {{submission.content.sentence2}}
+            </div>
+
+            <div>
+              <div class="denotation">
+                Objective of this picture: 
+              </div>
+             {{submission.content.sentence3}}
+            </div>
+          
+          </div>
+        {{/each}}
+    
+        </div>
+        <div class="sceneblock3_2">
+          {{#each submission in Conflict_value_2}}
+          <div class="sunsetSlides" id="img{{@index}}">
+            <!-- {{Fxxkthat}} -->
+            <div class="formatted">
+              <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+              <br>
+            </div>
+            <div>
+              <div class="denotation">
+                Specific subjects of the submission: 
+              </div>
+              {{submission.content.sentence1}}
+            </div>
+            
+            <div>
+              <div class="denotation">
+                Specific location of the submission: 
+              </div>
+             {{submission.content.sentence2}}
+            </div>
+
+            <div>
+              <div class="denotation">
+                Objective of this picture: 
+              </div>
+             {{submission.content.sentence3}}
+            </div>
+          
+          </div>
+        {{/each}}
+    
+        </div>
+
+       
+      </div>
+      {{/if}}
+    </div>
+    <div class="pisection4">
+      {{#if Conflict_resolution}}
+      <div class="sceneblock4">
+        <div class="sceneblock4_1">
+          {{#each submission in Conflict_resolution_value_1}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}} 
+        </div>
+        <div class="sceneblock4_2">
+          {{#each submission in Conflict_resolution_value_2}}
+            <div class="sunsetSlides" id="img{{@index}}">
+              <!-- {{Fxxkthat}} -->
+              <div class="formatted">
+                <img src={{imageValue(submission)}} referrerpolicy="no-referrer"/>
+                <br>
+              </div>
+              <div>
+                <div class="denotation">
+                  Specific subjects of the submission: 
+                </div>
+                {{submission.content.sentence1}}
+              </div>
+              
+              <div>
+                <div class="denotation">
+                  Specific location of the submission: 
+                </div>
+              {{submission.content.sentence2}}
+              </div>
+
+              <div>
+                <div class="denotation">
+                  Objective of this picture: 
+                </div>
+              {{submission.content.sentence3}}
+              </div>
+            
+            </div>
+          {{/each}} 
+        </div>
+        
+      </div>
+      {{/if}}
+    </div>
+    <button onclick = "aha()" >Last</button>
+    
+  </div>
+</template>
 
 
 

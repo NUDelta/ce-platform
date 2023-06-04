@@ -52,8 +52,10 @@ highlevelauthordescription = {
 
   //How many contribution we 
   //num_contribution: 2	
-  perspectives:["India", "USA"]
+  perspectives:["USA", "India"]
 }
+
+
 
 function cn_compile(debias_object){
   // scene_1 = debias_object.scene_array[0]
@@ -61,6 +63,7 @@ function cn_compile(debias_object){
   // scene_3 = debias_object.scene_array[2]
   // scene_4 = debias_object.scene_array[3]
   let needs = []
+  
 
   for (let scene of debias_object.scene_array){
     const needname_index = scene.needName -1

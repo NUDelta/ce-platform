@@ -10,7 +10,8 @@ const createDetectors = function (pairNum) {
         // rules: ['(triad1)']
       },
     }
-  }
+}
+
 export let DETECTORS = {
   wedding:{
     _id: Random.id(),
@@ -65,6 +66,7 @@ export let DETECTORS = {
     rules:['nighttime && (nighttime || movietheaters || sportsteams || sportsclubs || island_pub)']
     
   }
+  
 
 
   
