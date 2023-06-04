@@ -37,7 +37,32 @@ export let DETECTORS = {
 
     rules:['(landmarks || publictransport || civiccenter || shoppingcenters);']
   },
-  
+  Myownplace:{
+    _id: Random.id(),
+    description: "Detector for someone in their own place",
+    variables: [
+      'var university_housing;',
+      'var apartments;'
+    ],
+    rules:['(university_housing || apartments);']
+  },
+
+  workplace:{
+    _id: Random.id(),
+    description: "Detector for someone at work",
+    variables:
+    [
+      'var collegeuniv;',
+      'var libraries;',
+      'var gardeners;'
+    ],
+
+    rules:['(collegeuniv || libraries || gardeners)']
+
+
+  }
+
+
   commuting:{
     _id: Random.id(),
     description: "Travel to work",
@@ -66,6 +91,7 @@ export let DETECTORS = {
     rules:['nighttime && (nighttime || movietheaters || sportsteams || sportsclubs || island_pub)']
     
   }
+  
   
 
 
