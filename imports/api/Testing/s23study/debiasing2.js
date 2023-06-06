@@ -81,15 +81,10 @@ let scene_4 = {
 
 
 let highlevelauthordescription = {
-  // narrative objects 
 
   story_topic:"Debiasing Story between U.S and India",
-  instruction:"Please take a picture based on previous submissions and author's needs",
   scene_array: [scene_1, sceen_2, scene_3, scene_4],
   needNames: ['Context Building1','Character Introduction','Conflict','Conflict resolution'],
-
-  //How many contribution we 
-  //num_contribution: 2	
   perspectives:["USA", "India"]
 }
 
@@ -115,7 +110,7 @@ function cn_compile(debias_object){
       },
       toPass: {
         story_topic: debias_object.story_topic,
-        instruction: "Please take a picture based on previous submissions and author's needs",
+        instruction: scene.contributor_instructions,
         Right_Image: false,
         Left_Image: true,
         perspectives: debias_object.perspectives,
@@ -124,8 +119,8 @@ function cn_compile(debias_object){
           options: debias_object.perspectives,
         },
         scene_description:{
-          topic: scene.topic,
-          objective:scene.objective,
+          topic: scene.scene_topic,
+          objective:scene.scene_objective,
           instructions: scene.contributor_instructions,
           descriptors: scene.key_descriptors
         },
