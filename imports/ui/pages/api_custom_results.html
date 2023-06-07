@@ -1221,10 +1221,11 @@
       }
       .sunsetSlides {
           display: block;
+          padding-right: 2%;
           /* border: 1px solid black; */
           /* height: 300px; */
-          margin: 1%;
-          width: 400px;
+          /* margin: 1%;
+          width: 400px; */
       }
 
       .slideshow {
@@ -1272,6 +1273,10 @@
       .denotation{
         font-size: 18px;
       }
+      .topic{
+        text-align: center;
+        font-size: 30px;
+      }
     </style>
 
   </head>
@@ -1288,9 +1293,9 @@
      <div class = "topic">
       Story topic: {{topic}}
     </div>
-    <div id = "objective">
+    <!-- <div id = "objective">
       Story objective: {{objective}}
-    </div>
+    </div> -->
 
     <!-- <div class="sceneblock">
       {{#each submission in this.betterSubmissions}}
@@ -1322,6 +1327,7 @@
     <a class="next" >&#10095;</a> -->
     <div class = "picsection1">
       {{#if Contextb}}
+      <!-- <div class="context-topic">{{context_topic}}</div> -->
         <div class="sceneblock1">
           <div>
             {{#each submission in Contextb_value_1}}
@@ -1398,6 +1404,7 @@
 
     <div  class="pisection2">
       {{#if Subjectresolution}}
+      <!-- <div class="subject-topic">{{subject_topic}}</div> -->
       <div class="sceneblock2">
         <div class="sceneblock2_1">
           {{#each submission in Subjectresolution_value_1}}
@@ -1473,6 +1480,7 @@
 
     <div class="pisection3">
       {{#if Conflict}}
+      <!-- <div class="subject-topic">{{conflict_topic}}</div> -->
       <div class="sceneblock3">
         <div class="sceneblock3_1">
           {{#each submission in Conflict_value_1}}
@@ -1547,6 +1555,7 @@
     </div>
     <div class="pisection4">
       {{#if Conflict_resolution}}
+      <!-- <div class="subject-topic">{{resolution_topic}}</div> -->
       <div class="sceneblock4">
         <div class="sceneblock4_1">
           {{#each submission in Conflict_resolution_value_1}}
@@ -1686,6 +1695,9 @@
       .denotation{
         font-size: 18px;
       }
+      .story_t{
+
+      }
     </style>
 
   </head>
@@ -1699,11 +1711,12 @@
        
       }
     </script>
+    <div class="story_t">Debiasing Story between U.S and India</div>
      <div class = "topic">
-      Story topic: {{topic}}
+      Scene topic: {{topic}}
     </div>
     <div id = "objective">
-      Story objective: {{objective}}
+      Scene objective: {{objective}}
     </div>
   </div>
 

@@ -203,16 +203,26 @@ Template.cookSlides.helpers({
     return this.incident.contributionTypes[0].toPass.scene_description.objective
     console.log(this.incident.contributionTypes[0].toPass.scene_description.objective)
   },
-
+  context_topic:function(){
+    return this.incident.contributionTypes[0].toPass.scene_description.topic
+  },
+  subject_topic:function(){
+    return this.incident.contributionTypes[2].toPass.scene_description.topic
+  },
+  conflict_topic:function(){
+    return this.incident.contributionTypes[4].toPass.scene_description.topic
+  },
+  resolutotion_topic:function(){
+    return this.incident.contributionTypes[6].toPass.scene_description.topic
+  },
 
   topic: function(){
     console.log("perspectives: ", this.perspectives)
     console.log("bettersubmission: ", this.submissions)
     // console.log("aha: ", this.toPass.dropdownChoices)
-    return this.incident.contributionTypes[0].toPass.scene_description.topic
+    return this.incident.contributionTypes[0].toPass.story_topic
   },
-  Name: 
-  function(){
+  Name: function(){
     // debugger;
     // console.log(this.incident.name)
     // debugger;
