@@ -37,6 +37,7 @@ export let DETECTORS = {
 
     rules:['(landmarks || publictransport || civiccenter || shoppingcenters);']
   },
+  
   Myownplace:{
     _id: Random.id(),
     description: "Detector for someone in their own place",
