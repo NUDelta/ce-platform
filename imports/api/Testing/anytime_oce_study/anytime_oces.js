@@ -1,6 +1,49 @@
 import {DETECTORS} from "../DETECTORS";
 import { getDetectorUniqueKey, addStaticAffordanceToNeeds } from "../oce_api_helpers";
 
+/**
+ * Testing experience so we can get define needs based on minute timeblocks, at any hour of the day
+ */
+const createMomentsOfTheHourTimelapse = () => {
+  let apiDefinition = {
+    _id: Random.id(),
+    name: 'Moments of the Hour',
+    participateTemplate: 'sunsetTimelapseParticipate',
+    resultsTemplate: 'sunset',
+    description: 'Create a timelapse of the hour with others around the country',
+    notificationText: 'Take a photo that captures a moment of the hour!',
+    callbacks: [{
+      trigger: 'cb.incidentFinished()',
+      function: sendNotificationSunset.toString()
+    }]
+  }
+
+  contributionTypes = []
+  let b = 2; // block size
+  for (let i = 0; i < 60; i += b) {
+    let needName = `A moment at ${i} minutes past the hour`;
+    let detectorObjectKey = `block_starting_at_${i}`;
+    let need = {
+      needName: needName,
+      situation: {
+        detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
+        number: 1
+      },
+      toPass: {
+        instruction: 'Take a photo that captures a moment of the hour!',
+      },
+      numberNeeded: 1,
+      notificationDelay: 0
+    }
+    contributionTypes.push(need);
+  }
+
+  apiDefinition['contributionTypes'] = contributionTypes;
+  apiDefinition['anytimeSequential'] = {
+    "startingBuckets": 3
+  };
+  return apiDefinition;
+}
 
 let sendNotificationSunset = function (sub) {
   let uids = Submissions.find({ iid: sub.iid }).fetch().map(function (x) {
@@ -88,51 +131,6 @@ const createBaselineSunsetTimelapse = (minutes_before, minutes_after, interval_s
   apiDefinition['contributionTypes'] = addStaticAffordanceToNeeds('baseline', createSunsetNeeds(minutes_before, minutes_after, interval_size));
   return apiDefinition;
 };
-
-/**
- * Testing experience so we can get define needs based on minute timeblocks, at any hour of the day
- */
-const createMomentsOfTheHourTimelapse = () => {
-  let apiDefinition = {
-    _id: Random.id(),
-    name: 'Moments of the Hour',
-    participateTemplate: 'sunsetTimelapseParticipate',
-    resultsTemplate: 'sunset',
-    description: 'Create a timelapse of the hour with others around the country',
-    notificationText: 'Take a photo that captures a moment of the hour!',
-    callbacks: [{
-      trigger: 'cb.incidentFinished()',
-      function: sendNotificationSunset.toString()
-    }]
-  }
-
-  contributionTypes = []
-  let b = 2; // block size
-  for (let i = 0; i < 60; i += b) {
-    let needName = `A moment at ${i} minutes past the hour`;
-    let detectorObjectKey = `block_starting_at_${i}`;
-    let need = {
-      needName: needName,
-      situation: {
-        detector: getDetectorUniqueKey(DETECTORS[detectorObjectKey]),
-        number: 1
-      },
-      toPass: {
-        instruction: 'Take a photo that captures a moment of the hour!',
-      },
-      numberNeeded: 1,
-      notificationDelay: 0
-    }
-    contributionTypes.push(need);
-  }
-
-  apiDefinition['contributionTypes'] = contributionTypes;
-  apiDefinition['anytimeSequential'] = {
-    "startingBuckets": 3
-  };
-  return apiDefinition;
-}
-
 
 export default ANYTIME_OCES = {
   sunsetTimelapse: createSunsetTimelapse(120, 0, 2),
